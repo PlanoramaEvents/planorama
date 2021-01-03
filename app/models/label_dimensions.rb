@@ -1,0 +1,2 @@
+class LabelDimensions < ApplicationRecord
+end

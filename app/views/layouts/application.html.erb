@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+          crossorigin="anonymous"
+    >
+
+    <%#= stylesheet_pack_tag 'hello_vue' %>
+    <%= javascript_pack_tag 'side_menu_vue' %>
+    <%= javascript_pack_tag 'navbar_vue' %>
+
+    <title>Planorama</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css">
+
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+
+    <%#= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%#= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+  <body>
+    <section class="section">
+      <div class="container">
+        <%= render 'layouts/navbar' %>
+        <div class="columns is-mobile">
+          <%#= render 'layouts/menu' %>
+          <%= render 'layouts/content' %>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

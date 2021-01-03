@@ -1,0 +1,22 @@
+#
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("DB_POOL") { 5 } %>
+  timeout: <%= ENV.fetch("DB_TIMEOUT") { 8000 } %>
+  host: <%= ENV.fetch("DB_HOST") { 'postgres' } %>
+  port: <%= ENV.fetch("DB_PORT") { 5432 } %>
+  username: <%= ENV.fetch("POSTGRES_USER") { 'postgres' } %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD") { 'example' } %>
+
+development:
+  <<: *default
+  database: planorama_development
+
+test:
+  <<: *default
+  database: planorama_test
+
+production:
+  <<: *default
+  database: <%= ENV["DB_NAME"] || "planorama_production" %>

@@ -1,0 +1,2 @@
+class RoomsController < ResourceController
+end

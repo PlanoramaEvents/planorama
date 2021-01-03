@@ -1,0 +1,36 @@
+<%= javascript_pack_tag 'people_vue' %>
+
+<div id="people-app">
+  <div>
+    <table-component
+      :sort-field="sortField"
+      :sort-order="sortOrder"
+      :columns="columns"
+      :collection="collection"
+      v-on:selected="setSelected($event)"
+    />
+  </div>
+
+  <section>
+    <b-sidebar
+      type="is-light"
+      :fullheight=true
+      :fullwidth=false
+      :overlay=true
+      :right=true
+      v-model="selected"
+    >
+      <div class="p-1">
+        <img
+          src="https://raw.githubusercontent.com/buefy/buefy/dev/static/img/buefy-logo.png"
+          alt="Lightweight UI components for Vue.js based on Bulma"
+        />
+      </div>
+    </b-sidebar>
+  </section>
+
+  <h1>SELECTED</h1>
+    <div v-if="selected">
+      {{selected.get('first_name')}}
+    </div>
+</div>

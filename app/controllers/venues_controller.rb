@@ -1,0 +1,2 @@
+class VenuesController < ResourceController
+end
