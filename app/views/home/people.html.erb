@@ -1,3 +1,4 @@
+<%= stylesheet_pack_tag 'people_vue' %>
 <%= javascript_pack_tag 'people_vue' %>
 
 <div id="people-app">
@@ -8,7 +9,7 @@
       :columns="columns"
       :collection="collection"
       v-on:selected="setSelected($event)"
-    />
+    ></table-component>
   </div>
 
   <section>
@@ -16,9 +17,10 @@
       type="is-light"
       :fullheight=true
       :fullwidth=false
-      :overlay=true
+      :overlay=false
       :right=true
-      v-model="selected"
+      :can-cancel=false
+      v-model="has_selected"
     >
       <div class="p-1">
         <img

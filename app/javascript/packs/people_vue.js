@@ -1,6 +1,7 @@
 import Vue from 'vue/dist/vue.esm'
 import Buefy from 'buefy'
-import 'buefy/dist/buefy.css'
+import '../stylesheets/style.scss'
+// import 'buefy/dist/buefy.css'
 import TableComponent from '../table.vue'
 
 Vue.use(Buefy)
@@ -142,12 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
           sortField: 'published_last_name',
           columns: people_columns,
           collection: people,
-          selected: null
+          selected: null,
+          has_selected: false
         }
       },
       methods: {
         setSelected(v) {
           this.selected = v
+          this.has_selected = this.selected != null
         }
       }
     }

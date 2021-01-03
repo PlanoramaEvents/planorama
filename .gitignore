@@ -6,6 +6,7 @@ capybara-*.html
 .docker-sync
 .yardoc
 .gitlab
+.envrc
 */db/*.sqlite3
 */public/system
 */coverage/

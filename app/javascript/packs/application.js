@@ -10,7 +10,7 @@ require("channels")
 
 import "@fortawesome/fontawesome-free/js/all";
 
-import '../stylesheets/style'
+import '../stylesheets/style.scss'
 
 
 // Uncomment to copy all static images under ../images to the output folder and reference
