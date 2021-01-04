@@ -2,7 +2,6 @@
 import Vue from 'vue/dist/vue.esm'
 import Buefy from 'buefy'
 import '../stylesheets/style.scss'
-// import 'buefy/dist/buefy.css'
 
 Vue.use(Buefy)
 

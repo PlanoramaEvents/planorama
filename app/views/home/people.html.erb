@@ -19,20 +19,37 @@
       :fullwidth=false
       :overlay=false
       :right=true
-      :can-cancel=false
+      :can-cancel=true
       v-model="has_selected"
     >
       <div class="p-1">
-        <img
-          src="https://raw.githubusercontent.com/buefy/buefy/dev/static/img/buefy-logo.png"
-          alt="Lightweight UI components for Vue.js based on Bulma"
-        />
+        <div v-if="selected">
+          <section class="section">
+            <div class="box">
+              <ha class="title">{{selected.published_name}}</ha>
+            </div>
+            <div class="box">
+              <!-- TODO: edit button enable edit and submit and refresh on blur -->
+              <b-field label="First Name" label-position="on-border">
+                <b-input
+                  lazy=true
+                  maxlength="60"
+                  disabled
+                  v-model="selected.first_name"
+                ></b-input>
+              </b-field>
+              <b-field label="Last Name" label-position="on-border">
+                <b-input
+                  lazy=true
+                  maxlength="60"
+                  disabled
+                  v-model="selected.last_name"
+                ></b-input>
+              </b-field>
+            </div>
+          </section>
+        </div>
       </div>
     </b-sidebar>
   </section>
-
-  <h1>SELECTED</h1>
-    <div v-if="selected">
-      {{selected.get('first_name')}}
-    </div>
 </div>
