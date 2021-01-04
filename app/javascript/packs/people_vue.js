@@ -2,6 +2,7 @@ import Vue from 'vue/dist/vue.esm'
 import Buefy from 'buefy'
 import '../stylesheets/style.scss'
 import TableComponent from '../table.vue'
+import SidebarComponent from '../sidebar.vue'
 
 Vue.use(Buefy)
 
@@ -132,10 +133,14 @@ const people_columns = [
 
 document.addEventListener('DOMContentLoaded', () => {
   let people = new People()
+  let has_selected = false
 
   const app = new Vue(
     {
-      components: { TableComponent },
+      components: {
+        TableComponent,
+        SidebarComponent
+      },
       data() {
         return {
           sortOrder: 'asc',
@@ -143,13 +148,15 @@ document.addEventListener('DOMContentLoaded', () => {
           columns: people_columns,
           collection: people,
           selected: null,
-          has_selected: false
+          hasSelected: has_selected
         }
       },
       methods: {
         setSelected(v) {
+          console.debug('Set selected')
           this.selected = v
-          this.has_selected = this.selected != null
+          this.hasSelected = this.selected != null
+          this.$refs.sidebarComponent.setSelected(this.hasSelected);
         }
       }
     }

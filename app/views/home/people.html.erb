@@ -12,44 +12,36 @@
     ></table-component>
   </div>
 
-  <section>
-    <b-sidebar
-      type="is-light"
-      :fullheight=true
-      :fullwidth=false
-      :overlay=false
-      :right=true
-      :can-cancel=true
-      v-model="has_selected"
-    >
-      <div class="p-1">
-        <div v-if="selected">
-          <section class="section">
-            <div class="box">
-              <ha class="title">{{selected.published_name}}</ha>
-            </div>
-            <div class="box">
-              <!-- TODO: edit button enable edit and submit and refresh on blur -->
-              <b-field label="First Name" label-position="on-border">
-                <b-input
-                  lazy=true
-                  maxlength="60"
-                  disabled
-                  v-model="selected.first_name"
-                ></b-input>
-              </b-field>
-              <b-field label="Last Name" label-position="on-border">
-                <b-input
-                  lazy=true
-                  maxlength="60"
-                  disabled
-                  v-model="selected.last_name"
-                ></b-input>
-              </b-field>
-            </div>
-          </section>
-        </div>
+  <sidebar-component
+    ref='sidebarComponent'
+    :has-selected="hasSelected"
+  >
+    <div class="p-1">
+      <div v-if="selected">
+        <section class="section">
+          <div class="box">
+            <h1 class="title">{{selected.published_name}}</h1>
+          </div>
+          <div class="box">
+            <b-field label="First Name" label-position="on-border">
+              <b-input
+                :lazy=true
+                maxlength="60"
+                disabled
+                v-model="selected.first_name"
+              ></b-input>
+            </b-field>
+            <b-field label="Last Name" label-position="on-border">
+              <b-input
+                :lazy=true
+                maxlength="60"
+                disabled
+                v-model="selected.last_name"
+              ></b-input>
+            </b-field>
+          </div>
+        </section>
       </div>
-    </b-sidebar>
-  </section>
+    </div>
+  </sidebar-component>
 </div>
