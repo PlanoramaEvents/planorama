@@ -3,35 +3,26 @@
     <div class="column is-8-tablet is-6-desktop is-4-widescreen">
       <div class="box">
         <div class="card-content">
-
           <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
             <h2 class="title has-text-centered is-size-3">Please login</h2>
             <div class="field">
-              <%= f.label :login %><br />
-              <%= f.text_field :login, autofocus: true %>
-            </div>
-
-            <div class="field">
-              <%= f.label :password %><br />
-              <%= f.password_field :password, autocomplete: "current-password" %>
-            </div>
-
-            <% if devise_mapping.rememberable? %>
-              <div class="field">
-                <%= f.check_box :remember_me %>
-                <%= f.label :remember_me %>
+              <%= f.label :login, class: "label" %>
+              <div class="control">
+                <%= f.text_field :login, autofocus: true, class: 'input' %>
               </div>
-            <% end %>
-
-              <%= f.submit "Log in", class: "button is-medium is-primary is-fullwidth" %>
+            </div>
+            <div class="field">
+              <%= f.label :password, class: "label" %>
+              <div class="control">
+                <%= f.password_field :password, autocomplete: "current-password", class: 'input' %>
+              </div>
+            </div>
+            <%= f.submit "Log in", class: "button is-medium is-primary is-fullwidth" %>
           <% end %>
-
-          </div>
-              <div class="field has-text-centered">
-              <a href="/users/password/new" class="text-muted">Forgot password?</a>
-              <small class="text-muted mx-1 d-none d-md-inline">|</small>
-              <a href="/users/sign_up" class="text-muted d-block d-md-inline mt-2">Create an account</a>
-          </div>
+        </div>
+        <div class="field has-text-centered">
+          <a href="/users/password/new" class="text-muted">Forgot password?</a>
+        </div>
       </div>
     </div>
   </div>
