@@ -88,3 +88,5 @@ yarn-debug.log*
 !/storage/.keep
 */public/uploads/**/*
 /public/uploads
+
+/config/credentials/staging.key
