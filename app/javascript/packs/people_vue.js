@@ -1,39 +1,44 @@
 import Vue from 'vue/dist/vue.esm'
 import Buefy from 'buefy'
+import CKEditor from 'ckeditor4-vue'
 import '../stylesheets/style.scss'
 import TableComponent from '../table.vue'
 import SidebarComponent from '../sidebar.vue'
 
+import PlanoModel from '../model.js'
+
 Vue.use(Buefy)
+Vue.use( CKEditor );
 
-import {Model, Collection} from 'vue-mc'
+import {Collection} from 'vue-mc'
+import {
+    boolean,
+    equal,
+    integer,
+    min,
+    required,
+    string,
+} from 'vue-mc/validation'
 
-class Person extends Model {
+class Person extends PlanoModel {
   defaults() {
     return {
-      id: null,
+      // id: null,
       first_name: null,
-      last_name: '',
-    }
-  }
-  mutations() {
-    return {
-      id:   (id) => Number(id) || null,
-      first_name: String,
-      last_name: String,
+      last_name: ''
     }
   }
   validation() {
     return {
-      id: integer.and(min(1)).or(equal(null)),
-      first_name: string,
-      last_name: string.and(required),
+      last_name: string.and(required)
     }
   }
   routes() {
+    // TODO: do we need a custom route for update instaed of save???
+    // see http://vuemc.io/#model-request-custom
     return {
       fetch: '/people/{id}',
-      save:  '/people',
+      save:  '/people/{id}',
     }
   }
 };
@@ -63,72 +68,80 @@ class People extends Collection {
   }
 };
 
+// task.$.name or task.saved('name') to reflect what is in the backend ...
 const people_columns = [
   {
     field: 'id',
     label: 'ID',
     width: '350',
     // sticky: true,
-    numeric: true,
-    searchable: true,
+    numeric: true
+    // searchable: true,
   },
   {
-    field: 'published_name',
+    field: '$.published_name',
     label: 'Published Name',
     // sticky: true,
     width: '700',
-    searchable: true,
+    // searchable: true,
     sortable: true
   },
   {
-    field: 'published_last_name',
+    field: '$.published_last_name',
     label: 'Published Last Name',
     width: '400',
-    searchable: true,
+    // searchable: true,
     sortable: true
   },
   {
-    field: 'first_name',
+    field: '$.first_name',
     label: 'First Name',
     width: '400',
-    searchable: true,
+    // searchable: true,
     sortable: true
   },
   {
-    field: 'last_name',
+    field: '$.last_name',
     label: 'Last Name',
     width: '400',
-    searchable: true,
+    // searchable: true,
     sortable: true
   },
   {
-    field: 'pronouns',
+    field: '$.pronouns',
     label: 'Pronouns',
     width: '400',
-    searchable: false,
+    // searchable: false,
     sortable: false
   },
   {
-    field: 'registered',
+    field: '$.registered',
     label: 'Registered',
     width: '250',
-    searchable: false,
+    // searchable: false,
     sortable: true
   },
   {
-    field: 'registration_type',
+    field: '$.registration_type',
     label: 'Registration Type',
     width: '250',
-    searchable: false,
+    // searchable: false,
     sortable: true
   },
   {
-    field: 'registration_number',
+    field: '$.registration_number',
     label: 'Registration Number',
     width: '250',
-    searchable: true,
+    // searchable: true,
     sortable: true
   }
+  // {
+  //   field: '$.bio',
+  //   label: 'Bio',
+  //   width: '250',
+  //   searchable: false,
+  //   sortable: false
+  // }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -148,13 +161,24 @@ document.addEventListener('DOMContentLoaded', () => {
           columns: people_columns,
           collection: people,
           selected: null,
-          hasSelected: has_selected
+          hasSelected: has_selected,
+          editable : false,
+          editorConfig: {
+            readOnly: true
+          }
         }
       },
       methods: {
+        onSave() {
+          this.selected.save()
+        },
+        onReset() {
+          if (this.selected) this.selected.fetch()
+        },
         setSelected(v) {
-          console.debug('Set selected')
+          // console.debug('Set selected')
           this.selected = v
+          this.editable = false
           this.hasSelected = this.selected != null
           this.$refs.sidebarComponent.setSelected(this.hasSelected);
         }

@@ -71,6 +71,9 @@ export default {
     }
   },
   methods: {
+//    onSave() {
+//      this.selected.save()
+//    },
     onSelect(row) {
       this.$emit('selected', row)
     },
@@ -97,8 +100,8 @@ export default {
           this.data = []
           this.total = arg.response.data.total
           this.perPage = arg.response.data.perPage
-          this.collection.each((person, index) => {
-            this.data.push(person)
+          this.collection.each((obj, index) => {
+            this.data.push(obj)
           })
           this.loading = false
         }

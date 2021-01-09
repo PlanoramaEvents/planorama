@@ -23,7 +23,7 @@ module ResourceMethods
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, text: ex.message
+    render status: :bad_request, json: {error: ex.message}
   end
 
   def show
@@ -36,7 +36,7 @@ module ResourceMethods
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, text: ex.message
+    render status: :bad_request, json: {error: ex.message}
   end
 
   def create
@@ -55,16 +55,15 @@ module ResourceMethods
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, text: ex.message
+    render status: :bad_request, json: {error: ex.message}
   end
 
   def update
-    causal_block do
-      model_class.transaction do
-        before_update
-        @object.update!(strip_params(_permitted_params(object_name)))
-        after_update
-      end
+    model_class.transaction do
+      before_update
+      @object.update!(strip_params(_permitted_params(object_name)))
+      @object.reload
+      after_update
     end
     after_update_tx
     if serializer_class
@@ -76,7 +75,7 @@ module ResourceMethods
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, text: ex.message
+    render status: :bad_request, json: {error: ex.message}
   end
 
   def destroy
@@ -87,7 +86,7 @@ module ResourceMethods
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, text: ex.message
+    render status: :bad_request, json: {error: ex.message}
   end
 
   def restore
@@ -103,7 +102,7 @@ module ResourceMethods
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, text: ex.message
+    render status: :bad_request, json: {error: ex.message}
   end
 
   def before_update

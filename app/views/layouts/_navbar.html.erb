@@ -1,4 +1,5 @@
 
+<% if current_user %>
 <div id='top-navbar' class="container">
   <b-navbar>
     <template slot="brand">
@@ -49,11 +50,10 @@
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="buttons">
-          <a class="button is-primary">
-            Log in
-          </a>
+          <%= link_to('Logout', destroy_user_session_path, method: :delete, class: 'button is-primary') %>
         </div>
       </b-navbar-item>
     </template>
   <b-navbar>
 </div>
+<% end %>
