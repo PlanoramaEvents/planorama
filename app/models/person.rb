@@ -51,13 +51,12 @@ class Person < ApplicationRecord
   def check_if_assigned
     if (ProgrammeItemAssignment.where(person_id: id).count > 0) ||
        (PublishedProgrammeItemAssignment.where(person_id: id).count > 0)
-      raise 'Cannot delete the an assigned person'
-      # I18n.t("planner.core.errors.messages.cannot-delete-assigned-person", name: publication_name)
+      raise 'Cannot delete an assigned person'
     end
   end
 
   # # ----------------------------------------------------------------------------------------------
-  # # Conference specific data - need to change so that the access is scoped by conference id
+  # TODO: part of refactor
   # has_one :available_date, :dependent => :delete
   # has_one :person_constraints, :dependent => :delete # THis is the max items per day & conference
   # has_many  :exclusions, :dependent => :delete_all
