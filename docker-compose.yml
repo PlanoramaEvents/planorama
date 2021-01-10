@@ -1,0 +1,53 @@
+#
+# This is the dev version of the docker compose
+#
+# docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
+#
+version: "3.7"
+
+volumes:
+  pgdata:
+  # redis-data:
+
+services:
+  # Simple redis server based on the
+  # planorama-redis:
+  #   image: "redis:alpine"
+  # redis:
+  #   image: redis:alpine
+  #   restart: always
+  #   volumes:
+  #     - redis-data:/data
+  #   ports:
+  #     - "36379:6379"
+  # The database server - only needed for dev and test
+
+  # The Postgre DB
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    env_file:
+      - .envrc
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # - ./init_data:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+
+  # The planner app server
+  planorama:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # command: sleep 100000
+    command: ./script/planorama_start.sh
+    env_file:
+      - .envrc
+    depends_on:
+      - postgres
+      # - "planorama-redis"
+    links:
+      - postgres
+      # - planorama-redis
+    ports:
+      - "3000:3000"

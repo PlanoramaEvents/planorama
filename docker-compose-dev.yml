@@ -1,0 +1,20 @@
+#
+# This is the dev version of the docker compose
+# this is overlaid on the docket compose for dev environments
+#
+# docker-compose -f docker/docker-compose.yml -f  docker/docker-compose-dev.yml up
+#
+version: "3.7"
+
+services:
+  postgres:
+    volumes:
+      - pgdata:/var/lib/postgres:cached
+  planorama:
+    volumes:
+      - .:/opt/planorama
+      - box:/var/bundler # this is used to store make the bundle update/install persistent between runs
+
+# Simple volumes used for persistent storage
+volumes:
+  box: {} # used for the bundler, persistent store between runs
