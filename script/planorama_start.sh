@@ -10,11 +10,11 @@ if [[ -z $RAILS_ENV ]]; then
   # NOTE: I moved node_modules to /tmp/node_modules and have a problem with
   # the webpacker dev server ... TODO to fix
   # It just put the load on rails for now (which still works)
-  # yarn add @rails/webpacker
-  # # bin/rails webpacker:install
+  yarn add @rails/webpacker
+  bin/rails webpacker:install -n
   # # Background webpack watcher for speedy complilation
-  # # FIXME Hack, should be it's own process but was done this way so rails doesn't hit webpacker as well
-  # bin/webpack-dev-server --host 0.0.0.0 &
+  # FIXME Hack, should be it's own process but was done this way so rails doesn't hit webpacker as well
+  bin/webpack-dev-server --host 0.0.0.0 &
 fi
 
 # Run migrations and start the server, anything that comes in on 3000 is accepted

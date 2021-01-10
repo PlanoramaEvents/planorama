@@ -6,7 +6,7 @@
     "@rails/actioncable": "^6.0.0",
     "@rails/activestorage": "^6.0.0",
     "@rails/ujs": "^6.0.0",
-    "@rails/webpacker": "4.3.0",
+    "@rails/webpacker": "^6.0.0-pre.1",
     "buefy": "^0.9.4",
     "bulma": "^0.9.1",
     "ckeditor4": "^4.15.1",
@@ -22,6 +22,7 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "@webpack-cli/serve": "^1.2.1",
     "webpack-dev-server": "^3.11.1"
   }
 }

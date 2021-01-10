@@ -12,9 +12,14 @@ services:
       - pgdata:/var/lib/postgres:cached
   planorama:
     volumes:
+      - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
       - box:/var/bundler # this is used to store make the bundle update/install persistent between runs
+      - type: tmpfs
+        target: /opt/planorama/tmp
+
 
 # Simple volumes used for persistent storage
 volumes:
+  node_modules:
   box: {} # used for the bundler, persistent store between runs
