@@ -252,6 +252,7 @@
                 <b-input
                   v-model="selected.comments"
                   maxlength="2000"
+                  :disabled="!editable"
                   type="textarea">
                 </b-input>
               </b-field>
