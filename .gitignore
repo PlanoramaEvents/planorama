@@ -90,3 +90,10 @@ yarn-debug.log*
 /public/uploads
 
 /config/credentials/staging.key
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity

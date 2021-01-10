@@ -139,6 +139,7 @@ module ResourceMethods
     @page = params[:page]&.to_i || 0
     @order = params[:sortField] || ''
     @direction = params[:sortOrder] || ''
+    @order.slice!("$.")
     model_class
       .order("#{@order} #{@direction}")
       .page(@page)
