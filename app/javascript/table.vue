@@ -65,7 +65,7 @@ export default {
       total: 0,
       defaultSortOrder: 'asc',
       loading: false,
-      perPage: 30,
+      perPage: 20,
       page: 1,
       data: [],
     }
