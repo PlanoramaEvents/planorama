@@ -35,3 +35,8 @@ docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
 
 You will be able to access the running server via http://localhost:3000 and
 a test user will available (test with password 111111)
+
+
+NOTE: the docker image will use the files from the project directory.
+So editing those files will affect what is running in docker (and most
+changes can be seen by refreshing the page you are working on)
