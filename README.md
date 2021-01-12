@@ -37,6 +37,9 @@ You will be able to access the running server via http://localhost:3000 and
 a test user will available (test with password 111111)
 
 
+NOTE: there is a encrypted key for devise (used for login). You will need
+a copy of the `master.key` file. This is not in source code control.
+
 NOTE: the docker image will use the files from the project directory.
 So editing those files will affect what is running in docker (and most
 changes can be seen by refreshing the page you are working on)
