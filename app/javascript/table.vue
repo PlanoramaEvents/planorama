@@ -1,5 +1,11 @@
 <template>
   <section>
+    <b-button @click="onNew">
+      New
+    </b-button>
+    <b-button @click="onDelete">
+      Delete
+    </b-button>
     <b-table
       :data="data"
       :columns="columns"
@@ -71,9 +77,18 @@ export default {
     }
   },
   methods: {
-//    onSave() {
-//      this.selected.save()
-//    },
+    onNew() {
+      console.debug('***** New TODO');
+      // this.selected.save()
+    },
+    onDelete() {
+      if (this.selected) {
+        this.selected.delete();
+        this.$emit('selected', null);
+        this.selected = null;
+        this.loadAsyncData()
+      }
+    },
     onSelect(row) {
       this.$emit('selected', row)
     },

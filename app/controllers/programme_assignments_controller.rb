@@ -1,0 +1,2 @@
+class ProgrammeAssignmentsController < ResourceController
+end

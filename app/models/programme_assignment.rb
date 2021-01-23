@@ -1,4 +1,4 @@
-class ProgrammeItemAssignment < ApplicationRecord
+class ProgrammeAssignment < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: [:programme_item_id]
 
@@ -8,8 +8,8 @@ class ProgrammeItemAssignment < ApplicationRecord
 
   has_one :programme_assignment_role_type
 
-  enum visibility: {
-    public: 'public',
-    private: 'private'
-  }
+  # enum visibility: {
+  #   public: 'public',
+  #   private: 'private'
+  # }
 end

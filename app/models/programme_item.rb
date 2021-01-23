@@ -8,20 +8,20 @@ class ProgrammeItem < ApplicationRecord
   belongs_to :format
   has_one :published_programmme_item, dependent: :destroy
 
-  has_many :programme_item_assignments, dependent: :destroy do
+  has_many :programme_assignments, dependent: :destroy do
     def role(role)
       # get the people with the given role
       where(['programme_assignment_role_type_id = ?', role.id])
-        .order('programme_item_assignments.sort_order asc')
+        .order('programme_assignments.sort_order asc')
     end
 
     def roles(role_ids)
       # get the people with the given roles
       where(['programme_assignment_role_type_id in (?)', role_ids])
-        .order('programme_item_assignments.sort_order asc')
+        .order('programme_assignments.sort_order asc')
     end
   end
-  has_many :people, through: :programme_item_assignments
+  has_many :people, through: :programme_assignments
 
   enum visibility: {
     public: 'public',

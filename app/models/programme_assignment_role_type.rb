@@ -1,6 +1,6 @@
 class ProgrammeAssignmentRoleType < ApplicationRecord
-  has_many :programme_item_assignments
-  has_many :published_programme_item_assignments
+  has_many :programme_assignments
+  has_many :published_programme_assignments
 
   enum role_type: {
     participant: 'PARTICIPANT',

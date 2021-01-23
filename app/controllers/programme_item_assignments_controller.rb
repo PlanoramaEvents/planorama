@@ -1,2 +1,0 @@
-class ProgrammeItemAssignmentsController < ResourceController
-end

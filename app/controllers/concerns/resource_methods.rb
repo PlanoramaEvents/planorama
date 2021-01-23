@@ -81,7 +81,7 @@ module ResourceMethods
   def destroy
     model_class.transaction do
       @object.public_send(object_destroy_method)
-      render status: :ok, text: {}.to_json
+      render status: :ok, json: {}.to_json, content_type: 'application/json'
     end
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?

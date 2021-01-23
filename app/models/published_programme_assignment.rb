@@ -1,4 +1,4 @@
-class PublishedProgrammeItemAssignment < ApplicationRecord
+class PublishedProgrammeAssignment < ApplicationRecord
   self.primary_key = :programmme_item_assignment_id
 
   include RankedModel
@@ -10,8 +10,8 @@ class PublishedProgrammeItemAssignment < ApplicationRecord
 
   has_one :programme_assignment_role_type
 
-  enum visibility: {
-    public: 'public',
-    private: 'private'
-  }
+  # enum visibility: {
+  #   public: 'public',
+  #   private: 'private'
+  # }
 end

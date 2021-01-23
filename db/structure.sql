@@ -1011,7 +1011,7 @@ CREATE TABLE public.programme_assignments (
     lock_version integer DEFAULT 0,
     programme_assignment_role_type_id integer NOT NULL,
     programme_item_id integer NOT NULL,
-    sort_order integer DEFAULT 0,
+    sort_order integer,
     visibility public.visibility_enum
 );
 
@@ -1166,7 +1166,7 @@ CREATE TABLE public.published_programme_assignments (
     lock_version integer DEFAULT 0,
     programme_assignment_role_type_id integer NOT NULL,
     person_id integer NOT NULL,
-    sort_order integer DEFAULT 0,
+    sort_order integer,
     visibility public.visibility_enum
 );
 
@@ -2953,6 +2953,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201226195957'),
 ('20201226195958'),
 ('20201226195959'),
-('20201229161025');
+('20201229161025'),
+('20210123191007');
 
 

@@ -39,6 +39,7 @@ class Person extends PlanoModel {
     return {
       fetch: '/people/{id}',
       save:  '/people/{id}',
+      delete: '/people/{id}'
     }
   }
 };
@@ -176,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (this.selected) this.selected.fetch()
         },
         setSelected(v) {
-          // console.debug('Set selected')
           this.selected = v
           this.editable = false
           this.hasSelected = this.selected != null
