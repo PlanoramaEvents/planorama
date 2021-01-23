@@ -83,10 +83,15 @@ export default {
     },
     onDelete() {
       if (this.selected) {
-        this.selected.delete();
-        this.$emit('selected', null);
-        this.selected = null;
-        this.loadAsyncData()
+        this.selected.delete(
+
+        ).then(
+          () => {
+            this.$emit('selected', null);
+            this.selected = null;
+            this.loadAsyncData()
+          }
+        )
       }
     },
     onSelect(row) {
