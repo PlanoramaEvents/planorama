@@ -5,6 +5,7 @@
 if [[ -z $RAILS_ENV ]]; then
   gem install bundler:2.2.4
   bin/bundle install --quiet
+  # Pin the versio how?
   bin/yarn install --check-files
 
   # NOTE: I moved node_modules to /tmp/node_modules and have a problem with
