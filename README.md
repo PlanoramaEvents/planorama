@@ -38,7 +38,7 @@ a test user will available (test with password 111111)
 
 
 NOTE: there is a encrypted key for devise (used for login). You will need
-a copy of the `master.key` file. This is not in source code control.
+a copy of the `master.key` file. This is not in source code control. When you get it, move it to `config/master.key`
 
 NOTE: the docker image will use the files from the project directory.
 So editing those files will affect what is running in docker (and most

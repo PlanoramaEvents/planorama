@@ -6,7 +6,7 @@
     "@rails/actioncable": "^6.0.0",
     "@rails/activestorage": "^6.0.0",
     "@rails/ujs": "^6.0.0",
-    "@rails/webpacker": "^6.0.0-pre.1",
+    "@rails/webpacker": "^6.0.0-beta.4",
     "buefy": "^0.9.4",
     "bulma": "^0.9.1",
     "ckeditor4": "^4.15.1",

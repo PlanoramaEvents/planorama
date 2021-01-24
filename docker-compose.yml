@@ -40,7 +40,7 @@ services:
       context: .
       dockerfile: Dockerfile
     # command: sleep 100000
-    command: ./script/planorama_start.sh
+    command: /planorama_start.sh
     env_file:
       - .envrc
     depends_on:

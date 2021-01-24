@@ -19,7 +19,7 @@ fi
 
 # Run migrations and start the server, anything that comes in on 3000 is accepted
 bin/rails db:create
-bin/rails db:schema:load
+bin/rails db:structure:load
 bin/rake db:migrate
 bin/rails db:seed
 bin/rails server -b 0.0.0.0
