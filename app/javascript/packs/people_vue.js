@@ -176,6 +176,10 @@ document.addEventListener('DOMContentLoaded', () => {
         onReset() {
           if (this.selected) this.selected.fetch()
         },
+        onCreate() {
+          console.debug('******** SET CREATE');
+          // Create a new model and make that the selected on on the sidebar
+        },
         setSelected(v) {
           this.selected = v
           this.editable = false

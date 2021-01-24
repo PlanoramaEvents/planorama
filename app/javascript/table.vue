@@ -78,14 +78,12 @@ export default {
   },
   methods: {
     onNew() {
-      console.debug('***** New TODO');
       // this.selected.save()
+      this.$emit('create', false);
     },
     onDelete() {
       if (this.selected) {
-        this.selected.delete(
-
-        ).then(
+        this.selected.delete().then(
           () => {
             this.$emit('selected', null);
             this.selected = null;
