@@ -38,7 +38,9 @@ class Person extends PlanoModel {
     // see http://vuemc.io/#model-request-custom
     return {
       fetch: '/people/{id}',
+      create:  '/people',
       save:  '/people/{id}',
+      update: '/people/{id}',
       delete: '/people/{id}'
     }
   }
@@ -171,14 +173,28 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       methods: {
         onSave() {
-          this.selected.save()
+          let new_instance = typeof this.selected.id === 'undefined'
+          this.selected.save().then(
+            (arg) => {
+              if (new_instance) {
+                this.selected = null
+                this.editable = false
+                this.hasSelected = this.selected != null
+                this.$refs.sidebarComponent.setSelected(this.hasSelected);
+                this.$refs.tableComponent.loadAsyncData();
+              }
+            }
+          )
         },
         onReset() {
           if (this.selected) this.selected.fetch()
         },
         onCreate() {
-          console.debug('******** SET CREATE');
           // Create a new model and make that the selected on on the sidebar
+          this.selected = new Person();
+          this.hasSelected = this.selected != null
+          this.editable = true
+          this.$refs.sidebarComponent.setSelected(this.hasSelected);
         },
         setSelected(v) {
           this.selected = v
