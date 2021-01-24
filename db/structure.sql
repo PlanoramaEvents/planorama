@@ -1208,7 +1208,7 @@ CREATE TABLE public.rooms (
     purpose character varying,
     comment text,
     setup_type_id integer,
-    sort_order integer DEFAULT 0,
+    sort_order integer,
     capacity integer
 );
 
@@ -1899,7 +1899,7 @@ CREATE TABLE public.venues (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    sort_order integer DEFAULT 0
+    sort_order integer
 );
 
 
@@ -2954,6 +2954,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201226195958'),
 ('20201226195959'),
 ('20201229161025'),
-('20210123191007');
+('20210123191007'),
+('20210124233013');
 
 
