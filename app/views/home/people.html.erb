@@ -24,6 +24,23 @@
       </div>
     </template>
     <template v-slot:content>
+
+      <!-- TODO: put tags and bio into a seperate tab -->
+                  <!--
+                  <b-field grouped>
+                    <b-field label="Tags">
+                      <b-taginput
+                          v-model="selected.tags"
+                          ellipsis
+                          icon="label"
+                          placeholder="Add a tag"
+                          aria-close-label="Delete this tag">
+                      </b-taginput>
+                    </b-field>
+                  </b-field>
+                  -->
+
+
       <div class="p-3">
         <div v-if="selected">
           <div class="box">
@@ -138,7 +155,12 @@
                   :disabled="!editable"
                   v-model="selected.invite_status"
                 >
-                <!-- TODO -->
+                  <option value="not_set">Unknown</option>
+                  <option value="do_not_invite">Do not invite</option>
+                  <option value="potential_invite">Potential Invite</option>
+                  <option value="invite_pending">Invite Pending</option>
+                  <option value="invited">Invited</option>
+                  <option value="volunteered">Volunteered</option>
                 </b-select>
               </b-field>
               <b-field label="Acceptance Status" label-position="on-border" expanded>
@@ -146,15 +168,10 @@
                   :disabled="!editable"
                   v-model="selected.acceptance_status"
                 >
-                  <!-- TODO -->
-                  <option value="flint">Flint</option>
-                  <option value="silver">Silver</option>
-                  <!-- option
-                    v-for="option in data"
-                    :value="option.id"
-                    :key="option.id">
-                    {{ option.user.first_name }}
-                  </option -->
+                  <option value="unknown">Unknown</option>
+                  <option value="probable">Probable</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="declined">Declined</option>
                 </b-select>
               </b-field>
             </b-field>
@@ -259,21 +276,6 @@
                 </b-input>
               </b-field>
             </b-field>
-
-<!-- TODO: put tags and bio into a seperate tab -->
-            <!--
-            <b-field grouped>
-              <b-field label="Tags">
-                <b-taginput
-                    v-model="selected.tags"
-                    ellipsis
-                    icon="label"
-                    placeholder="Add a tag"
-                    aria-close-label="Delete this tag">
-                </b-taginput>
-              </b-field>
-            </b-field>
-            -->
           </div>
         </div>
       </div>

@@ -86,56 +86,56 @@ const people_columns = [
     label: 'Published Name',
     // sticky: true,
     width: '700',
-    // searchable: true,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.published_last_name',
     label: 'Published Last Name',
     width: '400',
-    // searchable: true,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.first_name',
     label: 'First Name',
     width: '400',
-    // searchable: true,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.last_name',
     label: 'Last Name',
     width: '400',
-    // searchable: true,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.pronouns',
     label: 'Pronouns',
     width: '400',
-    // searchable: false,
+    searchable: false,
     sortable: false
   },
   {
     field: '$.registered',
     label: 'Registered',
     width: '250',
-    // searchable: false,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.registration_type',
     label: 'Registration Type',
     width: '250',
-    // searchable: false,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.registration_number',
     label: 'Registration Number',
     width: '250',
-    // searchable: true,
+    searchable: true,
     sortable: true
   }
   // {
