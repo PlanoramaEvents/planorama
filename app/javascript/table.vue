@@ -34,6 +34,9 @@
       default-sort-direction="asc"
       :default-sort="[sortField, sortOrder]"
       @sort="onSort"
+
+      backend-filtering
+      @filters-change="onFilter"
     >
       <template v-for="column in columns">
         <b-table-column :key="column.id" v-bind="column">
@@ -104,6 +107,10 @@ export default {
       this.sortOrder = order
       this.loadAsyncData()
     },
+    onFilter(filter) {
+      this.filter = JSON.stringify(filter)
+      this.loadAsyncData()
+    },
     loadAsyncData() {
       this.loading = true
 
@@ -112,6 +119,7 @@ export default {
       if (this.perPage) this.collection.set('perPage', this.perPage)
       if (this.sortOrder) this.collection.set('sortOrder', this.sortOrder)
       if (this.sortField) this.collection.set('sortField', this.sortField)
+      if (this.filter) this.collection.set('filter', this.filter)
 
       this.collection.page(this.page).fetch().then(
         (arg) => {

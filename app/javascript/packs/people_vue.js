@@ -57,6 +57,7 @@ class People extends Collection {
     return {
       sortField: 'published_last_name',
       sortOrder: 'asc',
+      filter: '',
       perPage: 30,
       page: 1,
       total: 0
@@ -66,7 +67,7 @@ class People extends Collection {
   routes() {
     return {
       // fetch: '/people',
-      fetch: '/people?perPage={perPage}&sortField={sortField}&sortOrder={sortOrder}',
+      fetch: '/people?perPage={perPage}&sortField={sortField}&sortOrder={sortOrder}&filter={filter}',
     }
   }
 };
