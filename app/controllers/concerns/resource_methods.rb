@@ -161,7 +161,19 @@ module ResourceMethods
 
       a = "#{k}"
       a.slice!('$.')
-      part = table[a.to_sym].matches("%#{v}%")
+      type = model_class.columns_hash[a].type
+
+      case type
+      when :integer
+        part = table[a.to_sym].eq(v.to_i)
+      when :boolean
+        part = table[a.to_sym].eq(['true', true, 1].include?(v))
+      when :string
+        part = table[a.to_sym].matches("%#{v}%")
+      else
+        part = table[a.to_sym].matches("%#{v}%")
+      end
+
       q = q ? q.and(part) : part
     end
 
