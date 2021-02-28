@@ -139,11 +139,45 @@ module ResourceMethods
     @page = params[:page]&.to_i || 0
     @order = params[:sortField] || ''
     @direction = params[:sortOrder] || ''
-    @order.slice!("$.")
+    @filters = JSON.parse(params[:filter]) if params[:filter].present?
+    @order.slice!('$.')
     model_class
+      .includes(includes)
+      .references(references)
+      .where(query(@filters))
       .order("#{@order} #{@direction}")
       .page(@page)
       .per(@per_page)
+  end
+
+  def query(filters = nil)
+    # Go through the filter and construct the where clause
+    return nil unless filters.present?
+
+    table = Arel::Table.new(model_class.table_name)
+    q = nil
+    filters.each do |k,v|
+      next unless v.present?
+
+      a = "#{k}"
+      a.slice!('$.')
+      type = model_class.columns_hash[a].type
+
+      case type
+      when :integer
+        part = table[a.to_sym].eq(v.to_i)
+      when :boolean
+        part = table[a.to_sym].eq(['true', true, 1].include?(v))
+      when :string
+        part = table[a.to_sym].matches("%#{v}%")
+      else
+        part = table[a.to_sym].matches("%#{v}%")
+      end
+
+      q = q ? q.and(part) : part
+    end
+
+    q
   end
 
   def model_name
@@ -212,6 +246,14 @@ module ResourceMethods
 
   def allowed_params
     nil
+  end
+
+  def includes
+    []
+  end
+
+  def references
+    []
   end
 
   def _permitted_params(_object_name)

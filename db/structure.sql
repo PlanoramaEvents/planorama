@@ -605,7 +605,7 @@ CREATE TABLE public.mail_templates (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    transiton_invite_status public.invite_status_enum,
+    transiton_invite_status public.invite_status_enum default 'not_set',
     mail_use public.mail_use_enum
 );
 
@@ -783,8 +783,8 @@ CREATE TABLE public.people (
     gender character varying(100),
     ethnicity character varying(100),
     opted_in boolean DEFAULT false NOT NULL,
-    invite_status public.invite_status_enum,
-    acceptance_status public.acceptance_status_enum,
+    invite_status public.invite_status_enum default 'not_set',
+    acceptance_status public.acceptance_status_enum default 'unknown',
     registered boolean DEFAULT false NOT NULL,
     registration_type character varying,
     can_share boolean DEFAULT false NOT NULL,
@@ -995,7 +995,7 @@ CREATE TABLE public.programme_assignment_role_type (
     updated_at timestamp without time zone,
     name character varying(100) NOT NULL,
     role_type public.assignment_role_enum,
-    default_visibility public.visibility_enum
+    default_visibility public.visibility_enum default 'public'
 );
 
 
@@ -1012,7 +1012,7 @@ CREATE TABLE public.programme_assignments (
     programme_assignment_role_type_id integer NOT NULL,
     programme_item_id integer NOT NULL,
     sort_order integer,
-    visibility public.visibility_enum
+    visibility public.visibility_enum default 'public'
 );
 
 
@@ -1060,7 +1060,7 @@ CREATE TABLE public.programme_items (
     title character varying(256),
     start_time timestamp without time zone,
     room_id integer,
-    visibility public.visibility_enum,
+    visibility public.visibility_enum  default 'public',
     publish boolean DEFAULT false NOT NULL
 );
 
@@ -1167,7 +1167,7 @@ CREATE TABLE public.published_programme_assignments (
     programme_assignment_role_type_id integer NOT NULL,
     person_id integer NOT NULL,
     sort_order integer,
-    visibility public.visibility_enum
+    visibility public.visibility_enum default 'public'
 );
 
 
@@ -1190,7 +1190,7 @@ CREATE TABLE public.published_programme_items (
     description text,
     start_time timestamp without time zone,
     room_id integer,
-    visibility public.visibility_enum
+    visibility public.visibility_enum default 'public'
 );
 
 
@@ -2955,5 +2955,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201226195959'),
 ('20201229161025'),
 ('20210123191007');
-
-

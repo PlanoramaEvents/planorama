@@ -1,6 +1,19 @@
 class PeopleController < ResourceController
   SERIALIZER_CLASS = 'PersonSerializer'.freeze
 
+  # need to add includes etc to speed up query
+
+  def includes
+    [
+      :bio,
+      :base_tags
+    ]
+  end
+
+  # def references
+  #   [
+  #   ]
+  # end
 
   def allowed_params
     %i[
@@ -31,7 +44,7 @@ class PeopleController < ResourceController
       can_record
     ]
   end
-  # TODO: these to be dealt with in seperate controllers
+  # TODO: these to be dealt with in seperate controllers ??
   # tags
   # :bio
 end

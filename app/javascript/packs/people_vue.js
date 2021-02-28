@@ -38,7 +38,9 @@ class Person extends PlanoModel {
     // see http://vuemc.io/#model-request-custom
     return {
       fetch: '/people/{id}',
+      create:  '/people',
       save:  '/people/{id}',
+      update: '/people/{id}',
       delete: '/people/{id}'
     }
   }
@@ -55,6 +57,7 @@ class People extends Collection {
     return {
       sortField: 'published_last_name',
       sortOrder: 'asc',
+      filter: '',
       perPage: 30,
       page: 1,
       total: 0
@@ -64,7 +67,7 @@ class People extends Collection {
   routes() {
     return {
       // fetch: '/people',
-      fetch: '/people?perPage={perPage}&sortField={sortField}&sortOrder={sortOrder}',
+      fetch: '/people?perPage={perPage}&sortField={sortField}&sortOrder={sortOrder}&filter={filter}',
     }
   }
 };
@@ -84,56 +87,56 @@ const people_columns = [
     label: 'Published Name',
     // sticky: true,
     width: '700',
-    // searchable: true,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.published_last_name',
     label: 'Published Last Name',
     width: '400',
-    // searchable: true,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.first_name',
     label: 'First Name',
     width: '400',
-    // searchable: true,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.last_name',
     label: 'Last Name',
     width: '400',
-    // searchable: true,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.pronouns',
     label: 'Pronouns',
     width: '400',
-    // searchable: false,
+    searchable: false,
     sortable: false
   },
   {
     field: '$.registered',
     label: 'Registered',
     width: '250',
-    // searchable: false,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.registration_type',
     label: 'Registration Type',
     width: '250',
-    // searchable: false,
+    searchable: true,
     sortable: true
   },
   {
     field: '$.registration_number',
     label: 'Registration Number',
     width: '250',
-    // searchable: true,
+    searchable: true,
     sortable: true
   }
   // {
@@ -171,10 +174,28 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       methods: {
         onSave() {
-          this.selected.save()
+          let new_instance = typeof this.selected.id === 'undefined'
+          this.selected.save().then(
+            (arg) => {
+              if (new_instance) {
+                this.selected = null
+                this.editable = false
+                this.hasSelected = this.selected != null
+                this.$refs.sidebarComponent.setSelected(this.hasSelected);
+                this.$refs.tableComponent.loadAsyncData();
+              }
+            }
+          )
         },
         onReset() {
           if (this.selected) this.selected.fetch()
+        },
+        onCreate() {
+          // Create a new model and make that the selected on on the sidebar
+          this.selected = new Person();
+          this.hasSelected = this.selected != null
+          this.editable = true
+          this.$refs.sidebarComponent.setSelected(this.hasSelected);
         },
         setSelected(v) {
           this.selected = v
