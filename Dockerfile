@@ -1,7 +1,7 @@
 # Dockerfile
 
 # Use ruby image to build our own image
-FROM ruby:2.7.2-alpine as base
+FROM --platform=linux/x86_64 ruby:2.7.2-alpine as base
 
 # Ensure that we work in UTF 8
 ENV LANG C.UTF-8 # ensure that the encoding is UTF8
