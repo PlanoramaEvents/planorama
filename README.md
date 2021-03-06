@@ -27,6 +27,11 @@ export POSTGRES_PASSWORD=yourpassword
 This will be used by the docker scripts to create an instance of the database
 and set up an initial user. Also by the Rails database.yml for the connection.
 
+If you are installing this on a Windows machine, you may need to run the 
+following command:
+git config --global core.autocrlf input
+
+
 To start the dev docker instances use
 
 ```
