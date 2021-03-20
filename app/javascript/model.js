@@ -28,13 +28,16 @@ export default class PlanoModel extends Model {
 
 
   save(options = {}) {
+    const csrfToken = document.querySelector("meta[name=csrf-token]").content
+    let headers = this.getSaveHeaders();
+    headers['X-CSRF-Token'] = csrfToken;
     let config = () => {
       return {
         url     : defaultTo(options.url,     this.getSaveURL()),
         method  : defaultTo(options.method,  this.getSaveMethod()),
         data    : defaultTo(options.data,    this.getSaveData()),
         params  : defaults (options.params,  this.getSaveQuery()),
-        headers : defaults (options.headers, this.getSaveHeaders()),
+        headers : defaults (options.headers, headers),
       };
     };
 
@@ -47,7 +50,6 @@ export default class PlanoModel extends Model {
 
     save_promise.catch(
       (error) => {
-        // console.debug('***** SAVE FAILED', error);
         Notification.open({
           message: error.response.response.data.error,
           type: 'is-danger',
