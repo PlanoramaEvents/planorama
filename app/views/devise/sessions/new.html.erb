@@ -5,12 +5,14 @@
         <div class="card-content">
           <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
             <h2 class="title has-text-centered is-size-3">Please login</h2>
-            <div class="field">
-              <%= f.label :login, class: "label" %>
-              <div class="control">
-                <%= f.text_field :login, autofocus: true, class: 'input' %>
+            <%= f.fields_for 'email_addresses_attributes[1]' do |e| %>
+              <div class="field">
+                <%= e.label :email , class: "label"%>
+                <div class="control">
+                  <%= e.email_field :email, autofocus: true, autocomplete: "email", class: 'input' %>
+                </div>
               </div>
-            </div>
+            <% end %>
             <div class="field">
               <%= f.label :password, class: "label" %>
               <div class="control">

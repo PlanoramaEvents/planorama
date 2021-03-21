@@ -1,6 +1,6 @@
 class PlannerController < ApplicationController
 
-  before_action :authenticate_user!
+  before_action :authenticate_person!
   # before_filter :check_authenticated
   #
   # def check_authenticated

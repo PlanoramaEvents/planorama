@@ -34,3 +34,18 @@ if Person.count == 0
     )
   end
 end
+
+
+if !Person.find_by(last_name: 'test')
+  p = Person.create(
+    first_name: 'test',
+    last_name: 'test'
+  )
+
+  EmailAddress.create(
+    person: p,
+    isdefault: true,
+    email: 'test@test.com',
+    is_valid: true
+  )
+end

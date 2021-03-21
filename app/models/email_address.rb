@@ -13,7 +13,7 @@ class EmailAddress < ApplicationRecord
     return unless isdefault
 
     EmailAddress
-      .where(['person_id = ? && id != ?', person_id, id])
-      .update_all('isdefault = 0')
+      .where(['person_id = ? AND id != ?', person_id, id])
+      .update_all('isdefault = false')
   end
 end

@@ -1,6 +1,7 @@
+# For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-  devise_for :users
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  devise_for :people
+  # devise_for :users
 
   root to: 'home#index' #, :as => :authenticated_root
 
@@ -19,5 +20,4 @@ Rails.application.routes.draw do
   resources :rooms
   resources :venues
   resources :surveys
-
 end

@@ -1,4 +1,8 @@
 class Person < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
   acts_as_taggable
 
   has_one :bio, dependent: :delete
@@ -17,6 +21,7 @@ class Person < ApplicationRecord
   has_many  :mail_histories # , :through => :person_mailing_assignments
 
   has_many  :email_addresses
+  accepts_nested_attributes_for :email_addresses
 
   has_many  :survey_responses
   # TODO: add scope for survey id
@@ -47,6 +52,38 @@ class Person < ApplicationRecord
   #   or need to re-vet...
   #
 
+  #
+  # Foir devise login as a person
+  #
+  def email_required?
+    false
+  end
+
+  def will_save_change_to_email?
+    false
+  end
+
+# https://dispatch.moonfarmer.com/separate-email-address-table-with-devise-in-rails-62208a47d3b9
+  def self.find_first_by_auth_conditions(warden_conditions)
+    conditions = warden_conditions.dup
+
+    # If "email" is an attribute in the conditions,
+    # remove it and save to variable
+    if (email = conditions.delete(:email))
+      # Search through users by condition and also by
+      # users who have associations to the provided email
+      where(conditions.to_h)
+        .includes(:email_addresses)
+        .where(email_addresses: { email: email })
+        .first
+    else
+      # If "email" is not an attribute in the conditions,
+      # just search for users by the conditions as normal
+      where(conditions.to_h)
+        .first
+    end
+  end
+
   private
 
   # check that the person has not been assigned to program items, if they have then return an error and do not delete
@@ -55,6 +92,18 @@ class Person < ApplicationRecord
        (PublishedProgrammeAssignment.where(person_id: id).count > 0)
       raise 'Cannot delete an assigned person'
     end
+  end
+
+  def valid_password?(password)
+      if password.blank?
+          true
+      else
+          super
+      end
+  end
+
+  def password_required?
+      new_record? ? false : super
   end
 
   # # ----------------------------------------------------------------------------------------------
