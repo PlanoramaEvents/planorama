@@ -16,6 +16,8 @@ class Person < ApplicationRecord
   has_many  :mailings, through: :person_mailing_assignments
   has_many  :mail_histories # , :through => :person_mailing_assignments
 
+  has_many  :email_addresses
+
   has_many  :survey_responses
   # TODO: add scope for survey id
   # TODO: get list of surveys for this person ...

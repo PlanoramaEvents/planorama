@@ -18,5 +18,6 @@ Rails.application.routes.draw do
   resources :programme_ssignments
   resources :rooms
   resources :venues
+  resources :surveys
 
 end
