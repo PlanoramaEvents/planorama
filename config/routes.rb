@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   # REST based resources
   resources :people
   resources :programme_items
-  resources :programme_ssignments
+  resources :programme_assignments
   resources :rooms
   resources :venues
   resources :surveys
