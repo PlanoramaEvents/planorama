@@ -1,8 +1,10 @@
 class Person < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  # database_authenticatable,
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
   acts_as_taggable
 
   has_one :bio, dependent: :delete
@@ -21,7 +23,7 @@ class Person < ApplicationRecord
   has_many  :mail_histories # , :through => :person_mailing_assignments
 
   has_many  :email_addresses
-  accepts_nested_attributes_for :email_addresses
+  accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
   has_many  :survey_responses
   # TODO: add scope for survey id
@@ -52,6 +54,9 @@ class Person < ApplicationRecord
   #   or need to re-vet...
   #
 
+  def email
+    email_addresses.first&.email
+  end
   #
   # Foir devise login as a person
   #
@@ -63,8 +68,19 @@ class Person < ApplicationRecord
     false
   end
 
+  def primary_email
+    email_addresses.first&.email
+    # emails.primary || (emails.first if new_record?)
+  end
+
+  # def self.find_for_database_authentication warden_condition
+  #   Rails.logger.error "******** WARDEN AUTH #{warden_condition.to_json}"
+  # end
+
 # https://dispatch.moonfarmer.com/separate-email-address-table-with-devise-in-rails-62208a47d3b9
-  def self.find_first_by_auth_conditions(warden_conditions)
+# mapping.to.find_for_database_authentication(authentication_hash)
+  def self.find_first_by_auth_conditions(warden_conditions, opts={})
+    puts "******** WARDEN FIND #{warden_conditions.to_json}"
     conditions = warden_conditions.dup
 
     # If "email" is an attribute in the conditions,
@@ -77,6 +93,7 @@ class Person < ApplicationRecord
         .where(email_addresses: { email: email })
         .first
     else
+      # super(warden_conditions)
       # If "email" is not an attribute in the conditions,
       # just search for users by the conditions as normal
       where(conditions.to_h)
@@ -84,7 +101,12 @@ class Person < ApplicationRecord
     end
   end
 
-  private
+  # def authenticate! #(a1, a2)
+  #   Rails.logger.error "**** User Auth #{a1}, #{a2}"
+  #   super(a1, a2)
+  # end
+
+  # private
 
   # check that the person has not been assigned to program items, if they have then return an error and do not delete
   def check_if_assigned
@@ -95,11 +117,11 @@ class Person < ApplicationRecord
   end
 
   def valid_password?(password)
-      if password.blank?
-          true
-      else
-          super
-      end
+    if password.blank?
+        true
+    else
+        super
+    end
   end
 
   def password_required?
