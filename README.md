@@ -27,7 +27,7 @@ export POSTGRES_PASSWORD=yourpassword
 This will be used by the docker scripts to create an instance of the database
 and set up an initial user. Also by the Rails database.yml for the connection.
 
-If you are installing this on a Windows machine, you may need to run the 
+If you are installing this on a Windows machine, you may need to run the
 following command:
 
 ```
@@ -41,7 +41,7 @@ docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
 ```
 
 You will be able to access the running server via http://localhost:3000 and
-a test user will available (test with password 111111)
+a test user will available (test@test.com with password 111111)
 
 
 NOTE: there is a encrypted key for devise (used for login). You will need
