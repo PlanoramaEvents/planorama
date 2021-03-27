@@ -19,4 +19,8 @@ Rails.application.routes.draw do
   resources :rooms
   resources :venues
   resources :surveys
+
+  namespace :survey do
+    resources :groups
+  end
 end

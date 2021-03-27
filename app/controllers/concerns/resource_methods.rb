@@ -185,9 +185,11 @@ module ResourceMethods
   end
 
   def model_class
-    self.class::MODEL_CLASS.constantize if defined?(self.class::MODEL_CLASS)
-
-    self.class.name.sub('Controller', '').singularize.constantize
+    if defined?(self.class::MODEL_CLASS)
+      self.class::MODEL_CLASS.constantize
+    else
+      self.class.name.sub('Controller', '').singularize.constantize
+    end
   end
 
   def serializer_class
