@@ -344,7 +344,7 @@ CREATE TABLE public.email_addresses (
     lock_version integer DEFAULT 0,
     label character varying,
     person_id integer,
-    valid boolean DEFAULT true NOT NULL
+    is_valid boolean DEFAULT true NOT NULL
 );
 
 
@@ -810,7 +810,11 @@ END) STORED,
 CASE
     WHEN (pseudonym_last_name IS NOT NULL) THEN pseudonym_last_name
     ELSE last_name
-END) STORED
+END) STORED,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone
 );
 
 
@@ -2703,6 +2707,13 @@ CREATE INDEX fname_idx ON public.people USING btree (first_name);
 
 
 --
+-- Name: index_people_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_people_on_reset_password_token ON public.people USING btree (reset_password_token);
+
+
+--
 -- Name: index_person_mailing_assignments_on_mailing_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2954,6 +2965,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201226195959'),
 ('20201229161025'),
 ('20210123191007'),
-('20210320194037');
+('20210320194037'),
+('20210321205326'),
+('20210321211745');
 
 
