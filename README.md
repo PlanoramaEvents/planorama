@@ -40,6 +40,14 @@ To start the dev docker instances use
 docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
 ```
 
+alternatively use
+```
+rake docker:start
+
+# and to stop them
+rake docker:stop
+```
+
 You will be able to access the running server via http://localhost:3000 and
 a test user will available (test@test.com with password 111111)
 
@@ -50,3 +58,15 @@ a copy of the `master.key` file. This is not in source code control. When you ge
 NOTE: the docker image will use the files from the project directory.
 So editing those files will affect what is running in docker (and most
 changes can be seen by refreshing the page you are working on)
+
+## Running tests
+
+Assuming you have your local environment going, the easiest way is to run them on docker:
+```
+docker exec planorama_planorama_1 bundle exec rails
+```
+
+There is also a shortcut:
+```
+rake docker:test
+```
