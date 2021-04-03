@@ -22,6 +22,9 @@ jobs:
       postgres:
         image: postgres:12-alpine
         ports: ["5432:5432"]
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     strategy:
@@ -44,7 +47,6 @@ jobs:
       env:
         RAILS_ENV: test
         PGHOST: localhost
-        PGUSER: postgres
       run: bin/rails db:create db:structure:load
     - name: Run tests
       run: bundle exec rspec
