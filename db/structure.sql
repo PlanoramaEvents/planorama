@@ -344,7 +344,7 @@ CREATE TABLE public.email_addresses (
     lock_version integer DEFAULT 0,
     label character varying,
     person_id integer,
-    valid boolean DEFAULT true NOT NULL
+    is_valid boolean DEFAULT true NOT NULL
 );
 
 
@@ -605,7 +605,7 @@ CREATE TABLE public.mail_templates (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    transiton_invite_status public.invite_status_enum,
+    transiton_invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
     mail_use public.mail_use_enum
 );
 
@@ -783,8 +783,8 @@ CREATE TABLE public.people (
     gender character varying(100),
     ethnicity character varying(100),
     opted_in boolean DEFAULT false NOT NULL,
-    invite_status public.invite_status_enum,
-    acceptance_status public.acceptance_status_enum,
+    invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
+    acceptance_status public.acceptance_status_enum DEFAULT 'unknown'::public.acceptance_status_enum,
     registered boolean DEFAULT false NOT NULL,
     registration_type character varying,
     can_share boolean DEFAULT false NOT NULL,
@@ -810,7 +810,11 @@ END) STORED,
 CASE
     WHEN (pseudonym_last_name IS NOT NULL) THEN pseudonym_last_name
     ELSE last_name
-END) STORED
+END) STORED,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone
 );
 
 
@@ -995,7 +999,7 @@ CREATE TABLE public.programme_assignment_role_type (
     updated_at timestamp without time zone,
     name character varying(100) NOT NULL,
     role_type public.assignment_role_enum,
-    default_visibility public.visibility_enum
+    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 );
 
 
@@ -1012,7 +1016,7 @@ CREATE TABLE public.programme_assignments (
     programme_assignment_role_type_id integer NOT NULL,
     programme_item_id integer NOT NULL,
     sort_order integer,
-    visibility public.visibility_enum
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 );
 
 
@@ -1060,7 +1064,7 @@ CREATE TABLE public.programme_items (
     title character varying(256),
     start_time timestamp without time zone,
     room_id integer,
-    visibility public.visibility_enum,
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
     publish boolean DEFAULT false NOT NULL
 );
 
@@ -1167,7 +1171,7 @@ CREATE TABLE public.published_programme_assignments (
     programme_assignment_role_type_id integer NOT NULL,
     person_id integer NOT NULL,
     sort_order integer,
-    visibility public.visibility_enum
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 );
 
 
@@ -1190,7 +1194,7 @@ CREATE TABLE public.published_programme_items (
     description text,
     start_time timestamp without time zone,
     room_id integer,
-    visibility public.visibility_enum
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 );
 
 
@@ -2703,6 +2707,13 @@ CREATE INDEX fname_idx ON public.people USING btree (first_name);
 
 
 --
+-- Name: index_people_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_people_on_reset_password_token ON public.people USING btree (reset_password_token);
+
+
+--
 -- Name: index_person_mailing_assignments_on_mailing_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2949,12 +2960,14 @@ ALTER TABLE ONLY public.configurations
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('0'),
 ('20201226195957'),
 ('20201226195958'),
 ('20201226195959'),
 ('20201229161025'),
 ('20210123191007'),
-('20210124233013');
+('20210320194037'),
+('20210321205326'),
+('20210321211745'),
+('20210403110430');
 
 

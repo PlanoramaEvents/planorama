@@ -7,21 +7,8 @@ class Survey < ApplicationRecord
 
   before_destroy :check_for_use, :check_if_public
 
-  # status to move person to if they fill the survey
-  enum accept_status: {
-    unknown: 'Unknown',
-    probable: 'Probable',
-    accepted: 'Accepted',
-    declined: 'Declined'
-  }
-
-  # status to move person to if they decline the survey
-  enum decline_status: {
-    unknown: 'Unknown',
-    probable: 'Probable',
-    accepted: 'Accepted',
-    declined: 'Declined'
-  }
+  # transition_accept_status
+  # transition_decline_status
 
   private
 
