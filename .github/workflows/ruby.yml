@@ -46,7 +46,9 @@ jobs:
     - name: Setup Database
       env:
         RAILS_ENV: test
-        PGHOST: localhost
+        DB_HOST: localhost
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: admin
       run: bin/rails db:create db:structure:load
     - name: Run tests
       run: bundle exec rspec
