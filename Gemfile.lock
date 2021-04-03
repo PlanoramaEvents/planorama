@@ -98,6 +98,9 @@ GEM
     erubi (1.10.0)
     factory_bot (6.1.0)
       activesupport (>= 5.0.0)
+    factory_bot_rails (6.1.0)
+      factory_bot (~> 6.1.0)
+      railties (>= 5.0.0)
     faker (2.17.0)
       i18n (>= 1.6, < 2)
     ffi (1.15.0)
@@ -290,7 +293,7 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   devise
-  factory_bot
+  factory_bot_rails
   faker
   jbuilder (~> 2.7)
   kaminari

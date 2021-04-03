@@ -24,8 +24,8 @@ class PublishedProgrammeItem < ApplicationRecord
   has_many :people, through: :published_programme_assignments
 
   enum visibility: {
-    public: 'public',
-    private: 'private'
+    is_public: 'public',
+    is_private: 'private'
   }
 
   acts_as_taggable
