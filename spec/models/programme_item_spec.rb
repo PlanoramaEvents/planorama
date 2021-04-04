@@ -19,7 +19,14 @@ RSpec.describe ProgrammeItem, "#factories" do
         it "creates a panel" do
             panel = create(:panel)
             expect(panel.title).to eq "a panel"
-            expect(panel.format.name).to eq "panel"
+            expect(panel.format.name).to include "panel"
+        end
+    end
+
+    context "programme_item_with_participants factory" do
+        it "creates a programme item with participants" do
+            item = create(:programme_item_with_participants)
+            expect(item.people.length).to eq 5
         end
     end
 end

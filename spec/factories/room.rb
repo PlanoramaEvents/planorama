@@ -1,6 +1,6 @@
 FactoryBot.define do
     factory :room do
-        name { "my room" }
+        sequence(:name) { |n| "my room #{n}" }
         venue
         setup_type
     end
