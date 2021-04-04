@@ -1,3 +1,60 @@
+## schema
+# CREATE TABLE public.people (
+#     id integer NOT NULL,
+#     first_name character varying(150),
+#     last_name character varying(150) DEFAULT ''::character varying,
+#     suffix character varying(50),
+#     language character varying(5) DEFAULT ''::character varying,
+#     created_at timestamp without time zone NOT NULL,
+#     updated_at timestamp without time zone NOT NULL,
+#     lock_version integer DEFAULT 0,
+#     comments text,
+#     organization character varying,
+#     job_title character varying,
+#     prefix character varying(50),
+#     pseudonym_first_name character varying(150),
+#     pseudonym_last_name character varying(150),
+#     pseudonym_suffix character varying(50),
+#     pseudonym_prefix character varying(50),
+#     pronouns character varying(100),
+#     year_of_birth integer,
+#     gender character varying(100),
+#     ethnicity character varying(100),
+#     opted_in boolean DEFAULT false NOT NULL,
+#     invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
+#     acceptance_status public.acceptance_status_enum DEFAULT 'unknown'::public.acceptance_status_enum,
+#     registered boolean DEFAULT false NOT NULL,
+#     registration_type character varying,
+#     can_share boolean DEFAULT false NOT NULL,
+#     registration_number character varying,
+#     can_photo boolean DEFAULT false NOT NULL,
+#     can_record boolean DEFAULT false,
+#     published_name character varying(400) GENERATED ALWAYS AS (
+# CASE
+#     WHEN ((pseudonym_last_name IS NOT NULL) OR (pseudonym_first_name IS NOT NULL)) THEN
+#     CASE
+#         WHEN (pseudonym_first_name IS NULL) THEN (pseudonym_first_name)::text
+#         WHEN (pseudonym_last_name IS NULL) THEN (pseudonym_last_name)::text
+#         ELSE (((pseudonym_first_name)::text || ' '::text) || (pseudonym_last_name)::text)
+#     END
+#     ELSE
+#     CASE
+#         WHEN (first_name IS NULL) THEN (last_name)::text
+#         WHEN (last_name IS NULL) THEN (first_name)::text
+#         ELSE (((first_name)::text || ' '::text) || (last_name)::text)
+#     END
+# END) STORED,
+#     published_last_name character varying(400) GENERATED ALWAYS AS (
+# CASE
+#     WHEN (pseudonym_last_name IS NOT NULL) THEN pseudonym_last_name
+#     ELSE last_name
+# END) STORED,
+#     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+#     reset_password_token character varying,
+#     reset_password_sent_at timestamp without time zone,
+#     remember_created_at timestamp without time zone
+# );
+
 class Person < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

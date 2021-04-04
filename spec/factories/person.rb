@@ -18,5 +18,12 @@ FactoryBot.define do
             pseudonym_first_name { Faker::Name.first_name }
             pseudonym_last_name { Faker::Name.last_name }
         end
+
+        factory :registered_person do
+            registered { true }
+            # TODO make these more realistic
+            registration_number { "123456" }
+            registration_type { "adult_full" }
+        end
     end
 end

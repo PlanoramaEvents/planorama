@@ -24,4 +24,13 @@ RSpec.describe Person, '#factories' do
             expect(person.published_last_name).to eq person.pseudonym_last_name
         end
     end
+
+    context 'registered_person factory' do
+        it 'creates a registered person' do
+            person = create(:registered_person)
+            expect(person.registered).to be true
+            expect(person.registration_type).to be_truthy
+            expect(person.registration_number).to be_truthy
+        end
+    end
 end
