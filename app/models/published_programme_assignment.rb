@@ -10,8 +10,8 @@ class PublishedProgrammeAssignment < ApplicationRecord
 
   has_one :programme_assignment_role_type
 
-  # enum visibility: {
-  #   public: 'public',
-  #   private: 'private'
-  # }
+  enum visibility: {
+    is_public: 'public',
+    is_private: 'private'
+  }
 end
