@@ -63,7 +63,7 @@ changes can be seen by refreshing the page you are working on)
 
 Assuming you have your local environment going, the easiest way is to run them on docker:
 ```
-docker exec planorama_planorama_1 bundle exec rails
+docker exec planorama_planorama_1 bundle exec rspec
 ```
 
 There is also a shortcut:
