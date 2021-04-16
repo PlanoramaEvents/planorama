@@ -18,5 +18,12 @@ Rails.application.routes.draw do
   resources :programme_assignments
   resources :rooms
   resources :venues
+  resources :tag_contexts
+
   resources :surveys
+  namespace :survey do
+    resources :groups
+    resources :questions
+    resources :responses
+  end
 end
