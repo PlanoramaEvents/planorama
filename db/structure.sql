@@ -17,7 +17,7 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
     'unknown',
     'probable',
     'accepted',
-    'declined'''
+    'declined'
 );
 
 
