@@ -7,28 +7,29 @@
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
           crossorigin="anonymous"
     >
-    <%= javascript_pack_tag 'application' %>
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
 
-    <%= javascript_pack_tag 'navbar_vue' %>
+    <%#= javascript_pack_tag 'application' %>
+    <%#= javascript_pack_tag 'navbar_vue' %>
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap@next/dist/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
 
     <title>Planorama</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css">
-
-    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
   </head>
   <body>
-    <section class="section">
-      <div class="container">
-        <%= render 'layouts/navbar' %>
-        <div class="columns is-mobile">
-          <div class="column">
-            <%= yield %>
-          </div>
-        </div>
+
+    <div class="container-fluid">
+      <div class="p-3 p-md-4 p-lg-5">
+        <!-- Content here -->
+        <%= yield %>
       </div>
-    </section>
+    </div>
+
+    <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="//unpkg.com/tether@latest/dist/js/tether.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
   </body>
 </html>

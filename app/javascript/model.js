@@ -5,7 +5,7 @@ import defaultTo        from 'lodash/defaultTo'
 import axios from 'axios'
 import {Model} from 'vue-mc'
 
-import { NotificationProgrammatic as Notification } from 'buefy'
+// import { NotificationProgrammatic as Notification } from 'buefy'
 
 // TODO: modify for routes etc
 // make sure that save sans id in URL and update has id
