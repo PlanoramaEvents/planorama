@@ -1,11 +1,22 @@
 <template>
   <section>
+
     <b-button @click="onNew">
       New
     </b-button>
     <b-button @click="onDelete">
       Delete
     </b-button>
+
+
+    <b-table striped hover
+      :items="data"
+      :fields="columns"
+    >
+    </b-table>
+
+
+
     <b-table
       :data="data"
       :columns="columns"
@@ -61,6 +72,9 @@
 
 <script>
 export default {
+  // import { NavbarPlugin } from 'bootstrap-vue'
+  // import { BTable } from 'bootstrap-vue'
+
   name: 'TableComponent',
   props: {
     collection : { type: Object },

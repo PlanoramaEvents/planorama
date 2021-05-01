@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet"
           href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
 
-    <%#= javascript_pack_tag 'application' %>
-    <%#= javascript_pack_tag 'navbar_vue' %>
+    <%= javascript_pack_tag 'application' %>
+    <%= javascript_pack_tag 'navbar_vue' %>
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap@next/dist/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
 
@@ -22,6 +22,7 @@
   <body>
 
     <div class="container-fluid">
+      <%= render 'layouts/navbar' %>
       <div class="p-3 p-md-4 p-lg-5">
         <!-- Content here -->
         <%= yield %>

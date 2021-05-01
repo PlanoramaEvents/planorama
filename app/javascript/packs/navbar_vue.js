@@ -1,9 +1,21 @@
 /* eslint no-console: 0 */
 import Vue from 'vue/dist/vue.esm'
-import Buefy from 'buefy'
-import '../stylesheets/style.scss'
+// import '../stylesheets/style.scss'
 
-Vue.use(Buefy)
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+
+import { NavbarPlugin } from 'bootstrap-vue'
+
+Vue.use(BootstrapVue)
+
+// Optionally install the BootstrapVue icon components plugin
+// Vue.use(IconsPlugin)
+
+Vue.use(NavbarPlugin)
 
 document.addEventListener('DOMContentLoaded', () => {
   const app = new Vue({

@@ -1,59 +1,25 @@
-
 <% if current_person %>
-<div id='top-navbar' class="container">
-  <b-navbar>
-    <template slot="brand">
-      <b-navbar-item href="/">
-        <img
-          src="https://i1.wp.com/chicon.org/wp-content/uploads/2018/08/2022ChicagoWorldconBidLogo_3Color_Web_800_TransparentBack.png"
-          alt="Planorama: SF Convention Planning Tool"
-        >
-      </b-navbar-item>
-    </template>
+<div id='top-navbar'>
+  <b-navbar toggleable="lg" type="dark" variant="info">
+    <b-navbar-brand href="#">Planorama</b-navbar-brand>
 
-    <template slot="start">
-      <b-navbar-item href="/">
-        Home
-      </b-navbar-item>
-      <b-navbar-item
-        v-bind:active="currentLocation == '/page/venues'"
-        href="/page/venues"
-      >
-        Venues
-      </b-navbar-item>
-      <b-navbar-item
-        bind:active="currentLocation == '/page/people'"
-        href="/page/people"
-      >
-        People
-      </b-navbar-item>
-      <b-navbar-item
-        bind:active="currentLocation == '/page/program'"
-        href="/page/program"
-      >
-        Schedule
-      </b-navbar-item>
-      <b-navbar-item
-        bind:active="currentLocation == '/page/surveys'"
-        href="/page/surveys"
-      >
-        Surveys
-      </b-navbar-item>
-      <b-navbar-item
-        bind:active="currentLocation == '/page/reports'"
-        href="/page/reports"
-      >
-        Reports
-      </b-navbar-item>
-    </template>
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-    <template slot="end">
-      <b-navbar-item tag="div">
-        <div class="buttons">
-          <%= link_to('Logout', destroy_person_session_path, method: :delete, class: 'button is-primary') %>
-        </div>
-      </b-navbar-item>
-    </template>
-  <b-navbar>
+    <b-collapse id="nav-collapse" is-nav>
+      <b-navbar-nav>
+        <b-nav-item href="/page/venues">Venues</b-nav-item>
+        <b-nav-item href="/page/people">People</b-nav-item>
+
+        <b-nav-item href="/page/program">Schedule</b-nav-item>
+        <b-nav-item href="/page/surveys">Surveys</b-nav-item>
+        <b-nav-item href="/page/reports">Reports</b-nav-item>
+      </b-navbar-nav>
+
+      <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+        <%= link_to('Logout', destroy_person_session_path, method: :delete, class: 'btn btn-primary my-2 my-sm-0') %>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
 </div>
 <% end %>

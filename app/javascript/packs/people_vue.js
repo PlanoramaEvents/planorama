@@ -1,13 +1,25 @@
 import Vue from 'vue/dist/vue.esm'
-import Buefy from 'buefy'
+
+// import Buefy from 'buefy'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 import CKEditor from 'ckeditor4-vue'
 import '../stylesheets/style.scss'
+
+// import { TablePlugin } from 'bootstrap-vue'
+// Vue.use(TablePlugin)
+
+
 import TableComponent from '../table.vue'
-import SidebarComponent from '../sidebar.vue'
+// import SidebarComponent from '../sidebar.vue'
 
 import PlanoModel from '../model.js'
 
-Vue.use(Buefy)
+// Vue.use(Buefy)
+Vue.use(BootstrapVue)
 Vue.use( CKEditor );
 
 import {Collection} from 'vue-mc'
@@ -75,69 +87,69 @@ class People extends Collection {
 // task.$.name or task.saved('name') to reflect what is in the backend ...
 const people_columns = [
   {
-    field: 'id',
-    label: 'ID',
-    width: '350',
-    // sticky: true,
-    numeric: true
+    key: 'id',
+    // label: 'ID',
+    // width: '350',
+    // // sticky: true,
+    // numeric: true
+    // // searchable: true,
+  },
+  {
+    key: '$.published_name',
+    // label: 'Published Name',
+    // // sticky: true,
+    // width: '700',
     // searchable: true,
+    // sortable: true
   },
   {
-    field: '$.published_name',
-    label: 'Published Name',
-    // sticky: true,
-    width: '700',
-    searchable: true,
-    sortable: true
+    key: '$.published_last_name',
+    // label: 'Published Last Name',
+    // width: '400',
+    // searchable: true,
+    // sortable: true
   },
   {
-    field: '$.published_last_name',
-    label: 'Published Last Name',
-    width: '400',
-    searchable: true,
-    sortable: true
+    key: '$.first_name',
+    // label: 'First Name',
+    // width: '400',
+    // searchable: true,
+    // sortable: true
   },
   {
-    field: '$.first_name',
-    label: 'First Name',
-    width: '400',
-    searchable: true,
-    sortable: true
+    key: '$.last_name',
+    // label: 'Last Name',
+    // width: '400',
+    // searchable: true,
+    // sortable: true
   },
   {
-    field: '$.last_name',
-    label: 'Last Name',
-    width: '400',
-    searchable: true,
-    sortable: true
+    key: '$.pronouns',
+    // label: 'Pronouns',
+    // width: '400',
+    // searchable: false,
+    // sortable: false
   },
   {
-    field: '$.pronouns',
-    label: 'Pronouns',
-    width: '400',
-    searchable: false,
-    sortable: false
+    key: '$.registered',
+    // label: 'Registered',
+    // width: '250',
+    // searchable: true,
+    // sortable: true
   },
   {
-    field: '$.registered',
-    label: 'Registered',
-    width: '250',
-    searchable: true,
-    sortable: true
+    key: '$.registration_type',
+    // label: 'Registration Type',
+    // width: '250',
+    // searchable: true,
+    // sortable: true
   },
   {
-    field: '$.registration_type',
-    label: 'Registration Type',
-    width: '250',
-    searchable: true,
-    sortable: true
-  },
-  {
-    field: '$.registration_number',
-    label: 'Registration Number',
-    width: '250',
-    searchable: true,
-    sortable: true
+    key: '$.registration_number',
+    // label: 'Registration Number',
+    // width: '250',
+    // searchable: true,
+    // sortable: true
   }
   // {
   //   field: '$.bio',
@@ -156,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       components: {
         TableComponent,
-        SidebarComponent
+        // SidebarComponent
       },
       data() {
         return {
@@ -181,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.selected = null
                 this.editable = false
                 this.hasSelected = this.selected != null
-                this.$refs.sidebarComponent.setSelected(this.hasSelected);
+                // this.$refs.sidebarComponent.setSelected(this.hasSelected);
                 this.$refs.tableComponent.loadAsyncData();
               }
             }
@@ -195,13 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
           this.selected = new Person();
           this.hasSelected = this.selected != null
           this.editable = true
-          this.$refs.sidebarComponent.setSelected(this.hasSelected);
+          // this.$refs.sidebarComponent.setSelected(this.hasSelected);
         },
         setSelected(v) {
           this.selected = v
           this.editable = false
           this.hasSelected = this.selected != null
-          this.$refs.sidebarComponent.setSelected(this.hasSelected);
+          // this.$refs.sidebarComponent.setSelected(this.hasSelected);
         }
       }
     }
