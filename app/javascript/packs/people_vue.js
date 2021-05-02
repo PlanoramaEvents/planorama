@@ -1,6 +1,5 @@
 import Vue from 'vue/dist/vue.esm'
 
-// import Buefy from 'buefy'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -8,10 +7,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import CKEditor from 'ckeditor4-vue'
 import '../stylesheets/style.scss'
-
-// import { TablePlugin } from 'bootstrap-vue'
-// Vue.use(TablePlugin)
-
 
 import TableComponent from '../table.vue'
 // import SidebarComponent from '../sidebar.vue'
@@ -88,7 +83,7 @@ class People extends Collection {
 const people_columns = [
   {
     key: 'id',
-    // label: 'ID',
+    label: 'ID',
     // width: '350',
     // // sticky: true,
     // numeric: true
@@ -96,60 +91,61 @@ const people_columns = [
   },
   {
     key: '$.published_name',
-    // label: 'Published Name',
+    label: 'Published Name',
+    stickyColumn: true,
     // // sticky: true,
     // width: '700',
     // searchable: true,
-    // sortable: true
+    sortable: true
   },
   {
     key: '$.published_last_name',
-    // label: 'Published Last Name',
+    label: 'Published Last Name',
     // width: '400',
     // searchable: true,
-    // sortable: true
+    sortable: true
   },
   {
     key: '$.first_name',
-    // label: 'First Name',
+    label: 'First Name',
     // width: '400',
     // searchable: true,
-    // sortable: true
+    sortable: true
   },
   {
     key: '$.last_name',
-    // label: 'Last Name',
+    label: 'Last Name',
     // width: '400',
     // searchable: true,
-    // sortable: true
+    sortable: true
   },
   {
     key: '$.pronouns',
-    // label: 'Pronouns',
+    label: 'Pronouns',
     // width: '400',
     // searchable: false,
-    // sortable: false
+    sortable: false
   },
   {
     key: '$.registered',
-    // label: 'Registered',
+    label: 'Registered',
     // width: '250',
     // searchable: true,
-    // sortable: true
+    sortable: true
   },
   {
     key: '$.registration_type',
-    // label: 'Registration Type',
+    label: 'Registration Type',
     // width: '250',
     // searchable: true,
-    // sortable: true
+    sortable: true
   },
   {
     key: '$.registration_number',
-    // label: 'Registration Number',
+    label: 'Registration Number',
     // width: '250',
     // searchable: true,
-    // sortable: true
+    sortable: true
   }
   // {
   //   field: '$.bio',
@@ -172,12 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       data() {
         return {
+          collection: people,
+          columns: people_columns,
           sortOrder: 'asc',
           sortField: 'published_last_name',
-          columns: people_columns,
-          collection: people,
           selected: null,
           hasSelected: has_selected,
+          // primary-key
           editable : false,
           editorConfig: {
             readOnly: true
