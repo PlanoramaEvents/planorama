@@ -53,6 +53,9 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'rubocop'
   gem 'faker'
+  gem 'guard'
+  gem 'guard-livereload'
+  gem 'rack-livereload'
 end
 
 group :test do

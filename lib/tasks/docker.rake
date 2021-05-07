@@ -5,12 +5,20 @@ namespace :docker do
         sh "docker-compose", "-f", "docker-compose-dev.yml", "-f", "docker-compose.yml", "build"
     end
 
+    task :quickstart do
+        sh "docker-compose", "-f", "docker-compose-dev.yml", "-f", "docker-compose.yml", "up", "-d"
+    end
+
     task :start do
         sh "docker-compose", "-f", "docker-compose-dev.yml", "-f", "docker-compose.yml", "up", "--build", "-d"
     end
 
     task :stop do
-        sh "docker-compose", "down"
+        sh "docker-compose", "-f", "docker-compose-dev.yml", "-f", "docker-compose.yml", "down"
+    end
+
+    task :logs do
+        sh "docker-compose", "-f", "docker-compose-dev.yml", "-f", "docker-compose.yml", "logs", "-f"
     end
 
     task :test do

@@ -17,6 +17,19 @@ services:
       - box:/var/bundler # this is used to store make the bundle update/install persistent between runs
       - type: tmpfs
         target: /opt/planorama/tmp
+    links:
+      - livereload
+    ports:
+      - 3035:3035
+  livereload:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /opt/planorama/script/livereload_start.sh
+    ports:
+      - 35729:35729
+    volumes:
+      - .:/opt/planorama
 
 
 # Simple volumes used for persistent storage
