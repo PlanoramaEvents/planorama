@@ -17,6 +17,10 @@ services:
       - box:/var/bundler # this is used to store make the bundle update/install persistent between runs
       - type: tmpfs
         target: /opt/planorama/tmp
+    ports:
+      - 3035:3035
+    environment:
+      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
 
 
 # Simple volumes used for persistent storage
