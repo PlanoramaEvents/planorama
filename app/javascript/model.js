@@ -5,8 +5,6 @@ import defaultTo        from 'lodash/defaultTo'
 import axios from 'axios'
 import {Model} from 'vue-mc'
 
-// import { NotificationProgrammatic as Notification } from 'buefy'
-
 // TODO: modify for routes etc
 // make sure that save sans id in URL and update has id
 /*
@@ -48,18 +46,18 @@ export default class PlanoModel extends Model {
       this.onSaveFailure
     );
 
-    /*save_promise.catch(
+    save_promise.catch(
       (error) => {
-        console.log(save_promise, error)
-        Notification.open({
-          message: error.response.response.data.error,
-          type: 'is-danger',
-          hasIcon: true,
-          closable: true,
-          indefinite: true 
-        }) 
+        console.error("We have an error", error.response.response.data.error)
+        // Notification.open({
+        //   message: error.response.response.data.error,
+        //   type: 'is-danger',
+        //   hasIcon: true,
+        //   closable: true,
+        //   indefinite: true
+        // })
       }
-    ); */
+    ); 
 
     return save_promise;
   }

@@ -1,12 +1,18 @@
 <template>
-  <section>
+  <div class="overflow-auto">
     <b-button @click="onNew">
       New
     </b-button>
     <b-button @click="onDelete">
       Delete
     </b-button>
-    <!-- :primary-key="id" -->
+
+    <b-pagination
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+    ></b-pagination>
+
     <b-table
       hover outlined responsive selectable
       :select-mode="selectMode"
@@ -15,20 +21,22 @@
       :items="provider"
 
       :no-local-sorting="true"
-      :sort-by.sync="sortField"
-      :sort-desc.sync="sortDesc"
+      :sort-by="sortField"
+      :sort-desc="sortDesc"
 
-      :per-page.sync="perPage"
-      :current-page.sync="currentPage"
-      :filter.sync="filter"
+      :per-page="perPage"
+      :current-page="currentPage"
+      :filter="filter"
     ></b-table>
-  </section>
+  </div>
 </template>
 
 <script>
+import Vue from 'vue'
+import { BootstrapVue, IconsPlugin, BTable } from 'bootstrap-vue'
+Vue.use(BootstrapVue)
+
 export default {
-  // import { NavbarPlugin } from 'bootstrap-vue'
-  // import { BTable } from 'bootstrap-vue'
   name: 'TableComponent',
   props: {
     collection : { type: Object },
@@ -43,7 +51,7 @@ export default {
       perPage: 15,
       currentPage: 1,
       filter: null,
-      total: 0
+      totalRows: 100
     }
   },
   methods: {
@@ -58,17 +66,17 @@ export default {
       this.collection.clear()
       this.collection.page(ctx.currentPage).fetch().then(
         (arg) => {
-          var data = []
-          this.total = arg.response.data.total
-          // this.perPage = arg.response.data.perPage
+          var res = []
+          this.totalRows = arg.response.data.total
+          this.perPage = arg.response.data.perPage
           this.collection.each((obj, index) => {
-            data.push(obj)
+            res.push(obj)
           })
 
-          callback(data)
+          callback(res)
         }
       ).catch((error) => {
-        this.total = 0
+        this.totalRows = 0
         callback([])
       })
 
@@ -76,10 +84,12 @@ export default {
     },
 
     onNew() {
+      console.debug('***** NEW MODEL');
       // this.selected.save()
-      this.$emit('create', false);
+      // this.$emit('create', false);
     },
     onDelete() {
+      console.debug('***** DELETE MODEL');
       if (this.selected) {
         // this.selected.delete().then(
         //   () => {

@@ -1,22 +1,12 @@
-import Vue from 'vue/dist/vue.esm'
+import Vue from 'vue'
+// import '../stylesheets/style.scss'
 
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-
-import CKEditor from 'ckeditor4-vue'
-import '../stylesheets/style.scss'
-
-import TableComponent from '../table.vue'
-// import SidebarComponent from '../sidebar.vue'
+// import CKEditor from 'ckeditor4-vue'
 
 import PlanoModel from '../model.js'
-
-// Vue.use(Buefy)
-Vue.use(BootstrapVue)
-Vue.use( CKEditor );
-
+import TableComponent from '../table.vue'
+// import SidebarComponent from '../sidebar.vue'
+// Vue.use( CKEditor );
 import {Collection} from 'vue-mc'
 import {
     boolean,
