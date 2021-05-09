@@ -7,8 +7,13 @@ require("@rails/ujs").start()
 // require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
+require("jquery") // Optional, pulling this in for Bootstrap 4
 
 // import "@fortawesome/fontawesome-free/js/all";
+import 'jquery';
+import 'popper.js';
+import 'bootstrap';
+import 'bootstrap/dist/js/bootstrap';
 
 import '../stylesheets/style.scss'
 
