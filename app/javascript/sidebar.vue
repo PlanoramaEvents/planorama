@@ -1,34 +1,29 @@
 <template>
-  <section>
-    <b-sidebar
-      type="is-light"
-      :fullheight=true
-      :fullwidth=false
-      :overlay=false
-      :right=true
-      :can-cancel=false
-      :open.sync="isopen"
-    >
-    <nav class="level">
-      <!-- Left side -->
-      <div class="level-left">
-        <div class="level-item">
-          <b-button
-            icon-left="times"
-            icon-pack='fa'
-            @click="close">
+  <b-sidebar
+    right
+    shadow
+    lazy
+    width='70%'
+    :visible='visible'
+    @hidden="onHide"
+    no-header
+  >
+    <b-nav>
+      <b-navbar-nav>
+        <b-nav-form>
+          <b-button @click="onHide">
+            <i class="fas fa-times" @click="onHide"></i>
           </b-button>
-        </div>
-      </div>
-      <div class="level-item">
-        <slot name="header"></slot>
-      </div>
-    </nav>
-      <div v-if="isopen">
-        <slot name="content"></slot>
-      </div>
-    </b-sidebar>
-  </section>
+        </b-nav-form>
+      </b-navbar-nav>
+      <b-navbar-nav class="ml-auto">
+        <b-nav-text>
+          <slot name="header"></slot>
+        </b-nav-text>
+      </b-navbar-nav>
+    </b-nav>
+    <slot name="content"></slot>
+  </b-sidebar>
 </template>
 
 <script>
@@ -36,15 +31,15 @@ export default {
   name: 'SidebarComponent',
   data() {
     return {
-      isopen: false
+      visible: false
     }
   },
   methods: {
-    close() {
-      this.isopen = false
+    onHide() {
+      this.visible = false
     },
     setSelected(v) {
-      this.isopen = v
+      this.visible = true
     }
   }
 }

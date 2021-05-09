@@ -14,34 +14,36 @@
     ></table-component>
   </div>
 
-  <!--
   <sidebar-component
     ref='sidebarComponent'
     :has-selected="hasSelected"
   >
     <template v-slot:header>
       <div v-if="selected">
-        <h1 class="title">{{selected.published_name}}</h1>
+        <h1 class="title">HHHH{{selected.published_name}}</h1>
       </div>
     </template>
     <template v-slot:content>
-      <div class="p-3">
-        <div v-if="selected">
-          <div class="box">
-            <b-tabs>
-              <b-tab-item label="Details">
-                <%= render partial: "person_details" %>
-              </b-tab-item>
-              <b-tab-item label="Bio">
-              </b-tab-item>
-              <b-tab-item label="Tags">
-              </b-tab-item>
-            </b-tabs>
-          </div>
-        </div>
-      </div>
     </template>
   </sidebar-component>
+<!--
+<div class="p-3">
+  <div v-if="selected">
+    <div class="box">
+      <b-tabs>
+        <b-tab-item label="Details">
+          <%= render partial: "person_details" %>
+        </b-tab-item>
+        <b-tab-item label="Bio">
+        </b-tab-item>
+        <b-tab-item label="Tags">
+        </b-tab-item>
+      </b-tabs>
+    </div>
+  </div>
+</div>
+
+ -->
 <!--
 "comments": null,
  -->
