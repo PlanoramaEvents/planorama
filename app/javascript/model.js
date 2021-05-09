@@ -48,17 +48,18 @@ export default class PlanoModel extends Model {
       this.onSaveFailure
     );
 
-    save_promise.catch(
+    /*save_promise.catch(
       (error) => {
+        console.log(save_promise, error)
         Notification.open({
           message: error.response.response.data.error,
           type: 'is-danger',
           hasIcon: true,
           closable: true,
-          indefinite: true
-        })
+          indefinite: true 
+        }) 
       }
-    );
+    ); */
 
     return save_promise;
   }

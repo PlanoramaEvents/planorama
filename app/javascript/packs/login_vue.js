@@ -22,3 +22,4 @@ const app = new Vue({
 document.addEventListener('DOMContentLoaded', () => {
     app.$mount('#login-app');
 });
+
