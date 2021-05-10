@@ -5,6 +5,14 @@ namespace :docker do
         sh "docker-compose", "-f", "docker-compose-dev.yml", "-f", "docker-compose.yml", "build"
     end
 
+    task :restart, [:service] do |t, args|
+        new_args = [ "docker-compose", "-f", "docker-compose-dev.yml", "-f", "docker-compose.yml", "restart"]
+        if args[:service]
+            new_args += [args[:service]]
+        end
+        sh *new_args 
+    end
+
     task :quickstart do
         sh "docker-compose", "-f", "docker-compose-dev.yml", "-f", "docker-compose.yml", "up", "-d"
     end

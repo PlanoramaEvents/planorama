@@ -5,21 +5,15 @@ import { BootstrapVue } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
-import PlanLogo from '../logo.vue';
-import PlanLogin from '../login/login.vue';
-import PlanLoginFooter from '../login/login_footer.vue';
+import TermsOfUse from '../administration/terms_of_use.vue'
 
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue)
 
 const app = new Vue({
     components: {
-        PlanLogo,
-        PlanLogin,
-        PlanLoginFooter,
+        TermsOfUse,
     },
-
-});
+})
 document.addEventListener('DOMContentLoaded', () => {
-    app.$mount('#login-app');
-});
-
+    app.$mount('#terms-app');
+})

@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   get 'page/reports', to: 'home#reports'
   # get 'page/program', to: 'home#program'
 
+  get 'about/terms_of_use'
+
   # REST based resources
   resources :people
   resources :programme_items

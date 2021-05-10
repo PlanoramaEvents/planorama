@@ -205,5 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   )
+  console.log("mounting people app")
   app.$mount('#people-app')
 })

@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 col-md-8 offset-md-2 col-lg-4 offset-lg-4">
+    <div class="col-12 col-sm-8 offset-sm-2 col-lg-4 offset-lg-4">
         <b-alert :show="error.visible" variant="danger">{{ error.text }}</b-alert>
         <b-form @submit="onSubmit" @reset="onReset">
             <b-form-group
@@ -7,21 +7,24 @@
                 label="Email address"
                 label-for="input-1"
                 :invalid-feedback="formEmailInvalidFeedback"
-                :state="formEmailState"
+                :state="form.email.valid"
             >
                 <b-form-input
                     id="input-1"
                     v-model="person.email"
-                    type="email"
-                    :state="formEmailState"
+                    type="text"
+                    :state="form.email.valid"
                     novalidate
-                    @change="onEmailType()"
+                    @focus="onEmailFocus"
+                    @blur="onEmailUnfocus"
                 ></b-form-input>
             </b-form-group>
             <b-form-group
                 id="input-group-2"
                 label="Password"
                 label-for="input-2"
+                :invalid-feedback="form.password.invalidMessage"
+                :state="form.password.valid"
                 description="Passwords must contain: 6 or more characters. Password cannot contain: the word 'password' or your username"
             >
                 <b-form-input
@@ -29,6 +32,9 @@
                     v-model="person.password"
                     type="password"
                     novalidate
+                    :state="form.password.valid"
+                    @focus="onPasswordFocus"
+                    @blur="onPasswordUnfocus"
                 ></b-form-input>
             </b-form-group>
             <b-button type="submit" variant="primary">Submit</b-button>
@@ -38,7 +44,15 @@
 </template>
 
 <script>
-import PlanoModel from './model';
+import PlanoModel from '../model';
+
+import {
+    LOGIN_401,
+    LOGIN_MISSING_PASSWORD,
+    LOGIN_INVALID_FIELDS,
+    LOGIN_MISSING_EMAIL,
+    LOGIN_NOT_AN_EMAIL,
+} from '../constants/errors';
 
 export class LoginModel extends PlanoModel {
     default() {
@@ -71,33 +85,46 @@ export default {
             },
             form: {
                 email: {
-                    typed: false
+                    valid: null
+                },
+                password: {
+                    valid: null,
+                    invalidMessage:  LOGIN_MISSING_PASSWORD
                 }
             }
         }
     },
     computed: {
-      formEmailState: function() {
-            if (this.form.email.typed === false) {
-                return null;
-            }
-            return this.person.email.match(/.+@.+\..+/) ? null : false
-      },
       formEmailInvalidFeedback: function(){
             if (this.person.email.length > 0) {
-            return "Email address needs to be in the correct format\ne.g xyz@test.com"
+                return LOGIN_NOT_AN_EMAIL
             }
-            return 'You must enter an email address.'
-      }
+            return LOGIN_MISSING_EMAIL
+      },
     },
     methods: {
-        onEmailType: function(event) {
-            this.form.email.typed = true;
+        onEmailUnfocus: function(event) {
+            if(!this.person.email.match(/.+@.+\..+/)) {
+                this.form.email.valid = false;
+            }
+        },
+        onEmailFocus: function(event) {
+            this.form.email.valid = null;
+        },
+        onPasswordFocus: function(event) {
+            this.form.password.valid = null;
+        },
+        onPasswordUnfocus: function(event) {
+            if(this.person.password.length < 1) {
+                this.form.password.valid = false;
+            }
         },
         onSubmit: function(event) {
             event.preventDefault();
-            if(this.formEmailState) {
-                console.log("I clicked submit!")
+            if(this.form.email.valid === false || this.form.password.valid === false) {
+                this.error.text = LOGIN_INVALID_FIELDS;
+                this.error.visible = true;
+            } else {
                 const loginInfo = new LoginModel({person: this.person});
                 loginInfo.save().then(() => 
                     window.location.href = "/"
@@ -107,16 +134,16 @@ export default {
         },
         onReset: function() {
             event.preventDefault();
-            this.form.email = '';
-            this.form.password = '';
+            this.person.email = '';
+            this.person.password = '';
+            this.form.email.valid = null;
+            this.form.password.valid = null;
             this.show = false;
             this.$nextTick(() => this.show = true);
         },
         onSaveFailure: function(error) {
-            console.log(error)
-            console.log(error.response.response.status)
            if (error.response.response.status === 401) {
-               this.error.text = "You have an incorrect username or password."
+               this.error.text = LOGIN_401
                this.error.visible = true;
            }
         }
