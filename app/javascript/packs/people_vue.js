@@ -1,11 +1,9 @@
 import Vue from 'vue'
-// import '../stylesheets/style.scss'
-
 // import CKEditor from 'ckeditor4-vue'
 
 import PlanoModel from '../model.js'
 import TableComponent from '../table.vue'
-// import SidebarComponent from '../sidebar.vue'
+import SidebarComponent from '../sidebar.vue'
 // Vue.use( CKEditor );
 import {Collection} from 'vue-mc'
 import {
@@ -154,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       components: {
         TableComponent,
-        // SidebarComponent
+        SidebarComponent
       },
       data() {
         return {
@@ -180,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.selected = null
                 this.editable = false
                 this.hasSelected = this.selected != null
-                // this.$refs.sidebarComponent.setSelected(this.hasSelected);
+                this.$refs.sidebarComponent.setSelected(this.hasSelected);
                 this.$refs.tableComponent.loadAsyncData();
               }
             }
@@ -194,13 +192,14 @@ document.addEventListener('DOMContentLoaded', () => {
           this.selected = new Person();
           this.hasSelected = this.selected != null
           this.editable = true
-          // this.$refs.sidebarComponent.setSelected(this.hasSelected);
+          this.$refs.sidebarComponent.setSelected(this.hasSelected);
         },
         setSelected(v) {
+          console.debug("SET SELECTED", v)
           this.selected = v
           this.editable = false
           this.hasSelected = this.selected != null
-          // this.$refs.sidebarComponent.setSelected(this.hasSelected);
+          this.$refs.sidebarComponent.setSelected(this.hasSelected);
         }
       }
     }

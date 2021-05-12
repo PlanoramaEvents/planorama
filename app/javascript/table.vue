@@ -27,13 +27,15 @@
       :per-page="perPage"
       :current-page="currentPage"
       :filter="filter"
+
+      @row-selected="onRowSelected"
     ></b-table>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import { BootstrapVue, IconsPlugin, BTable } from 'bootstrap-vue'
+import { BootstrapVue, BTable } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
 export default {
@@ -89,7 +91,7 @@ export default {
       // this.$emit('create', false);
     },
     onDelete() {
-      console.debug('***** DELETE MODEL');
+      console.debug('***** DELETE MODEL', this.selected);
       if (this.selected) {
         // this.selected.delete().then(
         //   () => {
@@ -99,10 +101,11 @@ export default {
         //   }
         // )
       }
+    },
+    onRowSelected(items) {
+      // console.debug('***** Selected', items);
+      this.$emit('selected', items)
     }
-//    onSelect(row) {
-//      this.$emit('selected', row)
-//  },
   }
 }
 </script>

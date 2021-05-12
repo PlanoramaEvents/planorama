@@ -1,8 +1,8 @@
 /* eslint no-console: 0 */
 import Vue from 'vue'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { NavbarPlugin } from 'bootstrap-vue'
 
-Vue.use(BootstrapVue)
+Vue.use(NavbarPlugin)
 
 document.addEventListener('DOMContentLoaded', () => {
   const app = new Vue({
