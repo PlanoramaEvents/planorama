@@ -66,5 +66,5 @@ Rails.application.configure do
   #config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload
   config.middleware.use(Rack::LiveReload, host: 'localhost', source: :vendored)
 
-  config.web_console.permissions = '172.0.0.0/24'
+  config.web_console.permissions = ['172.0.0.0/8','192.168.0.0/16']
 end

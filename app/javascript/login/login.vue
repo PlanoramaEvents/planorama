@@ -1,24 +1,8 @@
 <template>
-    <div class="col-12 col-sm-8 offset-sm-2 col-lg-4 offset-lg-4">
+    <div class="login">
         <b-alert :show="error.visible" variant="danger">{{ error.text }}</b-alert>
         <b-form @submit="onSubmit">
-            <b-form-group
-                id="input-group-1"
-                label="Email address"
-                label-for="input-1"
-                :invalid-feedback="formEmailInvalidFeedback"
-                :state="form.email.valid"
-            >
-                <b-form-input
-                    id="input-1"
-                    v-model="person.email"
-                    type="text"
-                    :state="form.email.valid"
-                    novalidate
-                    @focus="onEmailFocus"
-                    @blur="onEmailUnfocus"
-                ></b-form-input>
-            </b-form-group>
+            <login-email-field v-model="person.email" @validated="form.email.valid = $event"></login-email-field>
             <b-form-group
                 id="input-group-2"
                 label="Password"
@@ -38,6 +22,9 @@
                 ></b-form-input>
             </b-form-group>
             <div class="d-flex flex-row-reverse">
+                <router-link to="/forgot">Forgot Password</router-link>
+            </div>
+            <div class="d-flex flex-row-reverse">
                 <b-button type="submit" variant="primary" class="px-5">Log In</b-button>
             </div>
         </b-form>
@@ -46,13 +33,12 @@
 
 <script>
 import PlanoModel from '../model';
+import LoginEmailField from './login_email_field';
 
 import {
     LOGIN_401,
     LOGIN_MISSING_PASSWORD,
     LOGIN_INVALID_FIELDS,
-    LOGIN_MISSING_EMAIL,
-    LOGIN_NOT_AN_EMAIL,
 } from '../constants/errors';
 
 export class LoginModel extends PlanoModel {
@@ -95,23 +81,10 @@ export default {
             }
         }
     },
-    computed: {
-      formEmailInvalidFeedback: function(){
-            if (this.person.email.length > 0) {
-                return LOGIN_NOT_AN_EMAIL
-            }
-            return LOGIN_MISSING_EMAIL
-      },
+    components: {
+        LoginEmailField,
     },
     methods: {
-        onEmailUnfocus: function(event) {
-            if(!this.person.email.match(/.+@.+\..+/)) {
-                this.form.email.valid = false;
-            }
-        },
-        onEmailFocus: function(event) {
-            this.form.email.valid = null;
-        },
         onPasswordFocus: function(event) {
             this.form.password.valid = null;
         },
@@ -132,15 +105,6 @@ export default {
                 ).catch(error => this.onSaveFailure(error));
             }
         
-        },
-        onReset: function() {
-            event.preventDefault();
-            this.person.email = '';
-            this.person.password = '';
-            this.form.email.valid = null;
-            this.form.password.valid = null;
-            this.show = false;
-            this.$nextTick(() => this.show = true);
         },
         onSaveFailure: function(error) {
            if (error.response.response.status === 401) {
