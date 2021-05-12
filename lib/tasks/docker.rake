@@ -33,6 +33,10 @@ namespace :docker do
         sh "docker", "exec", "planorama_planorama_1", "bundle", "exec", "rspec"
     end
 
+    task :sh do
+        sh "docker", "exec", "-it", "planorama_planorama_1", "sh"
+    end
+
     task :psql => :read_envrc do
         sh "docker", "exec", "-it", "planorama_postgres_1", "psql", "-U", ENV['POSTGRES_USER'], "-d", "planorama_development"
     end

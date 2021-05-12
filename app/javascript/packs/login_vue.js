@@ -2,9 +2,6 @@ import Vue from 'vue/dist/vue.esm';
 
 import { BootstrapVue } from 'bootstrap-vue';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
-
 import PlanLogo from '../logo.vue';
 import PlanLogin from '../login/login.vue';
 import PlanLoginFooter from '../login/login_footer.vue';

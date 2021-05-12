@@ -1,7 +1,7 @@
 <template>
     <div class="col-12 col-sm-8 offset-sm-2 col-lg-4 offset-lg-4">
         <b-alert :show="error.visible" variant="danger">{{ error.text }}</b-alert>
-        <b-form @submit="onSubmit" @reset="onReset">
+        <b-form @submit="onSubmit">
             <b-form-group
                 id="input-group-1"
                 label="Email address"
@@ -37,8 +37,9 @@
                     @blur="onPasswordUnfocus"
                 ></b-form-input>
             </b-form-group>
-            <b-button type="submit" variant="primary">Submit</b-button>
-            <b-button type="reset">Reset</b-button>
+            <div class="d-flex flex-row-reverse">
+                <b-button type="submit" variant="primary" class="px-5">Log In</b-button>
+            </div>
         </b-form>
     </div>
 </template>
