@@ -15,5 +15,5 @@ if !Person.find_by(last_name: 'test')
     )
 end
 
-p "Created special test user for development."
+p "Created special test user for development environment."
 
