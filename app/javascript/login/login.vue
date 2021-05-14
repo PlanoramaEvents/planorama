@@ -3,24 +3,7 @@
         <b-alert :show="error.visible" variant="danger">{{ error.text }}</b-alert>
         <b-form @submit="onSubmit">
             <login-email-field v-model="person.email" @validated="form.email.valid = $event"></login-email-field>
-            <b-form-group
-                id="input-group-2"
-                label="Password"
-                label-for="input-2"
-                :invalid-feedback="form.password.invalidMessage"
-                :state="form.password.valid"
-                description="Passwords must contain: 6 or more characters. Password cannot contain: the word 'password' or your username"
-            >
-                <b-form-input
-                    id="input-2"
-                    v-model="person.password"
-                    type="password"
-                    novalidate
-                    :state="form.password.valid"
-                    @focus="onPasswordFocus"
-                    @blur="onPasswordUnfocus"
-                ></b-form-input>
-            </b-form-group>
+            <login-password-field v-model="person.password" @validated="form.password.valid = $event"></login-password-field>
             <div class="d-flex flex-row-reverse">
                 <router-link to="/forgot">Forgot Password</router-link>
             </div>
@@ -34,6 +17,7 @@
 <script>
 import PlanoModel from '../model';
 import LoginEmailField from './login_email_field';
+import LoginPasswordField from './login_password_field';
 
 import {
     LOGIN_401,
@@ -75,24 +59,16 @@ export default {
                     valid: null
                 },
                 password: {
-                    valid: null,
-                    invalidMessage:  LOGIN_MISSING_PASSWORD
+                    valid: null
                 }
             }
         }
     },
     components: {
         LoginEmailField,
+        LoginPasswordField,
     },
     methods: {
-        onPasswordFocus: function(event) {
-            this.form.password.valid = null;
-        },
-        onPasswordUnfocus: function(event) {
-            if(this.person.password.length < 1) {
-                this.form.password.valid = false;
-            }
-        },
         onSubmit: function(event) {
             event.preventDefault();
             if(this.form.email.valid === false || this.form.password.valid === false) {
