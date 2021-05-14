@@ -2,7 +2,7 @@ import defaults         from 'lodash/defaults'
 import defaultsDeep     from 'lodash/defaultsDeep'
 import defaultTo        from 'lodash/defaultTo'
 
-import axios from 'axios'
+import axios from './axios'
 import {Model} from 'vue-mc'
 
 // TODO: modify for routes etc
@@ -62,10 +62,3 @@ export default class PlanoModel extends Model {
     return save_promise;
   }
 }
-
-document.addEventListener(
-  'DOMContentLoaded', () => {
-    const csrfToken = document.querySelector("meta[name=csrf-token]").content
-    axios.defaults.headers.common['X-CSRF-Token'] = csrfToken
-  }
-)

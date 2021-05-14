@@ -15,6 +15,8 @@
 <script>
 import { LOGIN_INVALID_FIELDS } from '../constants/errors';
 import LoginEmailField  from './login_email_field';
+import axios from '../axios';
+
 export default {
     name:"ForgotPassword",
     data: () => ({
@@ -47,6 +49,7 @@ export default {
                 this.error.visible = true;
             } else {
                 console.log("I will eventually be sending email here.");
+                axios.post('/people/password.json', { person: this.person }).then(data => console.log(data))
             }
         }
     }

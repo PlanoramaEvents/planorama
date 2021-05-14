@@ -70,3 +70,9 @@ There is also a shortcut:
 ```
 rake docker:test
 ```
+
+## Mailings
+
+To see mail sent by the dev environment, navigate in your browser to http://localhost:1080.
+
+(If this doesn't work, try restarting your development environment.)

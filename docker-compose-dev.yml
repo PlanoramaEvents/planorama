@@ -19,6 +19,7 @@ services:
         target: /opt/planorama/tmp
     links:
       - livereload
+      - mailcatcher
     ports:
       - 3035:3035
     environment:
@@ -32,7 +33,10 @@ services:
       - 35729:35729
     volumes:
       - .:/opt/planorama
-
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
 
 # Simple volumes used for persistent storage
 volumes:

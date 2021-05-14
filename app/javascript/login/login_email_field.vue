@@ -38,7 +38,6 @@ export default {
     },
     methods: {
         onEmailUnfocus: function(event) {
-            console.log("value is", this.value);
             if(!this.value.match(/.+@.+\..+/)) {
                 this.valid = false;
             }
