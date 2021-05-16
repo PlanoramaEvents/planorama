@@ -2,10 +2,15 @@
 <b-nav>
   <b-navbar-nav class="ml-auto px-3 py-2">
     <b-nav-form>
-      <b-button>
+      <b-button
+        @click="onSave"
+        :disabled="!editable"
+      >
         Save
       </b-button>
-      <b-button>
+      <b-button
+        @click="editable = true"
+      >
         <i class="fas fa-edit"></i>
       </b-button>
     </b-nav-form>
