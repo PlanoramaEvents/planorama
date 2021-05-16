@@ -104,7 +104,7 @@ export default {
     },
     onRowSelected(items) {
       // console.debug('***** Selected', items);
-      this.$emit('selected', items)
+      this.$emit('selected', items[0])
     }
   }
 }
