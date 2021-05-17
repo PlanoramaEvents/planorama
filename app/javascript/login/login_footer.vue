@@ -1,9 +1,7 @@
 <template>
     <footer>
-        <div class="col-12 col-sm-8 offset-sm-2 col-lg-4 offset-lg-4">
-            <terms-of-use-link></terms-of-use-link>
-            <privacy-policy-link></privacy-policy-link>
-        </div>
+        <terms-of-use-link></terms-of-use-link>
+        <privacy-policy-link></privacy-policy-link>
     </footer>
 </template>
 
@@ -23,9 +21,7 @@ export default {
 <style lang="scss" scoped>
     footer {
         margin-top: 2rem;
-        div {
-            display: flex;
-            justify-content: space-evenly;
-        }
+        display: flex;
+        justify-content: space-evenly;
     }
 </style>

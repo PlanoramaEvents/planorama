@@ -40,6 +40,9 @@ export default {
         confirmation: {
             type: Boolean,
             default: false
+        },
+        validateNow: {
+            type: Function
         }
     },
     data: () => ({
@@ -87,18 +90,27 @@ export default {
             return '';
         }
     },
+    watch: {
+        validateNow: function(val) {
+            this.validate()
+            val(true)
+        }
+    },
     methods: {
-        onPasswordFocus: function(event) {
-            this.valid = null;
-            this.$emit('validated', this.valid)
-        },
-        onPasswordUnfocus: function(event) {
+        validate: function(event) {
             const minLength = this.newPassword ? 6 : 1
             const matching = this.confirmation ? this.value === this.mustMatch : true;
             if(this.value.length < minLength || !matching) {
                 this.valid = false;
             }
+            this.$emit('validated', this.valid);
+        },
+        onPasswordFocus: function(event) {
+            this.valid = null;
             this.$emit('validated', this.valid)
+        },
+        onPasswordUnfocus: function(event) {
+            this.validate(event);
         },
     }
 }

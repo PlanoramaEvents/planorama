@@ -1,11 +1,7 @@
 <template>
-<div class="login-screen">
-    <div class="col-sm-8 offset-sm-2 col-lg-4 offset-lg-4">
-        <plan-logo></plan-logo>
-    </div>
-    <div class="col-12 col-sm-8 offset-sm-2 col-lg-4 offset-lg-4">
-        <router-view></router-view>
-    </div>
+<div class="login-screen container">
+    <plan-logo></plan-logo>
+    <router-view></router-view>
     <plan-login-footer></plan-login-footer>
 </div>
 </template>
@@ -22,3 +18,17 @@ export default {
     },
 }
 </script>
+
+<style lang="scss" scoped>
+@media (max-width: 576px) {
+    .login-screen {
+        width: 100%;
+    }
+}
+@media (min-width: 577px) {
+    .login-screen {
+        width: 500px;
+        margin: 0 auto;
+    }
+}
+</style>

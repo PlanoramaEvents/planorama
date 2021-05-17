@@ -24,7 +24,14 @@ import { LOGIN_NOT_AN_EMAIL, LOGIN_MISSING_EMAIL } from '../constants/errors';
 
 export default {
     name: "LoginEmailField",
-    props: ['value'],
+    props: {
+        value: {
+            type: String
+        },
+        validateNow: {
+            type: Function
+        }
+    },
     data: () => ({
         valid: null
     }),
@@ -36,12 +43,21 @@ export default {
             return LOGIN_MISSING_EMAIL
       },
     },
+    watch: {
+        validateNow: function(val) {
+            this.validate()
+            val(true)
+        }
+    },
     methods: {
-        onEmailUnfocus: function(event) {
+        validate: function(event) {
             if(!this.value.match(/.+@.+\..+/)) {
                 this.valid = false;
             }
             this.$emit('validated', this.valid)
+        },
+        onEmailUnfocus: function(event) {
+            this.validate(event)
         },
         onEmailFocus: function(event) {
             this.valid = null;
