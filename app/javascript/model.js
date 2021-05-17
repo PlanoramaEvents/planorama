@@ -2,7 +2,7 @@ import defaults         from 'lodash/defaults'
 import defaultsDeep     from 'lodash/defaultsDeep'
 import defaultTo        from 'lodash/defaultTo'
 
-import axios from './axios'
+import {http as axios} from './http'
 import {Model} from 'vue-mc'
 
 // TODO: modify for routes etc

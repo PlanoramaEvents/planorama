@@ -1,6 +1,6 @@
 <template>
     <div class="new-password">
-        <h3>Recover Password</h3>
+        <h3>Reset Password</h3>
         <p>In order to protect your account, make sure your password:</p>
         <ul>
             <li>Is 6 or more characters</li>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import axios from '../axios';
+import { http } from '../http';
 import { SOMETHING_WENT_WRONG } from '../constants/errors';
 import LoginPasswordField from './login_password_field';
 
@@ -60,7 +60,7 @@ export default {
                 this.error.visible = true;
             } else {
                 console.log("submit password change here!")
-                axios.put("/people/password.json", {person: this.person}).then( data => {
+                http.put("/people/password.json", {person: this.person}).then( data => {
                     if (data.status === 204) {
                         this.$router.push('/')
                     } else {
