@@ -174,9 +174,9 @@ document.addEventListener('DOMContentLoaded', () => {
           let new_instance = typeof this.selected.id === 'undefined'
           this.selected.save().then(
             (arg) => {
+              this.editable = false
               if (new_instance) {
                 this.selected = null
-                this.editable = false
                 this.hasSelected = this.selected != null
                 this.$refs.sidebarComponent.setSelected(this.hasSelected);
                 this.$refs.tableComponent.loadAsyncData();

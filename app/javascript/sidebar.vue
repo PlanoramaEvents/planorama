@@ -9,14 +9,14 @@
     no-header
   >
     <b-nav>
-      <b-navbar-nav>
+      <b-navbar-nav class="px-3 py-2">
         <b-nav-form>
           <b-button @click="onHide">
             <i class="fas fa-times" @click="onHide"></i>
           </b-button>
         </b-nav-form>
       </b-navbar-nav>
-      <b-navbar-nav class="ml-auto">
+      <b-navbar-nav class="ml-auto px-3 py-2">
         <b-nav-text>
           <slot name="header"></slot>
         </b-nav-text>

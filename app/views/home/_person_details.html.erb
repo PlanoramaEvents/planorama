@@ -1,232 +1,241 @@
-<nav class="level">
-  <div class="level-left">
-  </div>
-  <div class="level-right">
-    <div class="level-item">
+
+<b-nav>
+  <b-navbar-nav class="ml-auto px-3 py-2">
+    <b-nav-form>
       <b-button
-        icon-left="save"
-        icon-pack='fa'
         @click="onSave"
+        :disabled="!editable"
       >
         Save
       </b-button>
-    </div>
-    <div class="level-item">
       <b-button
-        icon-left="edit"
-        icon-pack='fa'
         @click="editable = true"
       >
+        <i class="fas fa-edit"></i>
       </b-button>
-    </div>
-  </div>
-</nav>
+    </b-nav-form>
+  </b-navbar-nav>
+</b-nav>
 
-<b-field grouped>
-  <b-field label="First Name" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="60"
-      :disabled="!editable"
+
+<div class="row">
+  <div class="col mb-3 form-floating">
+    <b-form-input
       v-model="selected.first_name"
-    ></b-input>
-  </b-field>
-  <b-field label="Last Name" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="60"
       :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>First Name</label>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
+      label="Last Name"
       v-model="selected.last_name"
-    ></b-input>
-  </b-field>
-  <b-field label="Suffix" label-position="on-border">
-    <b-input
-      :lazy=true
-      maxlength="10"
       :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Last Name</label>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
+      label="Suffix"
       v-model="selected.suffix"
-    ></b-input>
-  </b-field>
-</b-field>
-<b-field grouped>
-  <b-field label="Pub First Name" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="60"
       :disabled="!editable"
-      v-model="selected.pseudonym_first_name"
-    ></b-input>
-  </b-field>
-  <b-field label="Pub Last Name" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="60"
-      :disabled="!editable"
-      v-model="selected.pseudonym_last_name"
-    ></b-input>
-  </b-field>
-  <b-field label="Pub Suffix" label-position="on-border">
-    <b-input
-      :lazy=true
-      maxlength="10"
-      :disabled="!editable"
-      v-model="selected.pseudonym_suffix"
-    ></b-input>
-  </b-field>
-</b-field>
-<b-field grouped>
-  <b-field label="Pronouns" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="100"
-      :disabled="!editable"
-      v-model="selected.pronouns"
-    ></b-input>
-  </b-field>
-</b-field>
-<b-field grouped>
-  <b-field label="Job Title" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="100"
-      :disabled="!editable"
-      v-model="selected.job_title"
-    ></b-input>
-  </b-field>
-  <b-field label="Organization" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="100"
-      :disabled="!editable"
-      v-model="selected.organization"
-    ></b-input>
-  </b-field>
-</b-field>
+      type="text"
+    ></b-form-input>
+    <label>Suffix</label>
+  </div>
+</div>
 
-<b-field grouped>
-  <b-field label="Invite Status" label-position="on-border" expanded>
-    <b-select
+<div class="row">
+  <div class="col mb-3 form-floating">
+    <b-form-input
+      v-model="selected.pseudonym_first_name"
+      :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Pub First Name</label>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
+      v-model="selected.pseudonym_last_name"
+      :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Pub Last Name</label>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
+      v-model="selected.pseudonym_suffix"
+      :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Pub Suffix</label>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col mb-3 form-floating">
+    <b-form-input
+      v-model="selected.pronouns"
+      :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Pronouns</label>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
+      v-model="selected.job_title"
+      :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Job Title</label>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
+      v-model="selected.organization"
+      :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Organization</label>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col mb-3">
+    <label>Invite Status</label>
+    <b-form-select
       :disabled="!editable"
       v-model="selected.invite_status"
     >
-      <option value="not_set">Unknown</option>
-      <option value="do_not_invite">Do not invite</option>
-      <option value="potential_invite">Potential Invite</option>
-      <option value="invite_pending">Invite Pending</option>
-      <option value="invited">Invited</option>
-      <option value="volunteered">Volunteered</option>
-    </b-select>
-  </b-field>
-  <b-field label="Acceptance Status" label-position="on-border" expanded>
-    <b-select
+      <b-form-select-option value="not_set">Unknown</b-form-select-option>
+      <b-form-select-option value="do_not_invite">Do not invite</b-form-select-option>
+      <b-form-select-option value="potential_invite">Potential Invite</b-form-select-option>
+      <b-form-select-option value="invite_pending">Invite Pending</b-form-select-option>
+      <b-form-select-option value="invited">Invited</b-form-select-option>
+      <b-form-select-option value="volunteered">Volunteered</b-form-select-option>
+    </b-form-select>
+  </div>
+  <div class="col mb-3">
+    <label>Acceptance Status</label>
+    <b-form-select
       :disabled="!editable"
-      v-model="selected.acceptance_status"
-    >
-      <option value="unknown">Unknown</option>
-      <option value="probable">Probable</option>
-      <option value="accepted">Accepted</option>
-      <option value="declined">Declined</option>
-    </b-select>
-  </b-field>
-</b-field>
+      v-model="selected.acceptance_status">
+      <b-form-select-option value="unknown">Unknown</b-form-select-option>
+      <b-form-select-option value="probable">Probable</b-form-select-option>
+      <b-form-select-option value="accepted">Accepted</b-form-select-option>
+      <b-form-select-option value="declined">Declined</b-form-select-option>
+    </b-form-select>
+  </div>
+</div>
 
-<b-field grouped>
-  <b-field>
-    <b-switch
-      :lazy=true
-      :disabled="!editable"
-      :left-label=true
+<div class="row">
+  <div class="col mb-3">
+    <b-form-checkbox
       v-model="selected.registered"
-    >Registered</b-switch>
-  </b-field>
-  <b-field label="Reg Type" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="100"
       :disabled="!editable"
+      switch
+      size="lg"
+    >
+      Registered
+    </b-form-checkbox>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
       v-model="selected.registration_type"
-    ></b-input>
-  </b-field>
-  <b-field label="Reg Number" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="100"
       :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Reg Type</label>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
       v-model="selected.registration_number"
-    ></b-input>
-  </b-field>
-</b-field>
-
-<b-field grouped>
-  <b-field>
-    <b-switch
-      :lazy=true
       :disabled="!editable"
-      :left-label=true
+      type="text"
+    ></b-form-input>
+    <label>Reg Number</label>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col mb-3">
+    <b-form-checkbox
       v-model="selected.opted_in"
-    >Opted In</b-switch>
-  </b-field>
-  <b-field>
-    <b-switch
-      :lazy=true
       :disabled="!editable"
-      :left-label=true
+      switch
+      size="lg"
+    >
+      Opted In
+    </b-form-checkbox>
+  </div>
+  <div class="col mb-3">
+    <b-form-checkbox
       v-model="selected.can_share"
-    >Can Share</b-switch>
-  </b-field>
-  <b-field>
-    <b-switch
-      :lazy=true
       :disabled="!editable"
-      :left-label=true
+      switch
+      size="lg"
+    >
+      Can Share
+    </b-form-checkbox>
+  </div>
+  <div class="col mb-3">
+    <b-form-checkbox
       v-model="selected.can_photo"
-    >Can Photo</b-switch>
-  </b-field>
-  <b-field>
-    <b-switch
-      :lazy=true
       :disabled="!editable"
-      :left-label=true
+      switch
+      size="lg"
+    >
+      Can Photo
+    </b-form-checkbox>
+  </div>
+  <div class="col mb-3">
+    <b-form-checkbox
       v-model="selected.can_record"
-    >Can Record</b-switch>
-  </b-field>
-</b-field>
-
-<b-field grouped>
-  <b-field label="Gender" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="100"
       :disabled="!editable"
+      switch
+      size="lg"
+    >
+      Can Record
+    </b-form-checkbox>
+  </div>
+</div>
+
+<!-- label-position="on-border" -->
+<div class="row">
+  <div class="col mb-3 form-floating">
+    <b-form-input
       v-model="selected.gender"
-    ></b-input>
-  </b-field>
-  <b-field label="Ethnicty" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="100"
       :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Gender</label>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
       v-model="selected.ethnicity"
-    ></b-input>
-  </b-field>
-  <b-field label="Year of Birth" label-position="on-border" expanded>
-    <b-input
-      :lazy=true
-      maxlength="100"
       :disabled="!editable"
+      type="text"
+    ></b-form-input>
+    <label>Ethnicty</label>
+  </div>
+  <div class="col mb-3 form-floating">
+    <b-form-input
       v-model="selected.year_of_birth"
-    ></b-input>
-  </b-field>
-</b-field>
-
-
-<b-field grouped>
-  <b-field label="Comments" label-position="on-border" expanded>
-    <b-input
-      v-model="selected.comments"
-      maxlength="2000"
       :disabled="!editable"
-      type="textarea">
-    </b-input>
-  </b-field>
-</b-field>
+      type="text"
+    ></b-form-input>
+    <label>Year of Birth</label>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col mb-3 form-floating">
+    <b-form-textarea
+      v-model="selected.comments"
+      :disabled="!editable"
+      maxlength="2000"
+    ></b-form-textarea>
+    <label>Comments</label>
+  </div>
+</div>
