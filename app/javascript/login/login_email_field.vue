@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { LOGIN_NOT_AN_EMAIL, LOGIN_MISSING_EMAIL } from '../constants/errors';
+import { LOGIN_NOT_AN_EMAIL, LOGIN_MISSING_EMAIL } from '../constants/strings';
 
 export default {
     name: "LoginEmailField",

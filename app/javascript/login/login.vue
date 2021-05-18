@@ -26,7 +26,9 @@ import {
     LOGIN_401,
     LOGIN_MISSING_PASSWORD,
     LOGIN_INVALID_FIELDS,
-} from '../constants/errors';
+    LOGIN_PASSWORD_RESET_EMAIL_SEND,
+    LOGIN_PASSWORD_CHANGED,
+} from '../constants/strings';
 
 export class LoginModel extends PlanoModel {
     default() {
@@ -79,8 +81,18 @@ export default {
     },
     mounted: function() {
         if (this.$route.query.alert) {
-            this.alert.text = this.$route.query.alert;
-            this.alert.visible = true;
+            switch(this.$route.query.alert) {
+                case 'reset_sent':
+                    this.alert.text = LOGIN_PASSWORD_RESET_EMAIL_SEND;
+                    this.alert.visible = true;
+                    break;
+                case 'password_changed':
+                    this.alert.text = LOGIN_PASSWORD_CHANGED;
+                    this.alert.visible = true;
+                    break;
+                default:
+                    this.alert.visible = false;
+            }
         }
     },
     methods: {

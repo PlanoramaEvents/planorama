@@ -17,7 +17,7 @@
 import LoginEmailField  from './login_email_field';
 import {http} from '../http';
 import { validateFields } from '../utils';
-import { LOGIN_INVALID_FIELDS } from '../constants/errors'
+import { LOGIN_INVALID_FIELDS } from '../constants/strings'
 
 export default {
     name:"ForgotPassword",
@@ -57,7 +57,7 @@ export default {
                 http.post('/people/password.json', { person: this.person }).then(data => {
                     this.successfullySent = data.status === 201
                     if (this.successfullySent) {
-                        this.$router.push('/?alert=If+an+account+with+the+address+you+specified+exists+you+will+receive+an+email+with+a+password+reset+link.')
+                        this.$router.push('/?alert=reset_sent')
                     } else {
                         console.log(data)
                         this.alert.text = "TODO WRITE THIS COPY EMAIL DIDN'T SEND"

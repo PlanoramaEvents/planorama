@@ -14,7 +14,7 @@
       <a>TODO Correct Horse Battery Staple TODO</a> paradigm.
     </p>
     <b-form @submit="onSubmit">
-      <b-alert :show="error.visible" variant="danger">{{ error.text }}</b-alert>
+      <b-alert :show="error.visible" variant="danger" v-html="error.text"></b-alert>
       <login-password-field
         v-model="person.password"
         :new-password="true"
@@ -37,7 +37,7 @@
 
 <script>
 import { http } from "../http";
-import { LOGIN_MISSING_NEW_PASSWORD, LOGIN_PASSWORDS_MUST_MATCH, LOGIN_PASSWORD_INVALID, SOMETHING_WENT_WRONG } from "../constants/errors";
+import { LOGIN_MISSING_NEW_PASSWORD, LOGIN_PASSWORDS_MUST_MATCH, LOGIN_TOKEN_EXPIRED, SOMETHING_WENT_WRONG } from "../constants/strings";
 import LoginPasswordField from "./login_password_field";
 import { validateFields } from '../utils';
 
@@ -66,6 +66,8 @@ export default {
         validate: null
       },
     },
+    helpEmail: "configurable@email.com",
+    resetPasswordLink: `<a href="/people/sign_in#/forgot">Reset Password</a>`
   }),
   mounted: function () {
     this.person.reset_password_token = this.$route.query.reset_password_token;
@@ -91,21 +93,19 @@ export default {
           .put("/people/password.json", { person: this.person })
           .then((data) => {
             if (data.status === 204) {
-              this.$router.push("/");
+              this.$router.push("/?alert=password_changed");
             } else {
-              console.log(data);
-              this.error.text = SOMETHING_WENT_WRONG;
+              this.error.text = SOMETHING_WENT_WRONG(this.helpEmail);
               this.error.visible = true;
             }
           })
           .catch((error, result) => {
-            if (error.response.data.errors) {
-              console.log(
-                error.response.data.errors,
-                "needs to show instead TODO"
-              );
+            const errors = error.response.data.errors;
+            if( errors && errors.reset_password_token[0] === "is invalid") {
+              this.error.text = LOGIN_TOKEN_EXPIRED(this.resetPasswordLink);
+            } else {
+              this.error.text = SOMETHING_WENT_WRONG(this.helpEmail);
             }
-            this.error.text = SOMETHING_WENT_WRONG;
             this.error.visible = true;
           });
       }

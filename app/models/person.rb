@@ -125,6 +125,10 @@ class Person < ApplicationRecord
     false
   end
 
+  def saved_change_to_email?
+    email_addresses.first&.saved_change_to_email?
+  end
+
   def primary_email
     email_addresses.first&.email
     # emails.primary || (emails.first if new_record?)

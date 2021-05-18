@@ -1,7 +1,7 @@
 import PlanLogin from './login.vue';
 import { action } from '@storybook/addon-actions';
 
-import { LOGIN_MISSING_PASSWORD, LOGIN_INVALID_FIELDS } from '../constants/errors';
+import { LOGIN_MISSING_PASSWORD, LOGIN_INVALID_FIELDS } from '../constants/strings';
 
 export default {
     title: 'Login',
