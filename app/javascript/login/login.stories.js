@@ -7,19 +7,19 @@ export default {
     title: 'Login',
     component: PlanLogin,
     argTypes: {
-        onClick: { action: 'click'}
+        onClick: { action: 'click' }
     }
 };
 
 const Template = (args) => {
     return {
         components: { PlanLogin },
-        mounted: function()  {
+        mounted: function () {
             let component = this.$children[0]
             component.person.email = args.email || component.person.email,
-            component.person.password = args.password || component.person.password,
-            component.error = {...component.error, ...args.error};
-            component.form = {...component.form, ...args.form};
+                component.person.password = args.password || component.person.password,
+                component.error = { ...component.error, ...args.error };
+            component.form = { ...component.form, ...args.form };
             component.onSubmit = (event) => {
                 event.preventDefault();
                 action('onSubmit')('Submitted!')

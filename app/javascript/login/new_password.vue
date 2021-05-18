@@ -7,14 +7,28 @@
       <li>Does not contain the word "password"</li>
       <li>Does not contain your email address</li>
       <li>Is not one of your most recent passwords</li>
-      <li>Is not a member of this <a>TODO list of common passwords TODO</a></li>
+      <li>
+        Is not a member of this
+        <a
+          href="https://nordpass.com/most-common-passwords-list/"
+          target="_blank"
+          >list of common passwords</a
+        >
+      </li>
     </ul>
     <p>
       Optionally, we recommend you follow the
-      <a>TODO Correct Horse Battery Staple TODO</a> paradigm.
+      <a href="https://xkcd.com/936/" target="_blank"
+        >Correct Horse Battery Staple</a
+      >
+      paradigm.
     </p>
     <b-form @submit="onSubmit">
-      <b-alert :show="error.visible" variant="danger" v-html="error.text"></b-alert>
+      <b-alert
+        :show="error.visible"
+        variant="danger"
+        v-html="error.text"
+      ></b-alert>
       <login-password-field
         v-model="person.password"
         :new-password="true"
@@ -29,7 +43,9 @@
         :validateNow="form.passwordConfirmation.validate"
       ></login-password-field>
       <div class="d-flex flex-row-reverse">
-        <b-button type="submit" variant="primary" class="px-5">Change Password</b-button>
+        <b-button type="submit" variant="primary" class="px-5"
+          >Change Password</b-button
+        >
       </div>
     </b-form>
   </div>
@@ -37,9 +53,14 @@
 
 <script>
 import { http } from "../http";
-import { LOGIN_MISSING_NEW_PASSWORD, LOGIN_PASSWORDS_MUST_MATCH, LOGIN_TOKEN_EXPIRED, SOMETHING_WENT_WRONG } from "../constants/strings";
+import {
+  LOGIN_MISSING_NEW_PASSWORD,
+  LOGIN_PASSWORDS_MUST_MATCH,
+  LOGIN_TOKEN_EXPIRED,
+  SOMETHING_WENT_WRONG,
+} from "../constants/strings";
 import LoginPasswordField from "./login_password_field";
-import { validateFields } from '../utils';
+import { validateFields } from "../utils";
 
 export default {
   name: "NewPassword",
@@ -59,15 +80,15 @@ export default {
     form: {
       password: {
         valid: null,
-        validate: null
+        validate: null,
       },
       passwordConfirmation: {
         valid: null,
-        validate: null
+        validate: null,
       },
     },
     helpEmail: "configurable@email.com",
-    resetPasswordLink: `<a href="/people/sign_in#/forgot">Reset Password</a>`
+    resetPasswordLink: `<a href="/people/sign_in#/forgot">Reset Password</a>`,
   }),
   mounted: function () {
     this.person.reset_password_token = this.$route.query.reset_password_token;
@@ -80,9 +101,9 @@ export default {
         this.form.password.valid === false ||
         this.form.passwordConfirmation.valid === false
       ) {
-        if(this.person.password.length < 1) {
+        if (this.person.password.length < 1) {
           this.error.text = LOGIN_MISSING_NEW_PASSWORD;
-        } else if(this.form.password.valid === false) {
+        } else if (this.form.password.valid === false) {
           this.error.text = LOGIN_PASSWORD_INVALID;
         } else {
           this.error.text = LOGIN_PASSWORDS_MUST_MATCH;
@@ -101,7 +122,7 @@ export default {
           })
           .catch((error, result) => {
             const errors = error.response.data.errors;
-            if( errors && errors.reset_password_token[0] === "is invalid") {
+            if (errors && errors.reset_password_token[0] === "is invalid") {
               this.error.text = LOGIN_TOKEN_EXPIRED(this.resetPasswordLink);
             } else {
               this.error.text = SOMETHING_WENT_WRONG(this.helpEmail);

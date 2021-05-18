@@ -12,9 +12,9 @@ Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 
 const routes = [
-    {path: '/forgot', component: ForgotPassword},
-    {path: '/password-reset', component: NewPassword},
-    {path: '/', component: PlanLogin},
+    { path: '/forgot', component: ForgotPassword },
+    { path: '/password-reset', component: NewPassword },
+    { path: '/', component: PlanLogin },
 ]
 
 const router = new VueRouter({
