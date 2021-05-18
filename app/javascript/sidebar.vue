@@ -39,7 +39,11 @@ export default {
       this.visible = false
     },
     setSelected(v) {
-      this.visible = true
+      if (v) {
+        this.visible = true
+      } else {
+        this.visible = false
+      }
     }
   }
 }
