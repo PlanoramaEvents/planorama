@@ -2,7 +2,7 @@
 # This is the dev version of the docker compose
 # this is overlaid on the docket compose for dev environments
 #
-# docker-compose -f docker/docker-compose.yml -f  docker/docker-compose-dev.yml up
+# docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
 #
 version: "3.7"
 

@@ -1,0 +1,30 @@
+#
+# This is the dev version of the docker compose
+#
+# docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
+#
+version: "3.7"
+
+volumes:
+  pgdata:
+    redis-data:
+
+services:
+  planorama-redis:
+    image: "redis:alpine"
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+    ports:
+      - "36379:6379"
+
+  # The planner app server
+  planorama:
+    env_file:
+      - .envrc
+    depends_on:
+      - planorama-redis
+    links:
+      - planorama-redis
