@@ -65,7 +65,7 @@ CREATE TYPE public.mail_use_enum AS ENUM (
     'invite',
     'schedule',
     'completed_survey',
-    'declined_survey'''
+    'declined_survey'
 );
 
 
@@ -2968,5 +2968,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210320194037'),
 ('20210321205326'),
 ('20210321211745');
-
-
