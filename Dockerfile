@@ -36,10 +36,10 @@ RUN apk add \
 # Install bundler for this Docker image
 RUN gem install bundler:2.2.4
 
-COPY script/planorama_start.sh /planorama_start.sh
+COPY . /opt/planorama
 
 # We install all the dependencies
-#RUN bundle install
+RUN bundle install
 
 # We expose the port
 #EXPOSE 3000

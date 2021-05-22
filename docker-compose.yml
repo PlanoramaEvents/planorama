@@ -41,7 +41,8 @@ services:
       dockerfile: Dockerfile
     # command: sleep 100000
     # we should be able to use ./ but put in full path just to be safe
-    command: /opt/planorama/script/planorama_start.sh
+    #command: /opt/planorama/script/planorama_start.sh
+    command: tail -f /dev/null
     env_file:
       - .envrc
     depends_on:

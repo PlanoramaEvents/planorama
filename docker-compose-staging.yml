@@ -6,13 +6,10 @@
 version: "3.7"
 
 volumes:
-  pgdata:
-    redis-data:
+  redis-data:
 
 services:
   planorama-redis:
-    image: "redis:alpine"
-  redis:
     image: redis:alpine
     restart: always
     volumes:
@@ -28,3 +25,5 @@ services:
       - planorama-redis
     links:
       - planorama-redis
+    volumes: 
+      - .:/opt/planorama
