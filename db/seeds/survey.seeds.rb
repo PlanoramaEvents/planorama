@@ -1,14 +1,13 @@
 #surveys
 
-Survey_Question.delete_all
-Survey_Group.delete_all
+
 Survey.delete_all
 
 3.times.each do |i|
     s = Survey.create(
-        name: { "Survey # #{i}" },
+        name: 'Survey # ' + i.to_s,
         welcome: Faker::Movies::Hobbit.quote,
-        thank_you: { "Thank you for responding." },
+        thank_you: 'Thank you for responding.',
         public: true,
         authenticate: Faker::Boolean.boolean(true_ratio: 0.9)
 
@@ -23,30 +22,6 @@ Survey.delete_all
         #anonymous boolean DEFAULT false
     )
 
-    2.times.each do |j|
-        sg = Survey_Group.create(
-            name: { " Group #{j}" },
-            description: Faker::Movies::Ghostbusters.quote,
-            survey: s,
-            sort_order: Faker::Number.unique.number(digits: 3)
-        )
-
-        Survey_Question.create(
-            title: { "Question Title for group #{j} in survey #{i}" },
-            question: { "This is the actual question" },
-            survey_group: sg,
-            sort_order: 1,
-            question_type: {textfield},
-            answer_type: {String}
-
-            #mandatory boolean DEFAULT false,
-            #text_size integer,
-            #horizontal boolean DEFAULT false,
-            #private boolean DEFAULT false,
-            #regex character varying,
-            #mapping character varying(200)
-        )
-    end
 end
 
 
