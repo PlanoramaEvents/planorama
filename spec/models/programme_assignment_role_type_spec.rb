@@ -12,7 +12,7 @@ RSpec.describe ProgrammeAssignmentRoleType do
             expect(ProgrammeAssignmentRoleType.participant[0]).to eq participant_role
         end
 
-        it 'correctly returns no roles when there is only staff roles' do
+        it 'correctly returns no participant roles when there is only staff roles' do
             staff_role = create(:staff_role)
             expect(ProgrammeAssignmentRoleType.participant).to be_empty
         end
@@ -37,7 +37,7 @@ RSpec.describe ProgrammeAssignmentRoleType do
             expect(ProgrammeAssignmentRoleType.staff[0]).to eq staff_role
         end
 
-        it 'correctly returns no roles when there is only participants roles' do
+        it 'correctly returns no staff roles when there is only participants roles' do
             participant_role = create(:participant_role)
             expect(ProgrammeAssignmentRoleType.staff).to be_empty
         end

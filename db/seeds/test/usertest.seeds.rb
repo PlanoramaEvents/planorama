@@ -35,5 +35,5 @@ end
 
 #TODO: Add roles when we get around to them
 
-p "Created special test user for test environment."
+p "Created special test users for test environment."
 
