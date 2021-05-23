@@ -1401,44 +1401,6 @@ ALTER SEQUENCE public.survey_formats_id_seq OWNED BY public.survey_formats.id;
 
 
 --
--- Name: survey_groups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.survey_groups (
-    id integer NOT NULL,
-    code character varying DEFAULT ''::character varying,
-    name character varying DEFAULT ''::character varying,
-    altname character varying DEFAULT ''::character varying,
-    description text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    survey_id integer,
-    sort_order integer
-);
-
-
---
--- Name: survey_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.survey_groups_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: survey_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.survey_groups_id_seq OWNED BY public.survey_groups.id;
-
-
---
 -- Name: survey_queries; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1526,7 +1488,6 @@ CREATE TABLE public.survey_questions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    survey_group_id integer,
     mandatory boolean DEFAULT false,
     text_size integer,
     sort_order integer,
@@ -2138,13 +2099,6 @@ ALTER TABLE ONLY public.survey_formats ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
--- Name: survey_groups id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.survey_groups ALTER COLUMN id SET DEFAULT nextval('public.survey_groups_id_seq'::regclass);
-
-
---
 -- Name: survey_queries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2532,14 +2486,6 @@ ALTER TABLE ONLY public.survey_formats
 
 
 --
--- Name: survey_groups survey_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.survey_groups
-    ADD CONSTRAINT survey_groups_pkey PRIMARY KEY (id);
-
-
---
 -- Name: survey_queries survey_queries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2896,13 +2842,6 @@ CREATE INDEX survey_alias_idx ON public.surveys USING btree (alias);
 
 
 --
--- Name: survey_grp_survey_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX survey_grp_survey_idx ON public.survey_groups USING btree (survey_id);
-
-
---
 -- Name: survey_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2967,4 +2906,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210123191007'),
 ('20210320194037'),
 ('20210321205326'),
-('20210321211745');
+('20210321211745'),
+('20210522203951');
