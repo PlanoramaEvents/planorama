@@ -43,7 +43,6 @@ export default {
       this.selected = null
     },
     setSelected(v) {
-      console.debug('SET SELECTED', v)
       this.selected = v
       if (v) {
         this.visible = true

@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
           columns: people_columns,
           sortOrder: 'asc',
           sortField: 'published_last_name'
-          // selected: null
         }
       }
     }

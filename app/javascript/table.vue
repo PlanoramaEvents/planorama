@@ -110,7 +110,6 @@ export default {
       }
     },
     onDelete() {
-      console.debug('***** DELETE MODEL', this.selected);
       if (this.selected) {
         this.selected.delete().then(
           () => {
@@ -123,7 +122,6 @@ export default {
       }
     },
     onRowSelected(items) {
-      console.debug('***** Selected', items);
       this.selected = items[0]
       EventBus.emit('selectedObject', this.selected)
     }
