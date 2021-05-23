@@ -1,2 +1,13 @@
+<%= javascript_pack_tag 'survey_vue' %>
 
-TODO: SURVEYS
+<div id="survey-app">
+  <div>
+    <table-component
+      ref='tableComponent'
+      :sort-field="sortField"
+      :sort-order="sortOrder"
+      :columns="columns"
+      :collection="collection"
+    ></table-component>
+  </div>
+</div>
