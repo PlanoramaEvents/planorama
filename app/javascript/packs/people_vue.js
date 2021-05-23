@@ -195,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
           this.$refs.sidebarComponent.setSelected(this.hasSelected);
         },
         setSelected(v) {
-          console.debug("SET SELECTED", v)
           this.selected = v
           this.editable = false
           this.hasSelected = this.selected != null
