@@ -12,6 +12,7 @@
     "ckeditor4-vue": "^1.2.0",
     "css-loader": "^5.2.4",
     "jquery": "^3.6.0",
+    "mitt": "^2.1.0",
     "popper.js": "^1.16.1",
     "rails-erb-loader": "^5.5.2",
     "vue": "^2.6.12",

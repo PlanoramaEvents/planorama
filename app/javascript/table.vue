@@ -35,12 +35,14 @@
 
 <script>
 import Vue from 'vue'
+import { EventBus } from './event-bus';
 import { BootstrapVue, BTable } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
 export default {
   name: 'TableComponent',
   props: {
+    modelType : { type: Function },
     collection : { type: Object },
     columns : { type: Array }
   },
@@ -85,26 +87,45 @@ export default {
       return null
     },
 
+    onSave() {
+      let new_instance = typeof this.selected.id === 'undefined'
+      this.selected.save().then(
+        (arg) => {
+          if (new_instance) {
+            this.selected = null
+            EventBus.emit('selectedObject', this.selected)
+            this.$refs.tableComponent.loadAsyncData();
+          }
+        }
+      )
+    },
+    onReset() {
+      if (this.selected) this.selected.fetch()
+    },
     onNew() {
-      console.debug('***** NEW MODEL');
       // this.selected.save()
-      // this.$emit('create', false);
+      if (this.modelType) {
+        this.selected = new this.modelType();
+        EventBus.emit('selectedObject', this.selected)
+      }
     },
     onDelete() {
       console.debug('***** DELETE MODEL', this.selected);
       if (this.selected) {
-        // this.selected.delete().then(
-        //   () => {
-        //     this.$emit('selected', null);
-        //     this.selected = null;
-        //     this.loadAsyncData()
-        //   }
-        // )
+        this.selected.delete().then(
+          () => {
+            this.$emit('selected', null)
+            this.selected = null;
+            EventBus.emit('selectedObject', this.selected)
+            this.loadAsyncData()
+          }
+        )
       }
     },
     onRowSelected(items) {
-      // console.debug('***** Selected', items);
-      this.$emit('selected', items[0])
+      console.debug('***** Selected', items);
+      this.selected = items[0]
+      EventBus.emit('selectedObject', this.selected)
     }
   }
 }
