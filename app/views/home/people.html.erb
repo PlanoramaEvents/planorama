@@ -4,9 +4,10 @@
 <div id="people-app">
   <div>
     <table-component
-      ref='tableComponent'
-      :sort-field="sortField"
-      :sort-order="sortOrder"
+      select-event="selectedPerson"
+      sort-field="published_last_name"
+      sort-order="asc"
+
       :columns="columns"
       :collection="collection"
       :model-type="modelType"
@@ -14,7 +15,7 @@
   </div>
 
   <sidebar-component
-    ref='sidebarComponent'
+    select-event="selectedPerson"
   >
     <template v-slot:header="slotProps">
       <div v-if="slotProps.selected">

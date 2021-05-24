@@ -3,9 +3,10 @@
 <div id="survey-app">
   <div>
     <table-component
-      ref='tableComponent'
-      :sort-field="sortField"
-      :sort-order="sortOrder"
+      select-event="selectedSurvey"
+      sort-field="name"
+      sort-order="asc"
+
       :columns="columns"
       :collection="collection"
     ></table-component>

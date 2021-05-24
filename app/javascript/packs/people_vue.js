@@ -136,9 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return {
           modelType: Person,
           collection: people,
-          columns: people_columns,
-          sortOrder: 'asc',
-          sortField: 'published_last_name'
+          columns: people_columns
         }
       }
     }

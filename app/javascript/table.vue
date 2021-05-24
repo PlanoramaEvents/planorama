@@ -44,7 +44,8 @@ export default {
   props: {
     modelType : { type: Function },
     collection : { type: Object },
-    columns : { type: Array }
+    columns : { type: Array },
+    selectEvent : { type: String }
   },
   data() {
     return {
@@ -93,7 +94,9 @@ export default {
         (arg) => {
           if (new_instance) {
             this.selected = null
-            EventBus.emit('selectedObject', this.selected)
+            if (this.selectEvent) {
+              EventBus.emit(this.selectEvent, this.selected)
+            }
             this.$refs.tableComponent.loadAsyncData();
           }
         }
@@ -106,7 +109,9 @@ export default {
       // this.selected.save()
       if (this.modelType) {
         this.selected = new this.modelType();
-        EventBus.emit('selectedObject', this.selected)
+        if (this.selectEvent) {
+          EventBus.emit(this.selectEvent, this.selected)
+        }
       }
     },
     onDelete() {
@@ -115,7 +120,9 @@ export default {
           () => {
             this.$emit('selected', null)
             this.selected = null;
-            EventBus.emit('selectedObject', this.selected)
+            if (this.selectEvent) {
+              EventBus.emit(this.selectEvent, this.selected)
+            }
             this.loadAsyncData()
           }
         )
@@ -123,7 +130,9 @@ export default {
     },
     onRowSelected(items) {
       this.selected = items[0]
-      EventBus.emit('selectedObject', this.selected)
+      if (this.selectEvent) {
+        EventBus.emit(this.selectEvent, this.selected)
+      }
     }
   }
 }

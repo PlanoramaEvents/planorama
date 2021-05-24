@@ -103,9 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
       data() {
         return {
           collection: surveys,
-          columns: survey_columns,
-          sortOrder: 'asc',
-          sortField: 'name'
+          columns: survey_columns
         }
       }
     }

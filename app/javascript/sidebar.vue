@@ -31,6 +31,9 @@ import { EventBus } from './event-bus';
 
 export default {
   name: 'SidebarComponent',
+  props: {
+    selectEvent : { type: String }
+  },
   data() {
     return {
       visible: false,
@@ -52,7 +55,9 @@ export default {
     }
   },
   mounted() {
-    EventBus.on("selectedObject", this.setSelected);
+    if (this.selectEvent) {
+      EventBus.on(this.selectEvent, this.setSelected);
+    }
   }
 }
 </script>
