@@ -75,6 +75,11 @@ const survey_columns = [
     key: '$.welcome',
     label: 'Welcome',
     sortable: true
+  },
+  {
+    key: '$.alias',
+    label: 'Alias',
+    sortable: true
   }
   // welcome
   // thank_you

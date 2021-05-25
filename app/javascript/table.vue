@@ -65,7 +65,7 @@ export default {
 
       if (ctx.perPage) this.collection.set('perPage', ctx.perPage)
       if (sortOrder) this.collection.set('sortOrder', sortOrder)
-      if (ctx.sortField) this.collection.set('sortField', ctx.sortBy)
+      if (ctx.sortBy) this.collection.set('sortField', ctx.sortBy)
       if (ctx.filter) this.collection.set('filter', ctx.filter)
 
       this.collection.clear()
