@@ -9,7 +9,7 @@ FactoryBot.define do
         pseudonym_first_name { nil }
         pseudonym_last_name { nil }
 
-        after(:create) do |person, evaluator|
+        after(:create) do |person|
             create_list(:email_address, 1, person: person, email: Faker::Internet.safe_email(name: "#{person.first_name} #{person.last_name}"))
             person.reload
         end
@@ -26,4 +26,5 @@ FactoryBot.define do
             registration_type { "adult_full" }
         end
     end
+
 end
