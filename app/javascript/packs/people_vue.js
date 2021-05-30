@@ -1,10 +1,10 @@
 import Vue from 'vue'
 // import CKEditor from 'ckeditor4-vue'
+// Vue.use( CKEditor );
+import { EventBus } from '../event-bus';
 
 import PlanoModel from '../model.js'
-import TableComponent from '../table.vue'
-import SidebarComponent from '../sidebar.vue'
-// Vue.use( CKEditor );
+import TableWithSidebarComponent from '../table_with_sidebar.vue'
 import {Collection} from 'vue-mc'
 import {
     boolean,
@@ -129,16 +129,50 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = new Vue(
     {
       components: {
-        TableComponent,
-        SidebarComponent
+        TableWithSidebarComponent
       },
       data() {
         return {
           modelType: Person,
           collection: people,
-          columns: people_columns
+          columns: people_columns,
+          selectEvent: 'selectedPerson',
+          saveEvent: 'savePerson',
+          sortField: 'published_last_name'
+        }
+      },
+      methods: {
+        onSave(p) {
+          console.debug('**** SAVE PPPP', p)
+          p.save().then(
+            (arg) => {
+              // if (new_instance) {
+                // this.selected = null
+                if (this.selectEvent) {
+                  EventBus.emit(this.selectEvent, p)
+                }
+//                this.$refs.tableComponent.loadAsyncData();
+              // }
+            }
+          )
+        },
+      },
+      mounted() {
+        if (this.saveEvent) {
+          console.debug('--- set save ', this.saveEvent)
+          EventBus.on(this.saveEvent, this.onSave);
         }
       }
+      // template: `
+      //   <table-with-sidebar-component
+      //       :modelType="modelType"
+      //       :select-event="selectEvent"
+      //       :sort-field="sortField"
+      //       :columns="columns"
+      //       :collection="collection"
+      //     >
+      //   </table-with-sidebar-component>
+      // `
     }
   )
   app.$mount('#people-app')

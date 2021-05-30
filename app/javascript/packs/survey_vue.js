@@ -107,10 +107,22 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       data() {
         return {
+          modelType: Survey,
           collection: surveys,
-          columns: survey_columns
+          columns: survey_columns,
+          selectEvent: 'selectedSurvey',
+          sortField: 'welcome'
         }
-      }
+      },
+      template: `
+        <table-component
+          :modelType="modelType"
+          :select-event="selectEvent"
+          :sort-field="sortField"
+          :columns="columns"
+          :collection="collection"
+        ></table-component>
+      `
     }
   )
   app.$mount('#survey-app')

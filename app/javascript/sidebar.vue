@@ -32,7 +32,9 @@ import { EventBus } from './event-bus';
 export default {
   name: 'SidebarComponent',
   props: {
-    selectEvent : { type: String }
+    modelType : { type: Function },
+    selectEvent : { type: String },
+    saveEvent : { type: String }
   },
   data() {
     return {

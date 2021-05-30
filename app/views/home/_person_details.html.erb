@@ -3,13 +3,13 @@
   <b-navbar-nav class="ml-auto px-3 py-2">
     <b-nav-form>
       <b-button
-        @click="slotProps.onSave"
+        @click="slotProps.save"
         :disabled="!slotProps.editable"
       >
         Save
       </b-button>
       <b-button
-        @click="slotProps.editable = true"
+        @click="slotProps.edit"
       >
         <i class="fas fa-edit"></i>
       </b-button>
@@ -17,7 +17,9 @@
   </b-navbar-nav>
 </b-nav>
 
-
+<div class="row">
+  <div class="col mb-3 form-floating"></div>
+</div>
 <div class="row">
   <div class="col mb-3 form-floating">
     <label>First Name</label>

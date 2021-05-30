@@ -22,7 +22,6 @@
 
       :no-local-sorting="true"
       :sort-by="sortField"
-      :sort-desc="sortDesc"
 
       :per-page="perPage"
       :current-page="currentPage"
@@ -45,15 +44,15 @@ export default {
     modelType : { type: Function },
     collection : { type: Object },
     columns : { type: Array },
-    selectEvent : { type: String }
+    sortField : { type: String },
+    selectEvent : { type: String },
+    // saveEvent : { type: String },
+    perPage : { type: Number, default: 15 }
   },
   data() {
     return {
       selectMode: 'single',
-      sortField: null,
-      sortDesc: false,
       selected: null,
-      perPage: 15,
       currentPage: 1,
       filter: null,
       totalRows: 100
@@ -86,21 +85,6 @@ export default {
       })
 
       return null
-    },
-
-    onSave() {
-      let new_instance = typeof this.selected.id === 'undefined'
-      this.selected.save().then(
-        (arg) => {
-          if (new_instance) {
-            this.selected = null
-            if (this.selectEvent) {
-              EventBus.emit(this.selectEvent, this.selected)
-            }
-            this.$refs.tableComponent.loadAsyncData();
-          }
-        }
-      )
     },
     onReset() {
       if (this.selected) this.selected.fetch()

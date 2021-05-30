@@ -2,27 +2,20 @@
 <%= javascript_pack_tag 'people_vue' %>
 
 <div id="people-app">
-  <div>
-    <table-component
-      select-event="selectedPerson"
-      sort-field="published_last_name"
-      sort-order="asc"
-
+  <table-with-sidebar-component
+      :modelType="modelType"
+      :select-event="selectEvent"
+      :save-event="saveEvent"
+      :sort-field="sortField"
       :columns="columns"
       :collection="collection"
-      :model-type="modelType"
-    ></table-component>
-  </div>
-
-  <sidebar-component
-    select-event="selectedPerson"
-  >
-    <template v-slot:header="slotProps">
+    >
+    <template v-slot:sidebar-header="slotProps">
       <div v-if="slotProps.selected">
         <h1 class="title">{{slotProps.selected.published_name}}</h1>
       </div>
     </template>
-    <template v-slot:content="slotProps">
+    <template v-slot:sidebar-content="slotProps">
       <div v-if="slotProps.selected" class="px-3 py-2">
         <b-tabs content-class="mt-3">
           <b-tab title="Details" active>
@@ -33,30 +26,22 @@
           </b-tab>
           <b-tab title="Tags">
             <p>TODO: TAGS</p>
+            <!--
+            <b-field grouped>
+             <b-field label="Tags">
+               <b-taginput
+                   v-model="selected.tags"
+                   ellipsis
+                   icon="label"
+                   placeholder="Add a tag"
+                   aria-close-label="Delete this tag">
+               </b-taginput>
+             </b-field>
+            </b-field>
+            -->
           </b-tab>
         </b-tabs>
       </div>
     </template>
-  </sidebar-component>
-
-<!--
-"comments": null,
- -->
-
-       <!-- TODO: put tags and bio into a seperate tab -->
-                   <!--
-                   <b-field grouped>
-                     <b-field label="Tags">
-                       <b-taginput
-                           v-model="selected.tags"
-                           ellipsis
-                           icon="label"
-                           placeholder="Add a tag"
-                           aria-close-label="Delete this tag">
-                       </b-taginput>
-                     </b-field>
-                   </b-field>
-                   -->
-
-
+  </table-with-sidebar-component>
 </div>
