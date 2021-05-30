@@ -143,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       methods: {
         onSave(p) {
-          console.debug('**** SAVE PPPP', p)
           p.save().then(
             (arg) => {
               // if (new_instance) {
@@ -159,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       mounted() {
         if (this.saveEvent) {
-          console.debug('--- set save ', this.saveEvent)
           EventBus.on(this.saveEvent, this.onSave);
         }
       }
