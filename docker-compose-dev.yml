@@ -37,6 +37,32 @@ services:
     image: schickling/mailcatcher
     ports:
       - 1080:1080
+  # mail:
+  #   entrypoint: "mailcatcher -f --ip 0.0.0.0"
+  #   image: registry.gitlab.com/worldcon/wellington:latest
+  #   depends_on:
+  #     - web
+  #     - worker
+  #   ports:
+  #     - "1080:1080"
+  #     - "1025:1025"
+  #   restart: always
+  # worker:
+  #   entrypoint: "script/docker_sidekiq_entry.sh"
+  #   working_dir: /hack
+  #   image: registry.gitlab.com/worldcon/wellington:latest
+  #   depends_on:
+  #     - web
+  #     - postgres
+  #     - redis
+  #   env_file:
+  #     .env
+  #   restart: always
+  #   volumes:
+  #     - node_modules:/hack/node_modules  # Except node_modules folder which is exclusive to the container
+  #     - ./:/hack                         # Mount current working directory to /hack for hacking :)
+  #     - type: tmpfs
+  #       target: /hack/tmp
 
 # Simple volumes used for persistent storage
 volumes:

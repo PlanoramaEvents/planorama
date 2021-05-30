@@ -7,21 +7,10 @@ version: "3.7"
 
 volumes:
   pgdata:
-  # redis-data:
+  redis-data:
 
 services:
-  # Simple redis server based on the
-  # planorama-redis:
-  #   image: "redis:alpine"
-  # redis:
-  #   image: redis:alpine
-  #   restart: always
-  #   volumes:
-  #     - redis-data:/data
-  #   ports:
-  #     - "36379:6379"
   # The database server - only needed for dev and test
-
   # The Postgre DB
   postgres:
     image: postgres:12-alpine
@@ -33,6 +22,13 @@ services:
       # - ./init_data:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+  #   ports:
+  #     - "36379:6379"
 
   # The planner app server
   planorama:
@@ -46,6 +42,7 @@ services:
       - .envrc
     depends_on:
       - postgres
+      - redis
       # - "planorama-redis"
     links:
       - postgres
