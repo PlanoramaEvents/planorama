@@ -1,3 +1,23 @@
 <%= javascript_pack_tag 'survey_vue' %>
 
-<div id="survey-app"></div>
+<div id="survey-app">
+  <table-with-sidebar-component
+      :modelType="modelType"
+      :select-event="selectEvent"
+      :save-event="saveEvent"
+      :sort-field="sortField"
+      :columns="columns"
+      :collection="collection"
+  >
+    <template v-slot:sidebar-header="slotProps">
+      <div v-if="slotProps.selected">
+        <h1 class="title">{{slotProps.selected.name}}</h1>
+      </div>
+    </template>
+    <template v-slot:sidebar-content="slotProps">
+      <div v-if="slotProps.selected" class="px-3 py-2">
+        TODO
+      </div>
+    </template>
+  </table-with-sidebar-component>
+</div>

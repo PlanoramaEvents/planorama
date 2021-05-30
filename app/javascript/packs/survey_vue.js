@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import PlanoModel from '../model.js'
-import TableComponent from '../table.vue'
+import TableWithSidebarComponent from '../table_with_sidebar.vue'
 import {Collection} from 'vue-mc'
 import {
     boolean,
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = new Vue(
     {
       components: {
-        TableComponent
+        TableWithSidebarComponent
       },
       data() {
         return {
@@ -111,18 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
           collection: surveys,
           columns: survey_columns,
           selectEvent: 'selectedSurvey',
+          saveEvent: 'saveSurvey',
           sortField: 'welcome'
         }
-      },
-      template: `
-        <table-component
-          :modelType="modelType"
-          :select-event="selectEvent"
-          :sort-field="sortField"
-          :columns="columns"
-          :collection="collection"
-        ></table-component>
-      `
+      }
     }
   )
   app.$mount('#survey-app')
