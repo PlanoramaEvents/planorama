@@ -20,6 +20,8 @@
 
       :items="provider"
 
+      ref="table"
+
       :no-local-sorting="true"
       :sort-by="sortField"
 
@@ -100,14 +102,14 @@ export default {
     },
     onDelete() {
       if (this.selected) {
-        this.selected.delete().then(
+        let candidate = this.selected
+        this.selected = null;
+        if (this.selectEvent) {
+          EventBus.emit(this.selectEvent, null)
+        }
+        candidate.delete().then(
           () => {
-            this.$emit('selected', null)
-            this.selected = null;
-            if (this.selectEvent) {
-              EventBus.emit(this.selectEvent, this.selected)
-            }
-            this.loadAsyncData()
+            this.$refs.table.refresh()
           }
         )
       }
