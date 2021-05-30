@@ -1,10 +1,10 @@
 import Vue from 'vue'
 // import CKEditor from 'ckeditor4-vue'
+// Vue.use( CKEditor );
+import { EventBus } from '../event-bus';
 
 import PlanoModel from '../model.js'
-import TableComponent from '../table.vue'
-import SidebarComponent from '../sidebar.vue'
-// Vue.use( CKEditor );
+import TableWithSidebarComponent from '../table_with_sidebar.vue'
 import {Collection} from 'vue-mc'
 import {
     boolean,
@@ -71,68 +71,47 @@ class People extends Collection {
 const people_columns = [
   {
     key: 'id',
-    label: 'ID',
-    // width: '350',
-    // // sticky: true,
-    // numeric: true
-    // // searchable: true,
+    label: 'ID'
   },
   {
     key: '$.published_name',
     label: 'Published Name',
     stickyColumn: true,
-    // // sticky: true,
-    // width: '700',
-    // searchable: true,
     sortable: true
   },
   {
     key: '$.published_last_name',
     label: 'Published Last Name',
-    // width: '400',
-    // searchable: true,
     sortable: true
   },
   {
     key: '$.first_name',
     label: 'First Name',
-    // width: '400',
-    // searchable: true,
     sortable: true
   },
   {
     key: '$.last_name',
     label: 'Last Name',
-    // width: '400',
-    // searchable: true,
     sortable: true
   },
   {
     key: '$.pronouns',
     label: 'Pronouns',
-    // width: '400',
-    // searchable: false,
     sortable: false
   },
   {
     key: '$.registered',
     label: 'Registered',
-    // width: '250',
-    // searchable: true,
     sortable: true
   },
   {
     key: '$.registration_type',
     label: 'Registration Type',
-    // width: '250',
-    // searchable: true,
     sortable: true
   },
   {
     key: '$.registration_number',
     label: 'Registration Number',
-    // width: '250',
-    // searchable: true,
     sortable: true
   }
   // {
@@ -146,64 +125,55 @@ const people_columns = [
 
 document.addEventListener('DOMContentLoaded', () => {
   let people = new People()
-  let has_selected = false
 
   const app = new Vue(
     {
       components: {
-        TableComponent,
-        SidebarComponent
+        TableWithSidebarComponent
       },
       data() {
         return {
+          modelType: Person,
           collection: people,
           columns: people_columns,
-          sortOrder: 'asc',
-          sortField: 'published_last_name',
-          selected: null,
-          hasSelected: has_selected,
-          // primary-key
-          editable : false,
-          editorConfig: {
-            readOnly: true
-          }
+          selectEvent: 'selectedPerson',
+          saveEvent: 'savePerson',
+          sortField: 'published_last_name'
         }
       },
       methods: {
-        onSave() {
-          let new_instance = typeof this.selected.id === 'undefined'
-          this.selected.save().then(
+        onSave(p) {
+          console.debug('**** SAVE PPPP', p)
+          p.save().then(
             (arg) => {
-              this.editable = false
-              if (new_instance) {
-                this.selected = null
-                this.hasSelected = this.selected != null
-                this.$refs.sidebarComponent.setSelected(this.hasSelected);
-                this.$refs.tableComponent.loadAsyncData();
-              }
+              // if (new_instance) {
+                // this.selected = null
+                if (this.selectEvent) {
+                  EventBus.emit(this.selectEvent, p)
+                }
+//                this.$refs.tableComponent.loadAsyncData();
+              // }
             }
           )
         },
-        onReset() {
-          if (this.selected) this.selected.fetch()
-        },
-        onCreate() {
-          // Create a new model and make that the selected on on the sidebar
-          this.selected = new Person();
-          this.hasSelected = this.selected != null
-          this.editable = true
-          this.$refs.sidebarComponent.setSelected(this.hasSelected);
-        },
-        setSelected(v) {
-          console.debug("SET SELECTED", v)
-          this.selected = v
-          this.editable = false
-          this.hasSelected = this.selected != null
-          this.$refs.sidebarComponent.setSelected(this.hasSelected);
+      },
+      mounted() {
+        if (this.saveEvent) {
+          console.debug('--- set save ', this.saveEvent)
+          EventBus.on(this.saveEvent, this.onSave);
         }
       }
+      // template: `
+      //   <table-with-sidebar-component
+      //       :modelType="modelType"
+      //       :select-event="selectEvent"
+      //       :sort-field="sortField"
+      //       :columns="columns"
+      //       :collection="collection"
+      //     >
+      //   </table-with-sidebar-component>
+      // `
     }
   )
-  console.log("mounting people app")
   app.$mount('#people-app')
 })

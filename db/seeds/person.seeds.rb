@@ -8,7 +8,7 @@ Person.delete_all
 
     if registered == true
         registration_number = i + 1000
-        registration_type = %w[supporting attending child personal_assistant other].sample
+        registration_type = %w[supporting adult child teen ya first].sample
     end
 
     p = Person.create(

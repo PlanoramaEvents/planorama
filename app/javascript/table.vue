@@ -22,7 +22,6 @@
 
       :no-local-sorting="true"
       :sort-by="sortField"
-      :sort-desc="sortDesc"
 
       :per-page="perPage"
       :current-page="currentPage"
@@ -35,22 +34,25 @@
 
 <script>
 import Vue from 'vue'
+import { EventBus } from './event-bus';
 import { BootstrapVue, BTable } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
 export default {
   name: 'TableComponent',
   props: {
+    modelType : { type: Function },
     collection : { type: Object },
-    columns : { type: Array }
+    columns : { type: Array },
+    sortField : { type: String },
+    selectEvent : { type: String },
+    // saveEvent : { type: String },
+    perPage : { type: Number, default: 15 }
   },
   data() {
     return {
       selectMode: 'single',
-      sortField: null,
-      sortDesc: false,
       selected: null,
-      perPage: 15,
       currentPage: 1,
       filter: null,
       totalRows: 100
@@ -62,7 +64,7 @@ export default {
 
       if (ctx.perPage) this.collection.set('perPage', ctx.perPage)
       if (sortOrder) this.collection.set('sortOrder', sortOrder)
-      if (ctx.sortField) this.collection.set('sortField', ctx.sortBy)
+      if (ctx.sortBy) this.collection.set('sortField', ctx.sortBy)
       if (ctx.filter) this.collection.set('filter', ctx.filter)
 
       this.collection.clear()
@@ -84,27 +86,37 @@ export default {
 
       return null
     },
-
+    onReset() {
+      if (this.selected) this.selected.fetch()
+    },
     onNew() {
-      console.debug('***** NEW MODEL');
       // this.selected.save()
-      // this.$emit('create', false);
+      if (this.modelType) {
+        this.selected = new this.modelType();
+        if (this.selectEvent) {
+          EventBus.emit(this.selectEvent, this.selected)
+        }
+      }
     },
     onDelete() {
-      console.debug('***** DELETE MODEL', this.selected);
       if (this.selected) {
-        // this.selected.delete().then(
-        //   () => {
-        //     this.$emit('selected', null);
-        //     this.selected = null;
-        //     this.loadAsyncData()
-        //   }
-        // )
+        this.selected.delete().then(
+          () => {
+            this.$emit('selected', null)
+            this.selected = null;
+            if (this.selectEvent) {
+              EventBus.emit(this.selectEvent, this.selected)
+            }
+            this.loadAsyncData()
+          }
+        )
       }
     },
     onRowSelected(items) {
-      // console.debug('***** Selected', items);
-      this.$emit('selected', items[0])
+      this.selected = items[0]
+      if (this.selectEvent) {
+        EventBus.emit(this.selectEvent, this.selected)
+      }
     }
   }
 }
