@@ -343,6 +343,7 @@ DEPENDENCIES
   faker
   guard
   guard-livereload
+  io-wait
   jbuilder (~> 2.7)
   kaminari
   listen (~> 3.2)
