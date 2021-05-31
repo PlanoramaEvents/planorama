@@ -37,16 +37,6 @@ services:
     image: schickling/mailcatcher
     ports:
       - 1080:1080
-  # mail:
-  #   entrypoint: "mailcatcher -f --ip 0.0.0.0"
-  #   image: registry.gitlab.com/worldcon/wellington:latest
-  #   depends_on:
-  #     - web
-  #     - worker
-  #   ports:
-  #     - "1080:1080"
-  #     - "1025:1025"
-  #   restart: always
   # worker:
   #   entrypoint: "script/docker_sidekiq_entry.sh"
   #   working_dir: /hack
