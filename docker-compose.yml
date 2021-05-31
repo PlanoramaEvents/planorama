@@ -22,7 +22,7 @@ services:
       # - ./init_data:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
-  redis:
+  planorama-redis:
     image: redis:alpine
     restart: always
     volumes:
@@ -42,10 +42,9 @@ services:
       - .envrc
     depends_on:
       - postgres
-      - redis
-      # - "planorama-redis"
+      - planorama-redis
     links:
       - postgres
-      # - planorama-redis
+      - planorama-redis
     ports:
       - 3000:3000
