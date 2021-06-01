@@ -22,16 +22,17 @@ services:
       # - ./init_data:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
-  redis:
-    image: redis:alpine
-    restart: always
-    volumes:
-      - redis-data:/data
-  #   ports:
-  #     - "36379:6379"
+  #planorama-redis:
+    # image: redis:alpine
+    # restart: always
+    # volumes:
+    #   - redis-data:/data
+    # ports:
+    #   - "36379:6379"
 
   # The planner app server
   planorama:
+    # image: planorama:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -43,8 +44,7 @@ services:
       - .envrc
     depends_on:
       - postgres
-      - redis
-      # - "planorama-redis"
+      # - planorama-redis
     links:
       - postgres
       # - planorama-redis
