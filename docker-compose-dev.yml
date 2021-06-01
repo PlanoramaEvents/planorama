@@ -2,7 +2,7 @@
 # This is the dev version of the docker compose
 # this is overlaid on the docket compose for dev environments
 #
-# docker-compose -f docker/docker-compose.yml -f  docker/docker-compose-dev.yml up
+# docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
 #
 version: "3.7"
 
@@ -11,6 +11,10 @@ services:
     volumes:
       - pgdata:/var/lib/postgres:cached
   planorama:
+    # image: planorama:dev
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -25,9 +29,10 @@ services:
     environment:
       WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
   livereload:
+    # image: planorama:dev
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
     command: /opt/planorama/script/livereload_start.sh
     ports:
       - 35729:35729
