@@ -32,7 +32,7 @@ services:
 
   # The planner app server
   planorama:
-    image: planorama:latest
+    # image: planorama:latest
     build:
       context: .
       dockerfile: Dockerfile
