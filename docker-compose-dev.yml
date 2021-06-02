@@ -11,7 +11,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgres:cached
   planorama:
-    # image: planorama:dev
+    image: planorama:dev
     build:
       context: .
       dockerfile: Dockerfile-dev
@@ -29,7 +29,7 @@ services:
     environment:
       WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
   livereload:
-    # image: planorama:dev
+    image: planorama:dev
     build:
       context: .
       dockerfile: Dockerfile-dev
