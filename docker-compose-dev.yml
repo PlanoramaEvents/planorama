@@ -15,6 +15,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-dev
+    command: /opt/planorama/script/planorama_start.sh
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
