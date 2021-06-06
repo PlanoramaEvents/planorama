@@ -23,7 +23,7 @@ FactoryBot.define do
             registered { true }
             # TODO make these more realistic
             registration_number { "123456" }
-            registration_type { "adult_full" }
+            registration_type { "adult" }
         end
     end
 
