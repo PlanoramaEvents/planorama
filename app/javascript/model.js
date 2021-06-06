@@ -24,11 +24,8 @@ export default class PlanoModel extends Model {
     }
   }
 
-
   save(options = {}) {
-    const csrfToken = document.querySelector("meta[name=csrf-token]").content
     let headers = this.getSaveHeaders();
-    headers['X-CSRF-Token'] = csrfToken;
     let config = () => {
       return {
         url     : defaultTo(options.url,     this.getSaveURL()),
@@ -57,8 +54,16 @@ export default class PlanoModel extends Model {
         //   indefinite: true
         // })
       }
-    ); 
+    );
 
     return save_promise;
+  }
+
+  // We need to put the CSRF token in the header
+  getDefaultHeaders() {
+    const csrfToken = document.querySelector("meta[name=csrf-token]").content
+    return {
+      'X-CSRF-Token': csrfToken
+    }
   }
 }

@@ -2,7 +2,7 @@
 # This is the dev version of the docker compose
 # this is overlaid on the docket compose for dev environments
 #
-# docker-compose -f docker/docker-compose.yml -f  docker/docker-compose-dev.yml up
+# docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
 #
 version: "3.7"
 
@@ -11,6 +11,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgres:cached
   planorama:
+    image: planorama:dev
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    command: /opt/planorama/script/planorama_start.sh
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -25,9 +30,10 @@ services:
     environment:
       WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
   livereload:
+    image: planorama:dev
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
     command: /opt/planorama/script/livereload_start.sh
     ports:
       - 35729:35729
@@ -37,6 +43,22 @@ services:
     image: schickling/mailcatcher
     ports:
       - 1080:1080
+  # worker:
+  #   entrypoint: "script/docker_sidekiq_entry.sh"
+  #   working_dir: /hack
+  #   image: registry.gitlab.com/worldcon/wellington:latest
+  #   depends_on:
+  #     - web
+  #     - postgres
+  #     - redis
+  #   env_file:
+  #     .env
+  #   restart: always
+  #   volumes:
+  #     - node_modules:/hack/node_modules  # Except node_modules folder which is exclusive to the container
+  #     - ./:/hack                         # Mount current working directory to /hack for hacking :)
+  #     - type: tmpfs
+  #       target: /hack/tmp
 
 # Simple volumes used for persistent storage
 volumes:

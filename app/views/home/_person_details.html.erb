@@ -3,13 +3,13 @@
   <b-navbar-nav class="ml-auto px-3 py-2">
     <b-nav-form>
       <b-button
-        @click="onSave"
-        :disabled="!editable"
+        @click="slotProps.save"
+        :disabled="!slotProps.editable"
       >
         Save
       </b-button>
       <b-button
-        @click="editable = true"
+        @click="slotProps.edit"
       >
         <i class="fas fa-edit"></i>
       </b-button>
@@ -17,13 +17,15 @@
   </b-navbar-nav>
 </b-nav>
 
-
+<div class="row">
+  <div class="col mb-3 form-floating"></div>
+</div>
 <div class="row">
   <div class="col mb-3 form-floating">
     <label>First Name</label>
     <b-form-input
-      v-model="selected.first_name"
-      :disabled="!editable"
+      v-model="slotProps.selected.first_name"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
@@ -31,8 +33,8 @@
     <label>Last Name</label>
     <b-form-input
       label="Last Name"
-      v-model="selected.last_name"
-      :disabled="!editable"
+      v-model="slotProps.selected.last_name"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
@@ -40,8 +42,8 @@
     <label>Suffix</label>
     <b-form-input
       label="Suffix"
-      v-model="selected.suffix"
-      :disabled="!editable"
+      v-model="slotProps.selected.suffix"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
@@ -49,26 +51,26 @@
 
 <div class="row">
   <div class="col mb-3 form-floating">
-    <label>Pub First Name</label>
+    <label>Pseudonym First Name</label>
     <b-form-input
-      v-model="selected.pseudonym_first_name"
-      :disabled="!editable"
+      v-model="slotProps.selected.pseudonym_first_name"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
   <div class="col mb-3 form-floating">
-    <label>Pub Last Name</label>
+    <label>Pseudonym Last Name</label>
     <b-form-input
-      v-model="selected.pseudonym_last_name"
-      :disabled="!editable"
+      v-model="slotProps.selected.pseudonym_last_name"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
   <div class="col mb-3 form-floating">
-    <label>Pub Suffix</label>
+    <label>Pseudonym Suffix</label>
     <b-form-input
-      v-model="selected.pseudonym_suffix"
-      :disabled="!editable"
+      v-model="slotProps.selected.pseudonym_suffix"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
@@ -78,24 +80,24 @@
   <div class="col mb-3 form-floating">
     <label>Pronouns</label>
     <b-form-input
-      v-model="selected.pronouns"
-      :disabled="!editable"
+      v-model="slotProps.selected.pronouns"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
   <div class="col mb-3 form-floating">
     <label>Job Title</label>
     <b-form-input
-      v-model="selected.job_title"
-      :disabled="!editable"
+      v-model="slotProps.selected.job_title"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
   <div class="col mb-3 form-floating">
     <label>Organization</label>
     <b-form-input
-      v-model="selected.organization"
-      :disabled="!editable"
+      v-model="slotProps.selected.organization"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
@@ -105,8 +107,8 @@
   <div class="col mb-3">
     <label>Invite Status</label>
     <b-form-select
-      :disabled="!editable"
-      v-model="selected.invite_status"
+      :disabled="!slotProps.editable"
+      v-model="slotProps.selected.invite_status"
     >
       <b-form-select-option value="not_set">Unknown</b-form-select-option>
       <b-form-select-option value="do_not_invite">Do not invite</b-form-select-option>
@@ -119,8 +121,8 @@
   <div class="col mb-3">
     <label>Acceptance Status</label>
     <b-form-select
-      :disabled="!editable"
-      v-model="selected.acceptance_status">
+      :disabled="!slotProps.editable"
+      v-model="slotProps.selected.acceptance_status">
       <b-form-select-option value="unknown">Unknown</b-form-select-option>
       <b-form-select-option value="probable">Probable</b-form-select-option>
       <b-form-select-option value="accepted">Accepted</b-form-select-option>
@@ -132,8 +134,8 @@
 <div class="row">
   <div class="col mb-3">
     <b-form-checkbox
-      v-model="selected.registered"
-      :disabled="!editable"
+      v-model="slotProps.selected.registered"
+      :disabled="!slotProps.editable"
       switch
       size="lg"
     >
@@ -143,16 +145,16 @@
   <div class="col mb-3 form-floating">
     <label>Reg Type</label>
     <b-form-input
-      v-model="selected.registration_type"
-      :disabled="!editable"
+      v-model="slotProps.selected.registration_type"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
   <div class="col mb-3 form-floating">
     <label>Reg Number</label>
     <b-form-input
-      v-model="selected.registration_number"
-      :disabled="!editable"
+      v-model="slotProps.selected.registration_number"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
@@ -161,8 +163,8 @@
 <div class="row">
   <div class="col mb-3">
     <b-form-checkbox
-      v-model="selected.opted_in"
-      :disabled="!editable"
+      v-model="slotProps.selected.opted_in"
+      :disabled="!slotProps.editable"
       switch
       size="lg"
     >
@@ -171,8 +173,8 @@
   </div>
   <div class="col mb-3">
     <b-form-checkbox
-      v-model="selected.can_share"
-      :disabled="!editable"
+      v-model="slotProps.selected.can_share"
+      :disabled="!slotProps.editable"
       switch
       size="lg"
     >
@@ -181,8 +183,8 @@
   </div>
   <div class="col mb-3">
     <b-form-checkbox
-      v-model="selected.can_photo"
-      :disabled="!editable"
+      v-model="slotProps.selected.can_photo"
+      :disabled="!slotProps.editable"
       switch
       size="lg"
     >
@@ -191,8 +193,8 @@
   </div>
   <div class="col mb-3">
     <b-form-checkbox
-      v-model="selected.can_record"
-      :disabled="!editable"
+      v-model="slotProps.selected.can_record"
+      :disabled="!slotProps.editable"
       switch
       size="lg"
     >
@@ -206,24 +208,24 @@
   <div class="col mb-3 form-floating">
     <label>Gender</label>
     <b-form-input
-      v-model="selected.gender"
-      :disabled="!editable"
+      v-model="slotProps.selected.gender"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
   <div class="col mb-3 form-floating">
     <label>Ethnicty</label>
     <b-form-input
-      v-model="selected.ethnicity"
-      :disabled="!editable"
+      v-model="slotProps.selected.ethnicity"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
   <div class="col mb-3 form-floating">
     <label>Year of Birth</label>
     <b-form-input
-      v-model="selected.year_of_birth"
-      :disabled="!editable"
+      v-model="slotProps.selected.year_of_birth"
+      :disabled="!slotProps.editable"
       type="text"
     ></b-form-input>
   </div>
@@ -233,8 +235,8 @@
   <div class="col mb-3 form-floating">
     <label>Comments</label>
     <b-form-textarea
-      v-model="selected.comments"
-      :disabled="!editable"
+      v-model="slotProps.selected.comments"
+      :disabled="!slotProps.editable"
       maxlength="2000"
     ></b-form-textarea>
   </div>

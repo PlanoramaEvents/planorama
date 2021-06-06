@@ -11,7 +11,7 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'activerecord-postgres_enum'
 
 # Use Puma as the app server
-gem 'puma', '~> 4.1'
+gem 'puma', '~> 4.3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
@@ -37,6 +37,11 @@ gem 'active_model_serializers', '~> 0.10.0'
 
 gem 'devise'
 gem 'ranked-model'
+gem "nilify_blanks"
+
+gem "sidekiq"
+gem "sidekiq-scheduler"
+gem 'io-wait'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
