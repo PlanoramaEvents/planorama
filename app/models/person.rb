@@ -53,6 +53,18 @@
 #     reset_password_token character varying,
 #     reset_password_sent_at timestamp without time zone,
 #     remember_created_at timestamp without time zone
+#     sign_in_count integer DEFAULT 0 NOT NULL,
+#     current_sign_in_at timestamp without time zone,
+#     last_sign_in_at timestamp without time zone,
+#     current_sign_in_ip inet,
+#     last_sign_in_ip inet,
+#     confirmation_token character varying,
+#     confirmed_at timestamp without time zone,
+#     confirmation_sent_at timestamp without time zone,
+#     unconfirmed_email character varying,
+#     failed_attempts integer DEFAULT 0 NOT NULL,
+#     unlock_token character varying,
+#     locked_at timestamp without time zone
 # );
 
 class Person < ApplicationRecord
