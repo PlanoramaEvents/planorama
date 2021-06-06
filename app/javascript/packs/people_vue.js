@@ -95,6 +95,16 @@ const people_columns = [
     sortable: true
   },
   {
+    key: '$.pseudonym_first_name',
+    label: 'Pseudonym First Name',
+    sortable: true
+  },
+  {
+    key: '$.pseudonym_last_name',
+    label: 'Pseudonym Last Name',
+    sortable: true
+  },
+  {
     key: '$.pronouns',
     label: 'Pronouns',
     sortable: false

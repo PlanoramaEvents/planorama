@@ -104,6 +104,14 @@ class Person < ApplicationRecord
     volunteered: 'volunteered'
   }
 
+  nilify_blanks only: [
+    :bio,
+    :pseudonym_prefix,
+    :pseudonym_first_name,
+    :pseudonym_last_name,
+    :pseudonym_suffix
+  ]
+
   # TODO:
   # - there is talk about having a workflow, including whether a person
   #   is vetted as a programme participant. They could be have declined but
