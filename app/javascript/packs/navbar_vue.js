@@ -14,4 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   })
+  const app2 = new Vue({
+    el: '#side-navbar',
+    data: () => {
+      return {
+        isActive: true,
+        currentLocation: location.pathname
+      }
+    }
+  })
 })

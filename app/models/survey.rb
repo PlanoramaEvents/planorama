@@ -10,6 +10,10 @@ class Survey < ApplicationRecord
   # transition_accept_status
   # transition_decline_status
 
+  # TODO change last modified on survey_questions CUD
+  # TODO track created/updated by
+  # TODO serialize fake fields like links
+
   private
 
   def check_for_use

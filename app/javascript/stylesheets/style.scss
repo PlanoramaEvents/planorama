@@ -1,5 +1,22 @@
 /*
  *
  */
-$sidebar-width: 70%;
+@import 'custom.scss';
+$sidebar-width: 35%;
 $sidebar-mobile-width: 60%;
+
+.navbar.navbar-light {
+  height: 100px;
+  background: linear-gradient(to right, #ffffff, $color-primary-4 67%);
+  border-bottom: 5px solid $color-primary-0;
+  .navbar-brand {
+    font-size: 3rem;
+    color: $color-secondary-2-3;
+    font-weight: bolder;
+  }
+}
+
+#side-navbar .nav {
+  background: $color-light-blue;
+  height: calc(100vh - 100px);
+}

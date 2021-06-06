@@ -16,7 +16,12 @@
     </template>
     <template v-slot:sidebar-content="slotProps">
       <div v-if="slotProps.selected" class="px-3 py-2">
-        TODO
+        <p> {{slotProps.selected.welcome}}</p>
+        <span>Closed</span>
+        <b-form-checkbox inline v-model="slotProps.selected.public" switch>
+          Published
+        </b-form-checkbox>
+        <span v-if="slotProps.selected.public">on TODO TRACK PUBLISH DATE</span>
       </div>
     </template>
   </table-with-sidebar-component>

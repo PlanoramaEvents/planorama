@@ -24,6 +24,14 @@ class Survey extends PlanoModel {
       name: string.and(required)
     }
   }
+  mutations() {
+    return {
+      public: (p) => p ? 'Published' : 'Closed',
+      alias: () => "We don't track this yet.",
+      id: () => 'TODO PREVIEW LINK',
+      anonymous: (a) => a ? 'link here' : ''
+    }
+  }
   routes() {
     return {
       fetch: '/surveys/{id}',
@@ -47,7 +55,9 @@ class Surveys extends Collection {
       sortField: 'name',
       sortOrder: 'asc',
       filter: '',
-      perPage: 30,
+      // TODO UNDO ME
+      //perPage: 30,
+      perPage:5,
       page: 1,
       total: 0
     }
@@ -62,10 +72,6 @@ class Surveys extends Collection {
 
 const survey_columns = [
   {
-    key: 'id',
-    label: 'ID'
-  },
-  {
     key: '$.name',
     label: 'Name',
     stickyColumn: true,
@@ -73,13 +79,31 @@ const survey_columns = [
   },
   {
     key: '$.welcome',
-    label: 'Welcome',
+    label: 'Description',
+    sortable: true
+  },
+  {
+    key: '$.public',
+    label: 'Published',
     sortable: true
   },
   {
     key: '$.alias',
-    label: 'Alias',
+    label: 'Published On',
     sortable: true
+  },
+  {
+    key: '$.updated_at',
+    label: 'Last Modified On',
+    sortable: true
+  },
+  {
+    key: '$.id',
+    label: 'Preview',
+  },
+  {
+    key: '$.anonymous',
+    label: 'Link'
   }
   // welcome
   // thank_you

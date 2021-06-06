@@ -1,0 +1,10 @@
+  <div id="top-navbar" class="col-12">
+    <b-navbar toggleable="lg" type="light">
+      <b-navbar-brand href="#">Planorama</b-navbar-brand>
+      <b-navbar-nav class="ml-auto">
+        <b-nav-form>
+          <%= link_to('Logout', destroy_person_session_path, method: :delete, class: 'btn btn-primary my-2 my-sm-0') %>
+        </b-nav-form>
+      </b-navbar-nav>
+    </b-navbar>
+  </div>

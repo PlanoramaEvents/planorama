@@ -1,20 +1,34 @@
 <template>
   <div class="overflow-auto">
-    <b-button @click="onNew">
-      New
-    </b-button>
-    <b-button @click="onDelete">
-      Delete
-    </b-button>
+    <div class="d-flex flex-row-reverse my-3">
+      <b-button disabled class="ml-1">
+        Settings
+      </b-button>
+      <b-button @click="onDelete" variant="primary">
+        Delete
+      </b-button>
+      <b-button @click="onNew" class="mx-1" variant="primary">
+        Add
+      </b-button>
+      <b-button disabled >
+        Upload
+      </b-button>
+    </div>
 
-    <b-pagination
-      v-model="currentPage"
-      :total-rows="totalRows"
-      :per-page="perPage"
-    ></b-pagination>
+    <div class="d-flex flex-row-reverse">
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="totalRows"
+        :per-page="perPage"
+        first-text="First"
+        last-text="Last"
+        prev-text="Prev"
+        next-text="Next"
+      ></b-pagination>
+    </div>
 
     <b-table
-      hover outlined responsive selectable
+      hover outlined responsive selectable small striped
       :select-mode="selectMode"
       :fields="columns"
 
@@ -31,6 +45,16 @@
 
       @row-selected="onRowSelected"
     ></b-table>
+
+    <b-pagination class="float-right"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      first-text="First"
+      last-text="Last"
+      prev-text="Prev"
+      next-text="Next"
+    ></b-pagination>
   </div>
 </template>
 
@@ -49,7 +73,7 @@ export default {
     sortField : { type: String },
     selectEvent : { type: String },
     // saveEvent : { type: String },
-    perPage : { type: Number, default: 15 }
+    perPage : { type: Number, default: 10 }
   },
   data() {
     return {

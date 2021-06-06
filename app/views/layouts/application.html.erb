@@ -22,11 +22,18 @@
   <body>
 
     <div class="container-fluid">
-      <%= render 'layouts/navbar' %>
-      <div class="p-3 p-md-4 p-lg-5">
-        <!-- Content here -->
+      <% if current_person %>
+        <div class="row">
+          <%= render 'layouts/top-navbar' %>
+          <%= render 'layouts/side-navbar' %>
+          <div class="col-12 col-sm-9 col-xl-10">
+            <!-- Content here -->
+            <%= yield %>
+          </div>
+        </div>
+      <% else %>
         <%= yield %>
-      </div>
+      <% end %>
     </div>
 
     <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
