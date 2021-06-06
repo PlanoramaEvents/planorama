@@ -37,6 +37,7 @@ gem 'active_model_serializers', '~> 0.10.0'
 
 gem 'devise'
 gem 'ranked-model'
+gem "nilify_blanks"
 
 gem "sidekiq"
 gem "sidekiq-scheduler"
