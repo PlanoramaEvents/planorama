@@ -173,11 +173,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       // template: `
       //   <table-with-sidebar-component
-      //       :modelType="modelType"
-      //       :select-event="selectEvent"
-      //       :sort-field="sortField"
-      //       :columns="columns"
-      //       :collection="collection"
+      //     :modelType="modelType"
+      //     :select-event="selectEvent"
+      //     :save-event="saveEvent"
+      //     :sort-field="sortField"
+      //     :columns="columns"
+      //     :collection="collection"
       //     >
       //   </table-with-sidebar-component>
       // `
