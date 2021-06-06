@@ -65,7 +65,7 @@ CREATE TYPE public.mail_use_enum AS ENUM (
     'invite',
     'schedule',
     'completed_survey',
-    'declined_survey'''
+    'declined_survey'
 );
 
 
@@ -814,7 +814,19 @@ END) STORED,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
-    remember_created_at timestamp without time zone
+    remember_created_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0 NOT NULL,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip inet,
+    last_sign_in_ip inet,
+    confirmation_token character varying,
+    confirmed_at timestamp without time zone,
+    confirmation_sent_at timestamp without time zone,
+    unconfirmed_email character varying,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    locked_at timestamp without time zone
 );
 
 
@@ -1738,123 +1750,6 @@ ALTER SEQUENCE public.ui_preferences_id_seq OWNED BY public.ui_preferences.id;
 
 
 --
--- Name: user_role_assignments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_role_assignments (
-    id integer NOT NULL,
-    user_id integer,
-    user_role_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0
-);
-
-
---
--- Name: user_role_assignments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.user_role_assignments_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: user_role_assignments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.user_role_assignments_id_seq OWNED BY public.user_role_assignments.id;
-
-
---
--- Name: user_roles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_roles (
-    id integer NOT NULL,
-    title character varying
-);
-
-
---
--- Name: user_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.user_roles_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: user_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.user_roles_id_seq OWNED BY public.user_roles.id;
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    username character varying(191) NOT NULL,
-    encrypted_password character varying NOT NULL,
-    password_salt character varying,
-    single_access_token character varying,
-    sign_in_count integer DEFAULT 0 NOT NULL,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    last_request_at timestamp without time zone,
-    current_sign_in_at timestamp without time zone,
-    last_sign_in_at timestamp without time zone,
-    current_sign_in_ip character varying,
-    last_sign_in_ip character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    person_id integer,
-    confirmation_token character varying(191),
-    confirmed_at timestamp without time zone,
-    confirmation_sent_at timestamp without time zone,
-    reset_password_token character varying(191),
-    reset_password_sent_at timestamp without time zone,
-    email character varying(191) DEFAULT ''::character varying NOT NULL,
-    remember_token character varying,
-    remember_created_at timestamp without time zone,
-    unlock_token character varying(191),
-    locked_at timestamp without time zone
-);
-
-
---
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.users_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
-
-
---
 -- Name: venues; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2159,27 +2054,6 @@ ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id
 --
 
 ALTER TABLE ONLY public.ui_preferences ALTER COLUMN id SET DEFAULT nextval('public.ui_preferences_id_seq'::regclass);
-
-
---
--- Name: user_role_assignments id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_role_assignments ALTER COLUMN id SET DEFAULT nextval('public.user_role_assignments_id_seq'::regclass);
-
-
---
--- Name: user_roles id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_roles ALTER COLUMN id SET DEFAULT nextval('public.user_roles_id_seq'::regclass);
-
-
---
--- Name: users id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
@@ -2558,30 +2432,6 @@ ALTER TABLE ONLY public.ui_preferences
 
 
 --
--- Name: user_role_assignments user_role_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_role_assignments
-    ADD CONSTRAINT user_role_assignments_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_roles user_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_roles
-    ADD CONSTRAINT user_roles_pkey PRIMARY KEY (id);
-
-
---
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
 -- Name: venues venues_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2653,10 +2503,24 @@ CREATE INDEX fname_idx ON public.people USING btree (first_name);
 
 
 --
+-- Name: index_people_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_people_on_confirmation_token ON public.people USING btree (confirmation_token);
+
+
+--
 -- Name: index_people_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_people_on_reset_password_token ON public.people USING btree (reset_password_token);
+
+
+--
+-- Name: index_people_on_unlock_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_people_on_unlock_token ON public.people USING btree (unlock_token);
 
 
 --
@@ -2748,41 +2612,6 @@ CREATE INDEX index_taggings_on_tagger_id_and_tagger_type ON public.taggings USIN
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON public.tags USING btree (name);
-
-
---
--- Name: index_users_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_confirmation_token ON public.users USING btree (confirmation_token);
-
-
---
--- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_users_on_email ON public.users USING btree (email);
-
-
---
--- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING btree (reset_password_token);
-
-
---
--- Name: index_users_on_unlock_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
-
-
---
--- Name: index_users_on_username; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (username);
 
 
 --
@@ -2907,6 +2736,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210320194037'),
 ('20210321205326'),
 ('20210321211745'),
-('20210522203951');
-
-
+('20210522203951'),
+('20210606194530'),
+('20210606194812');
