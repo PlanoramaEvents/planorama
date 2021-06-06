@@ -118,12 +118,16 @@ class Person < ApplicationRecord
 
   nilify_blanks only: [
     :bio,
+    :first_name,
     :pseudonym_prefix,
     :pseudonym_first_name,
     :pseudonym_last_name,
     :pseudonym_suffix
   ]
 
+  validates :last_name, :presence => true
+
+  
   # TODO:
   # - there is talk about having a workflow, including whether a person
   #   is vetted as a programme participant. They could be have declined but

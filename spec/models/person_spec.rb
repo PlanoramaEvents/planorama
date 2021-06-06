@@ -16,9 +16,7 @@ RSpec.describe Person, '#factories' do
             expect(person.published_last_name).to eq person.last_name
         end
         it 'tries to create a person with a blank last name' do         #last_name should be a required field and non-blank
-            person = create(:person, last_name: '')
-            expect(person.last_name).to_not be_nil
-            expect(person.last_name).to_not eq ""
+            expect { person = create(:person, last_name: '') }.to raise_error(ActiveRecord::RecordInvalid)
         end
         it 'tries to create a person with a blank first name' do
             person = create(:person, first_name: '')
