@@ -3,7 +3,7 @@
     right
     shadow
     lazy
-    width='35%'
+    width='50%'
     :visible='visible'
     @hidden="onHide"
     no-header
