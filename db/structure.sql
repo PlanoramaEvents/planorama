@@ -791,21 +791,6 @@ CREATE TABLE public.people (
     registration_number character varying,
     can_photo boolean DEFAULT false NOT NULL,
     can_record boolean DEFAULT false,
-    published_name character varying(400) GENERATED ALWAYS AS (
-CASE
-    WHEN ((pseudonym_last_name IS NOT NULL) OR (pseudonym_first_name IS NOT NULL)) THEN
-    CASE
-        WHEN (pseudonym_first_name IS NULL) THEN (pseudonym_first_name)::text
-        WHEN (pseudonym_last_name IS NULL) THEN (pseudonym_last_name)::text
-        ELSE (((pseudonym_first_name)::text || ' '::text) || (pseudonym_last_name)::text)
-    END
-    ELSE
-    CASE
-        WHEN (first_name IS NULL) THEN (last_name)::text
-        WHEN (last_name IS NULL) THEN (first_name)::text
-        ELSE (((first_name)::text || ' '::text) || (last_name)::text)
-    END
-END) STORED,
     published_last_name character varying(400) GENERATED ALWAYS AS (
 CASE
     WHEN (pseudonym_last_name IS NOT NULL) THEN pseudonym_last_name
@@ -826,7 +811,22 @@ END) STORED,
     unconfirmed_email character varying,
     failed_attempts integer DEFAULT 0 NOT NULL,
     unlock_token character varying,
-    locked_at timestamp without time zone
+    locked_at timestamp without time zone,
+    published_name character varying(400) GENERATED ALWAYS AS (
+CASE
+    WHEN ((pseudonym_last_name IS NOT NULL) OR (pseudonym_first_name IS NOT NULL)) THEN
+    CASE
+        WHEN (pseudonym_first_name IS NULL) THEN (pseudonym_last_name)::text
+        WHEN (pseudonym_last_name IS NULL) THEN (pseudonym_first_name)::text
+        ELSE (((pseudonym_first_name)::text || ' '::text) || (pseudonym_last_name)::text)
+    END
+    ELSE
+    CASE
+        WHEN ((first_name IS NULL) AND (last_name IS NOT NULL)) THEN (last_name)::text
+        WHEN ((last_name IS NULL) AND (first_name IS NOT NULL)) THEN (first_name)::text
+        ELSE (((first_name)::text || ' '::text) || (last_name)::text)
+    END
+END) STORED
 );
 
 
@@ -2738,4 +2738,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210321211745'),
 ('20210522203951'),
 ('20210606194530'),
-('20210606194812');
+('20210606194812'),
+('20210607020926');
