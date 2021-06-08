@@ -16,23 +16,12 @@ export const store = {
     [UNSELECT] (state) {
       state.selected = undefined;
     },
-    [SAVE] (state, item) {
-      state = {...state, collection: [
-        ...state.collection.filter(i => i.id !== item.id),
-        item
-      ] }
-    },
-    [DELETE] (state, item) {
-      state = {...state, collection: [
-        ...state.collection.filter(i => i.id !== item.id)
-      ]}
-    }
   },
   actions: {
     [SAVE] (context, item) {
+      console.log(item)
       item.save().then(() => {
         console.log('saved successfully')
-        context.commit(SAVE, item)
       }, (error) => {
         // TODO actually show this to the user
         console.log("Error saving:", error);
@@ -41,7 +30,6 @@ export const store = {
     [DELETE] (context, item) {
       item.delete().then(() => {
         console.log('deleted successfully')
-        context.commit(DELETE, item)
       }, (error) => {
         // TODO actually show this to the user
         console.log("Error deleting:", error);

@@ -17,14 +17,6 @@ export class Survey extends PlanoModel {
       name: string.and(required)
     }
   }
-  mutations() {
-    return {
-      public: (p) => p ? 'Published' : 'Closed',
-      alias: () => "We don't track this yet.",
-      id: () => 'TODO PREVIEW LINK',
-      anonymous: (a) => a ? 'link here' : ''
-    }
-  }
   routes() {
     return {
       fetch: '/surveys/{id}',
@@ -75,29 +67,16 @@ export const survey_columns = [
     label: 'Description',
     sortable: true
   },
-  {
-    key: '$.public',
-    label: 'Published',
-    sortable: true
-  },
-  {
-    key: '$.alias',
-    label: 'Published On',
-    sortable: true
-  },
+  'published',
   {
     key: '$.updated_at',
     label: 'Last Modified On',
-    sortable: true
+    sortable: true,
+    formatter: (d) => new Date(d).toLocaleString()
   },
-  {
-    key: '$.id',
-    label: 'Preview',
-  },
-  {
-    key: '$.anonymous',
-    label: 'Link'
-  }
+  'updatedBy',
+  'preview',
+  'surveyLink',
   // welcome
   // thank_you
   // alias

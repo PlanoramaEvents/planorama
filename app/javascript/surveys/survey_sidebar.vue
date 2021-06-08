@@ -1,18 +1,21 @@
 <template>
   <sidebar-vuex>
-    <template #sidebar-header v-if="survey">
+    <template #header v-if="survey">
       <h1 class="title">{{ survey.name }}</h1>
     </template>
-    <template #sidebar-content class="survey" v-if="survey">
+    <template #content class="survey" v-if="survey">
       <div class="row">
-        <div class="col-12">
-          <span>Closed</span>
+        <div class="col-6">
+          <span class="mr-2">Closed</span>
           <b-form-checkbox inline v-model="survey.public" switch @change="save" >
             Published
           </b-form-checkbox>
-          <span v-if="survey.public">on TODO TRACK PUBLISH DATE </span>
+          <span v-if="survey.public">on ????</span>
         </div>
-        <div class="col-12">
+        <div class="col-6">
+          <b-form-checkbox inline v-model="survey.anonymous" switch @change="save">
+            Anonymous
+          </b-form-checkbox>
         </div>
       </div>
     </template>
@@ -33,7 +36,9 @@ export default {
     survey: 'selected'
   }),
   methods: mapActions({
-    save: SAVE
+    save() {
+      this.$store.dispatch(SAVE, this.survey)
+    }
   })
 }
 </script>
