@@ -7,18 +7,17 @@ import { store as surveyStore } from '../surveys/survey.store'
 
 Vue.use(Vuex);
 
-const store = new Vuex.Store(surveyStore);
+const store = surveyStore.initialize(Vuex)
+const app = new Vue(
+  {
+    components: {
+      SurveyTable,
+      SurveySidebar,
+    },
+    store,
+  }
+)
 
 document.addEventListener('DOMContentLoaded', () => {
-
-  const app = new Vue(
-    {
-      components: {
-        SurveyTable,
-        SurveySidebar
-      },
-      store,
-    }
-  )
   app.$mount('#survey-app')
 })

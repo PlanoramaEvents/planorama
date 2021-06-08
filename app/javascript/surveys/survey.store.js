@@ -1,7 +1,4 @@
-import { survey_columns } from './survey';
-import { store as planoStore } from '../model.store'
-import { Surveys } from './survey'
+import { survey_columns, Surveys } from './survey';
+import { PlanoStore } from '../model.store'
 
-export const store = planoStore;
-store.state.columns = survey_columns;
-store.state.collection = new Surveys();
+export const store = new PlanoStore(new Surveys(), survey_columns);

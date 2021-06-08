@@ -8,8 +8,19 @@ import {
 export class Survey extends PlanoModel {
   defaults() {
     return {
-      id: null,
-      last_name: ''
+      name: '',
+      welcome: null,
+      thank_you: null,
+      alias: '',
+      submit_string: '',
+      header_image: null,
+      use_captcha: false,
+      public: false,
+      authenticate: false,
+      transition_acceptance_status: false,
+      transition_decline_status: false,
+      declined_msg: '',
+      anonymous: false
     }
   }
   validation() {

@@ -1,43 +1,46 @@
 <template>
-  <sidebar-vuex>
-    <template #header v-if="survey">
-      <h1 class="title">{{ survey.name }}</h1>
+  <model-sidebar title-field="name"
+    :pulled-fields="['public', 'anonymous']"
+  >
+    <template #public>
+      <span class="mr-2">Closed</span>
+      <b-form-checkbox inline v-model="survey.public" switch @change="save" >
+        Published
+      </b-form-checkbox>
+      <span v-if="survey.public">on ????</span>
     </template>
-    <template #content class="survey" v-if="survey">
-      <div class="row">
-        <div class="col-6">
-          <span class="mr-2">Closed</span>
-          <b-form-checkbox inline v-model="survey.public" switch @change="save" >
-            Published
-          </b-form-checkbox>
-          <span v-if="survey.public">on ????</span>
-        </div>
-        <div class="col-6">
-          <b-form-checkbox inline v-model="survey.anonymous" switch @change="save">
-            Anonymous
-          </b-form-checkbox>
-        </div>
-      </div>
+    <template #anonymous>
+      <b-form-checkbox v-model="survey.anonymous" switch @change="save">
+        Anonymous
+      </b-form-checkbox>
     </template>
-  </sidebar-vuex>
+    <template #tabs>
+      <b-tab title="Questions">
+        <p>TODO questions</p>
+      </b-tab>
+      <b-tab title="Responses">
+        <p>TODO responses</p>
+      </b-tab>
+    </template>
+  </model-sidebar>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import { SAVE } from '../model.store';
-import SidebarVuex from '../sidebar_vuex';
+import ModelSidebar from '../model-sidebar';
 
 export default {
   name: 'SurveySidebar',
   components: {
-    SidebarVuex
+    ModelSidebar
   },
   computed: mapState({
     survey: 'selected'
   }),
   methods: mapActions({
     save() {
-      this.$store.dispatch(SAVE, this.survey)
+      this.$store.dispatch(SAVE, this.survey);
     }
   })
 }

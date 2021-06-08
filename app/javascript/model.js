@@ -18,6 +18,21 @@ routes() {
 }
 */
 export default class PlanoModel extends Model {
+  schema() {
+    const defaults = this.defaults();
+    return Object.keys(defaults).reduce((prev, curr) => {
+      const val = defaults[curr]
+      let type = "text"
+      if (val === true || val === false) {
+        type = "checkbox"
+      }
+      return Object.assign(prev,{[curr]: {
+        label: curr.split('_').map(w => w.substr(0,1).toUpperCase() + w.substr(1)).join(' '),
+        type
+      }})
+    }, {})
+  }
+
   options() {
     return {
       patch: true
