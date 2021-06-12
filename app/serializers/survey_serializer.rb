@@ -4,6 +4,6 @@ class SurveySerializer < ActiveModel::Serializer
     :header_image, :use_captcha, :public, :authenticate,
     :transition_accept_status, :transition_decline_status,
     :declined_msg, :authenticate_msg, :anonymous
-  
+
   has_many :survey_questions, serializer: Survey::QuestionSerializer
 end

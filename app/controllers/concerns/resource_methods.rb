@@ -3,22 +3,28 @@ module ResourceMethods
 
   def index
     if serializer_class
-      render json: {
-        total: @collection_total,
-        page: @page,
-        perPage: @per_page,
-        data: ActiveModel::Serializer::CollectionSerializer.new(
-          @collection,
-          serializer: serializer_class
-        ).as_json
-      }, content_type: 'application/json'
+      render json: @collection,
+             each_serializer: serializer_class,
+             meta: {
+               total: @collection_total,
+               page: @page,
+               perPage: @per_page
+             },
+             root: 'data',
+             # meta_key: 'header',
+             include: includes,
+             content_type: 'application/json'
     else
-      render json: {
-        total: @collection_total,
-        page: @page,
-        perPage: @per_page,
-        data: @collection
-      }, content_type: 'application/json'
+      render json: @collection,
+             meta: {
+               total: @collection_total,
+               page: @page,
+               perPage: @per_page
+             },
+             root: 'data',
+             # meta_key: 'header',
+             include: includes,
+             content_type: 'application/json'
     end
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?

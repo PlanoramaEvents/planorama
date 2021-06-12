@@ -98,8 +98,8 @@ export default {
       this.collection.page(ctx.currentPage).fetch().then(
         (arg) => {
           var res = []
-          this.totalRows = arg.response.data.total
-          this.perPage = arg.response.data.perPage
+          this.totalRows = arg.response.data.meta.total
+          this.perPage = arg.response.data.meta.perPage
           this.collection.each((obj, index) => {
             res.push(obj)
           })

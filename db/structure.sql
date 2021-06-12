@@ -2907,6 +2907,7 @@ ALTER TABLE ONLY public.configurations
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('0'),
 ('20201226195957'),
 ('20201226195958'),
 ('20201226195959'),
