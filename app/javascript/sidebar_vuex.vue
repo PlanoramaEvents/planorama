@@ -3,26 +3,28 @@
     right
     shadow
     lazy
-    width='35%'
-    :visible='selected'
+    :width="width"
+    :visible="!!selected"
     @hidden="unselect"
     no-header
   >
     <b-nav>
       <b-navbar-nav class="px-3 py-2">
-        <b-nav-form>
-          <b-button @click="onHide">
-            <i class="fas fa-times" @click="onHide"></i>
-          </b-button>
-        </b-nav-form>
-      </b-navbar-nav>
-      <b-navbar-nav class="ml-auto px-3 py-2">
         <b-nav-text>
           <slot name="header"></slot>
         </b-nav-text>
       </b-navbar-nav>
+      <b-navbar-nav class="ml-auto px-3 py-2">
+        <b-nav-form>
+          <b-button @click="unselect">
+            <i class="fas fa-times" @click="unselect"></i>
+          </b-button>
+        </b-nav-form>
+      </b-navbar-nav>
     </b-nav>
-    <slot name="content"></slot>
+    <div class="px-3">
+      <slot name="content"></slot>
+    </div>
   </b-sidebar>
 </template>
 
@@ -32,7 +34,15 @@ import { UNSELECT } from './model.store';
 
 export default {
   name: 'SidebarVuex',
+  props: {
+    width: {
+      type: String,
+      default: '50%'
+    }
+  },
   computed: mapState(['selected']),
-  methods: mapMutations(['unselect'])
+  methods: mapMutations({
+    unselect: UNSELECT
+  })
 }
 </script>

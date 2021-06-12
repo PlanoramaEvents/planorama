@@ -12,7 +12,7 @@
       </b-button>
     </div>
 
-    <div class="d-flex flex-row-reverse">
+    <div class="d-flex">
       <b-pagination
         v-model="currentPage"
         :total-rows="totalRows"
@@ -41,7 +41,12 @@
       :filter="filter"
 
       @row-selected="onRowSelected"
-    ></b-table>
+    >
+      <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
+      <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
+        <slot :name="name" v-bind="slotData" />
+      </template>
+    </b-table>
 
     <b-pagination class="float-right"
       v-model="currentPage"
@@ -89,12 +94,12 @@ export default {
       if (ctx.filter) this.collection.set('filter', ctx.filter)
 
       this.collection.clear()
-      // TODO use vuex here to fetch
+      // TODO use vuex here to fetch as a wrapper
       this.collection.page(ctx.currentPage).fetch().then(
         (arg) => {
           var res = []
-          this.totalRows = arg.response.data.total
-          this.perPage = arg.response.data.perPage
+          this.totalRows = arg.response.data.meta.total
+          this.perPage = arg.response.data.meta.perPage
           this.collection.each((obj, index) => {
             res.push(obj)
           })

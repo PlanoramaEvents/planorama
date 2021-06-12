@@ -65,7 +65,7 @@ CREATE TYPE public.mail_use_enum AS ENUM (
     'invite',
     'schedule',
     'completed_survey',
-    'declined_survey'
+    'declined_survey'''
 );
 
 
@@ -1507,7 +1507,8 @@ CREATE TABLE public.survey_questions (
     horizontal boolean DEFAULT false,
     private boolean DEFAULT false,
     regex character varying,
-    mapping character varying(200)
+    mapping character varying(200),
+    survey_id bigint
 );
 
 
@@ -2552,6 +2553,13 @@ CREATE INDEX index_published_programme_items_on_format_id ON public.published_pr
 
 
 --
+-- Name: index_survey_questions_on_survey_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_questions_on_survey_id ON public.survey_questions USING btree (survey_id);
+
+
+--
 -- Name: index_taggings_on_context; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2728,6 +2736,7 @@ ALTER TABLE ONLY public.configurations
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('0'),
 ('20201226195957'),
 ('20201226195958'),
 ('20201226195959'),
@@ -2739,4 +2748,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210522203951'),
 ('20210606194530'),
 ('20210606194812'),
-('20210607020926');
+('20210607020926'),
+('20210611132550');
+
+

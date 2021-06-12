@@ -6,8 +6,8 @@ class Survey::Question < ApplicationRecord
 
   belongs_to :survey
 
-  has_many :survey_answers, dependent: :destroy
-  # accepts_nested_attributes_for :survey_answers, :allow_destroy => true
+  has_many :survey_answers, dependent: :destroy, class_name: 'Survey::Answer', foreign_key: 'survey_question_id'
+  accepts_nested_attributes_for :survey_answers, :allow_destroy => true
 
   has_many :survey_responses
 
