@@ -19,18 +19,24 @@ routes() {
 */
 export default class PlanoModel extends Model {
   schema() {
+    function makeschema(fields) {
+      return Object.keys(fields).reduce((prev, curr) => {
+        const val = fields[curr]
+        let type = "text"
+        if (val instanceof Object) {
+          // todo figure out how to nest objects??
+        }
+        else if (val === true || val === false) {
+          type = "checkbox"
+        }
+        return Object.assign(prev,{[curr]: {
+          label: curr.split('_').map(w => w.substr(0,1).toUpperCase() + w.substr(1)).join(' '),
+          type
+        }})
+      }, {})
+    }
     const defaults = this.defaults();
-    return Object.keys(defaults).reduce((prev, curr) => {
-      const val = defaults[curr]
-      let type = "text"
-      if (val === true || val === false) {
-        type = "checkbox"
-      }
-      return Object.assign(prev,{[curr]: {
-        label: curr.split('_').map(w => w.substr(0,1).toUpperCase() + w.substr(1)).join(' '),
-        type
-      }})
-    }, {})
+    return makeschema(defaults);
   }
 
   options() {

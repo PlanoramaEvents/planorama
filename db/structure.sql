@@ -1495,7 +1495,8 @@ CREATE TABLE public.survey_questions (
     horizontal boolean DEFAULT false,
     private boolean DEFAULT false,
     regex character varying,
-    mapping character varying(200)
+    mapping character varying(200),
+    survey_id bigint
 );
 
 
@@ -2688,6 +2689,13 @@ CREATE INDEX index_published_programme_items_on_format_id ON public.published_pr
 
 
 --
+-- Name: index_survey_questions_on_survey_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_questions_on_survey_id ON public.survey_questions USING btree (survey_id);
+
+
+--
 -- Name: index_taggings_on_context; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2907,6 +2915,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210320194037'),
 ('20210321205326'),
 ('20210321211745'),
-('20210522203951');
+('20210522203951'),
+('20210611132550');
 
 

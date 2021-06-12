@@ -2,9 +2,9 @@
   <model-sidebar
     title-field="published_name"
   >
-    <template #tabs>
+    <template #tabs="{selected}">
       <b-tab title="Bio">
-        <p>TODO: BIO</p>
+        <p>{{selected.bio}}</p>
       </b-tab>
       <b-tab title="Tags">
         <p>TODO: Tags</p>

@@ -12,7 +12,7 @@
       </b-button>
     </div>
 
-    <div class="d-flex flex-row-reverse">
+    <div class="d-flex">
       <b-pagination
         v-model="currentPage"
         :total-rows="totalRows"

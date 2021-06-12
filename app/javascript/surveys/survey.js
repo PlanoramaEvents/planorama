@@ -4,10 +4,12 @@ import {
     required,
     string,
 } from 'vue-mc/validation'
+import { SurveyQuestions } from './survey_question.js';
 
 export class Survey extends PlanoModel {
   defaults() {
     return {
+      id: null,
       name: '',
       welcome: null,
       thank_you: null,
@@ -37,6 +39,13 @@ export class Survey extends PlanoModel {
       delete: '/surveys/{id}'
     }
   }
+
+  mutations() {
+    return {
+      survey_questions: sq => new SurveyQuestions(sq)
+    }
+  }
+
 };
 
 export class Surveys extends Collection {
@@ -51,9 +60,7 @@ export class Surveys extends Collection {
       sortField: 'name',
       sortOrder: 'asc',
       filter: '',
-      // TODO UNDO ME
-      //perPage: 30,
-      perPage:5,
+      perPage:15,
       page: 1,
       total: 0
     }

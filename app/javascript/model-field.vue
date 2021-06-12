@@ -50,7 +50,7 @@ export default {
     },
     options: {
       type: Object,
-      default: {}
+      default: () => {}
     }
   },
   computed: {

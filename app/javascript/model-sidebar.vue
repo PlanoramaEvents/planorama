@@ -17,7 +17,7 @@
             <model-field :label="label" v-model="selected[field]" :key="field" :type="type"></model-field>
           </slot>
         </b-tab>
-        <slot name="tabs">
+        <slot name="tabs" v-bind="{selected}">
         </slot>
       </b-tabs>
     </template>

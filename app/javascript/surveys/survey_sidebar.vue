@@ -16,7 +16,7 @@
     </template>
     <template #tabs>
       <b-tab title="Questions">
-        <p>TODO questions</p>
+        <survey-question :question="q" v-for="q in survey.survey_questions.models" :key="q.id" ></survey-question>
       </b-tab>
       <b-tab title="Responses">
         <p>TODO responses</p>
@@ -29,11 +29,13 @@
 import { mapActions, mapState } from 'vuex';
 import { SAVE } from '../model.store';
 import ModelSidebar from '../model-sidebar';
+import SurveyQuestion from './survey_question_component';
 
 export default {
   name: 'SurveySidebar',
   components: {
-    ModelSidebar
+    ModelSidebar,
+    SurveyQuestion
   },
   computed: mapState({
     survey: 'selected'

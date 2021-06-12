@@ -15,6 +15,7 @@ export class Person extends PlanoModel {
         maxlength: 2000
       }
     }
+    delete schema.bio
     return schema
   }
 
@@ -40,6 +41,18 @@ export class Person extends PlanoModel {
       ethnicity: null,
       year_of_birth: null,
       comments: null,
+      bio: {
+        bio: '',
+        twitterinfo: null,
+        photourl: null,
+        facebook: null,
+        linkedin: null,
+        twitch: null,
+        youtube: null,
+        instagram: null,
+        flickr: null,
+        reddit: null
+      }
     }
   }
   validation() {

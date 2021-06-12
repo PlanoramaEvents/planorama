@@ -2,8 +2,8 @@ class Survey::Answer < ApplicationRecord
   include RankedModel
   ranks :sort_order
 
-  # has_enumerated :answertype, :class_name => 'AnswerType'
-  belongs_to :survey_question
+  #has_enumerated :answertype, :class_name => 'AnswerType'
+  belongs_to :survey_question, class_name: 'Survey::Question', foreign_key: 'survey_question_id'
 
   # default_scope {order(['survey_answers.sort_order', :id])}
 
