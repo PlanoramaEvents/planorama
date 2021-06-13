@@ -26,21 +26,12 @@ Survey::Answer.delete_all
 
   10.times.each do
     question_type= [:textfield, :textbox, :singlechoice, :multiplechoice, :selectionbox, :break].sample;
-    case (question_type)
-    when :textfield, :textbox, :singlechoice, :selectionbox
-      answer_type = 'String'
-    when :multiplechoice
-      answer_type = 'Array'
-    else
-      answer_type = 'null'
-    end
 
     survey_question = Survey::Question.create(
       title: Faker::Lorem.sentence,
       question: Faker::Lorem.question,
       question_type: question_type,
       text_size: Faker::Number.between(from: 11, to: 16),
-      answer_type: answer_type,
       horizontal: Faker::Boolean.boolean,
       survey_id: survey.id
     )
