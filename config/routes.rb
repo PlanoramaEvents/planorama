@@ -13,7 +13,6 @@ Rails.application.routes.draw do
   get 'page/program', to: 'home#program'
   get 'page/surveys', to: 'home#surveys'
   get 'page/reports', to: 'home#reports'
-  # get 'page/program', to: 'home#program'
 
   get 'about/terms_of_use'
 
@@ -25,10 +24,11 @@ Rails.application.routes.draw do
   resources :venues
   resources :tag_contexts
 
-  resources :surveys
-  namespace :survey do
-    resources :groups
-    resources :questions
-    resources :responses
+  # Surveys and their nested resources
+  resources :surveys do
+    scope module: 'survey' do
+      resources :questions
+      resources :responses
+    end
   end
 end

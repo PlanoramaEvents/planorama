@@ -141,13 +141,20 @@ module ResourceMethods
   end
 
   def collection
+    base = if belong_to_class
+             parent = belong_to_class.find belongs_to_param_id
+             parent.send(belongs_to_relationship)
+           else
+             model_class
+           end
+
     @per_page = params[:perPage]&.to_i || model_class.default_per_page
     @page = params[:page]&.to_i || 0
     @order = params[:sortField] || ''
     @direction = params[:sortOrder] || ''
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
     @order.slice!('$.')
-    model_class
+    base
       .includes(includes)
       .references(references)
       .where(query(@filters))
@@ -233,11 +240,21 @@ module ResourceMethods
   end
 
   def find_resource
-    model_class.find(resource_id)
+    if belong_to_class
+      parent = belong_to_class.find belongs_to_param_id
+      parent.send(belongs_to_relationship).find(resource_id)
+    else
+      model_class.find(resource_id)
+    end
   end
 
   def build_resource
-    model_class.new(strip_params(_permitted_params(object_name)))
+    if belong_to_class
+      parent = belong_to_class.find belongs_to_param_id
+      parent.send(belongs_to_relationship).new(strip_params(_permitted_params(object_name)))
+    else
+      model_class.new(strip_params(_permitted_params(object_name)))
+    end
   end
 
   def collection_actions
@@ -263,6 +280,19 @@ module ResourceMethods
   def references
     []
   end
+
+  def belongs_to_param_id
+    nil
+  end
+
+  def belong_to_class
+    nil
+  end
+
+  def belongs_to_relationship
+    nil
+  end
+
 
   def _permitted_params(_object_name)
     if allowed_params

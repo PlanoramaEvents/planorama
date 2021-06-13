@@ -7,4 +7,7 @@ class PlannerController < ApplicationController
   #   set_return_to request.fullpath
   #   redirect_to '/users/sign_in' unless user_signed_in?
   # end
+
+  # TODO: RBAC
+  # TODO: timezone
 end
