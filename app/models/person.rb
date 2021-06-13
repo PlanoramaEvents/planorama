@@ -64,6 +64,8 @@ class Person < ApplicationRecord
 
   acts_as_taggable
 
+  has_paper_trail
+
   has_one :bio, dependent: :delete
 
   before_destroy :check_if_assigned

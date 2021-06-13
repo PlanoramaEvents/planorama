@@ -1,4 +1,6 @@
 class Survey < ApplicationRecord
+  has_paper_trail
+
   # Survey contains a series of groups, groups contain a series of questions
   has_many :survey_questions, dependent: :destroy, class_name: 'Survey::Question'
   accepts_nested_attributes_for :survey_questions, allow_destroy: true

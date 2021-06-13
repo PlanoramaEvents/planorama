@@ -2,6 +2,8 @@ class Survey::Question < ApplicationRecord
   include RankedModel
   ranks :sort_order
 
+  has_paper_trail
+
   default_scope {order(['survey_questions.sort_order', :question])}
 
   belongs_to :survey
