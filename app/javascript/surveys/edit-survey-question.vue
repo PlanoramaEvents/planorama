@@ -1,10 +1,18 @@
 <template>
-  <div class="survey-question mt-3">
-    <div v-if="!breakquestion">
-      <h3 v-if="question.title">{{question.title}}</h3>
-      <b-form-group
-        :label="question.question" v-slot="{ ariaDescribedBy }"
-      >
+  <div class="survey-question m-3 border-3">
+    <model-field
+      label="Title"
+      v-model="question.title"
+    ></model-field>
+    <model-field
+      label="Question"
+      v-model="question.question"
+    ></model-field>
+    <model-field
+      label="Type"
+      v-model="question.question_type"
+    ></model-field>
+      <!--
         <b-form-textarea 
           v-if="textbox"
           v-model="response.response.text"
@@ -45,33 +53,25 @@
     <div v-if="breakquestion">
       <hr />
     </div>
+    -->
   </div>
 </template>
 
 <script>
-import { SurveyResponse } from './survey_response'
+import ModelField from '../model-field.vue'
+import { SurveyQuestion } from './survey_question'
+
 
 export default {
-  name: "SurveyQuestion",
+  name: "EditSurveyQuestion",
+  components: {
+    ModelField,
+  },
   props: {
     question: {
-      type: Object,
+      type: SurveyQuestion,
       required: true
     },
-    response: {
-      type: SurveyResponse,
-      default() {
-        let resp = new SurveyResponse();
-        resp.survey_id = this.question.survey_id;
-        resp.survey_question_id = this.question.id;
-        resp.response = {text: '', answers: []};
-        return resp;
-      }
-    }, 
-    answerable: {
-      type: Boolean,
-      default: false
-    }
   },
   computed: {
     textfield() {
@@ -93,7 +93,28 @@ export default {
       return this.question.question_type === "break";
     },
     choices() {
-      return this.question.survey_answers;
+      // todo get this off the question. for now: hardcoded!
+      return [{
+        id: 1,
+        answer: 'Yes',
+        default: true,
+        sort_order: 1,
+        help: 'This means yes.'
+      },
+      {
+        id: 3,
+        answer: 'No',
+        default: false,
+        sort_order: 2,
+        help: 'This means no.'
+      },
+      {
+        id: 2,
+        answer: 'Future Hazy. Try Again Later.',
+        default: false,
+        sort_order: 3,
+        help: 'What do I look like, some kind of fortune teller?'
+      }]
     }
   }
 }

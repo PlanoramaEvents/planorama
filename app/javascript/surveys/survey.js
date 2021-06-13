@@ -4,7 +4,6 @@ import {
     required,
     string,
 } from 'vue-mc/validation'
-import { SurveyQuestions } from './survey_question.js';
 
 export class Survey extends PlanoModel {
   defaults() {
@@ -39,13 +38,6 @@ export class Survey extends PlanoModel {
       delete: '/surveys/{id}'
     }
   }
-
-  mutations() {
-    return {
-      survey_questions: sq => new SurveyQuestions(sq)
-    }
-  }
-
 };
 
 export class Surveys extends Collection {

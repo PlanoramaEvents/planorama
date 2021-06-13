@@ -5,8 +5,4 @@ class Survey::QuestionSerializer < ActiveModel::Serializer
     :private, :regex, :survey_id
 
   has_many :survey_answers, serializer: Survey::AnswerSerializer
-
-  attribute :synthetic do
-    'synthetic'
-  end
 end

@@ -16,7 +16,8 @@
     </template>
     <template #tabs>
       <b-tab title="Questions">
-        <survey-question :question="q" v-for="q in survey.survey_questions.models" :key="q.id" ></survey-question>
+        <router-link to="/edit" @click="edit">Edit Questions</router-link>
+        <survey-question :question="q" v-for="q in survey.survey_questions" :key="q.id" ></survey-question>
       </b-tab>
       <b-tab title="Responses">
         <p>TODO responses</p>
@@ -27,7 +28,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { SAVE } from '../model.store';
+import { SAVE, EDIT } from '../model.store';
 import ModelSidebar from '../model-sidebar';
 import SurveyQuestion from './survey_question_component';
 
@@ -43,7 +44,8 @@ export default {
   methods: mapActions({
     save() {
       this.$store.dispatch(SAVE, this.survey);
-    }
+    },
+    edit: EDIT
   })
 }
 </script>
