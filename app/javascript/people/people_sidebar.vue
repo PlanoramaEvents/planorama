@@ -4,7 +4,9 @@
   >
     <template #tabs="{selected}">
       <b-tab title="Bio">
-        <p>{{selected.bio}}</p>
+        <ul>
+          <li v-for="(val, field) in selected.bio" :key="field">{{field}}: {{val}}</li>
+        </ul>
       </b-tab>
       <b-tab title="Tags">
         <p>TODO: Tags</p>
