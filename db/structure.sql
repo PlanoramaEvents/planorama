@@ -1344,12 +1344,7 @@ CREATE TABLE public.survey_answers (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     survey_question_id integer,
-    sort_order integer,
-    help text,
-    answertype_id integer,
-    start_time text,
-    start_day integer,
-    duration integer
+    sort_order integer
 );
 
 
@@ -1495,7 +1490,6 @@ CREATE TABLE public.survey_questions (
     id integer NOT NULL,
     title character varying DEFAULT ''::character varying,
     question text,
-    tag_context character varying DEFAULT ''::character varying,
     question_type character varying DEFAULT 'textfield'::character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -1503,11 +1497,9 @@ CREATE TABLE public.survey_questions (
     mandatory boolean DEFAULT false,
     text_size integer,
     sort_order integer,
-    answer_type character varying DEFAULT 'String'::character varying,
     horizontal boolean DEFAULT false,
     private boolean DEFAULT false,
     regex character varying,
-    mapping character varying(200),
     survey_id bigint
 );
 
@@ -2749,6 +2741,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210606194530'),
 ('20210606194812'),
 ('20210607020926'),
-('20210611132550');
+('20210611132550'),
+('20210613201100');
 
 
