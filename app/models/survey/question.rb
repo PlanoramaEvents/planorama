@@ -13,8 +13,8 @@ class Survey::Question < ApplicationRecord
 
   validates_inclusion_of :question_type, in:
     [
-      :textfield, :textbox, :singlechoice, :multiplechoice,
-      :selectionbox, :break
+      :textfield, :textbox, :singlechoice, :multiplechoice, :hr,
+      :dropdown, :address, :email, :socialmedia, :textonly
     ]
 
   before_destroy :check_for_use, :check_if_published

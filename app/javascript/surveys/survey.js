@@ -72,19 +72,20 @@ export const survey_columns = [
     stickyColumn: true,
     sortable: true
   },
+  'description',
   {
-    key: '$.welcome',
-    label: 'Description',
-    sortable: true
+    key: '$.public',
+    label: 'Status',
+    formatter: (p) => p ? 'Published' : 'Closed'
   },
-  'published',
+  'publishedOn', // needs sortable
   {
     key: '$.updated_at',
     label: 'Last Modified On',
     sortable: true,
-    formatter: (d) => new Date(d).toLocaleString()
+    formatter: (d) => new Date(d).toLocaleDateString()
   },
-  'updatedBy',
+  'lastModifiedBy', // needs sortable
   'preview',
   'surveyLink',
   // welcome

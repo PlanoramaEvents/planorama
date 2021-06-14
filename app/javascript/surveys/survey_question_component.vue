@@ -1,50 +1,45 @@
 <template>
   <div class="survey-question mt-3">
-    <div v-if="!breakquestion">
-      <h3 v-if="question.title">{{question.title}}</h3>
-      <b-form-group
-        :label="question.question" v-slot="{ ariaDescribedBy }"
+    <h3 v-if="question.title">{{question.title}}</h3>
+    <b-form-group
+      :label="question.question" v-slot="{ ariaDescribedBy }"
+    >
+      <b-form-textarea
+        v-if="textbox"
+        v-model="response.response.text"
+        :aria-describedBy="ariaDescribedBy"
+        :disabled="!answerable"
+      >{{response.response.text}}</b-form-textarea>
+      <b-form-input
+        v-if="textfield"
+        v-model="response.response.text"
+        :aria-describedBy="ariaDescribedBy"
+        :disabled="!answerable"/>
+      <b-form-radio-group
+        v-if="singlechoice"
+        v-model="response.response.text"
+        :aria-describedBy="ariaDescribedBy"
       >
-        <b-form-textarea 
-          v-if="textbox"
-          v-model="response.response.text"
-          :aria-describedBy="ariaDescribedBy"
+        <b-form-radio
+          v-for="choice in choices"
+          :key="choice.id"
+          :value="choice.answer"
           :disabled="!answerable"
-        >{{response.response.text}}</b-form-textarea>
-        <b-form-input 
-          v-if="textfield"
-          v-model="response.response.text" 
-          :aria-describedBy="ariaDescribedBy"
-          :disabled="!answerable"/>
-        <b-form-radio-group
-          v-if="singlechoice"
-          v-model="response.response.text"
-          :aria-describedBy="ariaDescribedBy"
-        >
-          <b-form-radio 
-            v-for="choice in choices" 
-            :key="choice.id" 
-            :value="choice.answer"
-            :disabled="!answerable"
-          >{{choice.answer}}</b-form-radio>
-        </b-form-radio-group>
-        <b-form-checkbox-group
-          v-if="multiplechoice"
-          v-model="response.response.answers"
-          :aria-describedBy="ariaDescribedBy"
-        >
-          <b-form-checkbox 
-            v-for="choice in choices" 
-            :key="choice.id" 
-            :value="choice.answer" 
-            :disabled="!answerable"
-          >{{choice.answer}}</b-form-checkbox>
-        </b-form-checkbox-group>
-      </b-form-group>
-    </div>
-    <div v-if="breakquestion">
-      <hr />
-    </div>
+        >{{choice.answer}}</b-form-radio>
+      </b-form-radio-group>
+      <b-form-checkbox-group
+        v-if="multiplechoice"
+        v-model="response.response.answers"
+        :aria-describedBy="ariaDescribedBy"
+      >
+        <b-form-checkbox
+          v-for="choice in choices"
+          :key="choice.id"
+          :value="choice.answer"
+          :disabled="!answerable"
+        >{{choice.answer}}</b-form-checkbox>
+      </b-form-checkbox-group>
+    </b-form-group>
   </div>
 </template>
 
@@ -85,12 +80,6 @@ export default {
     },
     multiplechoice() {
       return this.question.question_type === "multiplechoice";
-    },
-    selectionbox() {
-      return this.question.question_type === "selectionbox";
-    },
-    breakquestion() {
-      return this.question.question_type === "break";
     },
     choices() {
       return this.question.survey_answers;

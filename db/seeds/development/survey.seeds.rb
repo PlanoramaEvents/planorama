@@ -25,7 +25,7 @@ Survey::Answer.delete_all
   )
 
   10.times.each do
-    question_type= [:textfield, :textbox, :singlechoice, :multiplechoice, :selectionbox, :break].sample;
+    question_type= [:textfield, :textbox, :singlechoice, :multiplechoice, :hr, :dropdown, :email, :address, :socialmedia].sample;
 
     survey_question = Survey::Question.create(
       title: Faker::Lorem.sentence,
@@ -36,7 +36,7 @@ Survey::Answer.delete_all
       survey_id: survey.id
     )
     case
-    when :singlechoice, :multiplechoice, :selectionbox
+    when :singlechoice, :multiplechoice, :dropdown
       Faker::Number.between(from: 3, to: 5).times.each do
         Survey::Answer.create(
           survey_question_id: survey_question.id,

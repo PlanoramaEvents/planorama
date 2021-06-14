@@ -23,6 +23,7 @@ class SurveysController < ResourceController
       declined_msg
       authenticate_msg
       anonymous
+      welcome
     ]
   end
 end
