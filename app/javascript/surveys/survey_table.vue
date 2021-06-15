@@ -4,7 +4,7 @@
     :modelType="modelType"
   >
     <template #cell(description)="{ item }">
-      <span v-b-tooltip="{customClass: 'description-tooltip', title: item.$.welcome}" class="text-truncate description" >{{ item.$.welcome }}</span>
+      <tooltip-overflow :title="item.$.welcome">{{item.$.welcome}}</tooltip-overflow>
     </template>
     <template #cell(publishedOn)="{ item }">
       <span v-if="item.public">?????</span>
@@ -25,6 +25,7 @@
 
 <script>
 import TableVuex from '../table_vuex'
+import TooltipOverflow from '../tooltip-overflow';
 import { Survey } from './survey';
 
 export default {
@@ -34,6 +35,7 @@ export default {
   }),
   components: {
     TableVuex,
+    TooltipOverflow,
   },
   methods: {
     previewLink(item) {
@@ -46,10 +48,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.description {
-  max-width: 20rem;
-  display: inline-block;
-}
-</style>

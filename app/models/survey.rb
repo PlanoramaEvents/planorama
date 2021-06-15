@@ -1,7 +1,9 @@
 class Survey < ApplicationRecord
-  # Survey contains a series of groups, groups contain a series of questions
-  has_many :survey_questions, dependent: :destroy, class_name: 'Survey::Question'
-  accepts_nested_attributes_for :survey_questions, allow_destroy: true
+  # Survey contains a series of pages, pages contain a series of questions
+  has_many :survey_questions, through: :survey_pages, class_name: 'Survey::Question'
+  has_many :survey_pages, dependent: :destroy, class_name: "Survey::Page"
+  accepts_nested_attributes_for :survey_pages, allow_destroy: true
+  #accepts_nested_attributes_for :survey_questions, allow_destroy: true
   #, :order => 'sort_order asc'
 
   has_many :survey_responses
