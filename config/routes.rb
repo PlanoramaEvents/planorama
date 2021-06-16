@@ -27,7 +27,11 @@ Rails.application.routes.draw do
   # Surveys and their nested resources
   resources :surveys do
     scope module: 'survey' do
-      resources :questions
+      resources :pages do
+        scope module: 'page' do
+          resources :questions
+        end
+      end
       resources :responses
     end
   end

@@ -2,9 +2,11 @@ class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
 
   def includes
-    [
-      {survey_questions: :survey_answers}
-    ]
+    [{
+      survey_pages: {
+        survey_questions: :survey_answers
+      }
+    }]
   end
 
   def allowed_params

@@ -1,6 +1,6 @@
 class Survey::Question < ApplicationRecord
   include RankedModel
-  ranks :sort_order
+  ranks :sort_order, with_same: :survey_page_id
 
   default_scope {order(['survey_questions.sort_order', :question])}
 
@@ -9,7 +9,7 @@ class Survey::Question < ApplicationRecord
   has_many :survey_answers, dependent: :destroy, class_name: 'Survey::Answer', foreign_key: 'survey_question_id'
   accepts_nested_attributes_for :survey_answers, :allow_destroy => true
 
-  has_many :survey_responses
+  has_many :survey_responses, dependent: :destroy, class_name: 'Survey::Response'
 
   validates_inclusion_of :question_type, in:
     [
@@ -17,7 +17,7 @@ class Survey::Question < ApplicationRecord
       :dropdown, :address, :email, :socialmedia, :textonly
     ]
 
-  before_destroy :check_for_use, :check_if_published
+  before_destroy :check_for_use #, :check_if_published
 
   def question_type
     read_attribute(:question_type).to_sym
