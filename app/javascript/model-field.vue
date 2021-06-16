@@ -20,7 +20,7 @@
         :value="value"
         @input="$emit('input', $event)"
         :disabled="!editable"
-        :maxlength="options.maxlength || 2000"
+        :maxlength="field_options.maxlength || 2000"
       ></b-form-textarea>
     </b-form-group>
     <b-form-checkbox
@@ -48,9 +48,11 @@ export default {
       type: String,
       default: "text"
     },
-    options: {
+    field_options: {
       type: Object,
-      default: () => {}
+      default() {
+        return {}
+      }
     }
   },
   computed: {
