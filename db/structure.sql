@@ -1408,6 +1408,40 @@ ALTER SEQUENCE public.survey_formats_id_seq OWNED BY public.survey_formats.id;
 
 
 --
+-- Name: survey_pages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_pages (
+    id bigint NOT NULL,
+    title character varying,
+    next_page_id bigint,
+    sort_order integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    survey_id bigint
+);
+
+
+--
+-- Name: survey_pages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.survey_pages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: survey_pages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.survey_pages_id_seq OWNED BY public.survey_pages.id;
+
+
+--
 -- Name: survey_queries; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1500,7 +1534,7 @@ CREATE TABLE public.survey_questions (
     horizontal boolean DEFAULT false,
     private boolean DEFAULT false,
     regex character varying,
-    survey_id bigint
+    survey_page_id bigint
 );
 
 
@@ -2021,6 +2055,13 @@ ALTER TABLE ONLY public.survey_formats ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: survey_pages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_pages ALTER COLUMN id SET DEFAULT nextval('public.survey_pages_id_seq'::regclass);
+
+
+--
 -- Name: survey_queries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2394,6 +2435,14 @@ ALTER TABLE ONLY public.survey_formats
 
 
 --
+-- Name: survey_pages survey_pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_pages
+    ADD CONSTRAINT survey_pages_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: survey_queries survey_queries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2594,10 +2643,17 @@ CREATE INDEX index_published_programme_items_on_format_id ON public.published_pr
 
 
 --
--- Name: index_survey_questions_on_survey_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_survey_pages_on_survey_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_survey_questions_on_survey_id ON public.survey_questions USING btree (survey_id);
+CREATE INDEX index_survey_pages_on_survey_id ON public.survey_pages USING btree (survey_id);
+
+
+--
+-- Name: index_survey_questions_on_survey_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_questions_on_survey_page_id ON public.survey_questions USING btree (survey_page_id);
 
 
 --
@@ -2778,6 +2834,22 @@ ALTER TABLE ONLY public.configurations
 
 
 --
+-- Name: survey_questions fk_rails_35518ef583; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_questions
+    ADD CONSTRAINT fk_rails_35518ef583 FOREIGN KEY (survey_page_id) REFERENCES public.survey_pages(id);
+
+
+--
+-- Name: survey_pages fk_rails_c9027d3929; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_pages
+    ADD CONSTRAINT fk_rails_c9027d3929 FOREIGN KEY (survey_id) REFERENCES public.surveys(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -2799,6 +2871,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210607020926'),
 ('20210611132550'),
 ('20210613201100'),
-('20210613204940');
-
-
+('20210613204940'),
+('20210615132509');

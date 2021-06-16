@@ -1,6 +1,6 @@
 class Survey::Answer < ApplicationRecord
   include RankedModel
-  ranks :sort_order
+  ranks :sort_order, with_same: :survey_question_id
 
   has_paper_trail
 

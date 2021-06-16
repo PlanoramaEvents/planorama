@@ -39,7 +39,7 @@ export default {
     },
     pulledFields: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   components: {
