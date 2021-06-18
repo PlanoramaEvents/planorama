@@ -33,15 +33,7 @@ module ResourceMethods
   end
 
   def show
-    if serializer_class && !@object.nil?
-      render json: @object,
-             include: includes,
-             serializer: serializer_class,
-             content_type: 'application/json'
-    else
-      render json: @object,
-             content_type: 'application/json'
-    end
+    render_object(@object)
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
@@ -55,15 +47,7 @@ module ResourceMethods
       after_save
     end
     after_save_tx
-    if serializer_class
-      render json: @object,
-             include: includes,
-             serializer: serializer_class,
-             content_type: 'application/json'
-    else
-      render json: @object,
-             content_type: 'application/json'
-    end
+    render_object(@object)
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
@@ -78,15 +62,7 @@ module ResourceMethods
       after_update
     end
     after_update_tx
-    if serializer_class
-      render json: @object,
-             include: includes,
-             serializer: serializer_class,
-             content_type: 'application/json'
-    else
-      render json: @object,
-             content_type: 'application/json'
-    end
+    render_object(@object)
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
@@ -107,17 +83,24 @@ module ResourceMethods
   def restore
     model_class.transaction do
       @object.public_send(object_restore_method)
-      if serializer_class
-        render json:  serializer_class.new(@object).to_json,
-          content_type: 'application/json'
-      else
-        render json: @object.to_json, content_type: 'application/json'
-      end
+      render_object(@object)
     end
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
     Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
     render status: :bad_request, json: {error: ex.message}
+  end
+
+  def render_object(object)
+    if serializer_class
+      render json: object,
+             include: includes,
+             serializer: serializer_class,
+             content_type: 'application/json'
+    else
+      render json: object,
+             content_type: 'application/json'
+    end
   end
 
   def before_update
