@@ -1,6 +1,7 @@
 
 Person.delete_all
 
+
 100.times.each do |i|
     registered = Faker::Boolean.boolean(true_ratio: 0.5)
     registration_number = ''
@@ -11,7 +12,7 @@ Person.delete_all
         registration_type = %w[supporting adult child teen ya first].sample
     end
 
-    p = Person.create(
+    person = Person.create(
         #prefix
         first_name: Faker::Name.unique.first_name,
         last_name: Faker::Name.unique.last_name,
@@ -39,8 +40,8 @@ Person.delete_all
         registration_number: registration_number,
         registration_type: registration_type,
         bio: Bio.create(
-            bio: Faker::Lorem.sentences(number: 3)
-            #website text,
+            bio: Faker::Lorem.sentences(number: 3),
+            website: Faker::Internet.url
             #twitterinfo text,
             #othersocialmedia text,
             #photourl text,
@@ -53,17 +54,35 @@ Person.delete_all
             #reddit text
         )
     )
-    #e = 'test' + i.to_s + '@test.com'
-    #EmailAddress.create(
-    #    person: p,
-    #    isdefault: true,
-    #    email: e,
-    #    is_valid: true
-    #)
-    #Bio.create(
-    #    person: p,
-    #    bio: Faker::Lorem.sentences(number: 3)
-    #)
+    e = person.first_name + '_' + person.last_name + i.to_s + '@test.com'
+    EmailAddress.create(
+        person: person,
+        isdefault: true,
+        email: e,
+        is_valid: true
+    )
+    secondary = Faker::Boolean.boolean(true_ratio: 0.5)
+    if secondary == true
+        e = person.first_name + '_' + person.last_name + '_second' + '@test.com'
+        EmailAddress.create(
+            person: person,
+            isdefault: false,
+            email: e,
+            is_valid: true
+        )
+    end
+    username = person.first_name[0] + person.last_name        #get first letter of first name + last name
+    #p "Username: " + username
+    person.bio.twitterinfo = username
+    person.bio.facebook = username
+    person.bio.linkedin = username
+    person.bio.twitch = username
+    person.bio.youtube = username
+    person.bio.instagram = username
+    person.bio.flickr = username
+    person.bio.reddit = username
+    person.bio.save
+    #p "Twitter is #{person.bio.twitterinfo}"
     
 end
 
