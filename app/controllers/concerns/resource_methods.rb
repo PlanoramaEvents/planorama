@@ -34,10 +34,13 @@ module ResourceMethods
 
   def show
     if serializer_class && !@object.nil?
-      render json: serializer_class.new(@object).to_json,
-        content_type: 'application/json'
+      render json: @object,
+             include: includes,
+             serializer: serializer_class,
+             content_type: 'application/json'
     else
-      render json: @object.to_json, content_type: 'application/json'
+      render json: @object,
+             content_type: 'application/json'
     end
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?

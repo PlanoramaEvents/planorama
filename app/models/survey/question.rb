@@ -7,11 +7,12 @@ class Survey::Question < ApplicationRecord
   default_scope {order(['survey_questions.sort_order', :question])}
 
   belongs_to :survey_page, foreign_key: "survey_page_id", class_name: "Survey::Page"
+  has_one :survey, through: :survey_page
 
   has_many :survey_answers, dependent: :destroy, class_name: 'Survey::Answer', foreign_key: 'survey_question_id'
   accepts_nested_attributes_for :survey_answers, :allow_destroy => true
 
-  has_many :survey_responses, dependent: :destroy, class_name: 'Survey::Response'
+  has_many :survey_responses, dependent: :destroy, class_name: 'Survey::Response', foreign_key: 'survey_question_id'
 
   validates_inclusion_of :question_type, in:
     [
