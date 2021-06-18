@@ -11,7 +11,7 @@ Vue.use(VueRouter);
 
 const routes = [
   { path: '/', component: SurveyList },
-  { path: '/edit', component: EditSurvey }
+  { path: '/edit/:id', component: EditSurvey, props: true }
 ]
 
 const router = new VueRouter({ routes })

@@ -1,75 +1,165 @@
 <template>
-  <div class="survey-question m-3 border-3">
-    <model-field
-      label="Title"
-      v-model="question.title"
-    ></model-field>
-    <model-field
-      label="Question"
-      v-model="question.question"
-    ></model-field>
-    <model-field
-      label="Type"
-      v-model="question.question_type"
-    ></model-field>
-      <!--
-        <b-form-textarea 
-          v-if="textbox"
-          v-model="response.response.text"
-          :aria-describedBy="ariaDescribedBy"
-          :disabled="!answerable"
-        >{{response.response.text}}</b-form-textarea>
-        <b-form-input 
-          v-if="textfield"
-          v-model="response.response.text" 
-          :aria-describedBy="ariaDescribedBy"
-          :disabled="!answerable"/>
-        <b-form-radio-group
-          v-if="singlechoice"
-          v-model="response.response.text"
-          :aria-describedBy="ariaDescribedBy"
+  <div class="survey-question m-3 border p-3">
+    <div v-if="!formatting" class="row">
+      <div class="col-6">
+        <b-form-group
+         :id="formGroupId('question-text')"
+         label="Question Text"
+         :label-for="formId('question-text')"
         >
-          <b-form-radio 
-            v-for="choice in choices" 
-            :key="choice.id" 
-            :value="choice.answer"
-            :disabled="!answerable"
-          >{{choice.answer}}</b-form-radio>
-        </b-form-radio-group>
-        <b-form-checkbox-group
-          v-if="multiplechoice"
-          v-model="response.response.answers"
-          :aria-describedBy="ariaDescribedBy"
+          <b-form-input
+            :id="formId('question-text')"
+            v-model="question.question"
+            type="text"
+          ></b-form-input>
+        </b-form-group>
+      </div>
+      <div class="col-6">
+        <b-form-group
+          :id="formGroupId('question-type')"
+          label="Question Type"
+          :label-for="formId('question-type')"
         >
-          <b-form-checkbox 
-            v-for="choice in choices" 
-            :key="choice.id" 
-            :value="choice.answer" 
-            :disabled="!answerable"
-          >{{choice.answer}}</b-form-checkbox>
-        </b-form-checkbox-group>
-      </b-form-group>
+          <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes"></b-form-select>
+        </b-form-group>
+      </div>
     </div>
-    <div v-if="breakquestion">
-      <hr />
+    <div class="row">
+      <template v-if="textfield">
+        <div class="col-12">
+          <small>Short answer text</small>
+        </div>
+      </template>
+      <template v-if="textbox">
+        <div class="col-12">
+          <small>Long answer text</small>
+        </div>
+      </template>
+      <template v-if="singlechoice">
+        <div class="col-12 pb-2" v-for="a in question.survey_answers" :key="a.id">
+          <b-form-radio disabled>
+            <b-form-input type="text" v-model="a.answer"></b-form-input>
+          </b-form-radio>
+        </div>
+      </template>
+      <template v-if="multiplechoice">
+        <div class="col-12 pb-2" v-for="a in question.survey_answers" :key="a.id">
+          <b-form-checkbox disabled>
+            <b-form-input type="text" v-model="a.answer"></b-form-input>
+          </b-form-checkbox>
+        </div>
+      </template>
+      <template v-if="hr">
+        <div class="col-12">
+          <hr />
+        </div>
+      </template>
+      <template v-if="dropdown">
+        <div class="col-12">
+          <ol>
+            <li class="pb-2" v-for="a in question.survey_answers" :key="a.id">
+              <b-form-input v-model="a.answer" type="text"></b-form-input>
+            </li>
+          </ol>
+        </div>
+      </template>
+      <template v-if="address">
+        <div class="col-12 col-sm-6">
+          <b-form-group
+            :id="formGroupId('address-1')"
+            :label-for="formId('address-1')"
+            label="Address 1"
+          >
+            <b-form-input disabled :id="formId('address-1')" value="123 Sesame Street"></b-form-input>
+          </b-form-group>
+        </div>
+        <div class="col-12 col-sm-6">
+          <b-form-group
+            :id="formGroupId('address-2')"
+            :label-for="formId('address-2')"
+            label="Address 2"
+          >
+            <b-form-input disabled :id="formId('address-2')" value="Apt. 2B"></b-form-input>
+          </b-form-group>
+        </div>
+        <div class="col-12 col-sm-6">
+          <b-form-group
+            :id="formGroupId('city')"
+            :label-for="formId('city')"
+            label="City"
+          >
+            <b-form-input disabled :id="formId('city')" value="New York"></b-form-input>
+          </b-form-group>
+        </div>
+        <div class="col-12 col-sm-3">
+          <b-form-group
+            :id="formGroupId('state')"
+            :label-for="formId('state')"
+            label="State"
+          >
+            <b-form-input disabled :id="formId('state')" value="NY"></b-form-input>
+          </b-form-group>
+        </div>
+        <div class="col-12 col-sm-3">
+          <b-form-group
+            :id="formGroupId('zip')"
+            :label-for="formId('zip')"
+            label="ZIP Code"
+          >
+            <b-form-input disabled :id="formId('zip')" value="12345"></b-form-input>
+          </b-form-group>
+        </div>
+        <div class="col-12">
+          <b-form-group
+            :id="formGroupId('country')"
+            :label-for="formId('country')"
+            label="Country"
+          >
+            <b-form-input disabled :id="formId('country')" value="USA"></b-form-input>
+          </b-form-group>
+        </div>
+      </template>
+      <template v-if="email">
+        <div class="col-12">
+          <b-form-input disabled type="email" value="example@example.com"></b-form-input>
+        </div>
+      </template>
+      <template v-if="socialmedia">
+        <div class="col-12">
+          <b-form-checkbox-group v-model="socialChoice" :options="socials">
+          </b-form-checkbox-group>
+        </div>
+      </template>
+      <template v-if="textonly">
+        <div class="col-12">
+          <b-form-textarea v-model="question.question"></b-form-textarea>
+        </div>
+      </template>
     </div>
-    -->
   </div>
 </template>
 
 <script>
-import ModelField from '../model-field.vue'
 import { SurveyQuestion } from './survey_question'
 
 
 export default {
   name: "EditSurveyQuestion",
-  components: {
-    ModelField,
-  },
+  data: () => ({
+    questionTypes: [
+      { value: 'textfield', text: 'Short Answer'},
+      { value: 'textbox', text: 'Paragraph'},
+      { value: 'singlechoice', text: 'Multiple Choice' },
+      { value: 'multiplechoice', text: 'Checkboxes' },
+      { value: 'dropdown', text: 'Dropdown' },
+      { value: 'address', text: 'Address' },
+      { value: 'email', text: 'Email' },
+      { value: 'socialmedia', text: 'Social Media' }
+    ],
+  }),
   props: {
     question: {
-      type: SurveyQuestion,
+      type: Object,
       required: true
     },
   },
@@ -86,36 +176,75 @@ export default {
     multiplechoice() {
       return this.question.question_type === "multiplechoice";
     },
-    selectionbox() {
-      return this.question.question_type === "selectionbox";
+    hr() {
+      return this.question.question_type === "hr";
     },
-    breakquestion() {
-      return this.question.question_type === "break";
+    dropdown() {
+      return this.question.question_type === "dropdown";
     },
-    choices() {
-      // todo get this off the question. for now: hardcoded!
-      return [{
-        id: 1,
-        answer: 'Yes',
-        default: true,
-        sort_order: 1,
-        help: 'This means yes.'
+    address() {
+      return this.question.question_type === "address";
+    },
+    email() {
+      return this.question.question_type === "email";
+    },
+    socialmedia() {
+      return this.question.question_type === "socialmedia";
+    },
+    textonly() {
+      return this.question.question_type === "textonly";
+    },
+    answerIdMap() {
+      if(!this.question.question_answers) {
+        return {}
+      }
+      return this.question.question_answers.reduce((p, c) => ({
+        ...p,
+        [c.answer]: c.id
+      }), {});
+
+    },
+    socialChoice: {
+      get() {
+        const answers = this.question.question_answers; 
+        return answers ? answers.map(qa => qa.answer) : [];
       },
-      {
-        id: 3,
-        answer: 'No',
-        default: false,
-        sort_order: 2,
-        help: 'This means no.'
-      },
-      {
-        id: 2,
-        answer: 'Future Hazy. Try Again Later.',
-        default: false,
-        sort_order: 3,
-        help: 'What do I look like, some kind of fortune teller?'
-      }]
+      set(val) {
+        this.question.question_answers = val.map(answer => ({
+          answer,
+          id: this.answerIdMap[answer] || undefined
+        }))
+      }
+    },
+    socials() {
+      return [
+        {value: "twitter", text: "Twitter"},
+        {value: "facebook", text: "Facebook"},
+        {value: "linkedin", text: "LinkedIn"},
+        {value: "twitch", text: "Twitch"},
+        {value: "youtube", text: "YouTube"},
+        {value: "instagram", text: "Instagram"},
+        {value: "flickr", text: "Flickr"},
+        {value: "reddit", text: "Reddit"},
+      ]
+    },
+    formatting() {
+      return this.textonly || this.hr;
+    },
+  },
+  methods: {
+    formId(string) {
+      return `${string}-${this.question.id}`
+    },
+    formGroupId(string) {
+      return `${this.formId(string)}-group`
     }
   }
 }
 </script>
+
+<style lang="scss">
+.custom-control-label {
+  width: 100%;
+}
+</style>
