@@ -16,8 +16,8 @@
     </template>
     <template #tabs>
       <b-tab title="Questions">
-        <router-link to="/edit" @click="edit">Edit Questions</router-link>
-        <survey-question :question="q" v-for="q in survey.survey_questions" :key="q.id" ></survey-question>
+        <router-link :to="editLink" @click="edit">Edit Questions</router-link>
+        <survey-question :question="q" v-for="q in questions" :key="q.id" ></survey-question>
       </b-tab>
       <b-tab title="Responses">
         <p>TODO responses</p>
@@ -38,9 +38,17 @@ export default {
     ModelSidebar,
     SurveyQuestion
   },
-  computed: mapState({
-    survey: 'selected'
-  }),
+  computed: {
+    ...mapState({
+      survey: 'selected',
+    }),
+    questions() {
+      return this.survey.survey_pages.map(p => p.survey_questions).reduce((p, c) => [...p, ...c],[])
+    },
+    editLink() {
+      return `/edit/${this.survey.id}`
+    }
+  },
   methods: mapActions({
     save() {
       this.$store.dispatch(SAVE, this.survey);

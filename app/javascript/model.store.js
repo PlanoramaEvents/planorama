@@ -6,12 +6,13 @@ export const EDIT = 'EDIT';
 export const UNEDIT = 'UNEDIT';
 
 export class PlanoStore {
-  constructor(collection, columns) {
+  constructor(collection, columns, state= {}) {
     this.state = {
       selected: undefined,
       editable: false,
       collection,
       columns,
+      ...state
     }
     this.mutations = {
       [SELECT] (state, item) {

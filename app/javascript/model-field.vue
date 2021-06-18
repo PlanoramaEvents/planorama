@@ -51,11 +51,15 @@ export default {
     fieldOptions: {
       type: Object,
       default: () => ({})
+    },
+    idPrefix: {
+      type: String,
+      default: 'id'
     }
   },
   computed: {
     inputId() {
-      return `input-${this.label.toLowerCase().replace(' ', '-')}`
+      return `${this.idPrefix}-input-${this.label.toLowerCase().replace(' ', '-')}`
     },
     groupId() {
       return `${this.inputId}-group`;

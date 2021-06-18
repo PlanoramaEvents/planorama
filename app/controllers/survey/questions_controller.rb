@@ -9,11 +9,11 @@ class Survey::QuestionsController < ResourceController
   end
 
   def belongs_to_param_id
-    params[:survey_id]
+    params[:survey_page_id]
   end
 
   def belong_to_class
-    Survey
+    Survey::Page
   end
 
   def belongs_to_relationship
