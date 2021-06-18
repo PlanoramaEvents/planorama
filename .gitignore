@@ -51,6 +51,7 @@ config/master.key
 .secret
 .idea
 .byebug_history
+.vscode
 
 
 # ##############################################################################
