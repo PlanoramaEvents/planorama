@@ -13,6 +13,7 @@ module ResourceMethods
              root: 'data',
              # meta_key: 'header',
              include: includes,
+             adapter: :json,
              content_type: 'application/json'
     else
       render json: @collection,
@@ -24,6 +25,7 @@ module ResourceMethods
              root: 'data',
              # meta_key: 'header',
              include: includes,
+             adapter: :json,
              content_type: 'application/json'
     end
   rescue => ex

@@ -52,41 +52,6 @@ export default class PlanoModel extends Model {
     }
   }
 
-  save(options = {}) {
-    let headers = this.getSaveHeaders();
-    let config = () => {
-      return {
-        url     : defaultTo(options.url,     this.getSaveURL()),
-        method  : defaultTo(options.method,  this.getSaveMethod()),
-        data    : defaultTo(options.data,    this.getSaveData()),
-        params  : defaults (options.params,  this.getSaveQuery()),
-        headers : defaults (options.headers, headers),
-      };
-    };
-
-    let save_promise = this.request(
-      config,
-      this.onSave,
-      this.onSaveSuccess,
-      this.onSaveFailure
-    );
-
-    save_promise.catch(
-      (error) => {
-        console.error("We have an error", error.response.response.data.error)
-        // Notification.open({
-        //   message: error.response.response.data.error,
-        //   type: 'is-danger',
-        //   hasIcon: true,
-        //   closable: true,
-        //   indefinite: true
-        // })
-      }
-    );
-
-    return save_promise;
-  }
-
   // We need to put the CSRF token in the header
   getDefaultHeaders() {
     const csrfToken = document.querySelector("meta[name=csrf-token]").content

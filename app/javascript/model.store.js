@@ -30,7 +30,6 @@ export class PlanoStore {
     }
     this.actions = {
       [SAVE] (context, item) {
-        console.log(item)
         item.save().then(() => {
           console.log('saved successfully')
           context.commit(UNEDIT)
