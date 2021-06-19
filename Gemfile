@@ -39,6 +39,7 @@ gem 'devise'
 gem 'ranked-model'
 gem "nilify_blanks"
 gem 'paper_trail'
+gem 'pundit'
 
 gem "sidekiq"
 gem "sidekiq-scheduler"

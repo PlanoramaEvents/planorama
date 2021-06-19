@@ -41,7 +41,14 @@ export default class PlanoModel extends Model {
 
   options() {
     return {
-      patch: true
+      methods: {
+        "fetch":  "GET",
+        "save":   "POST",
+        "update": "PUT",
+        "create": "POST",
+        "patch":  "PATCH",
+        "delete": "DELETE",
+      }
     }
   }
 
