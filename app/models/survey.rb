@@ -5,7 +5,7 @@ class Survey < ApplicationRecord
 
   has_many :survey_questions, through: :survey_pages, class_name: 'Survey::Question'
 
-  has_many :survey_responses, class_name: 'Survey::Response'
+  has_many :survey_submissions, class_name: 'Survey::Submission'
 
   before_destroy :check_for_use #, :check_if_public
 

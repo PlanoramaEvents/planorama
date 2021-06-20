@@ -32,6 +32,13 @@ Rails.application.routes.draw do
           resources :questions
         end
       end
+      resources :submissions
+    end
+  end
+
+  # NOTE: if we want submisisons sans surveys fill in the only
+  resources :submissions, only: [] do
+    scope module: 'submission' do
       resources :responses
     end
   end

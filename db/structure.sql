@@ -1567,11 +1567,10 @@ CREATE TABLE public.survey_responses (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    survey_id integer NOT NULL,
     survey_question_id integer NOT NULL,
-    person_id integer NOT NULL,
     response json,
-    response_as_text text
+    response_as_text text,
+    survey_submission_id bigint NOT NULL
 );
 
 
@@ -1593,6 +1592,39 @@ CREATE SEQUENCE public.survey_responses_id_seq
 --
 
 ALTER SEQUENCE public.survey_responses_id_seq OWNED BY public.survey_responses.id;
+
+
+--
+-- Name: survey_submissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_submissions (
+    id bigint NOT NULL,
+    name character varying,
+    survey_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: survey_submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.survey_submissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: survey_submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.survey_submissions_id_seq OWNED BY public.survey_submissions.id;
 
 
 --
@@ -2090,6 +2122,13 @@ ALTER TABLE ONLY public.survey_responses ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: survey_submissions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_submissions ALTER COLUMN id SET DEFAULT nextval('public.survey_submissions_id_seq'::regclass);
+
+
+--
 -- Name: surveys id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2475,6 +2514,14 @@ ALTER TABLE ONLY public.survey_responses
 
 
 --
+-- Name: survey_submissions survey_submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_submissions
+    ADD CONSTRAINT survey_submissions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: surveys surveys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2657,6 +2704,27 @@ CREATE INDEX index_survey_questions_on_survey_page_id ON public.survey_questions
 
 
 --
+-- Name: index_survey_responses_on_survey_submission_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_responses_on_survey_submission_id ON public.survey_responses USING btree (survey_submission_id);
+
+
+--
+-- Name: index_survey_submissions_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_submissions_on_person_id ON public.survey_submissions USING btree (person_id);
+
+
+--
+-- Name: index_survey_submissions_on_survey_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_submissions_on_survey_id ON public.survey_submissions USING btree (survey_id);
+
+
+--
 -- Name: index_taggings_on_context; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2783,13 +2851,6 @@ CREATE INDEX survey_alias_idx ON public.surveys USING btree (alias);
 
 
 --
--- Name: survey_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX survey_idx ON public.survey_responses USING btree (survey_id);
-
-
---
 -- Name: survey_resp_question_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2842,11 +2903,35 @@ ALTER TABLE ONLY public.survey_questions
 
 
 --
+-- Name: survey_submissions fk_rails_422004fc2f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_submissions
+    ADD CONSTRAINT fk_rails_422004fc2f FOREIGN KEY (survey_id) REFERENCES public.surveys(id);
+
+
+--
+-- Name: survey_responses fk_rails_7fc628646e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_responses
+    ADD CONSTRAINT fk_rails_7fc628646e FOREIGN KEY (survey_submission_id) REFERENCES public.survey_submissions(id);
+
+
+--
 -- Name: survey_pages fk_rails_c9027d3929; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.survey_pages
     ADD CONSTRAINT fk_rails_c9027d3929 FOREIGN KEY (survey_id) REFERENCES public.surveys(id);
+
+
+--
+-- Name: survey_submissions fk_rails_cca09747da; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_submissions
+    ADD CONSTRAINT fk_rails_cca09747da FOREIGN KEY (person_id) REFERENCES public.people(id);
 
 
 --
@@ -2872,6 +2957,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210611132550'),
 ('20210613201100'),
 ('20210613204940'),
-('20210615132509');
+('20210615132509'),
+('20210619225332'),
+('20210620011503');
 
 
