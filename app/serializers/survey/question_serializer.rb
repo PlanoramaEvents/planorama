@@ -5,4 +5,8 @@ class Survey::QuestionSerializer < ActiveModel::Serializer
              :private, :regex, :survey_page_id
 
   has_many :survey_answers, serializer: Survey::AnswerSerializer
+
+  attribute :sort_order_position do
+    object.sort_order
+  end
 end
