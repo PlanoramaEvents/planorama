@@ -203,6 +203,18 @@ module ResourceMethods
     self.class::SERIALIZER_CLASS.constantize if defined? self.class::SERIALIZER_CLASS
   end
 
+  # authorize @publication, policy_class: PublicationPolicy
+  def policy_class
+    # return an overide for policy class if there is one
+    return self.class::POLICY_CLASS.constantize if defined? self.class::POLICY_CLASS
+
+    # else use the 'global' policy
+    # TODO: global policy class
+
+    # if we return none then Pundit's policy finder will be used ...
+    nil
+  end
+
   def object_name
     controller_name.singularize
   end

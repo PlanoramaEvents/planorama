@@ -70,6 +70,17 @@ CREATE TYPE public.mail_use_enum AS ENUM (
 
 
 --
+-- Name: person_role; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.person_role AS ENUM (
+    'admin',
+    'planner',
+    'member'
+);
+
+
+--
 -- Name: phone_type_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -917,6 +928,38 @@ CREATE SEQUENCE public.person_mailing_assignments_id_seq
 --
 
 ALTER SEQUENCE public.person_mailing_assignments_id_seq OWNED BY public.person_mailing_assignments.id;
+
+
+--
+-- Name: person_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_roles (
+    id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    role public.person_role
+);
+
+
+--
+-- Name: person_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.person_roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: person_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.person_roles_id_seq OWNED BY public.person_roles.id;
 
 
 --
@@ -2010,6 +2053,13 @@ ALTER TABLE ONLY public.person_mailing_assignments ALTER COLUMN id SET DEFAULT n
 
 
 --
+-- Name: person_roles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_roles ALTER COLUMN id SET DEFAULT nextval('public.person_roles_id_seq'::regclass);
+
+
+--
 -- Name: phone_numbers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2354,6 +2404,14 @@ ALTER TABLE ONLY public.person_mailing_assignments
 
 
 --
+-- Name: person_roles person_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_roles
+    ADD CONSTRAINT person_roles_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: phone_numbers phone_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2676,6 +2734,20 @@ CREATE INDEX index_person_mailing_assignments_on_person_id ON public.person_mail
 
 
 --
+-- Name: index_person_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_person_roles_on_person_id ON public.person_roles USING btree (person_id);
+
+
+--
+-- Name: index_person_roles_on_role; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_person_roles_on_role ON public.person_roles USING btree (role);
+
+
+--
 -- Name: index_published_programme_item_assignments_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2919,6 +2991,14 @@ ALTER TABLE ONLY public.survey_responses
 
 
 --
+-- Name: person_roles fk_rails_8139558243; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_roles
+    ADD CONSTRAINT fk_rails_8139558243 FOREIGN KEY (person_id) REFERENCES public.people(id);
+
+
+--
 -- Name: survey_pages fk_rails_c9027d3929; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2959,6 +3039,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210613204940'),
 ('20210615132509'),
 ('20210619225332'),
-('20210620011503');
+('20210620011503'),
+('20210620175724'),
+('20210620180746');
 
 

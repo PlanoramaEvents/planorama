@@ -100,6 +100,8 @@ class Person < ApplicationRecord
   # TODO: add scope for survey id
   # TODO: get list of surveys for this person ...
 
+  has_many :person_roles
+
   enum acceptance_status: {
     unknown: 'unknown',
     probable: 'probable',
