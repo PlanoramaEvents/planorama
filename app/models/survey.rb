@@ -18,7 +18,7 @@ class Survey < ApplicationRecord
   private
 
   def check_for_use
-    raise 'can not delete a survey that has responses in the system' if survey_responses.any?
+    raise 'can not delete a survey that has responses in the system' if survey_submissions.any?
   end
 
   def check_if_public
