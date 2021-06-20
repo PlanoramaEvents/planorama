@@ -8,13 +8,6 @@ export class SurveyQuestion extends PlanoModel {
       survey_id: 0,
       title: '',
       question: '',
-      tag_context: {
-        id: 0,
-        name: '',
-        created_at: new Date(),
-        updated_at: new Date(),
-        publish: true
-      },
       question_type: '',
       created_at: new Date(),
       updated_at: new Date(),
@@ -26,6 +19,7 @@ export class SurveyQuestion extends PlanoModel {
       private: false,
       regex: null,
       mapping: null,
+      survey_answers: []
     }
   }
   routes() {

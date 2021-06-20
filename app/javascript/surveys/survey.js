@@ -18,10 +18,23 @@ export class Survey extends PlanoModel {
       use_captcha: false,
       public: false,
       authenticate: false,
-      transition_acceptance_status: false,
-      transition_decline_status: false,
+      //transition_accept_status: false,
+      //transition_decline_status: false,
       declined_msg: '',
-      anonymous: false
+      anonymous: false,
+      survey_pages: [{
+        id: null,
+        title: null,
+        survey_questions: [{
+          id: null,
+          question: '',
+          question_type: 'textfield',
+          survey_answers: [{
+            id: null,
+            answer: '',
+          }]
+        }]
+      }]
     }
   }
   validation() {
@@ -37,6 +50,29 @@ export class Survey extends PlanoModel {
       update: '/surveys/{id}',
       delete: '/surveys/{id}'
     }
+  }
+
+  getSaveData() {
+    const data = super.getSaveData()
+    if(data.survey_pages) {
+      data.survey_pages_attributes = data.survey_pages.map((page, i) => {
+        if (page.survey_questions) {
+          page.survey_questions_attributes = page.survey_questions.map((q, j) => {
+            if(q.survey_answers) {
+              q.survey_answers_attributes = q.survey_answers.map((a, k) => {
+                a.sort_order = k
+                return a
+              })
+            }
+            q.sort_order = j;
+            return q
+          })
+        }
+        page.sort_order = i
+        return page
+      })
+    }
+    return data;
   }
 };
 

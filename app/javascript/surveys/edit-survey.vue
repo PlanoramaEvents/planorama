@@ -1,32 +1,40 @@
 <template>
   <div class="survey">
     <router-link to="/">Back</router-link>
+    <edit-survey-controls></edit-survey-controls>
     <edit-survey-page
-      v-for="p in survey ? survey.survey_pages : []"
-      :key="p.id"
-      :page="p">
+      v-for="(p, i) in survey ? survey.survey_pages : []"
+      :key="p.id" :page="p" :i="i"
+      :n="survey.survey_pages.length">
     </edit-survey-page>
   </div>
 </template>
 
 <script>
 import EditSurveyPage from './edit-survey-page'
+import EditSurveyControls from './edit-survey-controls'
 import {mapState, mapMutations, mapActions} from 'vuex';
 import { UNSELECT, SAVE, SELECT } from '../model.store';
+import { SELECT_PAGE } from './survey.store';
 import { Survey } from './survey';
 
 export default {
   name: "EditSurvey",
   props: ['id'],
   components: {
-    EditSurveyPage
+    EditSurveyPage,
+    EditSurveyControls,
   },
   computed: mapState({
     survey: 'selected',
     surveys: 'collection'
   }),
   methods: {
-    ...mapMutations([UNSELECT]),
+    ...mapMutations({
+      unselect: UNSELECT,
+      select: SELECT,
+      selectPage: SELECT_PAGE
+      }),
     ...mapActions([SAVE])
   },
   mounted() {
@@ -35,8 +43,8 @@ export default {
       console.log('trying to load survey id', this.id)
       let model = new Survey({id: this.id}, this.surveys);
       model.fetch().then(() => {
-        console.log(model);
-        this.$store.commit(SELECT, model)
+        this.select(model);
+        this.selectPage(model.survey_pages[0]);
       });
     }
   }

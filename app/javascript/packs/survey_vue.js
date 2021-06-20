@@ -5,9 +5,12 @@ import VueRouter from 'vue-router';
 import SurveyList from '../surveys/survey-list.vue'
 import EditSurvey from '../surveys/edit-survey.vue';
 import { store as surveyStore } from '../surveys/survey.store'
+import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
+Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 
 const routes = [
   { path: '/', component: SurveyList },

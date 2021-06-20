@@ -79,6 +79,7 @@ class Person < ApplicationRecord
   has_paper_trail
 
   has_one :bio, dependent: :delete
+  accepts_nested_attributes_for :bio, allow_destroy: true
 
   before_destroy :check_if_assigned
 
