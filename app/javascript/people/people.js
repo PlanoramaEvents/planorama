@@ -51,7 +51,9 @@ export class Person extends PlanoModel {
         youtube: null,
         instagram: null,
         flickr: null,
-        reddit: null
+        reddit: null,
+        othersocialmedia: null,
+        website: null,
       }
     }
   }

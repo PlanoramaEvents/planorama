@@ -29,7 +29,11 @@ Rails.application.routes.draw do
     scope module: 'survey' do
       resources :pages do
         scope module: 'page' do
-          resources :questions
+          resources :questions do
+            scope module: 'question' do
+              resources :answers
+            end
+          end
         end
       end
       resources :submissions
