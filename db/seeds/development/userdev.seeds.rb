@@ -14,6 +14,11 @@ after :person do
             email: 'test@test.com',
             is_valid: true
         )
+
+        PersonRole.create(
+          person: p,
+          role: PersonRole.roles[:admin]
+        )
     end
 
     if !Person.find_by(last_name: 'staff')
@@ -31,6 +36,10 @@ after :person do
             is_valid: true
         )
 
+        PersonRole.create(
+          person: p,
+          role: PersonRole.roles[:planner]
+        )
     end
 
     if !Person.find_by(last_name: 'participant')
@@ -48,13 +57,13 @@ after :person do
             is_valid: true
         )
 
+        PersonRole.create(
+          person: p,
+          role: PersonRole.roles[:member]
+        )
     end
-
-#TODO: Add roles when we get around to them
 
     p "Created special test users for development environment."
 
 
 end
-
-

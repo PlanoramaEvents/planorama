@@ -2,6 +2,7 @@ module ResourceMethods
   extend ActiveSupport::Concern
 
   def index
+    authorize model_class, policy_class: policy_class
     if serializer_class
       render json: @collection,
              each_serializer: serializer_class,
@@ -35,6 +36,7 @@ module ResourceMethods
   end
 
   def show
+    authorize @object, policy_class: policy_class
     render_object(@object)
   rescue => ex
     Rails.logger.error ex.message if Rails.env.development?
@@ -44,6 +46,7 @@ module ResourceMethods
 
   def create
     model_class.transaction do
+      authorize model_class, policy_class: policy_class
       before_save
       @object.save!
       after_save
@@ -58,6 +61,7 @@ module ResourceMethods
 
   def update
     model_class.transaction do
+      authorize @object, policy_class: policy_class
       before_update
       @object.update!(strip_params(_permitted_params(object_name)))
       @object.reload
@@ -73,6 +77,7 @@ module ResourceMethods
 
   def destroy
     model_class.transaction do
+      authorize @object, policy_class: policy_class
       @object.public_send(object_destroy_method)
       render status: :ok, json: {}.to_json, content_type: 'application/json'
     end
@@ -84,6 +89,7 @@ module ResourceMethods
 
   def restore
     model_class.transaction do
+      authorize @object, policy_class: policy_class
       @object.public_send(object_restore_method)
       render_object(@object)
     end
@@ -148,7 +154,8 @@ module ResourceMethods
     @direction = params[:sortOrder] || ''
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
     @order.slice!('$.')
-    base
+    # base
+    policy_scope(base, policy_scope_class: policy_scope_class)
       .includes(includes)
       .references(references)
       .where(query(@filters))
@@ -212,7 +219,13 @@ module ResourceMethods
     # TODO: global policy class
 
     # if we return none then Pundit's policy finder will be used ...
-    nil
+    return PlannerPolicy
+  end
+
+  def policy_scope_class
+    return self.class::POLICY_SCOPE_CLASS.constantize if defined? self.class::POLICY_SCOPE_CLASS
+
+    PlannerPolicy::Scope
   end
 
   def object_name
@@ -248,9 +261,12 @@ module ResourceMethods
   def find_resource
     if belong_to_class
       parent = belong_to_class.find belongs_to_param_id
-      parent.send(belongs_to_relationship).find(resource_id)
+      policy_scope(
+        parent.send(belongs_to_relationship),
+        policy_scope_class: policy_scope_class
+      ).find(resource_id)
     else
-      model_class.find(resource_id)
+      policy_scope(model_class, policy_scope_class: policy_scope_class).find(resource_id)
     end
   end
 
