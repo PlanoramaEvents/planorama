@@ -14,7 +14,6 @@ class ApplicationController < ActionController::Base
     current_person
   end
 
-  # TODO: RBAC
   # TODO: timezone
 
   # def application_time_zone(&block)

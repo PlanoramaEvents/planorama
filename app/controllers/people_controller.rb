@@ -1,5 +1,7 @@
 class PeopleController < ResourceController
   SERIALIZER_CLASS = 'PersonSerializer'.freeze
+  POLICY_CLASS = 'PeoplePolicy'.freeze
+  POLICY_SCOPE_CLASS = 'PeoplePolicy::Scope'.freeze
 
   # need to add includes etc to speed up query
 
