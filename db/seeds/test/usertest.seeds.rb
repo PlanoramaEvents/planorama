@@ -1,8 +1,7 @@
 
-if !Person.find_by(last_name: 'staff')
+if !Person.find_by(name: 'staff')
     p = Person.create(
-        first_name: 'test',
-        last_name: 'staff',
+        name: 'test staff',
         password: 111111
         # confirmed_at: Time.now
     )
@@ -16,10 +15,9 @@ if !Person.find_by(last_name: 'staff')
 
 end
 
-if !Person.find_by(last_name: 'participant')
+if !Person.find_by(name: 'participant')
     p = Person.create(
-        first_name: 'test',
-        last_name: 'participant',
+        name: 'test participant',
         password: 111111
         # confirmed_at: Time.now
     )

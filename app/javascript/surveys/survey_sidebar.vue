@@ -49,11 +49,13 @@ export default {
       return `/edit/${this.survey.id}`
     }
   },
-  methods: mapActions({
+  methods: {
+    ...mapActions({
+      edit: EDIT
+    }),
     save() {
-      this.$store.dispatch(SAVE, this.survey);
+      this.$store.dispatch(SAVE, {item: this.survey});
     },
-    edit: EDIT
-  })
+  }
 }
 </script>

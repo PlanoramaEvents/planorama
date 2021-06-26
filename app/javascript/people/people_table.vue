@@ -1,6 +1,6 @@
 <template>
   <table-vuex
-    sortField="published_last_name"
+    sortField="sort_by"
     :modelType="modelType"
   >
   </table-vuex>

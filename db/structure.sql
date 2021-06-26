@@ -763,9 +763,6 @@ ALTER SEQUENCE public.pending_import_people_id_seq OWNED BY public.pending_impor
 
 CREATE TABLE public.people (
     id integer NOT NULL,
-    first_name character varying(150),
-    last_name character varying(150) DEFAULT ''::character varying,
-    suffix character varying(50),
     language character varying(5) DEFAULT ''::character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -773,11 +770,6 @@ CREATE TABLE public.people (
     comments text,
     organization character varying,
     job_title character varying,
-    prefix character varying(50),
-    pseudonym_first_name character varying(150),
-    pseudonym_last_name character varying(150),
-    pseudonym_suffix character varying(50),
-    pseudonym_prefix character varying(50),
     pronouns character varying(100),
     year_of_birth integer,
     gender character varying(100),
@@ -791,11 +783,6 @@ CREATE TABLE public.people (
     registration_number character varying,
     can_photo boolean DEFAULT false NOT NULL,
     can_record boolean DEFAULT false,
-    published_last_name character varying(400) GENERATED ALWAYS AS (
-CASE
-    WHEN (pseudonym_last_name IS NOT NULL) THEN pseudonym_last_name
-    ELSE last_name
-END) STORED,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
@@ -812,21 +799,10 @@ END) STORED,
     failed_attempts integer DEFAULT 0 NOT NULL,
     unlock_token character varying,
     locked_at timestamp without time zone,
-    published_name character varying(400) GENERATED ALWAYS AS (
-CASE
-    WHEN ((pseudonym_last_name IS NOT NULL) OR (pseudonym_first_name IS NOT NULL)) THEN
-    CASE
-        WHEN (pseudonym_first_name IS NULL) THEN (pseudonym_last_name)::text
-        WHEN (pseudonym_last_name IS NULL) THEN (pseudonym_first_name)::text
-        ELSE (((pseudonym_first_name)::text || ' '::text) || (pseudonym_last_name)::text)
-    END
-    ELSE
-    CASE
-        WHEN ((first_name IS NULL) AND (last_name IS NOT NULL)) THEN (last_name)::text
-        WHEN ((last_name IS NULL) AND (first_name IS NOT NULL)) THEN (first_name)::text
-        ELSE (((first_name)::text || ' '::text) || (last_name)::text)
-    END
-END) STORED
+    name character varying DEFAULT ''::character varying,
+    pseudonym character varying,
+    sort_by character varying,
+    sort_by_confirmed boolean DEFAULT false
 );
 
 
@@ -2634,13 +2610,6 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
--- Name: fname_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fname_idx ON public.people USING btree (first_name);
-
-
---
 -- Name: index_people_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2802,13 +2771,6 @@ CREATE UNIQUE INDEX key_event_index ON public.ui_preferences USING btree (key);
 
 
 --
--- Name: lname_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX lname_idx ON public.people USING btree (last_name);
-
-
---
 -- Name: parameter_description_UNIQUE; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2959,6 +2921,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210613204940'),
 ('20210615132509'),
 ('20210619225332'),
-('20210620011503');
+('20210620011503'),
+('20210626162611');
 
 

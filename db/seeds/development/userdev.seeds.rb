@@ -1,9 +1,8 @@
 after :person do
 
-    if !Person.find_by(last_name: 'test')
+    if !Person.find_by(name: 'test')
         p = Person.create(
-            first_name: 'test',
-            last_name: 'test',
+            name: 'test',
             password: 111111
             # confirmed_at: Time.now
         )
@@ -16,10 +15,9 @@ after :person do
         )
     end
 
-    if !Person.find_by(last_name: 'staff')
+    if !Person.find_by(name: 'staff')
         p = Person.create(
-            first_name: 'test',
-            last_name: 'staff',
+            name: 'staff',
             password: 111111
             # confirmed_at: Time.now
         )
@@ -33,10 +31,9 @@ after :person do
 
     end
 
-    if !Person.find_by(last_name: 'participant')
+    if !Person.find_by(name: 'participant')
         p = Person.create(
-            first_name: 'test',
-            last_name: 'participant',
+            name: 'participant',
             password: 111111
             # confirmed_at: Time.now
         )

@@ -1,18 +1,24 @@
 <template>
-  <div class="page">
-    <div class="page-label mt-3 mx-3">
+  <div class="page m-3">
+    <div class="page-label">
       <span :class="[onlyPage ? 'd-none' : 'd-inline-block']">Page {{i + 1}} of {{n}} </span>
     </div>
-    <h3 class="mb-3 mx-3 p-3 border" @click="selectPage(page)">
-      <b-form-input type="text" v-model="page.title" v-if="isSelected" @change="save(selected)"></b-form-input>
-      <span v-if="!isSelected">{{page.title}}</span>
-    </h3>
-    <draggable v-model="page.survey_questions" @end="save(selected)">
+    <div :class="['page-title', 'p-3', 'border', {selected: isSelected}]" @click="selectPage(page)">
+      <b-form-group
+        v-if="isSelected"
+        :label="i == 1 ? 'Display Title' : 'Page Title'"
+        :label-for="'page-title-' + page.id"
+      >
+        <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="save({item: selected})"></b-form-input>
+      </b-form-group>
+      <h3 v-if="!isSelected">{{page.title}}</h3>
+    </div>
+    <draggable v-model="page.survey_questions" @end="save(selected)" handle=".handle">
       <edit-survey-question :question="q" v-for="q in page.survey_questions" :key="q.id"></edit-survey-question>
     </draggable>
-    <div v-if="i + 1 < n">
+    <div v-if="i + 1 < n" class="mt-3">
       After section {{i + 1}}
-      <b-select class="d-inline ml-1 next-page" v-model="page.next_page_id" :options="nextPageOptions" @change="save(selected)"></b-select>
+      <b-select class="d-inline ml-1 next-page" v-model="page.next_page_id" :options="nextPageOptions" @change="save({item: selected})"></b-select>
     </div>
   </div>
 </template>
@@ -74,9 +80,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../stylesheets/style.scss';
 .page {
   width: 90%;
+  .page-title.selected {
+    box-shadow: 0 0 10px 2px $color-secondary-1-1;
+  }
+  .page-label:after {
+    background-color: $color-secondary-1-4;
+    width: 100%;
+    height: 6px;
+    content: '';
+    display: block;
+  }
+
+  .page-label span{
+    display: inline-block;
+    background-color: $color-secondary-1-4;
+    padding: 0.2rem 2rem;
+    color: white;
+    border-radius: 1rem 1rem 0 0;
+  }
 }
+
+.page ~ .page {
+  .page-label:after {
+    display: none;
+  }
+}
+
 .next-page {
   width: 30rem;
 }

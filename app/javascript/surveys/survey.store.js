@@ -29,13 +29,6 @@ export const store = new PlanoStore(new Surveys(), survey_columns, {
   [UNSELECT_PAGE] (state) {
     state.selected_page = undefined
   },
-  [NEW_PAGE] (state, {page, insertAt}) {
-    if (!state.selected.survey_pages) {
-      state.selected.survey_pages = []
-    }
-    state.selected.survey_pages.splice(insertAt, 0, page)
-    state.selected_page = page
-  },
   [SELECT_QUESTION] (state, question) {
     if (question._destroy) {
       state.selected_question = undefined;
@@ -47,12 +40,30 @@ export const store = new PlanoStore(new Surveys(), survey_columns, {
   [UNSELECT_QUESTION] (state) {
     state.selected_question = undefined;
   },
-  [NEW_QUESTION] (state, {question, insertAt}) {
-    console.log('i am called with', state, question, insertAt)
+},{
+  [NEW_QUESTION] ({commit}, state, {question, insertAt}) {
+    console.log('new question called with', question, insertAt)
     if(!state.selected_page.survey_questions) {
       state.selected_page.survey_questions = []
     }
     state.selected_page.survey_questions.splice(insertAt, 0, question);
-    state.selected_question = question;
+    state.selected.save().then(() => {
+      let questions = state.selected_page.survey_questions
+      let maxId = Math.max(...questions.map(q => q.id));
+      let newest_question = quesitons.find(q => q.id === maxId)
+      commit(SELECT_QUESTION, newest_question)
+    })
+  },
+  [NEW_PAGE] ({commit}, state, {page, insertAt}) {
+    if (!state.selected.survey_pages) {
+      state.selected.survey_pages = []
+    }
+    state.selected.survey_pages.splice(insertAt, 0, page)
+    state.selected.save().then(() => {
+      let pages = state.selected.survey_pages
+      let maxId = Math.max(...pages.map(p => p.id));
+      let newest_page = pages.find(p => p.id === maxId)
+      commit(SELECT_PAGE, newest_page)
+    })
   },
 });
