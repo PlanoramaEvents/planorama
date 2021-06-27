@@ -12,17 +12,11 @@ Person.delete_all
         registration_type = %w[supporting adult child teen ya first].sample
     end
 
+    name = Faker::Name.name
     person = Person.create(
-        #prefix
-        first_name: Faker::Name.unique.first_name,
-        last_name: Faker::Name.unique.last_name,
-        #suffix
-        #pseudonym_prefix
-        #pseudonym_first_name
-        #pseudonym_last_name
-        #pseudonym_suffix
-        #published_name
-        #published_last_name
+        name: name,
+        name_sort_by: name,
+        name_sort_by_confirmed: true,
         organization: Faker::Company.name,
         job_title: Faker::Company.profession,
         pronouns: %w[he/him she/her they/them ze/zir].sample,
@@ -54,7 +48,7 @@ Person.delete_all
             #reddit text
         )
     )
-    e = person.first_name + '_' + person.last_name + i.to_s + '@test.com'
+    e = name.gsub(' ', '_') + i.to_s + '@test.com'
     EmailAddress.create(
         person: person,
         isdefault: true,
@@ -63,7 +57,7 @@ Person.delete_all
     )
     secondary = Faker::Boolean.boolean(true_ratio: 0.5)
     if secondary == true
-        e = person.first_name + '_' + person.last_name + '_second' + '@test.com'
+        e = name.gsub(' ', '_') + '_second' + '@test.com'
         EmailAddress.create(
             person: person,
             isdefault: false,
@@ -71,7 +65,7 @@ Person.delete_all
             is_valid: true
         )
     end
-    username = person.first_name[0] + person.last_name        #get first letter of first name + last name
+    username = name.gsub(' ','_')
     #p "Username: " + username
     person.bio.twitterinfo = username
     person.bio.facebook = username

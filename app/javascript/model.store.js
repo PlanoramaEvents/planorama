@@ -31,7 +31,7 @@ export class PlanoStore {
       ...mutations
     }
     this.actions = {
-      [SAVE] ({commit}, item, unedit=false) {
+      [SAVE] ({commit}, {item, unedit=false}) {
         return new Promise((res, rej) => {
           item.save().then(() => {
             console.log('saved successfully')

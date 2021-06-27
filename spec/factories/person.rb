@@ -1,22 +1,22 @@
 FactoryBot.define do
     factory :person do
-        first_name { Faker::Name.first_name }
-        last_name { Faker::Name.last_name }
+        name { Faker::Name.name }
+        name_sort_by { "#{name}" }
         organization { Faker::Company.name }
         job_title { Faker::Company.profession }
         gender { Faker::Gender.type }
         year_of_birth { Faker::Date.between(from: 90.years.ago, to: 1.year.ago).year }
-        pseudonym_first_name { nil }
-        pseudonym_last_name { nil }
+        pseudonym { nil }
+        pseudonym_sort_by { nil }
 
         after(:create) do |person|
-            create_list(:email_address, 1, person: person, email: Faker::Internet.safe_email(name: "#{person.first_name} #{person.last_name}"))
+            create_list(:email_address, 1, person: person, email: Faker::Internet.safe_email(name: "#{person.name}"))
             person.reload
         end
 
         factory :pseudonym_person do
-            pseudonym_first_name { Faker::Name.first_name }
-            pseudonym_last_name { Faker::Name.last_name }
+            pseudonym { Faker::Name.name }
+            pseudonym_sort_by { "#{pseudonym}" }
         end
 
         factory :registered_person do

@@ -35,7 +35,6 @@ export default {
       select: SELECT,
       selectPage: SELECT_PAGE
       }),
-    ...mapActions([SAVE])
   },
   mounted() {
     console.log(this);

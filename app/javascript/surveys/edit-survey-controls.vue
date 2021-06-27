@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import { SAVE } from '../model.store';
 import { SELECT_PAGE, SELECT_QUESTION, NEW_PAGE, NEW_QUESTION } from './survey.store';
 
@@ -20,21 +20,19 @@ export default {
     ...mapMutations({
       selectQuestion: SELECT_QUESTION,
       selectPage: SELECT_PAGE,
-      newQuestionMutation: NEW_QUESTION,
-      newPageMutation: NEW_PAGE
+    }),
+    ...mapActions({
+      newQuestionAction: NEW_QUESTION,
+      newPageAction: NEW_PAGE
     }),
     newQuestion(question_type="textfield") {
-      this.$store.dispatch(SAVE, this.selected).then(() => {
-        
-        let insertAt = 0;
-        if(this.selected_question) {
-          // there might be bugs if the save hasn't come back yet
-          insertAt = this.selected_page.survey_questions.findIndex(q => q.id === this.selected_question.id) + 1
-        }
-        const question = {question: 'New Question', question_type, survey_page_id: this.selected_page.id}
-        this.newQuestionMutation({question, insertAt});
-
-      });
+      let insertAt = 0;
+      if(this.selected_question) {
+        // there might be bugs if the save hasn't come back yet
+        insertAt = this.selected_page.survey_questions.findIndex(q => q.id === this.selected_question.id) + 1
+      }
+      const question = {question: 'New Question', question_type, survey_page_id: this.selected_page.id}
+      this.newQuestionAction({question, insertAt});
     },
     newPage() {
       let insertAt = this.selected.survey_pages.length
@@ -42,7 +40,7 @@ export default {
         insertAt = this.selected.survey_pages.findIndex(p => p.id === this.selected_page.id) + 1
       }
       const page = {survey_questions: [], title: 'New Page'}
-      this.newPageMutation({page, insertAt});
+      this.newPageAction({page, insertAt});
     },
   }
 }

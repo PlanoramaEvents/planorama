@@ -20,17 +20,9 @@ class PeopleController < ResourceController
   def allowed_params
     %i[
       lock_version
-      first_name
-      last_name
-      prefix
-      suffix
       comments
       organization
       job_title
-      pseudonym_first_name
-      pseudonym_last_name
-      pseudonym_suffix
-      pseudonym_prefix
       pronouns
       year_of_birth
       gender
@@ -44,6 +36,14 @@ class PeopleController < ResourceController
       registration_number
       can_photo
       can_record
+      name
+      name_sort_by
+      name_sort_by_confirmed
+      pseudonym
+      pseudonym_sort_by
+      pseudonym_sort_by_confirmed
+      published_name
+      published_name_sort_by
     ]
   end
   # TODO: these to be dealt with in seperate controllers ??

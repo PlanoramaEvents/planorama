@@ -12,32 +12,17 @@ RSpec.describe Person, '#factories' do
             expect(person.can_share).to be false
             expect(person.can_photo).to be false
             expect(person.can_record).to be false
-            expect(person.published_name).to eq "#{person.first_name} #{person.last_name}"
-            expect(person.published_last_name).to eq person.last_name
         end
-        it 'should not create a person with a blank last name' do         #last_name should be a required field and non-blank
-            expect { person = create(:person, last_name: '') }.to raise_error(ActiveRecord::RecordInvalid)
-        end
-        it 'should create a person with a blank first name' do
-            person = create(:person, first_name: '')
-            expect(person.first_name).to be_nil
-            expect(person.first_name).to_not eq ""
+        it 'should not create a person with a name' do         #name should be a required field and non-blank
+            expect { person = create(:person, name: '') }.to raise_error(ActiveRecord::RecordInvalid)
         end
     end
 
     context 'pseudonym_person' do
-        it 'creates a person with a published first and last name' do
+        it 'creates a person with a pseudonym' do
             person = create(:pseudonym_person)
-            expect(person.published_name).to eq "#{person.pseudonym_first_name} #{person.pseudonym_last_name}"
-            expect(person.published_last_name).to eq person.pseudonym_last_name
-        end
-        it 'creates a person with a published first name only' do
-            person = create(:pseudonym_person, pseudonym_last_name: '')
-            expect(person.published_name).to eq "#{person.pseudonym_first_name}"
-        end
-        it 'creates a person with a published last name only' do
-            person = create(:pseudonym_person, pseudonym_first_name: '')
-            expect(person.published_name).to eq "#{person.pseudonym_last_name}"
+            expect(person.pseudonym).to_not be nil
+            expect(person.pseudonym_sort_by).to_not be nil
         end
     end
 

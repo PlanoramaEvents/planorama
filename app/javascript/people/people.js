@@ -21,12 +21,14 @@ export class Person extends PlanoModel {
 
   defaults() {
     return {
-      first_name: null,
-      last_name: '',
-      suffix: null,
-      pseudonym_first_name: null,
-      pseudonym_last_name: null,
-      pseudonym_suffix: null,
+      name: null,
+      name_sort_by: null,
+      name_sort_by_confirmed: false,
+      pseudonym: null,
+      pseudonym_sort_by: null,
+      pseudonym_sort_by_confirmed: false,
+      published_name: null,
+      published_name_sort_by: null,
       pronouns: null,
       job_title: null,
       organization: null,
@@ -59,7 +61,7 @@ export class Person extends PlanoModel {
   }
   validation() {
     return {
-      last_name: string.and(required)
+      name: string.and(required)
     }
   }
   routes() {
@@ -84,7 +86,7 @@ export class People extends Collection {
 
   defaults() {
     return {
-      sortField: 'published_last_name',
+      sortField: 'published_name_sort_by',
       sortOrder: 'asc',
       filter: '',
       perPage: 30,
@@ -108,24 +110,14 @@ export const people_columns = [
     label: 'ID'
   },
   {
-    key: '$.published_name',
-    label: 'Published Name',
-    stickyColumn: true,
-    sortable: true
+    key: '$.name',
+    label: 'Name',
+    sortable: true,
+    sticky: true,
   },
   {
-    key: '$.published_last_name',
-    label: 'Published Last Name',
-    sortable: true
-  },
-  {
-    key: '$.first_name',
-    label: 'First Name',
-    sortable: true
-  },
-  {
-    key: '$.last_name',
-    label: 'Last Name',
+    key: '$.pseudonym',
+    label: 'Pseudonym',
     sortable: true
   },
   {

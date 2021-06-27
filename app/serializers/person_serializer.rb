@@ -1,9 +1,8 @@
 class PersonSerializer < ActiveModel::Serializer
   attributes :id, :lock_version,
-             :prefix, :first_name, :last_name, :suffix,
-             :pseudonym_prefix, :pseudonym_first_name,
-             :pseudonym_last_name, :pseudonym_suffix,
-             :published_name, :published_last_name,
+             :name, :name_sort_by, :name_sort_by_confirmed,
+             :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
+             :published_name, :published_name_sort_by,
              :job_title, :organization,
              :pronouns, :year_of_birth, :gender, :ethnicity,
              :opted_in, :comments,

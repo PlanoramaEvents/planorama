@@ -6,6 +6,11 @@ import {
 } from 'vue-mc/validation'
 
 export class Survey extends PlanoModel {
+  schema() {
+    let s = super.schema()
+    delete s.survey_pages
+    return s
+  }
   defaults() {
     return {
       id: null,

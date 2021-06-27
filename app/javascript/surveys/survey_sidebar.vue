@@ -30,7 +30,7 @@
 import { mapActions, mapState } from 'vuex';
 import { SAVE, EDIT } from '../model.store';
 import ModelSidebar from '../model-sidebar';
-import SurveyQuestion from './survey_question_component';
+import SurveyQuestion from './survey_question';
 
 export default {
   name: 'SurveySidebar',
@@ -49,11 +49,13 @@ export default {
       return `/edit/${this.survey.id}`
     }
   },
-  methods: mapActions({
+  methods: {
+    ...mapActions({
+      edit: EDIT
+    }),
     save() {
-      this.$store.dispatch(SAVE, this.survey);
+      this.$store.dispatch(SAVE, {item: this.survey});
     },
-    edit: EDIT
-  })
+  }
 }
 </script>

@@ -1,5 +1,6 @@
 <template>
-  <div class="survey-question m-3 border p-3" @click="selectQuestion(question)">
+  <div :class="['survey-question', 'mt-3', 'border', 'p-3', {selected: isSelected}]" @click="selectQuestion(question)">
+    <div class="handle d-flex justify-content-center"><b-icon-grip-horizontal></b-icon-grip-horizontal></div>
     <div v-if="!formatting && isSelected" class="row">
       <div class="col-6">
         <b-form-group
@@ -33,12 +34,14 @@
     <div class="row">
       <template v-if="textfield">
         <div class="col-12">
-          <small>Short answer text</small>
+          <small v-if="isSelected">Short answer text</small>
+          <b-form-input v-if="!isSelected" type="text" disabled value="Short answer text"></b-form-input>
         </div>
       </template>
       <template v-if="textbox">
         <div class="col-12">
-          <small>Long answer text</small>
+          <small v-if="isSelected">Long answer text</small>
+          <b-textarea disabled v-if="!isSelected" value="Long answer text"></b-textarea>
         </div>
       </template>
       <template v-if="singlechoice">
@@ -120,7 +123,7 @@
           </ol>
         </div>
       </template>
-      <template v-if="address && isSelected">
+      <template v-if="address && !isSelected">
         <div class="col-12 col-sm-6">
           <b-form-group
             :id="formGroupId('address-1')"
@@ -176,15 +179,15 @@
           </b-form-group>
         </div>
       </template>
-      <template v-if="address && !isSelected">
+      <template v-if="address && isSelected">
         <div class="col-12">
           <small>Address fields</small>
         </div>
       </template>
       <template v-if="email">
         <div class="col-12">
-          <b-form-input v-if="isSelected" disabled type="email" value="example@example.com"></b-form-input>
-          <small v-if="!isSelected">Email field</small>
+          <b-form-input v-if="!isSelected" disabled type="email" value="example@example.com"></b-form-input>
+          <small v-if="isSelected">Email field</small>
         </div>
       </template>
       <template v-if="socialmedia">
@@ -202,7 +205,7 @@
     </div>
     <div class="row" v-if="isSelected">
       <div class="col-12 d-flex justify-content-end">
-        <b-button variant="info" class="mr-2"><b-icon-files></b-icon-files></b-button>
+        <b-button variant="info" class="mr-2" @click="duplicateQuestion"><b-icon-files></b-icon-files></b-button>
         <b-button variant="info" @click="destroyQuestion"><b-icon-trash></b-icon-trash></b-button>
       </div>
     </div>
@@ -213,7 +216,7 @@
 import { SurveyQuestion } from './survey_question'
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { SAVE } from '../model.store';
-import { SELECT_QUESTION, UNSELECT_QUESTION } from './survey.store';
+import { NEW_QUESTION, SELECT_QUESTION, UNSELECT_QUESTION } from './survey.store';
 
 
 export default {
@@ -237,7 +240,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['selected', 'selected_question']),
+    ...mapState(['selected', 'selected_question', 'selected_page']),
     textfield() {
       return this.question.question_type === "textfield";
     },
@@ -316,10 +319,13 @@ export default {
   methods: {
     ...mapMutations({
       selectQuestion: SELECT_QUESTION,
-      unselectQuestion: UNSELECT_QUESTION
+      unselectQuestion: UNSELECT_QUESTION,
+    }),
+    ...mapActions({
+      newQuestion: NEW_QUESTION
     }),
     save(event) {
-      this.$store.dispatch(SAVE, this.selected);
+      this.$store.dispatch(SAVE, {item: this.selected});
     },
     formId(string) {
       return `${string}-${this.question.id}`
@@ -354,13 +360,41 @@ export default {
       console.log(this.question)
       this.save()
       this.unselectQuestion()
-    }
+    },
+    duplicateQuestion() {
+      let new_question = {
+        question: this.question.question,
+        question_type: this.question.question_type,
+        mandatory: this.question.mandatory,
+        text_size: this.question.text_size,
+        horizontal: this.question.horizontal,
+        private: this.question.private,
+        regex: this.question.regex,
+        survey_page_id: this.question.survey_page_id,
+        survey_answers: this.question.survey_answers.map(a => ({
+          answer: a.answer,
+          default: a.default
+        }))
+      }
+      let insertAt = this.selected_page.survey_questions.findIndex(q => q.id === this.question.id) + 1
+      this.newQuestion({question: new_question, insertAt})
+    },
   }
 }
 </script>
 
 <style lang="scss">
+@import '../stylesheets/style.scss';
 .custom-control-label {
   width: 100%;
+}
+.handle {
+  visibility: hidden;
+}
+.survey-question:hover .handle{
+  visibility: visible;
+}
+.survey-question.selected {
+  box-shadow: 0 0 10px 2px $color-secondary-1-1;
 }
 </style>
