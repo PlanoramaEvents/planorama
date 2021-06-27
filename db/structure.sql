@@ -1635,7 +1635,8 @@ CREATE TABLE public.survey_submissions (
     survey_id bigint NOT NULL,
     person_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -3017,6 +3018,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210620175724'),
 ('20210620180746'),
 ('20210626162611'),
-('20210627143358');
+('20210627143358'),
+('20210627225348');
 
 
