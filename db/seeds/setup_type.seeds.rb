@@ -1,6 +1,6 @@
 #setup_type
 
-SetupType.delete_all
+SetupType.destroy_all
 
 SetupType.create(
     name: "Theater",

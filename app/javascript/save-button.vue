@@ -11,7 +11,7 @@ export default {
   computed: mapState(['editable', 'selected']),
   methods: mapActions({
     save() {
-      this.$store.dispatch(SAVE, this.selected)
+      this.$store.dispatch(SAVE, {item: this.selected, unedit: true})
     }
   })
 }

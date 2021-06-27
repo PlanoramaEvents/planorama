@@ -5,5 +5,6 @@ class SurveySerializer < ActiveModel::Serializer
     :transition_accept_status, :transition_decline_status,
     :declined_msg, :authenticate_msg, :anonymous
 
-  has_many :survey_questions, serializer: Survey::QuestionSerializer
+  has_many :survey_pages, serializer: Survey::PageSerializer
+  #has_many :survey_questions, serializer: Survey::QuestionSerializer
 end

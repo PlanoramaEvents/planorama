@@ -1,5 +1,7 @@
 class PeopleController < ResourceController
   SERIALIZER_CLASS = 'PersonSerializer'.freeze
+  POLICY_CLASS = 'PeoplePolicy'.freeze
+  POLICY_SCOPE_CLASS = 'PeoplePolicy::Scope'.freeze
 
   # need to add includes etc to speed up query
 
@@ -18,17 +20,9 @@ class PeopleController < ResourceController
   def allowed_params
     %i[
       lock_version
-      first_name
-      last_name
-      prefix
-      suffix
       comments
       organization
       job_title
-      pseudonym_first_name
-      pseudonym_last_name
-      pseudonym_suffix
-      pseudonym_prefix
       pronouns
       year_of_birth
       gender
@@ -42,6 +36,12 @@ class PeopleController < ResourceController
       registration_number
       can_photo
       can_record
+      name
+      name_sort_by
+      name_sort_by_confirmed
+      pseudonym
+      pseudonym_sort_by
+      pseudonym_sort_by_confirmed
     ]
   end
   # TODO: these to be dealt with in seperate controllers ??

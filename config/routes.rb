@@ -27,7 +27,22 @@ Rails.application.routes.draw do
   # Surveys and their nested resources
   resources :surveys do
     scope module: 'survey' do
-      resources :questions
+      resources :pages do
+        scope module: 'page' do
+          resources :questions do
+            scope module: 'question' do
+              resources :answers
+            end
+          end
+        end
+      end
+      resources :submissions
+    end
+  end
+
+  # NOTE: if we want submisisons sans surveys fill in the only
+  resources :submissions, only: [] do
+    scope module: 'submission' do
       resources :responses
     end
   end

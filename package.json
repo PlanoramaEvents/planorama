@@ -8,7 +8,7 @@
     "@rails/webpacker": "4.3.0",
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.21.2",
-    "ckeditor4": "^4.15.1",
+    "ckeditor4": "^4.16.1",
     "ckeditor4-vue": "^1.2.0",
     "css-loader": "^5.2.4",
     "jquery": "^3.6.0",
@@ -20,6 +20,7 @@
     "vue-mc": "^0.6.0",
     "vue-router": "^3.5.1",
     "vue-template-compiler": "^2.6.12",
+    "vuedraggable": "^2.24.3",
     "vuex": "^3.6.2"
   },
   "version": "0.1.0",

@@ -25,7 +25,7 @@
     </div>
 
     <b-table
-      hover outlined responsive selectable small striped
+      hover bordered responsive selectable small striped
       :select-mode="selectMode"
       :fields="columns"
 
@@ -133,3 +133,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+td {
+  white-space: nowrap;
+}
+</style>

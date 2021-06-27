@@ -1,5 +1,6 @@
 
-Person.delete_all
+Person.destroy_all
+
 
 100.times.each do |i|
     registered = Faker::Boolean.boolean(true_ratio: 0.5)
@@ -11,17 +12,11 @@ Person.delete_all
         registration_type = %w[supporting adult child teen ya first].sample
     end
 
-    p = Person.create(
-        #prefix
-        first_name: Faker::Name.unique.first_name,
-        last_name: Faker::Name.unique.last_name,
-        #suffix
-        #pseudonym_prefix
-        #pseudonym_first_name
-        #pseudonym_last_name
-        #pseudonym_suffix
-        #published_name
-        #published_last_name
+    name = Faker::Name.name
+    person = Person.create(
+        name: name,
+        name_sort_by: name,
+        name_sort_by_confirmed: true,
         organization: Faker::Company.name,
         job_title: Faker::Company.profession,
         pronouns: %w[he/him she/her they/them ze/zir].sample,
@@ -39,8 +34,8 @@ Person.delete_all
         registration_number: registration_number,
         registration_type: registration_type,
         bio: Bio.create(
-            bio: Faker::Lorem.sentences(number: 3)
-            #website text,
+            bio: Faker::Lorem.sentences(number: 3),
+            website: Faker::Internet.url
             #twitterinfo text,
             #othersocialmedia text,
             #photourl text,
@@ -53,18 +48,36 @@ Person.delete_all
             #reddit text
         )
     )
-    #e = 'test' + i.to_s + '@test.com'
-    #EmailAddress.create(
-    #    person: p,
-    #    isdefault: true,
-    #    email: e,
-    #    is_valid: true
-    #)
-    #Bio.create(
-    #    person: p,
-    #    bio: Faker::Lorem.sentences(number: 3)
-    #)
-    
+    e = name.gsub(' ', '_') + i.to_s + '@test.com'
+    EmailAddress.create(
+        person: person,
+        isdefault: true,
+        email: e,
+        is_valid: true
+    )
+    secondary = Faker::Boolean.boolean(true_ratio: 0.5)
+    if secondary == true
+        e = name.gsub(' ', '_') + '_second' + '@test.com'
+        EmailAddress.create(
+            person: person,
+            isdefault: false,
+            email: e,
+            is_valid: true
+        )
+    end
+    username = name.gsub(' ','_')
+    #p "Username: " + username
+    person.bio.twitterinfo = username
+    person.bio.facebook = username
+    person.bio.linkedin = username
+    person.bio.twitch = username
+    person.bio.youtube = username
+    person.bio.instagram = username
+    person.bio.flickr = username
+    person.bio.reddit = username
+    person.bio.save
+    #p "Twitter is #{person.bio.twitterinfo}"
+
 end
 
 p "Created #{Person.count} people."

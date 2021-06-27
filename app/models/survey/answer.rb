@@ -1,6 +1,8 @@
 class Survey::Answer < ApplicationRecord
   include RankedModel
-  ranks :sort_order
+  ranks :sort_order, with_same: :survey_question_id
+
+  has_paper_trail
 
   #has_enumerated :answertype, :class_name => 'AnswerType'
   belongs_to :survey_question, class_name: 'Survey::Question', foreign_key: 'survey_question_id'

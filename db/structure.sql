@@ -70,6 +70,17 @@ CREATE TYPE public.mail_use_enum AS ENUM (
 
 
 --
+-- Name: person_role; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.person_role AS ENUM (
+    'admin',
+    'planner',
+    'member'
+);
+
+
+--
 -- Name: phone_type_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -763,9 +774,6 @@ ALTER SEQUENCE public.pending_import_people_id_seq OWNED BY public.pending_impor
 
 CREATE TABLE public.people (
     id integer NOT NULL,
-    first_name character varying(150),
-    last_name character varying(150) DEFAULT ''::character varying,
-    suffix character varying(50),
     language character varying(5) DEFAULT ''::character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -773,11 +781,6 @@ CREATE TABLE public.people (
     comments text,
     organization character varying,
     job_title character varying,
-    prefix character varying(50),
-    pseudonym_first_name character varying(150),
-    pseudonym_last_name character varying(150),
-    pseudonym_suffix character varying(50),
-    pseudonym_prefix character varying(50),
     pronouns character varying(100),
     year_of_birth integer,
     gender character varying(100),
@@ -791,11 +794,6 @@ CREATE TABLE public.people (
     registration_number character varying,
     can_photo boolean DEFAULT false NOT NULL,
     can_record boolean DEFAULT false,
-    published_last_name character varying(400) GENERATED ALWAYS AS (
-CASE
-    WHEN (pseudonym_last_name IS NOT NULL) THEN pseudonym_last_name
-    ELSE last_name
-END) STORED,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
@@ -812,20 +810,21 @@ END) STORED,
     failed_attempts integer DEFAULT 0 NOT NULL,
     unlock_token character varying,
     locked_at timestamp without time zone,
-    published_name character varying(400) GENERATED ALWAYS AS (
+    name character varying DEFAULT ''::character varying,
+    name_sort_by character varying,
+    name_sort_by_confirmed boolean DEFAULT false,
+    pseudonym character varying,
+    pseudonym_sort_by character varying,
+    pseudonym_sort_by_confirmed boolean DEFAULT false,
+    published_name character varying GENERATED ALWAYS AS (
 CASE
-    WHEN ((pseudonym_last_name IS NOT NULL) OR (pseudonym_first_name IS NOT NULL)) THEN
-    CASE
-        WHEN (pseudonym_first_name IS NULL) THEN (pseudonym_last_name)::text
-        WHEN (pseudonym_last_name IS NULL) THEN (pseudonym_first_name)::text
-        ELSE (((pseudonym_first_name)::text || ' '::text) || (pseudonym_last_name)::text)
-    END
-    ELSE
-    CASE
-        WHEN ((first_name IS NULL) AND (last_name IS NOT NULL)) THEN (last_name)::text
-        WHEN ((last_name IS NULL) AND (first_name IS NOT NULL)) THEN (first_name)::text
-        ELSE (((first_name)::text || ' '::text) || (last_name)::text)
-    END
+    WHEN (pseudonym IS NOT NULL) THEN pseudonym
+    ELSE name
+END) STORED,
+    published_name_sort_by character varying GENERATED ALWAYS AS (
+CASE
+    WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
+    ELSE name_sort_by
 END) STORED
 );
 
@@ -917,6 +916,38 @@ CREATE SEQUENCE public.person_mailing_assignments_id_seq
 --
 
 ALTER SEQUENCE public.person_mailing_assignments_id_seq OWNED BY public.person_mailing_assignments.id;
+
+
+--
+-- Name: person_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_roles (
+    id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    role public.person_role
+);
+
+
+--
+-- Name: person_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.person_roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: person_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.person_roles_id_seq OWNED BY public.person_roles.id;
 
 
 --
@@ -1408,6 +1439,40 @@ ALTER SEQUENCE public.survey_formats_id_seq OWNED BY public.survey_formats.id;
 
 
 --
+-- Name: survey_pages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_pages (
+    id bigint NOT NULL,
+    title character varying,
+    next_page_id bigint,
+    sort_order integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    survey_id bigint
+);
+
+
+--
+-- Name: survey_pages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.survey_pages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: survey_pages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.survey_pages_id_seq OWNED BY public.survey_pages.id;
+
+
+--
 -- Name: survey_queries; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1500,7 +1565,7 @@ CREATE TABLE public.survey_questions (
     horizontal boolean DEFAULT false,
     private boolean DEFAULT false,
     regex character varying,
-    survey_id bigint
+    survey_page_id bigint
 );
 
 
@@ -1533,11 +1598,10 @@ CREATE TABLE public.survey_responses (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    survey_id integer NOT NULL,
     survey_question_id integer NOT NULL,
-    person_id integer NOT NULL,
     response json,
-    response_as_text text
+    response_as_text text,
+    survey_submission_id bigint NOT NULL
 );
 
 
@@ -1559,6 +1623,39 @@ CREATE SEQUENCE public.survey_responses_id_seq
 --
 
 ALTER SEQUENCE public.survey_responses_id_seq OWNED BY public.survey_responses.id;
+
+
+--
+-- Name: survey_submissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_submissions (
+    id bigint NOT NULL,
+    name character varying,
+    survey_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: survey_submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.survey_submissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: survey_submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.survey_submissions_id_seq OWNED BY public.survey_submissions.id;
 
 
 --
@@ -1777,6 +1874,40 @@ ALTER SEQUENCE public.venues_id_seq OWNED BY public.venues.id;
 
 
 --
+-- Name: versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.versions (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id bigint NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object text,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
+
+
+--
 -- Name: available_dates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1910,6 +2041,13 @@ ALTER TABLE ONLY public.person_mailing_assignments ALTER COLUMN id SET DEFAULT n
 
 
 --
+-- Name: person_roles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_roles ALTER COLUMN id SET DEFAULT nextval('public.person_roles_id_seq'::regclass);
+
+
+--
 -- Name: phone_numbers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1987,6 +2125,13 @@ ALTER TABLE ONLY public.survey_formats ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: survey_pages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_pages ALTER COLUMN id SET DEFAULT nextval('public.survey_pages_id_seq'::regclass);
+
+
+--
 -- Name: survey_queries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2012,6 +2157,13 @@ ALTER TABLE ONLY public.survey_questions ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.survey_responses ALTER COLUMN id SET DEFAULT nextval('public.survey_responses_id_seq'::regclass);
+
+
+--
+-- Name: survey_submissions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_submissions ALTER COLUMN id SET DEFAULT nextval('public.survey_submissions_id_seq'::regclass);
 
 
 --
@@ -2054,6 +2206,13 @@ ALTER TABLE ONLY public.ui_preferences ALTER COLUMN id SET DEFAULT nextval('publ
 --
 
 ALTER TABLE ONLY public.venues ALTER COLUMN id SET DEFAULT nextval('public.venues_id_seq'::regclass);
+
+
+--
+-- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
 
 
 --
@@ -2233,6 +2392,14 @@ ALTER TABLE ONLY public.person_mailing_assignments
 
 
 --
+-- Name: person_roles person_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_roles
+    ADD CONSTRAINT person_roles_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: phone_numbers phone_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2353,6 +2520,14 @@ ALTER TABLE ONLY public.survey_formats
 
 
 --
+-- Name: survey_pages survey_pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_pages
+    ADD CONSTRAINT survey_pages_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: survey_queries survey_queries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2382,6 +2557,14 @@ ALTER TABLE ONLY public.survey_questions
 
 ALTER TABLE ONLY public.survey_responses
     ADD CONSTRAINT survey_responses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: survey_submissions survey_submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_submissions
+    ADD CONSTRAINT survey_submissions_pkey PRIMARY KEY (id);
 
 
 --
@@ -2430,6 +2613,14 @@ ALTER TABLE ONLY public.ui_preferences
 
 ALTER TABLE ONLY public.venues
     ADD CONSTRAINT venues_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.versions
+    ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
 
 
 --
@@ -2489,13 +2680,6 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
--- Name: fname_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fname_idx ON public.people USING btree (first_name);
-
-
---
 -- Name: index_people_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2531,6 +2715,20 @@ CREATE INDEX index_person_mailing_assignments_on_person_id ON public.person_mail
 
 
 --
+-- Name: index_person_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_person_roles_on_person_id ON public.person_roles USING btree (person_id);
+
+
+--
+-- Name: index_person_roles_on_role; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_person_roles_on_role ON public.person_roles USING btree (role);
+
+
+--
 -- Name: index_published_programme_item_assignments_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2545,10 +2743,38 @@ CREATE INDEX index_published_programme_items_on_format_id ON public.published_pr
 
 
 --
--- Name: index_survey_questions_on_survey_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_survey_pages_on_survey_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_survey_questions_on_survey_id ON public.survey_questions USING btree (survey_id);
+CREATE INDEX index_survey_pages_on_survey_id ON public.survey_pages USING btree (survey_id);
+
+
+--
+-- Name: index_survey_questions_on_survey_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_questions_on_survey_page_id ON public.survey_questions USING btree (survey_page_id);
+
+
+--
+-- Name: index_survey_responses_on_survey_submission_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_responses_on_survey_submission_id ON public.survey_responses USING btree (survey_submission_id);
+
+
+--
+-- Name: index_survey_submissions_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_submissions_on_person_id ON public.survey_submissions USING btree (person_id);
+
+
+--
+-- Name: index_survey_submissions_on_survey_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_submissions_on_survey_id ON public.survey_submissions USING btree (survey_id);
 
 
 --
@@ -2615,17 +2841,17 @@ CREATE UNIQUE INDEX index_tags_on_name ON public.tags USING btree (name);
 
 
 --
+-- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING btree (item_type, item_id);
+
+
+--
 -- Name: key_event_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX key_event_index ON public.ui_preferences USING btree (key);
-
-
---
--- Name: lname_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX lname_idx ON public.people USING btree (last_name);
 
 
 --
@@ -2668,13 +2894,6 @@ CREATE INDEX pub_progitem_assignment_person_index ON public.published_programme_
 --
 
 CREATE INDEX survey_alias_idx ON public.surveys USING btree (alias);
-
-
---
--- Name: survey_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX survey_idx ON public.survey_responses USING btree (survey_id);
 
 
 --
@@ -2722,6 +2941,54 @@ ALTER TABLE ONLY public.configurations
 
 
 --
+-- Name: survey_questions fk_rails_35518ef583; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_questions
+    ADD CONSTRAINT fk_rails_35518ef583 FOREIGN KEY (survey_page_id) REFERENCES public.survey_pages(id);
+
+
+--
+-- Name: survey_submissions fk_rails_422004fc2f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_submissions
+    ADD CONSTRAINT fk_rails_422004fc2f FOREIGN KEY (survey_id) REFERENCES public.surveys(id);
+
+
+--
+-- Name: survey_responses fk_rails_7fc628646e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_responses
+    ADD CONSTRAINT fk_rails_7fc628646e FOREIGN KEY (survey_submission_id) REFERENCES public.survey_submissions(id);
+
+
+--
+-- Name: person_roles fk_rails_8139558243; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_roles
+    ADD CONSTRAINT fk_rails_8139558243 FOREIGN KEY (person_id) REFERENCES public.people(id);
+
+
+--
+-- Name: survey_pages fk_rails_c9027d3929; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_pages
+    ADD CONSTRAINT fk_rails_c9027d3929 FOREIGN KEY (survey_id) REFERENCES public.surveys(id);
+
+
+--
+-- Name: survey_submissions fk_rails_cca09747da; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_submissions
+    ADD CONSTRAINT fk_rails_cca09747da FOREIGN KEY (person_id) REFERENCES public.people(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -2742,6 +3009,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210606194812'),
 ('20210607020926'),
 ('20210611132550'),
-('20210613201100');
+('20210613201100'),
+('20210613204940'),
+('20210615132509'),
+('20210619225332'),
+('20210620011503'),
+('20210620175724'),
+('20210620180746'),
+('20210626162611'),
+('20210627143358');
 
 

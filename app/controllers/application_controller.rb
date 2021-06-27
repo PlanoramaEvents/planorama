@@ -1,6 +1,20 @@
 class ApplicationController < ActionController::Base
+  include Pundit
+
   before_action :configure_permitted_parameters, if: :devise_controller?
+
   # Secure the application
+  before_action :authenticate_person!
+
+  #  based on current_user
+  before_action :set_paper_trail_whodunnit
+
+  # Tell pundit to use the current person
+  def pundit_user
+    current_person
+  end
+
+  # TODO: timezone
 
   # def application_time_zone(&block)
   #   cfg = SiteConfig.first # for now we only have one convention... change when we have many
@@ -16,6 +30,11 @@ class ApplicationController < ActionController::Base
   #     end
   #   end
   # end
+
+  def user_for_paper_trail
+    current_person ? current_person.published_name : 'Anon user'
+  end
+
   protected
 
   def configure_permitted_parameters

@@ -4,9 +4,13 @@ import {
     required,
     string,
 } from 'vue-mc/validation'
-import { SurveyQuestions } from './survey_question.js';
 
 export class Survey extends PlanoModel {
+  schema() {
+    let s = super.schema()
+    delete s.survey_pages
+    return s
+  }
   defaults() {
     return {
       id: null,
@@ -19,10 +23,23 @@ export class Survey extends PlanoModel {
       use_captcha: false,
       public: false,
       authenticate: false,
-      transition_acceptance_status: false,
-      transition_decline_status: false,
+      //transition_accept_status: false,
+      //transition_decline_status: false,
       declined_msg: '',
-      anonymous: false
+      anonymous: false,
+      survey_pages: [{
+        id: null,
+        title: null,
+        survey_questions: [{
+          id: null,
+          question: '',
+          question_type: 'textfield',
+          survey_answers: [{
+            id: null,
+            answer: '',
+          }]
+        }]
+      }]
     }
   }
   validation() {
@@ -40,12 +57,28 @@ export class Survey extends PlanoModel {
     }
   }
 
-  mutations() {
-    return {
-      survey_questions: sq => new SurveyQuestions(sq)
+  getSaveData() {
+    const data = super.getSaveData()
+    if(data.survey_pages) {
+      data.survey_pages_attributes = data.survey_pages.map((page, i) => {
+        if (page.survey_questions) {
+          page.survey_questions_attributes = page.survey_questions.map((q, j) => {
+            if(q.survey_answers) {
+              q.survey_answers_attributes = q.survey_answers.map((a, k) => {
+                a.sort_order = k
+                return a
+              })
+            }
+            q.sort_order = j;
+            return q
+          })
+        }
+        page.sort_order = i
+        return page
+      })
     }
+    return data;
   }
-
 };
 
 export class Surveys extends Collection {
@@ -80,19 +113,20 @@ export const survey_columns = [
     stickyColumn: true,
     sortable: true
   },
+  'description',
   {
-    key: '$.welcome',
-    label: 'Description',
-    sortable: true
+    key: '$.public',
+    label: 'Status',
+    formatter: (p) => p ? 'Published' : 'Closed'
   },
-  'published',
+  'publishedOn', // needs sortable
   {
     key: '$.updated_at',
     label: 'Last Modified On',
     sortable: true,
-    formatter: (d) => new Date(d).toLocaleString()
+    formatter: (d) => new Date(d).toLocaleDateString()
   },
-  'updatedBy',
+  'lastModifiedBy', // needs sortable
   'preview',
   'surveyLink',
   // welcome

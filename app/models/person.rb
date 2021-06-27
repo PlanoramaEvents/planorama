@@ -1,9 +1,6 @@
 ## schema
 # CREATE TABLE public.people (
 #     id integer NOT NULL,
-#     first_name character varying(150),
-#     last_name character varying(150) DEFAULT ''::character varying,
-#     suffix character varying(50),
 #     language character varying(5) DEFAULT ''::character varying,
 #     created_at timestamp without time zone NOT NULL,
 #     updated_at timestamp without time zone NOT NULL,
@@ -11,11 +8,6 @@
 #     comments text,
 #     organization character varying,
 #     job_title character varying,
-#     prefix character varying(50),
-#     pseudonym_first_name character varying(150),
-#     pseudonym_last_name character varying(150),
-#     pseudonym_suffix character varying(50),
-#     pseudonym_prefix character varying(50),
 #     pronouns character varying(100),
 #     year_of_birth integer,
 #     gender character varying(100),
@@ -29,30 +21,23 @@
 #     registration_number character varying,
 #     can_photo boolean DEFAULT false NOT NULL,
 #     can_record boolean DEFAULT false,
-#     published_name character varying(400) GENERATED ALWAYS AS (
-# CASE
-#     WHEN ((pseudonym_last_name IS NOT NULL) OR (pseudonym_first_name IS NOT NULL)) THEN
-#     CASE
-#         WHEN (pseudonym_first_name IS NULL) THEN (pseudonym_first_name)::text
-#         WHEN (pseudonym_last_name IS NULL) THEN (pseudonym_last_name)::text
-#         ELSE (((pseudonym_first_name)::text || ' '::text) || (pseudonym_last_name)::text)
-#     END
-#     ELSE
-#     CASE
-#         WHEN (first_name IS NULL) THEN (last_name)::text
-#         WHEN (last_name IS NULL) THEN (first_name)::text
-#         ELSE (((first_name)::text || ' '::text) || (last_name)::text)
-#     END
-# END) STORED,
-#     published_last_name character varying(400) GENERATED ALWAYS AS (
-# CASE
-#     WHEN (pseudonym_last_name IS NOT NULL) THEN pseudonym_last_name
-#     ELSE last_name
-# END) STORED,
 #     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
 #     reset_password_token character varying,
 #     reset_password_sent_at timestamp without time zone,
 #     remember_created_at timestamp without time zone
+#     sign_in_count integer DEFAULT 0 NOT NULL,
+#     current_sign_in_at timestamp without time zone,
+#     last_sign_in_at timestamp without time zone,
+#     current_sign_in_ip inet,
+#     last_sign_in_ip inet,
+#     confirmation_token character varying,
+#     confirmed_at timestamp without time zone,
+#     confirmation_sent_at timestamp without time zone,
+#     unconfirmed_email character varying,
+#     failed_attempts integer DEFAULT 0 NOT NULL,
+#     unlock_token character varying,
+#     locked_at timestamp without time zone,
+#     name character
 # );
 
 class Person < ApplicationRecord
@@ -60,11 +45,14 @@ class Person < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   # database_authenticatable,
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable, :lockable
 
   acts_as_taggable
 
+  has_paper_trail
+
   has_one :bio, dependent: :delete
+  accepts_nested_attributes_for :bio, allow_destroy: true
 
   before_destroy :check_if_assigned
 
@@ -82,11 +70,11 @@ class Person < ApplicationRecord
   has_many  :email_addresses
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
-  has_many  :survey_responses
+  has_many :survey_submissions, class_name: 'Survey::Submission', dependent: :destroy
   # TODO: add scope for survey id
   # TODO: get list of surveys for this person ...
 
-  has_one :user
+  has_many :person_roles, dependent: :destroy
 
   enum acceptance_status: {
     unknown: 'unknown',
@@ -106,11 +94,11 @@ class Person < ApplicationRecord
 
   nilify_blanks only: [
     :bio,
-    :pseudonym_prefix,
-    :pseudonym_first_name,
-    :pseudonym_last_name,
-    :pseudonym_suffix
+    :pseudonym,
   ]
+
+  validates :name, presence: true
+
 
   # TODO:
   # - there is talk about having a workflow, including whether a person
@@ -118,12 +106,12 @@ class Person < ApplicationRecord
   #   pass vetting and later change their mind. So we do not want to
   #   or need to re-vet...
   #
-
   def email
     email_addresses.first&.email
   end
+
   #
-  # Foir devise login as a person
+  # For devise login as a person
   #
   def email_required?
     false
@@ -138,6 +126,7 @@ class Person < ApplicationRecord
   end
 
   def primary_email
+    # TODO: change to find the primary email
     email_addresses.first&.email
     # emails.primary || (emails.first if new_record?)
   end
@@ -149,7 +138,6 @@ class Person < ApplicationRecord
 # https://dispatch.moonfarmer.com/separate-email-address-table-with-devise-in-rails-62208a47d3b9
 # mapping.to.find_for_database_authentication(authentication_hash)
   def self.find_first_by_auth_conditions(warden_conditions, opts={})
-    puts "******** WARDEN FIND #{warden_conditions.to_json}"
     conditions = warden_conditions.dup
 
     # If "email" is an attribute in the conditions,
@@ -170,13 +158,6 @@ class Person < ApplicationRecord
     end
   end
 
-  # def authenticate! #(a1, a2)
-  #   Rails.logger.error "**** User Auth #{a1}, #{a2}"
-  #   super(a1, a2)
-  # end
-
-  # private
-
   # check that the person has not been assigned to program items, if they have then return an error and do not delete
   def check_if_assigned
     if (ProgrammeAssignment.where(person_id: id).count > 0) ||
@@ -186,15 +167,13 @@ class Person < ApplicationRecord
   end
 
   def valid_password?(password)
-    if password.blank?
-        true
-    else
-        super
-    end
+    return true if password.blank?
+
+    super
   end
 
   def password_required?
-      new_record? ? false : super
+    new_record? ? false : super
   end
 
   # # ----------------------------------------------------------------------------------------------

@@ -3,19 +3,21 @@
     sortField='name'
     :modelType="modelType"
   >
-    <template #cell(published)="{ item }">
-      {{ item.public ? 'Published' : 'Closed' }}
-      <small v-if="item.public">on ????</small>
+    <template #cell(description)="{ item }">
+      <tooltip-overflow :title="item.$.welcome">{{item.$.welcome}}</tooltip-overflow>
     </template>
-    <template #cell(updatedBy)>
-      We don't track this yet.
+    <template #cell(publishedOn)="{ item }">
+      <span v-if="item.public">?????</span>
+    </template>
+    <template #cell(lastModifiedBy)>
+      Kris "Nchanter" Snyder
     </template>
     <template #cell(preview)="{ item }">
       <a :href="previewLink(item)" target="_blank">Preview</a>
     </template>
     <template #cell(surveyLink)="{ item }">
-      <small v-if="!item.anonymous"><i>This survey is not anonymous</i></small>
-      <a v-if="item.anonymous" :href="surveyLink(item)" target="_blank">{{ surveyLink(item) }}</a>
+      <small v-if="!item.$.anonymous"><i>This survey is not anonymous</i></small>
+      <a v-if="item.$.anonymous" :href="surveyLink(item)" target="_blank">{{ surveyLink(item) }}</a>
     </template>
 
   </table-vuex>
@@ -23,6 +25,7 @@
 
 <script>
 import TableVuex from '../table_vuex'
+import TooltipOverflow from '../tooltip-overflow';
 import { Survey } from './survey';
 
 export default {
@@ -32,6 +35,7 @@ export default {
   }),
   components: {
     TableVuex,
+    TooltipOverflow,
   },
   methods: {
     previewLink(item) {
