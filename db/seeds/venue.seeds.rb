@@ -1,7 +1,6 @@
 after :setup_type do
-    
-    Venue.delete_all
-    Room.delete_all
+
+    Venue.destroy_all
 
     st = SetupType.first
 

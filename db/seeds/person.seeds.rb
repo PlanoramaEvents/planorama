@@ -1,5 +1,5 @@
 
-Person.delete_all
+Person.destroy_all
 
 
 100.times.each do |i|
@@ -77,7 +77,7 @@ Person.delete_all
     person.bio.reddit = username
     person.bio.save
     #p "Twitter is #{person.bio.twitterinfo}"
-    
+
 end
 
 p "Created #{Person.count} people."
