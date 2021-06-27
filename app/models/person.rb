@@ -97,7 +97,7 @@ class Person < ApplicationRecord
   has_many  :email_addresses
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
-  has_many :survey_submissions, class_name: 'Survey::Submission'
+  has_many :survey_submissions, class_name: 'Survey::Submission', dependent: :destroy
   # TODO: add scope for survey id
   # TODO: get list of surveys for this person ...
 
