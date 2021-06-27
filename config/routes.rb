@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     passwords: 'people/passwords'
   }
 
+  get '/people/sessions/current', to: 'people/sessions#get_session'
+
   root to: 'home#index' #, :as => :authenticated_root
 
   # Pages

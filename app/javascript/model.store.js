@@ -7,14 +7,15 @@ export const UNEDIT = 'UNEDIT';
 export const AFTER_SAVE = 'AFTER_SAVE'
 
 export class PlanoStore {
-  constructor(collection, columns, state= {}, mutations={}, actions={}) {
+  constructor(moduleName, collection, columns, state= {}, mutations={}, actions={}) {
+    this.moduleName = moduleName;
     this.state = {
       selected: undefined,
       editable: false,
       collection,
       columns,
       ...state
-    }
+    };
     this.mutations = {
       [SELECT] (state, item) {
         state.selected = item;
@@ -62,5 +63,13 @@ export class PlanoStore {
 
   initialize(vuex) {
     return new vuex.Store(this)
+  }
+
+  registerModule(store) {
+    store.registerModule(module_name, this);
+  }
+
+  helpers() {
+    // figure out later
   }
 }

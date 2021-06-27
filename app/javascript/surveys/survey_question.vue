@@ -1,7 +1,7 @@
 <template>
   <div class="survey-question mt-3">
-    <h3 v-if="question.title">{{question.title}}</h3>
     <b-form-group
+      v-if="!isFormatting && !address && !socialmedia"
       :label="question.question" v-slot="{ ariaDescribedBy }"
     >
       <b-form-textarea
@@ -39,28 +39,144 @@
           :disabled="!answerable"
         >{{choice.answer}}</b-form-checkbox>
       </b-form-checkbox-group>
+      <b-form-select
+        v-if="dropdown"
+        v-model="response.response.text"
+        :aria-describedby="ariaDescribedBy"
+      >
+        <b-form-select-option
+          v-for="choice in choices"
+          :key="choice.id"
+          :value="choice.answer"
+          :disabled="!answerable"
+        >{{choice.answer}}</b-form-select-option>
+      </b-form-select>
+      <b-form-input
+        v-if="email"
+        type="email"
+        v-model="response.response.text"
+        :disabled="!answerable"
+        :aria-describedBy="ariaDescribedBy"
+      ></b-form-input>
     </b-form-group>
+    <p v-if="textonly">{{question.question}}</p>
+    <hr v-if="hr" />
+    <div class="form-address form-row" v-if="address">
+      <div class="col-12">{{question.question}}</div>
+      <div class="col-12 col-sm-6">
+        <b-form-group
+          :id="formGroupId('address-1')"
+          :label-for="formId('address-1')"
+          label="Address 1"
+        >
+          <b-form-input 
+            :disabled="!answerable" 
+            :id="formId('address-1')" 
+            v-model="response.response.address.street"
+          ></b-form-input>
+        </b-form-group>
+      </div>
+      <div class="col-12 col-sm-6">
+        <b-form-group
+          :id="formGroupId('address-2')"
+          :label-for="formId('address-2')"
+          label="Address 2"
+        >
+          <b-form-input 
+            :disabled="!answerable" 
+            :id="formId('address-2')" 
+            v-model="response.response.address.street2"
+          ></b-form-input>
+        </b-form-group>
+      </div>
+      <div class="col-12 col-sm-6">
+        <b-form-group
+          :id="formGroupId('city')"
+          :label-for="formId('city')"
+          label="City"
+        >
+          <b-form-input 
+            :disabled="!answerable" 
+            :id="formId('city')" 
+            v-model="response.response.address.city"
+          ></b-form-input>
+        </b-form-group>
+      </div>
+      <div class="col-12 col-sm-3">
+        <b-form-group
+          :id="formGroupId('state')"
+          :label-for="formId('state')"
+          label="State"
+        >
+          <b-form-input 
+          :disabled="!answerable"
+          :id="formId('state')" 
+          v-model="response.response.address.state"
+        ></b-form-input>
+        </b-form-group>
+      </div>
+      <div class="col-12 col-sm-3">
+        <b-form-group
+          :id="formGroupId('zip')"
+          :label-for="formId('zip')"
+          label="ZIP Code"
+        >
+          <b-form-input 
+            :disabled="!answerable"
+            :id="formId('zip')"
+            v-model="response.response.address.zip"
+          ></b-form-input>
+        </b-form-group>
+      </div>
+      <div class="col-12">
+        <b-form-group
+          :id="formGroupId('country')"
+          :label-for="formId('country')"
+          label="Country"
+        >
+          <b-form-input
+            :disabled="!answerable"
+            :id="formId('country')"
+            v-model="response.response.address.country"
+          ></b-form-input>
+        </b-form-group>
+      </div>
+    </div>
+    <div v-if="socialmedia">
+      <span>{{question.question}}</span>
+      <twitter v-model="response.response.socialmedia.twitter" :edit="answerable"></twitter>
+    </div>
   </div>
 </template>
 
 <script>
-import { SurveyResponse } from './survey_response'
+import Twitter from '../social-media/twitter';
+import {mapState} from 'vuex'
 
 export default {
   name: "SurveyQuestion",
+  components: {
+    Twitter,
+  },
   props: {
     question: {
       type: Object,
       required: true
     },
     response: {
-      type: SurveyResponse,
+      type: Object,
       default() {
-        let resp = new SurveyResponse();
-        resp.survey_id = this.question.survey_id;
-        resp.survey_question_id = this.question.id;
-        resp.response = {text: '', answers: []};
-        return resp;
+        return {
+          survey_question_id: this.question.id,
+          response: {text: '', answers: [], address:{
+            street: null, street2: null, city: null, 
+            state: null, zip: null, country: null
+          }, socialmedia: {
+            twitter: null, facebook: null, linkedin: null,
+            twitch: null, youtube: null, instagram: null,
+            flickr: null, reddit: null
+          }}
+        }
       }
     }, 
     answerable: {
@@ -69,6 +185,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['submission']),
     textfield() {
       return this.question.question_type === "textfield";
     },
@@ -101,6 +218,26 @@ export default {
     },
     choices() {
       return this.question.survey_answers;
+    },
+    isFormatting() {
+      return this.textonly || this.hr;
+    }
+  },
+  methods: {
+    formId(string) {
+      return `${string}-${this.question.id}`
+    },
+    formGroupId(string) {
+      return `${this.formId(string)}-group`
+    },
+  },
+  mounted() {
+    console.log(this.response, this.submission)
+    if (this.submission) {
+      if (!this.submission.survey_responses) {
+        this.submission.survey_responses = []
+      }
+      this.submission.survey_responses.push(this.response)
     }
   }
 }

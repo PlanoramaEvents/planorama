@@ -32,6 +32,7 @@ export default {
         insertAt = this.selected_page.survey_questions.findIndex(q => q.id === this.selected_question.id) + 1
       }
       const question = {question: 'New Question', question_type, survey_page_id: this.selected_page.id}
+      console.log({question, insertAt})
       this.newQuestionAction({question, insertAt});
     },
     newPage() {

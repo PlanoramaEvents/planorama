@@ -29,7 +29,6 @@ class Survey::SubmissionsController < ResourceController
 
   def allowed_params
     %i[
-      lock_version
       person_id
       survey_id
       survey_responses
@@ -40,7 +39,30 @@ class Survey::SubmissionsController < ResourceController
         _destroy
         survey_submission_id
         survey_question_id
-        response
+      ] << [
+        response: %i[
+          text
+          answers
+        ] << [
+          address: %i[
+            street
+            street2
+            city
+            state
+            zip
+            country
+          ],
+          socialmedia: %i[
+            twitter
+            facebook
+            linkedin
+            twitch
+            youtube
+            instagram
+            flickr
+            reddit
+          ]
+        ]
       ]
     ]
   end

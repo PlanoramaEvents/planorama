@@ -1,15 +1,20 @@
 import { survey_columns, Surveys } from './survey';
 import { PlanoStore, SELECT } from '../model.store'
+import { SurveySubmission } from './survey_response';
 export const SELECT_PAGE = "SELECT PAGE";
 export const SELECT_QUESTION = "SELECT QUESTION";
 export const UNSELECT_PAGE = "UNSELECT PAGE";
 export const UNSELECT_QUESTION = "UNSELECT QUESTION";
 export const NEW_QUESTION = "NEW QUESTION";
 export const NEW_PAGE = "NEW PAGE";
+export const NEW_SUBMISSION = "NEW SUBMISSION";
+export const UNSELECT_SUBMISSION = "UNSELECT SUBMISSION";
+export const SUBMIT = "SUBMIT";
 
-export const store = new PlanoStore(new Surveys(), survey_columns, {
+export const store = new PlanoStore('surveys', new Surveys(), survey_columns, {
   selected_page: undefined,
-  selected_question: undefined
+  selected_question: undefined,
+  submission: undefined
 }, {
   [SELECT] (state, item) {
     // overriding the default one
@@ -40,8 +45,15 @@ export const store = new PlanoStore(new Surveys(), survey_columns, {
   [UNSELECT_QUESTION] (state) {
     state.selected_question = undefined;
   },
+  [NEW_SUBMISSION] (state) {
+    console.log("new submission!!!")
+    state.submission = new SurveySubmission({survey_id: state.selected.id})
+  },
+  [UNSELECT_SUBMISSION] (state) {
+    state.submission = undefined
+  }
 },{
-  [NEW_QUESTION] ({commit}, state, {question, insertAt}) {
+  [NEW_QUESTION] ({commit, state}, {question, insertAt}) {
     console.log('new question called with', question, insertAt)
     if(!state.selected_page.survey_questions) {
       state.selected_page.survey_questions = []
@@ -54,7 +66,7 @@ export const store = new PlanoStore(new Surveys(), survey_columns, {
       commit(SELECT_QUESTION, newest_question)
     })
   },
-  [NEW_PAGE] ({commit}, state, {page, insertAt}) {
+  [NEW_PAGE] ({commit, state}, {page, insertAt}) {
     if (!state.selected.survey_pages) {
       state.selected.survey_pages = []
     }
@@ -66,4 +78,9 @@ export const store = new PlanoStore(new Surveys(), survey_columns, {
       commit(SELECT_PAGE, newest_page)
     })
   },
+  [SUBMIT] ({state, commit}) {
+    state.submission.save().then(() => {
+      commit(UNSELECT_SUBMISSION);
+    })
+  }
 });

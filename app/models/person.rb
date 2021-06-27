@@ -110,6 +110,8 @@ class Person < ApplicationRecord
     email_addresses.first&.email
   end
 
+
+
   #
   # For devise login as a person
   #
