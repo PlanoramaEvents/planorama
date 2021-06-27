@@ -4536,25 +4536,24 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-ckeditor4-integrations-common@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.npmjs.org/ckeditor4-integrations-common/-/ckeditor4-integrations-common-0.1.0.tgz"
-  integrity sha512-Z0fOFOyIavYti3jh8u7SQCFTHTJfCF6cceIkxwnrtpTczt5nI0PI16EnknKvUOPOsHVAnmvRi10IUM+2Rooslw==
+ckeditor4-integrations-common@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/ckeditor4-integrations-common/-/ckeditor4-integrations-common-0.2.0.tgz#994a83f94e14161fa8ee15e7f0edc8735b12d8f8"
+  integrity sha512-KkHztF0bkGOnTcifWFd55j5Y9SCR3uk12SGgS6L1mZNnBeIJFCcgTwZWEHtG2aDJF7aZob7cex1CShL+SrNuow==
   dependencies:
     load-script "^1.0.0"
 
 ckeditor4-vue@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/ckeditor4-vue/-/ckeditor4-vue-1.2.0.tgz"
-  integrity sha512-JvlBnfDHrhCOoUrQ/Lfug8o+ChOVaNdVE+AuQ9b69h5K8DRZQUAvJgF9/s2L6qngx0FDAKOCpCJhbcBTWlSdAQ==
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/ckeditor4-vue/-/ckeditor4-vue-1.3.1.tgz#6deeec83de607b3cbfdf5cc2ee49923bc4840809"
+  integrity sha512-F5abagv2OXKbLuZjIea6BhxEoe54FtWDNRGZFnKNm9YcY24/W9VRedWuUCFwWVHFB+Gm4F5hcfF3aqoK7hPy8A==
   dependencies:
-    ckeditor4-integrations-common "^0.1.0"
-    load-script "^1.0.0"
+    ckeditor4-integrations-common "^0.2.0"
 
-ckeditor4@^4.15.1:
-  version "4.15.1"
-  resolved "https://registry.npmjs.org/ckeditor4/-/ckeditor4-4.15.1.tgz"
-  integrity sha512-t2q61VG2h0i5DwZ+G3jTesrBSGnhNK0iKVdSzLBKx40PQzcDUDZOWJbMlpbAOuMzAAS096x5J2H4u/IyQRl1vQ==
+ckeditor4@^4.16.1:
+  version "4.16.1"
+  resolved "https://registry.yarnpkg.com/ckeditor4/-/ckeditor4-4.16.1.tgz#c1d34d032085d33e2efe3c12b30431b5f9230c16"
+  integrity sha512-dfclP3QDQfXMOrPex3s/l6b5E+MBSxhMpW3+nUM6lFX3ax1u/1tl2ETpe7iYJRtoN4TdvddL5XFweQT17woN5A==
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -8256,7 +8255,7 @@ load-json-file@^1.0.0:
 
 load-script@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.npmjs.org/load-script/-/load-script-1.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/load-script/-/load-script-1.0.0.tgz#0491939e0bee5643ee494a7e3da3d2bac70c6ca4"
   integrity sha1-BJGTngvuVkPuSUp+PaPSuscMbKQ=
 
 loader-runner@^2.4.0:
