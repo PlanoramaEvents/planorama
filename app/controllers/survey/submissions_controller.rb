@@ -11,6 +11,10 @@ class Survey::SubmissionsController < ResourceController
     'survey_submissions'
   end
 
+  def belongs_to_param_id
+    params[:survey_id]
+  end
+
   def before_save
     # Make sure the submission is assigned to the current person
     @object.person_id = current_person.id
