@@ -42,8 +42,6 @@ class PeopleController < ResourceController
       pseudonym
       pseudonym_sort_by
       pseudonym_sort_by_confirmed
-      published_name
-      published_name_sort_by
     ]
   end
   # TODO: these to be dealt with in seperate controllers ??

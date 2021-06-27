@@ -27,8 +27,6 @@ export class Person extends PlanoModel {
       pseudonym: null,
       pseudonym_sort_by: null,
       pseudonym_sort_by_confirmed: false,
-      published_name: null,
-      published_name_sort_by: null,
       pronouns: null,
       job_title: null,
       organization: null,
@@ -108,6 +106,12 @@ export const people_columns = [
   {
     key: 'id',
     label: 'ID'
+  },
+  {
+    key: '$.published_name',
+    label: 'Published Name',
+    sortable: true,
+    sticky: true,
   },
   {
     key: '$.name',
