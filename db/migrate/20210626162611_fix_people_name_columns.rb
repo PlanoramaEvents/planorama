@@ -45,9 +45,36 @@ class FixPeopleNameColumns < ActiveRecord::Migration[6.0]
     remove_column :people, :pseudonym_prefix, :string
 
     add_column :people, :name, :string, index: true, default: ''
+    add_column :people, :name_sort_by, :string, index: true
+    add_column :people, :name_sort_by_confirmed, :boolean, default: false
     add_column :people, :pseudonym, :string, index: true
-    add_column :people, :sort_by, :string, index: true
-    add_column :people, :sort_by_confirmed, :boolean, default: false
+    add_column :people, :pseudonym_sort_by, :string, index: true
+    add_column :people, :pseudonym_sort_by_confirmed, :boolean, default: false
+
+    reversible do |dir|
+      dir.up do
+        execute <<-SQL
+          ALTER TABLE people
+          ADD COLUMN published_name character varying GENERATED ALWAYS AS (
+          CASE
+            WHEN (pseudonym IS NOT NULL) THEN pseudonym
+            ELSE name
+          END) STORED;
+          ALTER TABLE people
+          ADD COLUMN published_name_sort_by character varying GENERATED ALWAYS AS (
+          CASE
+            WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
+            ELSE name_sort_by
+          END) STORED;
+        SQL
+      end
+      dir.down do
+        execute <<-SQL
+          ALTER TABLE people DROP COLUMN IF EXISTS published_name;
+          ALTER TABLE people DROP COLUMN IF EXISTS published_name_sort_by;
+        SQL
+      end
+    end
 
   end
 end

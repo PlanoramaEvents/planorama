@@ -800,9 +800,21 @@ CREATE TABLE public.people (
     unlock_token character varying,
     locked_at timestamp without time zone,
     name character varying DEFAULT ''::character varying,
+    name_sort_by character varying,
+    name_sort_by_confirmed boolean DEFAULT false,
     pseudonym character varying,
-    sort_by character varying,
-    sort_by_confirmed boolean DEFAULT false
+    pseudonym_sort_by character varying,
+    pseudonym_sort_by_confirmed boolean DEFAULT false,
+    published_name character varying GENERATED ALWAYS AS (
+CASE
+    WHEN (pseudonym IS NOT NULL) THEN pseudonym
+    ELSE name
+END) STORED,
+    published_name_sort_by character varying GENERATED ALWAYS AS (
+CASE
+    WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
+    ELSE name_sort_by
+END) STORED
 );
 
 

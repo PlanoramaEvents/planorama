@@ -15,8 +15,8 @@ Person.delete_all
     name = Faker::Name.name
     person = Person.create(
         name: name,
-        sort_by: name,
-        sort_by_confirmed: true,
+        name_sort_by: name,
+        name_sort_by_confirmed: true,
         organization: Faker::Company.name,
         job_title: Faker::Company.profession,
         pronouns: %w[he/him she/her they/them ze/zir].sample,

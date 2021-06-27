@@ -21,10 +21,14 @@ export class Person extends PlanoModel {
 
   defaults() {
     return {
-      name: '',
+      name: null,
+      name_sort_by: null,
+      name_sort_by_confirmed: false,
       pseudonym: null,
-      sort_by: null,
-      sort_by_confirmed: false,
+      pseudonym_sort_by: null,
+      pseudonym_sort_by_confirmed: false,
+      published_name: null,
+      published_name_sort_by: null,
       pronouns: null,
       job_title: null,
       organization: null,
@@ -82,7 +86,7 @@ export class People extends Collection {
 
   defaults() {
     return {
-      sortField: 'sort_by',
+      sortField: 'published_name_sort_by',
       sortOrder: 'asc',
       filter: '',
       perPage: 30,

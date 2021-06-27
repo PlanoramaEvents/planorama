@@ -22,6 +22,7 @@ RSpec.describe Person, '#factories' do
         it 'creates a person with a pseudonym' do
             person = create(:pseudonym_person)
             expect(person.pseudonym).to_not be nil
+            expect(person.pseudonym_sort_by).to_not be nil
         end
     end
 

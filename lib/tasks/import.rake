@@ -20,27 +20,45 @@ namespace :import do
           next
         end
         name = o[:name]
+        if !name
+          puts "Skipping #{o} because there is no name."
+          next
+        end
+        name_sort_by = name;
         pseudonym = o[:pseudonym]
+        pseudonym_sort_by = pseudonym;
         comment = "Imported from spreadsheet."
-        sort_by = pseudonym || name || '';
-        tokens = sort_by.split(' ')
-        if tokens.length > 1 
-          sort_by = "#{tokens[1..-1].join(' ')}, #{tokens[0]}"
-        end
-        puts "Person name: #{name}"
-        puts "Person pseudonym: #{pseudonym}"
-        print "What string should we use to sort this person (default: #{sort_by})? "
-        raw_sort_by_input = STDIN.gets.strip
-        if raw_sort_by_input == "" 
-          puts "Using the default #{sort_by}"
-        else 
-          puts "Using #{raw_sort_by_input}"
-          sort_by = raw_sort_by_input
-        end
-        puts "<Person email=#{email} name=#{name} pseudonym=#{pseudonym} sort_by=#{sort_by}>"
+        # tokens = name_sort_by.split(' ')
+        # if tokens.length > 1 
+        #   name_sort_by = "#{tokens[1..-1].join(' ')}, #{tokens[0]}"
+        # end
+        # puts "Person name: #{name}"
+        # puts "Person pseudonym: #{pseudonym}"
+        # print "What string should we use to sort this person (default: #{sort_by})? "
+        # raw_sort_by_input = STDIN.gets.strip
+        # if raw_sort_by_input == "" 
+        #   puts "Using the default #{sort_by}"
+        # else 
+        #   puts "Using #{raw_sort_by_input}"
+        #   sort_by = raw_sort_by_input
+        # end
+        # puts "<Person email=#{email} name=#{name} pseudonym=#{pseudonym} namesort_by=#{sort_by}>"
         found_email = EmailAddress.find_by(email: email, isdefault: true)
         if !found_email
-          p "There is no person"
+          # there is no person! Make a new one.
+          person = Person.create(
+            name: name, 
+            name_sort_by: name_sort_by, 
+            pseudonym: pseudonym, 
+            pseudonym_sort_by: pseudonym_sort_by
+          );
+          email = EmailAddress.create(
+              person: person,
+              email: email,
+              isdefault: true,
+              is_valid: true
+          );
+          p person, email
           count += 1
         else
           p "There is already person with the email #{found_email.email}, skipping"

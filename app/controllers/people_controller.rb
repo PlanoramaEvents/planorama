@@ -35,9 +35,13 @@ class PeopleController < ResourceController
       can_photo
       can_record
       name
+      name_sort_by
+      name_sort_by_confirmed
       pseudonym
-      sort_by
-      sort_by_confirmed
+      pseudonym_sort_by
+      pseudonym_sort_by_confirmed
+      published_name
+      published_name_sort_by
     ]
   end
   # TODO: these to be dealt with in seperate controllers ??
