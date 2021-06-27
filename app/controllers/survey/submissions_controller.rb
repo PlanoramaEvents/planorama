@@ -1,4 +1,5 @@
 class Survey::SubmissionsController < ResourceController
+  SERIALIZER_CLASS = 'Survey::SubmissionSerializer'.freeze
   MODEL_CLASS = 'Survey::Submission'.freeze
   POLICY_CLASS = 'SubmissionsPolicy'.freeze
 
@@ -31,6 +32,7 @@ class Survey::SubmissionsController < ResourceController
     ] << [
       survey_responses_attributes: %i[
         id
+        lock_version
         _destroy
         survey_submission_id
         survey_question_id
