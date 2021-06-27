@@ -81,6 +81,24 @@ export default {
     multiplechoice() {
       return this.question.question_type === "multiplechoice";
     },
+    hr() {
+      return this.question.question_type === "hr";
+    },
+    dropdown() {
+      return this.question.question_type === "dropdown";
+    },
+    address() {
+      return this.question.question_type === "address";
+    },
+    email() {
+      return this.question.question_type === "email";
+    },
+    socialmedia() {
+      return this.question.question_type === "socialmedia";
+    },
+    textonly() {
+      return this.question.question_type === "textonly";
+    },
     choices() {
       return this.question.survey_answers;
     }

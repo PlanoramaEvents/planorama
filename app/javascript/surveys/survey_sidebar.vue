@@ -30,7 +30,7 @@
 import { mapActions, mapState } from 'vuex';
 import { SAVE, EDIT } from '../model.store';
 import ModelSidebar from '../model-sidebar';
-import SurveyQuestion from './survey_question_component';
+import SurveyQuestion from './survey_question';
 
 export default {
   name: 'SurveySidebar',
