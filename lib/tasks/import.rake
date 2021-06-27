@@ -47,9 +47,9 @@ namespace :import do
         if !found_email
           # there is no person! Make a new one.
           person = Person.create(
-            name: name, 
-            name_sort_by: name_sort_by, 
-            pseudonym: pseudonym, 
+            name: name,
+            name_sort_by: name_sort_by,
+            pseudonym: pseudonym,
             pseudonym_sort_by: pseudonym_sort_by
           );
           email = EmailAddress.create(
