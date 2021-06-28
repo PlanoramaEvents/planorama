@@ -27,6 +27,13 @@ export default {
       selectPage: SELECT_PAGE,
       newSubmission: NEW_SUBMISSION,
       }),
+      redirect() {
+        this.selectPage(this.survey.survey_pages[0]);
+        this.newSubmission();
+        let path = `/${this.id}/page/${this.survey.survey_pages[0].id}`
+        console.log('redirecting to ', path)
+        this.$router.push({path})
+      }
   },
   mounted() {
     console.log(this);
@@ -35,12 +42,11 @@ export default {
       let model = new Survey({id: this.id}, this.surveys);
       model.fetch().then(() => {
         this.select(model);
-        this.selectPage(model.survey_pages[0]);
-        this.newSubmission();
-        let path = `/${this.id}/page/${model.survey_pages[0].id}`
-        console.log('redirecting to ', path)
-        this.$router.push({path})
+        this.redirect();
       });
+    }
+    else {
+      this.redirect();
     }
   }
 }

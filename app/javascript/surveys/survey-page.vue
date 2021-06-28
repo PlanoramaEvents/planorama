@@ -7,7 +7,8 @@
       :question="q"
       answerable
     ></survey-question>
-    <b-button @click="submit">Submit</b-button>
+    <b-button v-if="!next_page" @click="submit">Submit</b-button>
+    <b-button v-if="next_page" @click="next">Next Page</b-button>
   </div>
 </template>
 
@@ -32,6 +33,9 @@ export default {
     }),
     questions() {
       return this.page && this.page.survey_questions || [];
+    },
+    next_page() {
+      return this.page && this.page.next_page_id && `/${this.survey_id}/page/${this.page.next_page_id}`
     }
   },
   methods: {
@@ -43,7 +47,13 @@ export default {
     }),
     ...mapActions({
       submit: SUBMIT
-    })
+    }),
+    next() {
+      this.$router.push(this.next_page);
+    },
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.selectPage(this.survey.survey_pages.find(p => p.id == to.params.id))
   },
   mounted() {
     if (!this.survey && this.survey_id) {

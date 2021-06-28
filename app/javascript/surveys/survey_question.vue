@@ -232,7 +232,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.response, this.submission)
     if (this.submission) {
       if (!this.submission.survey_responses) {
         this.submission.survey_responses = []

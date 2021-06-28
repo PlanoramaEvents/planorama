@@ -37,6 +37,10 @@ namespace :docker do
         sh "docker", "exec", "-it", "planorama_planorama_1", "sh"
     end
 
+    task :mac_trunc_logs do
+        sh "echo", "\":> $(docker inspect planorama_planorama_1 --format '{{.LogPath}}'); exit\"", "|",  "nc",  "-U",  "~/Library/Containers/com.docker.docker/Data/debug-shell.sock"
+    end
+
     task :psql => :read_envrc do
         sh "docker", "exec", "-it", "planorama_postgres_1", "psql", "-U", ENV['POSTGRES_USER'], "-d", "planorama_development"
     end

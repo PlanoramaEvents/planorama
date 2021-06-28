@@ -42,8 +42,8 @@ class Survey::SubmissionsController < ResourceController
       ] << [
         response: %i[
           text
-          answers
         ] << [
+          answers: [],
           address: %i[
             street
             street2
