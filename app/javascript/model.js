@@ -52,6 +52,10 @@ export default class PlanoModel extends Model {
     }
   }
 
+  onSaveFailure(error) {
+    alert("Something went horrible wrong. Please reload your page." + error)
+  }
+
   // We need to put the CSRF token in the header
   getDefaultHeaders() {
     const csrfToken = document.querySelector("meta[name=csrf-token]").content

@@ -62,7 +62,7 @@ export const store = new PlanoStore('surveys', new Surveys(), survey_columns, {
     state.selected.save().then(() => {
       let questions = state.selected_page.survey_questions
       let maxId = Math.max(...questions.map(q => q.id));
-      let newest_question = quesitons.find(q => q.id === maxId)
+      let newest_question = questions.find(q => q.id == maxId)
       commit(SELECT_QUESTION, newest_question)
     })
   },
@@ -74,7 +74,7 @@ export const store = new PlanoStore('surveys', new Surveys(), survey_columns, {
     state.selected.save().then(() => {
       let pages = state.selected.survey_pages
       let maxId = Math.max(...pages.map(p => p.id));
-      let newest_page = pages.find(p => p.id === maxId)
+      let newest_page = pages.find(p => p.id == maxId)
       commit(SELECT_PAGE, newest_page)
     })
   },

@@ -43,7 +43,7 @@ export default {
     },
     surveyLink(item) {
       // TODO add authenticity key to stop robots?
-      return `/link/to/take/survey/${item.id}`;
+      return `/page/surveys#/${item.id}`;
     }
   }
 }

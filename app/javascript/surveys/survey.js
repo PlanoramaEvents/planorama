@@ -8,7 +8,8 @@ import {
 export class Survey extends PlanoModel {
   schema() {
     let s = super.schema()
-    delete s.survey_pages
+    delete s.survey_pages;
+    delete s.id;
     return s
   }
   defaults() {
@@ -117,7 +118,8 @@ export const survey_columns = [
   {
     key: '$.public',
     label: 'Status',
-    formatter: (p) => p ? 'Published' : 'Closed'
+    formatter: (p) => p ? 'Published' : 'Closed',
+    sortable: true,
   },
   'publishedOn', // needs sortable
   {

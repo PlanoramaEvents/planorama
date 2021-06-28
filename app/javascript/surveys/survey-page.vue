@@ -1,14 +1,16 @@
 <template>
   <div class="survey-page">
     <h1>{{survey && survey.survey_pages[0].title}}</h1>
+    <h2 v-if="survey && survey.survey_pages[0].id != page.id">{{page.title}}</h2>
     <survey-question
       v-for="q in questions"
       :key="q.id"
       :question="q"
       answerable
     ></survey-question>
-    <b-button v-if="!next_page" @click="submit">Submit</b-button>
-    <b-button v-if="next_page" @click="next">Next Page</b-button>
+    <p class="pull-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
+    <b-button class="pull-right mt-2" v-if="!next_page && !submitted" @click="submit">Submit</b-button>
+    <b-button class="pull-right mt-2" v-if="next_page" @click="next">Next Page</b-button>
   </div>
 </template>
 
@@ -22,6 +24,9 @@ import { Survey } from './survey';
 export default {
   name: "SurveyPage",
   props: ['survey_id', 'id'],
+  data: () =>  ({
+    submitted: false
+  }),
   components: {
     SurveyQuestion,
   },
@@ -45,15 +50,18 @@ export default {
       selectPage: SELECT_PAGE,
       newSubmission: NEW_SUBMISSION
     }),
-    ...mapActions({
-      submit: SUBMIT
-    }),
+    submit() {
+      this.$store.dispatch(SUBMIT).then(() => {
+        this.submitted = true;
+      })
+    },
     next() {
       this.$router.push(this.next_page);
     },
   },
   beforeRouteUpdate(to, from, next) {
     this.selectPage(this.survey.survey_pages.find(p => p.id == to.params.id))
+    next()
   },
   mounted() {
     if (!this.survey && this.survey_id) {
@@ -74,7 +82,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.survey {
+.survey-page {
   overflow-y: scroll;
   max-height: calc(100vh - 100px);
 }
