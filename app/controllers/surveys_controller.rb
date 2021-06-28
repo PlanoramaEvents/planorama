@@ -1,12 +1,30 @@
 class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
 
-  def includes
-    [{
-      survey_pages: {
-        survey_questions: :survey_answers
+  def serializer_includes
+    [
+      {
+        survey_pages: {
+          survey_questions: :survey_answers
+        }
       }
-    }]
+    ]
+  end
+
+  def includes
+    [
+      :created_by,
+      :updated_by,
+      :published_by,
+    ] << serializer_includes
+  end
+
+  def before_save
+    @object.created_by_id = current_person.id
+  end
+
+  def before_update
+    @object.updated_by_id = current_person.id
   end
 
   def allowed_params
@@ -26,6 +44,9 @@ class SurveysController < ResourceController
       authenticate_msg
       anonymous
       welcome
+      published_on
+      published_by
+      description
     ] << [
       survey_pages_attributes: %i[
         id

@@ -12,8 +12,7 @@ module ResourceMethods
                perPage: @per_page
              },
              root: 'data',
-             # meta_key: 'header',
-             include: includes,
+             include: serializer_includes,
              adapter: :json,
              content_type: 'application/json'
     else
@@ -24,8 +23,7 @@ module ResourceMethods
                perPage: @per_page
              },
              root: 'data',
-             # meta_key: 'header',
-             include: includes,
+             include: serializer_includes,
              adapter: :json,
              content_type: 'application/json'
     end
@@ -102,7 +100,7 @@ module ResourceMethods
   def render_object(object)
     if serializer_class
       render json: object,
-             include: includes,
+             include: serializer_includes,
              serializer: serializer_class,
              content_type: 'application/json'
     else
@@ -293,6 +291,10 @@ module ResourceMethods
 
   def allowed_params
     nil
+  end
+
+  def serializer_includes
+    []
   end
 
   def includes

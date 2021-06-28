@@ -9,6 +9,14 @@ class Survey < ApplicationRecord
 
   before_destroy :check_for_use #, :check_if_public
 
+  belongs_to :published_by, class_name: 'Person'
+  belongs_to :created_by, class_name: 'Person'
+  belongs_to :updated_by, class_name: 'Person'
+
+  nilify_blanks only: [
+    :description
+  ]
+
   # transition_accept_status
   # transition_decline_status
 

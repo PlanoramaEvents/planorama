@@ -2,10 +2,14 @@ class Survey::PagesController < ResourceController
   MODEL_CLASS = 'Survey::Page'.freeze
   # SERIALIZER_CLASS = 'Survey::QuestionSerializer'.freeze
 
-  def includes
+  def serializer_includes
     [
       survey_questions: :survey_answers
     ]
+  end
+
+  def includes
+    serializer_includes
   end
 
   def belongs_to_param_id
