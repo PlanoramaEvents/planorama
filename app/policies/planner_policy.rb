@@ -1,27 +1,27 @@
 class PlannerPolicy < ApplicationPolicy
   def update?
-    @person.person_roles.inject(true) { |res, role| res && role.admin_role? }
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end
 
   def create?
-    @person.person_roles.inject(true) { |res, role| res && role.admin_role? }
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end
 
   def index?
-    @person.person_roles.inject(true) { |res, role| res && role.admin_role? }
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end
 
   def show?
-    @person.person_roles.inject(true) { |res, role| res && role.admin_role? }
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end
 
   def destroy?
-    @person.person_roles.inject(true) { |res, role| res && role.admin_role? }
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end
 
   class Scope < Scope
     def resolve
-      if @person.person_roles.inject(true) { |res, role| res && role.admin_role? }
+      if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
         scope.all
       else
         if scope == Person

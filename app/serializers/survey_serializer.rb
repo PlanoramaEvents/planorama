@@ -4,8 +4,11 @@ class SurveySerializer < ActiveModel::Serializer
     :header_image, :use_captcha, :public, :authenticate,
     :transition_accept_status, :transition_decline_status,
     :declined_msg, :authenticate_msg, :anonymous,
-    :published_on, :published_by_id,
-    :created_by_id, :updated_by_id, :description
+    :published_on, :description
 
   has_many :survey_pages, serializer: Survey::PageSerializer
+
+  belongs_to :published_by
+  belongs_to :created_by
+  belongs_to :updated_by
 end

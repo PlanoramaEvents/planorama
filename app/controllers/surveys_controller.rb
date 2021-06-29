@@ -6,17 +6,16 @@ class SurveysController < ResourceController
       {
         survey_pages: {
           survey_questions: :survey_answers
-        }
-      }
+        },
+      },
+      :created_by,
+      :updated_by,
+      :published_by
     ]
   end
 
   def includes
-    [
-      :created_by,
-      :updated_by,
-      :published_by,
-    ] << serializer_includes
+    serializer_includes
   end
 
   def before_save
