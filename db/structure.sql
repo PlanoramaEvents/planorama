@@ -1553,7 +1553,6 @@ ALTER SEQUENCE public.survey_query_predicates_id_seq OWNED BY public.survey_quer
 
 CREATE TABLE public.survey_questions (
     id integer NOT NULL,
-    title character varying DEFAULT ''::character varying,
     question text,
     question_type character varying DEFAULT 'textfield'::character varying,
     created_at timestamp without time zone NOT NULL,
@@ -1681,7 +1680,12 @@ CREATE TABLE public.surveys (
     transition_decline_status public.acceptance_status_enum,
     declined_msg text,
     authenticate_msg text,
-    anonymous boolean DEFAULT false
+    anonymous boolean DEFAULT false,
+    published_on timestamp without time zone,
+    published_by_id integer,
+    created_by_id integer,
+    updated_by_id integer,
+    description text
 );
 
 
@@ -3020,6 +3024,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210626162611'),
 ('20210627143358'),
 ('20210627225348'),
-('20210628120942');
+('20210628120942'),
+('20210628221900');
 
 

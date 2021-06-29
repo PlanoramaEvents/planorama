@@ -20,11 +20,16 @@ class Survey::SubmissionsController < ResourceController
     @object.person_id = current_person.id
   end
 
-  def includes
+  def serializer_includes
     [
       :survey_responses
     ]
   end
+
+  def includes
+    serializer_includes
+  end
+
 
 
   def allowed_params
