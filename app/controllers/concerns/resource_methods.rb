@@ -105,6 +105,7 @@ module ResourceMethods
              content_type: 'application/json'
     else
       render json: object,
+             include: serializer_includes,
              content_type: 'application/json'
     end
   end

@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   get '/people/sessions/current', to: 'people/sessions#get_session'
 
+  get '/login/:magic_link', to: 'login#magic_link'
+
   root to: 'home#index' #, :as => :authenticated_root
 
   # Pages

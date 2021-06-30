@@ -563,6 +563,41 @@ ALTER SEQUENCE public.label_dimensions_id_seq OWNED BY public.label_dimensions.i
 
 
 --
+-- Name: magic_links; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.magic_links (
+    id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    token character varying NOT NULL,
+    url character varying(10000) DEFAULT NULL::character varying,
+    expires_at timestamp without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: magic_links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.magic_links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: magic_links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.magic_links_id_seq OWNED BY public.magic_links.id;
+
+
+--
 -- Name: mail_histories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1997,6 +2032,13 @@ ALTER TABLE ONLY public.label_dimensions ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: magic_links id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.magic_links ALTER COLUMN id SET DEFAULT nextval('public.magic_links_id_seq'::regclass);
+
+
+--
 -- Name: mail_histories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2322,6 +2364,14 @@ ALTER TABLE ONLY public.job_infos
 
 ALTER TABLE ONLY public.label_dimensions
     ADD CONSTRAINT label_dimensions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: magic_links magic_links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.magic_links
+    ADD CONSTRAINT magic_links_pkey PRIMARY KEY (id);
 
 
 --
@@ -2685,6 +2735,13 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
+-- Name: index_magic_links_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_magic_links_on_person_id ON public.magic_links USING btree (person_id);
+
+
+--
 -- Name: index_people_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3025,6 +3082,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210627143358'),
 ('20210627225348'),
 ('20210628120942'),
-('20210628221900');
+('20210628221900'),
+('20210629220733');
 
 
