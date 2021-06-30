@@ -40,7 +40,7 @@ export class PlanoStore {
               commit(UNEDIT)
             }
             commit(SELECT, item)
-            res()
+            res(item)
           }, (error) => {
             // TODO actually show this to the user
             console.log("Error saving:", error);

@@ -1,6 +1,24 @@
 <template>
   <div class="survey">
     <router-link to="/">Back</router-link>
+    <b-form-group
+      class="mx-3"
+      v-if="survey"
+      id="survey-name-group"
+      label="Survey Name"
+      label-for="survey-name"
+    >
+      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="save"></b-form-input>
+    </b-form-group>
+    <b-form-group
+      class="mx-3"
+      v-if="survey"
+      id="survey-description-group"
+      label="Survey Description"
+      label-for="survey-description"
+    >
+      <b-form-textarea id="survey-description" v-model="survey.description" @blur="save"></b-form-textarea>
+    </b-form-group>
     <edit-survey-controls></edit-survey-controls>
     <edit-survey-page
       v-for="(p, i) in survey ? survey.survey_pages : []"
@@ -34,7 +52,10 @@ export default {
       unselect: UNSELECT,
       select: SELECT,
       selectPage: SELECT_PAGE
-      }),
+    }),
+    save() {
+      this.$store.dispatch(SAVE, {item: this.survey});
+    }
   },
   mounted() {
     console.log(this);

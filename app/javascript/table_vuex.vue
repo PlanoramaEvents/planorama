@@ -4,7 +4,7 @@
       <b-button disabled class="ml-1">
         Settings
       </b-button>
-      <b-button @click="onNew" class="mx-1" variant="primary">
+      <b-button @click="$emit('new')" class="mx-1" variant="primary">
         Add
       </b-button>
       <b-button disabled >
@@ -115,15 +115,6 @@ export default {
     },
     onReset() {
       if (this.selected) this.selected.fetch()
-    },
-    onNew() {
-      // this.selected.save()
-      if (this.modelType) {
-        this.selected = new this.modelType();
-        if (this.selectEvent) {
-          EventBus.emit(this.selectEvent, this.selected)
-        }
-      }
     },
     onRowSelected(items) {
       console.log('row selected', items)

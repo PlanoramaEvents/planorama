@@ -6,7 +6,7 @@
     <div :class="['page-title', 'p-3', 'border', {selected: isSelected}]" @click="selectPage(page)">
       <b-form-group
         v-if="isSelected"
-        :label="i == 1 ? 'Display Title' : 'Page Title'"
+        :label="i === 0 ? 'Display Title' : 'Page Title'"
         :label-for="'page-title-' + page.id"
       >
         <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="save({item: selected})"></b-form-input>

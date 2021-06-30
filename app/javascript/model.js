@@ -53,7 +53,7 @@ export default class PlanoModel extends Model {
   }
 
   onSaveFailure(error) {
-    alert("Something went horrible wrong. Please reload your page." + error)
+    alert("Something went horribly wrong. Please reload your page. " + error)
   }
 
   // We need to put the CSRF token in the header

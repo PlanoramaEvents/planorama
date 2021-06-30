@@ -8,9 +8,9 @@
       :question="q"
       answerable
     ></survey-question>
-    <p class="pull-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
-    <b-button class="pull-right mt-2" v-if="!next_page && !submitted" @click="submit">Submit</b-button>
-    <b-button class="pull-right mt-2" v-if="next_page" @click="next">Next Page</b-button>
+    <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
+    <b-button class="float-right mt-2" variant="primary" v-if="!next_page && !submitted" @click="submit">Submit</b-button>
+    <b-button class="float-right mt-2" variant="primary" v-if="next_page" @click="next">Next Page</b-button>
   </div>
 </template>
 

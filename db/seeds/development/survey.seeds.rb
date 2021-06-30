@@ -1,6 +1,7 @@
 #surveys
 
 
+Survey::Submission.destroy_all
 Survey.destroy_all
 # Survey::Page.delete_all
 # Survey::Question.delete_all
@@ -8,6 +9,8 @@ Survey.destroy_all
 
 10.times.each do |i|
   name = Faker::Books::CultureSeries.book
+
+  creator = Person.all.sample.id
   survey = Survey.create(
     name: name,
     thank_you: Faker::Lorem.sentence,
@@ -20,9 +23,12 @@ Survey.destroy_all
     transition_accept_status: [nil, :probable, :accepted].sample,
     transition_decline_status: [nil, :unknown, :probable, :declined].sample,
     welcome: Faker::Lorem.sentence,
+    description: Faker::Lorem.paragraph,
     declined_msg: Faker::Lorem.sentence,
     authenticate_msg: Faker::Lorem.sentence,
-    anonymous: Faker::Boolean.boolean(true_ratio: 0.8)
+    anonymous: Faker::Boolean.boolean(true_ratio: 0.8),
+    created_by_id: creator,
+    updated_by_id: creator
   )
 
   page_title = Faker::Books::CultureSeries.civ
@@ -35,7 +41,6 @@ Survey.destroy_all
     question_type= [:textfield, :textbox, :singlechoice, :multiplechoice, :hr, :dropdown, :email, :address, :socialmedia].sample;
 
     survey_question = Survey::Question.create(
-      title: Faker::Lorem.sentence,
       question: Faker::Lorem.question,
       question_type: question_type,
       text_size: Faker::Number.between(from: 11, to: 16),
