@@ -9,7 +9,13 @@
       answerable
     ></survey-question>
     <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
-    <b-button class="float-right mt-2" variant="primary" v-if="!next_page && !submitted" @click="submit">Submit</b-button>
+    <b-button
+      v-b-tooltip="{disabled: !preview, title: 'You cannot submit in preview mode.'}"
+      class="float-right mt-2"
+      variant="primary"
+      v-if="!next_page && !submitted"
+      @click="submit"
+    >Submit</b-button>
     <b-button class="float-right mt-2" variant="primary" v-if="next_page" @click="next">Next Page</b-button>
   </div>
 </template>
@@ -23,7 +29,7 @@ import { Survey } from './survey';
 
 export default {
   name: "SurveyPage",
-  props: ['survey_id', 'id'],
+  props: ['survey_id', 'id', 'preview'],
   data: () =>  ({
     submitted: false
   }),
@@ -40,7 +46,7 @@ export default {
       return this.page && this.page.survey_questions || [];
     },
     next_page() {
-      return this.page && this.page.next_page_id && `/${this.survey_id}/page/${this.page.next_page_id}`
+      return this.page && this.page.next_page_id && `/${this.survey_id}/page/${this.page.next_page_id}${this.preview ? '/preview' : ''}`
     }
   },
   methods: {
@@ -51,9 +57,11 @@ export default {
       newSubmission: NEW_SUBMISSION
     }),
     submit() {
-      this.$store.dispatch(SUBMIT).then(() => {
-        this.submitted = true;
-      })
+      if(!this.preview) {
+        this.$store.dispatch(SUBMIT).then(() => {
+          this.submitted = true;
+        })
+      }
     },
     next() {
       this.$router.push(this.next_page);

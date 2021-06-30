@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     previewLink(item) {
-      return `/surveys/${item.id}/preview`;
+      return `/page/surveys#/${item.id}/preview`;
     },
     surveyLink(item) {
       // TODO add authenticity key to stop robots?
@@ -52,7 +52,6 @@ export default {
       // overrides parent
       let survey = new Survey({
         name: 'New Survey',
-        public: false,
         survey_pages: [{
           title: 'New Survey',
           survey_questions: [{

@@ -13,7 +13,7 @@ import { Survey } from './survey';
 
 export default {
   name: "TakeSurvey",
-  props: ['id'],
+  props: ['id', 'preview'],
   components: {
   },
   computed: mapState({
@@ -30,13 +30,14 @@ export default {
       redirect() {
         this.selectPage(this.survey.survey_pages[0]);
         this.newSubmission();
-        let path = `/${this.id}/page/${this.survey.survey_pages[0].id}`
+        let path = `/${this.id}/page/${this.survey.survey_pages[0].id}${this.preview ? '/preview' : ''}`
         console.log('redirecting to ', path)
         this.$router.push({path})
       }
   },
   mounted() {
     console.log(this);
+    console.log('preview', this.preview);
     if (!this.survey && this.id) {
       console.log('trying to load survey id', this.id)
       let model = new Survey({id: this.id}, this.surveys);

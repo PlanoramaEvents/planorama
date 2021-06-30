@@ -15,9 +15,11 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
 const routes = [
-  { path: '/:survey_id/page/:id', component: SurveyPage, props: true},
-  { path: '/:id', component: TakeSurvey, props: true },
   { path: '/edit/:id', component: EditSurvey, props: true },
+  { path: '/:survey_id/page/:id/:preview', component: SurveyPage, props: true},
+  { path: '/:survey_id/page/:id', component: SurveyPage, props: true},
+  { path: '/:id/:preview', component: TakeSurvey, props: true },
+  { path: '/:id', component: TakeSurvey, props: true},
   { path: '/', component: SurveyList },
 ]
 
