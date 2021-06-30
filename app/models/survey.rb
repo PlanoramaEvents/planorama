@@ -1,6 +1,9 @@
 class Survey < ApplicationRecord
   # Survey contains a series of pages, pages contain a series of questions
-  has_many :survey_pages, dependent: :destroy, class_name: "Survey::Page"
+  has_many :survey_pages,
+           class_name: 'Survey::Page',
+           inverse_of: :survey,
+           dependent: :destroy
   accepts_nested_attributes_for :survey_pages, allow_destroy: true
 
   has_many :survey_questions, through: :survey_pages, class_name: 'Survey::Question'
