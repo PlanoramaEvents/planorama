@@ -1,9 +1,12 @@
 class SubmissionsPolicy < PlannerPolicy
   def create?
-    return true if @person
+    # Anyone can create a submission
+    return true #if @person
   end
 
   def update?
+    # Only makes sense for updates to happen by planners or submitters
+    # so anon surveys are excluded
     return true if @record.person_id == @person.id
 
     @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
@@ -11,6 +14,9 @@ class SubmissionsPolicy < PlannerPolicy
 
   def show?
     return true if @record.person_id == @person.id
+    # Anonymoous submission can be seen by anonymous perspn
+    # TODO: this could be an issue
+    # return true if @record.person_id == nil
 
     @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end

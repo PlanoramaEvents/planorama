@@ -17,7 +17,8 @@ class Survey::SubmissionsController < ResourceController
 
   def before_save
     # Make sure the submission is assigned to the current person
-    @object.person_id = current_person.id
+    # if there is one ... and survey is not anonymous
+    @object.person_id = current_person.id if current_person
   end
 
   def serializer_includes

@@ -318,6 +318,9 @@ module ResourceMethods
     nil
   end
 
+  def permitted_params
+    _permitted_params(object_name)
+  end
 
   def _permitted_params(_object_name)
     if allowed_params

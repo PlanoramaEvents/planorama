@@ -1,5 +1,6 @@
 class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
+  POLICY_CLASS = 'SurveysPolicy'.freeze
 
   def serializer_includes
     [
@@ -21,10 +22,24 @@ class SurveysController < ResourceController
   def before_save
     @object.created_by_id = current_person.id
     @object.updated_by_id = current_person.id
+    check_for_publish
   end
 
   def before_update
     @object.updated_by_id = current_person.id
+    check_for_publish
+  end
+
+  def check_for_publish
+    # check if going to be published
+    # If we are going to publish then public is set to true
+    return unless permitted_params[:public]
+    # If it was not already published the old value would be false
+    return if @object.public
+
+    Rails.logger.error "***** SET THE PUB PERSON AND DATE ****"
+    @object.published_by_id = current_person.id
+    @object.published_on = Time.now
   end
 
   def allowed_params
@@ -44,8 +59,6 @@ class SurveysController < ResourceController
       authenticate_msg
       anonymous
       welcome
-      published_on
-      published_by
       description
     ] << [
       survey_pages_attributes: %i[
