@@ -20,6 +20,7 @@ class SurveysController < ResourceController
 
   def before_save
     @object.created_by_id = current_person.id
+    @object.updated_by_id = current_person.id
   end
 
   def before_update
