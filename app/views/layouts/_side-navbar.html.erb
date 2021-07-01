@@ -1,9 +1,10 @@
 <div id="side-navbar" class="col-12 col-sm-3 col-xl-2">
   <b-nav vertical>
-    <b-nav-item href="/page/venues" :active="currentLocation == '/page/venues'">Venues</b-nav-item>
-    <b-nav-item href="/page/people" :active="currentLocation == '/page/people'">People</b-nav-item>
-    <b-nav-item href="/page/program" :active="currentLocation == '/page/program'">Schedule</b-nav-item>
-    <b-nav-item href="/page/surveys" :active="currentLocation == '/page/surveys'">Surveys</b-nav-item>
-    <b-nav-item href="/page/reports" :active="currentLocation == '/page/reports'">Reports</b-nav-item>
+    <b-nav-item href="/" :active="currentLocation === '/'">Dashboard</b-nav-item>
+    <b-nav-item href="/page/venues" :active="currentLocation.startsWith('/page/venues')">Venues</b-nav-item>
+    <b-nav-item href="/page/people" :active="currentLocation.startsWith('/page/people')">People</b-nav-item>
+    <b-nav-item href="/page/program" :active="currentLocation.startsWith('/page/program')">Schedule</b-nav-item>
+    <b-nav-item href="/page/surveys" :active="currentLocation.startsWith('/page/surveys')">Surveys</b-nav-item>
+    <b-nav-item href="/page/reports" :active="currentLocation.startsWith('/page/reports')">Reports</b-nav-item>
   </b-nav>
 </div>

@@ -56,7 +56,10 @@ export default {
           title: 'New Survey',
           survey_questions: [{
             question: 'New Question',
-            question_type: "textfield"
+            question_type: "textfield",
+            survey_answers: [{
+              answer: 'Option 1'
+            }]
           }]
         }]
       });

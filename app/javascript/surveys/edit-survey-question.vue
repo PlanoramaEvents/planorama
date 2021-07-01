@@ -191,10 +191,10 @@
         </div>
       </template>
       <template v-if="socialmedia">
-        <div class="col-12">
+        <!-- <div class="col-12">
           <b-form-checkbox-group :disabled="!isSelected" v-model="socialChoice" :options="socials" @change="save">
           </b-form-checkbox-group>
-        </div>
+        </div> -->
       </template>
       <template v-if="textonly">
         <div class="col-12">
@@ -301,12 +301,10 @@ export default {
       return [
         {value: "twitter", text: "Twitter"},
         {value: "facebook", text: "Facebook"},
-        {value: "linkedin", text: "LinkedIn"},
         {value: "twitch", text: "Twitch"},
         {value: "youtube", text: "YouTube"},
         {value: "instagram", text: "Instagram"},
-        {value: "flickr", text: "Flickr"},
-        {value: "reddit", text: "Reddit"},
+        {value: "website", text: "Website"},
       ]
     },
     formatting() {

@@ -16,11 +16,13 @@ export class Person extends PlanoModel {
       }
     }
     delete schema.bio
+    delete schema.id
     return schema
   }
 
   defaults() {
     return {
+      id: null,
       name: null,
       name_sort_by: null,
       name_sort_by_confirmed: false,
@@ -103,10 +105,6 @@ export class People extends Collection {
 
 // task.$.name or task.saved('name') to reflect what is in the backend ...
 export const people_columns = [
-  {
-    key: 'id',
-    label: 'ID'
-  },
   {
     key: '$.published_name',
     label: 'Published Name',

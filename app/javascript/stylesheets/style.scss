@@ -19,8 +19,13 @@ $sidebar-mobile-width: 60%;
 #side-navbar .nav {
   background: $color-light-blue;
   height: calc(100vh - 100px);
+  .nav-link.active {
+    background: $color-primary-2;
+    color: white;
+  }
 }
 
 .description-tooltip .tooltip-inner {
   max-width: 30rem;
 }
+

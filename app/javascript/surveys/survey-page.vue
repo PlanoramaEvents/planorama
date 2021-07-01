@@ -9,13 +9,14 @@
       answerable
     ></survey-question>
     <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
-    <b-button
-      v-b-tooltip="{disabled: !preview, title: 'You cannot submit in preview mode.'}"
-      class="float-right mt-2"
-      variant="primary"
-      v-if="!next_page && !submitted"
-      @click="submit"
-    >Submit</b-button>
+    <div class="d-inline float-right mt-2" v-b-tooltip="{disabled: !submit_disabled}" :title="submit_disabled_tooltip">
+      <b-button
+        variant="primary"
+        v-if="!next_page && !submitted"
+        @click="submit"
+        :disabled="submit_disabled"
+      >Submit</b-button>
+    </div>
     <b-button class="float-right mt-2" variant="primary" v-if="next_page" @click="next">Next Page</b-button>
   </div>
 </template>
@@ -47,6 +48,14 @@ export default {
     },
     next_page() {
       return this.page && this.page.next_page_id && `/${this.survey_id}/page/${this.page.next_page_id}${this.preview ? '/preview' : ''}`
+    },
+    submit_disabled() {
+      return this.preview || !this.public;
+    },
+    submit_disabled_tooltip() {
+      return this.preview
+        ? "This is a preview of the survey. You cannot submit it."
+        : "You cannot submit an unpublished survey. Publish the survey to enable."
     }
   },
   methods: {
@@ -57,7 +66,7 @@ export default {
       newSubmission: NEW_SUBMISSION
     }),
     submit() {
-      if(!this.preview) {
+      if(!this.submit_disabled) {
         this.$store.dispatch(SUBMIT).then(() => {
           this.submitted = true;
         })
@@ -91,7 +100,8 @@ export default {
 
 <style lang="scss" scoped>
 .survey-page {
-  overflow-y: scroll;
+  max-width: 50rem;
+  overflow-y: auto;
   max-height: calc(100vh - 100px);
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="survey">
-    <router-link to="/">Back</router-link>
+    <b-button variant="link" @click="back">Back</b-button>
     <b-form-group
       class="mx-3"
       v-if="survey"
@@ -55,6 +55,11 @@ export default {
     }),
     save() {
       this.$store.dispatch(SAVE, {item: this.survey});
+    },
+    back() {
+      // TODO only unselect if not coming from view page
+      this.$store.commit(UNSELECT);
+      this.$router.push('/');
     }
   },
   mounted() {
@@ -73,7 +78,8 @@ export default {
 
 <style lang="scss" scoped>
 .survey {
-  overflow-y: scroll;
+  max-width: 60rem;
+  overflow-y: auto;
   max-height: calc(100vh - 100px);
 }
 </style>

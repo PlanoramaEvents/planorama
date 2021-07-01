@@ -28,6 +28,7 @@
       hover bordered responsive selectable small striped
       :select-mode="selectMode"
       :fields="columns"
+      selected-variant="primary"
 
       :items="provider"
 

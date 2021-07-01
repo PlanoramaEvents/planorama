@@ -31,7 +31,7 @@ export default {
         // there might be bugs if the save hasn't come back yet
         insertAt = this.selected_page.survey_questions.findIndex(q => q.id === this.selected_question.id) + 1
       }
-      const question = {question: 'New Question', question_type, survey_page_id: this.selected_page.id}
+      const question = {question: 'New Question', question_type, survey_page_id: this.selected_page.id, survey_answers: [{answer: 'Option 1'}]}
       console.log({question, insertAt})
       this.newQuestionAction({question, insertAt});
     },
