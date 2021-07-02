@@ -78,8 +78,10 @@ export default {
 
 <style lang="scss" scoped>
 .survey {
-  max-width: 60rem;
   overflow-y: auto;
   max-height: calc(100vh - 100px);
+  .form-group {
+    max-width: 60rem;
+  }
 }
 </style>

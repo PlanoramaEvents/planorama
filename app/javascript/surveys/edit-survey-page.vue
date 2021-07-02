@@ -82,7 +82,8 @@ export default {
 <style lang="scss" scoped>
 @import '../stylesheets/style.scss';
 .page {
-  width: 90%;
+  max-width: 60rem;
+  min-width: 30rem;
   .page-title.selected {
     box-shadow: 0 0 10px 2px $color-secondary-1-1;
   }

@@ -1,18 +1,18 @@
 <template>
-  <div class="overflow-auto">
-    <div class="d-flex flex-row-reverse my-3">
-      <b-button disabled class="ml-1">
-        Settings
+  <div class="scrollbox">
+    <div class="d-flex justify-content-end my-3">
+      <b-button disabled >
+        <b-icon-upload></b-icon-upload>
       </b-button>
       <b-button @click="$emit('new')" class="mx-1" variant="primary">
-        Add
+        <b-icon-plus scale="2"></b-icon-plus>
       </b-button>
-      <b-button disabled >
-        Upload
+      <b-button disabled>
+        <b-icon-gear-fill></b-icon-gear-fill>
       </b-button>
     </div>
 
-    <div class="d-flex">
+    <div class="d-flex justify-content-end">
       <b-pagination
         v-model="currentPage"
         :total-rows="totalRows"
@@ -49,7 +49,7 @@
       </template>
     </b-table>
 
-    <b-pagination class="float-right"
+    <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
       :total-rows="totalRows"
       :per-page="perPage"
@@ -126,8 +126,13 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 td {
   white-space: nowrap;
+}
+
+.scrollbox {
+  overflow-y: auto;
+  max-height: calc(100vh - 100px)
 }
 </style>

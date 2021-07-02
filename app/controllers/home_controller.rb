@@ -16,4 +16,7 @@ class HomeController < ApplicationController
 
   def reports
   end
+
+  def admin
+  end
 end

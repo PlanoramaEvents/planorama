@@ -1,10 +1,10 @@
 <template>
-  <div class='float-right survey-controls m-3 p-3 border'>
-    <b-button variant="info" class="mb-2 d-block" @click="newQuestion()"><b-icon-plus-circle></b-icon-plus-circle></b-button>
-    <b-button variant="info" class="mb-2 d-block"><b-icon-box-arrow-in-right></b-icon-box-arrow-in-right></b-button>
-    <b-button variant="info" class="mb-2 d-block" @click="newPage"><b-icon-view-list></b-icon-view-list></b-button>
-    <b-button variant="info" class="mb-2 d-block" @click="newQuestion('hr')"><b-icon-hr></b-icon-hr></b-button>
-    <b-button variant="info" class="d-block" @click="newQuestion('textonly')"><b-icon-text-left></b-icon-text-left></b-button>
+  <div class='position-absolute survey-controls m-3 p-3 border'>
+    <b-button v-b-tooltip.left title="Add a Question" variant="info" class="mb-2 d-block" @click="newQuestion()"><b-icon-plus-circle></b-icon-plus-circle></b-button>
+    <div v-b-tooltip.left title="Import a Question"><b-button disabled variant="info" class="mb-2 d-block"><b-icon-box-arrow-in-right></b-icon-box-arrow-in-right></b-button></div>
+    <b-button v-b-tooltip.left title="Add a Page" variant="info" class="mb-2 d-block" @click="newPage"><b-icon-hdd-stack></b-icon-hdd-stack></b-button>
+    <b-button v-b-tooltip.left title="Add a Horizontal Rule" variant="info" class="mb-2 d-block" @click="newQuestion('hr')"><b-icon-hr></b-icon-hr></b-button>
+    <b-button v-b-tooltip.left title="Add a Text Block" variant="info" class="d-block" @click="newQuestion('textonly')"><b-icon-fonts></b-icon-fonts></b-button>
   </div>
 </template>
 
@@ -49,6 +49,10 @@ export default {
 
 <style lang="scss">
 .survey-controls {
+  box-shadow: 5px 5px 10px gray;
   background-color: white;
+  top: 30%;
+  right: 4rem;
+  z-index: 1000;
 }
 </style>
