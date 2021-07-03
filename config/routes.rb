@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   resources :venues
   resources :tag_contexts
   resources :configurations
+  resources :parameter_names
 
   get 'agreements/signed', to: 'agreements#signed'
   get 'agreements/unsigned', to: 'agreements#unsigned'

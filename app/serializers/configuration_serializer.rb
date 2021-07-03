@@ -1,4 +1,4 @@
 class ConfigurationSerializer < ActiveModel::Serializer
-  attributes :id, :parameter, :parameter_value,
-             :created_at, :updated_at
+  attributes :id, :lock_version, :parameter, :parameter_value,
+             :created_at, :updated_at, :parameter_name
 end

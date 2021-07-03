@@ -2,8 +2,14 @@ class AgreementsController < ResourceController
   SERIALIZER_CLASS = 'AgreementSerializer'.freeze
   POLICY_CLASS = 'AgreementsPolicy'.freeze
 
+  def paginate
+    false
+  end
+
   # list agreements that I have not signed
   def unsigned
+    authorize model_class, policy_class: policy_class
+
     agreements = Agreement.unsigned(person: current_person)
 
     render json: agreements,
@@ -20,6 +26,8 @@ class AgreementsController < ResourceController
 
   # list agreements that I have signed
   def signed
+    authorize model_class, policy_class: policy_class
+
     agreements = Agreement.unsigned(person: current_person)
 
     render json: agreements,
@@ -36,6 +44,8 @@ class AgreementsController < ResourceController
 
   # sign a specific agreement
   def sign
+    authorize model_class, policy_class: policy_class
+
     agreement = Agreement.find params[:id]
 
     existing = PersonAgreement.find_by(

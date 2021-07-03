@@ -328,7 +328,8 @@ CREATE TABLE public.configurations (
     parameter character varying(45) NOT NULL,
     parameter_value character varying(150) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -3242,6 +3243,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210702202436'),
 ('20210702202533'),
 ('20210703145543'),
-('20210703151749');
+('20210703151749'),
+('20210703182948');
 
 
