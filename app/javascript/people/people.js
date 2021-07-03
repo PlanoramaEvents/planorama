@@ -109,17 +109,20 @@ export const people_columns = [
     key: '$.published_name',
     label: 'Published Name',
     sortable: true,
+    sortKey: 'published_name_sort_by',
     sticky: true,
   },
   {
     key: '$.name',
     label: 'Name',
     sortable: true,
+    sortKey: 'name_sort_by',
     sticky: true,
   },
   {
     key: '$.pseudonym',
     label: 'Pseudonym',
+    sortKey: 'pseudonym_sort_by',
     sortable: true
   },
   {
