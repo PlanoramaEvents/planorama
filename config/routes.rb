@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   resources :rooms
   resources :venues
   resources :tag_contexts
+  resources :configurations
 
   get 'agreements/signed', to: 'agreements#signed'
   get 'agreements/unsigned', to: 'agreements#unsigned'

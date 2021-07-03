@@ -16,13 +16,13 @@
           label="Event Email"
           label-for="support-email"
         >
-          <b-form-input id="support-email" type="text" v-model="email"></b-form-input>
+          <b-form-input id="support-email" type="text" v-model="configuration.event_email"></b-form-input>
         </b-form-group>
         <b-form-group
           label="Event Phone Number"
           label-for="support-phone"
         >
-          <b-form-input id="support-phone" type="text" v-model="phone"></b-form-input>
+          <b-form-input id="support-phone" type="text" v-model="configuration.event_phone"></b-form-input>
         </b-form-group>
         <b-form-group
           label="Event Ethics Agreement"
@@ -43,8 +43,8 @@
 <script>
 import AdminAccordion from './admin_accordion.vue'
 import { mapState } from 'vuex';
-import { SAVE } from '../model.store';
-import {Setting} from './settings';
+import { SAVE, UPDATED } from '../model.store';
+import { Configuration } from './configurations';
 
 export default {
   components: { 
@@ -60,40 +60,22 @@ export default {
   }),
   computed: {
     ...mapState({
-      settings: 'collection'
+      configuration: 'collection'
     }),
-    email: {
-      get() {
-        return this.setting_getter('event_email')
-      },
-      set(val) {
-        return this.setting_setter('event_email', val)
-      }
-    },
-    phone: {
-      get() {
-        return this.setting_getter('event_phone')
-      },
-      set(val) {
-        return this.setting_setter('event_phone', val)
-      }
-    }
   },
   methods: {
-    setting_getter(name) {
-      const setting = this.settings.find(s => s.name === name)
-      return setting && setting.value || null;
-    },
-    setting_setter(name, val) {
-      const item = this.settings.find(s => s.name === name) || new Setting({name}, this.settings)
-      item.value = val;
-    },
     cancel() {
       // TODO reset
     },
     save() {
-      this.settings.models.forEach(item => this.$store.dispatch(SAVE, {item}));
+      console.log("I should do something here", this.configuration)
+      this.configuration.save()
     }
+  },
+  mounted() {
+    this.configuration.makeComputed('event_email');
+    this.configuration.makeComputed('event_phone');
+    this.configuration.fetch();
   }
 }
 </script>

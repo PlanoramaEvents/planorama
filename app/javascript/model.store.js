@@ -5,6 +5,7 @@ export const DELETE = 'DELETE';
 export const EDIT = 'EDIT';
 export const UNEDIT = 'UNEDIT';
 export const AFTER_SAVE = 'AFTER_SAVE'
+export const UPDATED = 'UPDATED';
 
 export class PlanoStore {
   constructor(moduleName, collection, columns, state= {}, mutations={}, actions={}) {
@@ -22,6 +23,9 @@ export class PlanoStore {
       },
       [UNSELECT] (state) {
         state.selected = undefined;
+      },
+      [UPDATED] (state, collection) {
+        state.collection = collection
       },
       [EDIT] (state) {
         state.editable = true;
