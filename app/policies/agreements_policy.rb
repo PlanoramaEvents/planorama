@@ -8,6 +8,18 @@ class AgreementsPolicy < PlannerPolicy
     return true
   end
 
+  def signed?
+    return true if @person
+  end
+
+  def unsigned?
+    return true if @person
+  end
+
+  def sign?
+    return true if @person
+  end
+
   # class Scope < Scope
   #   def resolve
   #     if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
