@@ -28,6 +28,10 @@ Rails.application.routes.draw do
   resources :rooms
   resources :venues
   resources :tag_contexts
+
+  get 'agreements/signed', to: 'agreements#signed'
+  get 'agreements/unsigned', to: 'agreements#unsigned'
+  put 'agreements/sign/:id', to: 'agreements#sign'
   resources :agreements
 
   # Surveys and their nested resources

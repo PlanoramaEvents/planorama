@@ -37,7 +37,6 @@ class SurveysController < ResourceController
     # If it was not already published the old value would be false
     return if @object.public
 
-    Rails.logger.error "***** SET THE PUB PERSON AND DATE ****"
     @object.published_by_id = current_person.id
     @object.published_on = Time.now
   end
