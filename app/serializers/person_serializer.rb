@@ -12,6 +12,8 @@ class PersonSerializer < ActiveModel::Serializer
 
   has_one :bio
 
+  has_many :person_roles
+
   # tag_list
   attribute :tags do
     object.base_tags.collect(&:name)

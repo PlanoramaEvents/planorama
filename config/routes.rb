@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   resources :rooms
   resources :venues
   resources :tag_contexts
+  resources :agreements
 
   # Surveys and their nested resources
   resources :surveys do
