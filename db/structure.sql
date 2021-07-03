@@ -22,6 +22,17 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 
 
 --
+-- Name: agreement_target; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.agreement_target AS ENUM (
+    'member',
+    'staff',
+    'all'
+);
+
+
+--
 -- Name: assignment_role_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -106,6 +117,43 @@ CREATE TYPE public.visibility_enum AS ENUM (
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: agreements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.agreements (
+    id bigint NOT NULL,
+    title character varying,
+    terms text,
+    type character varying,
+    created_by_id bigint NOT NULL,
+    updated_by_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0,
+    target public.agreement_target
+);
+
+
+--
+-- Name: agreements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.agreements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: agreements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.agreements_id_seq OWNED BY public.agreements.id;
+
 
 --
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
@@ -882,6 +930,41 @@ CREATE SEQUENCE public.people_id_seq
 --
 
 ALTER SEQUENCE public.people_id_seq OWNED BY public.people.id;
+
+
+--
+-- Name: person_agreements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_agreements (
+    id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    agreement_id bigint NOT NULL,
+    signed boolean DEFAULT false,
+    agreed_on timestamp without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: person_agreements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.person_agreements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: person_agreements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.person_agreements_id_seq OWNED BY public.person_agreements.id;
 
 
 --
@@ -1948,6 +2031,13 @@ ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
+-- Name: agreements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agreements ALTER COLUMN id SET DEFAULT nextval('public.agreements_id_seq'::regclass);
+
+
+--
 -- Name: available_dates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2071,6 +2161,13 @@ ALTER TABLE ONLY public.pending_import_people ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.people ALTER COLUMN id SET DEFAULT nextval('public.people_id_seq'::regclass);
+
+
+--
+-- Name: person_agreements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_agreements ALTER COLUMN id SET DEFAULT nextval('public.person_agreements_id_seq'::regclass);
 
 
 --
@@ -2263,6 +2360,14 @@ ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.ver
 
 
 --
+-- Name: agreements agreements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agreements
+    ADD CONSTRAINT agreements_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2428,6 +2533,14 @@ ALTER TABLE ONLY public.pending_import_people
 
 ALTER TABLE ONLY public.people
     ADD CONSTRAINT people_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: person_agreements person_agreements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_agreements
+    ADD CONSTRAINT person_agreements_pkey PRIMARY KEY (id);
 
 
 --
@@ -2735,6 +2848,27 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
+-- Name: index_agreements_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agreements_on_created_by_id ON public.agreements USING btree (created_by_id);
+
+
+--
+-- Name: index_agreements_on_target; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agreements_on_target ON public.agreements USING btree (target);
+
+
+--
+-- Name: index_agreements_on_updated_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree (updated_by_id);
+
+
+--
 -- Name: index_magic_links_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2760,6 +2894,27 @@ CREATE UNIQUE INDEX index_people_on_reset_password_token ON public.people USING 
 --
 
 CREATE UNIQUE INDEX index_people_on_unlock_token ON public.people USING btree (unlock_token);
+
+
+--
+-- Name: index_person_agreements_on_agreement_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_person_agreements_on_agreement_id ON public.person_agreements USING btree (agreement_id);
+
+
+--
+-- Name: index_person_agreements_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_person_agreements_on_person_id ON public.person_agreements USING btree (person_id);
+
+
+--
+-- Name: index_person_agreements_on_person_id_and_agreement_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_person_agreements_on_person_id_and_agreement_id ON public.person_agreements USING btree (person_id, agreement_id);
 
 
 --
@@ -3083,6 +3238,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210627225348'),
 ('20210628120942'),
 ('20210628221900'),
-('20210629220733');
+('20210629220733'),
+('20210702202436'),
+('20210702202533'),
+('20210703145543'),
+('20210703151749');
 
 
