@@ -47,6 +47,8 @@ class Person < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :lockable
 
+  # TODO: add a deleted_at mechanism
+
   acts_as_taggable
 
   has_paper_trail
@@ -181,25 +183,4 @@ class Person < ApplicationRecord
   def password_required?
     new_record? ? false : super
   end
-
-  # # ----------------------------------------------------------------------------------------------
-  # TODO: part of refactor
-  # has_one :available_date, :dependent => :delete
-  # has_one :person_constraints, :dependent => :delete # THis is the max items per day & conference
-  # has_many  :exclusions, :dependent => :delete_all
-  # has_many  :excluded_people, :through => :exclusions,
-  #           :source => :excludable,
-  #           :source_type => 'Person' do
-  #             def find_by_source(s)
-  #               where(['source = ?', s])
-  #             end
-  #           end
-  # has_many  :excluded_items, :through => :exclusions,
-  #           :source => :excludable,
-  #           :source_type => "ProgrammeItem" do
-  #             def find_by_source(s)
-  #               where(['source = ?', s])
-  #             end
-  #           end
-  # # ----------------------------------------------------------------------------------------------
 end

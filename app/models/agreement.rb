@@ -4,6 +4,8 @@ class Agreement < ApplicationRecord
   has_many  :person_agreements
   has_many  :people, through: :person_agreements
 
+  # TODO: take into account the target of the agreement as well
+
   # Get all agreements that have not been signed by person
   def self.unsigned(person:)
     raise 'Person needed to list agreements' unless person
