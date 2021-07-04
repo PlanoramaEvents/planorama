@@ -4,3 +4,5 @@ This software is open source! If you'd like to contribute, please email planoram
 
 
 [Planorama Terms and Conditions](/planorama/tandc)
+
+[Planorama Privacy Policy](/planorama/privacy)
