@@ -1494,7 +1494,8 @@ CREATE TABLE public.survey_answers (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     survey_question_id integer,
-    sort_order integer
+    sort_order integer,
+    next_page_id integer
 );
 
 
@@ -3244,6 +3245,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210702202533'),
 ('20210703145543'),
 ('20210703151749'),
-('20210703182948');
+('20210703182948'),
+('20210704135126');
 
 
