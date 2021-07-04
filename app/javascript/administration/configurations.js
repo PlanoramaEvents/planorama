@@ -1,6 +1,7 @@
 import PlanoModel from '../model.js';
 import {Collection} from 'vue-mc';
 import Vue from 'vue';
+import { http}  from '../http';
 
 export class Configuration extends PlanoModel {
   defaults() {
@@ -24,47 +25,46 @@ export class Configuration extends PlanoModel {
   }
 }
 
-export class Configurations extends Collection {
-  options() {
-    return {
-      model: Configuration
-    }
+export class Configurations {
+
+  constructor() {
+    // this needs all the properties you want to be reactive.
+    this.event_email = {parameter_value: null};
+    this.event_phone = {parameter_value: null};
+    this.data = {};
+    this.config_names = [];
   }
 
-  routes() {
-    return {
-      fetch: '/configurations'
-    }
+  configs(predicate) {
+    let configs = this.config_names.filter(predicate || (() => true)).map(k => this[k])
+    console.log(configs)
+    return configs
   }
 
-  getModelsFromResponse(response) {
-    let models = super.getModelsFromResponse(response);
-    return models.data ? models.data : models
-  }
-
-  save() {
-    return Promise.all(this.models.map(m => m.save()))
-  }
-
-  makeComputed(parameter) {
-    // TODO make this reactive according to vue
-    Object.defineProperty(this, parameter, {
-      get: function() {
-        let param = this.find(c => c.parameter === parameter) 
-        console.log("parameter:", param)
-        return param ? param.parameter_value : null;
-      },
-      set: function(parameter_value) {
-        let param = this.find(c => c.parameter === parameter);
-        console.log("found: ", param)
-        if (!param) {
-          param = this.add({parameter, parameter_value})
-          console.log ("attempted to make new thing", this)
-        } else {
-          param.parameter_value = parameter_value;
+  fetch() {
+    return new Promise((res, rej) => {
+      http.get('/configurations').then(resp => {
+        for (let key in resp.data) {
+          let val = resp.data[key]
+          this[key] = val ? new Configuration(val) : new Configuration();
         }
-      } 
-    });
+        this.data = resp.data;
+        this.config_names = Object.keys(resp.data);
+        res(this)
+      }).catch(e => rej(e))
+    })
+  }
+
+  save(predicate) {
+    return Promise.all(this.configs(predicate).map(c => c.changed() ? c.save() : null).filter(x => x))
+  }
+
+  reset(predicate) {
+    this.configs(predicate).map(c => c.reset())
+  }
+
+  changed(predicate) {
+    return this.configs(predicate).some(c => c.changed())
   }
 }
 

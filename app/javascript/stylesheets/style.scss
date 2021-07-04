@@ -29,3 +29,7 @@ $sidebar-mobile-width: 60%;
   max-width: 30rem;
 }
 
+.scrollable {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}

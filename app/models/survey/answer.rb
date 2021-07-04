@@ -8,6 +8,8 @@ class Survey::Answer < ApplicationRecord
 
   has_paper_trail
 
+  default_scope {order(['survey_answers.sort_order', :answer])}
+
   belongs_to :next_page,
              class_name: 'Survey::Page',
              foreign_key: 'next_page_id'

@@ -1,5 +1,5 @@
 <template>
-  <div class="admin">
+  <div class="admin scrollable">
     <h1>Admin stuff goes here.  <b-icon-minecart-loaded></b-icon-minecart-loaded></h1>
     <div class="accordion" role="tablist">
       <admin-accordion id="add-user-accordion" title="Add User">
@@ -11,18 +11,18 @@
       <admin-accordion id="edit-roles-accordion" title="Edit Roles">
         <b-card-text>Role me, baby.</b-card-text>
       </admin-accordion>
-      <admin-accordion id="event-settings-accordion" title="Event Settings">
+      <admin-accordion id="event-settings-accordion" title="Event Settings" :dirty="event_settings_dirty">
         <b-form-group
           label="Event Email"
           label-for="support-email"
         >
-          <b-form-input id="support-email" type="text" v-model="configuration.event_email"></b-form-input>
+          <b-form-input id="support-email" type="text" v-model="configuration.event_email.parameter_value"></b-form-input>
         </b-form-group>
         <b-form-group
           label="Event Phone Number"
           label-for="support-phone"
         >
-          <b-form-input id="support-phone" type="text" v-model="configuration.event_phone"></b-form-input>
+          <b-form-input id="support-phone" type="text" v-model="configuration.event_phone.parameter_value"></b-form-input>
         </b-form-group>
         <b-form-group
           label="Event Ethics Agreement"
@@ -32,7 +32,7 @@
           <b-form-textarea id="event-ethics" type="text" v-model="customization.ethics"></b-form-textarea>
         </b-form-group>
         <div class="d-flex justify-content-end">
-          <b-button variant="link" @click="cancel">Cancel</b-button>
+          <b-button variant="link" @click="cancel">Revert all fields</b-button>
           <b-button variant="primary" @click="save">Save</b-button>
         </div>
       </admin-accordion>
@@ -45,6 +45,8 @@ import AdminAccordion from './admin_accordion.vue'
 import { mapState } from 'vuex';
 import { SAVE, UPDATED } from '../model.store';
 import { Configuration } from './configurations';
+
+const ADMIN_CONFIGS = (x) => ['event_email', 'event_phone'].includes(x)
 
 export default {
   components: { 
@@ -62,19 +64,22 @@ export default {
     ...mapState({
       configuration: 'collection'
     }),
+    event_settings_dirty() {
+      console.log('dirty check!')
+      let result = this.configuration.changed(ADMIN_CONFIGS)
+      console.log('dirty:', result)
+      return result
+    }
   },
   methods: {
     cancel() {
-      // TODO reset
+      this.configuration.reset(ADMIN_CONFIGS);
     },
     save() {
-      console.log("I should do something here", this.configuration)
-      this.configuration.save()
+      this.configuration.save(ADMIN_CONFIGS);
     }
   },
   mounted() {
-    this.configuration.makeComputed('event_email');
-    this.configuration.makeComputed('event_phone');
     this.configuration.fetch();
   }
 }
