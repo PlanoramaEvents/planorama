@@ -9,7 +9,7 @@ class ConfigurationsController < ResourceController
     authorize model_class, policy_class: policy_class
 
     pnames = ParameterName.includes(:configuration).all
-    @collection = pnames.collect{ |k| [k.parameter_name, k.configuration]}
+    @collection = Hash[pnames.collect{ |k| [k.parameter_name, k.configuration]}]
 
     render json: @collection,
            adapter: :json,
