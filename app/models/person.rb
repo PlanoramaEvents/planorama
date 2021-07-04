@@ -117,6 +117,18 @@ class Person < ApplicationRecord
   end
 
 
+  #
+  def staff?
+    person_roles.inject(false) { |res, role| res || role.staff? }
+  end
+
+  def member?
+    person_roles.inject(false) { |res, role| res || role.member? }
+  end
+
+  def no_role?
+    person_roles.size == 0
+  end
 
   #
   # For devise login as a person

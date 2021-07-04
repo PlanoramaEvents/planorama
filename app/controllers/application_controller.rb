@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     current_person
   end
 
-  # TODO: timezone
+  # TODO: timezone ..
 
   # def application_time_zone(&block)
   #   cfg = SiteConfig.first # for now we only have one convention... change when we have many

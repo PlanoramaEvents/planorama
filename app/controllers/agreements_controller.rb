@@ -10,7 +10,6 @@ class AgreementsController < ResourceController
   def unsigned
     authorize model_class, policy_class: policy_class
 
-    # TODO: scope by target
     agreements = Agreement.unsigned(person: current_person)
 
     render json: agreements,
