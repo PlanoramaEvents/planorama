@@ -10,6 +10,10 @@ class Survey::Response < ApplicationRecord
 
   before_save :set_response_text
 
+  nilify_blanks only: [
+    :fuuid
+  ]
+
   #
   # Extract the values from all the entries and save a plain text
   # version that can be used for searchin the responses in a "report"

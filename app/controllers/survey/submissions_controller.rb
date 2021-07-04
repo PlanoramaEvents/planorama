@@ -38,6 +38,7 @@ class Survey::SubmissionsController < ResourceController
       person_id
       survey_id
       survey_responses
+      fuuid
     ] << [
       survey_responses_attributes: %i[
         id
@@ -45,9 +46,11 @@ class Survey::SubmissionsController < ResourceController
         _destroy
         survey_submission_id
         survey_question_id
+        fuuid
       ] << [
         response: %i[
           text
+          fuuid
         ] << [
           answers: [],
           address: %i[
@@ -57,6 +60,7 @@ class Survey::SubmissionsController < ResourceController
             state
             zip
             country
+            fuuid
           ],
           socialmedia: %i[
             twitter
@@ -67,6 +71,7 @@ class Survey::SubmissionsController < ResourceController
             instagram
             flickr
             reddit
+            fuuid
           ]
         ]
       ]

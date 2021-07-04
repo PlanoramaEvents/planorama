@@ -2,6 +2,10 @@ class Survey::Answer < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: :survey_question_id
 
+  nilify_blanks only: [
+    :fuuid
+  ]
+
   has_paper_trail
 
   belongs_to :next_page,

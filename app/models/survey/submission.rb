@@ -8,4 +8,8 @@ class Survey::Submission < ApplicationRecord
            inverse_of: :survey_submission,
            dependent: :destroy
   accepts_nested_attributes_for :survey_responses, allow_destroy: true
+
+  nilify_blanks only: [
+    :fuuid
+  ]
 end

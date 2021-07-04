@@ -59,6 +59,7 @@ class SurveysController < ResourceController
       anonymous
       welcome
       description
+      fuuid
     ] << [
       survey_pages_attributes: %i[
         id
@@ -67,6 +68,7 @@ class SurveysController < ResourceController
         sort_order
         survey_id
         lock_version
+        fuuid
         _destroy
       ] << [
         survey_questions_attributes: %i[
@@ -81,6 +83,7 @@ class SurveysController < ResourceController
           horizontal
           private
           regex
+          fuuid
           _destroy
         ] << [
           survey_answers_attributes: %i[
@@ -89,6 +92,7 @@ class SurveysController < ResourceController
             lock_version
             default
             sort_order
+            fuuid
             _destroy
           ]
         ]

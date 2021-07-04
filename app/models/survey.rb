@@ -17,7 +17,7 @@ class Survey < ApplicationRecord
   belongs_to :updated_by, class_name: 'Person', required: false
 
   nilify_blanks only: [
-    :description
+    :description, :fuuid
   ]
 
   # transition_accept_status

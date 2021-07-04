@@ -4,7 +4,7 @@ class SurveySerializer < ActiveModel::Serializer
     :header_image, :use_captcha, :public, :authenticate,
     :transition_accept_status, :transition_decline_status,
     :declined_msg, :authenticate_msg, :anonymous,
-    :published_on, :description
+    :published_on, :description, :fuuid
 
   has_many :survey_pages, serializer: Survey::PageSerializer
 
