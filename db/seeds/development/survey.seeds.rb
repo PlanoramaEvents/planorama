@@ -85,6 +85,78 @@ Survey::Answer.create(
 
 p "Anna's survey created"
 
+creator = Person.all.sample.id
+survey = Survey.create(
+  name: "Most Awesome Survey with a longer title because it is just that awesome okay?",
+  thank_you: Faker::Lorem.sentence,
+  #alias: name.gsub(/\s+/, '_'),
+  submit_string: 'submit',
+  header_image: Faker::LoremFlickr.image(size: "1000x100"),
+  use_captcha: Faker::Boolean.boolean(true_ratio: 0.8),
+  public: Faker::Boolean.boolean(true_ratio: 0.8),
+  authenticate: Faker::Boolean.boolean(true_ratio: 0.8),
+  transition_accept_status: nil,
+  transition_decline_status: nil,
+  welcome: Faker::Lorem.sentence,
+  description: "I like bit butts and i can not lie.  Other brothers can deny, when a girl walks in with... it is so late at night and i cant even make more of this stuff up.  But this needs to be a few lines long for reasons so iam jsut typign anything that ends up in my head.  This may be dangerous.",
+  declined_msg: Faker::Lorem.sentence,
+  authenticate_msg: Faker::Lorem.sentence,
+  anonymous: false,
+  created_by_id: creator,
+  updated_by_id: creator
+)
+
+#page_title = Faker::Books::CultureSeries.civ
+survey_page = Survey::Page.create(
+  title: "This is going to be the title of my survey",
+  survey_id: survey.id
+)
+survey_page2 = Survey::Page.create(
+  title: "Another day another page title",
+  survey_id: survey.id
+)
+
+survey_page.update(next_page_id: survey_page2.id)
+
+
+# question_type= [:textfield, :textbox, :singlechoice, :multiplechoice, :hr, :dropdown, :email, :address, :socialmedia].sample;
+
+
+survey_question = Survey::Question.create(
+  question: "What should we know about you?",
+  question_type: :textbox,
+  text_size: Faker::Number.between(from: 11, to: 16),
+  horizontal: Faker::Boolean.boolean,
+  survey_page_id: survey_page.id
+)
+survey_question2 = Survey::Question.create(
+  question: "Are your pants on fire?",
+  question_type: :textfield,
+  text_size: Faker::Number.between(from: 11, to: 16),
+  horizontal: Faker::Boolean.boolean,
+  survey_page_id: survey_page.id
+)
+survey_question3 = Survey::Question.create(
+  question: "What is the meaning of life?",
+  question_type: :multiplechoice,
+  text_size: Faker::Number.between(from: 11, to: 16),
+  horizontal: Faker::Boolean.boolean,
+  survey_page_id: survey_page2.id
+)
+Survey::Answer.create(
+  survey_question_id: survey_question3.id,
+  answer: "42"
+)
+Survey::Answer.create(
+  survey_question_id: survey_question3.id,
+  answer: "6x9"
+)
+Survey::Answer.create(
+  survey_question_id: survey_question3.id,
+  answer: "Every sperm is sacred"
+)
+
+p "Anna's survey created again"
 #----------------
 
 10.times.each do |i|
