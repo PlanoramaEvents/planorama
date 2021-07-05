@@ -5,6 +5,7 @@
         <span class="when-closed pr-2"><b-icon-minecart-loaded></b-icon-minecart-loaded></span>
         <span class="when-open pr-2"><b-icon-minecart></b-icon-minecart></span>
         {{title}}
+        <span v-if="dirty" class="pl-2" v-b-tooltip title="Unsaved changes"><b-icon-exclamation-circle-fill variant="warning"></b-icon-exclamation-circle-fill></span>
         <span class="float-right when-closed"><b-icon-caret-down-fill></b-icon-caret-down-fill></span>
         <span class="float-right when-open"><b-icon-caret-up-fill></b-icon-caret-up-fill></span>
       </b-button>
@@ -20,7 +21,19 @@
 <script>
 export default {
   name: "AdminAccordion",
-  props: ['title', 'id']
+  props: {
+    title: {
+      type: String
+    },
+    id: {
+      type: String,
+      required: true
+    },
+    dirty: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>
 
