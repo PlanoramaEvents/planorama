@@ -1,23 +1,28 @@
 <template>
-  <div class="survey-page">
-    <h1>{{survey && survey.survey_pages[0].title}}</h1>
-    <h2 v-if="survey && survey.survey_pages[0].id != page.id">{{page.title}}</h2>
-    <survey-question
-      v-for="q in questions"
-      :key="q.id"
-      :question="q"
-      answerable
-    ></survey-question>
-    <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
-    <div class="d-inline float-right mt-2" v-b-tooltip="{disabled: !submit_disabled}" :title="submit_disabled_tooltip">
-      <b-button
-        variant="primary"
-        v-if="!next_page && !submitted"
-        @click="submit"
-        :disabled="submit_disabled"
-      >Submit</b-button>
+  <div class="scrollable">
+    <div class="survey-page">
+      <h1>{{survey && survey.survey_pages[0].title}}</h1>
+      <h2 v-if="survey && survey.survey_pages[0].id != page.id">{{page.title}}</h2>
+      <survey-question
+        v-for="q in questions"
+        :key="q.id"
+        :question="q"
+        answerable
+      ></survey-question>
+      <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
+      <div class="d-flex justify-content-end mt-2">
+        <b-button variant="link" v-if="survey && survey.survey_pages[0].id != page.id" @click="prev">Previous Page</b-button>
+        <div v-b-tooltip="{disabled: !submit_disabled}" :title="submit_disabled_tooltip">
+          <b-button
+            variant="primary"
+            v-if="!next_page && !submitted"
+            @click="submit"
+            :disabled="submit_disabled"
+          >Submit</b-button>
+        </div>
+        <b-button variant="primary" v-if="next_page" @click="next">Next Page</b-button>
+      </div>
     </div>
-    <b-button class="float-right mt-2" variant="primary" v-if="next_page" @click="next">Next Page</b-button>
   </div>
 </template>
 
@@ -50,7 +55,7 @@ export default {
       return this.page && this.page.next_page_id && `/${this.survey_id}/page/${this.page.next_page_id}${this.preview ? '/preview' : ''}`
     },
     submit_disabled() {
-      return this.preview || !this.public;
+      return this.preview || !(this.survey && this.survey.public);
     },
     submit_disabled_tooltip() {
       return this.preview
@@ -75,6 +80,9 @@ export default {
     next() {
       this.$router.push(this.next_page);
     },
+    prev() {
+      this.$router.go(-1);
+    }
   },
   beforeRouteUpdate(to, from, next) {
     this.selectPage(this.survey.survey_pages.find(p => p.id == to.params.id))
@@ -101,7 +109,5 @@ export default {
 <style lang="scss" scoped>
 .survey-page {
   max-width: 50rem;
-  overflow-y: auto;
-  max-height: calc(100vh - 100px);
 }
 </style>

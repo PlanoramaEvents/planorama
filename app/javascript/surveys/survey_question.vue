@@ -2,7 +2,7 @@
   <div class="survey-question mt-3">
     <b-form-group
       v-if="!isFormatting && !address && !socialmedia"
-      :label="question.question" v-slot="{ ariaDescribedBy }"
+      :label="questionText" v-slot="{ ariaDescribedBy }"
     >
       <b-form-textarea
         v-if="textbox"
@@ -186,6 +186,9 @@ export default {
   },
   computed: {
     ...mapState(['submission']),
+    questionText() {
+      return `${this.question.sort_order + 1}. ${this.question.question}`
+    },
     textfield() {
       return this.question.question_type === "textfield";
     },

@@ -1,5 +1,5 @@
 <template>
-  <div class="survey">
+  <div class="survey scrollable">
     <b-button variant="link" @click="back">Back</b-button>
     <b-form-group
       class="mx-3"
@@ -78,8 +78,6 @@ export default {
 
 <style lang="scss" scoped>
 .survey {
-  overflow-y: auto;
-  max-height: calc(100vh - 100px);
   .form-group {
     max-width: 60rem;
   }

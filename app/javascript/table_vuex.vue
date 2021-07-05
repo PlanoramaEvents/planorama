@@ -1,5 +1,5 @@
 <template>
-  <div class="scrollbox">
+  <div class="scrollable">
     <div class="d-flex justify-content-end my-3">
       <b-button disabled >
         <b-icon-upload></b-icon-upload>
@@ -129,10 +129,5 @@ export default {
 <style lang="scss" scoped>
 td {
   white-space: nowrap;
-}
-
-.scrollbox {
-  overflow-y: auto;
-  max-height: calc(100vh - 100px)
 }
 </style>

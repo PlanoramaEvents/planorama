@@ -1,5 +1,5 @@
 <template>
-  <div class="survey">
+  <div class="survey scrollable">
     I am a survey!!!
     Loading...
   </div>
@@ -54,8 +54,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.survey {
-  overflow-y: scroll;
-  max-height: calc(100vh - 100px);
-}
 </style>

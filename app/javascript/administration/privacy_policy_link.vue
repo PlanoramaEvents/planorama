@@ -1,5 +1,5 @@
 <template>
-    <a href="https://chicon.org/home/about-worldcon/privacy-policy" target="_blank">Privacy Policy</a>
+    <a href="https://chicagoworldcon.github.io/planorama/privacy" target="_blank">Privacy Policy</a>
 </template>
 
 <script>
