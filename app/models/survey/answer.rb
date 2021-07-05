@@ -10,7 +10,8 @@ class Survey::Answer < ApplicationRecord
 
   belongs_to :next_page,
              class_name: 'Survey::Page',
-             foreign_key: 'next_page_id'
+             foreign_key: 'next_page_id',
+             optional: true
 
   belongs_to :survey_question,
              class_name: 'Survey::Question',
