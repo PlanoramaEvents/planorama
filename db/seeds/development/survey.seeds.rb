@@ -16,12 +16,9 @@ creator = Person.all.sample.id
 survey = Survey.create(
   name: "Anna's First Survey",
   thank_you: Faker::Lorem.sentence,
-  #alias: name.gsub(/\s+/, '_'),
   submit_string: 'submit',
-  header_image: Faker::LoremFlickr.image(size: "1000x100"),
   use_captcha: Faker::Boolean.boolean(true_ratio: 0.8),
   public: Faker::Boolean.boolean(true_ratio: 0.8),
-  authenticate: Faker::Boolean.boolean(true_ratio: 0.8),
   transition_accept_status: nil,
   transition_decline_status: nil,
   welcome: Faker::Lorem.sentence,
@@ -89,12 +86,9 @@ creator = Person.all.sample.id
 survey = Survey.create(
   name: "Most Awesome Survey with a longer title because it is just that awesome okay?",
   thank_you: Faker::Lorem.sentence,
-  #alias: name.gsub(/\s+/, '_'),
   submit_string: 'submit',
-  header_image: Faker::LoremFlickr.image(size: "1000x100"),
   use_captcha: Faker::Boolean.boolean(true_ratio: 0.8),
   public: Faker::Boolean.boolean(true_ratio: 0.8),
-  authenticate: Faker::Boolean.boolean(true_ratio: 0.8),
   transition_accept_status: nil,
   transition_decline_status: nil,
   welcome: Faker::Lorem.sentence,
@@ -166,7 +160,6 @@ p "Anna's survey created again"
   survey = Survey.create(
     name: name,
     thank_you: Faker::Lorem.sentence,
-    alias: name.gsub(/\s+/, '_'),
     submit_string: 'submit',
     header_image: Faker::LoremFlickr.image(size: "1000x100"),
     use_captcha: Faker::Boolean.boolean(true_ratio: 0.8),

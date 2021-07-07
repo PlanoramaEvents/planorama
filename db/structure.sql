@@ -1797,12 +1797,9 @@ CREATE TABLE public.surveys (
     name character varying,
     welcome text,
     thank_you text,
-    alias character varying(191),
     submit_string character varying DEFAULT 'Save'::character varying,
-    header_image character varying DEFAULT ''::character varying,
     use_captcha boolean DEFAULT false,
     public boolean,
-    authenticate boolean,
     transition_accept_status public.acceptance_status_enum,
     transition_decline_status public.acceptance_status_enum,
     declined_msg text,
@@ -1813,7 +1810,11 @@ CREATE TABLE public.surveys (
     created_by_id integer,
     updated_by_id integer,
     description text,
-    fuuid character varying
+    fuuid character varying,
+    mandatory_star boolean DEFAULT true,
+    numbered_questions boolean DEFAULT false,
+    branded boolean DEFAULT true,
+    allow_submission_edits boolean DEFAULT true
 );
 
 
@@ -3117,13 +3118,6 @@ CREATE INDEX pub_progitem_assignment_person_index ON public.published_programme_
 
 
 --
--- Name: survey_alias_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX survey_alias_idx ON public.surveys USING btree (alias);
-
-
---
 -- Name: survey_resp_question_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3256,6 +3250,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210703182948'),
 ('20210704135126'),
 ('20210704203655'),
-('20210704203704');
+('20210704203704'),
+('20210707121120');
 
 
