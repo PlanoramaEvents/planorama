@@ -1,3 +1,4 @@
 module.exports = {
-    planoramaLogo: 'images/planorama_logo_transparent.png'
+  // TODO: change imagePath
+  planoramaLogo: imagePath('planorama_logo_transparent.png')
 }

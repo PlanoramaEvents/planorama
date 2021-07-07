@@ -39,6 +39,7 @@ WORKDIR /opt/planorama
 
 RUN bundle install
 RUN yarn install --frozen-lockfile
+# The precompile will also deal with the webpacker assets
 RUN bundle exec rake assets:precompile
 
 # We expose the port
