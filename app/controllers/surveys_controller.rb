@@ -46,12 +46,9 @@ class SurveysController < ResourceController
       lock_version
       name
       thank_you
-      alias
       submit_string
-      header_image
       use_captcha
       public
-      authenticate
       transition_accept_status
       transition_decline_status
       declined_msg
@@ -59,6 +56,10 @@ class SurveysController < ResourceController
       anonymous
       welcome
       description
+      mandatory_star
+      numbered_questions
+      branded
+      allow_submission_edits
       fuuid
     ] << [
       survey_pages_attributes: %i[

@@ -18,12 +18,9 @@ export class Survey extends PlanoModel {
       name: '',
       welcome: null,
       thank_you: null,
-      alias: '',
       submit_string: '',
-      header_image: null,
       use_captcha: false,
       public: false,
-      authenticate: false,
       //transition_accept_status: false,
       //transition_decline_status: false,
       declined_msg: '',
@@ -145,15 +142,11 @@ export const survey_columns = [
   'surveyLink',
   // welcome
   // thank_you
-  // alias
   // submit_string
-  // header_image
   // use_captcha
   // public
-  // authenticate
   // transition_acceptance_status
   // transition_decline_status
   // declined_msg
   // anonymous
 ];
-
