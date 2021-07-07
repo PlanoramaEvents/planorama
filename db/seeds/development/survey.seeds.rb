@@ -161,7 +161,6 @@ p "Anna's survey created again"
     name: name,
     thank_you: Faker::Lorem.sentence,
     submit_string: 'submit',
-    header_image: Faker::LoremFlickr.image(size: "1000x100"),
     use_captcha: Faker::Boolean.boolean(true_ratio: 0.8),
     public: Faker::Boolean.boolean(true_ratio: 0.8),
     authenticate: Faker::Boolean.boolean(true_ratio: 0.8),
