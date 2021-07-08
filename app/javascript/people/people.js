@@ -84,14 +84,11 @@ export class People extends PlanoCollection {
   }
 
   defaults() {
-    return {
+    return Object.assign({}, super.defaults(), {
       sortField: 'published_name_sort_by',
       sortOrder: 'asc',
       filter: '',
-      perPage: 30,
-      page: 1,
-      total: 0
-    }
+    })
   }
 
   routes() {

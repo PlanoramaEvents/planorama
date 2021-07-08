@@ -30,7 +30,7 @@
       :fields="columns"
       selected-variant="primary"
 
-      :items="collection.models"
+      :items="collection.page(currentPage).models"
 
       ref="table"
 
@@ -71,20 +71,31 @@ Vue.use(BootstrapVue)
 export default {
   name: 'TableVuex',
   props: {
-    modelType : { type: Function },
     sortField : { type: String },
     perPage : { type: Number, default: 10 }
   },
   data() {
     return {
       selectMode: 'single',
-      selected: null,
-      currentPage: 1,
       filter: null,
-      totalRows: 100
+      
     }
   },
-  computed: mapState(['collection', 'columns']),
+  computed: {
+    ...mapState(['collection', 'columns', 'selected']),
+    currentPage: {
+      get() {
+        return this.collection ? this.collection.currentPage : 1;
+      },
+      set(val) {
+        this.collection.currentPage = val
+        this.collection.page(this.collection.currentPage).fetch();
+      }
+    },
+    totalRows() {
+      return this.collection ? this.collection.total : 0;
+    }
+  },
   methods: {
     provider(ctx, callback) {
       var sortOrder = ctx.sortDesc ? 'desc' : 'asc'
@@ -119,11 +130,11 @@ export default {
     },
     onRowSelected(items) {
       console.log('row selected', items)
-      this.selected = items[0]
-      this.$store.commit(SELECT, this.selected);
+      this.$store.commit(SELECT, items[0]);
     }
   },
   mounted() {
+    this.collection.perPage = this.perPage
     this.collection.fetch()
   }
 }

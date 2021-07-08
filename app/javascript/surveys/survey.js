@@ -86,14 +86,12 @@ export class Surveys extends PlanoCollection {
   }
 
   defaults() {
-    return {
-      sortField: 'name',
+    return Object.assign({}, super.defaults(), {
+      sortField: 'updated_at',
       sortOrder: 'asc',
       filter: '',
-      perPage:15,
-      page: 1,
-      total: 0
-    }
+      perPage: 15,
+    })
   }
 
   routes() {

@@ -3,6 +3,7 @@ import defaultsDeep     from 'lodash/defaultsDeep'
 import defaultTo        from 'lodash/defaultTo'
 
 import {http as axios} from './http'
+import Vue from 'vue';
 import {Model, Collection} from 'vue-mc'
 
 // TODO: modify for routes etc
@@ -66,11 +67,29 @@ export class PlanoModel extends Model {
 }
 
 export class PlanoCollection extends Collection {
+  defaults() {
+    return {
+      perPage: 10,
+      page: 1,
+      currentPage: 1,
+      total: 0,
+    }
+  }
 
   getModelsFromResponse(response) {
     let models = super.getModelsFromResponse(response);
-    console.log(models)
     return models.data ? models.data : models;
+  }
+
+  onFetchSuccess(response) {
+    if(response.response.data && response.response.data.meta){
+      console.log(response.response.data.meta)
+      Vue.set(this, 'total', response.response.data.meta.total);
+      Vue.set(this, 'perPage', response.response.data.meta.perPage);
+      // TODO figure out how not to go back to the server every time
+      this.clearModels();
+    }
+    return super.onFetchSuccess(response);
   }
 
 }
