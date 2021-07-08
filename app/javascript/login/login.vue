@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import PlanoModel from "../model";
+import {PlanoModel} from "../model";
 import LoginEmailField from "./login_email_field";
 import LoginPasswordField from "./login_password_field";
 

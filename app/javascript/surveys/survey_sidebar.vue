@@ -1,5 +1,5 @@
 <template>
-  <sidebar-vuex>
+  <sidebar-vuex v-if="survey">
     <template #header>
       <h3>Survey Details</h3>
       <small class="text-muted d-block">Last updated:</small>
@@ -32,7 +32,20 @@
         <b-button v-b-tooltip title="Preview Survey" class="mx-2" variant="primary"><a :href="previewLink" target="_blank"><b-icon-eye-fill variant="white"></b-icon-eye-fill></a></b-button>
         <b-button v-b-tooltip title="Edit Survey" variant="primary"><router-link :to="editLink"><b-icon-pencil variant="white"></b-icon-pencil></router-link></b-button>
         <span v-b-tooltip title="Send Survey"><b-button variant="primary" disabled class="mx-2" v-b-tooltip title="Send Survey"><b-icon-envelope></b-icon-envelope></b-button></span>
-        <b-button variant="primary"><b-icon-three-dots></b-icon-three-dots></b-button>
+        <b-dropdown variant="primary" right no-caret>
+          <template #button-content>
+            <b-icon-three-dots></b-icon-three-dots>
+          </template>
+          <b-dd-item disabled>View Responses</b-dd-item>
+          <b-dd-item disabled>Clear Response</b-dd-item>
+          <b-dd-item disabled>Freeze Response Edits</b-dd-item>
+          <b-dd-divider></b-dd-divider>
+          <b-dd-item disabled>Duplicate</b-dd-item>
+          <b-dd-item disabled>Export</b-dd-item>
+          <b-dd-item disabled>Make Template</b-dd-item>
+          <b-dd-item disabled>Freeze Survey Edits</b-dd-item>
+          <b-dd-item @click="destroy">Delete</b-dd-item>
+        </b-dropdown>
       </div>
       <b-tabs content-class="mt-3" nav-class="border-0" nav-wrapper-class="border-bottom">
         <b-tab title="Questions" active>
@@ -66,38 +79,11 @@
       </b-tabs>
     </template>
   </sidebar-vuex>
-  <!--
-  <model-sidebar title-field="name"
-    :pulled-fields="['public', 'anonymous']"
-  >
-    <template #public>
-      <span class="mr-2">Closed</span>
-      <b-form-checkbox inline v-model="survey.public" switch @change="save" >
-        Published
-      </b-form-checkbox>
-      <span v-if="survey.public">on ????</span>
-    </template>
-    <template #anonymous>
-      <b-form-checkbox v-model="survey.anonymous" switch @change="save">
-        Anonymous
-      </b-form-checkbox>
-    </template>
-    <template #tabs>
-      <b-tab title="Questions">
-        <router-link :to="editLink" @click="edit">Edit Questions</router-link>
-        <survey-question :question="q" v-for="q in questions" :key="q.id" ></survey-question>
-      </b-tab>
-      <b-tab title="Responses">
-        <p>TODO responses</p>
-      </b-tab>
-    </template>
-  </model-sidebar>
-  -->
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { SAVE, EDIT } from '../model.store';
+import { SAVE, EDIT, DELETE } from '../model.store';
 import SidebarVuex from '../sidebar_vuex';
 import SurveyQuestion from './survey_question';
 
@@ -128,6 +114,9 @@ export default {
     ...mapActions({
       edit: EDIT
     }),
+    destroy() {
+      this.$store.dispatch(DELETE, {item: this.survey})
+    },
     save() {
       this.$store.dispatch(SAVE, {item: this.survey});
     },

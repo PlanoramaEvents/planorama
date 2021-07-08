@@ -1,5 +1,4 @@
-import PlanoModel from '../model.js'
-import {Collection} from 'vue-mc'
+import {PlanoModel, PlanoCollection} from '../model.js'
 import {
     required,
     string,
@@ -77,7 +76,7 @@ export class Person extends PlanoModel {
   }
 };
 
-export class People extends Collection {
+export class People extends PlanoCollection {
   options() {
     return {
       model: Person,

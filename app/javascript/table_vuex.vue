@@ -30,7 +30,7 @@
       :fields="columns"
       selected-variant="primary"
 
-      :items="provider"
+      :items="collection.models"
 
       ref="table"
 
@@ -122,6 +122,9 @@ export default {
       this.selected = items[0]
       this.$store.commit(SELECT, this.selected);
     }
+  },
+  mounted() {
+    this.collection.fetch()
   }
 }
 </script>

@@ -3,7 +3,7 @@ import defaultsDeep     from 'lodash/defaultsDeep'
 import defaultTo        from 'lodash/defaultTo'
 
 import {http as axios} from './http'
-import {Model} from 'vue-mc'
+import {Model, Collection} from 'vue-mc'
 
 // TODO: modify for routes etc
 // make sure that save sans id in URL and update has id
@@ -17,7 +17,7 @@ routes() {
   }
 }
 */
-export default class PlanoModel extends Model {
+export class PlanoModel extends Model {
   schema() {
     function makeschema(fields) {
       return Object.keys(fields).reduce((prev, curr) => {
@@ -63,4 +63,14 @@ export default class PlanoModel extends Model {
       'X-CSRF-Token': csrfToken
     }
   }
+}
+
+export class PlanoCollection extends Collection {
+
+  getModelsFromResponse(response) {
+    let models = super.getModelsFromResponse(response);
+    console.log(models)
+    return models.data ? models.data : models;
+  }
+
 }

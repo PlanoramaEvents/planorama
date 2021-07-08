@@ -1,4 +1,4 @@
-import PlanoModel from "../model";
+import {PlanoModel} from "../model";
 
 export class SurveySubmission extends PlanoModel {
   defaults() {

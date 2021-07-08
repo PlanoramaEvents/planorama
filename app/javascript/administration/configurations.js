@@ -1,6 +1,4 @@
-import PlanoModel from '../model.js';
-import {Collection} from 'vue-mc';
-import Vue from 'vue';
+import {PlanoModel} from '../model.js';
 import { http}  from '../http';
 
 export class Configuration extends PlanoModel {
