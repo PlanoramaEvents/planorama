@@ -2,67 +2,71 @@
   <div class="survey-question mt-3">
     <b-form-group
       v-if="!isFormatting && !address && !socialmedia"
-      :label="questionText" v-slot="{ ariaDescribedBy }"
     >
-      <b-form-textarea
-        v-if="textbox"
-        v-model="response.response.text"
-        :aria-describedBy="ariaDescribedBy"
-        :disabled="!answerable"
-      >{{response.response.text}}</b-form-textarea>
-      <b-form-input
-        v-if="textfield"
-        v-model="response.response.text"
-        :aria-describedBy="ariaDescribedBy"
-        :disabled="!answerable"/>
-      <b-form-radio-group
-        v-if="singlechoice"
-        v-model="response.response.text"
-        :aria-describedBy="ariaDescribedBy"
-      >
-        <b-form-radio
-          v-for="choice in choices"
-          :key="choice.id"
-          :value="choice.answer"
+      <template #label>
+        {{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star>
+      </template>
+      <template #default="{ ariaDescribedBy }">
+        <b-form-textarea
+          v-if="textbox"
+          v-model="response.response.text"
+          :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
-        >{{choice.answer}}</b-form-radio>
-      </b-form-radio-group>
-      <b-form-checkbox-group
-        v-if="multiplechoice"
-        v-model="response.response.answers"
-        :aria-describedBy="ariaDescribedBy"
-      >
-        <b-form-checkbox
-          v-for="choice in choices"
-          :key="choice.id"
-          :value="choice.answer"
+        >{{response.response.text}}</b-form-textarea>
+        <b-form-input
+          v-if="textfield"
+          v-model="response.response.text"
+          :aria-describedBy="ariaDescribedBy"
+          :disabled="!answerable"/>
+        <b-form-radio-group
+          v-if="singlechoice"
+          v-model="response.response.text"
+          :aria-describedBy="ariaDescribedBy"
+        >
+          <b-form-radio
+            v-for="choice in choices"
+            :key="choice.id"
+            :value="choice.answer"
+            :disabled="!answerable"
+          >{{choice.answer}}</b-form-radio>
+        </b-form-radio-group>
+        <b-form-checkbox-group
+          v-if="multiplechoice"
+          v-model="response.response.answers"
+          :aria-describedBy="ariaDescribedBy"
+        >
+          <b-form-checkbox
+            v-for="choice in choices"
+            :key="choice.id"
+            :value="choice.answer"
+            :disabled="!answerable"
+          >{{choice.answer}}</b-form-checkbox>
+        </b-form-checkbox-group>
+        <b-form-select
+          v-if="dropdown"
+          v-model="response.response.text"
+          :aria-describedby="ariaDescribedBy"
+        >
+          <b-form-select-option
+            v-for="choice in choices"
+            :key="choice.id"
+            :value="choice.answer"
+            :disabled="!answerable"
+          >{{choice.answer}}</b-form-select-option>
+        </b-form-select>
+        <b-form-input
+          v-if="email"
+          type="email"
+          v-model="response.response.text"
           :disabled="!answerable"
-        >{{choice.answer}}</b-form-checkbox>
-      </b-form-checkbox-group>
-      <b-form-select
-        v-if="dropdown"
-        v-model="response.response.text"
-        :aria-describedby="ariaDescribedBy"
-      >
-        <b-form-select-option
-          v-for="choice in choices"
-          :key="choice.id"
-          :value="choice.answer"
-          :disabled="!answerable"
-        >{{choice.answer}}</b-form-select-option>
-      </b-form-select>
-      <b-form-input
-        v-if="email"
-        type="email"
-        v-model="response.response.text"
-        :disabled="!answerable"
-        :aria-describedBy="ariaDescribedBy"
-      ></b-form-input>
+          :aria-describedBy="ariaDescribedBy"
+        ></b-form-input>
+      </template>
     </b-form-group>
     <p v-if="textonly">{{question.question}}</p>
     <hr v-if="hr" />
     <div class="form-address form-row" v-if="address">
-      <div class="col-12">{{question.question}}</div>
+      <div class="col-12">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></div>
       <div class="col-12 col-sm-6">
         <b-form-group
           :id="formGroupId('address-1')"
@@ -143,7 +147,7 @@
       </div>
     </div>
     <div v-if="socialmedia">
-      <span>{{question.question}}</span>
+      <span>{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
       <twitter v-model="response.response.socialmedia.twitter" :edit="answerable"></twitter>
     </div>
   </div>
@@ -152,11 +156,13 @@
 <script>
 import Twitter from '../social-media/twitter';
 import {mapState} from 'vuex'
+import MandatoryStar from './mandatory-star.vue';
 
 export default {
   name: "SurveyQuestion",
   components: {
     Twitter,
+    MandatoryStar,
   },
   props: {
     question: {
@@ -185,7 +191,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['submission']),
+    ...mapState({
+      submission: 'submission',
+      survey: 'selected'
+    }),
     questionText() {
       return `${this.question.sort_order + 1}. ${this.question.question}`
     },

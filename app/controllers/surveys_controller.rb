@@ -95,6 +95,7 @@ class SurveysController < ResourceController
             sort_order
             fuuid
             _destroy
+            other
           ]
         ]
       ]

@@ -20,6 +20,10 @@ export class Survey extends PlanoModel {
       submit_string: '',
       use_captcha: false,
       public: false,
+      mandatory_star: true,
+      numbered_questions: false,
+      branded: true,
+      allow_submission_edits: true,
       //transition_accept_status: false,
       //transition_decline_status: false,
       declined_msg: '',
@@ -31,7 +35,9 @@ export class Survey extends PlanoModel {
           id: null,
           question: '',
           question_type: 'textfield',
+          mandatory: false,
           survey_answers: [{
+            other: false,
             id: null,
             answer: '',
           }]

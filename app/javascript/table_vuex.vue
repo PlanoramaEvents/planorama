@@ -1,15 +1,19 @@
 <template>
   <div class="scrollable">
     <div class="d-flex justify-content-end my-3">
-      <b-button disabled >
-        <b-icon-upload></b-icon-upload>
-      </b-button>
-      <b-button @click="$emit('new')" class="mx-1" variant="primary">
+      <div class="d-inline" title="Upload">
+        <b-button disabled >
+          <b-icon-upload></b-icon-upload>
+        </b-button>
+      </div>
+      <b-button @click="$emit('new')" class="mx-1" variant="primary" title="New">
         <b-icon-plus scale="2"></b-icon-plus>
       </b-button>
-      <b-button disabled>
-        <b-icon-gear-fill></b-icon-gear-fill>
-      </b-button>
+      <div class="d-inline" title="Settings">
+        <b-button disabled>
+          <b-icon-gear-fill></b-icon-gear-fill>
+        </b-button>
+      </div>
     </div>
 
     <div class="d-flex justify-content-end">
@@ -136,6 +140,13 @@ export default {
   mounted() {
     this.collection.perPage = this.perPage
     this.collection.fetch()
+  },
+  watch: {
+    selected(val) {
+      if (!val) {
+        this.$refs.table.clearSelected()
+      }
+    }
   }
 }
 </script>

@@ -1,6 +1,6 @@
 /* eslint no-console: 0 */
 import Vue from 'vue'
-import { NavbarPlugin, BootstrapVue } from 'bootstrap-vue'
+import { NavbarPlugin, BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 
 import HelpLink from '../administration/help_link.vue';
 import TermsOfUseLink from '../administration/terms_of_use_link.vue';
@@ -8,6 +8,7 @@ import PrivacyPolicyLink from '../administration/privacy_policy_link.vue';
 
 Vue.use(NavbarPlugin)
 Vue.use(BootstrapVue)
+Vue.use(BootstrapVueIcons)
 
 document.addEventListener('DOMContentLoaded', () => {
   const app = new Vue({
