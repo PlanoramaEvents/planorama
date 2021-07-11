@@ -163,7 +163,6 @@ p "Anna's survey created again"
     submit_string: 'submit',
     use_captcha: Faker::Boolean.boolean(true_ratio: 0.8),
     public: Faker::Boolean.boolean(true_ratio: 0.8),
-    authenticate: Faker::Boolean.boolean(true_ratio: 0.8),
     transition_accept_status: [nil, :probable, :accepted].sample,
     transition_decline_status: [nil, :unknown, :probable, :declined].sample,
     welcome: Faker::Lorem.sentence,
