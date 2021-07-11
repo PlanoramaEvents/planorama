@@ -8,11 +8,13 @@ import TakeSurvey from '../surveys/take-survey.vue';
 import SurveyPage from '../surveys/survey-page.vue';
 import { store as surveyStore } from '../surveys/survey.store'
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
+import { CustomIconsPlugin } from '../icons';
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+Vue.use(CustomIconsPlugin);
 
 const routes = [
   { path: '/edit/:id/:responses', component: EditSurvey, props: true},
