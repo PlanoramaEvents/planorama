@@ -18,7 +18,7 @@
             v-if="!next_page && !submitted"
             @click="submit"
             :disabled="submit_disabled"
-          >Submit</b-button>
+          >{{survey.submit_string || 'Submit'}}</b-button>
         </div>
         <b-button variant="primary" v-if="next_page" @click="next">Next Page</b-button>
       </div>

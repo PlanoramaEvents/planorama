@@ -8,20 +8,24 @@
           Published&nbsp;<span v-if="survey.$.public">on {{new Date(survey.published_on).toLocaleDateString()}}</span>
         </b-col>
       </b-row>
-      <b-row>
-        <b-col>
-          <not-implemented>
-            <b-form-checkbox disabled v-model="survey.anonymous" @change="save">
-              Anonymous
-            </b-form-checkbox>
-          </not-implemented>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <b-form-checkbox v-model="survey.mandatory_star" @change="save">Show star for required questions <small>(What is your name? <span class="text-danger" title="required">*</span>&nbsp;)</small></b-form-checkbox>
-        </b-col>
-      </b-row>
+      <survey-setting disabled v-model="survey.anonymous" @change="save">
+        Anonymous
+      </survey-setting>
+      <survey-setting bool v-model="survey.mandatory_star">
+        Show star for required questions <small>(What is your name? <span class="text-danger" title="required">*</span>&nbsp;)</small>
+      </survey-setting>
+      <survey-setting bool disabled v-model="survey.captcha">
+        Use CAPTCHA
+      </survey-setting>
+      <survey-setting bool disabled v-model="survey.numbered_questions">
+        Show numbers on questions
+      </survey-setting>
+      <survey-setting bool disabled v-model="survey.branded">
+        Show logo
+      </survey-setting>
+      <survey-setting text v-model="survey.submit_string">
+        Text for submit button
+      </survey-setting>
       <b-modal v-if="survey" id="confirmPublish" @ok="togglePublish" @cancel="cancelPublish" ok-title="Yes" cancel-variant="link">
         <p v-if="!survey.public">{{SURVEY_CONFIRM_CLOSE}}</p>
         <p v-if="survey.public">{{SURVEY_CONFIRM_PUBLISH}}</p>
@@ -41,12 +45,12 @@ import {
   SURVEY_SAVE_SUCCESS_PUBLISH,
   SURVEY_SAVE_SUCCESS_CLOSE,
 } from '../constants/strings';
-import NotImplemented from '../not-implemented.vue';
+import SurveySetting from './survey-setting.vue';
 
 export default {
   name: "SurveySettingsTab",
   components: {
-    NotImplemented,
+    SurveySetting,
   },
   data: () => ({
     SURVEY_CONFIRM_CLOSE,
