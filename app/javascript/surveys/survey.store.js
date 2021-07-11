@@ -1,6 +1,7 @@
 import { survey_columns, Surveys } from './survey';
 import { PlanoStore, SELECT } from '../model.store'
 import { SurveySubmission } from './survey_response';
+import { http } from '../http';
 export const SELECT_PAGE = "SELECT PAGE";
 export const SELECT_QUESTION = "SELECT QUESTION";
 export const UNSELECT_PAGE = "UNSELECT PAGE";
@@ -9,6 +10,7 @@ export const NEW_QUESTION = "NEW QUESTION";
 export const NEW_PAGE = "NEW PAGE";
 export const NEW_SUBMISSION = "NEW SUBMISSION";
 export const UNSELECT_SUBMISSION = "UNSELECT SUBMISSION";
+export const CLEAR_SUBMISSIONS = "CLEAR SUBMISSIONS"
 export const SUBMIT = "SUBMIT";
 
 export const store = new PlanoStore('surveys', new Surveys(), survey_columns, {
@@ -82,5 +84,9 @@ export const store = new PlanoStore('surveys', new Surveys(), survey_columns, {
     state.submission.save().then(() => {
       commit(UNSELECT_SUBMISSION);
     })
+  },
+  [CLEAR_SUBMISSIONS] ({commit}, {item}) {
+    commit(UNSELECT_SUBMISSION);
+    return http.delete(`surveys/${item.id}/submissions`)
   }
 });

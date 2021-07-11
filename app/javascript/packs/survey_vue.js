@@ -15,6 +15,7 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
 const routes = [
+  { path: '/edit/:id/:responses', component: EditSurvey, props: true},
   { path: '/edit/:id', component: EditSurvey, props: true },
   { path: '/:survey_id/page/:id/:preview', component: SurveyPage, props: true},
   { path: '/:survey_id/page/:id', component: SurveyPage, props: true},

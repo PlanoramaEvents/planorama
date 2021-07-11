@@ -9,16 +9,16 @@
         :label="i === 0 ? 'Display Title' : 'Page Title'"
         :label-for="'page-title-' + page.id"
       >
-        <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="save({item: selected})"></b-form-input>
+        <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="save"></b-form-input>
       </b-form-group>
       <h3 v-if="!isSelected">{{page.title}}</h3>
     </div>
-    <draggable v-model="page.survey_questions" @end="save(selected)" handle=".handle">
+    <draggable v-model="page.survey_questions" @end="save" handle=".handle">
       <edit-survey-question :question="q" v-for="q in page.survey_questions" :key="q.id"></edit-survey-question>
     </draggable>
     <div v-if="i + 1 < n" class="mt-3">
       After section {{i + 1}}
-      <b-select class="d-inline ml-1 next-page" v-model="page.next_page_id" :options="nextPageOptions" @change="save({item: selected})"></b-select>
+      <b-select class="d-inline ml-1 next-page" v-model="page.next_page_id" :options="nextPageOptions" @change="save"></b-select>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 import { SELECT_PAGE, UNSELECT_QUESTION } from './survey.store';
 import { SAVE } from '../model.store';
 import draggable from 'vuedraggable';
+import surveyMixin from './survey-mixin';
 
 export default {
   name: "EditSurveyPage",
@@ -36,6 +37,7 @@ export default {
     EditSurveyQuestion,
     draggable, 
   },
+  mixins: [surveyMixin],
   props: {
     page: {
       type: Object,
@@ -51,7 +53,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['selected_page', 'selected', 'selected_question']),
+    ...mapState(['selected_page', 'selected_question']),
     isSelected() {
       return this.selected_page && this.page.id === this.selected_page.id && !this.selected_question;
     },
@@ -60,8 +62,8 @@ export default {
     },
     nextPageOptions() {
       return [
-        {value: this.selected.survey_pages[this.i + 1], text: 'Continue to next page'},
-        ...this.selected.survey_pages.map((p, i) => ({
+        {value: this.survey.survey_pages[this.i + 1], text: 'Continue to next page'},
+        ...this.survey.survey_pages.map((p, i) => ({
           value: p.id, text: `Go to section ${i + 1} (${p.title})`
         })),
         {value: null, text: 'Submit form'}
@@ -71,9 +73,6 @@ export default {
   methods: {
     ...mapMutations({
       selectPage: SELECT_PAGE
-    }),
-    ...mapActions({
-      save: SAVE
     })
   }
 }

@@ -1,7 +1,6 @@
 <template>
   <table-vuex
     sortField='name'
-    :modelType="modelType"
     @new="onNew"
   >
     <template #cell(description)="{ item }">
@@ -32,9 +31,6 @@ import { Survey } from './survey';
 
 export default {
   name: 'SurveyTable',
-  data: () => ({
-    modelType: Survey
-  }),
   components: {
     TableVuex,
     TooltipOverflow,

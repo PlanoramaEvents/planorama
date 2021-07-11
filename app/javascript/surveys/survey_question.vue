@@ -1,48 +1,97 @@
 <template>
-  <div class="survey-question mt-3">
+  <div class="survey-question mt-3 pl-1">
     <b-form-group
       v-if="!isFormatting && !address && !socialmedia"
     >
       <template #label>
-        {{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star>
+        <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
       </template>
       <template #default="{ ariaDescribedBy }">
         <b-form-textarea
+          class="w-50"
           v-if="textbox"
           v-model="response.response.text"
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
         >{{response.response.text}}</b-form-textarea>
         <b-form-input
+          class="w-50"
           v-if="textfield"
           v-model="response.response.text"
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"/>
         <b-form-radio-group
+          class="w-50"
+          stacked
           v-if="singlechoice"
-          v-model="response.response.text"
+          v-model="radioButtonResponse"
           :aria-describedBy="ariaDescribedBy"
         >
           <b-form-radio
-            v-for="choice in choices"
+            v-for="choice in choices.filter(a => !a.other)"
             :key="choice.id"
             :value="choice.answer"
             :disabled="!answerable"
           >{{choice.answer}}</b-form-radio>
+          <b-form-radio
+            class="mt-2"
+            v-if="other"
+            value="Other"
+            v-model="otherChecked"
+          >
+            <b-form-group
+              label="Other"
+              label-cols="2"
+              :label-for="'other-' + question.id"
+              label-class="mt-n2"
+            >
+              <b-form-input 
+                class="mt-n2"
+                :id="'other-' + question.id" 
+                type="text" 
+                v-model="response.response.text"
+                :disabled="!answerable || !otherChecked"
+              ></b-form-input>
+            </b-form-group>
+          </b-form-radio>
         </b-form-radio-group>
         <b-form-checkbox-group
+          class="w-50"
+          stacked
           v-if="multiplechoice"
           v-model="response.response.answers"
           :aria-describedBy="ariaDescribedBy"
         >
           <b-form-checkbox
-            v-for="choice in choices"
+            v-for="choice in choices.filter(a => !a.other)"
             :key="choice.id"
             :value="choice.answer"
             :disabled="!answerable"
           >{{choice.answer}}</b-form-checkbox>
+          <b-form-checkbox
+            class="mt-2"
+            v-if="other"
+            value="Other"
+            v-model="otherChecked"
+          >
+            <b-form-group
+              label="Other"
+              label-cols="2"
+              :label-for="'other-' + question.id"
+              label-class="mt-n2"
+            >
+              <b-form-input 
+                class="mt-n2"
+                :id="'other-' + question.id" 
+                type="text" 
+                v-model="response.response.text"
+                :disabled="!answerable || !otherChecked"
+              ></b-form-input>
+            </b-form-group>
+          </b-form-checkbox>
         </b-form-checkbox-group>
         <b-form-select
+          class="w-50"
           v-if="dropdown"
           v-model="response.response.text"
           :aria-describedby="ariaDescribedBy"
@@ -55,6 +104,7 @@
           >{{choice.answer}}</b-form-select-option>
         </b-form-select>
         <b-form-input
+          class="w-50"
           v-if="email"
           type="email"
           v-model="response.response.text"
@@ -65,9 +115,11 @@
     </b-form-group>
     <p v-if="textonly">{{question.question}}</p>
     <hr v-if="hr" />
-    <div class="form-address form-row" v-if="address">
-      <div class="col-12">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></div>
-      <div class="col-12 col-sm-6">
+    <div class="row" v-if="address">
+      <div class="col-12 h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></div>
+    </div>
+    <div class="form-address form-row w-50" v-if="address">
+      <div class="col-12 col-sm-6 pt-2">
         <b-form-group
           :id="formGroupId('address-1')"
           :label-for="formId('address-1')"
@@ -80,7 +132,7 @@
           ></b-form-input>
         </b-form-group>
       </div>
-      <div class="col-12 col-sm-6">
+      <div class="col-12 col-sm-6 pt-sm-2">
         <b-form-group
           :id="formGroupId('address-2')"
           :label-for="formId('address-2')"
@@ -123,7 +175,7 @@
         <b-form-group
           :id="formGroupId('zip')"
           :label-for="formId('zip')"
-          label="ZIP Code"
+          label="Postal Code"
         >
           <b-form-input 
             :disabled="!answerable"
@@ -147,22 +199,102 @@
       </div>
     </div>
     <div v-if="socialmedia">
-      <span>{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
-      <twitter v-model="response.response.socialmedia.twitter" :edit="answerable"></twitter>
+      <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
+      <div class="row w-50 ml-0">
+        <div class="col-12 px-0">
+          <simple-social 
+              label="Twitter"
+              prepend="@"
+              :disabled="!answerable"
+              :id="formId('socials-twitter')"
+              v-model="response.response.socialmedia.twitter"
+            ></simple-social>
+          <simple-social 
+            label="Facebook"
+            :disabled="!answerable"
+            :id="formId('socials-facebook')"
+            v-model="response.response.socialmedia.facebook"
+          >
+            <template #prepend>
+              <b-input-group-text>facebook.com&sol;</b-input-group-text>
+            </template>
+          </simple-social>
+          <simple-social 
+            label="Website" 
+            prepend="url"
+            :disabled="!answerable"
+            :id="formId('socials-website')"
+            v-model="response.response.socialmedia.website"
+          ></simple-social>
+          <simple-social 
+            label="Instagram"
+            :disabled="!answerable"
+            :id="formId('socials-insta')"
+            v-model="response.response.socialmedia.instagram"
+          >
+            <template #prepend>
+              <b-input-group-text>instagram.com&sol;</b-input-group-text>
+            </template>
+          </simple-social>
+          <simple-social 
+            label="Twitch"
+            :disabled="!answerable"
+            :id="formId('socials-twitch')"
+            v-model="response.response.socialmedia.twitch"
+          >
+            <template #prepend>
+              <b-input-group-text>twitch.tv&sol;</b-input-group-text>
+            </template>
+          </simple-social>
+          <simple-social
+            label="YouTube"
+            :disabled="!answerable"
+            :id="formId('socials-youtube')"
+            v-model="response.response.socialmedia.youtube"
+          >
+            <template #prepend>
+              <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
+            </template>
+          </simple-social>
+          <simple-social 
+            label="TikTok"
+            prepend="@"
+            :disabled="!answerable"
+            :id="formId('socials-tiktok')"
+            v-model="response.response.socialmedia.tiktok"
+          ></simple-social>
+          <simple-social
+            label="LinkedIn"
+            :disabled="!answerable"
+            :id="formId('socials-linkedin')"
+            v-model="response.response.socialmedia.linkedin"
+          >
+            <template #prepend>
+              <b-input-group-text>linkedin.com&sol;in&sol;</b-input-group-text>
+            </template>
+          </simple-social>
+          <simple-social
+            label="Other"
+            :disabled="!answerable"
+            :id="formId('socials-other')"
+            v-model="response.response.socialmedia.other"
+          ></simple-social>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Twitter from '../social-media/twitter';
 import {mapState} from 'vuex'
 import MandatoryStar from './mandatory-star.vue';
+import SimpleSocial from '../social-media/simple-social.vue';
 
 export default {
   name: "SurveyQuestion",
   components: {
-    Twitter,
     MandatoryStar,
+    SimpleSocial,
   },
   props: {
     question: {
@@ -180,7 +312,7 @@ export default {
           }, socialmedia: {
             twitter: null, facebook: null, linkedin: null,
             twitch: null, youtube: null, instagram: null,
-            flickr: null, reddit: null
+            tiktok: null, other: null, website: null
           }}
         }
       }
@@ -190,6 +322,9 @@ export default {
       default: false
     }
   },
+  data: () => ({
+    otherChecked: false
+  }),
   computed: {
     ...mapState({
       submission: 'submission',
@@ -228,11 +363,22 @@ export default {
     textonly() {
       return this.question.question_type === "textonly";
     },
+    other() {
+      return  this.question.survey_answers ? this.question.survey_answers.filter(a => a.other).length > 0 : false;
+    },
     choices() {
       return this.question.survey_answers;
     },
     isFormatting() {
       return this.textonly || this.hr;
+    },
+    radioButtonResponse: {
+      get() {
+        return this.response.response.answers ? this.response.response.answers[0] : null
+      },
+      set(val) {
+        this.response.response.answers = [val]
+      }
     }
   },
   methods: {
@@ -242,13 +388,28 @@ export default {
     formGroupId(string) {
       return `${this.formId(string)}-group`
     },
-  },
-  mounted() {
-    if (this.submission) {
+    linkResponse() {
       if (!this.submission.survey_responses) {
         this.submission.survey_responses = []
       }
-      this.submission.survey_responses.push(this.response)
+      let existing_response = this.submission.survey_responses.find(r => r.survey_question_id == this.response.survey_question_id)
+      if (existing_response) {
+        this.response = existing_response
+      } else {
+        this.submission.survey_responses.push(this.response)
+      }
+    }
+  },
+  mounted() {
+    if (this.submission) {
+      this.linkResponse();
+    }
+  },
+  watch: {
+    submission(val, oldVal) {
+      if (!oldVal && val) {
+        this.linkResponse();
+      }
     }
   }
 }

@@ -201,12 +201,39 @@
       </template>
       <template v-if="socialmedia">
         <div class="col-12 col-lg-8 col-xl-6" v-if="!isSelected">
-          <b-form-group label="Twitter" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
-          <b-form-group label="Facebook" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
-          <b-form-group label="Website" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
-          <b-form-group label="Instagram" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
-          <b-form-group label="Twitch" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
-          <b-form-group label="YouTube" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
+          <b-form-group label="Twitter" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="Facebook" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>facebook.com&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
+          <b-form-group label="Website" label-cols="3"><b-input-group prepend="url"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="Instagram" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>instagram.com&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
+          <b-form-group label="Twitch" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>twitch.tv&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
+          <b-form-group label="YouTube" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
+          <b-form-group label="TikTok" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="LinkedIn" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>linkedin.com&sol;in&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
           <b-form-group label="Other" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
         </div>
         <div class="col-12">
@@ -235,6 +262,7 @@ import { mapState, mapActions, mapMutations } from 'vuex';
 import { SAVE } from '../model.store';
 import { NEW_QUESTION, SELECT_QUESTION, UNSELECT_QUESTION } from './survey.store';
 import draggable from 'vuedraggable';
+import surveyMixin from './survey-mixin';
 
 
 export default {
@@ -260,8 +288,9 @@ export default {
       required: true
     },
   },
+  mixins: [surveyMixin],
   computed: {
-    ...mapState(['selected', 'selected_question', 'selected_page']),
+    ...mapState(['selected_question', 'selected_page']),
     textfield() {
       return this.question.question_type === "textfield";
     },
@@ -342,9 +371,6 @@ export default {
     ...mapActions({
       newQuestion: NEW_QUESTION
     }),
-    save(event) {
-      this.$store.dispatch(SAVE, {item: this.selected});
-    },
     formId(string) {
       return `${string}-${this.question.id}`
     },
@@ -355,7 +381,7 @@ export default {
       if (!this.question.survey_answers) {
         this.question.survey_answers = []
       }
-      this.question.survey_answers.push({answer: undefined})
+      this.question.survey_answers.push({answer: 'Option'})
       this.save()
     },
     removeOption(answer) {

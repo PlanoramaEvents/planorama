@@ -53,14 +53,17 @@ export class PlanoStore {
         })
       },
       [DELETE] ({commit}, {item}) {
-        console.log("trying to delete", item)
-        commit(UNSELECT);
-        item.delete().then(() => {
-          console.log('deleted successfully')
-        }, (error) => {
-          // TODO actually show this to the user
-          console.log("Error deleting:", error);
-        });
+        return new Promise((res, rej) => {
+          console.log("trying to delete", item)
+          commit(UNSELECT);
+          item.delete().then(() => {
+            console.log('deleted successfully')
+            res()
+          }, (error) => {
+            console.log("Error deleting:", error);
+            rej(error)
+          });
+        })
       },
       ...actions
     }

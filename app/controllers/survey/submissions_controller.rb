@@ -69,9 +69,10 @@ class Survey::SubmissionsController < ResourceController
             twitch
             youtube
             instagram
-            flickr
-            reddit
             fuuid
+            website
+            other
+            tiktok
           ]
         ]
       ]

@@ -1,6 +1,6 @@
 <div id="side-navbar" class="col-12 col-sm-3 col-xl-2">
   <b-nav vertical>
-    <b-nav-item href="/" :active="currentLocation === '/'">Dashboard</b-nav-item>
+    <b-nav-item href="/" :active="currentLocation === '/'"><b-icon-pie-chart-fill class="mr-2"></b-icon-pie-chart-fill>Dashboard</b-nav-item>
     <b-nav-item href="/page/venues" :active="currentLocation.startsWith('/page/venues')"><b-icon-building class="mr-2"></b-icon-building>Venues</b-nav-item>
     <b-nav-item href="/page/people" :active="currentLocation.startsWith('/page/people')"><b-icon-person-fill class="mr-2"></b-icon-person-fill>People</b-nav-item>
     <b-nav-item href="/page/program" :active="currentLocation.startsWith('/page/program')"><b-icon-calendar2-range-fill class="mr-2"></b-icon-calendar2-range-fill>Schedule</b-nav-item>
