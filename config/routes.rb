@@ -47,6 +47,7 @@ Rails.application.routes.draw do
         end
       end
       resources :submissions
+      delete 'submissions', to: 'submissions#delete_all'
     end
   end
 

@@ -31,7 +31,19 @@ class Survey::SubmissionsController < ResourceController
     serializer_includes
   end
 
+  def delete_all
+    Survey.transaction do
+      survey = Survey.find params[:survey_id]
 
+      survey.survey_submissions.delete_all
+
+      render status: :ok, json: {}.to_json, content_type: 'application/json'
+    end
+  rescue => ex
+    Rails.logger.error ex.message if Rails.env.development?
+    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
+    render status: :bad_request, json: {error: ex.message}
+  end
 
   def allowed_params
     %i[
