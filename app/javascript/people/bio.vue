@@ -8,7 +8,7 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <b-form-group 
+        <b-form-group
           id="bio-text-group"
           label="Biography"
           label-for="bio-text"
@@ -26,8 +26,8 @@
         <h2>Social Media</h2>
       </div>
       <div class="col-12 col-sm-4 col-lg-3">
-        <span v-if="!bio.twitterinfo">No twitter info</span>
-        <twitter v-model="bio.twitterinfo" :edit="editable"></twitter>
+        <span v-if="!bio.twitter">No twitter info</span>
+        <twitter v-model="bio.twitter" :edit="editable"></twitter>
       </div>
     </div>
   </div>
@@ -55,7 +55,7 @@ export default {
       get() {
         return this.person.bio ? this.person.bio : {
           bio: '',
-          twitterinfo: null,
+          twitter: null,
           photourl: null,
           facebook: null,
           linkedin: null,

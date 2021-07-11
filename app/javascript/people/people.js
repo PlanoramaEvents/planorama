@@ -44,7 +44,7 @@ export class Person extends PlanoModel {
       comments: null,
       bio: {
         bio: '',
-        twitterinfo: null,
+        twitter: null,
         photourl: null,
         facebook: null,
         linkedin: null,

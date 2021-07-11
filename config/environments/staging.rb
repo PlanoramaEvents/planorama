@@ -62,6 +62,7 @@ Rails.application.configure do
 
   config.web_console.permissions = ['172.0.0.0/8','192.168.0.0/16']
 
+  # TODO: this will need to be fixed???
   config.hosts << "planorama.dev.chicon.org"
 
   config.cache_store = :redis_store, ENV['CACHE_URL'], {namespace: 'planorama::cache'}
