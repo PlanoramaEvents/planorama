@@ -214,7 +214,7 @@ CREATE TABLE public.bios (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     website text,
-    twitterinfo text,
+    twitter text,
     othersocialmedia text,
     photourl text,
     facebook text,
@@ -223,7 +223,8 @@ CREATE TABLE public.bios (
     youtube text,
     instagram text,
     flickr text,
-    reddit text
+    reddit text,
+    tiktok character varying
 );
 
 
@@ -1689,7 +1690,7 @@ CREATE TABLE public.survey_questions (
     regex character varying,
     survey_page_id bigint,
     fuuid character varying,
-    radndomize boolean DEFAULT false
+    randomize boolean DEFAULT false
 );
 
 
@@ -3251,6 +3252,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210704135126'),
 ('20210704203655'),
 ('20210704203704'),
-('20210707121120');
+('20210707121120'),
+('20210711150608');
 
 

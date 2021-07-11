@@ -36,7 +36,7 @@ Person.destroy_all
         bio: Bio.create(
             bio: Faker::Lorem.sentences(number: 3),
             website: Faker::Internet.url
-            #twitterinfo text,
+            #twitter text,
             #othersocialmedia text,
             #photourl text,
             #facebook text,
@@ -67,7 +67,7 @@ Person.destroy_all
     end
     username = name.gsub(' ','_')
     #p "Username: " + username
-    person.bio.twitterinfo = username
+    person.bio.twitter = username
     person.bio.facebook = username
     person.bio.linkedin = username
     person.bio.twitch = username
@@ -76,7 +76,7 @@ Person.destroy_all
     person.bio.flickr = username
     person.bio.reddit = username
     person.bio.save
-    #p "Twitter is #{person.bio.twitterinfo}"
+    #p "Twitter is #{person.bio.twitter}"
 
 end
 
