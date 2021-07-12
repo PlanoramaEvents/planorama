@@ -126,7 +126,7 @@ CREATE TABLE public.agreements (
     id bigint NOT NULL,
     title character varying,
     terms text,
-    type character varying,
+    agreement_type character varying,
     created_by_id bigint NOT NULL,
     updated_by_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -3253,6 +3253,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210704203655'),
 ('20210704203704'),
 ('20210707121120'),
-('20210711150608');
+('20210711150608'),
+('20210712134642');
 
 
