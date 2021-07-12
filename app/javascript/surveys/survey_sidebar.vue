@@ -31,7 +31,7 @@
             <b-dd-item v-b-modal.confirmClearResponses>Clear Responses</b-dd-item>
             <b-dd-item @click="toggleSubmissionEdits">{{survey.allow_submission_edits ? 'Freeze' : 'Unfreeze'}} Response Edits</b-dd-item>
             <b-dd-divider></b-dd-divider>
-            <b-dd-item disabled>Duplicate</b-dd-item>
+            <b-dd-item @click="duplicate">Duplicate</b-dd-item>
             <b-dd-item disabled>Export</b-dd-item>
             <b-dd-item disabled>Make Template</b-dd-item>
             <b-dd-item disabled>Freeze Survey Edits</b-dd-item>
@@ -54,7 +54,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { EDIT, DELETE } from '../model.store';
+import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../model.store';
 import SidebarVuex from '../sidebar_vuex';
 import SurveyQuestion from './survey_question';
 import surveyMixin from './survey-mixin';
@@ -105,7 +105,7 @@ export default {
         .then(() => this.success_toast(SURVEY_SAVE_SUCCESS_DELETE))
         .catch((error) => {
           console.log(error);
-          this.error_toast(error)
+          this.error_toast(error.message)
         })
     },
     clearResponses() {
@@ -125,6 +125,12 @@ export default {
     },
     responses() {
       this.$router.push(this.responsesLink);
+    },
+    duplicate() {
+      this.$store.dispatch(DUPLICATE, {item: this.survey}).then((newSurvey) => {
+        this.$store.commit(UNSELECT);
+        this.$router.push(`/edit/${newSurvey.id}`)
+      }).catch((error) => this.error_toast(error.message));
     }
   }
 }

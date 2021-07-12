@@ -73,6 +73,9 @@ export class PlanoCollection extends Collection {
       page: 1,
       currentPage: 1,
       total: 0,
+      sortField: 'updated_at',
+      sortOrder: 'asc',
+      filter: ''
     }
   }
 

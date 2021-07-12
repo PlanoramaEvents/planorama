@@ -11,7 +11,7 @@
       ></survey-question>
       <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
       <div class="d-flex justify-content-end mt-2">
-        <b-button variant="link" v-if="survey && survey.survey_pages[0].id != page.id" @click="prev">Previous Page</b-button>
+        <b-button variant="link" class="mr-1" v-if="survey && survey.survey_pages[0].id != page.id" @click="prev">Previous Page</b-button>
         <div v-b-tooltip="{disabled: !submit_disabled}" :title="submit_disabled_tooltip">
           <b-button
             variant="primary"
@@ -109,5 +109,6 @@ export default {
 <style lang="scss" scoped>
 .survey-page {
   max-width: 50rem;
+  padding-bottom: 10px;
 }
 </style>

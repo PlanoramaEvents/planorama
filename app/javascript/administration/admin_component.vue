@@ -61,26 +61,27 @@ export default {
     }
   }),
   computed: {
-    ...mapState({
-      configuration: 'collection'
+    ...mapState('configuration', {
+      configuration: state =>  state.collection
     }),
+    //...mapState('agreements', ['information_ethics']),
     event_settings_dirty() {
-      console.log('dirty check!')
-      let result = this.configuration.changed(ADMIN_CONFIGS)
-      console.log('dirty:', result)
-      return result
+      return this.configuration.changed(ADMIN_CONFIGS)
     }
   },
   methods: {
     cancel() {
       this.configuration.reset(ADMIN_CONFIGS);
+      //this.information_ethics.reset();
     },
     save() {
       this.configuration.save(ADMIN_CONFIGS);
+      //this.information_ethics.save();
     }
   },
   mounted() {
     this.configuration.fetch();
+    //this.information_ethics.fetch();
   }
 }
 </script>

@@ -20,7 +20,7 @@
         <template #label>
           <slot>{{label}}</slot>
         </template>
-        <b-form-input :disabled="disabled" type=text :value="value" @input="$emit('input', $event)" @blur="save"></b-form-input>
+        <b-form-input class="w-50" :disabled="disabled" type=text :value="value" @input="$emit('input', $event)" @blur="save"></b-form-input>
       </b-form-group>
     </b-col>
   </b-row>

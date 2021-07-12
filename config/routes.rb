@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   get 'agreements/signed', to: 'agreements#signed'
   get 'agreements/unsigned', to: 'agreements#unsigned'
   put 'agreements/sign/:id', to: 'agreements#sign'
+  get 'agreements/latest', to: 'agreements#latest'
   resources :agreements
 
   # Surveys and their nested resources

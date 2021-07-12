@@ -3,12 +3,16 @@ import Vuex from 'vuex';
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 
 import AdminComponent from '../administration/admin_component.vue';
+import { store as adminStore } from '../administration/admin.store';
+import { store as agreementStore } from '../administration/agreement.store'
 import { store as settingsStore } from '../administration/configurations.store';
 
 Vue.use(Vuex);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
-const store = settingsStore.initialize(Vuex);
+const store = adminStore.initialize(Vuex)
+settingsStore.registerAsModuleFor(store)
+agreementStore.registerAsModuleFor(store)
 
 const app = new Vue({
   components: {

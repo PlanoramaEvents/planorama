@@ -15,6 +15,7 @@ export class Survey extends PlanoModel {
     return {
       id: null,
       name: '',
+      description: null,
       welcome: null,
       thank_you: null,
       submit_string: '',
@@ -45,6 +46,37 @@ export class Survey extends PlanoModel {
       }]
     }
   }
+
+  duplicate() {
+    return new Survey({
+      name: `Copy of ${this.name}`,
+      description: this.description,
+      welcome: this.welcome,
+      thank_you: this.thank_you,
+      submit_string: this.submit_string,
+      use_captcha: this.use_captcha,
+      public: false,
+      mandatory_star: this.mandatory_star,
+      numbered_questions: this.numbered_questions,
+      branded: this.branded,
+      allow_submission_edits: true,
+      anonymous: this.anonymous,
+      survey_pages: this.survey_pages.map(p => ({
+        title: p.title,
+        survey_questions: p.survey_questions.map(q => ({
+          question: q.question,
+          question_type: q.question_type,
+          mandatory: q.mandatory,
+          survey_answers: q.survey_answers.map(a => ({
+            other: a.other,
+            answer: a.answer,
+          }))
+        }))
+      }))
+    })
+  }
+
+
   validation() {
     return {
       name: string.and(required)
@@ -93,9 +125,6 @@ export class Surveys extends PlanoCollection {
 
   defaults() {
     return Object.assign({}, super.defaults(), {
-      sortField: 'updated_at',
-      sortOrder: 'asc',
-      filter: '',
       perPage: 15,
     })
   }

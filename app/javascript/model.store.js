@@ -6,10 +6,26 @@ export const EDIT = 'EDIT';
 export const UNEDIT = 'UNEDIT';
 export const AFTER_SAVE = 'AFTER_SAVE'
 export const UPDATED = 'UPDATED';
+export const DUPLICATE = 'DUPLICATE';
 
-export class PlanoStore {
-  constructor(moduleName, collection, columns, state= {}, mutations={}, actions={}) {
+export class BasePlanoStore {
+  constructor(moduleName, namespaced = false) {
     this.moduleName = moduleName;
+    this.namespaced = namespaced;
+  }
+  initialize(vuex) {
+    return new vuex.Store(this)
+  }
+
+  registerAsModuleFor(store) {
+    console.log('namespaced', this.namespaced)
+    store.registerModule(this.moduleName, this);
+  }
+}
+
+export class PlanoStore extends BasePlanoStore{
+  constructor(moduleName, collection, columns, state= {}, mutations={}, actions={}, namespaced = false) {
+    super(moduleName, namespaced)
     this.state = {
       selected: undefined,
       editable: false,
@@ -65,16 +81,20 @@ export class PlanoStore {
           });
         })
       },
+      [DUPLICATE] ({state}, {item}) {
+        return new Promise((res, rej) => {
+          let copy = item.duplicate();
+          copy.registerCollection(state.collection);
+          copy.save().then(() => {
+            res(copy)
+          }, (error) => {
+            console.log("Error duplicating:", error)
+            rej(error)
+          })
+        });
+      },
       ...actions
     }
-  }
-
-  initialize(vuex) {
-    return new vuex.Store(this)
-  }
-
-  registerModule(store) {
-    store.registerModule(module_name, this);
   }
 
   helpers() {

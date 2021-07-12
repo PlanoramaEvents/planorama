@@ -6,6 +6,11 @@ class AgreementsController < ResourceController
     false
   end
 
+  def latest
+    # TODO sanitize params?
+    return Agreement.find_by(params, order: :updated_at)
+  end
+
   # list agreements that I have not signed
   def unsigned
     authorize model_class, policy_class: policy_class
@@ -83,10 +88,6 @@ class AgreementsController < ResourceController
       title
       terms
       agreement_type
-      created_by_id
-      updated_by_id
-      created_at
-      updated_at
     ]
   end
 end
