@@ -44,92 +44,10 @@
           <b-textarea disabled v-if="!isSelected" value="Long answer text"></b-textarea>
         </div>
       </template>
-      <template v-if="singlechoice">
-        <template v-for="a in question.survey_answers">
-          <div class="col-12" :key="a.id" v-if="!a.other">
-            <div class="row">
-              <div class="col-5 pb-2">
-                <b-form-radio disabled>
-                  <b-form-input v-if="isSelected" type="text" v-model="a.answer" @blur="save" class="mt-n2 mb-2"></b-form-input>
-                  <span v-if="!isSelected">{{a.answer}}</span>
-                </b-form-radio>
-              </div>
-              <div class="col-1 pb-2 text-center" v-if="isSelected">
-                <b-icon-x @click="removeOption(a)" class="h3"></b-icon-x>
-              </div>
-            </div>
-          </div>
-        </template>
-        <template v-if="other">
-          <div class="col-5 pb-2" >
-            <b-form-radio disabled><b-form-group label="Other" label-cols="2" class="mt-n2 mb-2"><b-form-input v-if="isSelected" type="text" disabled></b-form-input></b-form-group></b-form-radio>
-          </div>
-          <div class="col-1 pb-2 text-center" v-if="isSelected">
-            <b-icon-x @click="removeOther" class="h3"></b-icon-x>
-          </div>
-        </template>
-        <div class="col-12 pb-2" v-if="isSelected">
-          <b-button @click="addOption" variant="link" class="ml-3">Add option</b-button>
-          <div class="d-inline-block" v-if="!other" > or <b-button variant="link" @click="addOther">add "Other"</b-button></div>
-        </div>
-      </template>
-      <template v-if="multiplechoice">
-        <div class="col-12">
-          <draggable v-model="question.survey_answers" @end="save(selected)" handle=".qhandle">
-            <template v-for="a in question.survey_answers">
-              <div class="row survey-answer" :key="a.id" v-if="!a.other">
-                <div class="col-5 pb-2">
-                  <div class="float-left qhandle" v-if="isSelected"><b-icon-grip-vertical></b-icon-grip-vertical></div>
-                  <b-form-checkbox disabled class="ml-3">
-                    <b-form-input v-if="isSelected" type="text" v-model="a.answer" @blur="save" class="mt-n2 mb-2"></b-form-input>
-                    <span v-if="!isSelected">{{a.answer}}</span>
-                  </b-form-checkbox>
-                </div>
-                <div class="col-1 pb-2 text-center" v-if="isSelected">
-                  <b-icon-x @click="removeOption(a)" class="h3"></b-icon-x>
-                </div>
-              </div>
-            </template>
-          </draggable>
-          <template v-if="other">
-            <div class="row">
-              <div class="col-5 pb-2">
-                <b-form-checkbox disabled class="ml-3"><b-form-group label="Other" label-cols="2" class="mt-n2 mb-2"><b-form-input v-if="isSelected" type="text" disabled></b-form-input></b-form-group></b-form-checkbox>
-              </div>
-              <div class="col-1 pb-2 text-center" v-if="isSelected">
-                <b-icon-x @click="removeOther" class="h3"></b-icon-x>
-              </div>
-            </div>
-          </template>
-          <div class="col-12 pb-2" v-if="isSelected">
-            <b-button @click="addOption" variant="link">Add option</b-button>
-            <div class="d-inline-block" v-if="!other" > or <b-button variant="link" @click="addOther">add "Other"</b-button></div>
-          </div>
-        </div>
-      </template>
+      <options-question :question="question" v-if="singlechoice || multiplechoice || dropdown"></options-question>
       <template v-if="hr">
         <div class="col-12">
           <hr />
-        </div>
-      </template>
-      <template v-if="dropdown">
-        <div class="col-12">
-          <ol>
-            <li class="pb-2" v-for="a in question.survey_answers" :key="a.id">
-              <div class="row">
-                <div class="col-11">
-                  <b-form-input v-if="isSelected" v-model="a.answer" type="text" @blur="save"></b-form-input>
-                  <span v-if="!isSelected">{{a.answer}}</span>
-                </div>
-                <div class="col-1" v-if="isSelected">
-                  <b-icon-x @click="removeOption(a)"></b-icon-x>
-                </div>
-              </div>
-            </li>
-            <li class="pb-2" v-if="isSelected">
-              <b-button @click="addOption" variant="link">Add Option</b-button>
-            </li>
-          </ol>
         </div>
       </template>
       <template v-if="address && !isSelected">
@@ -263,12 +181,14 @@ import { SAVE } from '../model.store';
 import { NEW_QUESTION, SELECT_QUESTION, UNSELECT_QUESTION } from './survey.store';
 import draggable from 'vuedraggable';
 import surveyMixin from './survey-mixin';
+import OptionsQuestion from './options-question.vue';
 
 
 export default {
   name: "EditSurveyQuestion",
   components: {
     draggable,
+    OptionsQuestion,
   },
   data: () => ({
     questionTypes: [
@@ -376,28 +296,6 @@ export default {
     },
     formGroupId(string) {
       return `${this.formId(string)}-group`
-    },
-    addOption() {
-      if (!this.question.survey_answers) {
-        this.question.survey_answers = []
-      }
-      this.question.survey_answers.push({answer: 'Option'})
-      this.save()
-    },
-    removeOption(answer) {
-      answer._destroy = true;
-      this.save()
-    },
-    addOther() {
-      if (!this.question.survey_answers) {
-        this.question.survey_answers = []
-      }
-      this.question.survey_answers.push({answer: 'Other', other: true})
-      this.save()
-    },
-    removeOther() {
-      this.question.survey_answers.filter(a => a.other)[0]._destroy = true;
-      this.save()
     },
     destroyQuestion() {
       this.question._destroy = true
