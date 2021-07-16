@@ -18,7 +18,7 @@
 </template>
 
 <script>
-// import TwitterLogo from '../images/twitter.png'
+import TwitterLogo from '../images/twitter.png'
 import BaseSocial from './base-social';
 
 export default {
@@ -36,7 +36,7 @@ export default {
     }
   },
   data: () => ({
-    logo: imagePath('twitter.png') //TwitterLogo
+    logo: TwitterLogo
   }),
 }
 </script>
