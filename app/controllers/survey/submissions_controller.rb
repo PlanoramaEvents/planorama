@@ -34,8 +34,9 @@ class Survey::SubmissionsController < ResourceController
   def delete_all
     Survey.transaction do
       survey = Survey.find params[:survey_id]
+      authorize survey, policy_class: policy_class
 
-      survey.survey_submissions.delete_all
+      survey.survey_submissions.destroy_all
 
       render status: :ok, json: {}.to_json, content_type: 'application/json'
     end

@@ -4,6 +4,10 @@ class SubmissionsPolicy < PlannerPolicy
     return true #if @person
   end
 
+  def delete_all?
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
   def update?
     # Only makes sense for updates to happen by planners or submitters
     # so anon surveys are excluded

@@ -41,6 +41,8 @@ RUN bundle install
 RUN yarn install --frozen-lockfile
 # The precompile will also deal with the webpacker assets
 RUN bundle exec rake assets:precompile
+# The precompile the webpacker assets
+RUN bundle exec rake webpacker:compile
 
 # We expose the port
 EXPOSE 3000
