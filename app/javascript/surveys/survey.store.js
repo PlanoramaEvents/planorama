@@ -37,7 +37,7 @@ export const store = new PlanoStore('surveys', new Surveys(), survey_columns, {
     state.selected_page = undefined
   },
   [SELECT_QUESTION] (state, question) {
-    if (question._destroy) {
+    if (!question || question._destroy) {
       state.selected_question = undefined;
     } else {
       state.selected_question = question;
@@ -87,6 +87,6 @@ export const store = new PlanoStore('surveys', new Surveys(), survey_columns, {
   },
   [CLEAR_SUBMISSIONS] ({commit}, {item}) {
     commit(UNSELECT_SUBMISSION);
-    return http.delete(`surveys/${item.id}/submissions`)
+    return http.delete(`/surveys/${item.id}/submissions`)
   }
 });

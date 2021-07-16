@@ -14,7 +14,7 @@ const surveyMixin = {
     save(event, success_text = SURVEY_SAVE_SUCCESS) {
       this.$store.dispatch(SAVE, {item: this.survey})
         .then(() => this.success_toast(success_text))
-        .catch((error) => this.error_toast(error))
+        .catch((error) => this.error_toast(error.message))
     },
   }
 }

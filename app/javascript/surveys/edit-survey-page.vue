@@ -11,6 +11,12 @@
       >
         <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="save"></b-form-input>
       </b-form-group>
+      <div class="row" v-if="isSelected && i !== 0">
+        <div class="col-12 d-flex justify-content-end">
+          <b-button variant="info" title="Merge page up" class="mr-2" v-b-modal.mergePageUp><b-icon-arrow-up-circle-fill></b-icon-arrow-up-circle-fill></b-button>
+          <b-button variant="info" title="Delete page" v-b-modal.deletePage><b-icon-trash></b-icon-trash></b-button>
+        </div>
+      </div>
       <h3 v-if="!isSelected">{{page.title}}</h3>
     </div>
     <draggable v-model="page.survey_questions" @end="save" handle=".handle">
@@ -20,16 +26,28 @@
       After section {{i + 1}}
       <b-select class="d-inline ml-1 next-page" v-model="page.next_page_id" :options="nextPageOptions" @change="save"></b-select>
     </div>
+    <b-modal v-if="isSelected" id="mergePageUp" @ok="mergePage" ok-title="Yes" cancel-variant="link">
+      <p>{{SURVEY_CONFIRM_MERGE_PAGE}}</p>
+    </b-modal>
+    <b-modal v-if="isSelected" id="deletePage" @ok="destroyPage" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
+      <p>{{SURVEY_CONFIRM_DELETE_PAGE_1}}</p>
+      <p>{{SURVEY_CONFIRM_DELETE_PAGE_2}}</p>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import EditSurveyQuestion from './edit-survey-question.vue';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { SELECT_PAGE, UNSELECT_QUESTION } from './survey.store';
+import { SELECT_PAGE, UNSELECT_PAGE, UNSELECT_QUESTION } from './survey.store';
 import { SAVE } from '../model.store';
 import draggable from 'vuedraggable';
 import surveyMixin from './survey-mixin';
+import { 
+  SURVEY_CONFIRM_DELETE_PAGE_1, 
+  SURVEY_CONFIRM_DELETE_PAGE_2,
+  SURVEY_CONFIRM_MERGE_PAGE,
+ } from '../constants/strings';
 
 export default {
   name: "EditSurveyPage",
@@ -52,6 +70,11 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    SURVEY_CONFIRM_DELETE_PAGE_1,
+    SURVEY_CONFIRM_DELETE_PAGE_2,
+    SURVEY_CONFIRM_MERGE_PAGE
+  }),
   computed: {
     ...mapState(['selected_page', 'selected_question']),
     isSelected() {
@@ -72,8 +95,23 @@ export default {
   },
   methods: {
     ...mapMutations({
-      selectPage: SELECT_PAGE
-    })
+      selectPage: SELECT_PAGE,
+      unselectPage: UNSELECT_PAGE,
+    }),
+    mergePage() {
+      let prev_page = this.survey.survey_pages[this.i - 1];
+      this.survey.moveQuestions(this.selected_page.survey_questions.map(q => q.id), prev_page.id)
+      this.destroyPage()
+    },
+    destroyPage() {
+      this.selected_page._destroy = true;
+      for (let question of this.selected_page.survey_questions) {
+        question._destroy = true;
+      }
+      console.log(this.selected_page);
+      this.unselectPage();
+      this.save();
+    },
   }
 }
 </script>

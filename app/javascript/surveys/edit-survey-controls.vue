@@ -1,8 +1,8 @@
 <template>
   <div class='position-absolute survey-controls m-3 p-3 border'>
-    <b-button v-b-tooltip.left title="Add a Question" variant="info" class="mb-2 d-block" @click="newQuestion()"><b-icon-plus-circle></b-icon-plus-circle></b-button>
+    <b-button v-b-tooltip.left title="Add a Question" variant="info" class="mb-2 d-block" @click="newQuestion()" :disabled="!selected_question && !selected_page"><b-icon-plus-circle></b-icon-plus-circle></b-button>
     <div v-b-tooltip.left title="Import a Question"><b-button disabled variant="info" class="mb-2 d-block"><b-icon-box-arrow-in-right></b-icon-box-arrow-in-right></b-button></div>
-    <b-button v-b-tooltip.left title="Add a Page" variant="info" class="mb-2 d-block" @click="newPage"><b-icon-hdd-stack></b-icon-hdd-stack></b-button>
+    <b-button v-b-tooltip.left title="Add a Page" variant="info" class="mb-2 d-block" @click="newPage" :disabled="!selected_question && !selected_page"><b-icon-hdd-stack></b-icon-hdd-stack></b-button>
     <b-button v-b-tooltip.left title="Add a Horizontal Rule" variant="info" class="mb-2 d-block" @click="newQuestion('hr')"><b-icon-hr></b-icon-hr></b-button>
     <b-button v-b-tooltip.left title="Add a Text Block" variant="info" class="d-block" @click="newQuestion('textonly')"><b-icon-fonts></b-icon-fonts></b-button>
   </div>
@@ -36,11 +36,28 @@ export default {
       this.newQuestionAction({question, insertAt});
     },
     newPage() {
+      let extracted_question_ids=[]
+      if (!this.selected_question) {
+        // insert a new page with all of the questions in the current page
+        extracted_question_ids = this.selected_page.survey_questions.map(q => q.id);
+      } else {
+        // insert a new page with the questions below the currently selected question
+        let extract_questions = false;
+        for(let question of this.selected_page.survey_questions) {
+          if (extract_questions) {
+            extracted_question_ids.push(question.id)
+          } else {
+            if (question.id == this.selected_question.id) {
+              extract_questions = true;
+            }
+          }
+        }
+      }
       let insertAt = this.selected.survey_pages.length
       if (this.selected_page) {
         insertAt = this.selected.survey_pages.findIndex(p => p.id === this.selected_page.id) + 1
       }
-      const page = {survey_questions: [], title: 'New Page'}
+      const page = {survey_questions: this.selected.extractQuestions(extracted_question_ids), title: 'New Page'}
       this.newPageAction({page, insertAt});
     },
   }

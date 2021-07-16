@@ -299,7 +299,6 @@ export default {
     },
     destroyQuestion() {
       this.question._destroy = true
-      console.log(this.question)
       this.save()
       this.unselectQuestion()
     },

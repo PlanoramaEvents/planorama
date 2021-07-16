@@ -74,6 +74,36 @@ export class Survey extends PlanoModel {
         }))
       }))
     })
+
+  }
+
+  surveyQuestions() {
+    return this.survey_pages.reduce((p,c) => [...p, ...c.survey_questions], [])
+  }
+
+  extractQuestions(question_ids) {
+    let old_questions = this.surveyQuestions().filter(q => question_ids.includes(q.id))
+    let extracted_questions = old_questions.map(q => ({
+      question: q.question,
+      question_type: q.question_type,
+      mandatory: q.mandatory,
+      survey_answers: q.survey_answers.map(a => ({
+        other: a.other,
+        answer: a.answer,
+      }))
+    }))
+    for (let question of old_questions) {
+      question._destroy = true;
+    }
+    return extracted_questions
+  }
+
+  moveQuestions(question_ids, new_page_id) {
+    let new_page = this.survey_pages.find(p => p.id == new_page_id)
+    if(!new_page.survey_questions) {
+      new_page.survey_questions = []
+    }
+    new_page.survey_questions.push(...this.extractQuestions(question_ids));
   }
 
 
