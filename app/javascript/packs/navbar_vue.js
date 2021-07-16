@@ -1,11 +1,18 @@
 /* eslint no-console: 0 */
 import Vue from 'vue'
+import Vuex from 'vuex';
 import { NavbarPlugin, BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import { CustomIconsPlugin } from '../icons';
 
 import HelpLink from '../administration/help_link.vue';
 import TermsOfUseLink from '../administration/terms_of_use_link.vue';
 import PrivacyPolicyLink from '../administration/privacy_policy_link.vue';
+import {store as adminStore } from '../administration/admin.store';
+import {store as configurationStore } from '../administration/configurations.store';
+
+Vue.use(Vuex);
+const store = adminStore.initialize(Vuex)
+configurationStore.registerAsModuleFor(store);
 
 Vue.use(NavbarPlugin)
 Vue.use(BootstrapVue)
@@ -23,7 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     components: {
       HelpLink,
-    }
+    },
+    store
   })
   const app2 = new Vue({
     el: '#side-navbar',
