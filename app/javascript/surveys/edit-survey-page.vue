@@ -13,8 +13,8 @@
       </b-form-group>
       <div class="row" v-if="isSelected && i !== 0">
         <div class="col-12 d-flex justify-content-end">
-          <b-button variant="info" title="Merge page up" class="mr-2" v-b-modal.mergePageUp><b-icon-arrow-up-circle-fill></b-icon-arrow-up-circle-fill></b-button>
-          <b-button variant="info" title="Delete page" v-b-modal.deletePage><b-icon-trash></b-icon-trash></b-button>
+          <b-button variant="info" title="Merge page up" class="mr-2" @click="mergePage"><b-icon-arrow-up-circle-fill></b-icon-arrow-up-circle-fill></b-button>
+          <b-button variant="info" title="Delete page" v-b-modal="deleteModalId"><b-icon-trash></b-icon-trash></b-button>
         </div>
       </div>
       <h3 v-if="!isSelected">{{page.title}}</h3>
@@ -26,10 +26,7 @@
       After section {{i + 1}}
       <b-select class="d-inline ml-1 next-page" v-model="page.next_page_id" :options="nextPageOptions" @change="save"></b-select>
     </div>
-    <b-modal v-if="isSelected" id="mergePageUp" @ok="mergePage" ok-title="Yes" cancel-variant="link">
-      <p>{{SURVEY_CONFIRM_MERGE_PAGE}}</p>
-    </b-modal>
-    <b-modal v-if="isSelected" id="deletePage" @ok="destroyPage" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
+    <b-modal v-if="isSelected" :id="deleteModalId" @ok="destroyPage" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_1}}</p>
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_2}}</p>
     </b-modal>
@@ -46,7 +43,6 @@ import surveyMixin from './survey-mixin';
 import { 
   SURVEY_CONFIRM_DELETE_PAGE_1, 
   SURVEY_CONFIRM_DELETE_PAGE_2,
-  SURVEY_CONFIRM_MERGE_PAGE,
  } from '../constants/strings';
 
 export default {
@@ -73,7 +69,6 @@ export default {
   data: () => ({
     SURVEY_CONFIRM_DELETE_PAGE_1,
     SURVEY_CONFIRM_DELETE_PAGE_2,
-    SURVEY_CONFIRM_MERGE_PAGE
   }),
   computed: {
     ...mapState(['selected_page', 'selected_question']),
@@ -91,6 +86,9 @@ export default {
         })),
         {value: null, text: 'Submit form'}
       ]
+    },
+    deleteModalId() {
+      return `deletePage${this.selected_page ? this.selected_page.id : 0}`
     }
   },
   methods: {
@@ -99,18 +97,21 @@ export default {
       unselectPage: UNSELECT_PAGE,
     }),
     mergePage() {
+      // todo move this to vuex
       let prev_page = this.survey.survey_pages[this.i - 1];
       this.survey.moveQuestions(this.selected_page.survey_questions.map(q => q.id), prev_page.id)
       this.destroyPage()
     },
     destroyPage() {
+      // todo move this to vuex
       this.selected_page._destroy = true;
       for (let question of this.selected_page.survey_questions) {
         question._destroy = true;
       }
       console.log(this.selected_page);
-      this.unselectPage();
       this.save();
+      this.unselectPage();
+
     },
   }
 }

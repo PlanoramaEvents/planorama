@@ -35,7 +35,7 @@
             <b-dd-item disabled>Export</b-dd-item>
             <b-dd-item disabled>Make Template</b-dd-item>
             <b-dd-item disabled>Freeze Survey Edits</b-dd-item>
-            <b-dd-item @click="destroy">Delete</b-dd-item>
+            <b-dd-item v-b-modal.confirmDelete>Delete</b-dd-item>
           </b-dropdown>
         </div>
         <b-tabs content-class="mt-3" nav-class="border-0" nav-wrapper-class="border-bottom">
@@ -48,6 +48,9 @@
     </sidebar-vuex>
     <b-modal id="confirmClearResponses" @ok="clearResponses" ok-title="Yes" cancel-variant="link">
       <p>{{SURVEY_RESULTS_CLEAR_CONFIRM}}</p>
+    </b-modal>
+    <b-modal id="confirmDelete" @ok="destroy" ok-title="Yes" cancel-variant="link" title="Delete survey?">
+      <p>{{SURVEY_CONFIRM_DELETE}}</p>
     </b-modal>
   </div>
 </template>
@@ -66,6 +69,7 @@ import {
   SURVEY_RESULTS_CLEAR_SUCCESS,
   SURVEY_RESULTS_FREEZE_SUCCESS,
   SURVEY_RESULTS_UNFREEZE_SUCCESS,
+  SURVEY_CONFIRM_DELETE,
 } from '../constants/strings';
 
 export default {
@@ -78,6 +82,7 @@ export default {
   mixins: [surveyMixin],
   data: () => ({
     SURVEY_RESULTS_CLEAR_CONFIRM,
+    SURVEY_CONFIRM_DELETE
   }),
   computed: {
     questions() {

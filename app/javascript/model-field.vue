@@ -55,6 +55,10 @@ export default {
     idPrefix: {
       type: String,
       default: 'id'
+    },
+    stateless: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -64,7 +68,10 @@ export default {
     groupId() {
       return `${this.inputId}-group`;
     },
-    ...mapState(['editable'])
+    editable() {
+      if(this.stateless) return true;
+      return this.$store.state.editable;
+    },
   }
 }
 </script>

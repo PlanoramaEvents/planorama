@@ -3,7 +3,7 @@
     <h1>Admin stuff goes here.  <b-icon-minecart-loaded></b-icon-minecart-loaded></h1>
     <div class="accordion" role="tablist">
       <admin-accordion id="add-user-accordion" title="Add User">
-        <b-card-text>Someday you will be able to add a user here</b-card-text>
+        <add-user></add-user>
       </admin-accordion>
       <admin-accordion id="import-users-accordion" title="Import Users">
         <b-card-text>Import all the users!!!1!</b-card-text>
@@ -45,12 +45,14 @@ import AdminAccordion from './admin_accordion.vue'
 import { mapState } from 'vuex';
 import { SAVE, UPDATED } from '../model.store';
 import { Configuration } from './configurations';
+import AddUser from './add-user.vue';
 
 const ADMIN_CONFIGS = (x) => ['event_email', 'event_phone'].includes(x)
 
 export default {
   components: { 
-    AdminAccordion
+    AdminAccordion,
+    AddUser,
   },
   name: 'AdminComponent',
   data: () => ({

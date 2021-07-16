@@ -20,7 +20,6 @@ module.exports = {
     SURVEY_CONFIRM_DELETE: "DELETE OR DEATH!!! (This needs copy)",
     SURVEY_CONFIRM_DELETE_PAGE_1: "Deleting a page also deletes the questions and response options it contains.",
     SURVEY_CONFIRM_DELETE_PAGE_2: "To preserve the questions, choose \"Merge page up\" from the page options.",
-    SURVEY_CONFIRM_MERGE_PAGE: "You will lose me forever, but my questions will remain... (This needs copy)",
     SURVEY_SAVE_SUCCESS_PUBLISH: "Survey successfully published.",
     SURVEY_SAVE_SUCCESS_CLOSE: "Survey successfully closed.",
     SURVEY_SAVE_SUCCESS_DELETE: "Survey successfully deleted.",
@@ -29,4 +28,5 @@ module.exports = {
     SURVEY_RESULTS_FREEZE_SUCCESS: "Response edits successfully frozen.",
     SURVEY_RESULTS_UNFREEZE_SUCCESS: "Response edits successfully unfrozen.",
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
+    ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added.`,
 }
