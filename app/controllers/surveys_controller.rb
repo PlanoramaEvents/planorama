@@ -85,6 +85,7 @@ class SurveysController < ResourceController
           private
           regex
           fuuid
+          branching
           _destroy
         ] << [
           survey_answers_attributes: %i[
@@ -96,6 +97,7 @@ class SurveysController < ResourceController
             fuuid
             _destroy
             other
+            next_page_id
           ]
         ]
       ]

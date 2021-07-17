@@ -1690,7 +1690,8 @@ CREATE TABLE public.survey_questions (
     regex character varying,
     survey_page_id bigint,
     fuuid character varying,
-    randomize boolean DEFAULT false
+    randomize boolean DEFAULT false,
+    branching boolean DEFAULT false
 );
 
 
@@ -3254,6 +3255,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210704203704'),
 ('20210707121120'),
 ('20210711150608'),
-('20210712134642');
+('20210712134642'),
+('20210716142413');
 
 

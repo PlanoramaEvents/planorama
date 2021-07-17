@@ -24,7 +24,7 @@
     </draggable>
     <div v-if="i + 1 < n" class="mt-3">
       After section {{i + 1}}
-      <b-select class="d-inline ml-1 next-page" v-model="page.next_page_id" :options="nextPageOptions" @change="save"></b-select>
+      <next-page-picker class="ml-1" v-model="page.next_page_id"></next-page-picker>
     </div>
     <b-modal v-if="isSelected" :id="deleteModalId" @ok="destroyPage" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_1}}</p>
@@ -40,6 +40,8 @@ import { SELECT_PAGE, UNSELECT_PAGE, UNSELECT_QUESTION } from './survey.store';
 import { SAVE } from '../model.store';
 import draggable from 'vuedraggable';
 import surveyMixin from './survey-mixin';
+import NextPagePicker from './next-page-picker';
+
 import { 
   SURVEY_CONFIRM_DELETE_PAGE_1, 
   SURVEY_CONFIRM_DELETE_PAGE_2,
@@ -50,6 +52,7 @@ export default {
   components: { 
     EditSurveyQuestion,
     draggable, 
+    NextPagePicker,
   },
   mixins: [surveyMixin],
   props: {
@@ -77,15 +80,6 @@ export default {
     },
     onlyPage() {
       return this.n === 1;
-    },
-    nextPageOptions() {
-      return [
-        {value: this.survey.survey_pages[this.i + 1], text: 'Continue to next page'},
-        ...this.survey.survey_pages.map((p, i) => ({
-          value: p.id, text: `Go to section ${i + 1} (${p.title})`
-        })),
-        {value: null, text: 'Submit form'}
-      ]
     },
     deleteModalId() {
       return `deletePage${this.selected_page ? this.selected_page.id : 0}`

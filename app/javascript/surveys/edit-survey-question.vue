@@ -166,7 +166,11 @@
       </template>
     </div>
     <div class="row" v-if="isSelected">
-      <div class="col-12 d-flex justify-content-end">
+      <div class="col-6">
+        <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="save">Required</b-form-checkbox>
+        <b-form-checkbox inline v-if="singlechoice" :disabled="singlePage" v-model="question.branching" @change="save">Branching</b-form-checkbox>
+      </div>
+      <div class="col-6 d-flex justify-content-end">
         <b-button variant="info" class="mr-2" @click="duplicateQuestion"><b-icon-files></b-icon-files></b-button>
         <b-button variant="info" @click="destroyQuestion"><b-icon-trash></b-icon-trash></b-button>
       </div>
@@ -182,6 +186,8 @@ import { NEW_QUESTION, SELECT_QUESTION, UNSELECT_QUESTION } from './survey.store
 import draggable from 'vuedraggable';
 import surveyMixin from './survey-mixin';
 import OptionsQuestion from './options-question.vue';
+import pageMixin from './page-mixin';
+import questionMixin from './question.mixin';
 
 
 export default {
@@ -208,42 +214,13 @@ export default {
       required: true
     },
   },
-  mixins: [surveyMixin],
+  mixins: [
+    surveyMixin,
+    pageMixin,
+    questionMixin,
+  ],
   computed: {
     ...mapState(['selected_question', 'selected_page']),
-    textfield() {
-      return this.question.question_type === "textfield";
-    },
-    textbox() {
-      return this.question.question_type === "textbox";
-    },
-    singlechoice() {
-      return this.question.question_type === "singlechoice";
-    },
-    multiplechoice() {
-      return this.question.question_type === "multiplechoice";
-    },
-    hr() {
-      return this.question.question_type === "hr";
-    },
-    dropdown() {
-      return this.question.question_type === "dropdown";
-    },
-    address() {
-      return this.question.question_type === "address";
-    },
-    email() {
-      return this.question.question_type === "email";
-    },
-    socialmedia() {
-      return this.question.question_type === "socialmedia";
-    },
-    textonly() {
-      return this.question.question_type === "textonly";
-    },
-    other() {
-      return this.question.survey_answers ? this.question.survey_answers.filter(a => a.other).length > 0 : false;
-    },
     answerIdMap() {
       if(!this.question.survey_answers) {
         return {}
@@ -275,12 +252,6 @@ export default {
         {value: "instagram", text: "Instagram"},
         {value: "website", text: "Website"},
       ]
-    },
-    formatting() {
-      return this.textonly || this.hr;
-    },
-    isSelected() {
-      return this.selected_question && this.question.id === this.selected_question.id;
     },
   },
   methods: {

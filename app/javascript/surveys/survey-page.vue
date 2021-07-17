@@ -8,19 +8,20 @@
         :key="q.id"
         :question="q"
         answerable
+        @nextPage="setNextPageId"
       ></survey-question>
       <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
       <div class="d-flex justify-content-end mt-2">
-        <b-button variant="link" class="mr-1" v-if="survey && survey.survey_pages[0].id != page.id" @click="prev">Previous Page</b-button>
+        <b-button variant="link" class="mr-1" v-if="!firstPage" @click="prev">Previous Page</b-button>
         <div v-b-tooltip="{disabled: !submit_disabled}" :title="submit_disabled_tooltip">
           <b-button
             variant="primary"
-            v-if="!next_page && !submitted"
+            v-if="(nextPageId === -1 || !nextPageId && lastPage) && !submitted"
             @click="submit"
             :disabled="submit_disabled"
           >{{survey.submit_string || 'Submit'}}</b-button>
         </div>
-        <b-button variant="primary" v-if="next_page" @click="next">Next Page</b-button>
+        <b-button variant="primary" v-if="nextPageId !== -1 && !lastPage" @click="next" tabindex="1">Next Page</b-button>
       </div>
     </div>
   </div>
@@ -32,16 +33,19 @@ import {mapState, mapMutations, mapActions} from 'vuex';
 import { UNSELECT, SAVE, SELECT } from '../model.store';
 import { NEW_SUBMISSION, SELECT_PAGE, SUBMIT } from './survey.store';
 import { Survey } from './survey';
+import pageMixin from './page-mixin';
 
 export default {
   name: "SurveyPage",
   props: ['survey_id', 'id', 'preview'],
   data: () =>  ({
-    submitted: false
+    submitted: false,
+    nextPageId: null
   }),
   components: {
     SurveyQuestion,
   },
+  mixins: [pageMixin],
   computed: {
     ...mapState({
       page: 'selected_page',
@@ -52,7 +56,7 @@ export default {
       return this.page && this.page.survey_questions || [];
     },
     next_page() {
-      return this.page && this.page.next_page_id && `/${this.survey_id}/page/${this.page.next_page_id}${this.preview ? '/preview' : ''}`
+      return `/${this.survey_id}/page/${this.nextPageId}${this.preview ? '/preview' : ''}`
     },
     submit_disabled() {
       return this.preview || !(this.survey && this.survey.public);
@@ -74,6 +78,7 @@ export default {
       if(!this.submit_disabled) {
         this.$store.dispatch(SUBMIT).then(() => {
           this.submitted = true;
+          this.$router.push(`/${this.survey.id}/thankyou`);
         })
       }
     },
@@ -82,10 +87,17 @@ export default {
     },
     prev() {
       this.$router.go(-1);
+    },
+    setNextPageId(id) {
+      if(!id) {
+        id = this.getNextPage(this.page.id)?.id;
+      }
+      this.nextPageId = id;
     }
   },
   beforeRouteUpdate(to, from, next) {
     this.selectPage(this.survey.survey_pages.find(p => p.id == to.params.id))
+    this.setNextPageId(this.selected_page.next_page_id);
     next()
   },
   mounted() {
@@ -97,10 +109,12 @@ export default {
         console.log('trying to select page:', this.id)
         this.selectPage(model.survey_pages.find(p => p.id == this.id));
         this.newSubmission();
+        this.setNextPageId(this.selected_page.next_page_id);
       });
     }
     else if (!this.page && this.id) {
       this.selectPage(this.survey.survey_pages.find(p => p.id == this.id))
+      this.setNextPageId(this.selected_page.next_page_id);
     }
   }
 }

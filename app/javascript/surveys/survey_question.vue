@@ -1,7 +1,7 @@
 <template>
   <div class="survey-question mt-3 pl-1">
     <b-form-group
-      v-if="!isFormatting && !address && !socialmedia"
+      v-if="!formatting && !address && !socialmedia"
     >
       <template #label>
         <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
@@ -13,31 +13,37 @@
           v-model="response.response.text"
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
+          :required="question.mandatory"
         >{{response.response.text}}</b-form-textarea>
         <b-form-input
           class="w-50"
           v-if="textfield"
           v-model="response.response.text"
           :aria-describedBy="ariaDescribedBy"
-          :disabled="!answerable"/>
+          :disabled="!answerable"
+          :required="question.mandatory" />
         <b-form-radio-group
           class="w-50"
           stacked
           v-if="singlechoice"
           v-model="radioButtonResponse"
           :aria-describedBy="ariaDescribedBy"
+          :required="question.mandatory"
         >
           <b-form-radio
             v-for="choice in choices.filter(a => !a.other)"
             :key="choice.id"
-            :value="choice.answer"
+            :value="choiceValue(choice)"
             :disabled="!answerable"
+            @input="changeNextPage($event, choice)"
           >{{choice.answer}}</b-form-radio>
           <b-form-radio
             class="mt-2"
             v-if="other"
-            value="Other"
+            :value="choiceValue(other)"
             v-model="otherChecked"
+            :disabled="!answerable"
+            @input="changeNextPage($event, other)"
           >
             <b-form-group
               label="Other"
@@ -61,17 +67,19 @@
           v-if="multiplechoice"
           v-model="response.response.answers"
           :aria-describedBy="ariaDescribedBy"
+          :required="question.mandatory"
         >
           <b-form-checkbox
             v-for="choice in choices.filter(a => !a.other)"
             :key="choice.id"
-            :value="choice.answer"
+            :value="choiceValue(choice)"
             :disabled="!answerable"
           >{{choice.answer}}</b-form-checkbox>
           <b-form-checkbox
             class="mt-2"
             v-if="other"
-            value="Other"
+            :value="choiceValue(other)"
+            :disabled="!answerable"
             v-model="otherChecked"
           >
             <b-form-group
@@ -94,6 +102,7 @@
           class="w-50"
           v-if="dropdown"
           v-model="response.response.text"
+          :required="mandatory"
           :aria-describedby="ariaDescribedBy"
         >
           <b-form-select-option
@@ -107,6 +116,7 @@
           class="w-50"
           v-if="email"
           type="email"
+          :required="mandatory"
           v-model="response.response.text"
           :disabled="!answerable"
           :aria-describedBy="ariaDescribedBy"
@@ -124,6 +134,7 @@
           :id="formGroupId('address-1')"
           :label-for="formId('address-1')"
           label="Address 1"
+          :required="question.mandatory"
         >
           <b-form-input 
             :disabled="!answerable" 
@@ -289,6 +300,7 @@
 import {mapState} from 'vuex'
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
+import questionMixin from './question.mixin';
 
 export default {
   name: "SurveyQuestion",
@@ -296,34 +308,30 @@ export default {
     MandatoryStar,
     SimpleSocial,
   },
+  mixins: [questionMixin],
   props: {
     question: {
       type: Object,
       required: true
     },
-    response: {
-      type: Object,
-      default() {
-        return {
-          survey_question_id: this.question.id,
-          response: {text: '', answers: [], address:{
-            street: null, street2: null, city: null, 
-            state: null, zip: null, country: null
-          }, socialmedia: {
-            twitter: null, facebook: null, linkedin: null,
-            twitch: null, youtube: null, instagram: null,
-            tiktok: null, other: null, website: null
-          }}
-        }
-      }
-    }, 
     answerable: {
       type: Boolean,
       default: false
     }
   },
   data: () => ({
-    otherChecked: false
+    otherChecked: false,
+    response: {
+      survey_question_id: null,
+      response: {text: '', answers: [], address:{
+        street: null, street2: null, city: null, 
+        state: null, zip: null, country: null
+      }, socialmedia: {
+        twitter: null, facebook: null, linkedin: null,
+        twitch: null, youtube: null, instagram: null,
+        tiktok: null, other: null, website: null
+      }}
+    }
   }),
   computed: {
     ...mapState({
@@ -331,46 +339,12 @@ export default {
       survey: 'selected'
     }),
     questionText() {
-      return `${this.question.sort_order + 1}. ${this.question.question}`
-    },
-    textfield() {
-      return this.question.question_type === "textfield";
-    },
-    textbox() {
-      return this.question.question_type === "textbox";
-    },
-    singlechoice() {
-      return this.question.question_type === "singlechoice";
-    },
-    multiplechoice() {
-      return this.question.question_type === "multiplechoice";
-    },
-    hr() {
-      return this.question.question_type === "hr";
-    },
-    dropdown() {
-      return this.question.question_type === "dropdown";
-    },
-    address() {
-      return this.question.question_type === "address";
-    },
-    email() {
-      return this.question.question_type === "email";
-    },
-    socialmedia() {
-      return this.question.question_type === "socialmedia";
-    },
-    textonly() {
-      return this.question.question_type === "textonly";
-    },
-    other() {
-      return  this.question.survey_answers ? this.question.survey_answers.filter(a => a.other).length > 0 : false;
+      return this.question.question;
+      // todo implement question numbering
+      // return `${this.question.sort_order + 1}. ${this.question.question}`
     },
     choices() {
       return this.question.survey_answers;
-    },
-    isFormatting() {
-      return this.textonly || this.hr;
     },
     radioButtonResponse: {
       get() {
@@ -392,15 +366,25 @@ export default {
       if (!this.submission.survey_responses) {
         this.submission.survey_responses = []
       }
-      let existing_response = this.submission.survey_responses.find(r => r.survey_question_id == this.response.survey_question_id)
+      let existing_response = this.submission.survey_responses.find(r => r.survey_question_id == this.question.id)
       if (existing_response) {
         this.response = existing_response
       } else {
         this.submission.survey_responses.push(this.response)
       }
+    },
+    choiceValue(choice) {
+      return `${choice.id}-${choice.answer}`
+    },
+    changeNextPage(event, choice) {
+      if (this.question.branching && this.choiceValue(choice) === event) {
+        console.log("emitting", choice.next_page_id)
+        this.$emit('nextPage', choice.next_page_id)
+      }
     }
   },
   mounted() {
+    this.response.survey_question_id = this.question.id;
     if (this.submission) {
       this.linkResponse();
     }

@@ -27,6 +27,7 @@ module.exports = {
     SURVEY_RESULTS_CLEAR_CONFIRM: "This will permanently delete all responses to this survey. Are you sure you wish to clear all responses?",
     SURVEY_RESULTS_FREEZE_SUCCESS: "Response edits successfully frozen.",
     SURVEY_RESULTS_UNFREEZE_SUCCESS: "Response edits successfully unfrozen.",
+    SURVEY_DEFAULT_THANK_YOU: "Gail really needs to not be in charge of writing any copy!",
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added.`,
 }
