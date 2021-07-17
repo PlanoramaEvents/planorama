@@ -52,7 +52,7 @@ export class LoginModel extends PlanoModel {
   }
   routes() {
     return {
-      save: "/people/sign_in.json",
+      save: "/auth/sign_in.json",
     };
   }
 }

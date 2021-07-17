@@ -2,6 +2,7 @@ class ApplicationPolicy
   attr_reader :person, :record
 
   def initialize(person, record)
+    # check
     @person = person
     @record = record
   end

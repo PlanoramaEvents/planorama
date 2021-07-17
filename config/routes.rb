@@ -1,11 +1,12 @@
 # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-  devise_for :people, controllers: {
-    sessions: 'people/sessions',
-    passwords: 'people/passwords'
-  }
-
   get '/people/sessions/current', to: 'people/sessions#get_session'
+
+  devise_for :people, path: 'auth',
+             controllers: {
+               sessions: 'people/sessions',
+               passwords: 'people/passwords'
+             }
 
   get '/login/:magic_link', to: 'login#magic_link'
 

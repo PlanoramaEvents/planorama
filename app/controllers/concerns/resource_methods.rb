@@ -41,8 +41,9 @@ module ResourceMethods
   end
 
   def create
+    Rails.logger.debug('******* CREATE PERSON ???')
     model_class.transaction do
-      authorize model_class, policy_class: policy_class
+      # authorize model_class, policy_class: policy_class
       before_save
       @object.save!
       after_save

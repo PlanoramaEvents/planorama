@@ -38,7 +38,6 @@ export default {
       this.person.save()
         .then(() => {
           this.success_toast(ADMIN_ADD_USER_SUCCESS(this.person.name))
-          this.error_toast("Even though it says it succeeded, it did not. known bug.")
           this.person = new Person();
         })
         .catch((error) => this.error_toast(error.message))
