@@ -14,6 +14,12 @@ class PersonSerializer < ActiveModel::Serializer
 
   has_many :person_roles
 
+  has_many  :email_addresses
+
+  attribute :email do
+    object.email
+  end
+
   # tag_list
   attribute :tags do
     object.base_tags.collect(&:name)
