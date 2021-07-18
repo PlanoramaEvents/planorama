@@ -7,8 +7,19 @@ class AgreementsController < ResourceController
   end
 
   def latest
-    # TODO sanitize params?
-    return Agreement.find_by(params, order: :updated_at)
+    authorize model_class, policy_class: policy_class
+
+    agreement = collection.order('updated_at desc').first
+
+    if agreement
+      render_object(agreement)
+    else
+      raise 'agreement not found'
+    end
+  rescue => ex
+    Rails.logger.error ex.message if Rails.env.development?
+    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
+    render status: :bad_request, json: {error: ex.message}
   end
 
   # list agreements that I have not signed
