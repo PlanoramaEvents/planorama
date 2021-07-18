@@ -10,7 +10,7 @@ module ResourceMethods
     meta[:perPage] = @per_page if @per_page.present? && paginate
     format = params[:format]
 
-    if format == 'xls'
+    if format == 'xls' || format == 'xlsx'
       generate_xls
     else
       if serializer_class
