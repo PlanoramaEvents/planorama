@@ -75,7 +75,7 @@ export class InformationEthicsAgreement extends Agreement {
 
   routes() {
     return {
-      fetch: '/agreements/latest&type={type}',
+      fetch: '/agreements/latest?agreement_type={type}',
       create: '/agreements',
       save: '/agreements',
       update: '/agreements',

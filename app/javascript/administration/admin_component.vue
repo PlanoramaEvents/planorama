@@ -29,7 +29,7 @@
           label-for="event-ethics"
           description="If you save a new event agreement, you will clear the flag and everyone has to recheck the box."
         >
-          <b-form-textarea id="event-ethics" type="text" v-model="customization.ethics"></b-form-textarea>
+          <b-form-textarea id="event-ethics" type="text" v-model="information_ethics.terms"></b-form-textarea>
         </b-form-group>
         <div class="d-flex justify-content-end">
           <b-button variant="link" @click="cancel">Revert all fields</b-button>
@@ -66,7 +66,7 @@ export default {
     ...mapState('configuration', {
       configuration: state =>  state.collection
     }),
-    //...mapState('agreements', ['information_ethics']),
+    ...mapState('agreements', ['information_ethics']),
     event_settings_dirty() {
       return this.configuration.changed(ADMIN_CONFIGS)
     }
@@ -74,16 +74,16 @@ export default {
   methods: {
     cancel() {
       this.configuration.reset(ADMIN_CONFIGS);
-      //this.information_ethics.reset();
+      this.information_ethics.reset();
     },
     save() {
       this.configuration.save(ADMIN_CONFIGS);
-      //this.information_ethics.save();
+      this.information_ethics.save();
     }
   },
   mounted() {
     this.configuration.fetch();
-    //this.information_ethics.fetch();
+    this.information_ethics.fetch();
   }
 }
 </script>
