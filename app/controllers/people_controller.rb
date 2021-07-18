@@ -46,6 +46,11 @@ class PeopleController < ResourceController
       pseudonym
       pseudonym_sort_by
       pseudonym_sort_by_confirmed
+    ] << [
+      email_addresses_attributes: %i[
+        email
+        isdefault
+      ],
     ]
   end
   # TODO: these to be dealt with in seperate controllers ??

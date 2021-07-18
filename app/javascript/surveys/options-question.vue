@@ -15,7 +15,6 @@
           </div>
           <div class="col-6" v-if="singlechoice && question.branching">
             <next-page-picker class="mt-n2 mb-2" :disabled="singlePage" v-if="isSelected" v-model="a.next_page_id"></next-page-picker>
-            <p v-if="!isSelected">{{goesToPage(a.next_page_id)}}</p>
           </div>
         </div>
       </template>
@@ -30,7 +29,6 @@
         </div>
         <div class="col-6" v-if="singlechoice && question.branching">
           <next-page-picker class="mt-n2 mb-2" v-if="isSelected" v-model="other.next_page_id"></next-page-picker>
-          <p v-if="!isSelected">{{goesToPage(other.next_page_id)}}</p>
         </div>
       </div>
     </template>

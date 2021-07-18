@@ -168,7 +168,7 @@
     <div class="row" v-if="isSelected">
       <div class="col-6">
         <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="save">Required</b-form-checkbox>
-        <b-form-checkbox inline v-if="singlechoice" :disabled="singlePage" v-model="question.branching" @change="save">Branching</b-form-checkbox>
+        <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="save">Branching</b-form-checkbox>
       </div>
       <div class="col-6 d-flex justify-content-end">
         <b-button variant="info" class="mr-2" @click="duplicateQuestion"><b-icon-files></b-icon-files></b-button>

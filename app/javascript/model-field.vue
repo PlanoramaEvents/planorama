@@ -7,7 +7,7 @@
       :label-for="inputId"
     >
       <b-form-input
-        v-if="type === 'text'"
+        v-if="type === 'text' || type === 'email'"
         :id="inputId"
         :value="value"
         @input="$emit('input', $event)"
