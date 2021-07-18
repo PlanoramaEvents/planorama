@@ -6,6 +6,15 @@ class AgreementsController < ResourceController
     false
   end
 
+  def before_save
+    @object.created_by_id = current_person.id
+    @object.updated_by_id = current_person.id
+  end
+
+  def before_update
+    @object.updated_by_id = current_person.id
+  end
+
   def latest
     authorize model_class, policy_class: policy_class
 
