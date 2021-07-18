@@ -22,7 +22,7 @@
     <draggable v-model="page.survey_questions" @end="save" handle=".handle">
       <edit-survey-question :question="q" v-for="q in page.survey_questions" :key="q.id"></edit-survey-question>
     </draggable>
-    <div v-if="i + 1 < n" class="mt-3">
+    <div v-if="!isLastPage(page.id)" class="mt-3">
       After section {{i + 1}}
       <next-page-picker class="ml-1" v-model="page.next_page_id"></next-page-picker>
     </div>
@@ -46,6 +46,7 @@ import {
   SURVEY_CONFIRM_DELETE_PAGE_1, 
   SURVEY_CONFIRM_DELETE_PAGE_2,
  } from '../constants/strings';
+import pageMixin from './page-mixin';
 
 export default {
   name: "EditSurveyPage",
@@ -54,7 +55,10 @@ export default {
     draggable, 
     NextPagePicker,
   },
-  mixins: [surveyMixin],
+  mixins: [
+    surveyMixin,
+    pageMixin
+  ],
   props: {
     page: {
       type: Object,

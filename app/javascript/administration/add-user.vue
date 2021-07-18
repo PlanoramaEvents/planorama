@@ -1,6 +1,7 @@
 <template>
   <div>
-    <model-field :label="label" v-model="person[field]" :key="field" :type="type" v-for="({label, type}, field) in fields" stateless></model-field>
+    <model-field label="Name" v-model="person.name" type="text" stateless></model-field>
+    <model-field label="Email" v-model="email" type="email" stateless></model-field>
     <div class="d-flex justify-content-end">
       <b-button variant="link" @click="cancel">Cancel</b-button>
       <b-button variant="primary" @click="save">Save</b-button>
@@ -24,10 +25,14 @@ export default {
     person: new Person(),
   }),
   computed: {
-    fields() {
-      let fields = Object.keys(this.person.schema()).reduce((p, c) => Object.assign(p, {[c]: this.person.schema()[c]}), {});
-      console.log("person fields", fields)
-      return fields;
+    email: {
+      get() {
+        return this.person.email_addresses && this.person.email_addresses[0]?.email;
+      },
+      set(val) {
+        this.person.email_addresses = [{email: val, isdefault: true}];
+      }
+
     }
   },
   methods: {

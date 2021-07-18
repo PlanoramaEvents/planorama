@@ -89,18 +89,22 @@ export default {
       this.$router.go(-1);
     },
     setNextPageId(id) {
+      console.log('setting next page id to', id)
       if(!id) {
+        console.log('attempting to get actual next page id')
         id = this.getNextPage(this.page.id)?.id;
+        console.log('actual next page id:', id)
       }
       this.nextPageId = id;
     }
   },
   beforeRouteUpdate(to, from, next) {
     this.selectPage(this.survey.survey_pages.find(p => p.id == to.params.id))
-    this.setNextPageId(this.selected_page.next_page_id);
+    this.setNextPageId(this.selected_page?.next_page_id);
     next()
   },
   mounted() {
+    console.log('mounting page...')
     if (!this.survey && this.survey_id) {
       console.log('trying to load survey id', this.survey_id)
       let model = new Survey({id: this.survey_id}, this.surveys);
@@ -114,6 +118,9 @@ export default {
     }
     else if (!this.page && this.id) {
       this.selectPage(this.survey.survey_pages.find(p => p.id == this.id))
+      this.setNextPageId(this.selected_page.next_page_id);
+    }
+    else {
       this.setNextPageId(this.selected_page.next_page_id);
     }
   }

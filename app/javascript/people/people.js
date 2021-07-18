@@ -42,6 +42,9 @@ export class Person extends PlanoModel {
       ethnicity: null,
       year_of_birth: null,
       comments: null,
+      email_addresses: [
+        {email: null, isdefault: true}
+      ],
       bio: {
         bio: '',
         twitter: null,
@@ -73,6 +76,12 @@ export class Person extends PlanoModel {
       update: '/people/{id}',
       delete: '/people/{id}'
     }
+  }
+
+  getSaveData() {
+    const data = super.getSaveData()
+    data.email_addresses_attributes = data.email_addresses
+    return data
   }
 };
 
