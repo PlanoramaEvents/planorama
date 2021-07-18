@@ -49,11 +49,19 @@ class Person < ApplicationRecord
 
   # TODO: add a deleted_at mechanism
 
+  # TODO: on save ensure that there is an email address !!!
+  # perhaps in the controller ?
+
+  #   so when i save it, it should be email_address_attributes
+  # ugh which means i probably need to change allowed params
+  # can you take care of that too?
+
+
   acts_as_taggable
 
   has_paper_trail
 
-  has_one :bio, dependent: :delete
+  has_one :bio, dependent: :destroy
   accepts_nested_attributes_for :bio, allow_destroy: true
 
   before_destroy :check_if_assigned
@@ -69,7 +77,7 @@ class Person < ApplicationRecord
   has_many  :mailings, through: :person_mailing_assignments
   has_many  :mail_histories # , :through => :person_mailing_assignments
 
-  has_many  :email_addresses
+  has_many  :email_addresses, dependent: :destroy
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
   has_many :survey_submissions, class_name: 'Survey::Submission', dependent: :destroy
@@ -77,6 +85,7 @@ class Person < ApplicationRecord
   # TODO: get list of surveys for this person ...
 
   has_many :person_roles, dependent: :destroy
+  accepts_nested_attributes_for :person_roles, allow_destroy: true
 
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements

@@ -29,5 +29,6 @@ module MagicLinkService
   end
 end
 
+# TODO: add endpoint to get link for person
 
 # ..../login/00WEsDv1Vzh5RsbU
