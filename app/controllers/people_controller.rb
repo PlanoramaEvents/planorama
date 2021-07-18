@@ -51,6 +51,9 @@ class PeopleController < ResourceController
         email
         isdefault
       ],
+      person_roles_attributes: %i[
+        role
+      ]
     ]
   end
   # TODO: these to be dealt with in seperate controllers ??
