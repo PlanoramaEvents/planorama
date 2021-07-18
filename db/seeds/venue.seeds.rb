@@ -2,8 +2,6 @@ after :setup_type do
 
     Venue.destroy_all
 
-    st = SetupType.first
-
     3.times.each do |i|
         v = Venue.create(
             name: Faker::Space.unique.planet,
@@ -13,7 +11,6 @@ after :setup_type do
             Room.create(
                 name: Faker::Mountain.unique.name,
                 venue: v,
-                setup_type: st,
                 sort_order: Faker::Number.unique.number(digits: 3)
             )
         end
