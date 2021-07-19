@@ -17,17 +17,18 @@ export class AgreementStore extends BasePlanoStore {
       }
     }
     this.actions = {
-      [FETCH_IEA] ({state}) {
+      [FETCH_IEA] ({state, commit}) {
         state.information_ethics.fetch().then((resp) => {
-          console.log('what is this response', resp)
         }).catch((error) => {
-          console.log(error);
+          commit(SET_IEA, new InformationEthicsAgreement())
         })
       },
-      [SAVE_IEA] ({state}) {
-        state.information_ethics.save().then((resp) => {
-          console.log('how about this response', resp)
-        })
+      [SAVE_IEA] ({state, commit}, {success, failure}) {
+        if(state.information_ethics.changed()) {
+          let new_iea = new InformationEthicsAgreement({terms: state.information_ethics.terms})
+          commit(SET_IEA, new_iea)
+          new_iea.save().then(success).catch(failure)
+        }
       }
     }
   }

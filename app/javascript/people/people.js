@@ -45,6 +45,9 @@ export class Person extends PlanoModel {
       email_addresses: [
         {email: null, isdefault: true}
       ],
+      person_roles: [
+        {role: 'member'}
+      ],
       bio: {
         bio: '',
         twitter: null,
@@ -81,6 +84,7 @@ export class Person extends PlanoModel {
   getSaveData() {
     const data = super.getSaveData()
     data.email_addresses_attributes = data.email_addresses
+    data.person_roles_attributes = data.person_roles
     return data
   }
 };

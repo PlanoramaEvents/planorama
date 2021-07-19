@@ -66,13 +66,6 @@ export class InformationEthicsAgreement extends Agreement {
     })
   }
 
-  getSaveData() {
-    const data = super.getSaveData()
-    // always make a new one
-    delete data.id
-    delete data.lock_version
-  }
-
   routes() {
     return {
       fetch: '/agreements/latest?agreement_type={type}',

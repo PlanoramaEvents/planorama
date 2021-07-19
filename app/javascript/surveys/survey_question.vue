@@ -8,7 +8,7 @@
       </template>
       <template #default="{ ariaDescribedBy }">
         <b-form-textarea
-          class="w-50"
+          :class="{'w-50': answerable}"
           v-if="textbox"
           v-model="response.response.text"
           :aria-describedBy="ariaDescribedBy"
@@ -16,14 +16,14 @@
           :required="question.mandatory"
         >{{response.response.text}}</b-form-textarea>
         <b-form-input
-          class="w-50"
+          :class="{'w-50': answerable}"
           v-if="textfield"
           v-model="response.response.text"
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
           :required="question.mandatory" />
         <b-form-radio-group
-          class="w-50"
+          :class="{'w-50': answerable}"
           stacked
           v-if="singlechoice"
           v-model="radioButtonResponse"
@@ -62,7 +62,7 @@
           </b-form-radio>
         </b-form-radio-group>
         <b-form-checkbox-group
-          class="w-50"
+          :class="{'w-50': answerable}"
           stacked
           v-if="multiplechoice"
           v-model="response.response.answers"
@@ -99,7 +99,7 @@
           </b-form-checkbox>
         </b-form-checkbox-group>
         <b-form-select
-          class="w-50"
+          :class="{'w-50': answerable}"
           v-if="dropdown"
           v-model="response.response.text"
           :required="mandatory"
@@ -113,7 +113,7 @@
           >{{choice.answer}}</b-form-select-option>
         </b-form-select>
         <b-form-input
-          class="w-50"
+          :class="{'w-50': answerable}"
           v-if="email"
           type="email"
           :required="mandatory"
@@ -128,7 +128,7 @@
     <div class="row" v-if="address">
       <div class="col-12 h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></div>
     </div>
-    <div class="form-address form-row w-50" v-if="address">
+    <div :class="['form-address', 'form-row', { 'w-50': answerable}]" v-if="address">
       <div class="col-12 col-sm-6 pt-2">
         <b-form-group
           :id="formGroupId('address-1')"
@@ -211,7 +211,7 @@
     </div>
     <div v-if="socialmedia">
       <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
-      <div class="row w-50 ml-0">
+      <div :class="['row', 'ml-0', {'w-50': answerable}]">
         <div class="col-12 px-0">
           <simple-social 
               label="Twitter"

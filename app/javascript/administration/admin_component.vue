@@ -9,7 +9,7 @@
         <b-card-text>Import all the users!!!1!</b-card-text>
       </admin-accordion>
       <admin-accordion id="edit-roles-accordion" title="Edit Roles">
-        <b-card-text>Role me, baby.</b-card-text>
+        <change-user-roles></change-user-roles>
       </admin-accordion>
       <admin-accordion id="event-settings-accordion" title="Event Settings" :dirty="event_settings_dirty">
         <b-form-group
@@ -42,10 +42,14 @@
 
 <script>
 import AdminAccordion from './admin_accordion.vue'
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { SAVE, UPDATED } from '../model.store';
 import { Configuration } from './configurations';
 import AddUser from './add-user.vue';
+import ChangeUserRoles from './change-user-roles';
+import toastMixin from '../toast-mixin';
+import { InformationEthicsAgreement } from './agreement';
+import { FETCH_IEA, SAVE_IEA } from './agreement.store';
 
 const ADMIN_CONFIGS = (x) => ['event_email', 'event_phone'].includes(x)
 
@@ -53,7 +57,9 @@ export default {
   components: { 
     AdminAccordion,
     AddUser,
+    ChangeUserRoles,
   },
+  mixins: [toastMixin],
   name: 'AdminComponent',
   data: () => ({
     customization: {
@@ -72,18 +78,22 @@ export default {
     }
   },
   methods: {
+    ...mapActions('agreements', {
+      fetchIea: FETCH_IEA,
+      saveIea: SAVE_IEA
+    }),
     cancel() {
       this.configuration.reset(ADMIN_CONFIGS);
       this.information_ethics.reset();
     },
     save() {
       this.configuration.save(ADMIN_CONFIGS);
-      this.information_ethics.save();
+      this.saveIea(this.toastSuccessFailure('information ethics saved'))
     }
   },
   mounted() {
     this.configuration.fetch();
-    this.information_ethics.fetch();
+    this.fetchIea();
   }
 }
 </script>
