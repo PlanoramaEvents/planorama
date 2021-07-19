@@ -1,4 +1,10 @@
 class PeoplePolicy < PlannerPolicy
+  def me?
+    return true if @record.id == @person.id
+
+    false
+  end
+
   def update?
     return true if @record.id == @person.id
 
