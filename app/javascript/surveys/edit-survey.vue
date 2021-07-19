@@ -29,7 +29,8 @@
         </edit-survey-page>
       </b-tab>
       <b-tab title="Responses" :active="!!responses">
-        <h1>Coming soon</h1>
+        <p>There are <em>TODO GET THIS NUMBER</em> total responses.</p>
+        <p>Download responses: <a :href="downloadLink" :download="filename">{{filename}}</a></p>
       </b-tab>
       <survey-settings-tab></survey-settings-tab>
       <b-tab title="Audit Log" disabled>
@@ -62,6 +63,14 @@ export default {
     EditSurveyControls,
     SurveySettingsTab,
     NotImplemented,
+  },
+  computed: {
+    downloadLink() {
+      return `/surveys/${this.survey?.id}/submissions.xls`
+    },
+    filename() {
+      return `survey_${this.survey?.id}_responses.xls`
+    }
   },
   methods: {
     ...mapMutations({
