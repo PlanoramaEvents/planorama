@@ -9,10 +9,6 @@ class PeopleController < ResourceController
     me = current_person
     authorize me, policy_class: policy_class
     render_object(me)
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   def serializer_includes

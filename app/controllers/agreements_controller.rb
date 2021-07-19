@@ -25,10 +25,6 @@ class AgreementsController < ResourceController
     else
       raise 'agreement not found'
     end
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   # list agreements that I have not signed
@@ -43,10 +39,6 @@ class AgreementsController < ResourceController
            include: serializer_includes,
            adapter: :json,
            content_type: 'application/json'
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   # list agreements that I have signed
@@ -61,10 +53,6 @@ class AgreementsController < ResourceController
            include: serializer_includes,
            adapter: :json,
            content_type: 'application/json'
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   # sign a specific agreement
@@ -94,10 +82,6 @@ class AgreementsController < ResourceController
 
     # Agreement.unsigned(person: current_person)
     render_object(agreement)
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   # need to add includes etc to speed up query
