@@ -2,6 +2,7 @@ class Survey::SubmissionsController < ResourceController
   SERIALIZER_CLASS = 'Survey::SubmissionSerializer'.freeze
   MODEL_CLASS = 'Survey::Submission'.freeze
   POLICY_CLASS = 'SubmissionsPolicy'.freeze
+  XLS_SERIALIZER_CLASS = 'Survey::SubmissionXlsSerializer'.freeze
 
   def belong_to_class
     Survey
