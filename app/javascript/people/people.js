@@ -1,5 +1,4 @@
-import PlanoModel from '../model.js'
-import {Collection} from 'vue-mc'
+import {PlanoModel, PlanoCollection} from '../model.js'
 import {
     required,
     string,
@@ -16,11 +15,13 @@ export class Person extends PlanoModel {
       }
     }
     delete schema.bio
+    delete schema.id
     return schema
   }
 
   defaults() {
     return {
+      id: null,
       name: null,
       name_sort_by: null,
       name_sort_by_confirmed: false,
@@ -43,7 +44,7 @@ export class Person extends PlanoModel {
       comments: null,
       bio: {
         bio: '',
-        twitterinfo: null,
+        twitter: null,
         photourl: null,
         facebook: null,
         linkedin: null,
@@ -75,7 +76,7 @@ export class Person extends PlanoModel {
   }
 };
 
-export class People extends Collection {
+export class People extends PlanoCollection {
   options() {
     return {
       model: Person,
@@ -83,14 +84,11 @@ export class People extends Collection {
   }
 
   defaults() {
-    return {
+    return Object.assign({}, super.defaults(), {
       sortField: 'published_name_sort_by',
       sortOrder: 'asc',
       filter: '',
-      perPage: 30,
-      page: 1,
-      total: 0
-    }
+    })
   }
 
   routes() {
@@ -104,24 +102,23 @@ export class People extends Collection {
 // task.$.name or task.saved('name') to reflect what is in the backend ...
 export const people_columns = [
   {
-    key: 'id',
-    label: 'ID'
-  },
-  {
     key: '$.published_name',
     label: 'Published Name',
     sortable: true,
+    sortKey: 'published_name_sort_by',
     sticky: true,
   },
   {
     key: '$.name',
     label: 'Name',
     sortable: true,
+    sortKey: 'name_sort_by',
     sticky: true,
   },
   {
     key: '$.pseudonym',
     label: 'Pseudonym',
+    sortKey: 'pseudonym_sort_by',
     sortable: true
   },
   {

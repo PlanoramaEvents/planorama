@@ -3,29 +3,25 @@ module ResourceMethods
 
   def index
     authorize model_class, policy_class: policy_class
+
+    meta = {}
+    meta[:total] = @collection_total if paginate
+    meta[:page] = @page if @page.present? && paginate
+    meta[:perPage] = @per_page if @per_page.present? && paginate
+
     if serializer_class
       render json: @collection,
              each_serializer: serializer_class,
-             meta: {
-               total: @collection_total,
-               page: @page,
-               perPage: @per_page
-             },
+             meta: meta,
              root: 'data',
-             # meta_key: 'header',
-             include: includes,
+             include: serializer_includes,
              adapter: :json,
              content_type: 'application/json'
     else
       render json: @collection,
-             meta: {
-               total: @collection_total,
-               page: @page,
-               perPage: @per_page
-             },
+             meta: meta,
              root: 'data',
-             # meta_key: 'header',
-             include: includes,
+             include: serializer_includes,
              adapter: :json,
              content_type: 'application/json'
     end
@@ -45,8 +41,9 @@ module ResourceMethods
   end
 
   def create
+    Rails.logger.debug('******* CREATE PERSON ???')
     model_class.transaction do
-      authorize model_class, policy_class: policy_class
+      # authorize model_class, policy_class: policy_class
       before_save
       @object.save!
       after_save
@@ -102,11 +99,12 @@ module ResourceMethods
   def render_object(object)
     if serializer_class
       render json: object,
-             include: includes,
+             include: serializer_includes,
              serializer: serializer_class,
              content_type: 'application/json'
     else
       render json: object,
+             include: serializer_includes,
              content_type: 'application/json'
     end
   end
@@ -148,20 +146,27 @@ module ResourceMethods
              model_class
            end
 
-    @per_page = params[:perPage]&.to_i || model_class.default_per_page
-    @page = params[:page]&.to_i || 0
+    @per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate
+    @per_page = nil unless paginate
+    @page = params[:page]&.to_i || 0 if paginate
     @order = params[:sortField] || ''
     @direction = params[:sortOrder] || ''
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
     @order.slice!('$.')
     # base
-    policy_scope(base, policy_scope_class: policy_scope_class)
+
+
+    q = policy_scope(base, policy_scope_class: policy_scope_class)
       .includes(includes)
       .references(references)
       .where(query(@filters))
       .order("#{@order} #{@direction}")
-      .page(@page)
-      .per(@per_page)
+
+    if paginate
+      q.page(@page).per(@per_page)
+    else
+      q
+    end
   end
 
   def query(filters = nil)
@@ -243,7 +248,8 @@ module ResourceMethods
       instance_variable_set("@#{object_name}", @object)
     else
       @collection ||= collection
-      @collection_total ||= collection.total_count
+      @collection_total ||= collection.total_count if paginate
+      @collection_total ||= collection.size unless paginate
 
       instance_variable_set("@#{controller_name}", @collection_total)
       instance_variable_set("@#{controller_name}", @collection)
@@ -295,6 +301,10 @@ module ResourceMethods
     nil
   end
 
+  def serializer_includes
+    []
+  end
+
   def includes
     []
   end
@@ -315,6 +325,13 @@ module ResourceMethods
     nil
   end
 
+  def paginate
+    true
+  end
+
+  def permitted_params
+    _permitted_params(object_name)
+  end
 
   def _permitted_params(_object_name)
     if allowed_params

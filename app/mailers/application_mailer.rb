@@ -12,15 +12,11 @@ class ApplicationMailer < ActionMailer::Base
   private
 
   def from_email
-    @from_email ||= Dirac::ConfigurationService.parameter_value('email_from_address')
+    @from_email ||= ConfigService.value('email_from_address')
   end
 
   def reply_to_email
-    @reply_to_email ||= Dirac::ConfigurationService.parameter_value('email_reply_to_address')
-  end
-
-  def organizer_notification_email
-    @organizer_notification_email ||= Planner::Helpers.event_organizer_notification_email
+    @reply_to_email ||= ConfigService.value('email_reply_to_address')
   end
 
   def delivery_options

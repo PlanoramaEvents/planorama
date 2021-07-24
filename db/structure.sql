@@ -22,6 +22,17 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 
 
 --
+-- Name: agreement_target; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.agreement_target AS ENUM (
+    'member',
+    'staff',
+    'all'
+);
+
+
+--
 -- Name: assignment_role_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -108,6 +119,43 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: agreements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.agreements (
+    id bigint NOT NULL,
+    title character varying,
+    terms text,
+    agreement_type character varying,
+    created_by_id bigint NOT NULL,
+    updated_by_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0,
+    target public.agreement_target
+);
+
+
+--
+-- Name: agreements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.agreements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: agreements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.agreements_id_seq OWNED BY public.agreements.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -166,7 +214,7 @@ CREATE TABLE public.bios (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     website text,
-    twitterinfo text,
+    twitter text,
     othersocialmedia text,
     photourl text,
     facebook text,
@@ -175,7 +223,8 @@ CREATE TABLE public.bios (
     youtube text,
     instagram text,
     flickr text,
-    reddit text
+    reddit text,
+    tiktok character varying
 );
 
 
@@ -280,7 +329,8 @@ CREATE TABLE public.configurations (
     parameter character varying(45) NOT NULL,
     parameter_value character varying(150) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -560,6 +610,41 @@ CREATE SEQUENCE public.label_dimensions_id_seq
 --
 
 ALTER SEQUENCE public.label_dimensions_id_seq OWNED BY public.label_dimensions.id;
+
+
+--
+-- Name: magic_links; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.magic_links (
+    id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    token character varying NOT NULL,
+    url character varying(10000) DEFAULT NULL::character varying,
+    expires_at timestamp without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: magic_links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.magic_links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: magic_links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.magic_links_id_seq OWNED BY public.magic_links.id;
 
 
 --
@@ -847,6 +932,41 @@ CREATE SEQUENCE public.people_id_seq
 --
 
 ALTER SEQUENCE public.people_id_seq OWNED BY public.people.id;
+
+
+--
+-- Name: person_agreements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_agreements (
+    id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    agreement_id bigint NOT NULL,
+    signed boolean DEFAULT false,
+    agreed_on timestamp without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: person_agreements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.person_agreements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: person_agreements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.person_agreements_id_seq OWNED BY public.person_agreements.id;
 
 
 --
@@ -1375,7 +1495,10 @@ CREATE TABLE public.survey_answers (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     survey_question_id integer,
-    sort_order integer
+    sort_order integer,
+    next_page_id integer,
+    fuuid character varying,
+    other boolean DEFAULT false
 );
 
 
@@ -1449,7 +1572,8 @@ CREATE TABLE public.survey_pages (
     sort_order integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    survey_id bigint
+    survey_id bigint,
+    fuuid character varying
 );
 
 
@@ -1553,7 +1677,6 @@ ALTER SEQUENCE public.survey_query_predicates_id_seq OWNED BY public.survey_quer
 
 CREATE TABLE public.survey_questions (
     id integer NOT NULL,
-    title character varying DEFAULT ''::character varying,
     question text,
     question_type character varying DEFAULT 'textfield'::character varying,
     created_at timestamp without time zone NOT NULL,
@@ -1565,7 +1688,9 @@ CREATE TABLE public.survey_questions (
     horizontal boolean DEFAULT false,
     private boolean DEFAULT false,
     regex character varying,
-    survey_page_id bigint
+    survey_page_id bigint,
+    fuuid character varying,
+    randomize boolean DEFAULT false
 );
 
 
@@ -1601,7 +1726,8 @@ CREATE TABLE public.survey_responses (
     survey_question_id integer NOT NULL,
     response json,
     response_as_text text,
-    survey_submission_id bigint NOT NULL
+    survey_submission_id bigint NOT NULL,
+    fuuid character varying
 );
 
 
@@ -1635,7 +1761,9 @@ CREATE TABLE public.survey_submissions (
     survey_id bigint NOT NULL,
     person_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0,
+    fuuid character varying
 );
 
 
@@ -1670,17 +1798,24 @@ CREATE TABLE public.surveys (
     name character varying,
     welcome text,
     thank_you text,
-    alias character varying(191),
     submit_string character varying DEFAULT 'Save'::character varying,
-    header_image character varying DEFAULT ''::character varying,
     use_captcha boolean DEFAULT false,
     public boolean,
-    authenticate boolean,
     transition_accept_status public.acceptance_status_enum,
     transition_decline_status public.acceptance_status_enum,
     declined_msg text,
     authenticate_msg text,
-    anonymous boolean DEFAULT false
+    anonymous boolean DEFAULT false,
+    published_on timestamp without time zone,
+    published_by_id integer,
+    created_by_id integer,
+    updated_by_id integer,
+    description text,
+    fuuid character varying,
+    mandatory_star boolean DEFAULT true,
+    numbered_questions boolean DEFAULT false,
+    branded boolean DEFAULT true,
+    allow_submission_edits boolean DEFAULT true
 );
 
 
@@ -1908,6 +2043,13 @@ ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
+-- Name: agreements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agreements ALTER COLUMN id SET DEFAULT nextval('public.agreements_id_seq'::regclass);
+
+
+--
 -- Name: available_dates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1992,6 +2134,13 @@ ALTER TABLE ONLY public.label_dimensions ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: magic_links id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.magic_links ALTER COLUMN id SET DEFAULT nextval('public.magic_links_id_seq'::regclass);
+
+
+--
 -- Name: mail_histories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2024,6 +2173,13 @@ ALTER TABLE ONLY public.pending_import_people ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.people ALTER COLUMN id SET DEFAULT nextval('public.people_id_seq'::regclass);
+
+
+--
+-- Name: person_agreements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_agreements ALTER COLUMN id SET DEFAULT nextval('public.person_agreements_id_seq'::regclass);
 
 
 --
@@ -2216,6 +2372,14 @@ ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.ver
 
 
 --
+-- Name: agreements agreements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agreements
+    ADD CONSTRAINT agreements_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2320,6 +2484,14 @@ ALTER TABLE ONLY public.label_dimensions
 
 
 --
+-- Name: magic_links magic_links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.magic_links
+    ADD CONSTRAINT magic_links_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: mail_histories mail_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2373,6 +2545,14 @@ ALTER TABLE ONLY public.pending_import_people
 
 ALTER TABLE ONLY public.people
     ADD CONSTRAINT people_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: person_agreements person_agreements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_agreements
+    ADD CONSTRAINT person_agreements_pkey PRIMARY KEY (id);
 
 
 --
@@ -2680,6 +2860,34 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
+-- Name: index_agreements_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agreements_on_created_by_id ON public.agreements USING btree (created_by_id);
+
+
+--
+-- Name: index_agreements_on_target; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agreements_on_target ON public.agreements USING btree (target);
+
+
+--
+-- Name: index_agreements_on_updated_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree (updated_by_id);
+
+
+--
+-- Name: index_magic_links_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_magic_links_on_person_id ON public.magic_links USING btree (person_id);
+
+
+--
 -- Name: index_people_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2698,6 +2906,27 @@ CREATE UNIQUE INDEX index_people_on_reset_password_token ON public.people USING 
 --
 
 CREATE UNIQUE INDEX index_people_on_unlock_token ON public.people USING btree (unlock_token);
+
+
+--
+-- Name: index_person_agreements_on_agreement_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_person_agreements_on_agreement_id ON public.person_agreements USING btree (agreement_id);
+
+
+--
+-- Name: index_person_agreements_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_person_agreements_on_person_id ON public.person_agreements USING btree (person_id);
+
+
+--
+-- Name: index_person_agreements_on_person_id_and_agreement_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_person_agreements_on_person_id_and_agreement_id ON public.person_agreements USING btree (person_id, agreement_id);
 
 
 --
@@ -2890,13 +3119,6 @@ CREATE INDEX pub_progitem_assignment_person_index ON public.published_programme_
 
 
 --
--- Name: survey_alias_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX survey_alias_idx ON public.surveys USING btree (alias);
-
-
---
 -- Name: survey_resp_question_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3017,6 +3239,21 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210620175724'),
 ('20210620180746'),
 ('20210626162611'),
-('20210627143358');
+('20210627143358'),
+('20210627225348'),
+('20210628120942'),
+('20210628221900'),
+('20210629220733'),
+('20210702202436'),
+('20210702202533'),
+('20210703145543'),
+('20210703151749'),
+('20210703182948'),
+('20210704135126'),
+('20210704203655'),
+('20210704203704'),
+('20210707121120'),
+('20210711150608'),
+('20210712134642');
 
 

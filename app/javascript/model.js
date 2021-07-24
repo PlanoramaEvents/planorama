@@ -3,7 +3,8 @@ import defaultsDeep     from 'lodash/defaultsDeep'
 import defaultTo        from 'lodash/defaultTo'
 
 import {http as axios} from './http'
-import {Model} from 'vue-mc'
+import Vue from 'vue';
+import {Model, Collection} from 'vue-mc'
 
 // TODO: modify for routes etc
 // make sure that save sans id in URL and update has id
@@ -17,7 +18,7 @@ routes() {
   }
 }
 */
-export default class PlanoModel extends Model {
+export class PlanoModel extends Model {
   schema() {
     function makeschema(fields) {
       return Object.keys(fields).reduce((prev, curr) => {
@@ -52,6 +53,10 @@ export default class PlanoModel extends Model {
     }
   }
 
+  onSaveFailure(error) {
+    alert("Something went horribly wrong. Please reload your page. " + error)
+  }
+
   // We need to put the CSRF token in the header
   getDefaultHeaders() {
     const csrfToken = document.querySelector("meta[name=csrf-token]").content
@@ -59,4 +64,35 @@ export default class PlanoModel extends Model {
       'X-CSRF-Token': csrfToken
     }
   }
+}
+
+export class PlanoCollection extends Collection {
+  defaults() {
+    return {
+      perPage: 10,
+      page: 1,
+      currentPage: 1,
+      total: 0,
+      sortField: 'updated_at',
+      sortOrder: 'asc',
+      filter: ''
+    }
+  }
+
+  getModelsFromResponse(response) {
+    let models = super.getModelsFromResponse(response);
+    return models.data ? models.data : models;
+  }
+
+  onFetchSuccess(response) {
+    if(response.response.data && response.response.data.meta){
+      console.log(response.response.data.meta)
+      Vue.set(this, 'total', response.response.data.meta.total);
+      Vue.set(this, 'perPage', response.response.data.meta.perPage);
+      // TODO figure out how not to go back to the server every time
+      this.clearModels();
+    }
+    return super.onFetchSuccess(response);
+  }
+
 }

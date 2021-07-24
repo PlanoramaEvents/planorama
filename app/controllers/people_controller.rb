@@ -5,11 +5,15 @@ class PeopleController < ResourceController
 
   # need to add includes etc to speed up query
 
-  def includes
+  def serializer_includes
     [
       :bio,
       :base_tags
     ]
+  end
+
+  def includes
+    serializer_includes
   end
 
   # def references

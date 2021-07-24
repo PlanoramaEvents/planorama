@@ -88,7 +88,7 @@ export default {
       },
     },
     helpEmail: "configurable@email.com",
-    resetPasswordLink: `<a href="/people/sign_in#/forgot">Reset Password</a>`,
+    resetPasswordLink: `<a href="/auth/sign_in#/forgot">Reset Password</a>`,
   }),
   mounted: function () {
     this.person.reset_password_token = this.$route.query.reset_password_token;

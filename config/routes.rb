@@ -1,9 +1,14 @@
 # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-  devise_for :people, controllers: {
-    sessions: 'people/sessions',
-    passwords: 'people/passwords'
-  }
+  get '/people/sessions/current', to: 'people/sessions#get_session'
+
+  devise_for :people, path: 'auth',
+             controllers: {
+               sessions: 'people/sessions',
+               passwords: 'people/passwords'
+             }
+
+  get '/login/:magic_link', to: 'login#magic_link'
 
   root to: 'home#index' #, :as => :authenticated_root
 
@@ -13,8 +18,7 @@ Rails.application.routes.draw do
   get 'page/program', to: 'home#program'
   get 'page/surveys', to: 'home#surveys'
   get 'page/reports', to: 'home#reports'
-
-  get 'about/terms_of_use'
+  get 'page/admin', to: 'home#admin'
 
   # REST based resources
   resources :people
@@ -23,6 +27,14 @@ Rails.application.routes.draw do
   resources :rooms
   resources :venues
   resources :tag_contexts
+  resources :configurations
+  resources :parameter_names
+
+  get 'agreements/signed', to: 'agreements#signed'
+  get 'agreements/unsigned', to: 'agreements#unsigned'
+  put 'agreements/sign/:id', to: 'agreements#sign'
+  get 'agreements/latest', to: 'agreements#latest'
+  resources :agreements
 
   # Surveys and their nested resources
   resources :surveys do
@@ -37,6 +49,7 @@ Rails.application.routes.draw do
         end
       end
       resources :submissions
+      delete 'submissions', to: 'submissions#delete_all'
     end
   end
 

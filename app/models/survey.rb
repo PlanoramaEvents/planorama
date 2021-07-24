@@ -1,6 +1,9 @@
 class Survey < ApplicationRecord
   # Survey contains a series of pages, pages contain a series of questions
-  has_many :survey_pages, dependent: :destroy, class_name: "Survey::Page"
+  has_many :survey_pages,
+           class_name: 'Survey::Page',
+           inverse_of: :survey,
+           dependent: :destroy
   accepts_nested_attributes_for :survey_pages, allow_destroy: true
 
   has_many :survey_questions, through: :survey_pages, class_name: 'Survey::Question'
@@ -8,6 +11,14 @@ class Survey < ApplicationRecord
   has_many :survey_submissions, class_name: 'Survey::Submission'
 
   before_destroy :check_for_use #, :check_if_public
+
+  belongs_to :published_by, class_name: 'Person', required: false
+  belongs_to :created_by, class_name: 'Person', required: false
+  belongs_to :updated_by, class_name: 'Person', required: false
+
+  nilify_blanks only: [
+    :description, :fuuid
+  ]
 
   # transition_accept_status
   # transition_decline_status

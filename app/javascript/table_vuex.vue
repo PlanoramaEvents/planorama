@@ -1,18 +1,22 @@
 <template>
-  <div class="overflow-auto">
-    <div class="d-flex flex-row-reverse my-3">
-      <b-button disabled class="ml-1">
-        Settings
+  <div class="scrollable">
+    <div class="d-flex justify-content-end my-3">
+      <div class="d-inline" title="Upload">
+        <b-button disabled >
+          <b-icon-upload></b-icon-upload>
+        </b-button>
+      </div>
+      <b-button @click="$emit('new')" class="mx-1" variant="primary" title="New">
+        <b-icon-plus scale="2"></b-icon-plus>
       </b-button>
-      <b-button @click="onNew" class="mx-1" variant="primary">
-        Add
-      </b-button>
-      <b-button disabled >
-        Upload
-      </b-button>
+      <div class="d-inline" title="Settings">
+        <b-button disabled>
+          <b-icon-gear-fill></b-icon-gear-fill>
+        </b-button>
+      </div>
     </div>
 
-    <div class="d-flex">
+    <div class="d-flex justify-content-end">
       <b-pagination
         v-model="currentPage"
         :total-rows="totalRows"
@@ -28,8 +32,9 @@
       hover bordered responsive selectable small striped
       :select-mode="selectMode"
       :fields="columns"
+      selected-variant="primary"
 
-      :items="provider"
+      :items="collection.page(currentPage).models"
 
       ref="table"
 
@@ -48,7 +53,7 @@
       </template>
     </b-table>
 
-    <b-pagination class="float-right"
+    <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
       :total-rows="totalRows"
       :per-page="perPage"
@@ -70,20 +75,31 @@ Vue.use(BootstrapVue)
 export default {
   name: 'TableVuex',
   props: {
-    modelType : { type: Function },
     sortField : { type: String },
     perPage : { type: Number, default: 10 }
   },
   data() {
     return {
       selectMode: 'single',
-      selected: null,
-      currentPage: 1,
       filter: null,
-      totalRows: 100
+      
     }
   },
-  computed: mapState(['collection', 'columns']),
+  computed: {
+    ...mapState(['collection', 'columns', 'selected']),
+    currentPage: {
+      get() {
+        return this.collection ? this.collection.currentPage : 1;
+      },
+      set(val) {
+        this.collection.currentPage = val
+        this.collection.page(this.collection.currentPage).fetch();
+      }
+    },
+    totalRows() {
+      return this.collection ? this.collection.total : 0;
+    }
+  },
   methods: {
     provider(ctx, callback) {
       var sortOrder = ctx.sortDesc ? 'desc' : 'asc'
@@ -116,25 +132,26 @@ export default {
     onReset() {
       if (this.selected) this.selected.fetch()
     },
-    onNew() {
-      // this.selected.save()
-      if (this.modelType) {
-        this.selected = new this.modelType();
-        if (this.selectEvent) {
-          EventBus.emit(this.selectEvent, this.selected)
-        }
-      }
-    },
     onRowSelected(items) {
       console.log('row selected', items)
-      this.selected = items[0]
-      this.$store.commit(SELECT, this.selected);
+      this.$store.commit(SELECT, items[0]);
+    }
+  },
+  mounted() {
+    this.collection.perPage = this.perPage
+    this.collection.fetch()
+  },
+  watch: {
+    selected(val) {
+      if (!val) {
+        this.$refs.table.clearSelected()
+      }
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 td {
   white-space: nowrap;
 }

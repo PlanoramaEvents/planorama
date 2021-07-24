@@ -17,13 +17,28 @@ services:
     ports:
       - "36379:6379"
 
+  # TODO: sidekiq
+  planorama-sidekiq:
+    image: planorama:latest
+    build:
+      context: .
+      dockerfile: dockerfile
+    # TODO: run sidekiq shell
+    command:
+    restart: always
+    depends_on:
+      - postgres
+      - planorama-redis
+
   # The planner app server
   planorama:
     env_file:
       - .envrc
+    # TODO: run planorama
+    command:
     depends_on:
       - planorama-redis
     links:
       - planorama-redis
-    volumes: 
+    volumes:
       - .:/opt/planorama

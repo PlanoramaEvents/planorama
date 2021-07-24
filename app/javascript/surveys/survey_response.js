@@ -1,26 +1,31 @@
-import PlanoModel from "../model";
+import {PlanoModel} from "../model";
 
-export class SurveyResponse extends PlanoModel {
+export class SurveySubmission extends PlanoModel {
   defaults() {
     return {
-      id: 0,
+      id: null,
       created_at: new Date(),
       updated_at: new Date(),
       lock_version: 0,
       survey_id: 0,
-      survey_question_id: 0,
-      person_id: 0,
-      response: {},
-      response_as_text: '',
+      person_id: null,
+      survey_responses: []
     }
   }
   routes() {
     return {
-      fetch: '/surveys/{survey_id}/responses/{id}',
-      create: '/surveys/{survey_id}/responses',
-      save: '/surveys/{survey_id}/responses/{id}',
-      update: '/surveys/{survey_id}/responses/{id}',
-      delete: '/surveys/{survey_id}/responses/{id}'
+      fetch: '/surveys/{survey_id}/submissions/{id}',
+      create: '/surveys/{survey_id}/submissions',
+      save: '/surveys/{survey_id}/submissions/{id}',
+      update: '/surveys/{survey_id}/submissions/{id}',
+      delete: '/surveys/{survey_id}/submissions/{id}'
     }
+  }
+  getSaveData() {
+    const data = super.getSaveData()
+    if(data.survey_responses) {
+      data.survey_responses_attributes = data.survey_responses
+    }
+    return data;
   }
 }

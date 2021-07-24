@@ -1,5 +1,4 @@
-import PlanoModel from '../model.js';
-import {Collection} from 'vue-mc';
+import {PlanoModel, PlanoCollection} from '../model.js';
 import {
     required,
     string,
@@ -8,21 +7,24 @@ import {
 export class Survey extends PlanoModel {
   schema() {
     let s = super.schema()
-    delete s.survey_pages
+    delete s.survey_pages;
+    delete s.id;
     return s
   }
   defaults() {
     return {
       id: null,
       name: '',
+      description: null,
       welcome: null,
       thank_you: null,
-      alias: '',
       submit_string: '',
-      header_image: null,
       use_captcha: false,
       public: false,
-      authenticate: false,
+      mandatory_star: true,
+      numbered_questions: false,
+      branded: true,
+      allow_submission_edits: true,
       //transition_accept_status: false,
       //transition_decline_status: false,
       declined_msg: '',
@@ -34,7 +36,9 @@ export class Survey extends PlanoModel {
           id: null,
           question: '',
           question_type: 'textfield',
+          mandatory: false,
           survey_answers: [{
+            other: false,
             id: null,
             answer: '',
           }]
@@ -42,6 +46,67 @@ export class Survey extends PlanoModel {
       }]
     }
   }
+
+  duplicate() {
+    return new Survey({
+      name: `Copy of ${this.name}`,
+      description: this.description,
+      welcome: this.welcome,
+      thank_you: this.thank_you,
+      submit_string: this.submit_string,
+      use_captcha: this.use_captcha,
+      public: false,
+      mandatory_star: this.mandatory_star,
+      numbered_questions: this.numbered_questions,
+      branded: this.branded,
+      allow_submission_edits: true,
+      anonymous: this.anonymous,
+      survey_pages: this.survey_pages.map(p => ({
+        title: p.title,
+        survey_questions: p.survey_questions.map(q => ({
+          question: q.question,
+          question_type: q.question_type,
+          mandatory: q.mandatory,
+          survey_answers: q.survey_answers.map(a => ({
+            other: a.other,
+            answer: a.answer,
+          }))
+        }))
+      }))
+    })
+
+  }
+
+  surveyQuestions() {
+    return this.survey_pages.reduce((p,c) => [...p, ...c.survey_questions], [])
+  }
+
+  extractQuestions(question_ids) {
+    let old_questions = this.surveyQuestions().filter(q => question_ids.includes(q.id))
+    let extracted_questions = old_questions.map(q => ({
+      question: q.question,
+      question_type: q.question_type,
+      mandatory: q.mandatory,
+      survey_answers: q.survey_answers.map(a => ({
+        other: a.other,
+        answer: a.answer,
+      }))
+    }))
+    for (let question of old_questions) {
+      question._destroy = true;
+    }
+    return extracted_questions
+  }
+
+  moveQuestions(question_ids, new_page_id) {
+    let new_page = this.survey_pages.find(p => p.id == new_page_id)
+    if(!new_page.survey_questions) {
+      new_page.survey_questions = []
+    }
+    new_page.survey_questions.push(...this.extractQuestions(question_ids));
+  }
+
+
   validation() {
     return {
       name: string.and(required)
@@ -81,7 +146,7 @@ export class Survey extends PlanoModel {
   }
 };
 
-export class Surveys extends Collection {
+export class Surveys extends PlanoCollection {
   options() {
     return {
       model: Survey,
@@ -89,14 +154,9 @@ export class Surveys extends Collection {
   }
 
   defaults() {
-    return {
-      sortField: 'name',
-      sortOrder: 'asc',
-      filter: '',
-      perPage:15,
-      page: 1,
-      total: 0
-    }
+    return Object.assign({}, super.defaults(), {
+      perPage: 15,
+    })
   }
 
   routes() {
@@ -113,33 +173,42 @@ export const survey_columns = [
     stickyColumn: true,
     sortable: true
   },
-  'description',
+  {
+    key: 'description',
+    label: 'Description',
+    sortable: true,
+  },
   {
     key: '$.public',
     label: 'Status',
-    formatter: (p) => p ? 'Published' : 'Closed'
+    formatter: (p) => p ? 'Published' : 'Closed',
+    sortable: true,
   },
-  'publishedOn', // needs sortable
+  {
+    key: 'publishedOn',
+    label: 'Published On',
+    sortable: true,
+  },
   {
     key: '$.updated_at',
     label: 'Last Modified On',
     sortable: true,
     formatter: (d) => new Date(d).toLocaleDateString()
   },
-  'lastModifiedBy', // needs sortable
+  {
+    key: 'updated_by',
+    label: 'Last Modified By',
+    sortable: true
+  },
   'preview',
   'surveyLink',
   // welcome
   // thank_you
-  // alias
   // submit_string
-  // header_image
   // use_captcha
   // public
-  // authenticate
   // transition_acceptance_status
   // transition_decline_status
   // declined_msg
   // anonymous
 ];
-

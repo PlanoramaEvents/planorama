@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import PlanoModel from "../model";
+import {PlanoModel} from "../model";
 import LoginEmailField from "./login_email_field";
 import LoginPasswordField from "./login_password_field";
 
@@ -52,7 +52,7 @@ export class LoginModel extends PlanoModel {
   }
   routes() {
     return {
-      save: "/people/sign_in.json",
+      save: "/auth/sign_in.json",
     };
   }
 }

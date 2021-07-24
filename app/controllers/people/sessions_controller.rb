@@ -7,6 +7,10 @@ class People::SessionsController < Devise::SessionsController
   # Leaving the rest of the comments in in case we need some of those things in the future
   respond_to :json
 
+  def get_session
+    return current_person
+  end
+
   # GET /resource/sign_in
   #def new
   #  super

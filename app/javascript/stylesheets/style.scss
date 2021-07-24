@@ -5,6 +5,11 @@
 $sidebar-width: 35%;
 $sidebar-mobile-width: 60%;
 
+.container-fluid {
+  padding: 0px;
+  padding-right: 15px;
+}
+
 .navbar.navbar-light {
   height: 100px;
   background: linear-gradient(to right, #ffffff, $color-primary-4 67%);
@@ -18,9 +23,43 @@ $sidebar-mobile-width: 60%;
 
 #side-navbar .nav {
   background: $color-light-blue;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 150px);
+  overflow-y: auto;
+  .nav-link.active {
+    background: $color-primary-2;
+    color: white;
+  }
 }
 
 .description-tooltip .tooltip-inner {
   max-width: 30rem;
+}
+
+.scrollable {
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+footer#bottom-navbar {
+  background: $color-primary-4;
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  padding: 10px;
+
+  a {
+    color: white;
+  }
+
+  .silly-spacer {
+    width: 5rem;
+  }
+}
+
+#planotoast {
+  position: absolute;
+  right: 5px;
+  top: 105px;
 }

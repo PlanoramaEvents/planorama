@@ -1,5 +1,5 @@
 <template>
-    <a href="/about/terms_of_use" target="_blank">Terms of Use</a>
+    <a href="https://chicagoworldcon.github.io/planorama/tandc" target="_blank">Terms of Use</a>
 </template>
 
 <script>

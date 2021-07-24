@@ -47,6 +47,8 @@ class Person < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :lockable
 
+  # TODO: add a deleted_at mechanism
+
   acts_as_taggable
 
   has_paper_trail
@@ -75,6 +77,10 @@ class Person < ApplicationRecord
   # TODO: get list of surveys for this person ...
 
   has_many :person_roles, dependent: :destroy
+
+  has_many  :person_agreements
+  has_many  :agreements, through: :person_agreements
+  # signed, to be re-signed etc
 
   enum acceptance_status: {
     unknown: 'unknown',
@@ -108,6 +114,20 @@ class Person < ApplicationRecord
   #
   def email
     email_addresses.first&.email
+  end
+
+
+  #
+  def staff?
+    person_roles.inject(false) { |res, role| res || role.staff? }
+  end
+
+  def member?
+    person_roles.inject(false) { |res, role| res || role.member? }
+  end
+
+  def no_role?
+    person_roles.size == 0
   end
 
   #
@@ -175,25 +195,4 @@ class Person < ApplicationRecord
   def password_required?
     new_record? ? false : super
   end
-
-  # # ----------------------------------------------------------------------------------------------
-  # TODO: part of refactor
-  # has_one :available_date, :dependent => :delete
-  # has_one :person_constraints, :dependent => :delete # THis is the max items per day & conference
-  # has_many  :exclusions, :dependent => :delete_all
-  # has_many  :excluded_people, :through => :exclusions,
-  #           :source => :excludable,
-  #           :source_type => 'Person' do
-  #             def find_by_source(s)
-  #               where(['source = ?', s])
-  #             end
-  #           end
-  # has_many  :excluded_items, :through => :exclusions,
-  #           :source => :excludable,
-  #           :source_type => "ProgrammeItem" do
-  #             def find_by_source(s)
-  #               where(['source = ?', s])
-  #             end
-  #           end
-  # # ----------------------------------------------------------------------------------------------
 end

@@ -6,29 +6,44 @@
     <div :class="['page-title', 'p-3', 'border', {selected: isSelected}]" @click="selectPage(page)">
       <b-form-group
         v-if="isSelected"
-        :label="i == 1 ? 'Display Title' : 'Page Title'"
+        :label="i === 0 ? 'Display Title' : 'Page Title'"
         :label-for="'page-title-' + page.id"
       >
-        <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="save({item: selected})"></b-form-input>
+        <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="save"></b-form-input>
       </b-form-group>
+      <div class="row" v-if="isSelected && i !== 0">
+        <div class="col-12 d-flex justify-content-end">
+          <b-button variant="info" title="Merge page up" class="mr-2" @click="mergePage"><b-icon-arrow-up-circle-fill></b-icon-arrow-up-circle-fill></b-button>
+          <b-button variant="info" title="Delete page" v-b-modal="deleteModalId"><b-icon-trash></b-icon-trash></b-button>
+        </div>
+      </div>
       <h3 v-if="!isSelected">{{page.title}}</h3>
     </div>
-    <draggable v-model="page.survey_questions" @end="save(selected)" handle=".handle">
+    <draggable v-model="page.survey_questions" @end="save" handle=".handle">
       <edit-survey-question :question="q" v-for="q in page.survey_questions" :key="q.id"></edit-survey-question>
     </draggable>
     <div v-if="i + 1 < n" class="mt-3">
       After section {{i + 1}}
-      <b-select class="d-inline ml-1 next-page" v-model="page.next_page_id" :options="nextPageOptions" @change="save({item: selected})"></b-select>
+      <b-select class="d-inline ml-1 next-page" v-model="page.next_page_id" :options="nextPageOptions" @change="save"></b-select>
     </div>
+    <b-modal v-if="isSelected" :id="deleteModalId" @ok="destroyPage" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
+      <p>{{SURVEY_CONFIRM_DELETE_PAGE_1}}</p>
+      <p>{{SURVEY_CONFIRM_DELETE_PAGE_2}}</p>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import EditSurveyQuestion from './edit-survey-question.vue';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { SELECT_PAGE, UNSELECT_QUESTION } from './survey.store';
+import { SELECT_PAGE, UNSELECT_PAGE, UNSELECT_QUESTION } from './survey.store';
 import { SAVE } from '../model.store';
 import draggable from 'vuedraggable';
+import surveyMixin from './survey-mixin';
+import { 
+  SURVEY_CONFIRM_DELETE_PAGE_1, 
+  SURVEY_CONFIRM_DELETE_PAGE_2,
+ } from '../constants/strings';
 
 export default {
   name: "EditSurveyPage",
@@ -36,6 +51,7 @@ export default {
     EditSurveyQuestion,
     draggable, 
   },
+  mixins: [surveyMixin],
   props: {
     page: {
       type: Object,
@@ -50,8 +66,12 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    SURVEY_CONFIRM_DELETE_PAGE_1,
+    SURVEY_CONFIRM_DELETE_PAGE_2,
+  }),
   computed: {
-    ...mapState(['selected_page', 'selected', 'selected_question']),
+    ...mapState(['selected_page', 'selected_question']),
     isSelected() {
       return this.selected_page && this.page.id === this.selected_page.id && !this.selected_question;
     },
@@ -60,21 +80,39 @@ export default {
     },
     nextPageOptions() {
       return [
-        {value: this.selected.survey_pages[this.i + 1], text: 'Continue to next page'},
-        ...this.selected.survey_pages.map((p, i) => ({
+        {value: this.survey.survey_pages[this.i + 1], text: 'Continue to next page'},
+        ...this.survey.survey_pages.map((p, i) => ({
           value: p.id, text: `Go to section ${i + 1} (${p.title})`
         })),
         {value: null, text: 'Submit form'}
       ]
+    },
+    deleteModalId() {
+      return `deletePage${this.selected_page ? this.selected_page.id : 0}`
     }
   },
   methods: {
     ...mapMutations({
-      selectPage: SELECT_PAGE
+      selectPage: SELECT_PAGE,
+      unselectPage: UNSELECT_PAGE,
     }),
-    ...mapActions({
-      save: SAVE
-    })
+    mergePage() {
+      // todo move this to vuex
+      let prev_page = this.survey.survey_pages[this.i - 1];
+      this.survey.moveQuestions(this.selected_page.survey_questions.map(q => q.id), prev_page.id)
+      this.destroyPage()
+    },
+    destroyPage() {
+      // todo move this to vuex
+      this.selected_page._destroy = true;
+      for (let question of this.selected_page.survey_questions) {
+        question._destroy = true;
+      }
+      console.log(this.selected_page);
+      this.save();
+      this.unselectPage();
+
+    },
   }
 }
 </script>
@@ -82,7 +120,8 @@ export default {
 <style lang="scss" scoped>
 @import '../stylesheets/style.scss';
 .page {
-  width: 90%;
+  max-width: 60rem;
+  min-width: 30rem;
   .page-title.selected {
     box-shadow: 0 0 10px 2px $color-secondary-1-1;
   }

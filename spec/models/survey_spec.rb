@@ -8,7 +8,6 @@ RSpec.describe Survey  do
             expect(survey.transition_accept_status).to eq nil
             expect(survey.transition_decline_status).to eq nil
             expect(survey.public).to eq nil
-            expect(survey.authenticate).to eq nil
             expect(survey.anonymous).to be false
         end
 

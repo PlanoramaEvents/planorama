@@ -2,7 +2,7 @@
   <div :class="['survey-question', 'mt-3', 'border', 'p-3', {selected: isSelected}]" @click="selectQuestion(question)">
     <div class="handle d-flex justify-content-center"><b-icon-grip-horizontal></b-icon-grip-horizontal></div>
     <div v-if="!formatting && isSelected" class="row">
-      <div class="col-6">
+      <div class="col-5">
         <b-form-group
          :id="formGroupId('question-text')"
          label="Question Text"
@@ -16,7 +16,7 @@
           ></b-form-input>
         </b-form-group>
       </div>
-      <div class="col-6">
+      <div class="col-6 offset-1">
         <b-form-group
           :id="formGroupId('question-type')"
           label="Question Type"
@@ -44,83 +44,10 @@
           <b-textarea disabled v-if="!isSelected" value="Long answer text"></b-textarea>
         </div>
       </template>
-      <template v-if="singlechoice">
-        <template v-for="a in question.survey_answers">
-          <div class="col-11 pb-2" :key="a.id" v-if="a.answer != 'other'">
-            <b-form-radio disabled>
-              <b-form-input v-if="isSelected" type="text" v-model="a.answer" @blur="save"></b-form-input>
-              <span v-if="!isSelected">{{a.answer}}</span>
-            </b-form-radio>
-          </div>
-          <div class="col-1 pb-2" :key="a.id + '-delete'" v-if="a.answer != 'other' && isSelected">
-            <b-icon-x @click="removeOption(a)"></b-icon-x>
-          </div>
-        </template>
-        <template v-if="other">
-          <div class="col-11 pb-2" >
-            <b-form-radio disabled>Other <b-form-input v-if="isSelected" type="text" disabled></b-form-input></b-form-radio>
-          </div>
-          <div class="col-1 pb-2" v-if="isSelected">
-            <b-icon-x @click="removeOther"></b-icon-x>
-          </div>
-        </template>
-        <div class="col-12 pb-2" v-if="isSelected">
-          <b-form-radio disabled>
-            <b-button @click="addOption" variant="link">Add Option</b-button>
-            <div class="d-inline-block" v-if="!other" > or <b-button variant="link" @click="addOther">add other</b-button></div>
-          </b-form-radio>
-        </div>
-      </template>
-      <template v-if="multiplechoice">
-        <template v-for="a in question.survey_answers">
-          <div class="col-11 pb-2" :key="a.id" v-if="a.answer != 'other'">
-            <b-form-checkbox disabled>
-              <b-form-input v-if="isSelected" type="text" v-model="a.answer" @blur="save"></b-form-input>
-              <span v-if="!isSelected">{{a.answer}}</span>
-            </b-form-checkbox>
-          </div>
-          <div class="col-1 pb-2" :key="a.id + '-delete'" v-if="a.answer != 'other' && isSelected">
-            <b-icon-x @click="removeOption(a)"></b-icon-x>
-          </div>
-        </template>
-        <template v-if="other">
-          <div class="col-11 pb-2">
-            <b-form-checkbox disabled>Other <b-form-input v-if="isSelected" type="text" disabled></b-form-input></b-form-checkbox>
-          </div>
-          <div class="col-1 pb-2" v-if="isSelected">
-            <b-icon-x @click="removeOther"></b-icon-x>
-          </div>
-        </template>
-        <div class="col-12 pb-2" v-if="isSelected">
-          <b-form-checkbox disabled>
-            <b-button @click="addOption" variant="link">Add Option</b-button>
-            <div class="d-inline-block" v-if="!other" > or <b-button variant="link" @click="addOther">add other</b-button></div>
-          </b-form-checkbox>
-        </div>
-      </template>
+      <options-question :question="question" v-if="singlechoice || multiplechoice || dropdown"></options-question>
       <template v-if="hr">
         <div class="col-12">
           <hr />
-        </div>
-      </template>
-      <template v-if="dropdown">
-        <div class="col-12">
-          <ol>
-            <li class="pb-2" v-for="a in question.survey_answers" :key="a.id">
-              <div class="row">
-                <div class="col-11">
-                  <b-form-input v-if="isSelected" v-model="a.answer" type="text" @blur="save"></b-form-input>
-                  <span v-if="!isSelected">{{a.answer}}</span>
-                </div>
-                <div class="col-1" v-if="isSelected">
-                  <b-icon-x @click="removeOption(a)"></b-icon-x>
-                </div>
-              </div>
-            </li>
-            <li class="pb-2" v-if="isSelected">
-              <b-button @click="addOption" variant="link">Add Option</b-button>
-            </li>
-          </ol>
         </div>
       </template>
       <template v-if="address && !isSelected">
@@ -130,7 +57,7 @@
             :label-for="formId('address-1')"
             label="Address 1"
           >
-            <b-form-input disabled :id="formId('address-1')" value="123 Sesame Street"></b-form-input>
+            <b-form-input disabled :id="formId('address-1')"></b-form-input>
           </b-form-group>
         </div>
         <div class="col-12 col-sm-6">
@@ -139,7 +66,7 @@
             :label-for="formId('address-2')"
             label="Address 2"
           >
-            <b-form-input disabled :id="formId('address-2')" value="Apt. 2B"></b-form-input>
+            <b-form-input disabled :id="formId('address-2')"></b-form-input>
           </b-form-group>
         </div>
         <div class="col-12 col-sm-6">
@@ -148,7 +75,7 @@
             :label-for="formId('city')"
             label="City"
           >
-            <b-form-input disabled :id="formId('city')" value="New York"></b-form-input>
+            <b-form-input disabled :id="formId('city')"></b-form-input>
           </b-form-group>
         </div>
         <div class="col-12 col-sm-3">
@@ -157,7 +84,7 @@
             :label-for="formId('state')"
             label="State"
           >
-            <b-form-input disabled :id="formId('state')" value="NY"></b-form-input>
+            <b-form-input disabled :id="formId('state')"></b-form-input>
           </b-form-group>
         </div>
         <div class="col-12 col-sm-3">
@@ -166,7 +93,7 @@
             :label-for="formId('zip')"
             label="ZIP Code"
           >
-            <b-form-input disabled :id="formId('zip')" value="12345"></b-form-input>
+            <b-form-input disabled :id="formId('zip')"></b-form-input>
           </b-form-group>
         </div>
         <div class="col-12">
@@ -175,7 +102,7 @@
             :label-for="formId('country')"
             label="Country"
           >
-            <b-form-input disabled :id="formId('country')" value="USA"></b-form-input>
+            <b-form-input disabled :id="formId('country')"></b-form-input>
           </b-form-group>
         </div>
       </template>
@@ -186,14 +113,49 @@
       </template>
       <template v-if="email">
         <div class="col-12">
-          <b-form-input v-if="!isSelected" disabled type="email" value="example@example.com"></b-form-input>
+          <b-form-input v-if="!isSelected" disabled type="email"></b-form-input>
           <small v-if="isSelected">Email field</small>
         </div>
       </template>
       <template v-if="socialmedia">
+        <div class="col-12 col-lg-8 col-xl-6" v-if="!isSelected">
+          <b-form-group label="Twitter" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="Facebook" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>facebook.com&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
+          <b-form-group label="Website" label-cols="3"><b-input-group prepend="url"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="Instagram" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>instagram.com&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
+          <b-form-group label="Twitch" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>twitch.tv&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
+          <b-form-group label="YouTube" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
+          <b-form-group label="TikTok" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="LinkedIn" label-cols="3"><b-input-group>
+            <template #prepend>
+              <b-input-group-text>linkedin.com&sol;in&sol;</b-input-group-text>
+            </template>
+            <b-form-input type="text" disabled></b-form-input>
+          </b-input-group></b-form-group>
+          <b-form-group label="Other" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
+        </div>
         <div class="col-12">
-          <b-form-checkbox-group :disabled="!isSelected" v-model="socialChoice" :options="socials" @change="save">
-          </b-form-checkbox-group>
+          <small v-if="isSelected">Social Media fields</small>
         </div>
       </template>
       <template v-if="textonly">
@@ -217,10 +179,17 @@ import { SurveyQuestion } from './survey_question'
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { SAVE } from '../model.store';
 import { NEW_QUESTION, SELECT_QUESTION, UNSELECT_QUESTION } from './survey.store';
+import draggable from 'vuedraggable';
+import surveyMixin from './survey-mixin';
+import OptionsQuestion from './options-question.vue';
 
 
 export default {
   name: "EditSurveyQuestion",
+  components: {
+    draggable,
+    OptionsQuestion,
+  },
   data: () => ({
     questionTypes: [
       { value: 'textfield', text: 'Short Answer'},
@@ -239,8 +208,9 @@ export default {
       required: true
     },
   },
+  mixins: [surveyMixin],
   computed: {
-    ...mapState(['selected', 'selected_question', 'selected_page']),
+    ...mapState(['selected_question', 'selected_page']),
     textfield() {
       return this.question.question_type === "textfield";
     },
@@ -272,8 +242,7 @@ export default {
       return this.question.question_type === "textonly";
     },
     other() {
-      // specifically undefined because if we add it, we're setting it to null explicitly
-      return this.answerIdMap.other !== undefined;
+      return this.question.survey_answers ? this.question.survey_answers.filter(a => a.other).length > 0 : false;
     },
     answerIdMap() {
       if(!this.question.survey_answers) {
@@ -301,12 +270,10 @@ export default {
       return [
         {value: "twitter", text: "Twitter"},
         {value: "facebook", text: "Facebook"},
-        {value: "linkedin", text: "LinkedIn"},
         {value: "twitch", text: "Twitch"},
         {value: "youtube", text: "YouTube"},
         {value: "instagram", text: "Instagram"},
-        {value: "flickr", text: "Flickr"},
-        {value: "reddit", text: "Reddit"},
+        {value: "website", text: "Website"},
       ]
     },
     formatting() {
@@ -324,40 +291,14 @@ export default {
     ...mapActions({
       newQuestion: NEW_QUESTION
     }),
-    save(event) {
-      this.$store.dispatch(SAVE, {item: this.selected});
-    },
     formId(string) {
       return `${string}-${this.question.id}`
     },
     formGroupId(string) {
       return `${this.formId(string)}-group`
     },
-    addOption() {
-      if (!this.question.survey_answers) {
-        this.question.survey_answers = []
-      }
-      this.question.survey_answers.push({answer: undefined})
-      this.save()
-    },
-    removeOption(answer) {
-      answer._destroy = true;
-      this.save()
-    },
-    addOther() {
-      if (!this.question.survey_answers) {
-        this.question.survey_answers = []
-      }
-      this.question.survey_answers.push({answer: 'other'})
-      this.save()
-    },
-    removeOther() {
-      this.question.survey_answers.filter(a => a.answer === 'other')[0]._destroy = true;
-      this.save()
-    },
     destroyQuestion() {
       this.question._destroy = true
-      console.log(this.question)
       this.save()
       this.unselectQuestion()
     },
@@ -373,7 +314,8 @@ export default {
         survey_page_id: this.question.survey_page_id,
         survey_answers: this.question.survey_answers.map(a => ({
           answer: a.answer,
-          default: a.default
+          default: a.default,
+          other: a.other,
         }))
       }
       let insertAt = this.selected_page.survey_questions.findIndex(q => q.id === this.question.id) + 1
@@ -388,13 +330,20 @@ export default {
 .custom-control-label {
   width: 100%;
 }
-.handle {
+.handle, .qhandle {
   visibility: hidden;
 }
-.survey-question:hover .handle{
+
+
+.survey-question:hover .handle, .survey-answer:hover .qhandle{
   visibility: visible;
 }
+
 .survey-question.selected {
   box-shadow: 0 0 10px 2px $color-secondary-1-1;
+}
+
+.row-offset {
+  width: calc(100% - 1em);
 }
 </style>
