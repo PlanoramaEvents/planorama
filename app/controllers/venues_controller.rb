@@ -1,2 +1,2 @@
-class SurveysController < ResourceController
+class VenuesController < ResourceController
 end
