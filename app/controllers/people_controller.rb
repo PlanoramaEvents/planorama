@@ -64,6 +64,7 @@ class PeopleController < ResourceController
       person_roles_attributes: %i[
         id
         role
+        _destroy
       ]
     ]
   end

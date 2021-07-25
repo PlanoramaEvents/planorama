@@ -1,6 +1,6 @@
 <template>
   <b-form-group :label="person.name" label-cols="4" :label-for="formId">
-    <b-form-checkbox-group :id="formId" inline v-model="roles" :options="roleOptions" @change="save">
+    <b-form-checkbox-group :id="formId" :name="formId" inline v-model="roles" :options="roleOptions" @change="save">
     </b-form-checkbox-group>
   </b-form-group>
 </template>
@@ -28,7 +28,7 @@ export default {
     },
     roles: {
       get() {
-        return this.person.person_roles?.map(r => r.role) || [];
+        return this.person.$.person_roles?.map(r => r.role) || [];
       },
       set(val) {
         let existingRoles = this.person.person_roles;
@@ -37,17 +37,18 @@ export default {
         for (let role of newRoles) {
           let existing = existingRoles.find(r => r.role === role);
           if(existing) {
-            rolesForSaving.push(existingRoles);
+            rolesForSaving.push(existing);
           } else {
             rolesForSaving.push({role})
           }
         }
         for (let role of existingRoles) {
-          if(!role.role in newRoles) {
+          if(!newRoles.includes(role.role)) {
             rolesForSaving.push({...role, _destroy: 1})
           }
         }
         this.person.person_roles = rolesForSaving;
+        console.log(this.person.person_roles)
       }
     }
   },
