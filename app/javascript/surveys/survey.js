@@ -1,4 +1,5 @@
 import {PlanoModel, PlanoCollection} from '../model.js';
+import { SurveySubmissions } from './survey_response';
 import {
     required,
     string,
@@ -29,6 +30,7 @@ export class Survey extends PlanoModel {
       //transition_decline_status: false,
       declined_msg: '',
       anonymous: false,
+      survey_responses: [],
       survey_pages: [{
         id: null,
         title: null,
@@ -105,7 +107,6 @@ export class Survey extends PlanoModel {
     }
     new_page.survey_questions.push(...this.extractQuestions(question_ids));
   }
-
 
   validation() {
     return {

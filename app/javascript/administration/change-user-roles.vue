@@ -19,8 +19,7 @@ export default {
     })
   },
   mounted() {
-    this.people.perPage = 1000;
-    this.people.fetch({perPage: 1000});
+    this.people.fetch();
   }
 }
 </script>

@@ -56,10 +56,13 @@ class PeopleController < ResourceController
       pseudonym_sort_by_confirmed
     ] << [
       email_addresses_attributes: %i[
+        id
+        lock_version
         email
         isdefault
       ],
       person_roles_attributes: %i[
+        id
         role
       ]
     ]
