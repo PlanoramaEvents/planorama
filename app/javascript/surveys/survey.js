@@ -156,7 +156,9 @@ export class Surveys extends PlanoCollection {
 
   defaults() {
     return Object.assign({}, super.defaults(), {
-      perPage: 15,
+      perPage: 10,
+      sortField: 'updated_at',
+      sortOrder: 'desc'
     })
   }
 

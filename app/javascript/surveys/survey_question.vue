@@ -102,7 +102,7 @@
           :class="{'w-50': answerable}"
           v-if="dropdown"
           v-model="response.response.text"
-          :required="mandatory"
+          :required="question.mandatory"
           :aria-describedby="ariaDescribedBy"
         >
           <b-form-select-option
@@ -112,15 +112,15 @@
             :disabled="!answerable"
           >{{choice.answer}}</b-form-select-option>
         </b-form-select>
-        <b-form-input
+        <email-field
           :class="{'w-50': answerable}"
           v-if="email"
-          type="email"
-          :required="mandatory"
+          label-sr-only
+          :required="question.mandatory"
           v-model="response.response.text"
           :disabled="!answerable"
           :aria-describedBy="ariaDescribedBy"
-        ></b-form-input>
+        ></email-field>
       </template>
     </b-form-group>
     <p v-if="textonly">{{question.question}}</p>
@@ -301,12 +301,14 @@ import {mapState} from 'vuex'
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
 import questionMixin from './question.mixin';
+import EmailField from '../shared/email_field';
 
 export default {
   name: "SurveyQuestion",
   components: {
     MandatoryStar,
     SimpleSocial,
+    EmailField
   },
   mixins: [questionMixin],
   props: {
