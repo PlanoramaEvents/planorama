@@ -98,7 +98,7 @@ export class AdminPeople extends PlanoCollection {
 
   defaults() {
     return Object.assign({}, super.defaults(), {
-      sortField: 'published_name_sort_by',
+      sortField: 'name',
       sortOrder: 'asc',
       filter: '',
       page: 0,

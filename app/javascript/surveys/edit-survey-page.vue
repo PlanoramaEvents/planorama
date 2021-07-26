@@ -23,7 +23,7 @@
       <edit-survey-question :question="q" v-for="q in page.survey_questions" :key="q.id"></edit-survey-question>
     </draggable>
     <div v-if="!isLastPage(page.id)" class="mt-3">
-      After section {{i + 1}}
+      After page {{i + 1}}
       <next-page-picker class="ml-1" v-model="page.next_page_id"></next-page-picker>
     </div>
     <b-modal v-if="isSelected" :id="deleteModalId" @ok="destroyPage" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
