@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <b-form>
     <model-field label="Name" v-model="person.name" type="text" stateless></model-field>
-    <model-field label="Email" v-model="email" type="email" stateless></model-field>
+    <email-field label="Email" id="new-user-email" v-model="email"></email-field>
     <div class="d-flex justify-content-end">
       <b-button variant="link" @click="cancel">Cancel</b-button>
       <b-button variant="primary" @click="save">Save</b-button>
     </div>
-  </div>
+  </b-form>
 </template>
 
 <script>
@@ -14,11 +14,13 @@ import { Person } from '../people/people'
 import toastMixin from '../toast-mixin';
 import { ADMIN_ADD_USER_SUCCESS } from '../constants/strings';
 import ModelField from '../model-field';
+import EmailField from '../shared/email_field';
 
 export default {
   name: "AddUser",
   components: {
     ModelField,
+    EmailField,
   },
   mixins: [toastMixin],
   data: () =>  ({

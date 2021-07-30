@@ -12,13 +12,9 @@ class PersonSerializer < ActiveModel::Serializer
 
   has_one :bio
 
-  has_many :person_roles
+  has_many :person_roles, serializer: PersonRoleSerializer
 
-  has_many  :email_addresses
-
-  attribute :email do
-    object.email
-  end
+  has_many  :email_addresses, serializer: EmailAddressSerializer
 
   # tag_list
   attribute :tags do

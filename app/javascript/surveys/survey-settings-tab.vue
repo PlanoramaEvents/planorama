@@ -26,6 +26,9 @@
       <survey-setting text v-model="survey.submit_string">
         Text for submit button
       </survey-setting>
+      <survey-setting text v-model="survey.thank_you">
+        Confirmation message
+      </survey-setting>
       <b-modal v-if="survey" id="confirmPublish" @ok="togglePublish" @cancel="cancelPublish" ok-title="Yes" cancel-variant="link">
         <p v-if="!survey.public">{{SURVEY_CONFIRM_CLOSE}}</p>
         <p v-if="survey.public">{{SURVEY_CONFIRM_PUBLISH}}</p>
