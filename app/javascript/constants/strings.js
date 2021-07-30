@@ -17,7 +17,7 @@ module.exports = {
     SURVEY_SAVE_SUCCESS: "Survey successfully saved.",
     SURVEY_CONFIRM_PUBLISH: "You have published this survey. This will allow responses to be collected. Are you sure you want to publish this survey?",
     SURVEY_CONFIRM_CLOSE: "You have closed this survey. This will no longer allow any responses to be collected. Are you sure you want to close this survey?",
-    SURVEY_CONFIRM_DELETE: "DELETE OR DEATH!!! (This needs copy)",
+    SURVEY_CONFIRM_DELETE: `Are you sure you want to permanently delete this survey? This cannot be undone.`,
     SURVEY_CONFIRM_DELETE_PAGE_1: "Deleting a page also deletes the questions and response options it contains.",
     SURVEY_CONFIRM_DELETE_PAGE_2: "To preserve the questions, choose \"Merge page up\" from the page options.",
     SURVEY_SAVE_SUCCESS_PUBLISH: "Survey successfully published.",
@@ -27,7 +27,7 @@ module.exports = {
     SURVEY_RESULTS_CLEAR_CONFIRM: "This will permanently delete all responses to this survey. Are you sure you wish to clear all responses?",
     SURVEY_RESULTS_FREEZE_SUCCESS: "Response edits successfully frozen.",
     SURVEY_RESULTS_UNFREEZE_SUCCESS: "Response edits successfully unfrozen.",
-    SURVEY_DEFAULT_THANK_YOU: "Gail really needs to not be in charge of writing any copy!",
+    SURVEY_DEFAULT_THANK_YOU: "Your response has been recorded.",
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added.`,
 }
