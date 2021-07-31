@@ -6,9 +6,25 @@ class AgreementsController < ResourceController
     false
   end
 
+  def before_save
+    @object.created_by_id = current_person.id
+    @object.updated_by_id = current_person.id
+  end
+
+  def before_update
+    @object.updated_by_id = current_person.id
+  end
+
   def latest
-    # TODO sanitize params?
-    return Agreement.find_by(params, order: :updated_at)
+    authorize model_class, policy_class: policy_class
+
+    agreement = collection.order('updated_at desc').first
+
+    if agreement
+      render_object(agreement)
+    else
+      raise 'agreement not found'
+    end
   end
 
   # list agreements that I have not signed
@@ -23,10 +39,6 @@ class AgreementsController < ResourceController
            include: serializer_includes,
            adapter: :json,
            content_type: 'application/json'
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   # list agreements that I have signed
@@ -41,10 +53,6 @@ class AgreementsController < ResourceController
            include: serializer_includes,
            adapter: :json,
            content_type: 'application/json'
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   # sign a specific agreement
@@ -74,10 +82,6 @@ class AgreementsController < ResourceController
 
     # Agreement.unsigned(person: current_person)
     render_object(agreement)
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   # need to add includes etc to speed up query

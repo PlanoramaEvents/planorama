@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get 'page/admin', to: 'home#admin'
 
   # REST based resources
+  get 'people/me', to: 'people#me'
   resources :people
   resources :programme_items
   resources :programme_assignments

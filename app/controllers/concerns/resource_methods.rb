@@ -8,52 +8,44 @@ module ResourceMethods
     meta[:total] = @collection_total if paginate
     meta[:page] = @page if @page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
+    format = params[:format]
 
-    if serializer_class
-      render json: @collection,
-             each_serializer: serializer_class,
-             meta: meta,
-             root: 'data',
-             include: serializer_includes,
-             adapter: :json,
-             content_type: 'application/json'
+    if format == 'xls' || format == 'xlsx'
+      generate_xls
     else
-      render json: @collection,
-             meta: meta,
-             root: 'data',
-             include: serializer_includes,
-             adapter: :json,
-             content_type: 'application/json'
+      if serializer_class
+        render json: @collection,
+               each_serializer: serializer_class,
+               meta: meta,
+               root: 'data',
+               include: serializer_includes,
+               adapter: :json,
+               content_type: 'application/json'
+      else
+        render json: @collection,
+               meta: meta,
+               root: 'data',
+               include: serializer_includes,
+               adapter: :json,
+               content_type: 'application/json'
+      end
     end
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   def show
     authorize @object, policy_class: policy_class
     render_object(@object)
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   def create
-    Rails.logger.debug('******* CREATE PERSON ???')
     model_class.transaction do
-      # authorize model_class, policy_class: policy_class
+      authorize model_class, policy_class: policy_class
       before_save
       @object.save!
       after_save
     end
     after_save_tx
     render_object(@object)
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   def update
@@ -66,10 +58,6 @@ module ResourceMethods
     end
     after_update_tx
     render_object(@object)
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   def destroy
@@ -78,10 +66,6 @@ module ResourceMethods
       @object.public_send(object_destroy_method)
       render status: :ok, json: {}.to_json, content_type: 'application/json'
     end
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   def restore
@@ -90,10 +74,6 @@ module ResourceMethods
       @object.public_send(object_restore_method)
       render_object(@object)
     end
-  rescue => ex
-    Rails.logger.error ex.message if Rails.env.development?
-    Rails.logger.error ex.backtrace.join("\n\t") if Rails.env.development?
-    render status: :bad_request, json: {error: ex.message}
   end
 
   def render_object(object)
@@ -213,6 +193,25 @@ module ResourceMethods
 
   def serializer_class
     self.class::SERIALIZER_CLASS.constantize if defined? self.class::SERIALIZER_CLASS
+  end
+
+  def generate_xls(serializer = nil, opts = {})
+    opts[:each_serializer] = serializer ? serializer : xls_serializer_class
+    cookies[:fileDownload] = true
+    fname = self.class::XLS_SERIALIZER_FILENAME if defined? self.class::XLS_SERIALIZER_FILENAME
+    fname ||= controller_name.downcase
+    send_data ActiveModel::XlsArraySerializer.new(
+      @collection,
+      opts
+    ).to_xls,
+    filename: "#{fname}_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+    disposition: 'attachment'
+  end
+
+  def xls_serializer_class
+    return self.class::XLS_SERIALIZER_CLASS.constantize if defined? self.class::XLS_SERIALIZER_CLASS
+
+    'ActiveModel::XlsSerializer'.constantize
   end
 
   # authorize @publication, policy_class: PublicationPolicy

@@ -168,41 +168,6 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
--- Name: available_dates; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.available_dates (
-    id integer NOT NULL,
-    start_time timestamp without time zone,
-    end_time timestamp without time zone,
-    person_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0
-);
-
-
---
--- Name: available_dates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.available_dates_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: available_dates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.available_dates_id_seq OWNED BY public.available_dates.id;
-
-
---
 -- Name: bios; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -430,76 +395,6 @@ ALTER SEQUENCE public.email_addresses_id_seq OWNED BY public.email_addresses.id;
 
 
 --
--- Name: excluded_items_survey_maps; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.excluded_items_survey_maps (
-    id integer NOT NULL,
-    programme_item_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    survey_answer_id integer
-);
-
-
---
--- Name: excluded_items_survey_maps_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.excluded_items_survey_maps_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: excluded_items_survey_maps_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.excluded_items_survey_maps_id_seq OWNED BY public.excluded_items_survey_maps.id;
-
-
---
--- Name: exclusions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.exclusions (
-    id integer NOT NULL,
-    excludable_id integer,
-    excludable_type character varying,
-    person_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    source text
-);
-
-
---
--- Name: exclusions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.exclusions_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: exclusions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.exclusions_id_seq OWNED BY public.exclusions.id;
-
-
---
 -- Name: formats; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -531,39 +426,6 @@ CREATE SEQUENCE public.formats_id_seq
 --
 
 ALTER SEQUENCE public.formats_id_seq OWNED BY public.formats.id;
-
-
---
--- Name: job_infos; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.job_infos (
-    id integer NOT NULL,
-    last_run timestamp without time zone,
-    job_name character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: job_infos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.job_infos_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: job_infos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.job_infos_id_seq OWNED BY public.job_infos.id;
 
 
 --
@@ -766,23 +628,6 @@ ALTER SEQUENCE public.mailings_id_seq OWNED BY public.mailings.id;
 
 
 --
--- Name: notes; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.notes (
-    id integer NOT NULL,
-    title character varying NOT NULL,
-    body text NOT NULL,
-    originator_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    programme_item_id integer,
-    person_id integer
-);
-
-
---
 -- Name: parameter_names; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -790,67 +635,6 @@ CREATE TABLE public.parameter_names (
     parameter_name character varying(45) NOT NULL,
     parameter_description character varying(170) NOT NULL
 );
-
-
---
--- Name: pending_import_people; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pending_import_people (
-    id integer NOT NULL,
-    first_name character varying DEFAULT ''::character varying,
-    last_name character varying DEFAULT ''::character varying,
-    suffix character varying DEFAULT ''::character varying,
-    line1 character varying,
-    line2 character varying,
-    line3 character varying,
-    city character varying,
-    state character varying,
-    postcode character varying,
-    country character varying,
-    phone character varying,
-    email character varying DEFAULT ''::character varying,
-    registration_number character varying,
-    registration_type character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    datasource_id integer,
-    datasource_dbid character varying,
-    pendingtype_id integer,
-    alt_email text,
-    pub_first_name character varying,
-    pub_last_name character varying,
-    pub_suffix character varying,
-    company character varying,
-    job_title character varying,
-    prefix character varying DEFAULT ''::character varying,
-    pub_prefix character varying DEFAULT ''::character varying,
-    bio text,
-    invite_status character varying,
-    invite_category character varying,
-    accept_status character varying
-);
-
-
---
--- Name: pending_import_people_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pending_import_people_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pending_import_people_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pending_import_people_id_seq OWNED BY public.pending_import_people.id;
 
 
 --
@@ -1071,87 +855,6 @@ ALTER SEQUENCE public.person_roles_id_seq OWNED BY public.person_roles.id;
 
 
 --
--- Name: phone_numbers; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.phone_numbers (
-    id integer NOT NULL,
-    number character varying DEFAULT ''::character varying,
-    phone_type public.phone_type_enum,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    label character varying,
-    isdefault boolean DEFAULT false,
-    person_id integer,
-    at_con boolean DEFAULT false NOT NULL
-);
-
-
---
--- Name: phone_numbers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.phone_numbers_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: phone_numbers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.phone_numbers_id_seq OWNED BY public.phone_numbers.id;
-
-
---
--- Name: postal_addresses; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.postal_addresses (
-    id integer NOT NULL,
-    line1 character varying,
-    line2 character varying,
-    city character varying,
-    state character varying,
-    postcode character varying,
-    country character varying NOT NULL,
-    phone character varying,
-    isdefault boolean DEFAULT false NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    state_code character varying,
-    country_code character varying,
-    venue_id integer
-);
-
-
---
--- Name: postal_addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.postal_addresses_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: postal_addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.postal_addresses_id_seq OWNED BY public.postal_addresses.id;
-
-
---
 -- Name: programme_assignment_role_type; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1217,7 +920,6 @@ CREATE TABLE public.programme_items (
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     lock_version integer DEFAULT 0,
     format_id integer,
-    setup_type_id integer,
     pub_reference_number integer,
     mobile_card_size integer DEFAULT 1 NOT NULL,
     audience_size integer,
@@ -1374,7 +1076,6 @@ CREATE TABLE public.rooms (
     lock_version integer DEFAULT 0,
     purpose character varying,
     comment text,
-    setup_type_id integer,
     sort_order integer,
     capacity integer
 );
@@ -1407,80 +1108,6 @@ ALTER SEQUENCE public.rooms_id_seq OWNED BY public.rooms.id;
 CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
 );
-
-
---
--- Name: setup_types; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.setup_types (
-    id integer NOT NULL,
-    name character varying,
-    description character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0
-);
-
-
---
--- Name: setup_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.setup_types_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: setup_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.setup_types_id_seq OWNED BY public.setup_types.id;
-
-
---
--- Name: site_configs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.site_configs (
-    id integer NOT NULL,
-    captcha_pub_key character varying DEFAULT ''::character varying,
-    captcha_priv_key character varying DEFAULT ''::character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    name character varying DEFAULT ''::character varying,
-    time_zone character varying DEFAULT 'Eastern Time (US & Canada)'::character varying,
-    start_date timestamp without time zone,
-    public_start_date timestamp without time zone,
-    end_date timestamp without time zone,
-    public_end_date timestamp without time zone
-);
-
-
---
--- Name: site_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.site_configs_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: site_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.site_configs_id_seq OWNED BY public.site_configs.id;
 
 
 --
@@ -1690,7 +1317,8 @@ CREATE TABLE public.survey_questions (
     regex character varying,
     survey_page_id bigint,
     fuuid character varying,
-    randomize boolean DEFAULT false
+    randomize boolean DEFAULT false,
+    branching boolean DEFAULT false
 );
 
 
@@ -1941,40 +1569,6 @@ ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
--- Name: ui_preferences; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.ui_preferences (
-    id integer NOT NULL,
-    key character varying(191),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    val json
-);
-
-
---
--- Name: ui_preferences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.ui_preferences_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: ui_preferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.ui_preferences_id_seq OWNED BY public.ui_preferences.id;
-
-
---
 -- Name: venues; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2050,13 +1644,6 @@ ALTER TABLE ONLY public.agreements ALTER COLUMN id SET DEFAULT nextval('public.a
 
 
 --
--- Name: available_dates id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.available_dates ALTER COLUMN id SET DEFAULT nextval('public.available_dates_id_seq'::regclass);
-
-
---
 -- Name: bios id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2099,31 +1686,10 @@ ALTER TABLE ONLY public.email_addresses ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
--- Name: excluded_items_survey_maps id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.excluded_items_survey_maps ALTER COLUMN id SET DEFAULT nextval('public.excluded_items_survey_maps_id_seq'::regclass);
-
-
---
--- Name: exclusions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.exclusions ALTER COLUMN id SET DEFAULT nextval('public.exclusions_id_seq'::regclass);
-
-
---
 -- Name: formats id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.formats ALTER COLUMN id SET DEFAULT nextval('public.formats_id_seq'::regclass);
-
-
---
--- Name: job_infos id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.job_infos ALTER COLUMN id SET DEFAULT nextval('public.job_infos_id_seq'::regclass);
 
 
 --
@@ -2162,13 +1728,6 @@ ALTER TABLE ONLY public.mailings ALTER COLUMN id SET DEFAULT nextval('public.mai
 
 
 --
--- Name: pending_import_people id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pending_import_people ALTER COLUMN id SET DEFAULT nextval('public.pending_import_people_id_seq'::regclass);
-
-
---
 -- Name: people id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2204,20 +1763,6 @@ ALTER TABLE ONLY public.person_roles ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
--- Name: phone_numbers id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.phone_numbers ALTER COLUMN id SET DEFAULT nextval('public.phone_numbers_id_seq'::regclass);
-
-
---
--- Name: postal_addresses id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.postal_addresses ALTER COLUMN id SET DEFAULT nextval('public.postal_addresses_id_seq'::regclass);
-
-
---
 -- Name: programme_assignments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2250,20 +1795,6 @@ ALTER TABLE ONLY public.publication_statuses ALTER COLUMN id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY public.rooms ALTER COLUMN id SET DEFAULT nextval('public.rooms_id_seq'::regclass);
-
-
---
--- Name: setup_types id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.setup_types ALTER COLUMN id SET DEFAULT nextval('public.setup_types_id_seq'::regclass);
-
-
---
--- Name: site_configs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.site_configs ALTER COLUMN id SET DEFAULT nextval('public.site_configs_id_seq'::regclass);
 
 
 --
@@ -2351,13 +1882,6 @@ ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id
 
 
 --
--- Name: ui_preferences id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.ui_preferences ALTER COLUMN id SET DEFAULT nextval('public.ui_preferences_id_seq'::regclass);
-
-
---
 -- Name: venues id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2385,14 +1909,6 @@ ALTER TABLE ONLY public.agreements
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
-
-
---
--- Name: available_dates available_dates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.available_dates
-    ADD CONSTRAINT available_dates_pkey PRIMARY KEY (id);
 
 
 --
@@ -2444,35 +1960,11 @@ ALTER TABLE ONLY public.email_addresses
 
 
 --
--- Name: excluded_items_survey_maps excluded_items_survey_maps_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.excluded_items_survey_maps
-    ADD CONSTRAINT excluded_items_survey_maps_pkey PRIMARY KEY (id);
-
-
---
--- Name: exclusions exclusions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.exclusions
-    ADD CONSTRAINT exclusions_pkey PRIMARY KEY (id);
-
-
---
 -- Name: formats formats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.formats
     ADD CONSTRAINT formats_pkey PRIMARY KEY (id);
-
-
---
--- Name: job_infos job_infos_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.job_infos
-    ADD CONSTRAINT job_infos_pkey PRIMARY KEY (id);
 
 
 --
@@ -2516,27 +2008,11 @@ ALTER TABLE ONLY public.mailings
 
 
 --
--- Name: notes notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.notes
-    ADD CONSTRAINT notes_pkey PRIMARY KEY (id);
-
-
---
 -- Name: parameter_names parameter_names_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.parameter_names
     ADD CONSTRAINT parameter_names_pkey PRIMARY KEY (parameter_name);
-
-
---
--- Name: pending_import_people pending_import_people_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pending_import_people
-    ADD CONSTRAINT pending_import_people_pkey PRIMARY KEY (id);
 
 
 --
@@ -2577,22 +2053,6 @@ ALTER TABLE ONLY public.person_mailing_assignments
 
 ALTER TABLE ONLY public.person_roles
     ADD CONSTRAINT person_roles_pkey PRIMARY KEY (id);
-
-
---
--- Name: phone_numbers phone_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.phone_numbers
-    ADD CONSTRAINT phone_numbers_pkey PRIMARY KEY (id);
-
-
---
--- Name: postal_addresses postal_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.postal_addresses
-    ADD CONSTRAINT postal_addresses_pkey PRIMARY KEY (id);
 
 
 --
@@ -2665,22 +2125,6 @@ ALTER TABLE ONLY public.rooms
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
-
-
---
--- Name: setup_types setup_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.setup_types
-    ADD CONSTRAINT setup_types_pkey PRIMARY KEY (id);
-
-
---
--- Name: site_configs site_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.site_configs
-    ADD CONSTRAINT site_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -2777,14 +2221,6 @@ ALTER TABLE ONLY public.taggings
 
 ALTER TABLE ONLY public.tags
     ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
-
-
---
--- Name: ui_preferences ui_preferences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.ui_preferences
-    ADD CONSTRAINT ui_preferences_pkey PRIMARY KEY (id);
 
 
 --
@@ -3077,13 +2513,6 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 
 --
--- Name: key_event_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX key_event_index ON public.ui_preferences USING btree (key);
-
-
---
 -- Name: parameter_description_UNIQUE; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3254,6 +2683,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210704203704'),
 ('20210707121120'),
 ('20210711150608'),
-('20210712134642');
+('20210712134642'),
+('20210716142413'),
+('20210717191036');
 
 

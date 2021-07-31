@@ -9,7 +9,6 @@
 #     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 #     lock_version integer DEFAULT 0,
 #     format_id integer,
-#     setup_type_id integer,
 #     pub_reference_number integer,
 #     mobile_card_size integer DEFAULT 1 NOT NULL,
 #     audience_size integer,
@@ -29,7 +28,6 @@ class ProgrammeItem < ApplicationRecord
   validates_numericality_of :minimum_people, allow_nil: true
   validates_numericality_of :maximum_people, allow_nil: true
 
-  belongs_to :setup_type
   belongs_to :format
   has_one :published_programme_item, dependent: :destroy
 

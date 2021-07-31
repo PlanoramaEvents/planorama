@@ -5,10 +5,18 @@ class PeopleController < ResourceController
 
   # need to add includes etc to speed up query
 
+  def me
+    me = current_person
+    authorize me, policy_class: policy_class
+    render_object(me)
+  end
+
   def serializer_includes
     [
       :bio,
-      :base_tags
+      :base_tags,
+      :email_addresses,
+      :person_roles
     ]
   end
 
@@ -46,6 +54,18 @@ class PeopleController < ResourceController
       pseudonym
       pseudonym_sort_by
       pseudonym_sort_by_confirmed
+    ] << [
+      email_addresses_attributes: %i[
+        id
+        lock_version
+        email
+        isdefault
+      ],
+      person_roles_attributes: %i[
+        id
+        role
+        _destroy
+      ]
     ]
   end
   # TODO: these to be dealt with in seperate controllers ??

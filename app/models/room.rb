@@ -5,7 +5,6 @@ class Room < ApplicationRecord
   ranks :sort_order, with_same: :venue_id
 
   belongs_to :venue
-  belongs_to :setup_type
 
   has_many :programme_items
   has_many :published_programme_items

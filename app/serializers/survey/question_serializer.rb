@@ -2,7 +2,8 @@ class Survey::QuestionSerializer < ActiveModel::Serializer
   attributes :id, :question, :question_type,
              :created_at, :updated_at, :lock_version, :mandatory,
              :text_size, :sort_order, :horizontal,
-             :private, :regex, :survey_page_id, :fuuid
+             :private, :regex, :survey_page_id, :fuuid,
+             :branching
 
   has_many :survey_answers, serializer: Survey::AnswerSerializer
 

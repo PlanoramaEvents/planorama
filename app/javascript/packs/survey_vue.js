@@ -6,6 +6,7 @@ import SurveyList from '../surveys/survey-list.vue';
 import EditSurvey from '../surveys/edit-survey.vue';
 import TakeSurvey from '../surveys/take-survey.vue';
 import SurveyPage from '../surveys/survey-page.vue';
+import SurveyThankYou from '../surveys/survey-thank-you.vue';
 import { store as surveyStore } from '../surveys/survey.store'
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import { CustomIconsPlugin } from '../icons';
@@ -21,6 +22,7 @@ const routes = [
   { path: '/edit/:id', component: EditSurvey, props: true },
   { path: '/:survey_id/page/:id/:preview', component: SurveyPage, props: true},
   { path: '/:survey_id/page/:id', component: SurveyPage, props: true},
+  { path: '/:id/thankyou', component: SurveyThankYou, props: true},
   { path: '/:id/:preview', component: TakeSurvey, props: true },
   { path: '/:id', component: TakeSurvey, props: true},
   { path: '/', component: SurveyList },
