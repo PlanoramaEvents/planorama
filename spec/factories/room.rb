@@ -2,7 +2,6 @@ FactoryBot.define do
     factory :room do
         sequence(:name) { |n| "my room #{n}" }
         venue
-        setup_type
 
         factory :room_with_detail do
             purpose { "This is the purpose of the room." }

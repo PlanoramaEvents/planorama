@@ -10,11 +10,11 @@
       alert.text
     }}</b-alert>
     <b-form @submit="onSubmit">
-      <login-email-field
+      <email-field
         v-model="person.email"
         @validated="form.email.valid = $event"
         :validateNow="form.email.validate"
-      ></login-email-field>
+      ></email-field>
       <div class="d-flex flex-row-reverse">
         <b-button
           :disabled="submitDisabled"
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import LoginEmailField from "./login_email_field";
+import EmailField from "../shared/email_field";
 import { http } from "../http";
 import { validateFields } from "../utils";
 import {
@@ -58,7 +58,7 @@ export default {
     helpEmail: "configurable@email.com",
   }),
   components: {
-    LoginEmailField,
+    EmailField,
   },
   computed: {
     submitDisabled: function () {

@@ -1,4 +1,5 @@
 import {PlanoModel, PlanoCollection} from '../model.js';
+import { SurveySubmissions } from './survey_response';
 import {
     required,
     string,
@@ -29,6 +30,7 @@ export class Survey extends PlanoModel {
       //transition_decline_status: false,
       declined_msg: '',
       anonymous: false,
+      survey_responses: [],
       survey_pages: [{
         id: null,
         title: null,
@@ -106,7 +108,6 @@ export class Survey extends PlanoModel {
     new_page.survey_questions.push(...this.extractQuestions(question_ids));
   }
 
-
   validation() {
     return {
       name: string.and(required)
@@ -155,7 +156,9 @@ export class Surveys extends PlanoCollection {
 
   defaults() {
     return Object.assign({}, super.defaults(), {
-      perPage: 15,
+      perPage: 10,
+      sortField: 'updated_at',
+      sortOrder: 'desc'
     })
   }
 
@@ -171,34 +174,34 @@ export const survey_columns = [
     key: '$.name',
     label: 'Name',
     stickyColumn: true,
-    sortable: true
+    //sortable: true
   },
   {
     key: 'description',
     label: 'Description',
-    sortable: true,
+    //sortable: true,
   },
   {
     key: '$.public',
     label: 'Status',
     formatter: (p) => p ? 'Published' : 'Closed',
-    sortable: true,
+    //sortable: true,
   },
   {
     key: 'publishedOn',
     label: 'Published On',
-    sortable: true,
+    //sortable: true,
   },
   {
     key: '$.updated_at',
     label: 'Last Modified On',
-    sortable: true,
+    //sortable: true,
     formatter: (d) => new Date(d).toLocaleDateString()
   },
   {
     key: 'updated_by',
     label: 'Last Modified By',
-    sortable: true
+    //sortable: true
   },
   'preview',
   'surveyLink',

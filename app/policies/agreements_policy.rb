@@ -4,6 +4,10 @@ class AgreementsPolicy < PlannerPolicy
     return true
   end
 
+  def latest?
+    return true
+  end
+
   def show?
     return true
   end
