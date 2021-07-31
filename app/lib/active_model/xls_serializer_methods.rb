@@ -7,13 +7,18 @@
 #
 module ActiveModel
   module XlsSerializerMethods
-    def to_a
+    def to_a(cols)
       return [] unless @object
       @attributes = nil
 
       associated_serializers
 
-      @object.class.attribute_names.collect { |name| value_for_cell(@object[name.to_sym], name) }
+      if cols && cols.size.positive?
+        cols.collect { |name| value_for_cell(read_attribute(name), name) }
+      else
+        # self.class._attributes.collect { |name| value_for_cell(read_attribute(name), name) } #value_for_cell(h[name.to_sym], name) }
+        @object.class.attribute_names.collect { |name| value_for_cell(@object[name.to_sym], name) }
+      end
     end
 
     def set_object(obj)
@@ -30,6 +35,7 @@ module ActiveModel
         associated_serializers unless @associated_serializers
 
         cname = name.split('.')
+        Rails.logger.debug "***** NAME IS #{name}"
         if name.include?('survey_responses')
           association = self._reflections[:survey_responses].build_association(self, {})
 
@@ -83,26 +89,6 @@ module ActiveModel
       else
         val
       end
-
-      # case val.class.name
-      # when 'DateTime'
-      #   Rails.logger.debug("**** datetime")
-      #
-      #   FastExcel.date_num(val, val.in_time_zone.utc_offset) if val
-      # when :Time
-      #   Rails.logger.debug("**** time")
-      #
-      #   FastExcel.date_num(val, val.in_time_zone.utc_offset) if val
-      # when 'ActiveSupport::TimeWithZone'
-      #   Rails.logger.debug("**** time with zone")
-      #   FastExcel.date_num(val, val.in_time_zone.utc_offset) if val
-      # when 'TrueClass'
-      #   val == true
-      # when 'FalseClass'
-      #   val == true
-      # else
-        # val
-      # end
     end
 
     def response_columns
@@ -110,7 +96,25 @@ module ActiveModel
     end
 
     def column_titles(cols = nil)
-      return attribute_names
+      return attribute_names unless response_columns
+
+      cols = attribute_names + response_columns.collect{|e| e[:name]}
+      # res_cols = response_columns
+      # if res_cols
+      #   res_cols.collect{|a| dynamic_translations[a[:name]] = a[:display_name] }
+      # end
+
+      # if cols
+      #   cols.collect do |c|
+      #     if class_columns[c] && class_columns[c][:raw_label].present?
+      #       class_columns[c][:raw_label]
+      #     else
+      #       col_name_translate(c, dynamic_translations)
+      #     end
+      #   end
+      # else
+      #   []
+      # end
     end
 
     def get_styles(record = nil, styles)
