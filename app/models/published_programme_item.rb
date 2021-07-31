@@ -4,7 +4,6 @@
 class PublishedProgrammeItem < ApplicationRecord
   self.primary_key = :programmme_item_id
 
-  belongs_to :setup_type
   belongs_to :format
   belongs_to :programmme_item
 
