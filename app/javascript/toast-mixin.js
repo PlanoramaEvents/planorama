@@ -13,6 +13,16 @@ const toastMixin = {
         title: 'Something went wrong',
         // toaster: 'planotoaster'
       })
+    },
+    toastCallback(method, success_message) {
+      method().then(() => this.success_toast(success_message))
+        .catch((error) => this.error_toast(error.message))
+    },
+    toastSuccessFailure(success_message) {
+      return {
+        success: () => this.success_toast(success_message),
+        failure: (error) => this.error_toast(error.message)
+      }
     }
   }
 }

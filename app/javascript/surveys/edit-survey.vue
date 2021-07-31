@@ -29,7 +29,8 @@
         </edit-survey-page>
       </b-tab>
       <b-tab title="Responses" :active="!!responses">
-        <h1>Coming soon</h1>
+        <p>There are <em>TODO GET THIS NUMBER</em> total responses.</p>
+        <p>Download responses: <a :href="downloadLink" :download="filename">{{filename}}</a></p>
       </b-tab>
       <survey-settings-tab></survey-settings-tab>
       <b-tab title="Audit Log" disabled>
@@ -46,27 +47,34 @@ import { UNSELECT, SAVE, SELECT } from '../model.store';
 import { SELECT_PAGE } from './survey.store';
 import { Survey } from './survey';
 import surveyMixin from './survey-mixin'
+import surveyIdPropMixin from './survey-id-prop-mixin';
 import SurveySettingsTab from './survey-settings-tab.vue';
 import NotImplemented from '../not-implemented.vue';
 
 export default {
   name: "EditSurvey",
-  props: ['id', 'responses'],
-  mixins: [surveyMixin],
+  props: ['responses'],
+  mixins: [
+    surveyMixin,
+    surveyIdPropMixin,
+  ],
   components: {
     EditSurveyPage,
     EditSurveyControls,
     SurveySettingsTab,
     NotImplemented,
   },
-  computed: mapState({
-    surveys: 'collection'
-  }),
+  computed: {
+    downloadLink() {
+      return `/surveys/${this.survey?.id}/submissions.xls`
+    },
+    filename() {
+      return `survey_${this.survey?.id}_responses.xls`
+    }
+  },
   methods: {
     ...mapMutations({
       unselect: UNSELECT,
-      select: SELECT,
-      selectPage: SELECT_PAGE
     }),
     back() {
       // TODO only unselect if not coming from view page
@@ -74,17 +82,6 @@ export default {
       this.$router.push('/');
     }
   },
-  mounted() {
-    console.log(this);
-    if (!this.survey && this.id) {
-      console.log('trying to load survey id', this.id)
-      let model = new Survey({id: this.id}, this.surveys);
-      model.fetch().then(() => {
-        this.select(model);
-        this.selectPage(model.survey_pages[0]);
-      });
-    }
-  }
 }
 </script>
 

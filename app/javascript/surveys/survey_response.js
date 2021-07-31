@@ -1,4 +1,4 @@
-import {PlanoModel} from "../model";
+import {PlanoModel, PlanoCollection} from "../model";
 
 export class SurveySubmission extends PlanoModel {
   defaults() {
@@ -27,5 +27,26 @@ export class SurveySubmission extends PlanoModel {
       data.survey_responses_attributes = data.survey_responses
     }
     return data;
+  }
+}
+
+export class SurveySubmissions extends PlanoCollection {
+  options() {
+    return {
+      model: SurveySubmission
+    }
+  }
+
+  defaults() {
+    return {
+      survey_id: null,
+      page: null
+    }
+  }
+
+  routes() {
+    return {
+      fetch: '/surveys/{survey_id}/submissions'
+    }
   }
 }

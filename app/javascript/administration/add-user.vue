@@ -1,11 +1,12 @@
 <template>
-  <div>
-    <model-field :label="label" v-model="person[field]" :key="field" :type="type" v-for="({label, type}, field) in fields" stateless></model-field>
+  <b-form>
+    <model-field label="Name" v-model="person.name" type="text" stateless></model-field>
+    <email-field label="Email" id="new-user-email" v-model="email"></email-field>
     <div class="d-flex justify-content-end">
       <b-button variant="link" @click="cancel">Cancel</b-button>
       <b-button variant="primary" @click="save">Save</b-button>
     </div>
-  </div>
+  </b-form>
 </template>
 
 <script>
@@ -13,21 +14,27 @@ import { Person } from '../people/people'
 import toastMixin from '../toast-mixin';
 import { ADMIN_ADD_USER_SUCCESS } from '../constants/strings';
 import ModelField from '../model-field';
+import EmailField from '../shared/email_field';
 
 export default {
   name: "AddUser",
   components: {
     ModelField,
+    EmailField,
   },
   mixins: [toastMixin],
   data: () =>  ({
     person: new Person(),
   }),
   computed: {
-    fields() {
-      let fields = Object.keys(this.person.schema()).reduce((p, c) => Object.assign(p, {[c]: this.person.schema()[c]}), {});
-      console.log("person fields", fields)
-      return fields;
+    email: {
+      get() {
+        return this.person.email_addresses && this.person.email_addresses[0]?.email;
+      },
+      set(val) {
+        this.person.email_addresses = [{email: val, isdefault: true}];
+      }
+
     }
   },
   methods: {

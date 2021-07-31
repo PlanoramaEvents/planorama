@@ -5,11 +5,11 @@
     }}</b-alert>
     <b-alert :show="error.visible" variant="danger">{{ error.text }}</b-alert>
     <b-form @submit="onSubmit">
-      <login-email-field
+      <email-field
         v-model="person.email"
         @validated="form.email.valid = $event"
         :validateNow="form.email.validate"
-      ></login-email-field>
+      ></email-field>
       <login-password-field
         v-model="person.password"
         @validated="form.password.valid = $event"
@@ -27,7 +27,7 @@
 
 <script>
 import {PlanoModel} from "../model";
-import LoginEmailField from "./login_email_field";
+import EmailField from "../shared/email_field";
 import LoginPasswordField from "./login_password_field";
 
 import { validateFields } from "../utils";
@@ -86,7 +86,7 @@ export default {
     };
   },
   components: {
-    LoginEmailField,
+    EmailField,
     LoginPasswordField,
   },
   mounted: function () {
