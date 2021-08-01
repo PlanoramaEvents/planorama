@@ -11,7 +11,11 @@ module ResourceMethods
     format = params[:format]
 
     if format == 'xls' || format == 'xlsx'
-      generate_xls
+      if belongs_to_param_id
+        generate_xls(xls_serializer_class, { serializer: { model_id: belongs_to_param_id } })
+      else
+        generate_xls
+      end
     else
       if serializer_class
         render json: @collection,
@@ -133,8 +137,6 @@ module ResourceMethods
     @direction = params[:sortOrder] || ''
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
     @order.slice!('$.')
-    # base
-
 
     q = policy_scope(base, policy_scope_class: policy_scope_class)
       .includes(includes)

@@ -29,7 +29,6 @@ module ActiveModel
       @objects.each do |record|
         # set the object to use for this row
         the_serializer.set_object record
-        row = the_serializer.to_a
 
         # 2. Create columns headers - this is the first row
         if first
@@ -45,6 +44,8 @@ module ActiveModel
             }
           )
         end
+
+        row = the_serializer.to_a(the_serializer.column_fields)
         worksheet.append_row(
           row,
           styles
