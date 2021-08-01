@@ -45,7 +45,7 @@ module ActiveModel
           )
         end
 
-        row = the_serializer.to_a(the_serializer.column_titles)
+        row = the_serializer.to_a(the_serializer.column_fields)
         worksheet.append_row(
           row,
           styles

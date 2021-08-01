@@ -98,23 +98,13 @@ module ActiveModel
     def column_titles(cols = nil)
       return attribute_names unless response_columns
 
-      cols = attribute_names + response_columns.collect{|e| e[:name]}
-      # res_cols = response_columns
-      # if res_cols
-      #   res_cols.collect{|a| dynamic_translations[a[:name]] = a[:display_name] }
-      # end
+      attribute_names + response_columns.collect{|e| e[:display_name]}
+    end
 
-      # if cols
-      #   cols.collect do |c|
-      #     if class_columns[c] && class_columns[c][:raw_label].present?
-      #       class_columns[c][:raw_label]
-      #     else
-      #       col_name_translate(c, dynamic_translations)
-      #     end
-      #   end
-      # else
-      #   []
-      # end
+    def column_fields(cols = nil)
+      return attribute_names unless response_columns
+
+      attribute_names + response_columns.collect{|e| e[:name]}
     end
 
     def get_styles(record = nil, styles)
