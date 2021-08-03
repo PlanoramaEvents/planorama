@@ -15,4 +15,8 @@ class SurveySerializer < ActiveModel::Serializer
   belongs_to :published_by
   belongs_to :created_by
   belongs_to :updated_by
+
+  attribute :nbr_submissions do
+    object.survey_submissions.size
+  end
 end
