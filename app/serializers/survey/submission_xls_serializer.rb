@@ -22,9 +22,13 @@ class Survey::SubmissionXlsSerializer < Survey::SubmissionSerializer
 
       if questions
         questions.each do |question|
+          # exclude the line and text only question types
+          next if [:hr, :textonly].include? question.question_type
+
           res << {
             name: "survey_responses.#{question.id}",
-            display_name: question.question
+            display_name: question.question,
+            question_type: question.question_type
           }
         end
       end
