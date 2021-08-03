@@ -27,7 +27,6 @@ module ActiveModel
     end
 
     def read_attribute(name)
-      Rails.logger.error "*** READ #{name}"
       if self.class._attributes_data.key?(name.to_sym)
         self.class._attributes_data[name.to_sym].value(self)
       else
@@ -35,7 +34,6 @@ module ActiveModel
         associated_serializers unless @associated_serializers
 
         cname = name.split('.')
-        Rails.logger.debug "***** NAME IS #{name}"
         if name.include?('survey_responses')
           association = self._reflections[:survey_responses].build_association(self, {})
 
@@ -95,13 +93,13 @@ module ActiveModel
       nil
     end
 
-    def column_titles(cols = nil)
+    def column_titles
       return attribute_names unless response_columns
 
       attribute_names + response_columns.collect{|e| e[:display_name]}
     end
 
-    def column_fields(cols = nil)
+    def column_fields
       return attribute_names unless response_columns
 
       attribute_names + response_columns.collect{|e| e[:name]}
@@ -111,8 +109,8 @@ module ActiveModel
       res = []
 
       if record
-        record.class.attribute_types.each do |r|
-          res << to_xl_style(r[1].class, styles)
+        attribute_for_sheet.collect do |attribute|
+          res << to_xl_style(record.class.attribute_types[attribute.to_s].class, styles)
         end
       end
 
@@ -127,16 +125,14 @@ module ActiveModel
       end
     end
 
-    def attribute_names(cols = nil)
-      return cols if cols && cols.size.positive?
-
-      if self.class.method_defined? '_attributes'
-        self.class._attributes.collect do |attribute|
-          attribute.to_s
-        end
-      else
-        @object.class.attribute_names
+    def attribute_names
+      attribute_for_sheet.collect do |attribute|
+        attribute.to_s
       end
+    end
+
+    def attribute_for_sheet
+      self.class._attributes.difference([:lock_version, :survey_id, :person_id, :fuuid])
     end
   end
 end
