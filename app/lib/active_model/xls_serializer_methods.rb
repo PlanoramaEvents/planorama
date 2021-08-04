@@ -16,7 +16,6 @@ module ActiveModel
       if cols && cols.size.positive?
         cols.collect { |name| value_for_cell(read_attribute(name), name) }
       else
-        # self.class._attributes.collect { |name| value_for_cell(read_attribute(name), name) } #value_for_cell(h[name.to_sym], name) }
         @object.class.attribute_names.collect { |name| value_for_cell(@object[name.to_sym], name) }
       end
     end
@@ -103,6 +102,12 @@ module ActiveModel
       return attribute_names unless response_columns
 
       attribute_names + response_columns.collect{|e| e[:name]}
+    end
+
+    def question_types
+      return {} unless response_columns
+
+      response_columns.collect{|e| {e[:name] => e[:question_type]}}.reduce({}, :merge)
     end
 
     def get_styles(record = nil, styles)
