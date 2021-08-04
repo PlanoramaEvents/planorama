@@ -27,8 +27,8 @@ export class Configurations {
 
   constructor() {
     // this needs all the properties you want to be reactive.
-    this.event_email = {parameter_value: null};
-    this.event_phone = {parameter_value: null};
+    this.event_email = {parameter: 'event_email', parameter_value: null};
+    this.event_phone = {parameter: 'event_phone', parameter_value: null};
     this.data = {};
     this.config_names = [];
   }
@@ -44,7 +44,7 @@ export class Configurations {
       http.get('/configurations').then(resp => {
         for (let key in resp.data) {
           let val = resp.data[key]
-          this[key] = val ? new Configuration(val) : new Configuration();
+          this[key] = val ? new Configuration(val) : new Configuration({parameter: key});
         }
         this.data = resp.data;
         this.config_names = Object.keys(resp.data);
