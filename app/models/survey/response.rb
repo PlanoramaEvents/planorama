@@ -28,7 +28,11 @@ class Survey::Response < ApplicationRecord
     hash.each_with_object({}) do |(k, v), h|
       if v.is_a? Hash
         flatten_response(v).map do |h_k, h_v|
-        h["#{k}.#{h_k}".to_sym] = h_v
+          if k == 'socialmedia'
+            h["#{k}.#{h_k}".to_sym] = "#{h_k}:#{h_v}" unless h_v.blank?
+          else
+            h["#{k}.#{h_k}".to_sym] = h_v unless h_v.blank?
+          end
         end
       else
         h[k] = v
