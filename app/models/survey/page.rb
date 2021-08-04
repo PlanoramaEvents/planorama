@@ -6,7 +6,7 @@ class Survey::Page < ApplicationRecord
     :fuuid
   ]
 
-  default_scope { order(['survey_pages.sort_order', :title])}
+  default_scope { order(['survey_pages.sort_order asc'])}
 
   has_many :survey_questions,
            class_name: 'Survey::Question',

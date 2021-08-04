@@ -7,9 +7,9 @@ class Survey::SubmissionXlsSerializer < Survey::SubmissionSerializer
   end
 
   has_many :survey_responses do
-    object.survey_responses.group_by{|v| v.survey_question_id}.transform_values! { |v|
-      v.first.response_as_text
-    }
+    object.survey_responses.collect { |v|
+      {v.survey_question_id => v.response_as_text}
+    }.reduce({}, :merge)
   end
 
   # dynamic fields for columns
