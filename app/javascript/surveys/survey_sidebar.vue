@@ -19,9 +19,9 @@
           </b-col>
         </b-row>
         <div class="float-right d-flex justify-content-end">
-          <b-button title="Survey Link" variant="primary"><a :href="surveyLink" target="_blank"><b-icon-link45deg variant="white"></b-icon-link45deg></a></b-button>
-          <b-button title="Preview Survey" class="mx-2" variant="primary"><a :href="previewLink" target="_blank"><b-icon-eye-fill variant="white"></b-icon-eye-fill></a></b-button>
-          <b-button title="Edit Survey" variant="primary"><router-link :to="editLink"><b-icon-pencil variant="white"></b-icon-pencil></router-link></b-button>
+          <b-button title="Survey Link" variant="primary" :href="surveyLink" target="_blank"><b-icon-link45deg variant="white"></b-icon-link45deg></b-button>
+          <b-button title="Preview Survey" class="mx-2" variant="primary" :href="previewLink" target="_blank"><b-icon-eye-fill variant="white"></b-icon-eye-fill></b-button>
+          <b-button title="Edit Survey" variant="primary" :to="editLink"><b-icon-pencil variant="white"></b-icon-pencil></b-button>
           <span title="Send Survey"><b-button variant="primary" disabled class="mx-2" title="Send Survey"><b-icon-envelope></b-icon-envelope></b-button></span>
           <b-dropdown variant="primary" right no-caret>
             <template #button-content>
