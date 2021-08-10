@@ -19,8 +19,6 @@ RUN apk add \
       git \
       less \
       netcat-openbsd \
-      nodejs \
-      nodejs-npm \
       postgresql-client \
       postgresql-dev \
       pkgconfig \
@@ -37,12 +35,18 @@ RUN gem install bundler:2.2.4
 ADD . /opt/planorama
 WORKDIR /opt/planorama
 
+# Just not use dev here
 RUN bundle install
-RUN yarn install --frozen-lockfile
+
+# Just not use dev here
+# NODE_ENV=production
+# RUN yarn install --frozen-lockfile
+
+# The asset compile etc is down as part of the startup ... for now
 # The precompile will also deal with the webpacker assets
-RUN bundle exec rake assets:precompile
+# RUN bundle exec rake assets:precompile
 # The precompile the webpacker assets
-RUN bundle exec rake webpacker:compile
+# RUN bundle exec rake webpacker:compile
 
 # We expose the port
 EXPOSE 3000

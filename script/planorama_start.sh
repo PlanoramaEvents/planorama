@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 # inspired by the start script  from Matthew's wellington code
 
+export NODE_ENV=${RAILS_ENV}
+
 # Development environment setup runs when RAILS_ENV is not set
 if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   gem install bundler:2.2.4
@@ -23,13 +25,20 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   # Run migrations and start the server, anything that comes in on 3000 is accepted
   # bin/rails db:create
   bin/rails db:seed
+else
+  until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST/$DB_NAME" -c 'select current_date'; do
+    echo "waiting for postgres..."
+    sleep 5
+  done
+
+  bin/yarn install --frozen-lockfile
+  bin/rake assets:precompile
+  bin/rake webpacker:compile
 fi
 
 bin/rake dev:db_missing || (bin/rails db:create; bin/rails db:structure:load)
 
 # bin/rails db:structure:load
 bin/rake db:migrate
-bin/rails server -b 0.0.0.0
 
-# bin/rake db:migrate
-# bin/rails server -b 0.0.0.0
+bin/rails server -b 0.0.0.0

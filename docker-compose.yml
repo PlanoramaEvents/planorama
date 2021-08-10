@@ -19,9 +19,9 @@ services:
       - .envrc
     volumes:
       - pgdata:/var/lib/postgresql/data
-      # - ./init_data:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+
   #planorama-redis:
     # image: redis:alpine
     # restart: always
@@ -36,12 +36,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # command: sleep 100000
     # we should be able to use ./ but put in full path just to be safe
     #command: /opt/planorama/script/planorama_start.sh
     command: tail -f /dev/null
-    env_file:
-      - .envrc
     depends_on:
       - postgres
       # - planorama-redis

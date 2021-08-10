@@ -4,6 +4,10 @@
 #
 # docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
 #
+# docker-compose -f docker-compose.yml -f docker-compose-dev.yml up --build
+#
+# docker-compose -f docker-compose.yml -f docker-compose-dev.yml up --build -d
+#
 version: "3.7"
 
 services:
@@ -15,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-dev
+    env_file:
+      - .envrc
     command: /opt/planorama/script/planorama_start.sh
     volumes:
       - node_modules:/opt/planorama/node_modules

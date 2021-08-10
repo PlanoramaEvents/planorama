@@ -1,7 +1,8 @@
 #
 # This is the dev version of the docker compose
 #
-# docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
+# docker-compose -f docker-compose.yml -f  docker-compose-staging.yml up
+# docker-compose -f docker-compose.yml -f  docker-compose-staging.yml up --build
 #
 version: "3.7"
 
@@ -17,28 +18,57 @@ services:
     ports:
       - "36379:6379"
 
-  # TODO: sidekiq
   planorama-sidekiq:
-    image: planorama:latest
+    image: planorama:staging
+    volumes:
+      - node_modules:/opt/planorama/node_modules
+      - type: tmpfs
+        target: /opt/planorama/tmp
     build:
       context: .
-      dockerfile: dockerfile
-    # TODO: run sidekiq shell
-    command:
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - POSTGRES_USER=planner
+      - POSTGRES_PASSWORD=H0rvendile
+      - RAILS_ENV=staging
+      - NODE_ENV=staging
+    command: /opt/planorama/script/planorama_sidekiq.sh
     restart: always
     depends_on:
       - postgres
       - planorama-redis
+    links:
+      - planorama-redis
 
   # The planner app server
   planorama:
-    env_file:
-      - .envrc
-    # TODO: run planorama
-    command:
+    image: planorama:staging
+    volumes:
+      - node_modules:/opt/planorama/node_modules
+      - type: tmpfs
+        target: /opt/planorama/tmp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - POSTGRES_USER=planner
+      - POSTGRES_PASSWORD=H0rvendile
+      - RAILS_ENV=staging
+      - NODE_ENV=staging
+    command: /opt/planorama/script/planorama_start.sh
+    ports:
+      - "3000:3000"
+    restart: always
     depends_on:
+      - postgres
       - planorama-redis
     links:
       - planorama-redis
-    volumes:
-      - .:/opt/planorama
+
+# Simple volumes used for persistent storage
+volumes:
+  node_modules:

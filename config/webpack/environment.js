@@ -16,6 +16,6 @@ config.resolve = {
         'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['*', '.js', '.vue', '.json']
-},
+}
 
 module.exports = environment

@@ -7,6 +7,7 @@ module MagicLinkService
   # rediorect_url: where to redirect to
   # valid_for: number of hours that the token is valid for
   #
+  # TODO: provide an enpoint to generate a link for a given person
   def self.generate(person_id:, redirect_url: nil, valid_for: 24)
     expires_at = Time.now + valid_for.hours
 
