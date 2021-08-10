@@ -16,7 +16,7 @@ module.exports = {
     LOGIN_TOKEN_EXPIRED: (resetPasswordLink) => `The password reset link you used is no longer valid. Please request another link here: ${resetPasswordLink}`,
     SURVEY_SAVE_SUCCESS: "Survey successfully saved.",
     SURVEY_CONFIRM_PUBLISH: "You have published this survey. This will allow responses to be collected. Are you sure you want to publish this survey?",
-    SURVEY_CONFIRM_CLOSE: "You have closed this survey. This will no longer allow any responses to be collected. Are you sure you want to close this survey?",
+    SURVEY_CONFIRM_CLOSE: "You are about to close this survey. This will no longer allow any responses to be collected. Are you sure you want to close this survey?",
     SURVEY_CONFIRM_DELETE: `Are you sure you want to permanently delete this survey? This cannot be undone.`,
     SURVEY_CONFIRM_DELETE_PAGE_1: "Deleting a page also deletes the questions and response options it contains.",
     SURVEY_CONFIRM_DELETE_PAGE_2: "To preserve the questions, choose \"Merge page up\" from the page options.",
