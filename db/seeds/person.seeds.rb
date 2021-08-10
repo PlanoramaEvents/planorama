@@ -36,16 +36,6 @@ Person.destroy_all
         bio: Bio.create(
             bio: Faker::Lorem.sentences(number: 3),
             website: Faker::Internet.url
-            #twitter text,
-            #othersocialmedia text,
-            #photourl text,
-            #facebook text,
-            #linkedin text,
-            #twitch text,
-            #youtube text,
-            #instagram text,
-            #flickr text,
-            #reddit text
         )
     )
     e = name.gsub(' ', '_') + i.to_s + '@test.com'
@@ -75,8 +65,14 @@ Person.destroy_all
     person.bio.instagram = username
     person.bio.flickr = username
     person.bio.reddit = username
+    person.bio.tiktok = username
     person.bio.save
     #p "Twitter is #{person.bio.twitter}"
+    
+    PersonRole.create(
+        person: person,
+        role: PersonRole.roles[:member]
+      )
 
 end
 

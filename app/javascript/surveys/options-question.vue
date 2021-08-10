@@ -14,7 +14,7 @@
             <b-icon-x @click="removeOption(a)" class="h3"></b-icon-x>
           </div>
           <div class="col-6" v-if="singlechoice && question.branching">
-            <next-page-picker class="mt-n2 mb-2" :disabled="singlePage" v-if="isSelected" v-model="a.next_page_id"></next-page-picker>
+            <next-page-picker :id="pagePickerId(a)" class="mt-n2 mb-2" :disabled="singlePage" v-if="isSelected" v-model="a.next_page_id"></next-page-picker>
           </div>
         </div>
       </template>
@@ -28,7 +28,7 @@
           <b-icon-x @click="removeOther" class="h3"></b-icon-x>
         </div>
         <div class="col-6" v-if="singlechoice && question.branching">
-          <next-page-picker class="mt-n2 mb-2" :disabled="singlePage" v-if="isSelected" v-model="other.next_page_id"></next-page-picker>
+          <next-page-picker :id="pagePickerId(other)" class="mt-n2 mb-2" :disabled="singlePage" v-if="isSelected" v-model="other.next_page_id"></next-page-picker>
         </div>
       </div>
     </template>
@@ -84,6 +84,9 @@ export default {
     },
   },
   methods: {
+    pagePickerId(answer) {
+      return `page-picker-answer-${answer.id}`
+    },
     addOption() {
       if (!this.question.survey_answers) {
         this.question.survey_answers = []

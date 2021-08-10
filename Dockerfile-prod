@@ -38,9 +38,7 @@ WORKDIR /opt/planorama
 # Just not use dev here
 RUN bundle install
 
-# Just not use dev here
-# NODE_ENV=production
-# RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile
 
 # The asset compile etc is down as part of the startup ... for now
 # The precompile will also deal with the webpacker assets
