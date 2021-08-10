@@ -21,6 +21,10 @@ services:
       dockerfile: Dockerfile-dev
     env_file:
       - .envrc
+    environment:
+      - DB_HOST=postgres
+      - RAILS_ENV=development
+      - NODE_ENV=development
     command: /opt/planorama/script/planorama_start.sh
     volumes:
       - node_modules:/opt/planorama/node_modules

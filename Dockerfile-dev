@@ -13,6 +13,7 @@ WORKDIR /opt/planorama
 
 # Use a persistent volume for the gems installed by the bundler
 ENV BUNDLE_PATH /var/bundler
+ENV RAILS_ENV development
 
 RUN apk add \
       build-base \
