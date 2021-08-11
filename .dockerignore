@@ -1,6 +1,12 @@
 .git*
+.envrc
+.DS_Store
+.storybook
 db/*.sqlite3
 db/*.sqlite3-journal
 log/*
 tmp/*
+node_modules/*
+public/assets/*
+public/packs/*
 Dockerfile
