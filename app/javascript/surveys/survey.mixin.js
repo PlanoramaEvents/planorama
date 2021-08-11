@@ -6,13 +6,13 @@ import { SURVEY_SAVE_SUCCESS } from '../constants/strings'
 const surveyMixin = {
   mixins: [toastMixin],
   computed: {
-    ...mapState({
+    ...mapState('surveys', {
       survey: 'selected'
     }),
   },
   methods: {
     save(event, success_text = SURVEY_SAVE_SUCCESS) {
-      this.$store.dispatch(SAVE, {item: this.survey})
+      this.$store.dispatch(`survey/${SAVE}`, {item: this.survey})
         .then(() => this.success_toast(success_text))
         .catch((error) => this.error_toast(error.message))
     },

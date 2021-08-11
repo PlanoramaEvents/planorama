@@ -12,7 +12,7 @@ export default {
       default: false
     }
   },
-  computed: mapState({
+  computed: mapState('surveys', {
     survey: 'selected'
   })
 }

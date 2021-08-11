@@ -6,7 +6,8 @@
 </template>
 
 <script>
-import {mapState, mapMutations, mapActions} from 'vuex';
+import { createNamespacedHelpers} from 'vuex';
+const {mapState, mapMutations} = createNamespacedHelpers('surveys');
 import { UNSELECT, SAVE, SELECT } from '../model.store';
 import { NEW_SUBMISSION, SELECT_PAGE } from './survey.store';
 import { Survey } from './survey';

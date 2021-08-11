@@ -2,7 +2,7 @@ import {mapState} from 'vuex';
 
 const questionMixin = {
   computed: {
-    ...mapState(['selected_question']),
+    ...mapState('surveys', ['selected_question']),
     textfield() {
       return this.question.question_type === "textfield";
     },

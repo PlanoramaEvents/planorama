@@ -12,14 +12,26 @@ export class BasePlanoStore {
   constructor(moduleName, namespaced = false) {
     this.moduleName = moduleName;
     this.namespaced = namespaced;
+    this.children = [];
   }
   initialize(vuex) {
     return new vuex.Store(this)
   }
 
+  registerModule(name, config) {
+    name = Array.isArray(name) ? name : [name];
+    this.children.push({name, config })
+  }
+
   registerAsModuleFor(store) {
-    console.log('namespaced', this.namespaced)
-    store.registerModule(this.moduleName, this);
+    if (this.children.length) {
+      store.registerModule(this.moduleName, this);
+      this.children.map(({name, config}) => {
+        store.registerModule([this.moduleName, ...name], config)
+      })
+    } else {
+      store.registerModule(this.moduleName, this);
+    }
   }
 }
 

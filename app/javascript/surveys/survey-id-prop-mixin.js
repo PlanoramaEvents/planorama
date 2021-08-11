@@ -1,5 +1,6 @@
-import surveyMixin from "./survey-mixin";
-import { mapMutations, mapState } from "vuex";
+import surveyMixin from "./survey.mixin";
+import { createNamespacedHelpers} from 'vuex';
+const { mapMutations, mapState } = createNamespacedHelpers('surveys');
 import { SELECT } from "../model.store";
 import { SELECT_PAGE } from './survey.store'
 import { Survey } from './survey'

@@ -2,6 +2,7 @@
   <table-vuex
     sortField="published_name_sort_by"
     :modelType="modelType"
+    namespace="people"
   >
   </table-vuex>
 </template>

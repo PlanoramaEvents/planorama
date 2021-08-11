@@ -1,5 +1,5 @@
 <template>
-  <sidebar-vuex>
+  <sidebar-vuex v-bind="{namespace}">
     <template #header v-if="selected">
       <h1 class="title">{{ selected[titleField] || selected[Object.keys(fields)[0]] }}</h1>
     </template>
@@ -40,6 +40,10 @@ export default {
     pulledFields: {
       type: Array,
       default: () => []
+    },
+    namespace: {
+      type: String,
+      default: null
     }
   },
   components: {

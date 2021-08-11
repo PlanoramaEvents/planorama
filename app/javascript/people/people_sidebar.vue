@@ -1,6 +1,7 @@
 <template>
   <model-sidebar
     title-field="published_name"
+    namespace="people"
   >
     <template #tabs="{selected}">
       <b-tab title="Bio">

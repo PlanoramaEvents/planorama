@@ -29,7 +29,8 @@
 
 <script>
 import SurveyQuestion from './survey_question';
-import {mapState, mapMutations, mapActions} from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
+const {mapState, mapMutations, mapActions} = createNamespacedHelpers('surveys');
 import { UNSELECT, SAVE, SELECT } from '../model.store';
 import { NEW_SUBMISSION, SELECT_PAGE, SUBMIT } from './survey.store';
 import { Survey } from './survey';

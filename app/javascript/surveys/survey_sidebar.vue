@@ -1,6 +1,6 @@
 <template>
   <div>
-    <sidebar-vuex v-if="survey">
+    <sidebar-vuex v-if="survey" namespace="surveys">
       <template #header>
         <h3>Survey Details</h3>
         <small class="text-muted d-block">Last updated:</small>
@@ -60,7 +60,7 @@ import { mapActions } from 'vuex';
 import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../model.store';
 import SidebarVuex from '../sidebar_vuex';
 import SurveyQuestion from './survey_question';
-import surveyMixin from './survey-mixin';
+import surveyMixin from './survey.mixin';
 import SurveySettingsTab from './survey-settings-tab';
 import { CLEAR_SUBMISSIONS } from './survey.store';
 import {
@@ -102,11 +102,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
+    ...mapActions('surveys', {
       edit: EDIT
     }),
     destroy() {
-      this.$store.dispatch(DELETE, {item: this.survey})
+      this.$store.dispatch(`surveys/${DELETE}`, {item: this.survey})
         .then(() => this.success_toast(SURVEY_SAVE_SUCCESS_DELETE))
         .catch((error) => {
           console.log(error);
@@ -114,7 +114,7 @@ export default {
         })
     },
     clearResponses() {
-      this.$store.dispatch(CLEAR_SUBMISSIONS, {item: this.survey})
+      this.$store.dispatch(`surveys/${CLEAR_SUBMISSIONS}`, {item: this.survey})
         .then(() => this.success_toast(SURVEY_RESULTS_CLEAR_SUCCESS))
         .catch((error) => {
           console.log(error)
@@ -132,9 +132,9 @@ export default {
       this.$router.push(this.responsesLink);
     },
     duplicate() {
-      this.$store.dispatch(DUPLICATE, {item: this.survey}).then((newSurvey) => {
-        this.$store.commit(UNSELECT);
-        this.$router.push(`/edit/${newSurvey.id}`)
+      this.$store.dispatch(`surveys/${DUPLICATE}`, {item: this.survey}).then((newSurvey) => {
+        this.$store.commit(`surveys/${UNSELECT}`);
+        this.$router.push(`surveys/edit/${newSurvey.id}`)
       }).catch((error) => this.error_toast(error.message));
     }
   }

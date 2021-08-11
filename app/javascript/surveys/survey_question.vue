@@ -297,7 +297,8 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {createNamespacedHelpers} from 'vuex';
+const {mapState} = createNamespacedHelpers('surveys');
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
 import questionMixin from './question.mixin';

@@ -14,7 +14,6 @@ Vue.use(BootstrapVueIcons);
 const store = adminStore.initialize(Vuex);
 settingsStore.registerAsModuleFor(store);
 agreementStore.registerAsModuleFor(store);
-peopleStore.namespaced = true;
 peopleStore.registerAsModuleFor(store);
 
 const app = new Vue({

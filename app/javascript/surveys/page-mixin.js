@@ -1,10 +1,10 @@
-import surveyMixin from './survey-mixin';
+import surveyMixin from './survey.mixin';
 import { mapState } from 'vuex'
 
 const pageMixin = {
   mixins: [surveyMixin],
   computed: {
-    ...mapState(['selected_page']),
+    ...mapState('surveys', ['selected_page']),
     selectedNumber() {
       return this.survey?.survey_pages?.indexOf(this.selected_page) + 1;
     },

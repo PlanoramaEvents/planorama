@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import surveyMixin from './survey-mixin';
+import surveyMixin from './survey.mixin';
 import { 
   SURVEY_CONFIRM_CLOSE, 
   SURVEY_CONFIRM_PUBLISH,

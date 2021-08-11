@@ -29,8 +29,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { createNamespacedHelpers, mapMutations } from 'vuex';
 import { UNSELECT } from './model.store';
+import namespacedMixin from './namespaced.mixin';
 
 export default {
   name: 'SidebarVuex',
@@ -38,11 +39,13 @@ export default {
     width: {
       type: String,
       default: '50%'
-    }
+    },
   },
-  computed: mapState(['selected']),
-  methods: mapMutations({
-    unselect: UNSELECT
-  })
+  mixins: [
+    namespacedMixin(
+      ['selected'],
+      {unselect: UNSELECT}
+    )
+  ],
 }
 </script>

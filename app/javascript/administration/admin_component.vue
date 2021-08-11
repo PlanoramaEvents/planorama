@@ -69,16 +69,16 @@ export default {
     }
   }),
   computed: {
-    ...mapState('configuration', {
+    ...mapState('admin/configuration', {
       configuration: state =>  state.collection
     }),
-    ...mapState('agreements', ['information_ethics']),
+    ...mapState('admin/agreements', ['information_ethics']),
     event_settings_dirty() {
       return this.configuration.changed(ADMIN_CONFIGS)
     }
   },
   methods: {
-    ...mapActions('agreements', {
+    ...mapActions('admin/agreements', {
       fetchIea: FETCH_IEA,
       saveIea: SAVE_IEA
     }),

@@ -35,11 +35,11 @@
 
 <script>
 import EditSurveyQuestion from './edit-survey-question.vue';
-import { mapState, mapMutations, mapActions } from 'vuex';
-import { SELECT_PAGE, UNSELECT_PAGE, UNSELECT_QUESTION } from './survey.store';
-import { SAVE } from '../model.store';
+import { createNamespacedHelpers } from 'vuex';
+const { mapState, mapActions, mapMutations } = createNamespacedHelpers('surveys');
+import { SELECT_PAGE, UNSELECT_PAGE } from './survey.store';
 import draggable from 'vuedraggable';
-import surveyMixin from './survey-mixin';
+import surveyMixin from './survey.mixin';
 import NextPagePicker from './next-page-picker';
 
 import { 

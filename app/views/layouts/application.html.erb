@@ -12,23 +12,22 @@
 
     <%= javascript_pack_tag 'application' %>
     <%= stylesheet_pack_tag 'application' %>
-    <%= javascript_pack_tag 'navbar_vue' %>
-    <%= stylesheet_pack_tag 'navbar_vue' %>
-
 
     <title>Planorama</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
   </head>
   <body>
-
+    <div id="app">
+      <planorama-app></planorama-app>
+    </div>
+<!--
     <div class="container-fluid">
       <% if current_person %>
         <div class="row">
           <%= render 'layouts/top-navbar' %>
           <%= render 'layouts/side-navbar' %>
           <div class="col-12 col-sm-9 col-xl-10">
-            <!-- Content here -->
             <%= yield %>
           </div>
         </div>
@@ -37,6 +36,7 @@
       <% end %>
       <%= render 'layouts/bottom-navbar'%>
     </div>
+    -->
 
     <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
     <script src="//unpkg.com/tether@latest/dist/js/tether.min.js"></script>

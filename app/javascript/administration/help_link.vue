@@ -13,7 +13,7 @@ import { mapState } from 'vuex'
 export default {
   name: "HelpLink",
   computed: {
-    ...mapState('configuration', {
+    ...mapState('admin/configuration', {
       configuration: 'collection',
     }),
     email() {

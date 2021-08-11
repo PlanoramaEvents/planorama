@@ -42,11 +42,12 @@
 <script>
 import EditSurveyPage from './edit-survey-page'
 import EditSurveyControls from './edit-survey-controls'
-import {mapState, mapMutations, mapActions} from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
+const { mapState, mapActions, mapMutations } = createNamespacedHelpers('surveys');
 import { UNSELECT, SAVE, SELECT } from '../model.store';
 import { SELECT_PAGE } from './survey.store';
 import { Survey } from './survey';
-import surveyMixin from './survey-mixin'
+import surveyMixin from './survey.mixin'
 import surveyIdPropMixin from './survey-id-prop-mixin';
 import SurveySettingsTab from './survey-settings-tab.vue';
 import NotImplemented from '../not-implemented.vue';
@@ -78,7 +79,7 @@ export default {
     }),
     back() {
       // TODO only unselect if not coming from view page
-      this.$store.commit(UNSELECT);
+      this.unselect();
       this.$router.push('/');
     }
   },

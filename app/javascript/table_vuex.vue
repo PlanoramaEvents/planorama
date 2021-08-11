@@ -66,11 +66,8 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { BootstrapVue, BTable } from 'bootstrap-vue'
 import { SELECT } from './model.store';
-import { mapState } from 'vuex';
-Vue.use(BootstrapVue)
+import namespacedMixin from './namespaced.mixin';
 
 export default {
   name: 'TableVuex',
@@ -85,8 +82,10 @@ export default {
       
     }
   },
+  mixins: [
+    namespacedMixin(['collection', 'columns', 'selected'], {select: SELECT})
+  ],
   computed: {
-    ...mapState(['collection', 'columns', 'selected']),
     currentPage: {
       get() {
         return this.collection ? this.collection.currentPage : 1;
@@ -134,7 +133,7 @@ export default {
     },
     onRowSelected(items) {
       console.log('row selected', items)
-      this.$store.commit(SELECT, items[0]);
+      this.select(items[0]);
     }
   },
   mounted() {
