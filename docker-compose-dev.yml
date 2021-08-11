@@ -28,8 +28,11 @@ services:
       - DB_HOST=postgres
       - RAILS_ENV=development
       - NODE_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
     volumes:
       - node_modules:/opt/planorama/node_modules
+      - .:/opt/planorama
+      - box:/var/bundler
       - type: tmpfs
         target: /opt/planorama/tmp
     ports:
@@ -52,8 +55,11 @@ services:
       - DB_HOST=postgres
       - RAILS_ENV=development
       - NODE_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
     volumes:
       - node_modules:/opt/planorama/node_modules
+      - .:/opt/planorama
+      - box:/var/bundler
       - type: tmpfs
         target: /opt/planorama/tmp
     depends_on:
