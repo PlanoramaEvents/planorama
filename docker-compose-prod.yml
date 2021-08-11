@@ -1,22 +1,23 @@
 #
 # This is the dev version of the docker compose
 #
-# docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
+# docker-compose -f  docker-compose-prod.yml up --build
+#
+# With a local postgres
+# docker-compose -p plano-prod -f  docker-compose-prod.yml -f docker-compose-pg.yml up
 #
 version: "3.7"
 
 volumes:
   redis-data:
+  # box: {} # used for the bundler, persistent store between runs
 
 services:
-  planorama-redis:
+  redis:
     image: redis:alpine
     restart: always
     volumes:
       - redis-data:/data
-    ports:
-      - "36379:6379"
-
   #
   # NOTE:
   # .enrc set ths env variables for
@@ -24,6 +25,28 @@ services:
   #   POSTGRES_USER
   #   POSTGRES_PASSWORD
   #
+  planorama:
+    # image: planorama:production
+    build:
+      context: .
+      dockerfile: Dockerfile-prod
+    env_file:
+      - .envrc
+    environment:
+      - DB_HOST=postgres
+      - RAILS_ENV=production
+      - NODE_ENV=production
+    command: /opt/planorama/script/planorama_start.sh
+    volumes:
+      - type: tmpfs
+        target: /opt/planorama/tmp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+    links:
+      - redis
+
   planorama-sidekiq:
     # image: planorama:production
     build:
@@ -37,39 +60,9 @@ services:
       - NODE_ENV=production
     command: /opt/planorama/script/planorama_sidekiq.sh
     volumes:
-      - node_modules:/opt/planorama/node_modules
       - type: tmpfs
         target: /opt/planorama/tmp
     depends_on:
-      - postgres
-      - planorama-redis
+      - redis
     links:
-      - planorama-redis
-      - postgres
-
-  planorama:
-    # image: planorama:production
-    build:
-      context: .
-      dockerfile: Dockerfile-prod
-    environment:
-      - DB_HOST=postgres
-      - RAILS_ENV=production
-      - NODE_ENV=production
-    command: /opt/planorama/script/planorama_start.sh
-    volumes:
-      - node_modules:/opt/planorama/node_modules
-      - type: tmpfs
-        target: /opt/planorama/tmp
-    ports:
-      - "3000:3000"
-    depends_on:
-      - postgres
-      - planorama-redis
-    links:
-      - planorama-redis
-      - postgres
-
-volumes:
-  node_modules:
-  box: {} # used for the bundler, persistent store between runs
+      - redis

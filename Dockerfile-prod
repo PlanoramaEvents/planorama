@@ -7,8 +7,8 @@ FROM --platform=linux/x86_64 ruby:2.7.2-alpine as base
 ENV LANG C.UTF-8 # ensure that the encoding is UTF8
 ENV LANGUAGE C.UTF-8 # ensure that the encoding is UTF8
 
-# Specify an external volume for the Application source
-# VOLUME ["/opt/planorama"]
+ENV RAILS_ENV production
+ENV NODE_ENV production
 
 # Use a persistent volume for the gems installed by the bundler
 ENV BUNDLE_PATH /var/bundler
@@ -36,19 +36,14 @@ ADD . /opt/planorama
 WORKDIR /opt/planorama
 
 # Just not use dev here
-RUN bundle install
+RUN bin/bundle install
+RUN bin/yarn install --frozen-lockfile
 
-RUN yarn install --frozen-lockfile
-
-# The asset compile etc is down as part of the startup ... for now
 # The precompile will also deal with the webpacker assets
-# RUN bundle exec rake assets:precompile
-# The precompile the webpacker assets
-# RUN bundle exec rake webpacker:compile
+RUN RAILS_ENV=production bin/rake assets:precompile
 
 # We expose the port
 EXPOSE 3000
 
-VOLUME /app
-
-CMD script/planorama_start.sh
+# CMD script/planorama_start.sh
+CMD ["tail", "-f", "/dev/null"]

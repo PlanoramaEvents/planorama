@@ -14,11 +14,6 @@ else
     echo "waiting for postgres..."
     sleep 5
   done
-
-  bin/yarn install --frozen-lockfile
-  bin/rake assets:precompile
-  bin/rake webpacker:compile
-
 fi
 
 bundle exec sidekiq

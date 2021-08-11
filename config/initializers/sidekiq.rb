@@ -1,7 +1,7 @@
 #
 #
 #
-DEFAULT_REDIS_URL = "redis://planorama-redis:6379/0"
+DEFAULT_REDIS_URL = "redis://redis:6379/0"
 sidekiq_config = { url: ENV.fetch("SIDEKIQ_REDIS_URL", DEFAULT_REDIS_URL) }
 
 Sidekiq.configure_server do |config|

@@ -30,10 +30,6 @@ else
     echo "waiting for postgres..."
     sleep 5
   done
-
-  bin/yarn install --frozen-lockfile
-  bin/rake assets:precompile
-  bin/rake webpacker:compile
 fi
 
 bin/rake dev:db_missing || (bin/rails db:create; bin/rails db:structure:load)
