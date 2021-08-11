@@ -14,6 +14,7 @@ module.exports = {
     LOGIN_PASSWORD_RESET_EMAIL_SEND: "If an account with the address you specified exists you will receive an email with a password reset link.",
     LOGIN_PASSWORD_CHANGED: "You successfully changed your password.",
     LOGIN_TOKEN_EXPIRED: (resetPasswordLink) => `The password reset link you used is no longer valid. Please request another link here: ${resetPasswordLink}`,
+    LOGIN_CLICK_TO_AGREE: "By clicking ‘Log In’ below, I agree to Chicon 8 storing and using my personal data as documented in the",
     SURVEY_SAVE_SUCCESS: "Survey successfully saved.",
     SURVEY_CONFIRM_PUBLISH: "You have published this survey. This will allow responses to be collected. Are you sure you want to publish this survey?",
     SURVEY_CONFIRM_CLOSE: "You have closed this survey. This will no longer allow any responses to be collected. Are you sure you want to close this survey?",

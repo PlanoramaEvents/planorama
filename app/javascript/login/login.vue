@@ -15,6 +15,7 @@
         @validated="form.password.valid = $event"
         :validateNow="form.password.validate"
       ></login-password-field>
+      <div class="pt-3"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
       <div class="d-flex flex-row-reverse">
         <router-link to="/forgot">Forgot Password</router-link>
       </div>
@@ -29,6 +30,7 @@
 import {PlanoModel} from "../model";
 import EmailField from "../shared/email_field";
 import LoginPasswordField from "./login_password_field";
+import PrivacyPolicyLink from "../administration/privacy_policy_link"
 
 import { validateFields } from "../utils";
 
@@ -38,6 +40,7 @@ import {
   LOGIN_INVALID_FIELDS,
   LOGIN_PASSWORD_RESET_EMAIL_SEND,
   LOGIN_PASSWORD_CHANGED,
+  LOGIN_CLICK_TO_AGREE
 } from "../constants/strings";
 
 export class LoginModel extends PlanoModel {
@@ -61,6 +64,7 @@ export default {
   name: "PlanLogin",
   data() {
     return {
+      LOGIN_CLICK_TO_AGREE,
       person: {
         email: "",
         password: "",
@@ -88,6 +92,7 @@ export default {
   components: {
     EmailField,
     LoginPasswordField,
+    PrivacyPolicyLink,
   },
   mounted: function () {
     if (this.$route.query.alert) {
