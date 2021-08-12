@@ -69,9 +69,6 @@ jobs:
           tags: "${{ env.CONTAINER_TEST_REPOSITORY }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-          secrets: |
-            DEVISE_SECRET: 88dd6baa96f7f174786033d16f638d6572a03a06fceec022b199fd4f725e7f5b1dee3e466d6187b27ba5590e348f079d95993bc17fa9a4fbbb0636ba31668247
-          # DEVISE_SECRET: ${{ secrets.AWS_ACCESS_KEY_ID }}
 
       - name: Run specs
         run: |
