@@ -19,10 +19,15 @@ jobs:
         with:
           swap-size-mb: 4096
           temp-reserve-mb: 4096
-          root-reserve-mb: 8192
+          root-reserve-mb: 16384
           remove-dotnet: 'true'
           remove-android: 'true'
           remove-haskell: 'true'
+
+      - name: Build Space
+        run: |
+          echo "Free space:"
+          df -h
 
       - uses: actions/checkout@v2
 
