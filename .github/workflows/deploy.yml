@@ -65,7 +65,7 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           push: false
           load: true
-          target: development
+          # target: development
           tags: "${{ env.CONTAINER_TEST_REPOSITORY }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
@@ -101,4 +101,3 @@ jobs:
       #   if: ${{ startsWith(github.ref, 'refs/heads/staging') }}
       #   run: |
       #     ./deploy/deploy-tag.py "${{ steps.extract_name.outputs.branch }}" --description "@${{ github.actor }} deployed ${{ steps.extract_name.outputs.branch }} to staging from the deploy action"
-  
