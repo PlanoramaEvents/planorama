@@ -9,4 +9,6 @@ tmp/*
 node_modules/*
 public/assets/*
 public/packs/*
-Dockerfile
+Dockerfile*
+docker-compose*
+Guardfile

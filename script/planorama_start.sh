@@ -22,7 +22,10 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   # FIXME Hack, should be it's own process but was done this way so rails doesn't hit webpacker as well
   bin/webpack-dev-server --host 0.0.0.0 &
 
-  bin/rake dev:db_missing || (bin/rails db:create; bin/rails db:structure:load)
+  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
+
+  # bin/rails db:structure:load
+  bin/rake db:migrate
 
   # Run migrations and start the server, anything that comes in on 3000 is accepted
   # bin/rails db:create
@@ -33,10 +36,9 @@ else
     sleep 5
   done
 
-  bin/rake dev:db_missing || (bin/rails db:create; bin/rails db:structure:load)
-fi
+  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
 
-# bin/rails db:structure:load
-bin/rake db:migrate
+  bin/rake db:migrate
+fi
 
 bin/rails server -b 0.0.0.0

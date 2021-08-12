@@ -16,7 +16,6 @@ ENV BUNDLE_PATH /var/bundler
 RUN apk add \
       build-base \
       freetds-dev \
-      git \
       less \
       netcat-openbsd \
       postgresql-client \
@@ -36,11 +35,11 @@ ADD . /opt/planorama
 WORKDIR /opt/planorama
 
 # Just not use dev here
-RUN bin/bundle install
+RUN bin/bundle install --without development
 RUN bin/yarn install --frozen-lockfile
 
 # The precompile will also deal with the webpacker assets
-RUN RAILS_ENV=production bin/rake assets:precompile
+RUN bin/rake assets:precompile
 
 # We expose the port
 EXPOSE 3000
