@@ -1,0 +1,104 @@
+---
+name: "Build Planorame Docker image for Deploy"
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      # - release
+      # - ci-testing*
+
+jobs:
+  release:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_name
+
+      # ARE THE SECRETS ORG LEVEL AND DO WE HAVE ACCESS ????
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Define the repository labels
+        run: |
+          echo "CONTAINER_TEST_REPOSITORY=${{ steps.login-ecr.outputs.registry }}/planorama:ci-${{ github.sha }}" >> $GITHUB_ENV
+          echo "CONTAINER_DEPLOY_REPOSITORY=${{ steps.login-ecr.outputs.registry }}/planorama:${{ steps.extract_name.outputs.branch }}" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Builder instance name
+        run: echo ${{ steps.buildx.outputs.name }}
+
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build the image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-prod
+          builder: ${{ steps.buildx.outputs.name }}
+          push: false
+          load: true
+          target: development
+          tags: "${{ env.CONTAINER_TEST_REPOSITORY }}"
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Run specs
+        run: |
+          docker run -d --name="test-database" --hostname "postgres" -e "POSTGRES_PASSWORD=test" postgres:latest
+          docker run --network "container:test-database" -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY bundle exec rake db:create db:structure:load spec
+
+      - name: Run security tests
+        if: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/security-') }}
+        run: |
+          docker pull $CONTAINER_TEST_REPOSITORY
+          # docker run $CONTAINER_TEST_REPOSITORY bundle update brakeman --quiet
+          # docker run $CONTAINER_TEST_REPOSITORY bundle exec brakeman --run-all-checks --no-pager
+          docker run $CONTAINER_TEST_REPOSITORY bundle exec bundler-audit check --update
+          docker run $CONTAINER_TEST_REPOSITORY bundle exec ruby-audit check
+          # docker run $CONTAINER_TEST_REPOSITORY script/yarn_smart_audit.rb
+          docker run $CONTAINER_TEST_REPOSITORY yarn check --integrity
+
+      - name: Publish the deployable image
+        run: |
+          docker tag $CONTAINER_TEST_REPOSITORY $CONTAINER_DEPLOY_REPOSITORY
+          docker push $CONTAINER_DEPLOY_REPOSITORY
+
+      - name: Clean up the CI testing tag
+        run: |
+          aws ecr batch-delete-image --repository-name planorama --image-ids imageTag=ci-${{ github.sha }}
+
+      # TODO: this is python script to do .... ?
+      # - id: deploy
+      #   name: Deploy to the target host
+      #   if: ${{ startsWith(github.ref, 'refs/heads/staging') }}
+      #   run: |
+      #     ./deploy/deploy-tag.py "${{ steps.extract_name.outputs.branch }}" --description "@${{ github.actor }} deployed ${{ steps.extract_name.outputs.branch }} to staging from the deploy action"
+  
