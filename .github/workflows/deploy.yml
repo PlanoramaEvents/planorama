@@ -78,7 +78,8 @@ jobs:
           context: ./
           file: ./Dockerfile-prod
           builder: ${{ steps.buildx.outputs.name }}
-          build-args: DEVISE_SECRET=aa77bb734faa9b935c1f8b68846e37aed9096cc9fb746copypastaf856594409a11b1086535e468edb2e5bbc18482b386b6264ada38703dcdefd94a291ab5a95eb5
+          build-args:
+            - DEVISE_SECRET=aa77bb734faa9b935c1f8b68846e37aed9096cc9fb746copypastaf856594409a11b1086535e468edb2e5bbc18482b386b6264ada38703dcdefd94a291ab5a95eb5
           push: false
           load: true
           # target: development
