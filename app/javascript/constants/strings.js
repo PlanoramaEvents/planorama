@@ -31,4 +31,5 @@ module.exports = {
     SURVEY_DEFAULT_THANK_YOU: "Your response has been recorded.",
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added.`,
+    IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",
 }
