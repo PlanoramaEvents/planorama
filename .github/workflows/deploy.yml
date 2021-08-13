@@ -83,6 +83,8 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |
             DEVISE_SECRET=${{ env.DEVISE_SECRET }}
+            RAILS_ENV=production
+            NODE_ENV=production
           push: false
           load: true
           # target: development
@@ -93,17 +95,17 @@ jobs:
       - name: Run specs
         run: |
           docker run -d --name="test-database" --hostname "postgres" -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" postgres:latest
-          docker run --network "container:test-database" -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY bundle exec rake db:create db:structure:load rspec
+          docker run --network "container:test-database" -e RAILS_ENV=test -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY /bin/sh -c "bundle exec rake db:create db:structure:load; bundle exec rspec"
 
       # The docker pull does not work
       - name: Run security tests
         if: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/security-') }}
         run: |
-          docker run $CONTAINER_TEST_REPOSITORY bundle update brakeman --quiet
-          docker run $CONTAINER_TEST_REPOSITORY bundle exec brakeman --run-all-checks --no-pager
-          # docker run $CONTAINER_TEST_REPOSITORY bundle exec bundler-audit check --update
-          # docker run $CONTAINER_TEST_REPOSITORY bundle exec ruby-audit check
-          docker run $CONTAINER_TEST_REPOSITORY yarn check --integrity
+          docker run -e RAILS_ENV=test $CONTAINER_TEST_REPOSITORY bundle update brakeman --quiet
+          docker run -e RAILS_ENV=test $CONTAINER_TEST_REPOSITORY bundle exec brakeman --run-all-checks --no-pager
+          # docker run -e RAILS_ENV=test $CONTAINER_TEST_REPOSITORY bundle exec bundler-audit check --update
+          # docker run -e RAILS_ENV=test $CONTAINER_TEST_REPOSITORY bundle exec ruby-audit check
+          docker run -e RAILS_ENV=production -e NODE_ENV=production $CONTAINER_TEST_REPOSITORY yarn check --integrity
 
       - name: Publish the deployable image
         run: |
