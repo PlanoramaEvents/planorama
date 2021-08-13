@@ -93,8 +93,8 @@ jobs:
       # TODO
       - name: Run specs
         run: |
-          docker run -d --name="test-database" --hostname "postgres" --build-arg DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" postgres:latest
-          docker run --network "container:test-database" --build-arg DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY bundle exec rake db:create db:structure:load spec
+          docker run -d --name="test-database" --hostname "postgres" -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" postgres:latest
+          docker run --network "container:test-database" -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY bundle exec rake db:create db:structure:load spec
 
       - name: Run security tests
         if: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/security-') }}
