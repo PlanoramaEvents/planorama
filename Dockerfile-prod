@@ -13,6 +13,8 @@ ENV NODE_ENV production
 # Use a persistent volume for the gems installed by the bundler
 ENV BUNDLE_PATH /var/bundler
 
+ARG DEVISE_SECRET
+
 RUN apk add \
       build-base \
       freetds-dev \
