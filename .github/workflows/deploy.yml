@@ -110,9 +110,10 @@ jobs:
           docker tag $CONTAINER_TEST_REPOSITORY $CONTAINER_DEPLOY_REPOSITORY
           docker push $CONTAINER_DEPLOY_REPOSITORY
 
-      - name: Clean up the CI testing tag
-        run: |
-          aws ecr batch-delete-image --repository-name planorama --image-ids imageTag=ci-${{ github.sha }}
+      # I think this is not needed since the "test" image is not pushed
+      # - name: Clean up the CI testing tag
+      #   run: |
+      #     aws ecr batch-delete-image --repository-name planorama --image-ids imageTag=ci-${{ github.sha }}
 
       # TODO: this is python script to do .... ?
       # - id: deploy
