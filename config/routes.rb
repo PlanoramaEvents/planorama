@@ -1,3 +1,5 @@
+require "sidekiq/web"
+
 # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   get '/people/sessions/current', to: 'people/sessions#get_session'
@@ -11,6 +13,10 @@ Rails.application.routes.draw do
   get '/login/:magic_link', to: 'login#magic_link'
 
   root to: 'home#index' #, :as => :authenticated_root
+
+  authenticate :person, lambda { |p| p.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   # Pages
   get 'page/venues', to: 'home#venues'

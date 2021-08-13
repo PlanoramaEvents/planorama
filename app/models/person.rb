@@ -125,10 +125,17 @@ class Person < ApplicationRecord
     email_addresses.first&.email
   end
 
+  def admin?
+    person_roles.inject(false) { |res, role| res || role.admin? }
+  end
 
-  #
   def staff?
     person_roles.inject(false) { |res, role| res || role.staff? }
+  end
+
+  #
+  def planner?
+    person_roles.inject(false) { |res, role| res || role.planner? }
   end
 
   def member?
