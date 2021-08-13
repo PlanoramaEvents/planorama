@@ -101,8 +101,8 @@ jobs:
         run: |
           docker run $CONTAINER_TEST_REPOSITORY bundle update brakeman --quiet
           docker run $CONTAINER_TEST_REPOSITORY bundle exec brakeman --run-all-checks --no-pager
-          docker run $CONTAINER_TEST_REPOSITORY bundle exec bundler-audit check --update
-          docker run $CONTAINER_TEST_REPOSITORY bundle exec ruby-audit check
+          # docker run $CONTAINER_TEST_REPOSITORY bundle exec bundler-audit check --update
+          # docker run $CONTAINER_TEST_REPOSITORY bundle exec ruby-audit check
           docker run $CONTAINER_TEST_REPOSITORY yarn check --integrity
 
       - name: Publish the deployable image
@@ -110,9 +110,10 @@ jobs:
           docker tag $CONTAINER_TEST_REPOSITORY $CONTAINER_DEPLOY_REPOSITORY
           docker push $CONTAINER_DEPLOY_REPOSITORY
 
-      - name: Clean up the CI testing tag
-        run: |
-          aws ecr batch-delete-image --repository-name planorama --image-ids imageTag=ci-${{ github.sha }}
+      # I think this is not needed since the "test" image is not pushed
+      # - name: Clean up the CI testing tag
+      #   run: |
+      #     aws ecr batch-delete-image --repository-name planorama --image-ids imageTag=ci-${{ github.sha }}
 
       # TODO: this is python script to do .... ?
       # - id: deploy
