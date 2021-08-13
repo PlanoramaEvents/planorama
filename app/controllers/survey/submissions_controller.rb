@@ -34,7 +34,7 @@ class Survey::SubmissionsController < ResourceController
 
   def delete_all
     Survey.transaction do
-      survey = Survey.find params[:survey_id]
+      survey = Survey.find_by(id: params[:survey_id])
       authorize survey, policy_class: policy_class
 
       survey.survey_submissions.destroy_all
