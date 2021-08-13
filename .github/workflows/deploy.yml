@@ -87,10 +87,11 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
-      - name: Run specs
-        run: |
-          docker run -d --name="test-database" --hostname "postgres" -e "POSTGRES_PASSWORD=test" postgres:latest
-          docker run --network "container:test-database" -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY bundle exec rake db:create db:structure:load spec
+      # TODO
+      # - name: Run specs
+        # run: |
+          # docker run -d --name="test-database" --hostname "postgres" -e "POSTGRES_PASSWORD=test" postgres:latest
+          # docker run --network "container:test-database" -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY bundle exec rake db:create db:structure:load spec
 
       - name: Run security tests
         if: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/security-') }}
