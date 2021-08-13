@@ -36,7 +36,7 @@ jobs:
 
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
         id: extract_name
 
       # ARE THE SECRETS ORG LEVEL AND DO WE HAVE ACCESS ????
@@ -96,6 +96,7 @@ jobs:
           docker run -d --name="test-database" --hostname "postgres" -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" postgres:latest
           docker run --network "container:test-database" -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY bundle exec rake db:create db:structure:load spec
 
+      # The docker pull does not work
       - name: Run security tests
         if: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/security-') }}
         run: |
