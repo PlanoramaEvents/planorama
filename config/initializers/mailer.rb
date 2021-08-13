@@ -6,6 +6,9 @@ Rails.application.config.action_mailer.tap do |action_mailer|
       host: "localhost"
     }
   else
+    action_mailer.default_url_options = {
+      host: ENV["HOSTNAME"]
+    }
     action_mailer.delivery_method = :smtp
     action_mailer.tap do |action_mailer|
       action_mailer.raise_delivery_errors = true
