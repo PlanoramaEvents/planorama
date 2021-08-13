@@ -74,7 +74,7 @@ export default {
         this.error.visible = true;
       } else {
         http
-          .post("/people/password.json", { person: this.person })
+          .post("/auth/password.json", { person: this.person })
           .then((data) => {
             this.successfullySent = data.status === 201;
             if (this.successfullySent) {
