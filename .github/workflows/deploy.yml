@@ -96,13 +96,13 @@ jobs:
       - name: Run security tests
         if: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/security-') }}
         run: |
-          docker pull $CONTAINER_TEST_REPOSITORY
+          # docker pull $CONTAINER_TEST_REPOSITORY
           # docker run $CONTAINER_TEST_REPOSITORY bundle update brakeman --quiet
           # docker run $CONTAINER_TEST_REPOSITORY bundle exec brakeman --run-all-checks --no-pager
-          docker run $CONTAINER_TEST_REPOSITORY bundle exec bundler-audit check --update
-          docker run $CONTAINER_TEST_REPOSITORY bundle exec ruby-audit check
+          # docker run $CONTAINER_TEST_REPOSITORY bundle exec bundler-audit check --update
+          # docker run $CONTAINER_TEST_REPOSITORY bundle exec ruby-audit check
           # docker run $CONTAINER_TEST_REPOSITORY script/yarn_smart_audit.rb
-          docker run $CONTAINER_TEST_REPOSITORY yarn check --integrity
+          # docker run $CONTAINER_TEST_REPOSITORY yarn check --integrity
 
       - name: Publish the deployable image
         run: |
