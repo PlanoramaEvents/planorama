@@ -134,7 +134,7 @@ module ResourceMethods
     @per_page = nil unless paginate
     @page = params[:page]&.to_i || 0 if paginate
     @order = params[:sortField] || ''
-    @direction = params[:sortOrder] || ''
+    @direction = params[:sortOrder] || 'asc'
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
     @order.slice!('$.')
 
@@ -142,7 +142,8 @@ module ResourceMethods
       .includes(includes)
       .references(references)
       .where(query(@filters))
-      .order("#{@order} #{@direction}")
+
+    q = q.order("#{@order}" => "#{@direction}") if !@order.blank?
 
     if paginate
       q.page(@page).per(@per_page)
