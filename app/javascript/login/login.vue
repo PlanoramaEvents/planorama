@@ -15,6 +15,7 @@
         @validated="form.password.valid = $event"
         :validateNow="form.password.validate"
       ></login-password-field>
+      <div class="pt-3"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
       <div class="d-flex flex-row-reverse">
         <router-link to="/forgot">Forgot Password</router-link>
       </div>
@@ -22,6 +23,7 @@
         <b-button type="submit" variant="primary" class="px-5">Log In</b-button>
       </div>
     </b-form>
+    <iea-modal @cancel="onIeaCancel" @ok="onIeaAgree"></iea-modal>
   </div>
 </template>
 
@@ -29,6 +31,9 @@
 import {PlanoModel} from "../model";
 import EmailField from "../shared/email_field";
 import LoginPasswordField from "./login_password_field";
+import PrivacyPolicyLink from "../administration/privacy_policy_link"
+import authMixin from '../auth.mixin';
+import IeaModal from './iea-modal';
 
 import { validateFields } from "../utils";
 
@@ -38,7 +43,10 @@ import {
   LOGIN_INVALID_FIELDS,
   LOGIN_PASSWORD_RESET_EMAIL_SEND,
   LOGIN_PASSWORD_CHANGED,
+  LOGIN_CLICK_TO_AGREE,
+  IEA_FAILURE_TO_SIGN
 } from "../constants/strings";
+import { http } from '../http';
 
 export class LoginModel extends PlanoModel {
   default() {
@@ -61,6 +69,7 @@ export default {
   name: "PlanLogin",
   data() {
     return {
+      LOGIN_CLICK_TO_AGREE,
       person: {
         email: "",
         password: "",
@@ -88,7 +97,10 @@ export default {
   components: {
     EmailField,
     LoginPasswordField,
+    PrivacyPolicyLink,
+    IeaModal,
   },
+  mixins: [authMixin],
   mounted: function () {
     if (this.$route.query.alert) {
       switch (this.$route.query.alert) {
@@ -119,7 +131,7 @@ export default {
         const loginInfo = new LoginModel({ person: this.person });
         loginInfo
           .save()
-          .then(() => (window.location.href = "/"))
+          .then(() => this.$bvModal.show('iea-modal'))
           .catch((error) => this.onSaveFailure(error));
       }
     },
@@ -129,6 +141,15 @@ export default {
         this.error.visible = true;
       }
     },
+    onIeaAgree() {
+      window.location.href = "/"
+    },
+    onIeaCancel() {
+      this.signOut().finally(() => {
+        this.error.text = IEA_FAILURE_TO_SIGN;
+        this.error.visible = true;
+      })
+    }
   },
 };
 </script>

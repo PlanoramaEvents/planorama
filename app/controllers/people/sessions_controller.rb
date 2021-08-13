@@ -2,6 +2,8 @@
 
 class People::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
+  # TODO remove this in 0.3
+  protect_from_forgery except: [:destroy, :create]
 
   # The below line is the one i really needed
   # Leaving the rest of the comments in in case we need some of those things in the future
