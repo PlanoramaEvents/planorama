@@ -63,14 +63,14 @@ import toastMixin from '../toast-mixin'
 export default {
   name: "IeaModal",
   computed: {
-    ...mapState('agreements', ['information_ethics', 'ieaUnsigned']),
+    ...mapState('admin/agreements', ['information_ethics', 'ieaUnsigned']),
   },
   mixins: [toastMixin],
   data: () => ({
     showModal: false
   }),
   methods: {
-    ...mapActions('agreements', {
+    ...mapActions('admin/agreements', {
       fetchIea: FETCH_IEA,
       signIea: SIGN_IEA,
       getIeaUnsigned: GET_IEA_UNSIGNED,

@@ -15,6 +15,7 @@
 import TopNavbar from "./navbar/top-navbar.vue";
 import SideNavbar from "./navbar/side-navbar.vue";
 import BottomNavbar from "./navbar/bottom-navbar.vue";
+import sessionMixin from "./session/session.mixin";
 
 export default  {
   name: "PlanoramaApp",
@@ -23,13 +24,7 @@ export default  {
     SideNavbar,
     BottomNavbar,
   },
-  computed: {
-    loggedIn() {
-      // TODO for real
-      return true;
-    }
-  }
-
+  mixins: [sessionMixin],
 }
 </script>
 

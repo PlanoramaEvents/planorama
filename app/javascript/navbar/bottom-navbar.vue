@@ -20,7 +20,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .silly-spacer {
-    width: 5rem;
+@import '../stylesheets/style.scss';
+.silly-spacer {
+  width: 5rem;
+}
+footer {
+  background: $color-primary-4;
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  padding: 10px;
+
+  a {
+    color: white;
   }
+}
 </style>

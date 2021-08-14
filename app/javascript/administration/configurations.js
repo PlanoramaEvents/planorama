@@ -41,7 +41,7 @@ export class Configurations {
 
   fetch() {
     return new Promise((res, rej) => {
-      http.get('/configurations').then(resp => {
+      http.get('/configurations').subscribe(resp => {
         for (let key in resp.data) {
           let val = resp.data[key]
           this[key] = val ? new Configuration(val) : new Configuration({parameter: key});
@@ -49,7 +49,7 @@ export class Configurations {
         this.data = resp.data;
         this.config_names = Object.keys(resp.data);
         res(this)
-      }).catch(e => rej(e))
+      })
     })
   }
 

@@ -7,6 +7,7 @@
           <help-link></help-link>
           <a href="https://chicagoworldcon.github.io/planorama" target="_blank" class="btn btn-link text-light my-2 my-sm-0 mx-2">About</a>
           <!-- TODO logout button -->
+          <b-button v-if="loggedIn" @click="logout" variant="primary">Logout</b-button>
         </b-nav-form>
       </b-navbar-nav>
     </b-navbar>
@@ -17,11 +18,24 @@
 
 <script>
 import HelpLink from '../administration/help_link.vue';
+import authMixin from '../auth.mixin';
+import sessionMixin from '../session/session.mixin';
 
 export default {
   name: 'TopNavbar',
   components: {
     HelpLink,
+  },
+  mixins: [
+    authMixin,
+    sessionMixin
+  ],
+  methods: {
+    logout() {
+      this.signOut().then(() => {
+        window.location.href="/"
+      })
+    }
   }
 }
 </script>

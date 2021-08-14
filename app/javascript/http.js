@@ -1,7 +1,7 @@
-import axios from 'axios';
+import Axios from 'axios-observable';
 import { csrfToken } from '@rails/ujs';
 
-export const http = axios.create({})
+export const http = Axios.create({ })
 
 http.interceptors.request.use(
     config => {
