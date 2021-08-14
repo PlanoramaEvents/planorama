@@ -24,6 +24,8 @@ class PeopleController < ResourceController
     serializer_includes
   end
 
+  # TODO: on create must have at least one email_addresses_attributes
+
   # def references
   #   [
   #   ]
