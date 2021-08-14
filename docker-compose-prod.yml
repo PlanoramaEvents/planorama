@@ -1,7 +1,10 @@
 #
 # This is the dev version of the docker compose
 #
-# docker-compose -p plano-stag -f  docker-compose-staging.yml -f docker-compose-pg.yml up
+# docker-compose -f  docker-compose-prod.yml up --build
+#
+# With a local postgres
+# docker-compose -p plano-prod -f  docker-compose-prod.yml -f docker-compose-pg.yml up
 #
 version: "3.7"
 
@@ -31,8 +34,8 @@ services:
       - .envrc
     environment:
       - DB_HOST=postgres
-      - RAILS_ENV=staging
-      - NODE_ENV=staging
+      - RAILS_ENV=production
+      - NODE_ENV=production
     command: /opt/planorama/script/planorama_start.sh
     volumes:
       - type: tmpfs
@@ -53,8 +56,8 @@ services:
       - .envrc
     environment:
       - DB_HOST=postgres
-      - RAILS_ENV=staging
-      - NODE_ENV=staging
+      - RAILS_ENV=production
+      - NODE_ENV=production
     command: /opt/planorama/script/planorama_sidekiq.sh
     volumes:
       - type: tmpfs

@@ -67,10 +67,10 @@ export default {
   },
   computed: {
     downloadLink() {
-      return `/surveys/${this.survey?.id}/submissions.xls`
+      return `/surveys/${this.survey?.id}/submissions.xlsx`
     },
     filename() {
-      return `survey_${this.survey?.id}_responses.xls`
+      return `survey_${this.survey?.id}_responses.xlsx`
     }
   },
   methods: {

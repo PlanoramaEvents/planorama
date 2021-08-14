@@ -7,20 +7,19 @@ FROM --platform=linux/x86_64 ruby:2.7.2-alpine as base
 ENV LANG C.UTF-8 # ensure that the encoding is UTF8
 ENV LANGUAGE C.UTF-8 # ensure that the encoding is UTF8
 
-# Specify an external volume for the Application source
-# VOLUME ["/opt/planorama"]
+ARG RAILS_ENV=production
+ARG NODE_ENV=production
 
 # Use a persistent volume for the gems installed by the bundler
 ENV BUNDLE_PATH /var/bundler
 
+ARG DEVISE_SECRET
+
 RUN apk add \
       build-base \
       freetds-dev \
-      git \
       less \
       netcat-openbsd \
-      nodejs \
-      nodejs-npm \
       postgresql-client \
       postgresql-dev \
       pkgconfig \
@@ -37,16 +36,15 @@ RUN gem install bundler:2.2.4
 ADD . /opt/planorama
 WORKDIR /opt/planorama
 
-RUN bundle install
-RUN yarn install --frozen-lockfile
+# Just not use dev here
+RUN bin/bundle install --without development
+RUN bin/yarn install --frozen-lockfile
+
 # The precompile will also deal with the webpacker assets
-RUN bundle exec rake assets:precompile
-# The precompile the webpacker assets
-RUN bundle exec rake webpacker:compile
+RUN bin/rake assets:precompile --trace
 
 # We expose the port
 EXPOSE 3000
 
-VOLUME /app
-
-CMD script/docker_web_entry.sh
+# CMD script/planorama_start.sh
+CMD ["tail", "-f", "/dev/null"]

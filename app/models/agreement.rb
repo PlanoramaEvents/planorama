@@ -11,13 +11,15 @@ class Agreement < ApplicationRecord
     scoping = Agreement.targets[:staff] if person.staff?
     scoping = Agreement.targets[:member] if person.member? || person.no_role?
 
-    left_outer_joins(:person_agreements)
-      .where(
-        ['person_agreements.person_id != ?', person.id]
-      )
-      .where(
-        ['target in (?)', [scoping, Agreement.targets[:all]]]
-      )
+    where(
+      [
+        "agreements.id not in (select agreement_id from person_agreements where person_id = ?)",
+        person.id
+      ]
+    )
+    .where(
+      ['target in (?)', [scoping, Agreement.targets[:all]]]
+    )
   end
 
   # Get all agreements that have been signed by person

@@ -4,8 +4,7 @@
 #
 class ApplicationMailer < ActionMailer::Base
   default from: Proc.new { from_email },
-          reply_to: Proc.new { reply_to_email },
-          delivery_method_options: Proc.new { delivery_options }
+          reply_to: Proc.new { reply_to_email }
 
   layout 'mailer'
 
@@ -17,17 +16,5 @@ class ApplicationMailer < ActionMailer::Base
 
   def reply_to_email
     @reply_to_email ||= ConfigService.value('email_reply_to_address')
-  end
-
-  def delivery_options
-    @delivery_options ||= {
-      address: ConfigService.value('smtp__server_address'),
-      port: ConfigService.value('smtp__server_port').to_i,
-      user_name: ConfigService.value('smtp_server_user_name'),
-      password: ConfigService.value('smtp_server_password'),
-      authentication: ConfigService.value('smtp_server_authentication_mode').to_sym,
-      ssl: ConfigService.value?('smtp_server_ssl'),
-      enable_starttls_auto: ConfigService.value?('smtp_server_enable_starttls_auto')
-    }
   end
 end

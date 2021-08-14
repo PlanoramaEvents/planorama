@@ -111,7 +111,7 @@ export default {
         this.error.visible = true;
       } else {
         http
-          .put("/people/password.json", { person: this.person })
+          .put("/auth/password.json", { person: this.person })
           .then((data) => {
             if (data.status === 204) {
               this.$router.push("/?alert=password_changed");

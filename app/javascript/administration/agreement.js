@@ -1,4 +1,5 @@
 import {PlanoModel, PlanoCollection} from '../model.js';
+import axios from 'axios';
 
 export const AgreementTarget = {
   MEMBER: 'member',
@@ -64,6 +65,10 @@ export class InformationEthicsAgreement extends Agreement {
       type: 'information_ethics',
       target: AgreementTarget.STAFF
     })
+  }
+
+  sign() {
+    return axios.put(`/agreements/sign/${this.id}`, {}, {headers: this.getDefaultHeaders()})
   }
 
   routes() {

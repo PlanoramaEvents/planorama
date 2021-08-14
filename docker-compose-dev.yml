@@ -2,33 +2,91 @@
 # This is the dev version of the docker compose
 # this is overlaid on the docket compose for dev environments
 #
-# docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
+# docker-compose -p plano-dev -f docker-compose-dev.yml up
+#
+# docker-compose -p plano-dev -f docker-compose-dev.yml up --build
+#
+# docker-compose -p plano-dev -f docker-compose-dev.yml up --build -d
 #
 version: "3.7"
 
+volumes:
+  pgdata:
+  redis-data:
+  node_modules:
+  box: {} # used for the bundler, persistent store between runs
+
 services:
-  postgres:
-    volumes:
-      - pgdata:/var/lib/postgres:cached
   planorama:
-    image: planorama:dev
+    command: /opt/planorama/script/planorama_start.sh
     build:
       context: .
       dockerfile: Dockerfile-dev
-    command: /opt/planorama/script/planorama_start.sh
+    env_file:
+      - .envrc
+    environment:
+      - DB_HOST=postgres
+      - RAILS_ENV=development
+      - NODE_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
-      - box:/var/bundler # this is used to store make the bundle update/install persistent between runs
+      - box:/var/bundler
       - type: tmpfs
         target: /opt/planorama/tmp
-    links:
-      - livereload
-      - mailcatcher
     ports:
-      - 3035:3035
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+    links:
+      - redis
+      - postgres
+
+  planorama-sidekiq:
+    command: /opt/planorama/script/planorama_sidekiq.sh
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    env_file:
+      - .envrc
     environment:
-      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+      - DB_HOST=postgres
+      - RAILS_ENV=development
+      - NODE_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    volumes:
+      - node_modules:/opt/planorama/node_modules
+      - .:/opt/planorama
+      - box:/var/bundler
+      - type: tmpfs
+        target: /opt/planorama/tmp
+    depends_on:
+      - postgres
+      - redis
+    links:
+      - redis
+      - postgres
+
+  # The database server - only needed for dev and test
+  # The Postgre DB
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    env_file:
+      - .envrc
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+
   livereload:
     image: planorama:dev
     build:
@@ -39,28 +97,8 @@ services:
       - 35729:35729
     volumes:
       - .:/opt/planorama
+
   mailcatcher:
     image: schickling/mailcatcher
     ports:
       - 1080:1080
-  # worker:
-  #   entrypoint: "script/docker_sidekiq_entry.sh"
-  #   working_dir: /hack
-  #   image: registry.gitlab.com/worldcon/wellington:latest
-  #   depends_on:
-  #     - web
-  #     - postgres
-  #     - redis
-  #   env_file:
-  #     .env
-  #   restart: always
-  #   volumes:
-  #     - node_modules:/hack/node_modules  # Except node_modules folder which is exclusive to the container
-  #     - ./:/hack                         # Mount current working directory to /hack for hacking :)
-  #     - type: tmpfs
-  #       target: /hack/tmp
-
-# Simple volumes used for persistent storage
-volumes:
-  node_modules:
-  box: {} # used for the bundler, persistent store between runs

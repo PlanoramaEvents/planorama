@@ -1,4 +1,4 @@
-namespace :dev do
+namespace :db do
   desc "Checks to see if the DB is there"
   task :db_missing do
     begin
