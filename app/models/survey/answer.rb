@@ -10,11 +10,11 @@ class Survey::Answer < ApplicationRecord
 
   default_scope {order(['survey_answers.sort_order', :answer])}
 
-  # Allow null and -1 ????
-  # belongs_to :next_page,
-  #            class_name: 'Survey::Page',
-  #            foreign_key: 'next_page_id',
-  #            optional: true
+  # Allows null and -1 ????
+  belongs_to :next_page,
+             class_name: 'Survey::Page',
+             foreign_key: 'next_page_id',
+             optional: true
 
   belongs_to :survey_question,
              class_name: 'Survey::Question',
@@ -23,5 +23,15 @@ class Survey::Answer < ApplicationRecord
 
 
   # TODO: on save need to remove next_page refs that do not exist
+  before_save :ensure_next_page_consistency
 
+  private
+
+  # Ensure the next page id is a valid value
+  def ensure_next_page_consistency
+    # next_page is either null, -1 or a valid survey_page_id
+    return unless next_page_id > 0
+
+    next_page_id = nil unless Survey::Page.exists? next_page_id
+  end
 end
