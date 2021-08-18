@@ -6,9 +6,14 @@ Rails.application.config.action_mailer.tap do |action_mailer|
       host: "localhost"
     }
   else
+    # ensure that the correct portocol is used when generating emails
+    protocal = Rails.application.config.force_ssl ? "https" : "http"
+
     action_mailer.default_url_options = {
-      host: ENV["HOSTNAME"]
+      host: ENV["HOSTNAME"],
+      protocol: protocal
     }
+
     action_mailer.delivery_method = :smtp
     action_mailer.tap do |action_mailer|
       action_mailer.raise_delivery_errors = true
