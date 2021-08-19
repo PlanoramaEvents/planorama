@@ -1,9 +1,10 @@
-import { csrfToken, csrfParam } from '@rails/ujs';
+// import { csrfToken, csrfParam } from '@rails/ujs';
 import axios from 'axios';
 
 const authMixin = {
   methods: {
     signOut() {
+      // TODO: change 
       const body = new FormData();
       // TODO
       // body.append(csrfParam(), csrfToken())
