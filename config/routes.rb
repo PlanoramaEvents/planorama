@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   devise_for :people, path: 'auth',
              controllers: {
                sessions: 'people/sessions',
-               passwords: 'people/passwords'
-             }
+               passwords: 'people/passwords',
+               registrations: 'people/registrations'
+             }, defaults: { format: :json }
 
   root to: 'home#index' #, :as => :authenticated_root
   # force everything back to the SPA home page
