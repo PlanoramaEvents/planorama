@@ -23,4 +23,6 @@ class Survey::PagesController < ResourceController
   def belongs_to_relationship
     'survey_pages'
   end
+
+  # TODO: on delete need to clean up any references in branches to this
 end
