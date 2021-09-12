@@ -11,7 +11,6 @@ class People::SessionsController < Devise::SessionsController
   private
     def respond_with(resource, _opts = {})
       # Rails.logger.debug "******* #{resource.to_json}, #{_opts}"
-      # respond_to :html
       super unless resource.id
       render json: { message: 'You are logged in.' }, status: :ok if resource.id
     end

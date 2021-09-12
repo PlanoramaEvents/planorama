@@ -12,7 +12,7 @@ Devise.setup do |config|
 
   # Use the devise key for JWT for now
   config.jwt do |jwt|
-    jwt.secret = Rails.application.credentials.config[:jwt_secret_key]
+    jwt.secret = Rails.application.credentials.config[:secret_key_base]
   end
 
   # The secret key used by Devise. Devise uses this key to generate
@@ -316,4 +316,8 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
+
+  config.warden do |manager|
+    manager.failure_app = PlanoramaDeviseFailure
+  end
 end
