@@ -1,15 +1,12 @@
-import Axios from 'axios-observable';
-//import { csrfToken } from '@rails/ujs';
+import axios from 'axios';
 
-export const http = Axios.create({ })
+// here
+export const http = axios.create({})
 
 // TODO
 http.interceptors.request.use(
     config => {
-      // if (!config.headers['X-CSRF-TOKEN']) {
-      //   config.headers['X-CSRF-TOKEN'] = csrfToken()
-      // }
-      // TODO: change 
+      // TODO: change, how do we set the JWT token?
       config,headers['Authorization'] = jwtToken()
       return config;
     },
