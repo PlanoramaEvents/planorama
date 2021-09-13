@@ -3,6 +3,8 @@ name: "Build Planorame Docker image for Deploy"
 
 on:
   push:
+  schedule:
+    - cron:  "0 * * * *"
     branches:
       - main
       - staging
