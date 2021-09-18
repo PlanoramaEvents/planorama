@@ -18,26 +18,8 @@
     <%= csp_meta_tag %>
   </head>
   <body>
-    <div id="app">
-      <planorama-app></planorama-app>
-    </div>
-<!--
-    <div class="container-fluid">
-      <% if current_person %>
-        <div class="row">
-          <%= render 'layouts/top-navbar' %>
-          <%= render 'layouts/side-navbar' %>
-          <div class="col-12 col-sm-9 col-xl-10">
-            <%= yield %>
-          </div>
-        </div>
-      <% else %>
-        <%= yield %>
-      <% end %>
-      <%= render 'layouts/bottom-navbar'%>
-    </div>
-    -->
-
+    <%# Just yield cause this is a layout file with globale includes. The ERB contains the actual SPA %>
+    <%= yield %>
     <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
     <script src="//unpkg.com/tether@latest/dist/js/tether.min.js"></script>
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>

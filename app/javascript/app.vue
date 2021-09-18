@@ -25,6 +25,9 @@ export default  {
     BottomNavbar,
   },
   mixins: [sessionMixin],
+  mounted() {
+    console.debug('*** APP MOUNTED')
+  }
 }
 </script>
 

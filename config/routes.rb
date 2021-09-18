@@ -2,29 +2,31 @@ require "sidekiq/web"
 
 # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-  get '/people/sessions/current', to: 'people/sessions#get_session'
-
   devise_for :people, path: 'auth',
              controllers: {
                sessions: 'people/sessions',
                passwords: 'people/passwords'
              }
 
-  get '/login/:magic_link', to: 'login#magic_link'
-
   root to: 'home#index' #, :as => :authenticated_root
+  # force everything back to the SPA home page
+  match '*path' => redirect('/'), via: :get
 
-  authenticate :person, lambda { |p| p.admin? } do
-    mount Sidekiq::Web => '/sidekiq'
-  end
+  # TODO: we will need to rework the magic link for SPA routing
+  # get '/login/:magic_link', to: 'login#magic_link'
 
-  # Pages
-  get 'page/venues', to: 'home#venues'
-  get 'page/people', to: 'home#people'
-  get 'page/program', to: 'home#program'
-  get 'page/surveys', to: 'home#surveys'
-  get 'page/reports', to: 'home#reports'
-  get 'page/admin', to: 'home#admin'
+  # Access to the sidekiq monitoring app...
+  # authenticate :person, lambda { |p| p.admin? } do
+  #   mount Sidekiq::Web => '/sidekiq'
+  # end
+
+  # Pages - deprecate these
+  # get 'page/venues', to: 'home#venues'
+  # get 'page/people', to: 'home#people'
+  # get 'page/program', to: 'home#program'
+  # get 'page/surveys', to: 'home#surveys'
+  # get 'page/reports', to: 'home#reports'
+  # get 'page/admin', to: 'home#admin'
 
   # REST based resources
   get 'people/me', to: 'people#me'

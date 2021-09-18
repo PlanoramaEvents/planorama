@@ -43,7 +43,10 @@ import { store } from '../app.store';
 const app = new Vue({
   components: { PlanoramaApp },
   router,
-  store
+  store,
+  mounted() {
+    console.debug('*** APP X MOUNTED')
+  }
 })
 
 document.addEventListener('DOMContentLoaded', () => {
