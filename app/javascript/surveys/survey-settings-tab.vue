@@ -42,8 +42,8 @@
 
 <script>
 import surveyMixin from './survey.mixin';
-import { 
-  SURVEY_CONFIRM_CLOSE, 
+import {
+  SURVEY_CONFIRM_CLOSE,
   SURVEY_CONFIRM_PUBLISH,
   SURVEY_SAVE_SUCCESS_PUBLISH,
   SURVEY_SAVE_SUCCESS_CLOSE,
