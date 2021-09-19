@@ -1,12 +1,11 @@
-import axios from 'axios';
+import Axios from 'axios-observable';
+import {jwtToken} from './utils/jwt_utils';
 
 // here
 export const http = axios.create({})
 
-// TODO
 http.interceptors.request.use(
     config => {
-      // TODO: change, how do we set the JWT token?
       config,headers['Authorization'] = jwtToken()
       return config;
     },
