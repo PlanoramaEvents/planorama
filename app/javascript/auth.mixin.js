@@ -1,5 +1,6 @@
 // import { csrfToken, csrfParam } from '@rails/ujs';
 import axios from 'axios';
+import {jwtToken} from './utils/jwt_utils';
 
 const authMixin = {
   methods: {

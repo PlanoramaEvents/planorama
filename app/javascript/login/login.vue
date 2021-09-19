@@ -36,6 +36,7 @@ import authMixin from '../auth.mixin';
 import IeaModal from './iea-modal';
 
 import { validateFields } from "../utils";
+import {jwtToken, setJWTToken} from '../utils/jwt_utils';
 
 import {
   LOGIN_401,
@@ -60,7 +61,7 @@ export class LoginModel extends PlanoModel {
   }
   routes() {
     return {
-      save: "/auth/sign_in.json",
+      save: "/auth/sign_in",
     };
   }
 }
@@ -129,10 +130,9 @@ export default {
         this.error.visible = true;
       } else {
         const loginInfo = new LoginModel({ person: this.person });
-        // TODO: we need a then that saves the person to the store and the JWT token
         loginInfo
           .save()
-          .then((a) => { console.debug('****** GET TOKEN', a.response.headers) })
+          .then((m) => { setJWTToken(m.response.headers['authorization']) })
           .then(() => this.$bvModal.show('iea-modal'))
           .catch((error) => this.onSaveFailure(error));
       }

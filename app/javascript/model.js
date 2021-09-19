@@ -5,6 +5,7 @@ import defaultTo        from 'lodash/defaultTo'
 import {http as axios} from './http'
 import Vue from 'vue';
 import {Model, Collection} from 'vue-mc'
+import {jwtToken} from './utils/jwt_utils';
 
 // TODO: modify for routes etc
 // make sure that save sans id in URL and update has id
