@@ -10,8 +10,6 @@ Rails.application.routes.draw do
              }, defaults: { format: :json }
 
   root to: 'home#index' #, :as => :authenticated_root
-  # force everything back to the SPA home page
-  match '*path' => redirect('/'), via: :get
 
   # TODO: we will need to rework the magic link for SPA routing
   # get '/login/:magic_link', to: 'login#magic_link'
@@ -69,4 +67,7 @@ Rails.application.routes.draw do
       resources :responses
     end
   end
+
+  # force everything back to the SPA home page
+  match '*path' => redirect('/'), via: :get
 end
