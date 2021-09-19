@@ -129,8 +129,10 @@ export default {
         this.error.visible = true;
       } else {
         const loginInfo = new LoginModel({ person: this.person });
+        // TODO: we need a then that saves the person to the store and the JWT token
         loginInfo
           .save()
+          .then((a) => { console.debug('****** GET TOKEN', a.response.headers) })
           .then(() => this.$bvModal.show('iea-modal'))
           .catch((error) => this.onSaveFailure(error));
       }

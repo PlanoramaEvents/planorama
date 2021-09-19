@@ -3,6 +3,7 @@ import { csrfToken } from '@rails/ujs';
 
 export const http = Axios.create({ })
 
+// TODO
 http.interceptors.request.use(
     config => {
       if (!config.headers['X-CSRF-TOKEN']) {

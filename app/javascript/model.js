@@ -59,10 +59,11 @@ export class PlanoModel extends Model {
 
   // We need to put the CSRF token in the header
   getDefaultHeaders() {
-    const csrfToken = document.querySelector("meta[name=csrf-token]").content
-    return {
-      'X-CSRF-Token': csrfToken
-    }
+    // TODO
+    // const csrfToken = document.querySelector("meta[name=csrf-token]").content
+    // return {
+    //   'X-CSRF-Token': csrfToken
+    // }
   }
 }
 

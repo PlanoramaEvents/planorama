@@ -9,6 +9,7 @@ export class SessionStore extends BasePlanoStore {
     super(moduleName, namespaced);
     const sessionService = new SessionService();
 
+    // How is this set ???
     this.state = {
       user: {}
     }
