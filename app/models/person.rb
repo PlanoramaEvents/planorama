@@ -120,9 +120,9 @@ class Person < ApplicationRecord
   validates :name, presence: true
 
   # Needed for JWT revocation strategy
-  def jwt_payload
-    super.merge('foo' => 'bar')
-  end
+  # def jwt_payload
+  #   super.merge('foo' => 'bar')
+  # end
 
   # TODO:
   # - there is talk about having a workflow, including whether a person

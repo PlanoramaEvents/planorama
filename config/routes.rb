@@ -12,20 +12,7 @@ Rails.application.routes.draw do
   root to: 'home#index' #, :as => :authenticated_root
 
   # TODO: we will need to rework the magic link for SPA routing
-  # get '/login/:magic_link', to: 'login#magic_link'
-
-  # Access to the sidekiq monitoring app...
-  # authenticate :person, lambda { |p| p.admin? } do
-  #   mount Sidekiq::Web => '/sidekiq'
-  # end
-
-  # Pages - deprecate these
-  # get 'page/venues', to: 'home#venues'
-  # get 'page/people', to: 'home#people'
-  # get 'page/program', to: 'home#program'
-  # get 'page/surveys', to: 'home#surveys'
-  # get 'page/reports', to: 'home#reports'
-  # get 'page/admin', to: 'home#admin'
+  get '/login/:magic_link', to: 'login#magic_link'
 
   # REST based resources
   get 'people/me', to: 'people#me'
@@ -68,6 +55,13 @@ Rails.application.routes.draw do
     end
   end
 
+  # Access to the sidekiq monitoring app...
+  # authenticate :person, lambda { |p| p.admin? } do
+  #   mount Sidekiq::Web => '/sidekiq'
+  # end
+
   # force everything back to the SPA home page
+  # This has to be at the end otherwise we do not match the resource endpoints
+  # as this is a catch all
   match '*path' => redirect('/'), via: :get
 end

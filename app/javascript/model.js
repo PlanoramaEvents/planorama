@@ -60,7 +60,6 @@ export class PlanoModel extends Model {
 
   // We need to put the CSRF token in the header
   getDefaultHeaders() {
-    console.debug('****** GET DEF HEADER');
     return {
       'Authorization': jwtToken()
     }
@@ -98,7 +97,6 @@ export class PlanoCollection extends Collection {
 
   // We need to put the CSRF token in the header
   getDefaultHeaders() {
-    console.debug('****** GET DEF HEADER');
     return {
       'Authorization': jwtToken()
     }
