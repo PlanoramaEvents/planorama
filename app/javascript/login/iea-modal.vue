@@ -38,7 +38,7 @@
         </ul>
 
         <p>By clicking ‘Agree’ below I do hereby agree to abide by the above usage restrictions. I acknowledge that there may be personal, business, and legal implications if I use this system inappropriately.</p>
-        
+
         <!-- gail's shorter version -->
         <!--
         <p>This system contains the personal data for people, including some information that is considered sensitive. In order to keep that data safe, I agree to the following:</p>

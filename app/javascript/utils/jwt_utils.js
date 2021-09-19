@@ -5,5 +5,8 @@ export function setJWTToken(token) {
 }
 
 export function jwtToken() {
-  localStorage.getItem('gr_jwt_token');
+  let tok = localStorage.getItem('gr_jwt_token');
+  console.debug('GET JWT token', tok);
+
+  return tok;
 }

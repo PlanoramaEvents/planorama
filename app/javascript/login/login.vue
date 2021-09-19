@@ -144,7 +144,7 @@ export default {
       }
     },
     onIeaAgree() {
-      window.location.href = "/"
+      window.location.href = "#"
     },
     onIeaCancel() {
       this.signOut().finally(() => {

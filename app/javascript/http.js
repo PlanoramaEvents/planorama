@@ -6,7 +6,7 @@ export const http = axios.create({})
 
 http.interceptors.request.use(
     config => {
-      config,headers['Authorization'] = jwtToken()
+      config.headers['Authorization'] = jwtToken()
       return config;
     },
     error => Promise.reject(error)
