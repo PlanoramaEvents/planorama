@@ -55,6 +55,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'rbac', to: 'rbac#index'
+
   # Access to the sidekiq monitoring app...
   # authenticate :person, lambda { |p| p.admin? } do
   #   mount Sidekiq::Web => '/sidekiq'
