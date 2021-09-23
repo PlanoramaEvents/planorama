@@ -34,6 +34,7 @@ import LoginPasswordField from "./login_password_field";
 import PrivacyPolicyLink from "../administration/privacy_policy_link"
 import authMixin from '../auth.mixin';
 import IeaModal from './iea-modal';
+import sessionMixin from '../session/session.mixin';
 
 import { validateFields } from "../utils";
 import {jwtToken, setJWTToken} from '../utils/jwt_utils';
@@ -101,7 +102,7 @@ export default {
     PrivacyPolicyLink,
     IeaModal,
   },
-  mixins: [authMixin],
+  mixins: [authMixin, sessionMixin],
   mounted: function () {
     if (this.$route.query.alert) {
       switch (this.$route.query.alert) {
@@ -134,6 +135,7 @@ export default {
           .save()
           .then((m) => { setJWTToken(m.response.headers['authorization']) })
           .then(() => this.$bvModal.show('iea-modal'))
+          .then(() => this.fetchSession())
           .catch((error) => this.onSaveFailure(error));
       }
     },
