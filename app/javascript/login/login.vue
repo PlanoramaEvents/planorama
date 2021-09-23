@@ -60,6 +60,13 @@ export class LoginModel extends PlanoModel {
       },
     };
   }
+
+  getDefaultHeaders() {
+    // on save we do not want a jwt token to be sent
+    let res = {}
+    return res
+  }
+
   routes() {
     return {
       save: "/auth/sign_in",
