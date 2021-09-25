@@ -199,7 +199,7 @@ export const survey_columns = [
     formatter: (d) => new Date(d).toLocaleDateString()
   },
   {
-    key: 'updated_by',
+    key: 'updated_by.name',
     label: 'Last Modified By',
     sortable: true
   },

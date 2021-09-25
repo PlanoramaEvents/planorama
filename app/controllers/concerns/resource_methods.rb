@@ -133,6 +133,7 @@ module ResourceMethods
     @per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate
     @per_page = nil unless paginate
     @page = params[:page]&.to_i || 0 if paginate
+    # Sort field could come from the nested object
     @order = params[:sortField] || ''
     @direction = params[:sortOrder] || 'asc'
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
@@ -141,6 +142,7 @@ module ResourceMethods
     q = policy_scope(base, policy_scope_class: policy_scope_class)
       .includes(includes)
       .references(references)
+      .joins(join_tables)
       .where(query(@filters))
 
     q = q.order("#{@order}" => "#{@direction}") if !@order.blank?
@@ -312,6 +314,10 @@ module ResourceMethods
   end
 
   def references
+    []
+  end
+
+  def join_tables
     []
   end
 

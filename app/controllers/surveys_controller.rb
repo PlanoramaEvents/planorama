@@ -19,6 +19,20 @@ class SurveysController < ResourceController
     serializer_includes
   end
 
+  def join_tables
+    surveys = Arel::Table.new(Survey.table_name)
+    updated_by = Arel::Table.new(Person.table_name).alias('updated_by')
+    [
+      surveys.create_join(
+        updated_by,
+        surveys.create_on(
+          surveys[:updated_by_id].eq(updated_by[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+  end
+
   def before_save
     @object.created_by_id = current_person.id
     @object.updated_by_id = current_person.id
