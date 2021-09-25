@@ -123,36 +123,17 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.agreements (
-    id bigint NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     title character varying,
     terms text,
     agreement_type character varying,
-    created_by_id bigint NOT NULL,
-    updated_by_id bigint NOT NULL,
+    created_by_id uuid NOT NULL,
+    updated_by_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     target public.agreement_target
 );
-
-
---
--- Name: agreements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.agreements_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: agreements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.agreements_id_seq OWNED BY public.agreements.id;
 
 
 --
@@ -172,9 +153,9 @@ CREATE TABLE public.ar_internal_metadata (
 --
 
 CREATE TABLE public.bios (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     bio text,
-    person_id integer,
+    person_id uuid,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
@@ -194,31 +175,11 @@ CREATE TABLE public.bios (
 
 
 --
--- Name: bios_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.bios_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: bios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.bios_id_seq OWNED BY public.bios.id;
-
-
---
 -- Name: categories; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.categories (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying(191) NOT NULL,
     description character varying,
     target_class character varying(100),
@@ -227,26 +188,6 @@ CREATE TABLE public.categories (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
-
-
---
--- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.categories_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
 
 
 --
@@ -261,7 +202,7 @@ CREATE TABLE public.categorizations (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    category_id integer NOT NULL
+    category_id uuid NOT NULL
 );
 
 
@@ -290,8 +231,8 @@ ALTER SEQUENCE public.categorizations_id_seq OWNED BY public.categorizations.id;
 --
 
 CREATE TABLE public.configurations (
-    id integer NOT NULL,
-    parameter character varying(45) NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    parameter uuid NOT NULL,
     parameter_value character varying(150) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -300,31 +241,11 @@ CREATE TABLE public.configurations (
 
 
 --
--- Name: configurations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.configurations_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: configurations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.configurations_id_seq OWNED BY public.configurations.id;
-
-
---
 -- Name: conflict_exceptions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.conflict_exceptions (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     conflict_type character varying,
     affected integer,
     src1 integer,
@@ -338,60 +259,20 @@ CREATE TABLE public.conflict_exceptions (
 
 
 --
--- Name: conflict_exceptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.conflict_exceptions_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: conflict_exceptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.conflict_exceptions_id_seq OWNED BY public.conflict_exceptions.id;
-
-
---
 -- Name: email_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.email_addresses (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     email character varying DEFAULT ''::character varying,
     isdefault boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     label character varying,
-    person_id integer,
+    person_id uuid,
     is_valid boolean DEFAULT true NOT NULL
 );
-
-
---
--- Name: email_addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.email_addresses_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: email_addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.email_addresses_id_seq OWNED BY public.email_addresses.id;
 
 
 --
@@ -399,7 +280,7 @@ ALTER SEQUENCE public.email_addresses_id_seq OWNED BY public.email_addresses.id;
 --
 
 CREATE TABLE public.formats (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying NOT NULL,
     "position" integer,
     created_at timestamp without time zone NOT NULL,
@@ -409,31 +290,11 @@ CREATE TABLE public.formats (
 
 
 --
--- Name: formats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.formats_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: formats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.formats_id_seq OWNED BY public.formats.id;
-
-
---
 -- Name: label_dimensions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.label_dimensions (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying,
     manufacturer character varying,
     page_size character varying,
@@ -455,32 +316,12 @@ CREATE TABLE public.label_dimensions (
 
 
 --
--- Name: label_dimensions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.label_dimensions_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: label_dimensions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.label_dimensions_id_seq OWNED BY public.label_dimensions.id;
-
-
---
 -- Name: magic_links; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.magic_links (
-    id bigint NOT NULL,
-    person_id bigint NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid NOT NULL,
     token character varying NOT NULL,
     url character varying(10000) DEFAULT NULL::character varying,
     expires_at timestamp without time zone NOT NULL,
@@ -491,31 +332,12 @@ CREATE TABLE public.magic_links (
 
 
 --
--- Name: magic_links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.magic_links_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: magic_links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.magic_links_id_seq OWNED BY public.magic_links.id;
-
-
---
 -- Name: mail_histories; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.mail_histories (
-    id integer NOT NULL,
-    person_mailing_assignment_id integer,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_mailing_assignment_id uuid,
     email_status public.mail_status_enum,
     date_sent timestamp without time zone,
     email character varying,
@@ -524,30 +346,10 @@ CREATE TABLE public.mail_histories (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    person_id integer,
-    mailing_id integer,
+    person_id uuid,
+    mailing_id uuid,
     subject character varying
 );
-
-
---
--- Name: mail_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.mail_histories_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: mail_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.mail_histories_id_seq OWNED BY public.mail_histories.id;
 
 
 --
@@ -555,11 +357,11 @@ ALTER SEQUENCE public.mail_histories_id_seq OWNED BY public.mail_histories.id;
 --
 
 CREATE TABLE public.mail_templates (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     title character varying DEFAULT ''::character varying,
     subject character varying DEFAULT ''::character varying,
     content text,
-    survey_id integer,
+    survey_id uuid,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
@@ -569,33 +371,13 @@ CREATE TABLE public.mail_templates (
 
 
 --
--- Name: mail_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.mail_templates_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: mail_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.mail_templates_id_seq OWNED BY public.mail_templates.id;
-
-
---
 -- Name: mailings; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.mailings (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     mailing_number integer,
-    mail_template_id integer,
+    mail_template_id uuid,
     scheduled boolean,
     testrun boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
@@ -608,31 +390,11 @@ CREATE TABLE public.mailings (
 
 
 --
--- Name: mailings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.mailings_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: mailings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.mailings_id_seq OWNED BY public.mailings.id;
-
-
---
 -- Name: parameter_names; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.parameter_names (
-    parameter_name character varying(45) NOT NULL,
+    parameter_name uuid DEFAULT public.gen_random_uuid() NOT NULL,
     parameter_description character varying(170) NOT NULL
 );
 
@@ -642,7 +404,7 @@ CREATE TABLE public.parameter_names (
 --
 
 CREATE TABLE public.people (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     language character varying(5) DEFAULT ''::character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -700,33 +462,13 @@ END) STORED,
 
 
 --
--- Name: people_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.people_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: people_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.people_id_seq OWNED BY public.people.id;
-
-
---
 -- Name: person_agreements; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.person_agreements (
-    id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    agreement_id bigint NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid NOT NULL,
+    agreement_id uuid NOT NULL,
     signed boolean DEFAULT false,
     agreed_on timestamp without time zone NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -736,57 +478,18 @@ CREATE TABLE public.person_agreements (
 
 
 --
--- Name: person_agreements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.person_agreements_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: person_agreements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.person_agreements_id_seq OWNED BY public.person_agreements.id;
-
-
---
 -- Name: person_constraints; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.person_constraints (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     max_items_per_day integer,
     max_items_per_con integer,
-    person_id integer,
+    person_id uuid,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
 );
-
-
---
--- Name: person_constraints_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.person_constraints_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: person_constraints_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.person_constraints_id_seq OWNED BY public.person_constraints.id;
 
 
 --
@@ -794,9 +497,9 @@ ALTER SEQUENCE public.person_constraints_id_seq OWNED BY public.person_constrain
 --
 
 CREATE TABLE public.person_mailing_assignments (
-    id integer NOT NULL,
-    person_id integer,
-    mailing_id integer,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    mailing_id uuid,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
@@ -804,32 +507,12 @@ CREATE TABLE public.person_mailing_assignments (
 
 
 --
--- Name: person_mailing_assignments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.person_mailing_assignments_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: person_mailing_assignments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.person_mailing_assignments_id_seq OWNED BY public.person_mailing_assignments.id;
-
-
---
 -- Name: person_roles; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.person_roles (
-    id bigint NOT NULL,
-    person_id bigint NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     role public.person_role
@@ -837,30 +520,11 @@ CREATE TABLE public.person_roles (
 
 
 --
--- Name: person_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.person_roles_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: person_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.person_roles_id_seq OWNED BY public.person_roles.id;
-
-
---
 -- Name: programme_assignment_role_type; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.programme_assignment_role_type (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     lock_version integer DEFAULT 0,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -875,36 +539,16 @@ CREATE TABLE public.programme_assignment_role_type (
 --
 
 CREATE TABLE public.programme_assignments (
-    id integer NOT NULL,
-    person_id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    programme_assignment_role_type_id integer NOT NULL,
-    programme_item_id integer NOT NULL,
+    programme_assignment_role_type_id uuid NOT NULL,
+    programme_item_id uuid NOT NULL,
     sort_order integer,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 );
-
-
---
--- Name: programme_assignments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.programme_assignments_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: programme_assignments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.programme_assignments_id_seq OWNED BY public.programme_assignments.id;
 
 
 --
@@ -912,7 +556,7 @@ ALTER SEQUENCE public.programme_assignments_id_seq OWNED BY public.programme_ass
 --
 
 CREATE TABLE public.programme_items (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     duration integer,
     minimum_people integer,
     maximum_people integer,
@@ -920,7 +564,7 @@ CREATE TABLE public.programme_items (
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     lock_version integer DEFAULT 0,
-    format_id integer,
+    format_id uuid,
     pub_reference_number integer,
     mobile_card_size integer DEFAULT 1 NOT NULL,
     audience_size integer,
@@ -929,30 +573,10 @@ CREATE TABLE public.programme_items (
     description text,
     title character varying(256),
     start_time timestamp without time zone,
-    room_id integer,
+    room_id uuid,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
     publish boolean DEFAULT false NOT NULL
 );
-
-
---
--- Name: programme_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.programme_items_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: programme_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.programme_items_id_seq OWNED BY public.programme_items.id;
 
 
 --
@@ -960,7 +584,7 @@ ALTER SEQUENCE public.programme_items_id_seq OWNED BY public.programme_items.id;
 --
 
 CREATE TABLE public.publication_dates (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     "timestamp" timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -971,31 +595,11 @@ CREATE TABLE public.publication_dates (
 
 
 --
--- Name: publication_dates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.publication_dates_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: publication_dates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.publication_dates_id_seq OWNED BY public.publication_dates.id;
-
-
---
 -- Name: publication_statuses; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.publication_statuses (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     status character varying,
     submit_time timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
@@ -1005,37 +609,17 @@ CREATE TABLE public.publication_statuses (
 
 
 --
--- Name: publication_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.publication_statuses_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: publication_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.publication_statuses_id_seq OWNED BY public.publication_statuses.id;
-
-
---
 -- Name: published_programme_assignments; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.published_programme_assignments (
-    programme_assignment_id integer NOT NULL,
-    programme_item_id integer NOT NULL,
+    programme_assignment_id uuid NOT NULL,
+    programme_item_id uuid NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    programme_assignment_role_type_id integer NOT NULL,
-    person_id integer NOT NULL,
+    programme_assignment_role_type_id uuid NOT NULL,
+    person_id uuid NOT NULL,
     sort_order integer,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 );
@@ -1046,20 +630,20 @@ CREATE TABLE public.published_programme_assignments (
 --
 
 CREATE TABLE public.published_programme_items (
-    programme_item_id integer NOT NULL,
+    programme_item_id uuid NOT NULL,
     title character varying,
     duration integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    format_id integer,
+    format_id uuid,
     pub_reference_number integer,
     audience_size integer,
     participant_notes text,
     is_break boolean DEFAULT false,
     description text,
     start_time timestamp without time zone,
-    room_id integer,
+    room_id uuid,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 );
 
@@ -1069,8 +653,8 @@ CREATE TABLE public.published_programme_items (
 --
 
 CREATE TABLE public.rooms (
-    id integer NOT NULL,
-    venue_id integer,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    venue_id uuid,
     name character varying(490) NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -1080,26 +664,6 @@ CREATE TABLE public.rooms (
     sort_order integer,
     capacity integer
 );
-
-
---
--- Name: rooms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rooms_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rooms_id_seq OWNED BY public.rooms.id;
 
 
 --
@@ -1116,38 +680,18 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE TABLE public.survey_answers (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     answer text,
     "default" boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    survey_question_id integer,
+    survey_question_id uuid,
     sort_order integer,
-    next_page_id integer,
+    next_page_id uuid,
     fuuid character varying,
     other boolean DEFAULT false
 );
-
-
---
--- Name: survey_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.survey_answers_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: survey_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.survey_answers_id_seq OWNED BY public.survey_answers.id;
 
 
 --
@@ -1194,34 +738,15 @@ ALTER SEQUENCE public.survey_formats_id_seq OWNED BY public.survey_formats.id;
 --
 
 CREATE TABLE public.survey_pages (
-    id bigint NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     title character varying,
-    next_page_id bigint,
+    next_page_id uuid,
     sort_order integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    survey_id bigint,
+    survey_id uuid,
     fuuid character varying
 );
-
-
---
--- Name: survey_pages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.survey_pages_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: survey_pages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.survey_pages_id_seq OWNED BY public.survey_pages.id;
 
 
 --
@@ -1229,12 +754,12 @@ ALTER SEQUENCE public.survey_pages_id_seq OWNED BY public.survey_pages.id;
 --
 
 CREATE TABLE public.survey_queries (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying,
     operation character varying,
-    survey_id integer,
+    survey_id uuid,
     shared boolean,
-    user_id integer,
+    user_id uuid,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
@@ -1244,35 +769,15 @@ CREATE TABLE public.survey_queries (
 
 
 --
--- Name: survey_queries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.survey_queries_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: survey_queries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.survey_queries_id_seq OWNED BY public.survey_queries.id;
-
-
---
 -- Name: survey_query_predicates; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.survey_query_predicates (
-    id integer NOT NULL,
-    survey_question_id integer,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    survey_question_id uuid,
     operation character varying,
     value text,
-    survey_query_id integer,
+    survey_query_id uuid,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
@@ -1280,31 +785,11 @@ CREATE TABLE public.survey_query_predicates (
 
 
 --
--- Name: survey_query_predicates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.survey_query_predicates_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: survey_query_predicates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.survey_query_predicates_id_seq OWNED BY public.survey_query_predicates.id;
-
-
---
 -- Name: survey_questions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.survey_questions (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     question text,
     question_type character varying DEFAULT 'textfield'::character varying,
     created_at timestamp without time zone NOT NULL,
@@ -1316,7 +801,7 @@ CREATE TABLE public.survey_questions (
     horizontal boolean DEFAULT false,
     private boolean DEFAULT false,
     regex character varying,
-    survey_page_id bigint,
+    survey_page_id uuid,
     fuuid character varying,
     randomize boolean DEFAULT false,
     branching boolean DEFAULT false
@@ -1324,60 +809,20 @@ CREATE TABLE public.survey_questions (
 
 
 --
--- Name: survey_questions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.survey_questions_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: survey_questions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.survey_questions_id_seq OWNED BY public.survey_questions.id;
-
-
---
 -- Name: survey_responses; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.survey_responses (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    survey_question_id integer NOT NULL,
+    survey_question_id uuid NOT NULL,
     response json,
     response_as_text text,
-    survey_submission_id bigint NOT NULL,
+    survey_submission_id uuid NOT NULL,
     fuuid character varying
 );
-
-
---
--- Name: survey_responses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.survey_responses_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: survey_responses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.survey_responses_id_seq OWNED BY public.survey_responses.id;
 
 
 --
@@ -1385,10 +830,10 @@ ALTER SEQUENCE public.survey_responses_id_seq OWNED BY public.survey_responses.i
 --
 
 CREATE TABLE public.survey_submissions (
-    id bigint NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying,
-    survey_id bigint NOT NULL,
-    person_id bigint NOT NULL,
+    survey_id uuid NOT NULL,
+    person_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     lock_version integer DEFAULT 0,
@@ -1397,30 +842,11 @@ CREATE TABLE public.survey_submissions (
 
 
 --
--- Name: survey_submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.survey_submissions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: survey_submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.survey_submissions_id_seq OWNED BY public.survey_submissions.id;
-
-
---
 -- Name: surveys; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.surveys (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
@@ -1436,9 +862,9 @@ CREATE TABLE public.surveys (
     authenticate_msg text,
     anonymous boolean DEFAULT false,
     published_on timestamp without time zone,
-    published_by_id integer,
-    created_by_id integer,
-    updated_by_id integer,
+    published_by_id uuid,
+    created_by_id uuid,
+    updated_by_id uuid,
     description text,
     fuuid character varying,
     mandatory_star boolean DEFAULT true,
@@ -1449,57 +875,17 @@ CREATE TABLE public.surveys (
 
 
 --
--- Name: surveys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.surveys_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: surveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.surveys_id_seq OWNED BY public.surveys.id;
-
-
---
 -- Name: tag_contexts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.tag_contexts (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     publish boolean DEFAULT true
 );
-
-
---
--- Name: tag_contexts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.tag_contexts_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tag_contexts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.tag_contexts_id_seq OWNED BY public.tag_contexts.id;
 
 
 --
@@ -1574,33 +960,13 @@ ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 --
 
 CREATE TABLE public.venues (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     sort_order integer
 );
-
-
---
--- Name: venues_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.venues_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: venues_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.venues_id_seq OWNED BY public.venues.id;
 
 
 --
@@ -1638,27 +1004,6 @@ ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
--- Name: agreements id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.agreements ALTER COLUMN id SET DEFAULT nextval('public.agreements_id_seq'::regclass);
-
-
---
--- Name: bios id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.bios ALTER COLUMN id SET DEFAULT nextval('public.bios_id_seq'::regclass);
-
-
---
--- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
-
-
---
 -- Name: categorizations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1666,206 +1011,10 @@ ALTER TABLE ONLY public.categorizations ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
--- Name: configurations id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.configurations ALTER COLUMN id SET DEFAULT nextval('public.configurations_id_seq'::regclass);
-
-
---
--- Name: conflict_exceptions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.conflict_exceptions ALTER COLUMN id SET DEFAULT nextval('public.conflict_exceptions_id_seq'::regclass);
-
-
---
--- Name: email_addresses id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.email_addresses ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_id_seq'::regclass);
-
-
---
--- Name: formats id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.formats ALTER COLUMN id SET DEFAULT nextval('public.formats_id_seq'::regclass);
-
-
---
--- Name: label_dimensions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.label_dimensions ALTER COLUMN id SET DEFAULT nextval('public.label_dimensions_id_seq'::regclass);
-
-
---
--- Name: magic_links id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.magic_links ALTER COLUMN id SET DEFAULT nextval('public.magic_links_id_seq'::regclass);
-
-
---
--- Name: mail_histories id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_histories ALTER COLUMN id SET DEFAULT nextval('public.mail_histories_id_seq'::regclass);
-
-
---
--- Name: mail_templates id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_templates ALTER COLUMN id SET DEFAULT nextval('public.mail_templates_id_seq'::regclass);
-
-
---
--- Name: mailings id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mailings ALTER COLUMN id SET DEFAULT nextval('public.mailings_id_seq'::regclass);
-
-
---
--- Name: people id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.people ALTER COLUMN id SET DEFAULT nextval('public.people_id_seq'::regclass);
-
-
---
--- Name: person_agreements id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_agreements ALTER COLUMN id SET DEFAULT nextval('public.person_agreements_id_seq'::regclass);
-
-
---
--- Name: person_constraints id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_constraints ALTER COLUMN id SET DEFAULT nextval('public.person_constraints_id_seq'::regclass);
-
-
---
--- Name: person_mailing_assignments id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_mailing_assignments ALTER COLUMN id SET DEFAULT nextval('public.person_mailing_assignments_id_seq'::regclass);
-
-
---
--- Name: person_roles id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_roles ALTER COLUMN id SET DEFAULT nextval('public.person_roles_id_seq'::regclass);
-
-
---
--- Name: programme_assignments id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.programme_assignments ALTER COLUMN id SET DEFAULT nextval('public.programme_assignments_id_seq'::regclass);
-
-
---
--- Name: programme_items id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.programme_items ALTER COLUMN id SET DEFAULT nextval('public.programme_items_id_seq'::regclass);
-
-
---
--- Name: publication_dates id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.publication_dates ALTER COLUMN id SET DEFAULT nextval('public.publication_dates_id_seq'::regclass);
-
-
---
--- Name: publication_statuses id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.publication_statuses ALTER COLUMN id SET DEFAULT nextval('public.publication_statuses_id_seq'::regclass);
-
-
---
--- Name: rooms id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rooms ALTER COLUMN id SET DEFAULT nextval('public.rooms_id_seq'::regclass);
-
-
---
--- Name: survey_answers id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.survey_answers ALTER COLUMN id SET DEFAULT nextval('public.survey_answers_id_seq'::regclass);
-
-
---
 -- Name: survey_formats id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.survey_formats ALTER COLUMN id SET DEFAULT nextval('public.survey_formats_id_seq'::regclass);
-
-
---
--- Name: survey_pages id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.survey_pages ALTER COLUMN id SET DEFAULT nextval('public.survey_pages_id_seq'::regclass);
-
-
---
--- Name: survey_queries id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.survey_queries ALTER COLUMN id SET DEFAULT nextval('public.survey_queries_id_seq'::regclass);
-
-
---
--- Name: survey_query_predicates id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.survey_query_predicates ALTER COLUMN id SET DEFAULT nextval('public.survey_query_predicates_id_seq'::regclass);
-
-
---
--- Name: survey_questions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.survey_questions ALTER COLUMN id SET DEFAULT nextval('public.survey_questions_id_seq'::regclass);
-
-
---
--- Name: survey_responses id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.survey_responses ALTER COLUMN id SET DEFAULT nextval('public.survey_responses_id_seq'::regclass);
-
-
---
--- Name: survey_submissions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.survey_submissions ALTER COLUMN id SET DEFAULT nextval('public.survey_submissions_id_seq'::regclass);
-
-
---
--- Name: surveys id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.surveys ALTER COLUMN id SET DEFAULT nextval('public.surveys_id_seq'::regclass);
-
-
---
--- Name: tag_contexts id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tag_contexts ALTER COLUMN id SET DEFAULT nextval('public.tag_contexts_id_seq'::regclass);
 
 
 --
@@ -1880,13 +1029,6 @@ ALTER TABLE ONLY public.taggings ALTER COLUMN id SET DEFAULT nextval('public.tag
 --
 
 ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
-
-
---
--- Name: venues id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.venues ALTER COLUMN id SET DEFAULT nextval('public.venues_id_seq'::regclass);
 
 
 --
@@ -2695,6 +1837,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210716142413'),
 ('20210717191036'),
 ('20210811135617'),
-('20210819204542');
-
-
+('20210819204542'),
+('20210924224027'),
+('20210925131929');
