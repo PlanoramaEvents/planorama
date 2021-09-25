@@ -73,7 +73,6 @@ export default {
   name: 'TableVuexorm',
   props: {
     model: {
-      type: Model,
       required: true
     },
     sortField : { type: String },
@@ -104,6 +103,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.model);
     this.model.fetch();
   },
   watch: {
