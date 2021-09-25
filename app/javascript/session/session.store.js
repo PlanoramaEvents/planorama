@@ -22,10 +22,12 @@ export class SessionStore extends BasePlanoStore {
     this.actions = {
       [GET_SESSION_USER] ({commit, state}) {
         // only fetch session if we don't have one
-        // TODO is that right
         if(!state.user.id) {
           sessionService.getSessionUser().then((user) => {
             commit(SET_SESSION_USER, user)
+          }).catch((error) => {
+            // If we can not get the session then set no no user
+            commit(SET_SESSION_USER, {})
           })
         }
       }

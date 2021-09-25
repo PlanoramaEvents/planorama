@@ -105,7 +105,6 @@ export default {
   },
   methods: {
     provider(ctx, callback) {
-      console.debug('******* PROVIDE', ctx)
       var sortOrder = ctx.sortDesc ? 'desc' : 'asc'
 
       if (ctx.perPage) this.collection.set('perPage', ctx.perPage)
@@ -114,11 +113,9 @@ export default {
       if (ctx.filter) this.collection.set('filter', ctx.filter)
 
       this.collection.clear()
-      // TODO use vuex here to fetch as a wrapper
       this.collection.page(ctx.currentPage).fetch().then(
         (arg) => {
           var res = []
-          this.totalRows = arg.response.data.meta.total
           this.perPage = arg.response.data.meta.perPage
           this.collection.each((obj, index) => {
             res.push(obj)
@@ -127,7 +124,6 @@ export default {
           callback(res)
         }
       ).catch((error) => {
-        this.totalRows = 0
         callback([])
       })
 

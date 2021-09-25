@@ -17,6 +17,7 @@ const sessionMixin = {
     })
   },
   mounted() {
+    // fetch the current session on mount !!!
     this.fetchSession();
   }
 }

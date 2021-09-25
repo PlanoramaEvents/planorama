@@ -26,7 +26,6 @@ export default  {
   },
   mixins: [sessionMixin],
   mounted() {
-    console.debug('*** APP MOUNTED')
   }
 }
 </script>
