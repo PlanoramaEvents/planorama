@@ -1,23 +1,23 @@
 <template>
-  <table-vuex
+  <table-vuexorm
     sortField="published_name_sort_by"
-    :modelType="modelType"
+    :model="Person"
     namespace="people"
   >
-  </table-vuex>
+  </table-vuexorm>
 </template>
 
 <script>
-import TableVuex from '../table_vuex';
-import { Person } from './people';
+import TableVuexorm from '../table_vuexorm';
+import { Person } from './people.model';
 
 export default {
   name: 'PeopleTable',
   data: () => ({
-    modelType: Person
+    Person
   }),
   components: {
-    TableVuex,
+    TableVuexorm,
   }
 }
 </script>

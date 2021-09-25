@@ -1,11 +1,12 @@
-import { Model } from '@vuex-orm/core';
+import { PlanoModel } from '../vuexorm.model';
 import { v4 as uuid } from 'uuid';
 
 export const SELECT = "SELECT";
 export const UNSELECT = "UNSELECT";
 
-export class Person extends Model {
+export class Person extends PlanoModel {
   static entity = 'people'
+  static apiEndpoint = "/people"
 
   static fields () {
     return {
@@ -42,25 +43,9 @@ export class Person extends Model {
       // missing relationships
     }
   }
-}
 
-export const personState = {
-  state: {
-    selectedId: null
-  },
-
-  getters: {
-    selected: (state, getters) => {
-      return getters.find(state.selectedId)
-    }
-  },
- 
-  mutations: {
-    [SELECT] (state, id) {
-      state.selectedId = id;
-    },
-    [UNSELECT] (state) {
-      state.selectedId = null;
-    }
+  static tableFields () {
+    // todo return fields for bootstrap table here
+    return ['name']
   }
 }

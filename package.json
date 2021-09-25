@@ -13,6 +13,7 @@
     "@rails/ujs": "^6.0.3-7",
     "@rails/webpacker": "4.3.0",
     "@vuex-orm/core": "^0.36.4",
+    "@vuex-orm/plugin-axios": "^0.9.4",
     "axios": "^0.21.1",
     "axios-jwt": "^1.7.1",
     "axios-observable": "^1.2.1",

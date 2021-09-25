@@ -31,10 +31,10 @@
     <b-table
       hover bordered responsive selectable small striped
       :select-mode="selectMode"
-      :fields="columns"
+      :fields="model.tableFields()"
       selected-variant="primary"
 
-      :items="collection.page(currentPage).models"
+      :items="model.provider"
 
       ref="table"
 
@@ -67,11 +67,10 @@
 
 <script>
 import { SELECT } from './model.store';
-import namespacedMixin from './namespaced.mixin';
 import { Model } from '@vuex-orm/core';
 
 export default {
-  name: 'TableVuex',
+  name: 'TableVuexorm',
   props: {
     model: {
       type: Model,
@@ -84,68 +83,28 @@ export default {
     return {
       selectMode: 'single',
       filter: null,
-      
+      currentPage: 1,
     }
   },
-  mixins: [
-    namespacedMixin(['collection', 'columns', 'selected'], {select: SELECT})
-  ],
+  mixins: [],
   computed: {
-    currentPage: {
-      get() {
-        return this.collection ? this.collection.currentPage : 1;
-      },
-      set(val) {
-        this.collection.currentPage = val
-        this.collection.page(this.collection.currentPage).fetch();
-      }
-    },
     totalRows() {
-      return this.collection ? this.collection.total : 0;
+      return this.model.query().count();
+    },
+    selected() {
+      return this.model.getters('selected')
     }
   },
   methods: {
-    provider(ctx, callback) {
-      // TODO rewrite for vuexorm
-      // possibly just start over :(
-      var sortOrder = ctx.sortDesc ? 'desc' : 'asc'
-
-      if (ctx.perPage) this.collection.set('perPage', ctx.perPage)
-      if (sortOrder) this.collection.set('sortOrder', sortOrder)
-      if (ctx.sortBy) this.collection.set('sortField', ctx.sortBy)
-      if (ctx.filter) this.collection.set('filter', ctx.filter)
-
-      this.collection.clear()
-      // TODO use vuex here to fetch as a wrapper
-      this.collection.page(ctx.currentPage).fetch().then(
-        (arg) => {
-          var res = []
-          this.totalRows = arg.response.data.meta.total
-          this.perPage = arg.response.data.meta.perPage
-          this.collection.each((obj, index) => {
-            res.push(obj)
-          })
-
-          callback(res)
-        }
-      ).catch((error) => {
-        this.totalRows = 0
-        callback([])
-      })
-
-      return null
-    },
     onReset() {
-      if (this.selected) this.selected.fetch()
+      // What goes here
     },
     onRowSelected(items) {
-      console.log('row selected', items)
-      this.select(items[0]);
+      this.model.commit(SELECT, items[0].id)
     }
   },
   mounted() {
-    this.collection.perPage = this.perPage
-    this.collection.fetch()
+    this.model.fetch();
   },
   watch: {
     selected(val) {

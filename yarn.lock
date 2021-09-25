@@ -3891,6 +3891,13 @@
   dependencies:
     normalizr "^3.6.0"
 
+"@vuex-orm/plugin-axios@^0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@vuex-orm/plugin-axios/-/plugin-axios-0.9.4.tgz#7f20a9780b8910cd0636201c049f7975d640d0e4"
+  integrity sha512-l7gGwodIovXPMLW9UZFgFuy7Cqy+h5eDF7B65Tz2lHDt1eQbt+gL0oB6uTD1NgMTTEGWGjMbbKwPfcFxnNwgJw==
+  dependencies:
+    axios "^0.21.1"
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.9.0.tgz"

@@ -1,5 +1,11 @@
 import VuexORM from '@vuex-orm/core';
+import VuexORMAxios from '@vuex-orm/plugin-axios';
+import {http as axios} from './http';
+
+VuexORM.use(VuexORMAxios, {axios})
+
 const database = new VuexORM.Database();
+
 
 // admin
 import { store as admin } from './administration/admin.store';
@@ -10,9 +16,9 @@ settingsStore.registerAsModuleFor(admin);
 agreementStore.registerAsModuleFor(admin);
 
 // people
-//import { store  as people } from './people/people.store';
 import { Person } from './people/people.model';
-database.register(Person);
+import { planoModelStore } from './vuexorm.model';
+database.register(Person, planoModelStore);
 
 // store
 import { store as surveys } from './surveys/survey.store'
