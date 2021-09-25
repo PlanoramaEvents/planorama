@@ -8,7 +8,7 @@ class UuidMigrate < ActiveRecord::Migration[6.0]
     reversible do |dir|
       dir.up do
         # This was done in add_uuid_to_db
-        # enable_extension 'pgcrypto'
+        enable_extension 'pgcrypto'
 
         # agreements
         primary_key_to_uuid :agreements

@@ -10,6 +10,20 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
+
+--
 -- Name: acceptance_status_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1838,5 +1852,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210717191036'),
 ('20210811135617'),
 ('20210819204542'),
-('20210924224027'),
 ('20210925131929');
