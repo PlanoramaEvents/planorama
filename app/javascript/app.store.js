@@ -26,9 +26,8 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import { store as appStore } from './store';
-export const store = appStore.initialize(Vuex, database);
+export const store = appStore.initialize(Vuex, [VuexORM.install(database)]);
 admin.registerAsModuleFor(store);
-people.registerAsModuleFor(store);
 surveys.registerAsModuleFor(store);
 session.registerAsModuleFor(store);
 
