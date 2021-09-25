@@ -179,29 +179,29 @@ export const survey_columns = [
   {
     key: 'description',
     label: 'Description',
-    //sortable: true,
+    sortable: true,
   },
   {
     key: '$.public',
     label: 'Status',
     formatter: (p) => p ? 'Published' : 'Closed',
-    //sortable: true,
+    sortable: true,
   },
   {
-    key: 'publishedOn',
+    key: 'published_on',
     label: 'Published On',
-    //sortable: true,
+    sortable: true,
   },
   {
     key: '$.updated_at',
     label: 'Last Modified On',
-    //sortable: true,
+    sortable: true,
     formatter: (d) => new Date(d).toLocaleDateString()
   },
   {
     key: 'updated_by',
     label: 'Last Modified By',
-    //sortable: true
+    sortable: true
   },
   'preview',
   'surveyLink',
