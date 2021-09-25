@@ -174,7 +174,7 @@ export const survey_columns = [
     key: '$.name',
     label: 'Name',
     stickyColumn: true,
-    //sortable: true
+    sortable: true
   },
   {
     key: 'description',

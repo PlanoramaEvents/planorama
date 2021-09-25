@@ -28,13 +28,14 @@
       ></b-pagination>
     </div>
 
+    <!-- NOTE:  items uses 'provider' function so that sortung works-->
     <b-table
       hover bordered responsive selectable small striped
       :select-mode="selectMode"
       :fields="columns"
       selected-variant="primary"
 
-      :items="collection.page(currentPage).models"
+      :items="provider"
 
       ref="table"
 
@@ -79,28 +80,32 @@ export default {
     return {
       selectMode: 'single',
       filter: null,
-      
+      currentPage: 1
     }
   },
   mixins: [
     namespacedMixin(['collection', 'columns', 'selected'], {select: SELECT})
   ],
   computed: {
-    currentPage: {
-      get() {
-        return this.collection ? this.collection.currentPage : 1;
-      },
-      set(val) {
-        this.collection.currentPage = val
-        this.collection.page(this.collection.currentPage).fetch();
-      }
-    },
+    // NOTE: this does not use bootstrap vue's pager and table integration with provider
+    // which then breaks the sorting
+    // currentPage: {
+    //   get() {
+    //     return this.collection ? this.collection.currentPage : 1;
+    //   },
+    //   set(val) {
+    //     this.collection.currentPage = val
+    //     //
+    //     this.collection.page(this.collection.currentPage).fetch();
+    //   }
+    // },
     totalRows() {
       return this.collection ? this.collection.total : 0;
     }
   },
   methods: {
     provider(ctx, callback) {
+      console.debug('******* PROVIDE', ctx)
       var sortOrder = ctx.sortDesc ? 'desc' : 'asc'
 
       if (ctx.perPage) this.collection.set('perPage', ctx.perPage)
@@ -132,7 +137,7 @@ export default {
       if (this.selected) this.selected.fetch()
     },
     onRowSelected(items) {
-      console.log('row selected', items)
+      // console.log('row selected', items)
       this.select(items[0]);
     }
   },
