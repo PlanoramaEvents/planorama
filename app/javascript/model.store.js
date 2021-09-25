@@ -8,14 +8,19 @@ export const AFTER_SAVE = 'AFTER_SAVE'
 export const UPDATED = 'UPDATED';
 export const DUPLICATE = 'DUPLICATE';
 
+import VuexORM from '@vuex-orm/core';
+
 export class BasePlanoStore {
   constructor(moduleName, namespaced = false) {
     this.moduleName = moduleName;
     this.namespaced = namespaced;
     this.children = [];
   }
-  initialize(vuex) {
-    return new vuex.Store(this)
+  initialize(vuex, database) {
+    return new vuex.Store({
+      ...this,
+      plugins: [VuexORM.install(database)]
+    })
   }
 
   registerModule(name, config) {

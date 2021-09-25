@@ -3884,6 +3884,13 @@
   resolved "https://registry.npmjs.org/@vue/shared/-/shared-3.0.11.tgz"
   integrity sha512-b+zB8A2so8eCE0JsxjL24J7vdGl8rzPQ09hZNhystm+KqSbKcAej1A+Hbva1rCMmTTqA+hFnUSDc5kouEo0JzA==
 
+"@vuex-orm/core@^0.36.4":
+  version "0.36.4"
+  resolved "https://registry.yarnpkg.com/@vuex-orm/core/-/core-0.36.4.tgz#9e2b1b8dfd74c2a508f1862ffa3e4a2c1e4cc60c"
+  integrity sha512-Wkq1G+FtcEQ4LbhEZUZalhuErb2nY2nuBo2UeGVpbVKkMss5piJhw7bt5TpWecDNmIUc2BzaenDDqm08AAe7Hw==
+  dependencies:
+    normalizr "^3.6.0"
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.9.0.tgz"
@@ -9968,6 +9975,11 @@ normalize-url@^3.0.0:
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-3.3.0.tgz"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
+normalizr@^3.6.0:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.6.1.tgz#d367ab840e031ff382141b8d81ce279292ff69fe"
+  integrity sha512-8iEmqXmPtll8PwbEFrbPoDxVw7MKnNvt3PZzR2Xvq9nggEEOgBlNICPXYzyZ4w4AkHUzCU998mdatER3n2VaMA==
+
 npm-run-path@^2.0.0:
   version "2.0.2"
   resolved "https://registry.npmjs.org/npm-run-path/-/npm-run-path-2.0.2.tgz"
@@ -13919,6 +13931,11 @@ uuid@^3.3.2, uuid@^3.4.0:
   version "3.4.0"
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+
+uuid@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-compile-cache@^2.1.1:
   version "2.2.0"

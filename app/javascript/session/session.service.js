@@ -3,9 +3,8 @@ import { map, catchError } from 'rxjs';
 
 export class SessionService {
   getSessionUser() {
-    return http.get('/people/me').pipe(
-      catchError((a,b,c) => console.log(a,b,c)),
-      map(r => r.data)
-    );
+    return http.get('/people/me').then((data) => {
+      return data.data;
+    });
   }
 }

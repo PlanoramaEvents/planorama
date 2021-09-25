@@ -31,6 +31,7 @@ const imagePath = (name) => images(name, true)
 import Vue from 'vue';
 import {BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import { CustomIconsPlugin } from '../icons';
+import VuexORM from '@vuex-orm/core';
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);

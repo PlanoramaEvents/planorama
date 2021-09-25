@@ -10,6 +10,7 @@ export class SessionStore extends BasePlanoStore {
     const sessionService = new SessionService();
 
     // How is this set ???
+    // with setSession user
     this.state = {
       user: {}
     }
@@ -23,7 +24,7 @@ export class SessionStore extends BasePlanoStore {
         // only fetch session if we don't have one
         // TODO is that right
         if(!state.user.id) {
-          sessionService.getSessionUser().subscribe((user) => {
+          sessionService.getSessionUser().then((user) => {
             commit(SET_SESSION_USER, user)
           })
         }
