@@ -139,7 +139,7 @@ export default {
   },
   mounted() {
     this.collection.perPage = this.perPage
-    this.collection.fetch()
+    this.collection.fetch().catch((error) => {})
   },
   watch: {
     selected(val) {
