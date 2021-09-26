@@ -19,7 +19,7 @@ class UuidMigrate < ActiveRecord::Migration[6.0]
         # categories
         primary_key_and_all_references_to_uuid :categories
         # parameter_names
-        primary_key_and_all_references_to_uuid :parameter_names
+        # primary_key_and_all_references_to_uuid :parameter_names
         # configurations
         primary_key_to_uuid :configurations
         # conflict_exceptions
