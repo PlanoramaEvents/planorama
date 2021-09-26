@@ -4,12 +4,18 @@ import { v4 as uuid } from 'uuid';
 export const SELECT = "SELECT";
 export const UNSELECT = "UNSELECT";
 
+// abstract
 export class PlanoModel extends Model {
 
   static fetch() {
+    console.log("'this' is", this)
     this.api().get(this.apiEndpoint, {
       dataTransformer: (response) => {
-        return response.data.data
+        console.log("'this' is", this)
+        if(this.paginated) {
+          return response.data.data
+        }
+        return response.data
       }
     })
   }

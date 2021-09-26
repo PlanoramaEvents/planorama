@@ -7,6 +7,7 @@ export const UNSELECT = "UNSELECT";
 export class Person extends PlanoModel {
   static entity = 'people'
   static apiEndpoint = "/people"
+  static paginated = true
 
   static fields () {
     return {
