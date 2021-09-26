@@ -408,7 +408,7 @@ CREATE TABLE public.mailings (
 --
 
 CREATE TABLE public.parameter_names (
-    parameter_name uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    parameter_name character varying(45) NOT NULL,
     parameter_description character varying(170) NOT NULL
 );
 
