@@ -77,6 +77,8 @@ export default {
     }),
     okAction(event) {
       this.$emit('ok', event)
+      // Got to the "home page"
+      this.$router.push('/');
       // not signing for now
       /*
       this.signIea(this.toastSuccessFailure('Information Ethics Agreement Signed')).then(() => {
