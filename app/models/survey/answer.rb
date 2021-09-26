@@ -30,7 +30,7 @@ class Survey::Answer < ApplicationRecord
   # Ensure the next page id is a valid value
   def ensure_next_page_consistency
     # next_page is either null, -1 or a valid survey_page_id
-    return unless next_page_id && next_page_id > 0
+    return unless next_page_id # && next_page_id > 0
 
     next_page_id = nil unless Survey::Page.exists? next_page_id
   end

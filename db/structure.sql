@@ -246,7 +246,7 @@ ALTER SEQUENCE public.categorizations_id_seq OWNED BY public.categorizations.id;
 
 CREATE TABLE public.configurations (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    parameter uuid NOT NULL,
+    parameter character varying(45) NOT NULL,
     parameter_value character varying(150) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
