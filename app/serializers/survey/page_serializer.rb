@@ -1,4 +1,6 @@
-class Survey::PageSerializer < ActiveModel::Serializer
+class Survey::PageSerializer
+  include JSONAPI::Serializer
+
   attributes :id, :title, :next_page_id,
              :sort_order, :created_at, :updated_at, :survey_id, :fuuid
 

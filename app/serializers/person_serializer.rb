@@ -1,4 +1,6 @@
-class PersonSerializer < ActiveModel::Serializer
+class PersonSerializer #< ActiveModel::Serializer
+  include JSONAPI::Serializer
+
   attributes :id, :lock_version,
              :name, :name_sort_by, :name_sort_by_confirmed,
              :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
@@ -13,11 +15,10 @@ class PersonSerializer < ActiveModel::Serializer
   has_one :bio
 
   has_many :person_roles, serializer: PersonRoleSerializer
-
   has_many  :email_addresses, serializer: EmailAddressSerializer
 
   # tag_list
-  attribute :tags do
-    object.base_tags.collect(&:name)
+  attribute :tags do |person|
+    person.base_tags.collect(&:name)
   end
 end

@@ -1,4 +1,6 @@
-class SurveySerializer < ActiveModel::Serializer
+class SurveySerializer
+  include JSONAPI::Serializer
+
   attributes :id, :created_at, :updated_at, :lock_version,
              :name, :welcome, :thank_you, :submit_string,
              :use_captcha, :public,
@@ -10,13 +12,13 @@ class SurveySerializer < ActiveModel::Serializer
              :branded,
              :allow_submission_edits
 
-  has_many :survey_pages, serializer: Survey::PageSerializer
+  has_many :survey_pages #, serializer: Survey::PageSerializer
 
   belongs_to :published_by
   belongs_to :created_by
   belongs_to :updated_by
 
-  attribute :nbr_submissions do
+  attribute :nbr_submissions do |object|
     object.survey_submissions.size
   end
 end

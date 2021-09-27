@@ -18,18 +18,17 @@ module ResourceMethods
       end
     else
       if serializer_class
-        render json: @collection,
-               each_serializer: serializer_class,
-               meta: meta,
-               root: 'data',
-               include: serializer_includes,
-               adapter: :json,
+        render json: serializer_class.new(@collection,
+                      {
+                        meta: meta,
+                        include: serializer_includes
+                      }
+                    ).serializable_hash,
                content_type: 'application/json'
       else
         render json: @collection,
                meta: meta,
                root: 'data',
-               include: serializer_includes,
                adapter: :json,
                content_type: 'application/json'
       end
@@ -82,13 +81,15 @@ module ResourceMethods
 
   def render_object(object)
     if serializer_class
-      render json: object,
-             include: serializer_includes,
-             serializer: serializer_class,
+      render json: serializer_class.new(
+                    object,
+                    {
+                      include: serializer_includes
+                    }
+                   ).serializable_hash,
              content_type: 'application/json'
     else
       render json: object,
-             include: serializer_includes,
              content_type: 'application/json'
     end
   end

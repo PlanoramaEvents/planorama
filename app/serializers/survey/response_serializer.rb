@@ -1,4 +1,6 @@
-class Survey::ResponseSerializer < ActiveModel::Serializer
+class Survey::ResponseSerializer
+  include JSONAPI::Serializer
+
   attributes :id, :lock_version, :survey_submission_id,
              :survey_question_id,
              :response, :fuuid

@@ -14,7 +14,6 @@ class PeopleController < ResourceController
   def serializer_includes
     [
       :bio,
-      :base_tags,
       :email_addresses,
       :person_roles
     ]

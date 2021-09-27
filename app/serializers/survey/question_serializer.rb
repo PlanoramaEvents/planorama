@@ -1,4 +1,6 @@
-class Survey::QuestionSerializer < ActiveModel::Serializer
+class Survey::QuestionSerializer
+  include JSONAPI::Serializer
+
   attributes :id, :question, :question_type,
              :created_at, :updated_at, :lock_version, :mandatory,
              :text_size, :sort_order, :horizontal,
@@ -7,7 +9,7 @@ class Survey::QuestionSerializer < ActiveModel::Serializer
 
   has_many :survey_answers, serializer: Survey::AnswerSerializer
 
-  attribute :sort_order_position do
+  attribute :sort_order_position do |object|
     object.sort_order
   end
 end
