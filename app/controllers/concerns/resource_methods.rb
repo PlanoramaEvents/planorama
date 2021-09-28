@@ -135,7 +135,9 @@ module ResourceMethods
     @per_page = nil unless paginate
     @page = params[:page]&.to_i || 0 if paginate
     # Sort field could come from the nested object
-    @order = params[:sortField] || ''
+    @order = params[:sortField]
+    @order = self.class::DEFAULT_ORDER
+    @order ||= ''
     @direction = params[:sortOrder] || 'asc'
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
     @order.slice!('$.')

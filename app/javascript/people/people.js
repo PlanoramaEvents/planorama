@@ -4,6 +4,7 @@ import {
     string,
 } from 'vue-mc/validation'
 
+// CHANGE
 export class Person extends PlanoModel {
   schema() {
     let schema = super.schema();

@@ -15,10 +15,11 @@ import { store as settingsStore } from './administration/configurations.store';
 settingsStore.registerAsModuleFor(admin);
 agreementStore.registerAsModuleFor(admin);
 
+// TODO
 // people
-import { Person } from './people/people.model';
+// import { Person } from './people/people.model';
 import { planoModelStore } from './vuexorm.model';
-database.register(Person, planoModelStore);
+// database.register(Person, planoModelStore);
 
 // store
 import { store as surveys } from './surveys/survey.store'
@@ -36,4 +37,3 @@ export const store = appStore.initialize(Vuex, [VuexORM.install(database)]);
 admin.registerAsModuleFor(store);
 surveys.registerAsModuleFor(store);
 session.registerAsModuleFor(store);
-
