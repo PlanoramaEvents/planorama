@@ -67,6 +67,7 @@
 <script>
 // import { SELECT } from './model.store';
 // import namespacedMixin from './namespaced.mixin';
+import { people_columns } from './people';
 
 export default {
   name: 'PeopleTable',
@@ -79,7 +80,8 @@ export default {
       selectMode: 'single',
       filter: null,
       currentPage: 1,
-      totalRows: 0
+      totalRows: 0,
+      columns: people_columns
     }
   },
   // mixins: [

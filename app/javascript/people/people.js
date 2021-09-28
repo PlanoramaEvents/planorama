@@ -116,42 +116,42 @@ export class People extends PlanoCollection {
 // task.$.name or task.saved('name') to reflect what is in the backend ...
 export const people_columns = [
   {
-    key: '$.published_name',
+    key: 'published_name',
     label: 'Published Name',
     sortable: true,
     sortKey: 'published_name_sort_by',
     sticky: true,
   },
   {
-    key: '$.name',
+    key: 'name',
     label: 'Name',
     sortable: true,
     sortKey: 'name_sort_by',
     sticky: true,
   },
   {
-    key: '$.pseudonym',
+    key: 'pseudonym',
     label: 'Pseudonym',
     sortKey: 'pseudonym_sort_by',
     sortable: true
   },
   {
-    key: '$.pronouns',
+    key: 'pronouns',
     label: 'Pronouns',
     sortable: false
   },
   {
-    key: '$.registered',
+    key: 'registered',
     label: 'Registered',
     sortable: true
   },
   {
-    key: '$.registration_type',
+    key: 'registration_type',
     label: 'Registration Type',
     sortable: true
   },
   {
-    key: '$.registration_number',
+    key: 'registration_number',
     label: 'Registration Number',
     sortable: true
   }
