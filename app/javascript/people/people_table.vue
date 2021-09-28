@@ -104,24 +104,13 @@ export default {
   },
   methods: {
     provider(ctx, callback) {
-      var sortOrder = ctx.sortDesc ? 'desc' : 'asc'
-
-      // if (ctx.perPage) this.collection.set('perPage', ctx.perPage)
-      // if (sortOrder) this.collection.set('sortOrder', sortOrder)
-      // if (ctx.sortBy) this.collection.set('sortField', ctx.sortBy)
-      // if (ctx.filter) this.collection.set('filter', ctx.filter)
-      console.log('****', ctx.perPage)
-      console.log('****', ctx.sortBy)
-      console.log('****', ctx.currentPage)
-
-
       this.$store.dispatch('jv/get',
         [
           'people',
           {
             params: {
               perPage: ctx.perPage,
-              sortOrder: sortOrder,
+              sortOrder: ctx.sortDesc ? 'desc' : 'asc',
               sortBy: ctx.sortBy,
               filter: ctx.filter,
               page: ctx.currentPage
@@ -129,7 +118,6 @@ export default {
           }
         ]
       ).then((data) => {
-        // console.log('****', data)
         var res = []
         Object.keys(data).forEach(function (key) {
           res.push(data[key])
@@ -146,7 +134,8 @@ export default {
       return null
     },
     onReset() {
-      if (this.selected) this.selected.fetch()
+      // TODO
+      // if (this.selected) this.selected.fetch()
     },
     onRowSelected(items) {
       // console.log('row selected', items)
