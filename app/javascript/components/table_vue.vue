@@ -65,6 +65,9 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex';
+import { SELECT } from '../store/store'
+
 export default {
   name: 'TableVue',
   props: {
@@ -82,8 +85,15 @@ export default {
     }
   },
   methods: {
+    // Can we map an action with a paramater ???
+    ...mapMutations([
+      SELECT
+    ]),
+    ...mapActions('jv', [
+      'get'
+    ]),
     provider(ctx, callback) {
-      this.$store.dispatch('jv/get',
+      this.get(
         [
           this.modelType,
           {
@@ -115,8 +125,7 @@ export default {
       // if (this.selected) this.selected.fetch()
     },
     onRowSelected(items) {
-      // console.log('row selected', items)
-      // this.select(items[0]);
+      this.SELECT(items[0]);
     }
   },
   mounted() {
