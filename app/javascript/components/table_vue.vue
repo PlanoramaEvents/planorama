@@ -66,7 +66,7 @@
 
 <script>
 import { mapActions, mapMutations } from 'vuex';
-import { SELECT } from '../store/store'
+import { SELECT } from '../store/model.store'
 
 export default {
   name: 'TableVue',
