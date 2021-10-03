@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - staging
+      - development
       # - release
       # - ci-testing*
 
