@@ -7,6 +7,7 @@ export const GET_SESSION_USER = "GET SESSION USER";
 export class SessionStore extends BasePlanoStore {
   constructor(moduleName, namespaced) {
     super(moduleName, namespaced);
+    // TODO: change
     const sessionService = new SessionService();
 
     // How is this set ???
@@ -22,6 +23,7 @@ export class SessionStore extends BasePlanoStore {
     this.actions = {
       [GET_SESSION_USER] ({commit, state}) {
         // only fetch session if we don't have one
+        // TODO
         if(!state.user.id) {
           sessionService.getSessionUser().then((user) => {
             commit(SET_SESSION_USER, user)
