@@ -13,14 +13,16 @@ import { mapState } from 'vuex'
 export default {
   name: "HelpLink",
   computed: {
-    ...mapState('admin/configuration', {
-      configuration: 'collection',
-    }),
+    // ...mapState('admin/configuration', {
+    //   configuration: 'collection',
+    // }),
     email() {
-      return this.configuration.event_email.parameter_value || 'this event has not configured an email yet';
+      // return this.configuration.event_email.parameter_value || 'this event has not configured an email yet';
+      return 'this event has not configured an email yet';
     },
     phone() {
-      return this.configuration.event_phone.parameter_value || 'this event has not configured a phone yet';
+      // return this.configuration.event_phone.parameter_value || 'this event has not configured a phone yet';
+      return 'this event has not configured a phone yet';
     },
     mailto() {
       return `mailto:${this.email}`
@@ -28,7 +30,7 @@ export default {
   },
   mounted() {
     // This does not deal with 401 well
-    this.configuration.fetch().catch((error) => {})
+    // this.configuration.fetch().catch((error) => {})
   }
 }
 </script>

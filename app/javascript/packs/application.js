@@ -39,14 +39,16 @@ Vue.use(CustomIconsPlugin);
 
 import PlanoramaApp from '../app.vue';
 import { router } from '../app.router';
-import { store } from '../app.store';
+// import { store } from '../app.store';
+import { modelStore } from '../store/model.store';
 
 const app = new Vue({
   components: { PlanoramaApp },
   router,
-  store,
+  store: modelStore,
   mounted() {
     console.debug('*** APP X MOUNTED')
+    // console.debug('****** ST ', store)
   }
 })
 

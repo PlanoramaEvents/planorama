@@ -25,7 +25,7 @@ import { planoModelStore } from './vuexorm.model';
 import { store as surveys } from './surveys/survey.store'
 
 // session
-import { store as session } from './session/session.store';
+// import { store as session } from './session/session.store';
 
 // main
 import Vue from 'vue';
@@ -36,4 +36,4 @@ import { store as appStore } from './store';
 export const store = appStore.initialize(Vuex, [VuexORM.install(database)]);
 admin.registerAsModuleFor(store);
 surveys.registerAsModuleFor(store);
-session.registerAsModuleFor(store);
+// session.registerAsModuleFor(store);
