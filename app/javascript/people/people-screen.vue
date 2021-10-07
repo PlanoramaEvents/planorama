@@ -6,16 +6,14 @@
 </template>
 
 <script>
-import PeopleTable from '../people/people_table.vue';
-// import PeopleSidebar from '../people/people_sidebar.vue';
-import { modelStore } from '../store/model.store';
+import PeopleTable from './people_table.vue';
+import PeopleSidebar from './people_sidebar.vue';
 
 export default {
   name: "PeopleScreen",
-  store: modelStore,
   components: {
     PeopleTable,
-  //   PeopleSidebar,
+    PeopleSidebar,
   }
 }
 </script>

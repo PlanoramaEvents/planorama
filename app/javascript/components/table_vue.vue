@@ -65,13 +65,13 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
-import { SELECT } from '../store/model.store'
-
+import modelMixin from '../store/model.mixin';
 export default {
   name: 'TableVue',
+  mixins: [
+    modelMixin,
+  ],
   props: {
-    modelType : { type: String },
     sortField : { type: String },
     perPage : { type: Number, default: 10 },
     columns : { type: Object }
@@ -85,28 +85,14 @@ export default {
     }
   },
   methods: {
-    // Can we map an action with a paramater ???
-    ...mapMutations([
-      SELECT
-    ]),
-    ...mapActions('jv', [
-      'get'
-    ]),
     provider(ctx, callback) {
-      this.get(
-        [
-          this.modelType,
-          {
-            params: {
-              perPage: ctx.perPage,
-              sortOrder: ctx.sortDesc ? 'desc' : 'asc',
-              sortBy: ctx.sortBy,
-              filter: ctx.filter,
-              page: ctx.currentPage
-            }
-          }
-        ]
-      ).then((data) => {
+      this.fetch({
+        perPage: ctx.perPage,
+        sortOrder: ctx.sortDesc ? 'desc' : 'asc',
+        sortBy: ctx.sortBy,
+        filter: ctx.filter,
+        page: ctx.currentPage
+      }).then((data) => {
         var res = []
         Object.keys(data).forEach(function (key) {
           res.push(data[key])
@@ -121,22 +107,21 @@ export default {
       })
     },
     onReset() {
-      // TODO
-      // if (this.selected) this.selected.fetch()
+      if (this.selected) this.fetchSelected();
     },
     onRowSelected(items) {
-      this.SELECT(items[0]);
+      this.select(items[0]);
     }
   },
   mounted() {
+  },
+  watch: {
+    selected(val) {
+      if (!val) {
+        this.$refs.table.clearSelected()
+      }
+    }
   }
-  // watch: {
-  //   selected(val) {
-  //     if (!val) {
-  //       this.$refs.table.clearSelected()
-  //     }
-  //   }
-  // }
 }
 </script>
 

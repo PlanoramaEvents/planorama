@@ -1,8 +1,8 @@
 <template>
   <table-vue
     sortField='name'
-    modelType="people"
-    v-bind:columns="columns"
+    model="person"
+    :columns="columns"
   >
   </table-vue>
 

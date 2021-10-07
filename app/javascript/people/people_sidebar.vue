@@ -1,4 +1,5 @@
 <template>
+<!--
   <model-sidebar
     title-field="published_name"
     namespace="people"
@@ -15,17 +16,20 @@
       </b-tab>
     </template>
   </model-sidebar>
+-->
+  <sidebar-vue model='person'>
+  </sidebar-vue>
 </template>
 
 <script>
-import ModelSidebar from '../model-sidebar';
-import Bio from './bio';
+import SidebarVue from '../components/sidebar_vue';
+//import Bio from './bio';
 
 export default {
   name: 'PeopleSidebar',
   components: {
-    ModelSidebar,
-    Bio
+    SidebarVue,
+ //   Bio
   },
 }
 </script>

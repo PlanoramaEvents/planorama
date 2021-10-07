@@ -7,12 +7,10 @@
 </template>
 
 <script>
-import { modelStore } from '../store/model.store';
 import sessionMixin from '../session/session.mixin';
 
 export default {
   name: "Dashboard",
-  store: modelStore,
   mixins: [sessionMixin]
 }
 </script>

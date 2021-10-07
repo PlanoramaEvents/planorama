@@ -1,12 +1,11 @@
 import {mapState, mapActions } from 'vuex';
-// TODO
-import { GET_SESSION_USER }  from "../store/model.store";
+import { GET_SESSION_USER }  from "../store/session.store";
 
 const sessionMixin = {
-  // TODO: these mappins are not quite correct
   computed: {
+    // don't quite understand what this part is doing
     // map this.session to store.state.session
-    ...mapState(['session']),
+    // ...mapState(['session']),
     ...mapState({
       currentUser: 'user'
     }),

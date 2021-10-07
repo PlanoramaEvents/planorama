@@ -1,53 +1,94 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { jsonapiModule } from 'jsonapi-vuex'
+import { jsonapiModule, utils } from 'jsonapi-vuex'
 import { http } from '../http';
 
 export const SELECT = 'SELECT';
 export const UNSELECT = 'UNSELECT';
-export const SAVE = 'SAVE'
 
-export const SET_SESSION_USER = "SET SESSION USER";
-export const GET_SESSION_USER = "GET SESSION USER";
+export const SELECTED = 'SELECTED';
+export const FETCH_SELECTED = 'FETCH SELECTED';
+export const FETCH = 'FETCH';
+export const NEW = 'NEW';
+
+// people add-ons
+import { personStore, personEndpoints } from './person.store';
+
+// session add-ons
+import { sessionStore } from './session.store';
+
+const endpoints = {
+  ...personEndpoints,
+}
 
 // NOTE: this is really the store
 Vue.use(Vuex)
-export const modelStore = new Vuex.Store({
-  // Do we need selected and collection???
-  state: {
-    selected: undefined,
-    user: {}
-  },
+export const store = new Vuex.Store({
   modules: {
     jv: jsonapiModule(http, {preserveJson: true, clearOnUpdate: true})
   },
+  state: {
+    selected: {
+      ...personStore.selected,
+      survey: undefined,
+      page: undefined,
+      question: undefined,
+      submission: undefined,
+    },
+    ...sessionStore.state,
+  },
+  getters: {
+    [SELECTED] (state, getters) {
+      return ({model}) => {
+        console.log("selecting model", model)
+        if (!state.selected[model]) return undefined;
+        console.log("selecting", model, state.selected[model])
+        return utils.deepCopy(getters['jv/get']({_jv: {id: state.selected[model], type: model}}))
+      }
+    },
+    ...personStore.getters,
+  },
   mutations: {
-    // TODO: change the select to be a collection of objs indexed by type
-    [SELECT] (state, item) {
-      console.log('**** SELECT', item)
-      state.selected = item;
+    [SELECT] (state, {model, itemOrId}) {
+      let id;
+      try {
+        id = itemOrId.id;
+      } catch {
+        id = itemOrId;
+      }
+      state.selected[model] = id;
     },
-    [UNSELECT] (state) {
-      state.selected = undefined;
+    [UNSELECT] (state, {model}) {
+      state.selected[model] = undefined;
     },
-    [SET_SESSION_USER] (state, user) {
-      state.user = user
-    }
+    ...sessionStore.mutations,
   },
   actions: {
-    [GET_SESSION_USER] ({commit, dispatch, state}) {
-      // only fetch session if we don't have one
-      if(!state.user.id) {
-        // console.debug('******* get the session user')
-        dispatch('jv/get','/people/me').then((user) => {
-          // console.debug('******* session user', user)
-          commit(SET_SESSION_USER, user)
-        }).catch((error) => {
-          // console.debug('******* error', error)
-          // If we can not get the session then set no no user
-          commit(SET_SESSION_USER, {})
-        })
+    [NEW] ({commit, dispatch}, {model, selected = false, ...attrs}) {
+      let newModel = {
+        ...attrs,
+        _jv: {
+          type: model
+        }
       }
-    }
+      return new Promise((res, rej) => {
+        dispatch('jv/post', newModel).then((savedModel) => {
+          if (selected) {
+            commit(SELECT, {model, itemOrId: savedModel});
+          }
+          res(savedModel);
+        }).catch(rej);
+      });
+    },
+    [FETCH] ({dispatch}, {model, params}) {
+      return dispatch('jv/get', [endpoints[model], {params}])
+    },
+    [FETCH_SELECTED] ({state, dispatch}, {model}) {
+      if (!state.selected[model]) {
+        return Promise.reject(`No ${model} selected`)
+      }
+      return dispatch('jv/get', `${endpoints[model]}/${state.selected[model]}`)
+    },
+    ...sessionStore.actions,
   }
 })
