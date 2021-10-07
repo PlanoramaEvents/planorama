@@ -7,17 +7,15 @@ const sessionMixin = {
   computed: {
     // map this.session to store.state.session
     ...mapState(['session']),
-    ...mapState('session', {
+    ...mapState({
       currentUser: 'user'
     }),
     loggedIn() {
-      console.debug('****** ST ', this.$store)
-      // return !!this.currentUser.id
-      false
+      return !!this.currentUser.id
     }
   },
   methods: {
-    ...mapActions('session', {
+    ...mapActions({
       fetchSession: GET_SESSION_USER
     })
   },

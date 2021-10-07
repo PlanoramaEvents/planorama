@@ -22,6 +22,7 @@ export const modelStore = new Vuex.Store({
     jv: jsonapiModule(http, {preserveJson: true, clearOnUpdate: true})
   },
   mutations: {
+    // TODO: change the select to be a collection of objs indexed by type
     [SELECT] (state, item) {
       console.log('**** SELECT', item)
       state.selected = item;
@@ -34,17 +35,15 @@ export const modelStore = new Vuex.Store({
     }
   },
   actions: {
-    [GET_SESSION_USER] ({commit, state}) {
+    [GET_SESSION_USER] ({commit, dispatch, state}) {
       // only fetch session if we don't have one
-      console.debug('******* get the session user')
       if(!state.user.id) {
-        this.get(
-          [
-            '/people/me'
-          ]
-        ).then((user) => {
+        // console.debug('******* get the session user')
+        dispatch('jv/get','/people/me').then((user) => {
+          // console.debug('******* session user', user)
           commit(SET_SESSION_USER, user)
         }).catch((error) => {
+          // console.debug('******* error', error)
           // If we can not get the session then set no no user
           commit(SET_SESSION_USER, {})
         })
