@@ -28,27 +28,3 @@ const sessionMixin = {
 }
 
 export default sessionMixin;
-
-//
-// computed: {
-//   ...mapState({
-//     videoItems: state => state.video_room.videoItems,
-//     audioItems: state => state.video_room.audioItems,
-//     cssVars: state => {
-//       let total = state.video_room.videoItems.length
-//       let colNum = 2
-//
-//       let rowNum = Math.ceil(total/colNum)
-//
-//       if (total > 1) {
-//         return {
-//           '--rowNum': rowNum,
-//           '--colNum': colNum,
-//           '--gridHeight': 'calc(100vh / var(--rowNum) - 5px * (var(--rowNum) - 1) / var(--rowNum))'
-//         }
-//       } else {
-//         return {}
-//       }
-//     }
-//   })
-// },
