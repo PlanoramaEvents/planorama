@@ -12,11 +12,11 @@ class SurveySerializer
              :branded,
              :allow_submission_edits
 
-  has_many :survey_pages #, serializer: Survey::PageSerializer
-
-  belongs_to :published_by
-  belongs_to :created_by
-  belongs_to :updated_by
+  has_many :survey_pages, serializer: Survey::PageSerializer
+  #
+  belongs_to :published_by, serializer: PersonSerializer
+  belongs_to :created_by, serializer: PersonSerializer
+  belongs_to :updated_by, serializer: PersonSerializer
 
   attribute :nbr_submissions do |object|
     object.survey_submissions.size

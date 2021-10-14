@@ -74,7 +74,7 @@ export default {
   props: {
     sortField : { type: String },
     perPage : { type: Number, default: 10 },
-    columns : { type: Object }
+    columns : { type: Array }
   },
   data() {
     return {

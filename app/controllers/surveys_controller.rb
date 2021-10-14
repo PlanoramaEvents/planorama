@@ -1,14 +1,13 @@
 class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
   POLICY_CLASS = 'SurveysPolicy'.freeze
+  DEFAULT_ORDER = 'name'
 
   def serializer_includes
     [
-      {
-        survey_pages: {
-          survey_questions: :survey_answers
-        },
-      },
+      :survey_pages,
+      :'survey_pages.survey_questions',
+      :'survey_pages.survey_questions.survey_answers',
       :created_by,
       :updated_by,
       :published_by
@@ -16,7 +15,16 @@ class SurveysController < ResourceController
   end
 
   def includes
-    serializer_includes
+    [
+      {
+        survey_pages: {
+          survey_questions: :survey_answers
+        }
+      },
+      :created_by,
+      :updated_by,
+      :published_by
+    ]
   end
 
   def join_tables
