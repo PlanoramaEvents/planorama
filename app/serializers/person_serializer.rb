@@ -44,6 +44,8 @@ class PersonSerializer #< ActiveModel::Serializer
                 }
               }
 
+  has_many  :mail_histories
+
   # tag_list
   attribute :tags do |person|
     person.base_tags.collect(&:name)

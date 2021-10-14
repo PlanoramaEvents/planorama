@@ -21,7 +21,10 @@
           <pre>{{ selected.person_roles }}</pre>
         </b-tab>
         <b-tab title="Tags">
-          <p>TODO: Tags</p>
+          <pre>{{ selected.tags }}</pre>
+        </b-tab>
+        <b-tab title="Mail History">
+          <pre>{{ selected.mail_histories }}</pre>
         </b-tab>
       </b-tabs>
     </template>
