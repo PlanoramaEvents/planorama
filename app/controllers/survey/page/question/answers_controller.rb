@@ -1,4 +1,4 @@
-class Survey::Page::AnswersController < ResourceController
+class Survey::Page::Question::AnswersController < ResourceController
   MODEL_CLASS = 'Survey::Answer'.freeze
   SERIALIZER_CLASS = 'Survey::AnswerSerializer'.freeze
   DEFAULT_ORDER = 'sort_order'
