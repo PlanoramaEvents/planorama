@@ -7,7 +7,15 @@ class Survey::QuestionSerializer
              :private, :regex, :survey_page_id, :fuuid,
              :branching
 
-  has_many :survey_answers, serializer: Survey::AnswerSerializer
+  has_many :survey_answers, serializer: Survey::AnswerSerializer,
+            links: {
+              self: -> (object, params) {
+                "#{params[:domain]}/surveys/#{object.survey_id}/pages/#{object.survey_page_id}/questions/#{object.id}"
+              },
+              related: -> (object, params) {
+                "#{params[:domain]}/surveys/#{object.survey_id}/pages/#{object.survey_page_id}/questions/#{object.id}/answers"
+              }
+            }
 
   attribute :sort_order_position do |object|
     object.sort_order

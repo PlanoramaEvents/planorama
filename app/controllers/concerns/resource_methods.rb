@@ -21,7 +21,8 @@ module ResourceMethods
         render json: serializer_class.new(@collection,
                       {
                         meta: meta,
-                        include: serializer_includes
+                        include: serializer_includes,
+                        params: {domain: "#{request.base_url}"}
                       }
                     ).serializable_hash,
                content_type: 'application/json'
@@ -84,7 +85,8 @@ module ResourceMethods
       render json: serializer_class.new(
                     object,
                     {
-                      include: serializer_includes
+                      include: serializer_includes,
+                      params: {domain: "#{request.base_url}"}
                     }
                    ).serializable_hash,
              content_type: 'application/json'
