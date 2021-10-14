@@ -23,9 +23,7 @@
       </b-navbar-nav>
     </b-nav>
     <div class="px-3">
-      <slot name="content">
-        <pre>{{ selected }}</pre>
-      </slot>
+      <slot name="content"></slot>
     </div>
   </b-sidebar>
 </template>
@@ -43,6 +41,6 @@ export default {
   },
   mixins: [
     modelMixin
-  ],
+  ]
 }
 </script>

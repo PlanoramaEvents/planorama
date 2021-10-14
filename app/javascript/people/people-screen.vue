@@ -1,7 +1,7 @@
 <template>
   <div>
     <people-table></people-table>
-    <people-sidebar></people-sidebar>
+    <people-sidebar model="person"></people-sidebar>
   </div>
 </template>
 
