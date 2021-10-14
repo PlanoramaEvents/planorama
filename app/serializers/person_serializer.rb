@@ -13,6 +13,7 @@ class PersonSerializer #< ActiveModel::Serializer
              :registered, :registration_type, :registration_number
 
   has_one :bio,
+          if: Proc.new { |record| record.bio },
           links: {
             self: -> (object, params) {
               "#{params[:domain]}/people/#{object.id}"
