@@ -6,5 +6,13 @@ class BioSerializer
              :photourl, :facebook, :linkedin, :twitch,
              :youtube, :instagram, :flickr, :reddit, :tiktok
 
-  belongs_to :person
+  belongs_to :person,
+    links: {
+      self: -> (object, params) {
+        "#{params[:domain]}/bios/#{object.id}"
+      },
+      related: -> (object, params) {
+        "#{params[:domain]}/people/#{object.person_id}"
+      }
+    }
 end

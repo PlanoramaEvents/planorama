@@ -3,5 +3,13 @@ class PersonRoleSerializer
 
   attributes :role, :id
 
-  belongs_to :person
+  belongs_to :person,
+    links: {
+      self: -> (object, params) {
+        "#{params[:domain]}/person_roles/#{object.id}"
+      },
+      related: -> (object, params) {
+        "#{params[:domain]}/people/#{object.person_id}"
+      }
+    }
 end

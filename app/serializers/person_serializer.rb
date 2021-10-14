@@ -12,10 +12,36 @@ class PersonSerializer #< ActiveModel::Serializer
              :invite_status, :acceptance_status,
              :registered, :registration_type, :registration_number
 
-  has_one :bio
+  has_one :bio,
+          links: {
+            self: -> (object, params) {
+              "#{params[:domain]}/people/#{object.id}"
+            },
+            related: -> (object, params) {
+              "#{params[:domain]}/bios/#{object.bio.id}"
+            }
+          }
 
-  has_many :person_roles, serializer: PersonRoleSerializer
-  has_many  :email_addresses, serializer: EmailAddressSerializer
+
+  has_many :person_roles, serializer: PersonRoleSerializer,
+            links: {
+              self: -> (object, params) {
+                "#{params[:domain]}/people/#{object.id}"
+              },
+              related: -> (object, params) {
+                "#{params[:domain]}/people/#{object.id}/person_roles"
+              }
+            }
+
+  has_many  :email_addresses, serializer: EmailAddressSerializer,
+              links: {
+                self: -> (object, params) {
+                  "#{params[:domain]}/people/#{object.id}"
+                },
+                related: -> (object, params) {
+                  "#{params[:domain]}/people/#{object.id}/email_addresses"
+                }
+              }
 
   # tag_list
   attribute :tags do |person|

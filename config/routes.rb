@@ -16,7 +16,11 @@ Rails.application.routes.draw do
 
   # REST based resources
   get 'people/me', to: 'people#me'
-  resources :people
+  resources :people do
+    resources :person_roles, shallow: true
+    resources :email_addresses, shallow: true
+  end
+  resources :bios
   resources :programme_items
   resources :programme_assignments
   resources :rooms
@@ -54,6 +58,15 @@ Rails.application.routes.draw do
       resources :responses
     end
   end
+
+  # scope module: 'survey' do
+  #   resources :pages, :questions, :answers, :submissions
+  #   delete 'submissions', to: 'submissions#delete_all'
+  # end
+  #
+  # scope module: 'submission' do
+  #   resources :responses
+  # end
 
   get 'rbac', to: 'rbac#index'
 
