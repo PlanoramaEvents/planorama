@@ -19,6 +19,7 @@ import { sessionStore } from './session.store';
 
 const endpoints = {
   ...personEndpoints,
+  survey: 'surveys'
 }
 
 // NOTE: this is really the store

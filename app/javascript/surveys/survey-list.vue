@@ -13,8 +13,7 @@ export default {
   name:"SurveyList",
   components: {
     SurveyTable,
-    SurveySidebar,
+    SurveySidebar
   }
 }
 </script>
-

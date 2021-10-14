@@ -171,7 +171,7 @@ export class Surveys extends PlanoCollection {
 
 export const survey_columns = [
   {
-    key: '$.name',
+    key: 'name',
     label: 'Name',
     stickyColumn: true,
     sortable: true
@@ -182,7 +182,7 @@ export const survey_columns = [
     sortable: true,
   },
   {
-    key: '$.public',
+    key: 'public',
     label: 'Status',
     formatter: (p) => p ? 'Published' : 'Closed',
     sortable: true,
@@ -193,7 +193,7 @@ export const survey_columns = [
     sortable: true,
   },
   {
-    key: '$.updated_at',
+    key: 'updated_at',
     label: 'Last Modified On',
     sortable: true,
     formatter: (d) => new Date(d).toLocaleDateString()
