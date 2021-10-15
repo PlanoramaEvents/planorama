@@ -16,10 +16,10 @@ class PersonSerializer #< ActiveModel::Serializer
           if: Proc.new { |record| record.bio },
           links: {
             self: -> (object, params) {
-              "#{params[:domain]}/people/#{object.id}"
+              "#{params[:domain]}/person/#{object.id}"
             },
             related: -> (object, params) {
-              "#{params[:domain]}/bios/#{object.bio.id}"
+              "#{params[:domain]}/bio/#{object.bio.id}"
             }
           }
 
@@ -27,20 +27,20 @@ class PersonSerializer #< ActiveModel::Serializer
   has_many :person_roles, serializer: PersonRoleSerializer,
             links: {
               self: -> (object, params) {
-                "#{params[:domain]}/people/#{object.id}"
+                "#{params[:domain]}/person/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/people/#{object.id}/person_roles"
+                "#{params[:domain]}/people/#{object.id}/person_role"
               }
             }
 
   has_many  :email_addresses, serializer: EmailAddressSerializer,
               links: {
                 self: -> (object, params) {
-                  "#{params[:domain]}/people/#{object.id}"
+                  "#{params[:domain]}/person/#{object.id}"
                 },
                 related: -> (object, params) {
-                  "#{params[:domain]}/people/#{object.id}/email_addresses"
+                  "#{params[:domain]}/person/#{object.id}/email_address"
                 }
               }
 

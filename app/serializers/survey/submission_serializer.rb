@@ -10,10 +10,10 @@ class Survey::SubmissionSerializer
   has_many :survey_responses,
             links: {
               self: -> (object, params) {
-                "#{params[:domain]}/surveys/#{object.survey_id}/submissions/#{object.id}"
+                "#{params[:domain]}/survey/#{object.survey_id}/submission/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/surveys/#{object.survey_id}/submissions/#{object.id}/survey_responses"
+                "#{params[:domain]}/survey/#{object.survey_id}/submission/#{object.id}/survey_response"
               }
             } do |object|
               object.survey_responses.collect{|r| {r.survey_question.question => r.response_as_text}}

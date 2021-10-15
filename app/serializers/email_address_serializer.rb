@@ -7,10 +7,10 @@ class EmailAddressSerializer
     if: Proc.new { |record| record.person_id },
     links: {
       self: -> (object, params) {
-        "#{params[:domain]}/email_addresses/#{object.id}"
+        "#{params[:domain]}/email_address/#{object.id}"
       },
       related: -> (object, params) {
-        "#{params[:domain]}/people/#{object.person_id}"
+        "#{params[:domain]}/person/#{object.person_id}"
       }
     }
 end

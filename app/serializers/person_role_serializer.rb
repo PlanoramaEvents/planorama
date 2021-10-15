@@ -6,10 +6,10 @@ class PersonRoleSerializer
   belongs_to :person,
     links: {
       self: -> (object, params) {
-        "#{params[:domain]}/person_roles/#{object.id}"
+        "#{params[:domain]}/person_role/#{object.id}"
       },
       related: -> (object, params) {
-        "#{params[:domain]}/people/#{object.person_id}"
+        "#{params[:domain]}/person/#{object.person_id}"
       }
     }
 end

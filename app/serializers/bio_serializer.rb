@@ -9,10 +9,10 @@ class BioSerializer
   belongs_to :person,
     links: {
       self: -> (object, params) {
-        "#{params[:domain]}/bios/#{object.id}"
+        "#{params[:domain]}/bio/#{object.id}"
       },
       related: -> (object, params) {
-        "#{params[:domain]}/people/#{object.person_id}"
+        "#{params[:domain]}/person/#{object.person_id}"
       }
     }
 end

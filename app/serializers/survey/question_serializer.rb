@@ -10,10 +10,10 @@ class Survey::QuestionSerializer
   has_many :survey_answers, serializer: Survey::AnswerSerializer,
             links: {
               self: -> (object, params) {
-                "#{params[:domain]}/surveys/#{object.survey_id}/pages/#{object.survey_page_id}/questions/#{object.id}"
+                "#{params[:domain]}/survey/#{object.survey_id}/page/#{object.survey_page_id}/question/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/surveys/#{object.survey_id}/pages/#{object.survey_page_id}/questions/#{object.id}/answers"
+                "#{params[:domain]}/survey/#{object.survey_id}/page/#{object.survey_page_id}/question/#{object.id}/answers"
               }
             }
 

@@ -16,10 +16,10 @@ class SurveySerializer
            serializer: Survey::PageSerializer,
            links: {
              self: -> (object, params) {
-               "#{params[:domain]}/surveys/#{object.id}"
+               "#{params[:domain]}/survey/#{object.id}"
              },
              related: -> (object, params) {
-               "#{params[:domain]}/surveys/#{object.id}/pages"
+               "#{params[:domain]}/survey/#{object.id}/page"
              }
            }
 
@@ -27,10 +27,10 @@ class SurveySerializer
               if: Proc.new { |record| record.published_by_id },
               links: {
                 self: -> (object, params) {
-                  "#{params[:domain]}/surveys/#{object.id}"
+                  "#{params[:domain]}/survey/#{object.id}"
                 },
                 related: -> (object, params) {
-                  "#{params[:domain]}/people/#{object.published_by_id}"
+                  "#{params[:domain]}/person/#{object.published_by_id}"
                 }
               }
 
@@ -38,10 +38,10 @@ class SurveySerializer
               if: Proc.new { |record| record.created_by_id },
               links: {
                 self: -> (object, params) {
-                  "#{params[:domain]}/surveys/#{object.id}"
+                  "#{params[:domain]}/survey/#{object.id}"
                 },
                 related: -> (object, params) {
-                  "#{params[:domain]}/people/#{object.created_by_id}"
+                  "#{params[:domain]}/person/#{object.created_by_id}"
                 }
               }
 
@@ -50,9 +50,9 @@ class SurveySerializer
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/surveys/#{object.id}"
-                },
+                survey
                 related: -> (object, params) {
-                  "#{params[:domain]}/people/#{object.updated_by_id}"
+                  "#{params[:domain]}/person/#{object.updated_by_id}"
                 }
               }
 
