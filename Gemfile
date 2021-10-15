@@ -47,6 +47,7 @@ gem "sidekiq-scheduler"
 gem 'io-wait'
 gem 'fast_excel'
 gem 'jsonapi-serializer'
+gem 'jsonapi.rb'
 
 # This is needed to run the migrations from id to uuid for primary keys
 gem 'webdack-uuid_migration'

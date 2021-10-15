@@ -9,13 +9,13 @@
     <template v-slot:content>
       <b-tabs content-class="mt-3">
         <b-tab title="Details">
-          <pre>{{ selected }}</pre>
+          <detail v-bind:person="selected"></detail>
         </b-tab>
         <b-tab title="Emails">
           <pre>{{ selected.email_addresses }}</pre>
         </b-tab>
         <b-tab title="Bio">
-          <pre>{{ selected.bio }}</pre>
+          <bio v-bind:bio="selected.bio"></bio>
         </b-tab>
         <b-tab title="Roles">
           <pre>{{ selected.person_roles }}</pre>
@@ -34,11 +34,15 @@
 <script>
 import SidebarVue from '../components/sidebar_vue';
 import modelMixin from '../store/model.mixin';
+import Bio from './bio.vue';
+import Detail from './detail.vue';
 
 export default {
   name: 'PeopleSidebar',
   components: {
-    SidebarVue
+    SidebarVue,
+    Bio,
+    Detail
   },
   mixins: [
     modelMixin

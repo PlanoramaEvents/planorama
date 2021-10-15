@@ -15,8 +15,9 @@ Rails.application.routes.draw do
   get '/login/:magic_link', to: 'login#magic_link'
 
   # REST based resources
+  get 'person/me', to: 'people#me'
   get 'people/me', to: 'people#me'
-  resources :people do
+  resources :people, path: 'person' do
     resources :person_roles, shallow: true
     resources :email_addresses, shallow: true
   end
@@ -36,7 +37,7 @@ Rails.application.routes.draw do
   resources :agreements
 
   # Surveys and their nested resources
-  resources :surveys do
+  resources :surveys, path: 'survey' do
     scope module: 'survey' do
       resources :pages do
         scope module: 'page' do

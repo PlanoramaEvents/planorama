@@ -1,5 +1,6 @@
 module ResourceMethods
   extend ActiveSupport::Concern
+  include JSONAPI::Deserialization
 
   def index
     authorize model_class, policy_class: policy_class
@@ -347,12 +348,22 @@ module ResourceMethods
   end
 
   def _permitted_params(_object_name)
+    # NOTE: if params[:data] to determine if this is JSON-API packet
+    # that is received, if so we need to deserialize it
     if allowed_params
-      params.permit(
-        allowed_params
-      )
+      if params[:data]
+        jsonapi_deserialize(params, only: allowed_params)
+      else
+        params.permit(
+          allowed_params
+        )
+      end
     else
-      params[_object_name]
+      if params[:data]
+        jsonapi_deserialize(params)
+      else
+        params[_object_name]
+      end
     end
   end
 

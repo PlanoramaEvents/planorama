@@ -3,7 +3,7 @@ import { SELECTED } from './model.store';
 export const personModel = 'person';
 
 export const personEndpoints = {
-  [personModel]: 'people'
+  [personModel]: 'person'
 }
 
 export const personStore = {
