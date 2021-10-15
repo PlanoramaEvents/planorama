@@ -44,9 +44,8 @@ export const store = new Vuex.Store({
         // console.log("selecting model", model)
         if (!state.selected[model]) return undefined;
         // console.log("selecting", model, state.selected[model])
-        // Doing a copy creates a new instance and removes reactivity from the UI
-        // we just want to get the selected model from the store
-        return getters['jv/get']({_jv: {id: state.selected[model], type: model}})
+        // TODO: this needs to be checked for grid reactivity ????
+        return utils.deepCopy(getters['jv/get']({_jv: {id: state.selected[model], type: model}}))
       }
     },
     ...personStore.getters,
