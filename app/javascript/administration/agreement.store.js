@@ -40,7 +40,7 @@ export class AgreementStore extends BasePlanoStore {
       },
       [GET_IEA_UNSIGNED] ({state, commit}) {
         return new Promise((res, rej) => {
-          http.get('/agreements/signed.json').then((data) => {
+          http.get('/agreement/signed.json').then((data) => {
             let agreementIds = data.data.data
             console.log('agreement ids', agreementIds)
             commit(SET_IEA_UNSIGNED, agreementIds.includes(state.information_ethics.id))

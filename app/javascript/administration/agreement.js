@@ -35,11 +35,11 @@ export class Agreement extends PlanoModel {
 
   routes() {
     return {
-      fetch: '/agreements/{id}',
-      create:  '/agreements',
-      save:  '/agreements/{id}',
-      update: '/agreements/{id}',
-      delete: '/agreements/{id}'
+      fetch: '/agreement/{id}',
+      create:  '/agreement',
+      save:  '/agreement/{id}',
+      update: '/agreement/{id}',
+      delete: '/agreement/{id}'
     }
   }
 }
@@ -53,7 +53,7 @@ export class Agreements extends PlanoCollection {
 
   routes() {
     return {
-      fetch: '/agreements?perPage={perPage}&sortField={sortField}&sortOrder={sortOrder}&filter={filter}',
+      fetch: '/agreement?perPage={perPage}&sortField={sortField}&sortOrder={sortOrder}&filter={filter}',
     }
   }
 }
@@ -68,16 +68,16 @@ export class InformationEthicsAgreement extends Agreement {
   }
 
   sign() {
-    return http.put(`/agreements/sign/${this.id}`)
+    return http.put(`/agreement/sign/${this.id}`)
   }
 
   routes() {
     return {
-      fetch: '/agreements/latest?agreement_type={type}',
-      create: '/agreements',
-      save: '/agreements',
-      update: '/agreements',
-      delete: '/agreements/{id}'
+      fetch: '/agreement/latest?agreement_type={type}',
+      create: '/agreement',
+      save: '/agreement',
+      update: '/agreement',
+      delete: '/agreement/{id}'
     }
   }
 }
