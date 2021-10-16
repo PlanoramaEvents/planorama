@@ -46,7 +46,7 @@ import {
   SURVEY_CONFIRM_DELETE_PAGE_1, 
   SURVEY_CONFIRM_DELETE_PAGE_2,
  } from '../constants/strings';
-import pageMixin from './page-mixin';
+import pageMixin from './page.mixin';
 
 export default {
   name: "EditSurveyPage",

@@ -1,12 +1,12 @@
 <template>
   <sidebar-vue model="person">
-    <template v-slot:header>
+    <template #header v-if="selected">
       <h1>
         {{selected.name}}
       </h1>
     </template>
 
-    <template v-slot:content>
+    <template #content v-if="selected">
       <b-tabs content-class="mt-3">
         <b-tab title="Details">
           <detail model="person"></detail>

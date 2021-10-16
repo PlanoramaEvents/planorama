@@ -66,6 +66,7 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
+import { personModel } from '../store/person.store';
 export default {
   name: 'TableVue',
   mixins: [
@@ -93,6 +94,8 @@ export default {
         filter: ctx.filter,
         page: ctx.currentPage
       }).then((data) => {
+        //console.log(this.$store.getters['jv/get', ({_jv: {type: personModel}})]);
+        console.log(this.collection);
         var res = []
         // TODO: for some reason when the store is updated the table view
         // is not...
@@ -103,7 +106,7 @@ export default {
         this.currentPage = data._jv.json.meta.page
         this.totalRows = data._jv.json.meta.total
 
-        callback(res)
+        callback(this.collection)
       }).catch((error) => {
         callback([])
       })

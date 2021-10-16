@@ -187,7 +187,7 @@ import { NEW_QUESTION, SELECT_QUESTION, UNSELECT_QUESTION } from './survey.store
 import draggable from 'vuedraggable';
 import surveyMixin from './survey.mixin';
 import OptionsQuestion from './options-question.vue';
-import pageMixin from './page-mixin';
+import pageMixin from './page.mixin';
 import questionMixin from './question.mixin';
 
 

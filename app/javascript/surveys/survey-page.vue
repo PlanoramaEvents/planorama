@@ -1,10 +1,13 @@
+<!-- MOSTLY CONVERTED
+ TODO: write SUBMIT action
+-->
 <template>
   <div class="scrollable">
     <div class="survey-page">
-      <h1>{{survey && survey.survey_pages[0].title}}</h1>
-      <h2 v-if="survey && survey.survey_pages[0].id != page.id">{{page.title}}</h2>
+      <h1>{{ selectedSurveyFirstPage?.title }}</h1>
+      <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
       <survey-question
-        v-for="q in questions"
+        v-for="q in selectedPageSurveyQuestions"
         :key="q.id"
         :question="q"
         answerable
@@ -28,17 +31,14 @@
 </template>
 
 <script>
-import SurveyQuestion from './survey_question';
-import { createNamespacedHelpers } from 'vuex';
-const {mapState, mapMutations, mapActions} = createNamespacedHelpers('surveys');
-import { UNSELECT, SAVE, SELECT } from '../model.store';
-import { NEW_SUBMISSION, SELECT_PAGE, SUBMIT } from './survey.store';
-import { Survey } from './survey';
-import pageMixin from './page-mixin';
+import pageMixin from './page.mixin';
+import { surveyIdPropMixinSurveyId } from './survey-id-prop.mixin';
+import surveyMixin from './survey.mixin';
+import { NEW_SUBMISSION, SAVE_SUBMISION} from '../store/survey.store'
 
 export default {
   name: "SurveyPage",
-  props: ['survey_id', 'id', 'preview'],
+  props: ['id', 'preview'],
   data: () =>  ({
     submitted: false,
     nextPageId: null
@@ -46,16 +46,12 @@ export default {
   components: {
     SurveyQuestion,
   },
-  mixins: [pageMixin],
+  mixins: [
+    surveyMixin,
+    pageMixin,
+    surveyIdPropMixinSurveyId,
+  ],
   computed: {
-    ...mapState({
-      page: 'selected_page',
-      survey: 'selected',
-      surveys: 'collection',
-    }),
-    questions() {
-      return this.page && this.page.survey_questions || [];
-    },
     next_page() {
       return `/${this.survey_id}/page/${this.nextPageId}${this.preview ? '/preview' : ''}`
     },
@@ -69,15 +65,14 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      unselect: UNSELECT,
-      select: SELECT,
-      selectPage: SELECT_PAGE,
-      newSubmission: NEW_SUBMISSION
+    ...mapActions({
+      newSubmission: NEW_SUBMISSION,
+      // TODO write SAVE_SUBMISION modeled after old survey store SUBMIT
+      submit: SAVE_SUBMISION
     }),
     submit() {
       if(!this.submit_disabled) {
-        this.$store.dispatch(SUBMIT).then(() => {
+        this.submit().then(() => {
           this.submitted = true;
           this.$router.push(`/${this.survey.id}/thankyou`);
         })
@@ -93,37 +88,27 @@ export default {
       console.log('setting next page id to', id)
       if(!id) {
         console.log('attempting to get actual next page id')
-        id = this.getNextPage(this.page.id)?.id;
+        id = this.getNextPage(this.selectedPage.id)?.id;
         console.log('actual next page id:', id)
       }
       this.nextPageId = id;
     }
   },
   beforeRouteUpdate(to, from, next) {
-    this.selectPage(this.survey.survey_pages.find(p => p.id == to.params.id))
-    this.setNextPageId(this.selected_page?.next_page_id);
+    this.selectPage(this.survey.survey_pages[to.params.id])
+    this.setNextPageId(this.selectedPage?.next_page_id);
     next()
   },
   mounted() {
     console.log('mounting page...')
-    if (!this.survey && this.survey_id) {
-      console.log('trying to load survey id', this.survey_id)
-      let model = new Survey({id: this.survey_id}, this.surveys);
-      model.fetch().then(() => {
-        this.select(model);
-        console.log('trying to select page:', this.id)
-        this.selectPage(model.survey_pages.find(p => p.id == this.id));
+    this.surveyLoadedPromise.then((surveyLoaded) => {
+      if (surveyLoaded) {
         this.newSubmission();
-        this.setNextPageId(this.selected_page.next_page_id);
-      });
-    }
-    else if (!this.page && this.id) {
-      this.selectPage(this.survey.survey_pages.find(p => p.id == this.id))
-      this.setNextPageId(this.selected_page.next_page_id);
-    }
-    else {
-      this.setNextPageId(this.selected_page.next_page_id);
-    }
+      } else if((!this.selectedPage && this.id) || this.id && this.selectedPage.id != this.id) {
+        this.selectPage(this.id);
+      }
+      this.setNextPageId(this.selectedPage.next_page_id);
+    })
   }
 }
 </script>

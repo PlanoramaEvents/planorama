@@ -1,7 +1,7 @@
 class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
   POLICY_CLASS = 'SurveysPolicy'.freeze
-  DEFAULT_ORDER = 'name'
+  DEFAULT_ORDER = 'updated_at'
 
   def serializer_includes
     [

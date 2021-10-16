@@ -1,3 +1,4 @@
+<!-- CONVERTED -->
 <template>
   <div>
     <router-view></router-view>

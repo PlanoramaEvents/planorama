@@ -1,8 +1,9 @@
-import {mapState} from 'vuex';
+import {mapGetters} from 'vuex';
 
+// CONVERTED
 const questionMixin = {
   computed: {
-    ...mapState('surveys', ['selected_question']),
+    ...mapGetters(['selectedQuestion']),
     textfield() {
       return this.question.question_type === "textfield";
     },
@@ -40,7 +41,7 @@ const questionMixin = {
       return this.textonly || this.hr;
     },
     isSelected() {
-      return this.question.id === this.selected_question?.id;
+      return this.question.id === this.selectedQuestion?.id;
     },
   }
 }

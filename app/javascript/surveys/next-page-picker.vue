@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import pageMixin from './page-mixin'
+import pageMixin from './page.mixin'
 export default {
   name: 'NextPagePicker',
   mixins: [pageMixin],

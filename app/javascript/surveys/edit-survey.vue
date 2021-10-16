@@ -48,7 +48,7 @@ import { UNSELECT, SAVE, SELECT } from '../model.store';
 import { SELECT_PAGE } from './survey.store';
 import { Survey } from './survey';
 import surveyMixin from './survey.mixin'
-import surveyIdPropMixin from './survey-id-prop-mixin';
+import { surveyIdPropMixinId } from './survey-id-prop.mixin';
 import SurveySettingsTab from './survey-settings-tab.vue';
 import NotImplemented from '../not-implemented.vue';
 
@@ -57,7 +57,7 @@ export default {
   props: ['responses'],
   mixins: [
     surveyMixin,
-    surveyIdPropMixin,
+    surveyIdPropMixinId,
   ],
   components: {
     EditSurveyPage,

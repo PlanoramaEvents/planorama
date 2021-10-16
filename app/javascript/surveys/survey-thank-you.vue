@@ -1,3 +1,4 @@
+<!-- CONVERTED -->
 <template>
   <b-row>
     <b-col>
@@ -8,9 +9,8 @@
 </template>
 
 <script>
-import surveyIdPropMixin from './survey-id-prop-mixin';
+import surveyIdPropMixin from './survey-id-prop.mixin';
 import { SURVEY_DEFAULT_THANK_YOU } from '../constants/strings';
-
 export default {
   name: "SurveyThankYou",
   mixins: [surveyIdPropMixin],

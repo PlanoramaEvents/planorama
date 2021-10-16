@@ -25,7 +25,7 @@ module ResourceMethods
                         include: serializer_includes,
                         params: {domain: "#{request.base_url}"}
                       }
-                    ).serializable_hash,
+                    ).serializable_hash(),
                content_type: 'application/json'
       else
         render json: @collection,

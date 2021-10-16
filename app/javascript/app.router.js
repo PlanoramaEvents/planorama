@@ -18,6 +18,7 @@ import AdminComponent from './administration/admin_component.vue';
 import PeopleScreen from './people/people-screen.vue';
 
 // surveys
+/*
 import SurveyScreen from './surveys/survey-screen.vue';
 import SurveyList from './surveys/survey-list.vue';
 import EditSurvey from './surveys/edit-survey.vue';
@@ -35,6 +36,8 @@ const surveyRoutes = [
   { path: ':id', component: TakeSurvey, props: true},
   { path: '', component: SurveyList },
 ]
+*/
+import SurveyScreen from './surveys2/survey-screen.vue';
 
 // dashboard
 import Dashboard from './dashboard/dashboard.vue';
@@ -49,7 +52,8 @@ export const router = new VueRouter({
     { path: '/login', component: LoginScreen, children: loginRoutes },
     { path: '/admin', component: AdminComponent},
     { path: '/people', component: PeopleScreen},
-    { path: '/surveys', component: SurveyScreen, children: surveyRoutes },
+    { path: '/surveys', component: SurveyScreen},
+   // { path: '/surveys', component: SurveyScreen, children: surveyRoutes },
     { path: '', component: Dashboard}
   ]
 });

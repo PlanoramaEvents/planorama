@@ -8,8 +8,10 @@ export const UNSELECT = 'UNSELECT';
 
 export const SELECTED = 'SELECTED';
 export const FETCH_SELECTED = 'FETCH SELECTED';
+export const FETCH_BY_ID = 'FETCH BY ID'
 export const FETCH = 'FETCH';
 export const NEW = 'NEW';
+export const SAVE = 'SAVE';
 
 // people add-ons
 import { personStore, personEndpoints } from './person.store';
@@ -17,9 +19,12 @@ import { personStore, personEndpoints } from './person.store';
 // session add-ons
 import { sessionStore } from './session.store';
 
+// survey add-ons 
+import { surveyStore, surveyEndpoints } from './survey.store';
+
 const endpoints = {
   ...personEndpoints,
-  survey: 'survey'
+  ...surveyEndpoints,
 }
 
 // NOTE: this is really the store
@@ -31,10 +36,7 @@ export const store = new Vuex.Store({
   state: {
     selected: {
       ...personStore.selected,
-      survey: undefined,
-      page: undefined,
-      question: undefined,
-      submission: undefined,
+      ...surveyStore.selected,
     },
     ...sessionStore.state,
   },
@@ -42,11 +44,11 @@ export const store = new Vuex.Store({
     [SELECTED] (state, getters) {
       return ({model}) => {
         if (!state.selected[model]) return undefined;
-        // TODO: this needs to be checked for grid reactivity ????
         return utils.deepCopy(getters['jv/get']({_jv: {id: state.selected[model], type: model}}))
       }
     },
     ...personStore.getters,
+    ...surveyStore.getters,
   },
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
@@ -72,11 +74,12 @@ export const store = new Vuex.Store({
     ...sessionStore.mutations,
   },
   actions: {
-    [NEW] ({commit, dispatch}, {model, selected = false, ...attrs}) {
+    [NEW] ({commit, dispatch}, {model, selected = false, relationships = {}, ...attrs}) {
       let newModel = {
         ...attrs,
         _jv: {
-          type: model
+          type: model,
+          relationships
         }
       }
       return new Promise((res, rej) => {
@@ -88,6 +91,26 @@ export const store = new Vuex.Store({
         }).catch(rej);
       });
     },
+    [SAVE] ({commit, dispatch}, {model, selected = true, item, params}) {
+      if(item._jv) {
+        if(!item._jv.type) {
+          type = model
+        }
+      }
+      else {
+        item._jv = { type: model }
+      }
+      return new Promise((res, rej) => {
+        dispatch('jv/patch', [endpoints[model], {params}]).then((savedModel) => {
+          // to get around the fact that the getter returns a copy,
+          // re-select the saved model so that the getter updates.
+          if(selected) {
+            commit(SELECT, {model, itemOrId: savedModel});
+          }
+          res(savedModel);
+        }).catch(rej)
+      });
+    },
     [FETCH] ({dispatch}, {model, params}) {
       return dispatch('jv/get', [endpoints[model], {params}])
     },
@@ -95,8 +118,13 @@ export const store = new Vuex.Store({
       if (!state.selected[model]) {
         return Promise.reject(`No ${model} selected`)
       }
-      return dispatch('jv/get', `${endpoints[model]}/${state.selected[model]}`)
+      return dispatch(FETCH_BY_ID, {model, id: state.selected[model]})
+    },
+    [FETCH_BY_ID] ({dispatch}, {model, id}) {
+      // TODO do we ever need this? or is model always selected
+      return dispatch('jv/get', `${endpoints[model]}/${id}`)
     },
     ...sessionStore.actions,
+    ...surveyStore.actions,
   }
 })

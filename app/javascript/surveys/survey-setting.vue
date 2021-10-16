@@ -1,3 +1,4 @@
+<!-- CONVERTED -->
 <template>
   <b-row>
     <b-col>
@@ -8,7 +9,7 @@
           </slot>
         </b-form-checkbox>
       </not-implemented>
-      <b-form-checkbox v-if="!disabled && bool" :checked="value" @input="$emit('input', $event)" @change="save">
+      <b-form-checkbox v-if="!disabled && bool" :checked="value" @input="$emit('input', $event)" @change="saveSurvey">
         <slot>
           {{label}}
         </slot>
@@ -20,7 +21,7 @@
         <template #label>
           <slot>{{label}}</slot>
         </template>
-        <b-form-input class="w-50" :disabled="disabled" type=text :value="value" @input="$emit('input', $event)" @blur="save"></b-form-input>
+        <b-form-input class="w-50" :disabled="disabled" type=text :value="value" @input="$emit('input', $event)" @blur="saveSurvey"></b-form-input>
       </b-form-group>
     </b-col>
   </b-row>
