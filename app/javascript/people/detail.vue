@@ -8,28 +8,28 @@
         <b-form-group
           label="Name"
         >
-          <b-form-input v-model="person.name" :disabled="!editable"></b-form-input>
+          <b-form-input v-model="selected.name" :disabled="!editable"></b-form-input>
         </b-form-group>
         <b-form-group
           label="Name Sort By"
         >
-        <b-form-input v-model="person.name_sort_by" :disabled="!editable"></b-form-input>
+        <b-form-input v-model="selected.name_sort_by" :disabled="!editable"></b-form-input>
         </b-form-group>
-        <b-form-checkbox v-model="person.name_sort_by_confirmed" :disabled="!editable">
+        <b-form-checkbox v-model="selected.name_sort_by_confirmed" :disabled="!editable">
           Name Sort By Confirmed
         </b-form-checkbox>
 
         <b-form-group
           label="Pseudonym"
         >
-          <b-form-input v-model="person.pseudonym" :disabled="!editable"></b-form-input>
+          <b-form-input v-model="selected.pseudonym" :disabled="!editable"></b-form-input>
         </b-form-group>
         <b-form-group
           label="Pseudonym Sort By"
         >
-        <b-form-input v-model="person.pseudonym_sort_by" :disabled="!editable"></b-form-input>
+        <b-form-input v-model="selected.pseudonym_sort_by" :disabled="!editable"></b-form-input>
         </b-form-group>
-        <b-form-checkbox v-model="person.pseudonym_sort_by_confirmed" :disabled="!editable">
+        <b-form-checkbox v-model="selected.pseudonym_sort_by_confirmed" :disabled="!editable">
           Pseudonym Sort By Confirmed
         </b-form-checkbox>
 
@@ -55,14 +55,13 @@
 </template>
 
 <script>
+import modelMixin from '../store/model.mixin';
 
 export default {
   name: "Detail",
-  props: {
-    person: {
-      type: Object
-    }
-  },
+  mixins: [
+    modelMixin
+  ],
   data: () => ({
     editable: false,
   }),
@@ -73,10 +72,11 @@ export default {
     save() {
       // this.editable = true
       this.editable = false
-      console.debug('******** SAVE PERSON ????', this.person)
+      console.debug('******** SAVE PERSON ????', this.selected.id)
       // this.person.save()
-      this.$store.dispatch('jv/update', this.person).then((data) => {
-        console.log(data)
+      this.$store.dispatch('jv/update', this.selected).then((data) => {
+        // How do we get this to update the model in the store ????
+        console.log('saved: ', data.id)
       })
     }
   }

@@ -41,9 +41,7 @@ export const store = new Vuex.Store({
   getters: {
     [SELECTED] (state, getters) {
       return ({model}) => {
-        // console.log("selecting model", model)
         if (!state.selected[model]) return undefined;
-        // console.log("selecting", model, state.selected[model])
         // TODO: this needs to be checked for grid reactivity ????
         return utils.deepCopy(getters['jv/get']({_jv: {id: state.selected[model], type: model}}))
       }
@@ -53,11 +51,19 @@ export const store = new Vuex.Store({
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
       let id;
-      try {
+      // NOTE: the try/catch was broken. Tested with passing in an id
+      if (typeof itemOrId.id !== 'undefined') {
         id = itemOrId.id;
-      } catch {
+      } else {
         id = itemOrId;
       }
+      // try {
+      //   // console.debug("***** SELECT we have item????", itemOrId.id)
+      //   id = itemOrId.id;
+      // } catch {
+      //   // console.debug("***** SELECT we have id????")
+      //   id = itemOrId;
+      // }
       state.selected[model] = id;
     },
     [UNSELECT] (state, {model}) {

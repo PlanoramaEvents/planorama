@@ -90,28 +90,28 @@ export class Person extends PlanoModel {
   }
 };
 
-export class People extends PlanoCollection {
-  options() {
-    return {
-      model: Person,
-    }
-  }
-
-  defaults() {
-    return Object.assign({}, super.defaults(), {
-      sortField: 'published_name_sort_by',
-      sortOrder: 'asc',
-      filter: '',
-    })
-  }
-
-  routes() {
-    return {
-      // fetch: '/people',
-      fetch: '/people?perPage={perPage}&sortField={sortField}&sortOrder={sortOrder}&filter={filter}',
-    }
-  }
-};
+// export class People extends PlanoCollection {
+//   options() {
+//     return {
+//       model: Person,
+//     }
+//   }
+//
+//   defaults() {
+//     return Object.assign({}, super.defaults(), {
+//       sortField: 'published_name_sort_by',
+//       sortOrder: 'asc',
+//       filter: '',
+//     })
+//   }
+//
+//   routes() {
+//     return {
+//       // fetch: '/people',
+//       fetch: '/people?perPage={perPage}&sortField={sortField}&sortOrder={sortOrder}&filter={filter}',
+//     }
+//   }
+// };
 
 // task.$.name or task.saved('name') to reflect what is in the backend ...
 export const people_columns = [
@@ -120,14 +120,14 @@ export const people_columns = [
     label: 'Published Name',
     sortable: true,
     sortKey: 'published_name_sort_by',
-    sticky: true,
+    sticky: true
   },
   {
     key: 'name',
     label: 'Name',
     sortable: true,
     sortKey: 'name_sort_by',
-    sticky: true,
+    sticky: true
   },
   {
     key: 'pseudonym',

@@ -94,6 +94,8 @@ export default {
         page: ctx.currentPage
       }).then((data) => {
         var res = []
+        // TODO: for some reason when the store is updated the table view
+        // is not...
         Object.keys(data).forEach(function (key) {
           res.push(data[key])
         })
@@ -110,18 +112,19 @@ export default {
       if (this.selected) this.fetchSelected();
     },
     onRowSelected(items) {
-      this.select(items[0]);
+\      this.select(items[0]);
     }
   },
   mounted() {
   },
-  watch: {
-    selected(val) {
-      if (!val) {
-        this.$refs.table.clearSelected()
-      }
-    }
-  }
+  // This does nothing
+  // watch: {
+  //   selected(val) {
+  //     if (!val) {
+  //       this.$refs.table.clearSelected()
+  //     }
+  //   }
+  // }
 }
 </script>
 
