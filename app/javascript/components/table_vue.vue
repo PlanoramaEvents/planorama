@@ -112,7 +112,7 @@ export default {
       if (this.selected) this.fetchSelected();
     },
     onRowSelected(items) {
-\      this.select(items[0]);
+      this.select(items[0]);
     }
   },
   mounted() {
