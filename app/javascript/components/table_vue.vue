@@ -66,13 +66,13 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
-import paginationMixin from '../store/pagination.mixin';
+import tableMixin from '../store/table.mixin';
 import { personModel } from '../store/person.store';
 export default {
   name: 'TableVue',
   mixins: [
     modelMixin,
-    paginationMixin, // covers pagination and sorting
+    tableMixin, // covers pagination and sorting
   ],
   props: {
     columns : { type: Array }
@@ -83,9 +83,6 @@ export default {
     }
   },
   methods: {
-    onReset() {
-      if (this.selected) this.fetchSelected();
-    },
     onRowSelected(items) {
       this.select(items[0]);
     },
@@ -93,8 +90,6 @@ export default {
       this.sortBy = ctx.sortBy;
       this.sortDesc = ctx.sortDesc;
     }
-  },
-  mounted() {
   },
   watch: {
     selected(val) {
