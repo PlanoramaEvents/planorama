@@ -72,4 +72,4 @@ const tableMixin = {
   }
 }
 
-export default paginationMixin;
+export default tableMixin;

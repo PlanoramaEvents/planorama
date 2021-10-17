@@ -1,6 +1,4 @@
-<!-- MOSTLY CONVERTED
- TODO: write SUBMIT action
--->
+<!-- CONVERTED -->
 <template>
   <div class="scrollable">
     <div class="survey-page">
@@ -34,7 +32,7 @@
 import pageMixin from './page.mixin';
 import { surveyIdPropMixinSurveyId } from './survey-id-prop.mixin';
 import surveyMixin from './survey.mixin';
-import { NEW_SUBMISSION, SAVE_SUBMISION} from '../store/survey.store'
+import { NEW_SUBMISSION, SAVE_SUBMISION } from '../store/survey.store'
 
 export default {
   name: "SurveyPage",
