@@ -1,0 +1,2 @@
+class SessionSerializer < PersonSerializer
+end
