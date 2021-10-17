@@ -48,7 +48,7 @@ class Person < ApplicationRecord
   # database_authenticatable,
   devise :database_authenticatable,
          :jwt_authenticatable,
-         :registerable,
+         :registerable, :timeoutable,
          :recoverable, :rememberable, :validatable, :lockable,
          jwt_revocation_strategy: self
 
