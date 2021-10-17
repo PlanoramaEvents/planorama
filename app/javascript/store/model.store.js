@@ -31,7 +31,7 @@ const endpoints = {
 Vue.use(Vuex)
 export const store = new Vuex.Store({
   modules: {
-    jv: jsonapiModule(http, {preserveJson: true, clearOnUpdate: true, mergeRecords: true})
+    jv: jsonapiModule(http, {preserveJson: true, clearOnUpdate: true})
   },
   state: {
     selected: {

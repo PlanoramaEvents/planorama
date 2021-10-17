@@ -1,6 +1,6 @@
 <template>
   <table-vue
-    sortField='name'
+    defaultSortBy='name'
     model="person"
     :columns="columns"
   >

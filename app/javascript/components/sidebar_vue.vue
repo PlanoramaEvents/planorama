@@ -23,7 +23,9 @@
       </b-navbar-nav>
     </b-nav>
     <div class="px-3">
-      <slot name="content"></slot>
+      <slot name="content">
+        <pre>{{selected}}</pre>
+      </slot>
     </div>
   </b-sidebar>
 </template>

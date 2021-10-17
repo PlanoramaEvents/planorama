@@ -3,6 +3,10 @@ import modelMixin from "./model.mixin";
 const paginationMixin = {
   mixins: [modelMixin],
   props: {
+    defaultSortBy: {
+      type: String,
+      default: undefined,
+    },
     perPage: {
       type: Number,
       default: 10
@@ -44,16 +48,26 @@ const paginationMixin = {
     }
   },
   mounted() {
+    this.sortBy = this.defaultSortBy;
     this.fetchPaged();
   },
   watch: {
     currentPage(newVal, oldVal) {
+      console.log("currentpage changed:", newVal, oldVal)
       // when we change the desired page to a new one, fetch again
       if(newVal != oldVal) {
         // at this point, this.currentPage reflects newVal so we don't
         // have to pass anything in here, it should just work
         this.fetchPaged();
       }
+    },
+    sortDesc(newVal, oldVal) {
+      console.log("sortdesc changed:", newVal, oldVal)
+      if (newVal != oldVal) this.fetchPaged();
+    },
+    sortBy(newVal, oldVal) {
+      console.log("sortby changed:", newVal, oldVal)
+      if (newVal != oldVal) this.fetchPaged();
     }
   }
 }
