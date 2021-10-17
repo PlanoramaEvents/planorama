@@ -38,11 +38,13 @@
       ref="table"
 
       :no-local-sorting="true"
-      :sort-by="sortField"
+      :sort-by="sortBy"
+      :sort-desc="sortDesc"
 
       :filter="filter"
 
       @row-selected="onRowSelected"
+      @sort-changed="onSortChanged"
     >
       <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
       <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
@@ -64,16 +66,15 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
-import paginationMixin from '../store/pagination.mixin';
+import tableMixin from '../store/table.mixin';
 import { personModel } from '../store/person.store';
 export default {
   name: 'TableVue',
   mixins: [
     modelMixin,
-    paginationMixin, // covers pagination and sorting
+    tableMixin, // covers pagination and sorting
   ],
   props: {
-    sortField : { type: String },
     columns : { type: Array }
   },
   data() {
@@ -82,14 +83,13 @@ export default {
     }
   },
   methods: {
-    onReset() {
-      if (this.selected) this.fetchSelected();
-    },
     onRowSelected(items) {
       this.select(items[0]);
+    },
+    onSortChanged(ctx) {
+      this.sortBy = ctx.sortBy;
+      this.sortDesc = ctx.sortDesc;
     }
-  },
-  mounted() {
   },
   watch: {
     selected(val) {
