@@ -31,7 +31,7 @@ const endpoints = {
 Vue.use(Vuex)
 export const store = new Vuex.Store({
   modules: {
-    jv: jsonapiModule(http, {preserveJson: true, clearOnUpdate: true})
+    jv: jsonapiModule(http, {preserveJson: true, clearOnUpdate: true, mergeRecords: true})
   },
   state: {
     selected: {
@@ -53,19 +53,11 @@ export const store = new Vuex.Store({
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
       let id;
-      // NOTE: the try/catch was broken. Tested with passing in an id
-      if (typeof itemOrId.id !== 'undefined') {
-        id = itemOrId.id;
-      } else {
+      try {
+        id = itemOrId.id || id;
+      } catch {
         id = itemOrId;
       }
-      // try {
-      //   // console.debug("***** SELECT we have item????", itemOrId.id)
-      //   id = itemOrId.id;
-      // } catch {
-      //   // console.debug("***** SELECT we have id????")
-      //   id = itemOrId;
-      // }
       state.selected[model] = id;
     },
     [UNSELECT] (state, {model}) {

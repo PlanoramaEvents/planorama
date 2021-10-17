@@ -33,15 +33,13 @@
       :fields="columns"
       selected-variant="primary"
 
-      :items="provider"
+      :items="sortedCollection"
 
       ref="table"
 
       :no-local-sorting="true"
       :sort-by="sortField"
 
-      :per-page="perPage"
-      :current-page="currentPage"
       :filter="filter"
 
       @row-selected="onRowSelected"
@@ -66,51 +64,24 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
+import paginationMixin from '../store/pagination.mixin';
 import { personModel } from '../store/person.store';
 export default {
   name: 'TableVue',
   mixins: [
     modelMixin,
+    paginationMixin, // covers pagination and sorting
   ],
   props: {
     sortField : { type: String },
-    perPage : { type: Number, default: 10 },
     columns : { type: Array }
   },
   data() {
     return {
       selectMode: 'single',
-      filter: null,
-      currentPage: 1,
-      totalRows: 0
     }
   },
   methods: {
-    provider(ctx, callback) {
-      this.fetch({
-        perPage: ctx.perPage,
-        sortOrder: ctx.sortDesc ? 'desc' : 'asc',
-        sortBy: ctx.sortBy,
-        filter: ctx.filter,
-        page: ctx.currentPage
-      }).then((data) => {
-        //console.log(this.$store.getters['jv/get', ({_jv: {type: personModel}})]);
-        console.log(this.collection);
-        var res = []
-        // TODO: for some reason when the store is updated the table view
-        // is not...
-        Object.keys(data).forEach(function (key) {
-          res.push(data[key])
-        })
-
-        this.currentPage = data._jv.json.meta.page
-        this.totalRows = data._jv.json.meta.total
-
-        callback(this.collection)
-      }).catch((error) => {
-        callback([])
-      })
-    },
     onReset() {
       if (this.selected) this.fetchSelected();
     },
@@ -120,14 +91,13 @@ export default {
   },
   mounted() {
   },
-  // This does nothing
-  // watch: {
-  //   selected(val) {
-  //     if (!val) {
-  //       this.$refs.table.clearSelected()
-  //     }
-  //   }
-  // }
+  watch: {
+    selected(val) {
+      if (!val) {
+        this.$refs.table.clearSelected()
+      }
+    }
+  }
 }
 </script>
 
