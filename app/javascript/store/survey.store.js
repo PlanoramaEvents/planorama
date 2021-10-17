@@ -13,7 +13,7 @@ export const questionModel = 'question';
 export const submissionModel = 'submission';
 
 export const surveyEndpoints = {
-  [surveyModel]: 'surveys'
+  [surveyModel]: 'survey'
 }
 
 export const surveyStore = {

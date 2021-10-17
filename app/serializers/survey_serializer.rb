@@ -49,8 +49,8 @@ class SurveySerializer
               if: Proc.new { |record| record.updated_by_id },
               links: {
                 self: -> (object, params) {
-                  "#{params[:domain]}/surveys/#{object.id}"
-                survey
+                  "#{params[:domain]}/survey/#{object.id}"
+                },
                 related: -> (object, params) {
                   "#{params[:domain]}/person/#{object.updated_by_id}"
                 }
