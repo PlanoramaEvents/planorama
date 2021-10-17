@@ -2,11 +2,12 @@
   <!-- @new="onNew"
   namespace="surveys" -->
   <table-vue
-    sortField='name'
+    @new="onNew"
+    defaultSortBy='name'
     model="survey"
     :columns="columns"
   >
-    <!-- <template #cell(description)="{ item }">
+    <template #cell(description)="{ item }">
       <tooltip-overflow :title="item.description">{{item.description}}</tooltip-overflow>
     </template>
     <template #cell(publishedOn)="{ item }">
@@ -21,7 +22,7 @@
     <template #cell(surveyLink)="{ item }">
       <small v-if="!item.anonymous"><i>This survey is not anonymous</i></small>
       <a v-if="item.anonymous" :to="surveyLink(item)" target="_blank">{{ surveyLink(item) }}</a>
-    </template> -->
+    </template>
   </table-vue>
 </template>
 

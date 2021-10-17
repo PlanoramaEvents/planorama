@@ -64,11 +64,11 @@ export default {
   mixins: [surveyMixin],
   methods: {
     togglePublish() {
-      let public = !this.survey.public;
-      let message = this.public
+      let publicValue = !this.survey.public;
+      let message = this.publicValue
         ? SURVEY_SAVE_SUCCESS_PUBLISH
         : SURVEY_SAVE_SUCCESS_CLOSE;
-      this.saveSurvey({...this.survey, public}, message);
+      this.saveSurvey({...this.survey, public: publicValue}, message);
     },
     cancelPublish() {
       this.publishVal = this.survey.public;

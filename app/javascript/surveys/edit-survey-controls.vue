@@ -9,9 +9,8 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex';
-const { mapState, mapActions, mapMutations } = createNamespacedHelpers('surveys');
 import { SAVE } from '../model.store';
+import {mapGetters, mapActions} from 'vuex';
 import { SELECT } from '../store/model.store';
 import { pageModel, questionModel } from '../store/survey.store';
 import { SELECT_PAGE, SELECT_QUESTION, NEW_PAGE, NEW_QUESTION } from './survey.store';

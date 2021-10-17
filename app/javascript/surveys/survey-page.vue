@@ -2,7 +2,7 @@
 <template>
   <div class="scrollable">
     <div class="survey-page">
-      <h1>{{ selectedSurveyFirstPage?.title }}</h1>
+      <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
       <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
       <survey-question
         v-for="q in selectedPageSurveyQuestions"
@@ -32,7 +32,9 @@
 import pageMixin from './page.mixin';
 import { surveyIdPropMixinSurveyId } from './survey-id-prop.mixin';
 import surveyMixin from './survey.mixin';
-import { NEW_SUBMISSION, SAVE_SUBMISION } from '../store/survey.store'
+import { NEW_SUBMISSION, SAVE_SUBMISSION } from '../store/survey.store'
+import SurveyQuestion from './survey_question';
+import { mapActions } from 'vuex';
 
 export default {
   name: "SurveyPage",
@@ -65,8 +67,7 @@ export default {
   methods: {
     ...mapActions({
       newSubmission: NEW_SUBMISSION,
-      // TODO write SAVE_SUBMISION modeled after old survey store SUBMIT
-      submit: SAVE_SUBMISION
+      submit: SAVE_SUBMISSION
     }),
     submit() {
       if(!this.submit_disabled) {

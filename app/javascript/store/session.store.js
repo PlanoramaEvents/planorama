@@ -15,7 +15,7 @@ export const sessionStore = {
       // only fetch session if we don't have one
       if(!state.user.id) {
         // console.debug('******* get the session user')
-        dispatch('jv/get','/person/me').then((user) => {
+        dispatch('jv/get','/session/me').then((user) => {
           // console.debug('******* session user', user)
           commit(SET_SESSION_USER, user)
         }).catch((error) => {
