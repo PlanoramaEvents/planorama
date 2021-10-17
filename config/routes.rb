@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get '/login/:magic_link', to: 'login#magic_link'
 
   # REST based resources
+  get 'session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
   get 'people/me', to: 'people#me'
   resources :people, path: 'person' do
