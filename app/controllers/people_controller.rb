@@ -9,7 +9,8 @@ class PeopleController < ResourceController
   def me
     me = current_person
     authorize me, policy_class: policy_class
-    render_object(me)
+    # change type in serializer
+    render_object(me, serializer: SessionSerializer)
   end
 
   def serializer_includes

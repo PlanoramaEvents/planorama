@@ -81,9 +81,10 @@ module ResourceMethods
     end
   end
 
-  def render_object(object)
-    if serializer_class
-      render json: serializer_class.new(
+  def render_object(object, serializer: nil)
+    serializer_used = serializer || serializer_class
+    if serializer_used
+      render json: serializer_used.new(
                     object,
                     {
                       include: serializer_includes,
