@@ -271,7 +271,10 @@ module ResourceMethods
     if new_actions.include?(action)
       build_resource
     elsif resource_id
-      find_resource
+      # JSON api could send a resource with UUID generated
+      # client side. If we do not find it in the DB we then
+      # will create it!
+      find_resource || build_resource
     end
   end
 
@@ -309,6 +312,10 @@ module ResourceMethods
   end
 
   def allowed_params
+    nil
+  end
+
+  def except_params
     nil
   end
 
@@ -351,20 +358,22 @@ module ResourceMethods
   def _permitted_params(_object_name)
     # NOTE: if params[:data] to determine if this is JSON-API packet
     # that is received, if so we need to deserialize it
-    if allowed_params
-      if params[:data]
-        jsonapi_deserialize(params, only: allowed_params)
-      else
-        params.permit(
-          allowed_params
-        )
-      end
+    if params[:data]
+      # NOTE: JSPON API does not save nested data structures ....
+      jsonapi_deserialize(
+        params,
+        {
+          only: allowed_params,
+          except: except_params
+        }
+      )
     else
-      if params[:data]
-        jsonapi_deserialize(params)
-      else
-        params[_object_name]
-      end
+      # We treat this as a regular rails request
+      params[_object_name] unless allowed_params
+
+      params.permit(
+        allowed_params
+      )
     end
   end
 
