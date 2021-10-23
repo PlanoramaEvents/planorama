@@ -26,9 +26,6 @@ export const surveyStore = {
     [submissionModel]: undefined,
   },
   getters: {
-    selectedSurvey(state, getters) {
-      return getters[SELECTED](surveyModel);
-    },
     selectedPage(state, getters) {
       return getters[SELECTED](pageModel);
     },
