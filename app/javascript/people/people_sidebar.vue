@@ -11,11 +11,11 @@
         <b-tab title="Details">
           <detail model="person"></detail>
         </b-tab>
-        <b-tab title="Emails">
+        <b-tab title="Email Addresses">
           <pre>{{ selected.email_addresses }}</pre>
         </b-tab>
         <b-tab title="Bio">
-          <!-- <bio v-bind:bio="selected.bio"></bio> -->
+          <bio v-bind:bio="selected.bio"></bio>
         </b-tab>
         <b-tab title="Roles">
           <pre>{{ selected.person_roles }}</pre>
@@ -34,14 +34,14 @@
 <script>
 import SidebarVue from '../components/sidebar_vue';
 import modelMixin from '../store/model.mixin';
-// import Bio from './bio.vue';
+import Bio from './bio.vue';
 import Detail from './detail.vue';
 
 export default {
   name: 'PeopleSidebar',
   components: {
     SidebarVue,
-    // Bio,
+    Bio,
     Detail
   },
   mixins: [

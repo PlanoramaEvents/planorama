@@ -33,22 +33,74 @@
           Pseudonym Sort By Confirmed
         </b-form-checkbox>
 
-        <!--
-        pronouns
-        job title
-        organization
-        registered
-        reg type
-        reg number
-        opt in
-        can share
-        can photo
-        can record
-        gender
-        ethnicity
-        year of birth
-        comments
-        -->
+        <b-form-group
+          label="Pronouns"
+        >
+          <b-form-input v-model="selected.pronouns" :disabled="!editable"></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Job Title"
+        >
+          <b-form-input v-model="selected.job_title" :disabled="!editable"></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Organization"
+        >
+          <b-form-input v-model="selected.organization" :disabled="!editable"></b-form-input>
+        </b-form-group>
+
+        <b-form-checkbox v-model="selected.registered" :disabled="!editable">
+          Registered
+        </b-form-checkbox>
+
+        <b-form-group
+          label="Registration Type"
+        >
+          <b-form-input v-model="selected.registration_type" :disabled="!editable"></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Registration Number"
+        >
+          <b-form-input v-model="selected.registration_number" :disabled="!editable"></b-form-input>
+        </b-form-group>
+
+        <b-form-checkbox v-model="selected.opted_in" :disabled="!editable">
+          Opted In
+        </b-form-checkbox>
+        <b-form-checkbox v-model="selected.can_share" :disabled="!editable">
+          Can Share
+        </b-form-checkbox>
+        <b-form-checkbox v-model="selected.can_photo" :disabled="!editable">
+          Can Photo
+        </b-form-checkbox>
+        <b-form-checkbox v-model="selected.can_record" :disabled="!editable">
+          Can Record
+        </b-form-checkbox>
+
+        <b-form-group
+          label="Gender"
+        >
+          <b-form-input v-model="selected.gender" :disabled="!editable"></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Ethnicity"
+        >
+          <b-form-input v-model="selected.ethnicity" :disabled="!editable"></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Year of Birth"
+        >
+          <!-- TODO: year selector/number -->
+          <b-form-input
+            v-model="selected.year_of_birth"
+            :disabled="!editable"></b-form-input>
+        </b-form-group>
+
+        <b-form-group
+          label="Comments"
+        >
+          <b-form-textarea v-model="selected.comments" :disabled="!editable"></b-form-textarea>
+        </b-form-group>
       </div>
     </div>
   </div>

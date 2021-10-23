@@ -6,12 +6,15 @@
           id="bio-text-group"
           label="Biography"
           label-for="bio-text"
+          v-if="bio"
         >
           <b-form-textarea
             id="bio-text"
             v-model="bio.bio"
             :disabled="!false"
-          >{{bio.bio}}</b-form-textarea>
+          >
+            {{bio.bio}}
+          </b-form-textarea>
         </b-form-group>
       </div>
     </div>
