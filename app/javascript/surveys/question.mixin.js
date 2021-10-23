@@ -1,9 +1,17 @@
 import {mapGetters} from 'vuex';
+import { getOrderedRelationships } from '../utils/jsonapi_utils';
+import { SELECTED } from '../store/model.store';
+import { questionModel as model } from '../store/survey.store';
 
 // CONVERTED
 const questionMixin = {
   computed: {
-    ...mapGetters(['selectedQuestion']),
+    ...mapGetters({
+      selected: SELECTED
+    }),
+    selectedQuestion() {
+      return this.selected({model});
+    },
     textfield() {
       return this.question.question_type === "textfield";
     },
@@ -35,7 +43,7 @@ const questionMixin = {
       return this.question.question_type === "textonly";
     },
     other() {
-      return this.question.survey_answers?.find(a => a.other);
+      return this.getQuestionAnswers(this.question)?.find(a => a.other);
     },
     formatting() {
       return this.textonly || this.hr;
@@ -43,6 +51,11 @@ const questionMixin = {
     isSelected() {
       return this.question.id === this.selectedQuestion?.id;
     },
+  },
+  methods: {
+    getQuestionAnswers(question) {
+      return getOrderedRelationships('survey_answers', question);
+    }
   }
 }
 

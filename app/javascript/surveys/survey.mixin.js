@@ -1,8 +1,9 @@
 import {mapGetters} from 'vuex';
 import toastMixin from '../toast-mixin';
-import { SAVE, SELECTED, FETCH_SELECTED, DELETE } from '../store/model.store';
+import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE } from '../store/model.store';
 import { SURVEY_SAVE_SUCCESS, SURVEY_SAVE_SUCCESS_DELETE } from '../constants/strings'
 import { surveyModel as model} from '../store/survey.store';
+import { getOrderedRelationships } from '../utils/jsonapi_utils';
 
 // CONVERTED
 const surveyMixin = {
@@ -38,11 +39,7 @@ const surveyMixin = {
       return this.toastPromise(this.$store.dispatch(DELETE, {model, itemOrId}), success_text);
     },
     getSurveyPages(survey) {
-      let pages = survey.survey_pages;
-      if (!pages) return [];
-      let order = survey._jv.relationships.survey_pages.data.map(p => p.id);
-      // these are going to be in order
-      return Object.values(pages).sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
+      return getOrderedRelationships('survey_pages', survey);
     }
   }
 }

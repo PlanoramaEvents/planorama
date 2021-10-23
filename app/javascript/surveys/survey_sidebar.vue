@@ -1,3 +1,4 @@
+<!-- CONVERTED? -->
 <template>
   <div>
     <sidebar-vue v-if="survey" model="survey">
@@ -60,7 +61,6 @@ import { mapActions } from 'vuex';
 import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../model.store';
 import SurveyQuestion from './survey_question';
 import surveyMixin from './survey.mixin';
-import pageMixin from './page.mixin';
 import SurveySettingsTab from './survey-settings-tab';
 import SidebarVue from '../components/sidebar_vue';
 import { CLEAR_SUBMISSIONS } from './survey.store';
@@ -73,6 +73,7 @@ import {
   SURVEY_CONFIRM_DELETE,
 } from '../constants/strings';
 import { DUPLICATE_SURVEY } from '../store/survey.store';
+import { getOrderedRelationships } from '../utils/jsonapi_utils';
 
 export default {
   name: 'SurveySidebar',
@@ -81,24 +82,24 @@ export default {
     SurveyQuestion,
     SurveySettingsTab,
   },
-  mixins: [surveyMixin, pageMixin],
+  mixins: [surveyMixin],
   data: () => ({
     SURVEY_RESULTS_CLEAR_CONFIRM,
     SURVEY_CONFIRM_DELETE
   }),
   computed: {
     questions() {
-      return this.getSurveyPages(this.survey).map(this.getPageQuestions).reduce((p, c) => [...p, ...c], []);
+      return this.getSurveyPages(this.survey).map(p => getOrderedRelationships('survey_questions', p)).reduce((p, c) => [...p, ...c], []);
       //return Object.values(this.survey.survey_pages).map(p => p.survey_questions).reduce((p, c) => [...p, ...Object.values(c)],[])
     },
     editLink() {
-      return `/edit/${this.survey.id}`;
+      return `/#/surveys/edit/${this.survey.id}`;
     },
     responsesLink() {
-      return `${this.editLink}/responses`;
+      return `/#/surveys/${this.editLink}/responses`;
     },
     surveyLink() {
-      return `/page/surveys#/${this.survey.id}`;
+      return `/#/surveys/${this.survey.id}`;
     },
     previewLink() {
       return `${this.surveyLink}/preview`;

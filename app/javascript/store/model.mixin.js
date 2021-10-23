@@ -29,7 +29,7 @@ const modelMixin = {
     },
     fetch(params) {
       return this.$store.dispatch(FETCH, {model: this.model, params});
-    }
+    },
   }
 }
 

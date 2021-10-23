@@ -1,3 +1,4 @@
+<!-- CONVERTED? -->
 <template>
   <div class="survey-question mt-3 pl-1">
     <b-form-group
@@ -297,12 +298,12 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from 'vuex';
-const {mapState} = createNamespacedHelpers('surveys');
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
 import questionMixin from './question.mixin';
 import EmailField from '../shared/email_field';
+import surveyMixin from './survey.mixin';
+import submissionMixin from './submission.mixin';
 
 export default {
   name: "SurveyQuestion",
@@ -311,7 +312,11 @@ export default {
     SimpleSocial,
     EmailField
   },
-  mixins: [questionMixin],
+  mixins: [
+    questionMixin,
+    surveyMixin,
+    submissionMixin
+  ],
   props: {
     question: {
       type: Object,
@@ -337,17 +342,13 @@ export default {
     }
   }),
   computed: {
-    ...mapState({
-      submission: 'submission',
-      survey: 'selected'
-    }),
     questionText() {
       return this.question.question;
       // todo implement question numbering
       // return `${this.question.sort_order + 1}. ${this.question.question}`
     },
     choices() {
-      return this.question.survey_answers;
+      return this.getQuestionAnswers(this.question);
     },
     radioButtonResponse: {
       get() {
@@ -366,14 +367,14 @@ export default {
       return `${this.formId(string)}-group`
     },
     linkResponse() {
-      if (!this.submission.survey_responses) {
-        this.submission.survey_responses = []
+      if (!this.selectedSubmission.survey_responses_attributes) {
+        this.selectedSubmission.survey_responses_attributes = []
       }
-      let existing_response = this.submission.survey_responses.find(r => r.survey_question_id == this.question.id)
+      let existing_response = this.selectedSubmission.survey_responses_attributes.find(r => r.survey_question_id == this.question.id)
       if (existing_response) {
         this.response = existing_response
       } else {
-        this.submission.survey_responses.push(this.response)
+        this.submission.survey_responses_attributes.push(this.response)
       }
     },
     choiceValue(choice) {
@@ -388,12 +389,12 @@ export default {
   },
   mounted() {
     this.response.survey_question_id = this.question.id;
-    if (this.submission) {
+    if (this.selectedSubmission) {
       this.linkResponse();
     }
   },
   watch: {
-    submission(val, oldVal) {
+    selectedSubmission(val, oldVal) {
       if (!oldVal && val) {
         this.linkResponse();
       }

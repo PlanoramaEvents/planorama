@@ -9,11 +9,11 @@
 </template>
 
 <script>
-import surveyIdPropMixin from './survey-id-prop.mixin';
+import { surveyIdPropMixinId } from './survey-id-prop.mixin';
 import { SURVEY_DEFAULT_THANK_YOU } from '../constants/strings';
 export default {
   name: "SurveyThankYou",
-  mixins: [surveyIdPropMixin],
+  mixins: [surveyIdPropMixinId],
   computed: {
     thankYou() {
       return this.survey?.thank_you || SURVEY_DEFAULT_THANK_YOU;

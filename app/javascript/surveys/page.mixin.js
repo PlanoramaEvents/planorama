@@ -2,6 +2,7 @@ import surveyMixin from './survey.mixin';
 import { pageModel as model } from '../store/survey.store';
 import { SELECT, SELECTED } from '../store/model.store';
 import { mapGetters } from 'vuex';
+import { getOrderedRelationships } from '../utils/jsonapi_utils';
 
 // CONVERTED
 const pageMixin = {
@@ -60,11 +61,7 @@ const pageMixin = {
       this.$store.commit(SELECT, {model, itemOrId});
     },
     getPageQuestions(page) {
-      let questions = page.survey_questions;
-      if (!questions) return [];
-      let order = page._jv.relationships.survey_questions.data.map(q => q.id);
-      // these are going to be in order
-      return Object.values(questions).sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
+      return getOrderedRelationships('survey_questions', page)
     }
   }
 }

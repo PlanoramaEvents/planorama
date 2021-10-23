@@ -17,7 +17,7 @@ const surveyIdPropMixin = (idProp = 'id') => ({
         console.log('trying to load survey id', this[idProp])
         this.selectSurvey(this[idProp]);
         this.fetchSelectedSurvey().then(() => {
-          this.selectPage(this.selectedSurveyFirstPage());
+          this.selectPage(this.selectedSurveyFirstPage);
           res(true);
         }).catch(rej);
       } else {
