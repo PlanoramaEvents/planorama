@@ -1,6 +1,6 @@
 <template>
   <div>
-    <sidebar-vuex v-if="survey" namespace="surveys">
+    <sidebar-vue v-if="survey" model="survey">
       <template #header>
         <h3>Survey Details</h3>
         <small class="text-muted d-block">Last updated:</small>
@@ -45,7 +45,7 @@
           <survey-settings-tab></survey-settings-tab>
         </b-tabs>
       </template>
-    </sidebar-vuex>
+    </sidebar-vue>
     <b-modal id="confirmClearResponses" @ok="clearResponses" ok-title="Yes" cancel-variant="link">
       <p>{{SURVEY_RESULTS_CLEAR_CONFIRM}}</p>
     </b-modal>
@@ -58,10 +58,10 @@
 <script>
 import { mapActions } from 'vuex';
 import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../model.store';
-import SidebarVuex from '../sidebar_vuex';
 import SurveyQuestion from './survey_question';
 import surveyMixin from './survey.mixin';
 import SurveySettingsTab from './survey-settings-tab';
+import SidebarVue from '../components/sidebar_vue';
 import { CLEAR_SUBMISSIONS } from './survey.store';
 import {
   SURVEY_RESULTS_CLEAR_CONFIRM,
@@ -71,11 +71,12 @@ import {
   SURVEY_RESULTS_UNFREEZE_SUCCESS,
   SURVEY_CONFIRM_DELETE,
 } from '../constants/strings';
+import { DUPLICATE_SURVEY } from '../store/survey.store';
 
 export default {
   name: 'SurveySidebar',
   components: {
-    SidebarVuex,
+    SidebarVue,
     SurveyQuestion,
     SurveySettingsTab,
   },
@@ -102,38 +103,33 @@ export default {
     }
   },
   methods: {
-    ...mapActions('surveys', {
-      edit: EDIT
-    }),
+    ...mapActions({duplicateSurvey: DUPLICATE_SURVEY}),
     destroy() {
-      this.$store.dispatch(`surveys/${DELETE}`, {item: this.survey})
-        .then(() => this.success_toast(SURVEY_SAVE_SUCCESS_DELETE))
-        .catch((error) => {
-          console.log(error);
-          this.error_toast(error.message)
-        })
+      this.deleteSurvey()
     },
     clearResponses() {
+      this.error_toast('Has not been converted from vuemc');
+      /*
       this.$store.dispatch(`surveys/${CLEAR_SUBMISSIONS}`, {item: this.survey})
         .then(() => this.success_toast(SURVEY_RESULTS_CLEAR_SUCCESS))
         .catch((error) => {
           console.log(error)
           this.error_toast(error.message)
         });
+        */
     },
     toggleSubmissionEdits(val) {
       this.survey.allow_submission_edits = val
       let message = this.val
         ? SURVEY_RESULTS_UNFREEZE_SUCCESS
         : SURVEY_RESULTS_FREEZE_SUCCESS
-      this.save(val, message)
+      this.saveSurvey(this.survey, message)
     },
     responses() {
       this.$router.push(this.responsesLink);
     },
     duplicate() {
-      this.$store.dispatch(`surveys/${DUPLICATE}`, {item: this.survey}).then((newSurvey) => {
-        this.$store.commit(`surveys/${UNSELECT}`);
+      this.duplicateSurvey({item: this.survey}).then((newSurvey) => {
         this.$router.push(`surveys/edit/${newSurvey.id}`)
       }).catch((error) => this.error_toast(error.message));
     }

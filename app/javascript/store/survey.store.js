@@ -6,6 +6,8 @@ export const NEW_QUESTION = 'NEW QUESTION';
 export const NEW_SUBMISSION = 'NEW SUBMISSION';
 export const SAVE_SUBMISSION = 'SAVE SUBMISSION';
 export const GET_NESTED_SURVEY = 'GET NESTED SURVEY';
+export const CLEAR_SURVEY_SUBMISSIONS = 'CLEAR SURVEY SUBMISSIONS';
+export const DUPLICATE_SURVEY = 'DUPLICATE SURVEY';
 
 export const surveyModel = 'survey';
 export const pageModel = 'page';
@@ -120,6 +122,40 @@ export const surveyStore = {
           res(result);
         }).catch(rej);
       });
+    },
+    [CLEAR_SURVEY_SUBMISSIONS] ({dispatch}, {item}) {
+      return new Promise((res, rej) => {
+        res("This has not been implemented yet")
+      })
+    },
+    [DUPLICATE_SURVEY] ({dispatch}, {item}) {
+      let newSurvey = {
+        name: `Copy of ${item.name}`,
+        description: item.description,
+        welcome: item.welcome,
+        thank_you: item.thank_you,
+        submit_string: item.submit_string,
+        use_captcha: item.use_captcha,
+        public: false,
+        mandatory_star: item.mandatory_star,
+        numbered_questions: item.numbered_questions,
+        branded: item.branded,
+        allow_submission_edits: true,
+        anonymous: item.anonymous,
+        survey_pages_attributes: item.survey_pages.map(p => ({
+          title: p.title,
+          survey_questions_attributes: p.survey_questions.map(q => ({
+            question: q.question,
+            question_type: q.question_type,
+            mandatory: q.mandatory,
+            survey_answers_attributes: q.survey_answers.map(a => ({
+              other: a.other,
+              answer: a.answer,
+            })),
+          })),
+        })),
+      }
+      return dispatch(NEW, {model: surveyModel, selected: true, ...newSurvey})
     }
   }
 }

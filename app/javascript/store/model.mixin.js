@@ -33,6 +33,7 @@ const modelMixin = {
   }
 }
 
+/* obsolete
 const mapStateHelper = (mapState) => {
   let states = mapState;
   if (Array.isArray(mapState)) {
@@ -70,5 +71,5 @@ const mapActionsHelper = (mapActions) => {
     return this.dispatch(actionName, ...args);
   }}), {})
 }
-
+*/
 export default modelMixin;
