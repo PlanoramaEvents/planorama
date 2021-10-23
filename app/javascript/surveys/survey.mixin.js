@@ -1,7 +1,7 @@
 import {mapGetters} from 'vuex';
 import toastMixin from '../toast-mixin';
-import { SAVE, SELECT, FETCH_SELECTED } from '../store/model.store';
-import { SURVEY_SAVE_SUCCESS } from '../constants/strings'
+import { SAVE, SELECTED, FETCH_SELECTED, DELETE } from '../store/model.store';
+import { SURVEY_SAVE_SUCCESS, SURVEY_SAVE_SUCCESS_DELETE } from '../constants/strings'
 import { surveyModel as model} from '../store/survey.store';
 
 // CONVERTED
@@ -9,8 +9,11 @@ const surveyMixin = {
   mixins: [toastMixin],
   computed: {
     ...mapGetters({
-      survey: 'selectedSurvey'
+      selected: SELECTED
     }),
+    survey() {
+      return this.selected({model});
+    },
     selectedSurveyFirstPage() {
       return this.survey && Object.values(this.survey.survey_pages).find(p => p.sort_order === 0)
     },
@@ -20,15 +23,26 @@ const surveyMixin = {
       if (!newSurvey) {
         newSurvey = this.survey;
       }
-      this.$store.dispatch(SAVE, {model, selected: true, item: newSurvey})
-        .then(() => this.success_toast(success_text))
-        .catch((error) => this.error_toast(error.message))
+      return this.toastPromise(this.$store.dispatch(SAVE, {model, selected: true, item: newSurvey}), success_text)
     },
     selectSurvey(itemOrId) {
       this.$store.commit(SELECT, {model, itemOrId});
     },
     fetchSelectedSurvey() {
       return this.$store.dispatch(FETCH_SELECTED, {model});
+    },
+    deleteSurvey(itemOrId, success_text = SURVEY_SAVE_SUCCESS_DELETE) {
+      if (!itemOrId) {
+        itemOrId = this.survey;
+      }
+      return this.toastPromise(this.$store.dispatch(DELETE, {model, itemOrId}), success_text);
+    },
+    getSurveyPages(survey) {
+      let pages = survey.survey_pages;
+      if (!pages) return [];
+      let order = survey._jv.relationships.survey_pages.data.map(p => p.id);
+      // these are going to be in order
+      return Object.values(pages).sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
     }
   }
 }

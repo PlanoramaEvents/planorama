@@ -23,6 +23,19 @@ const toastMixin = {
         success: () => this.success_toast(success_message),
         failure: (error) => this.error_toast(error.message)
       }
+    },
+    toastPromise(promise, success_text) {
+      return new Promise((res, rej) => {
+        promise.then((item) => {
+          this.success_toast(success_text);
+          res(item);
+        })
+        .catch((error) => {
+          console.log(error)
+          this.error_toast(error.message)
+          rej(error);
+        })
+      });
     }
   }
 }

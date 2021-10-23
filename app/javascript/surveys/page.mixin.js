@@ -1,13 +1,18 @@
 import surveyMixin from './survey.mixin';
-import { mapState } from 'vuex'
 import { pageModel as model } from '../store/survey.store';
-import { SELECT } from '../store/model.store';
+import { SELECT, SELECTED } from '../store/model.store';
+import { mapGetters } from 'vuex';
 
 // CONVERTED
 const pageMixin = {
   mixins: [surveyMixin],
   computed: {
-    ...mapState(['selectedPage']),
+    ...mapGetters({
+      selected: SELECTED
+    }),
+    selectedPage() {
+      return this.selected({model});
+    },
     selectedNumber() {
       // TODO are we using sort_order as an index? or should we process them into an array? or have some meta data??
       return this.survey?.survey_pages?.[this.$store.selected[model]].sort_order + 1
@@ -22,11 +27,7 @@ const pageMixin = {
       return this.survey?._jv?.relationships?.survey_pages?.data?.length < 2;
     },
     selectedPageQuestions() {
-      let questions = this.selectedPage?.survey_questions;
-      if (!questions) return [];
-      // these are going to be in order
-      return Object.values(questions).sort((a, b) => a.sort_order - b.sort_order)
-
+      return this.selectedPage ? this.getPageQuestions(this.selectedPage) : [];
     }
   }, methods: {
     getPageIndex(id) {
@@ -57,6 +58,13 @@ const pageMixin = {
     },
     selectPage(itemOrId) {
       this.$store.commit(SELECT, {model, itemOrId});
+    },
+    getPageQuestions(page) {
+      let questions = page.survey_questions;
+      if (!questions) return [];
+      let order = page._jv.relationships.survey_questions.data.map(q => q.id);
+      // these are going to be in order
+      return Object.values(questions).sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
     }
   }
 }

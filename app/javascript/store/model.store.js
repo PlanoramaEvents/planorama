@@ -12,6 +12,7 @@ export const FETCH_BY_ID = 'FETCH BY ID'
 export const FETCH = 'FETCH';
 export const NEW = 'NEW';
 export const SAVE = 'SAVE';
+export const DELETE = 'DELETE';
 
 // people add-ons
 import { personStore, personEndpoints } from './person.store';
@@ -21,6 +22,14 @@ import { sessionStore } from './session.store';
 
 // survey add-ons 
 import { surveyStore, surveyEndpoints } from './survey.store';
+
+const getId = (itemOrId) => {
+  try {
+    return itemOrId.id || id;
+  } catch {
+    return itemOrId;
+  }
+}
 
 const endpoints = {
   ...personEndpoints,
@@ -52,13 +61,7 @@ export const store = new Vuex.Store({
   },
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
-      let id;
-      try {
-        id = itemOrId.id || id;
-      } catch {
-        id = itemOrId;
-      }
-      state.selected[model] = id;
+      state.selected[model] = getId(itemOrId);
     },
     [UNSELECT] (state, {model}) {
       state.selected[model] = undefined;
@@ -102,6 +105,9 @@ export const store = new Vuex.Store({
           res(savedModel);
         }).catch(rej)
       });
+    },
+    [DELETE] ({dispatch}, {model, itemOrId}) {
+      return dispatch('jv/delete', `${endpoints[model]}/${getId(itemOrId)}`)
     },
     [FETCH] ({dispatch}, {model, params}) {
       return dispatch('jv/get', [endpoints[model], {params}])

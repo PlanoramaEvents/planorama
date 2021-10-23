@@ -1,6 +1,7 @@
+<!-- CONVERTED 
+ISSUE - template links don't work
+-->
 <template>
-  <!-- @new="onNew"
-  namespace="surveys" -->
   <table-vue
     @new="onNew"
     defaultSortBy='name'
@@ -28,11 +29,11 @@
 
 <script>
 import { SAVE } from '../model.store';
-// import TableVuex from '../table_vuex'
 import TableVue from '../components/table_vue';
-import { Survey } from './survey';
 import TooltipOverflow from '../tooltip-overflow';
-import { survey_columns } from './survey';
+import { survey_columns as columns } from './survey';
+import { mapActions } from 'vuex';
+import { NEW_SURVEY } from '../store/survey.store';
 
 export default {
   name: 'SurveyTable',
@@ -42,37 +43,23 @@ export default {
   },
   data() {
     return {
-      columns: survey_columns
+      columns
     }
   },
-  // methods: {
-  //   previewLink(item) {
-  //     return `/surveys/${item.id}/preview`;
-  //   },
-  //   surveyLink(item) {
-  //     // TODO add authenticity key to stop robots?
-  //     return `/surveys/${item.id}`;
-  //   },
-  //   onNew() {
-  //     console.log("clicked")
-  //     // overrides parent
-  //     let survey = new Survey({
-  //       name: 'New Survey',
-  //       survey_pages: [{
-  //         title: 'New Survey',
-  //         survey_questions: [{
-  //           question: 'New Question',
-  //           question_type: "textfield",
-  //           survey_answers: [{
-  //             answer: 'Option 1'
-  //           }]
-  //         }]
-  //       }]
-  //     });
-  //     this.$store.dispatch(`survey/${SAVE}`, {item: survey}).then(() => {
-  //       this.$router.push({path: `/edit/${survey.id}`})
-  //     });
-  //   }
-  // }
+  methods: {
+    ...mapActions({newSurvey: NEW_SURVEY}),
+    previewLink(item) {
+      return `/surveys/${item.id}/preview`;
+    },
+    surveyLink(item) {
+      // TODO add authenticity key to stop robots?
+      return `/surveys/${item.id}`;
+    },
+    onNew() {
+      this.newSurvey().then((survey) => {
+        this.$router.push({path: `/edit/${survey.id}`})
+      });
+    }
+  }
 }
 </script>

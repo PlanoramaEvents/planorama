@@ -9,7 +9,7 @@
           Published&nbsp;<span v-if="survey.public">on {{new Date(survey.published_on).toLocaleDateString()}}</span>
         </b-col>
       </b-row>
-      <survey-setting disabled v-model="survey.anonymous" @change="save">
+      <survey-setting disabled v-model="survey.anonymous">
         Anonymous
       </survey-setting>
       <survey-setting bool v-model="survey.mandatory_star">
