@@ -122,10 +122,7 @@ export default {
       this.editable = true
     },
     save() {
-      // this.editable = true
       this.editable = false
-      console.debug('******** SAVE PERSON ????', this.selected.id)
-      // this.person.save()
       this.$store.dispatch('jv/update', this.selected).then((data) => {
         // How do we get this to update the model in the store ????
         console.log('saved: ', data.id)
