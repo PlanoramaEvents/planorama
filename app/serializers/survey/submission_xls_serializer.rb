@@ -1,3 +1,6 @@
+#
+# TODO: check how this is going to work
+#
 class Survey::SubmissionXlsSerializer < Survey::SubmissionSerializer
   include ActiveModel::XlsSerializerMethods
 

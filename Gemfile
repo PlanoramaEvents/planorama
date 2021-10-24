@@ -34,6 +34,9 @@ gem 'kaminari'
 gem 'active_model_serializers', '~> 0.10.0'
 
 gem 'devise'
+gem 'devise-jwt'
+gem 'rack-cors'
+
 gem 'ranked-model'
 gem "nilify_blanks"
 gem 'paper_trail'
@@ -43,6 +46,11 @@ gem "sidekiq"
 gem "sidekiq-scheduler"
 gem 'io-wait'
 gem 'fast_excel'
+gem 'jsonapi-serializer'
+gem 'jsonapi.rb'
+
+# This is needed to run the migrations from id to uuid for primary keys
+gem 'webdack-uuid_migration'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

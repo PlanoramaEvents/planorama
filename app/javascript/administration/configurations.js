@@ -49,7 +49,7 @@ export class Configurations {
         this.data = resp.data;
         this.config_names = Object.keys(resp.data);
         res(this)
-      }).catch(e => rej(e))
+      })
     })
   }
 

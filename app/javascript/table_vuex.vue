@@ -28,13 +28,14 @@
       ></b-pagination>
     </div>
 
+    <!-- NOTE:  items uses 'provider' function so that sortung works-->
     <b-table
       hover bordered responsive selectable small striped
       :select-mode="selectMode"
       :fields="columns"
       selected-variant="primary"
 
-      :items="collection.page(currentPage).models"
+      :items="provider"
 
       ref="table"
 
@@ -66,11 +67,8 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { BootstrapVue, BTable } from 'bootstrap-vue'
 import { SELECT } from './model.store';
-import { mapState } from 'vuex';
-Vue.use(BootstrapVue)
+import namespacedMixin from './namespaced.mixin';
 
 export default {
   name: 'TableVuex',
@@ -82,20 +80,25 @@ export default {
     return {
       selectMode: 'single',
       filter: null,
-      
+      currentPage: 1
     }
   },
+  mixins: [
+    namespacedMixin(['collection', 'columns', 'selected'], {select: SELECT})
+  ],
   computed: {
-    ...mapState(['collection', 'columns', 'selected']),
-    currentPage: {
-      get() {
-        return this.collection ? this.collection.currentPage : 1;
-      },
-      set(val) {
-        this.collection.currentPage = val
-        this.collection.page(this.collection.currentPage).fetch();
-      }
-    },
+    // NOTE: this does not use bootstrap vue's pager and table integration with provider
+    // which then breaks the sorting
+    // currentPage: {
+    //   get() {
+    //     return this.collection ? this.collection.currentPage : 1;
+    //   },
+    //   set(val) {
+    //     this.collection.currentPage = val
+    //     //
+    //     this.collection.page(this.collection.currentPage).fetch();
+    //   }
+    // },
     totalRows() {
       return this.collection ? this.collection.total : 0;
     }
@@ -110,11 +113,9 @@ export default {
       if (ctx.filter) this.collection.set('filter', ctx.filter)
 
       this.collection.clear()
-      // TODO use vuex here to fetch as a wrapper
       this.collection.page(ctx.currentPage).fetch().then(
         (arg) => {
           var res = []
-          this.totalRows = arg.response.data.meta.total
           this.perPage = arg.response.data.meta.perPage
           this.collection.each((obj, index) => {
             res.push(obj)
@@ -123,7 +124,6 @@ export default {
           callback(res)
         }
       ).catch((error) => {
-        this.totalRows = 0
         callback([])
       })
 
@@ -133,13 +133,13 @@ export default {
       if (this.selected) this.selected.fetch()
     },
     onRowSelected(items) {
-      console.log('row selected', items)
-      this.$store.commit(SELECT, items[0]);
+      // console.log('row selected', items)
+      this.select(items[0]);
     }
   },
   mounted() {
     this.collection.perPage = this.perPage
-    this.collection.fetch()
+    this.collection.fetch().catch((error) => {})
   },
   watch: {
     selected(val) {

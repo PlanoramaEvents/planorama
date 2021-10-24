@@ -1,22 +1,27 @@
 <template>
-  <table-vuex
-    sortField="published_name_sort_by"
-    :modelType="modelType"
+  <table-vue
+    defaultSortBy='name'
+    model="person"
+    :columns="columns"
   >
-  </table-vuex>
+  </table-vue>
+
 </template>
 
 <script>
-import TableVuex from '../table_vuex';
-import { Person } from './people';
+import TableVue from '../components/table_vue';
+import { people_columns } from './people';
 
 export default {
   name: 'PeopleTable',
-  data: () => ({
-    modelType: Person
-  }),
   components: {
-    TableVuex,
+    TableVue
+    // TooltipOverflow,
+  },
+  data() {
+    return {
+      columns: people_columns
+    }
   }
 }
 </script>

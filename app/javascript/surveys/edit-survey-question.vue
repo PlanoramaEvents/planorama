@@ -180,13 +180,14 @@
 
 <script>
 import { SurveyQuestion } from './survey_question'
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
+const { mapState, mapActions, mapMutations } = createNamespacedHelpers('surveys');
 import { SAVE } from '../model.store';
 import { NEW_QUESTION, SELECT_QUESTION, UNSELECT_QUESTION } from './survey.store';
 import draggable from 'vuedraggable';
-import surveyMixin from './survey-mixin';
+import surveyMixin from './survey.mixin';
 import OptionsQuestion from './options-question.vue';
-import pageMixin from './page-mixin';
+import pageMixin from './page.mixin';
 import questionMixin from './question.mixin';
 
 

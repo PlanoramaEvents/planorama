@@ -34,8 +34,10 @@ import LoginPasswordField from "./login_password_field";
 import PrivacyPolicyLink from "../administration/privacy_policy_link"
 import authMixin from '../auth.mixin';
 import IeaModal from './iea-modal';
+import sessionMixin from '../session/session.mixin';
 
 import { validateFields } from "../utils";
+import {jwtToken, setJWTToken} from '../utils/jwt_utils';
 
 import {
   LOGIN_401,
@@ -58,9 +60,16 @@ export class LoginModel extends PlanoModel {
       },
     };
   }
+
+  getDefaultHeaders() {
+    // on save we do not want a jwt token to be sent
+    let res = {}
+    return res
+  }
+
   routes() {
     return {
-      save: "/auth/sign_in.json",
+      save: "/auth/sign_in",
     };
   }
 }
@@ -100,7 +109,7 @@ export default {
     PrivacyPolicyLink,
     IeaModal,
   },
-  mixins: [authMixin],
+  mixins: [authMixin, sessionMixin],
   mounted: function () {
     if (this.$route.query.alert) {
       switch (this.$route.query.alert) {
@@ -131,7 +140,9 @@ export default {
         const loginInfo = new LoginModel({ person: this.person });
         loginInfo
           .save()
+          .then((m) => { setJWTToken(m.response.headers['authorization']) })
           .then(() => this.$bvModal.show('iea-modal'))
+          .then(() => this.fetchSession())
           .catch((error) => this.onSaveFailure(error));
       }
     },
@@ -142,7 +153,7 @@ export default {
       }
     },
     onIeaAgree() {
-      window.location.href = "/"
+      window.location.href = "#"
     },
     onIeaCancel() {
       this.signOut().finally(() => {

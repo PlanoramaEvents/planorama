@@ -3,6 +3,7 @@ class Survey::SubmissionsController < ResourceController
   MODEL_CLASS = 'Survey::Submission'.freeze
   POLICY_CLASS = 'SubmissionsPolicy'.freeze
   XLS_SERIALIZER_CLASS = 'Survey::SubmissionXlsSerializer'.freeze
+  DEFAULT_ORDER = 'updated_at'
 
   def belong_to_class
     Survey

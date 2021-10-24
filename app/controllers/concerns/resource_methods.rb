@@ -1,5 +1,6 @@
 module ResourceMethods
   extend ActiveSupport::Concern
+  include JSONAPI::Deserialization
 
   def index
     authorize model_class, policy_class: policy_class
@@ -18,18 +19,18 @@ module ResourceMethods
       end
     else
       if serializer_class
-        render json: @collection,
-               each_serializer: serializer_class,
-               meta: meta,
-               root: 'data',
-               include: serializer_includes,
-               adapter: :json,
+        render json: serializer_class.new(@collection,
+                      {
+                        meta: meta,
+                        include: serializer_includes,
+                        params: {domain: "#{request.base_url}"}
+                      }
+                    ).serializable_hash(),
                content_type: 'application/json'
       else
         render json: @collection,
                meta: meta,
                root: 'data',
-               include: serializer_includes,
                adapter: :json,
                content_type: 'application/json'
       end
@@ -80,15 +81,19 @@ module ResourceMethods
     end
   end
 
-  def render_object(object)
-    if serializer_class
-      render json: object,
-             include: serializer_includes,
-             serializer: serializer_class,
+  def render_object(object, serializer: nil)
+    serializer_used = serializer || serializer_class
+    if serializer_used
+      render json: serializer_used.new(
+                    object,
+                    {
+                      include: serializer_includes,
+                      params: {domain: "#{request.base_url}"}
+                    }
+                   ).serializable_hash,
              content_type: 'application/json'
     else
       render json: object,
-             include: serializer_includes,
              content_type: 'application/json'
     end
   end
@@ -133,17 +138,29 @@ module ResourceMethods
     @per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate
     @per_page = nil unless paginate
     @page = params[:page]&.to_i || 0 if paginate
-    @order = params[:sortField] || ''
+    # Sort field could come from the nested object
+    @order = params[:sortBy]
+    @order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
+    @order ||= ''
     @direction = params[:sortOrder] || 'asc'
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
-    @order.slice!('$.')
 
     q = policy_scope(base, policy_scope_class: policy_scope_class)
       .includes(includes)
       .references(references)
+      .joins(join_tables)
       .where(query(@filters))
 
-    q = q.order("#{@order}" => "#{@direction}") if !@order.blank?
+    # For PSQL NULLS FIRST is the default for DESC order, and NULLS LAST otherwise.
+    if !@order.blank?
+      order_str = "#{@order} #{@direction}"
+      if @direction == 'asc'
+        order_str += ' NULLS FIRST'
+      else
+        order_str += ' NULLS LAST'
+      end
+      q = q.order(order_str)
+    end
 
     if paginate
       q.page(@page).per(@per_page)
@@ -262,7 +279,10 @@ module ResourceMethods
     if new_actions.include?(action)
       build_resource
     elsif resource_id
-      find_resource
+      # JSON api could send a resource with UUID generated
+      # client side. If we do not find it in the DB we then
+      # will create it!
+      find_resource || build_resource
     end
   end
 
@@ -303,6 +323,10 @@ module ResourceMethods
     nil
   end
 
+  def except_params
+    nil
+  end
+
   def serializer_includes
     []
   end
@@ -312,6 +336,10 @@ module ResourceMethods
   end
 
   def references
+    []
+  end
+
+  def join_tables
     []
   end
 
@@ -336,12 +364,24 @@ module ResourceMethods
   end
 
   def _permitted_params(_object_name)
-    if allowed_params
+    # NOTE: if params[:data] to determine if this is JSON-API packet
+    # that is received, if so we need to deserialize it
+    if params[:data]
+      # NOTE: JSPON API does not save nested data structures ....
+      jsonapi_deserialize(
+        params,
+        {
+          only: allowed_params,
+          except: except_params
+        }
+      )
+    else
+      # We treat this as a regular rails request
+      params[_object_name] unless allowed_params
+
       params.permit(
         allowed_params
       )
-    else
-      params[_object_name]
     end
   end
 

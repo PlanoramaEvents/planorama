@@ -41,9 +41,11 @@
 
 <script>
 import draggable from 'vuedraggable';
-import { mapState } from 'vuex';
-import surveyMixin from './survey-mixin';
-import pageMixin from './page-mixin';
+
+import { createNamespacedHelpers } from 'vuex';
+const { mapState } = createNamespacedHelpers('surveys');
+import surveyMixin from './survey.mixin';
+import pageMixin from './page.mixin';
 import questionMixin from './question.mixin';
 import DropdownItem from './dropdown-item';
 import NextPagePicker from './next-page-picker.vue';

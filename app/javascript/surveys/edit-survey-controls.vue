@@ -1,35 +1,39 @@
 <template>
   <div class='position-absolute survey-controls m-3 p-3 border'>
-    <b-button v-b-tooltip.left title="Add a Question" variant="info" class="mb-2 d-block" @click="newQuestion()" :disabled="!selected_question && !selected_page"><b-icon-plus-circle></b-icon-plus-circle></b-button>
+    <b-button v-b-tooltip.left title="Add a Question" variant="info" class="mb-2 d-block" @click="newQuestion()" :disabled="!selectedQuestion && !selected_page"><b-icon-plus-circle></b-icon-plus-circle></b-button>
     <div v-b-tooltip.left title="Import a Question"><b-button disabled variant="info" class="mb-2 d-block"><b-icon-box-arrow-in-right></b-icon-box-arrow-in-right></b-button></div>
-    <b-button v-b-tooltip.left title="Add a Page" variant="info" class="mb-2 d-block" @click="newPage" :disabled="!selected_question && !selected_page"><b-icon-hdd-stack></b-icon-hdd-stack></b-button>
+    <b-button v-b-tooltip.left title="Add a Page" variant="info" class="mb-2 d-block" @click="newPage" :disabled="!selectedQuestion && !selected_page"><b-icon-hdd-stack></b-icon-hdd-stack></b-button>
     <b-button v-b-tooltip.left title="Add a Horizontal Rule" variant="info" class="mb-2 d-block" @click="newQuestion('hr')"><b-icon-hr></b-icon-hr></b-button>
     <b-button v-b-tooltip.left title="Add a Text Block" variant="info" class="d-block" @click="newQuestion('textonly')"><b-icon-fonts></b-icon-fonts></b-button>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
 import { SAVE } from '../model.store';
+import {mapGetters, mapActions} from 'vuex';
+import { SELECT } from '../store/model.store';
+import { pageModel, questionModel } from '../store/survey.store';
 import { SELECT_PAGE, SELECT_QUESTION, NEW_PAGE, NEW_QUESTION } from './survey.store';
 
 export default {
   name: 'EditSurveyControls',
-  computed: mapState(['selected', 'selected_page', 'selected_question']),
+  computed: mapGetters(['selectedSurvey', 'selectedPage', 'selectedQuestion']),
   methods: {
-    ...mapMutations({
-      selectQuestion: SELECT_QUESTION,
-      selectPage: SELECT_PAGE,
-    }),
     ...mapActions({
       newQuestionAction: NEW_QUESTION,
       newPageAction: NEW_PAGE
     }),
+    selectQuestion(itemOrId) {
+      return this.$store.commit(SELECT, {model: questionModel, itemOrId})
+    },
+    selectPage(itemOrId) {
+      return this.$store.commit(SELECT, {model: pageModel, itemOrId})
+    },
     newQuestion(question_type="textfield") {
       let insertAt = 0;
-      if(this.selected_question) {
+      if(this.selectedQuestion) {
         // there might be bugs if the save hasn't come back yet
-        insertAt = this.selected_page.survey_questions.findIndex(q => q.id === this.selected_question.id) + 1
+        insertAt = this.selectedPage.survey_questions.findIndex(q => q.id === this.selected_question.id) + 1
       }
       const question = {question: 'New Question', question_type, survey_page_id: this.selected_page.id, survey_answers: [{answer: 'Option 1'}]}
       console.log({question, insertAt})

@@ -88,6 +88,7 @@ export default {
       },
     },
     helpEmail: "configurable@email.com",
+    // TODO: this will need to change
     resetPasswordLink: `<a href="/auth/sign_in#/forgot">Reset Password</a>`,
   }),
   mounted: function () {

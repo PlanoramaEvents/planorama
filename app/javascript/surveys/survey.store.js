@@ -1,3 +1,5 @@
+/*
+// OBSOLETE
 import { survey_columns, Surveys } from './survey';
 import { PlanoStore, SELECT } from '../model.store'
 import { SurveySubmission } from './survey_response';
@@ -89,4 +91,5 @@ export const store = new PlanoStore('surveys', new Surveys(), survey_columns, {
     commit(UNSELECT_SUBMISSION);
     return http.delete(`/surveys/${item.id}/submissions`)
   }
-});
+}, true);
+*/

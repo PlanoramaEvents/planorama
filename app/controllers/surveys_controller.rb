@@ -1,13 +1,25 @@
 class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
   POLICY_CLASS = 'SurveysPolicy'.freeze
+  DEFAULT_ORDER = 'updated_at'
 
   def serializer_includes
+    [
+      :survey_pages,
+      :'survey_pages.survey_questions',
+      :'survey_pages.survey_questions.survey_answers'
+      # :created_by,
+      # :updated_by,
+      # :published_by
+    ]
+  end
+
+  def includes
     [
       {
         survey_pages: {
           survey_questions: :survey_answers
-        },
+        }
       },
       :created_by,
       :updated_by,
@@ -15,8 +27,18 @@ class SurveysController < ResourceController
     ]
   end
 
-  def includes
-    serializer_includes
+  def join_tables
+    surveys = Arel::Table.new(Survey.table_name)
+    updated_by = Arel::Table.new(Person.table_name).alias('updated_by')
+    [
+      surveys.create_join(
+        updated_by,
+        surveys.create_on(
+          surveys[:updated_by_id].eq(updated_by[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
   end
 
   def before_save

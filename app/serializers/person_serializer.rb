@@ -1,4 +1,6 @@
-class PersonSerializer < ActiveModel::Serializer
+class PersonSerializer #< ActiveModel::Serializer
+  include JSONAPI::Serializer
+
   attributes :id, :lock_version,
              :name, :name_sort_by, :name_sort_by_confirmed,
              :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
@@ -10,14 +12,42 @@ class PersonSerializer < ActiveModel::Serializer
              :invite_status, :acceptance_status,
              :registered, :registration_type, :registration_number
 
-  has_one :bio
+  has_one :bio,
+          if: Proc.new { |record| record.bio },
+          links: {
+            self: -> (object, params) {
+              "#{params[:domain]}/person/#{object.id}"
+            },
+            related: -> (object, params) {
+              "#{params[:domain]}/bio/#{object.bio.id}"
+            }
+          }
 
-  has_many :person_roles, serializer: PersonRoleSerializer
 
-  has_many  :email_addresses, serializer: EmailAddressSerializer
+  has_many :person_roles, serializer: PersonRoleSerializer,
+            links: {
+              self: -> (object, params) {
+                "#{params[:domain]}/person/#{object.id}"
+              },
+              related: -> (object, params) {
+                "#{params[:domain]}/people/#{object.id}/person_role"
+              }
+            }
+
+  has_many  :email_addresses, serializer: EmailAddressSerializer,
+              links: {
+                self: -> (object, params) {
+                  "#{params[:domain]}/person/#{object.id}"
+                },
+                related: -> (object, params) {
+                  "#{params[:domain]}/person/#{object.id}/email_address"
+                }
+              }
+
+  has_many  :mail_histories
 
   # tag_list
-  attribute :tags do
-    object.base_tags.collect(&:name)
+  attribute :tags do |person|
+    person.base_tags.collect(&:name)
   end
 end

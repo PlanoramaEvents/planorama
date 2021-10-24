@@ -27,3 +27,30 @@ import '../stylesheets/style.scss'
 //
 const images = require.context('../images', true)
 const imagePath = (name) => images(name, true)
+
+import Vue from 'vue';
+import {BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
+import { CustomIconsPlugin } from '../icons';
+
+Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
+Vue.use(CustomIconsPlugin);
+
+import PlanoramaApp from '../app.vue';
+import { router } from '../app.router';
+// import { store } from '../app.store';
+import { store } from '../store/model.store';
+
+const app = new Vue({
+  components: { PlanoramaApp },
+  router,
+  store,
+  mounted() {
+    console.debug('*** APP X MOUNTED')
+    // console.debug('****** ST ', store)
+  }
+})
+
+document.addEventListener('DOMContentLoaded', () => {
+  app.$mount('#app');
+})

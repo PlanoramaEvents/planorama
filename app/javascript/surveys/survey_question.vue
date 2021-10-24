@@ -1,3 +1,4 @@
+<!-- CONVERTED? -->
 <template>
   <div class="survey-question mt-3 pl-1">
     <b-form-group
@@ -51,10 +52,10 @@
               :label-for="'other-' + question.id"
               label-class="mt-n2"
             >
-              <b-form-input 
+              <b-form-input
                 class="mt-n2"
-                :id="'other-' + question.id" 
-                type="text" 
+                :id="'other-' + question.id"
+                type="text"
                 v-model="response.response.text"
                 :disabled="!answerable || !otherChecked"
               ></b-form-input>
@@ -88,10 +89,10 @@
               :label-for="'other-' + question.id"
               label-class="mt-n2"
             >
-              <b-form-input 
+              <b-form-input
                 class="mt-n2"
-                :id="'other-' + question.id" 
-                type="text" 
+                :id="'other-' + question.id"
+                type="text"
                 v-model="response.response.text"
                 :disabled="!answerable || !otherChecked"
               ></b-form-input>
@@ -136,9 +137,9 @@
           label="Address 1"
           :required="question.mandatory"
         >
-          <b-form-input 
-            :disabled="!answerable" 
-            :id="formId('address-1')" 
+          <b-form-input
+            :disabled="!answerable"
+            :id="formId('address-1')"
             v-model="response.response.address.street"
           ></b-form-input>
         </b-form-group>
@@ -149,9 +150,9 @@
           :label-for="formId('address-2')"
           label="Address 2"
         >
-          <b-form-input 
-            :disabled="!answerable" 
-            :id="formId('address-2')" 
+          <b-form-input
+            :disabled="!answerable"
+            :id="formId('address-2')"
             v-model="response.response.address.street2"
           ></b-form-input>
         </b-form-group>
@@ -162,9 +163,9 @@
           :label-for="formId('city')"
           label="City"
         >
-          <b-form-input 
-            :disabled="!answerable" 
-            :id="formId('city')" 
+          <b-form-input
+            :disabled="!answerable"
+            :id="formId('city')"
             v-model="response.response.address.city"
           ></b-form-input>
         </b-form-group>
@@ -175,9 +176,9 @@
           :label-for="formId('state')"
           label="State"
         >
-          <b-form-input 
+          <b-form-input
           :disabled="!answerable"
-          :id="formId('state')" 
+          :id="formId('state')"
           v-model="response.response.address.state"
         ></b-form-input>
         </b-form-group>
@@ -188,7 +189,7 @@
           :label-for="formId('zip')"
           label="Postal Code"
         >
-          <b-form-input 
+          <b-form-input
             :disabled="!answerable"
             :id="formId('zip')"
             v-model="response.response.address.zip"
@@ -213,14 +214,14 @@
       <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
       <div :class="['row', 'ml-0', {'w-50': answerable}]">
         <div class="col-12 px-0">
-          <simple-social 
+          <simple-social
               label="Twitter"
               prepend="@"
               :disabled="!answerable"
               :id="formId('socials-twitter')"
               v-model="response.response.socialmedia.twitter"
             ></simple-social>
-          <simple-social 
+          <simple-social
             label="Facebook"
             :disabled="!answerable"
             :id="formId('socials-facebook')"
@@ -230,14 +231,14 @@
               <b-input-group-text>facebook.com&sol;</b-input-group-text>
             </template>
           </simple-social>
-          <simple-social 
-            label="Website" 
+          <simple-social
+            label="Website"
             prepend="url"
             :disabled="!answerable"
             :id="formId('socials-website')"
             v-model="response.response.socialmedia.website"
           ></simple-social>
-          <simple-social 
+          <simple-social
             label="Instagram"
             :disabled="!answerable"
             :id="formId('socials-insta')"
@@ -247,7 +248,7 @@
               <b-input-group-text>instagram.com&sol;</b-input-group-text>
             </template>
           </simple-social>
-          <simple-social 
+          <simple-social
             label="Twitch"
             :disabled="!answerable"
             :id="formId('socials-twitch')"
@@ -267,7 +268,7 @@
               <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
             </template>
           </simple-social>
-          <simple-social 
+          <simple-social
             label="TikTok"
             prepend="@"
             :disabled="!answerable"
@@ -297,11 +298,12 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
 import questionMixin from './question.mixin';
 import EmailField from '../shared/email_field';
+import surveyMixin from './survey.mixin';
+import submissionMixin from './submission.mixin';
 
 export default {
   name: "SurveyQuestion",
@@ -310,7 +312,11 @@ export default {
     SimpleSocial,
     EmailField
   },
-  mixins: [questionMixin],
+  mixins: [
+    questionMixin,
+    surveyMixin,
+    submissionMixin
+  ],
   props: {
     question: {
       type: Object,
@@ -326,7 +332,7 @@ export default {
     response: {
       survey_question_id: null,
       response: {text: '', answers: [], address:{
-        street: null, street2: null, city: null, 
+        street: null, street2: null, city: null,
         state: null, zip: null, country: null
       }, socialmedia: {
         twitter: null, facebook: null, linkedin: null,
@@ -336,17 +342,13 @@ export default {
     }
   }),
   computed: {
-    ...mapState({
-      submission: 'submission',
-      survey: 'selected'
-    }),
     questionText() {
       return this.question.question;
       // todo implement question numbering
       // return `${this.question.sort_order + 1}. ${this.question.question}`
     },
     choices() {
-      return this.question.survey_answers;
+      return this.getQuestionAnswers(this.question);
     },
     radioButtonResponse: {
       get() {
@@ -365,14 +367,14 @@ export default {
       return `${this.formId(string)}-group`
     },
     linkResponse() {
-      if (!this.submission.survey_responses) {
-        this.submission.survey_responses = []
+      if (!this.selectedSubmission.survey_responses_attributes) {
+        this.selectedSubmission.survey_responses_attributes = []
       }
-      let existing_response = this.submission.survey_responses.find(r => r.survey_question_id == this.question.id)
+      let existing_response = this.selectedSubmission.survey_responses_attributes.find(r => r.survey_question_id == this.question.id)
       if (existing_response) {
         this.response = existing_response
       } else {
-        this.submission.survey_responses.push(this.response)
+        this.submission.survey_responses_attributes.push(this.response)
       }
     },
     choiceValue(choice) {
@@ -387,12 +389,12 @@ export default {
   },
   mounted() {
     this.response.survey_question_id = this.question.id;
-    if (this.submission) {
+    if (this.selectedSubmission) {
       this.linkResponse();
     }
   },
   watch: {
-    submission(val, oldVal) {
+    selectedSubmission(val, oldVal) {
       if (!oldVal && val) {
         this.linkResponse();
       }

@@ -1,14 +1,15 @@
+<!-- CONVERTED -->
 <template>
   <b-tab title="Settings">
     <div v-if="survey" class="container">
       <b-row>
         <b-col>
           <span class="mr-2">Closed</span>
-          <b-form-checkbox inline v-model="survey.public" switch size="lg" v-b-modal.confirmPublish class="mr-0"></b-form-checkbox>
-          Published&nbsp;<span v-if="survey.$.public">on {{new Date(survey.published_on).toLocaleDateString()}}</span>
+          <b-form-checkbox inline v-model="publishVal" switch size="lg" v-b-modal.confirmPublish class="mr-0"></b-form-checkbox>
+          Published&nbsp;<span v-if="survey.public">on {{new Date(survey.published_on).toLocaleDateString()}}</span>
         </b-col>
       </b-row>
-      <survey-setting disabled v-model="survey.anonymous" @change="save">
+      <survey-setting disabled v-model="survey.anonymous">
         Anonymous
       </survey-setting>
       <survey-setting bool v-model="survey.mandatory_star">
@@ -41,9 +42,9 @@
 </template>
 
 <script>
-import surveyMixin from './survey-mixin';
-import { 
-  SURVEY_CONFIRM_CLOSE, 
+import surveyMixin from './survey.mixin';
+import {
+  SURVEY_CONFIRM_CLOSE,
   SURVEY_CONFIRM_PUBLISH,
   SURVEY_SAVE_SUCCESS_PUBLISH,
   SURVEY_SAVE_SUCCESS_CLOSE,
@@ -57,20 +58,24 @@ export default {
   },
   data: () => ({
     SURVEY_CONFIRM_CLOSE,
-    SURVEY_CONFIRM_PUBLISH
+    SURVEY_CONFIRM_PUBLISH,
+    publishVal: false,
   }),
   mixins: [surveyMixin],
   methods: {
     togglePublish() {
-      this.survey.public = !this.survey.$.public;
-      let message = this.survey.public
+      let publicValue = !this.survey.public;
+      let message = this.publicValue
         ? SURVEY_SAVE_SUCCESS_PUBLISH
         : SURVEY_SAVE_SUCCESS_CLOSE;
-      this.save(this.survey.public, message);
+      this.saveSurvey({...this.survey, public: publicValue}, message);
     },
     cancelPublish() {
-      this.survey.public = this.survey.$.public;
+      this.publishVal = this.survey.public;
     },
+  },
+  mounted() {
+    this.publishVal = this.survey.public;
   }
 }
 </script>

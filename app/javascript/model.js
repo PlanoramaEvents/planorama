@@ -5,6 +5,7 @@ import defaultTo        from 'lodash/defaultTo'
 import {http as axios} from './http'
 import Vue from 'vue';
 import {Model, Collection} from 'vue-mc'
+import {jwtToken} from './utils/jwt_utils';
 
 // TODO: modify for routes etc
 // make sure that save sans id in URL and update has id
@@ -59,9 +60,8 @@ export class PlanoModel extends Model {
 
   // We need to put the CSRF token in the header
   getDefaultHeaders() {
-    const csrfToken = document.querySelector("meta[name=csrf-token]").content
     return {
-      'X-CSRF-Token': csrfToken
+      'Authorization': jwtToken()
     }
   }
 }
@@ -95,4 +95,10 @@ export class PlanoCollection extends Collection {
     return super.onFetchSuccess(response);
   }
 
+  // We need to put the CSRF token in the header
+  getDefaultHeaders() {
+    return {
+      'Authorization': jwtToken()
+    }
+  }
 }

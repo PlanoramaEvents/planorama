@@ -1,6 +1,7 @@
-class Survey::QuestionsController < ResourceController
+class Survey::Page::QuestionsController < ResourceController
   MODEL_CLASS = 'Survey::Question'.freeze
   SERIALIZER_CLASS = 'Survey::QuestionSerializer'.freeze
+  DEFAULT_ORDER = 'sort_order'
 
   def serializer_includes
     [
@@ -9,11 +10,13 @@ class Survey::QuestionsController < ResourceController
   end
 
   def includes
-    serializer_includes
+    [
+      :survey_answers
+    ]
   end
 
   def belongs_to_param_id
-    params[:survey_page_id]
+    params[:page_id]
   end
 
   def belong_to_class

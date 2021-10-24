@@ -34,7 +34,7 @@ Person.destroy_all
         registration_number: registration_number,
         registration_type: registration_type,
         bio: Bio.create(
-            bio: Faker::Lorem.sentences(number: 3),
+            bio: Faker::Lorem.sentences(number: 3).join('. '),
             website: Faker::Internet.url
         )
     )
@@ -68,7 +68,7 @@ Person.destroy_all
     person.bio.tiktok = username
     person.bio.save
     #p "Twitter is #{person.bio.twitter}"
-    
+
     PersonRole.create(
         person: person,
         role: PersonRole.roles[:member]

@@ -3,8 +3,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import pageMixin from './page-mixin'
+import pageMixin from './page.mixin'
 export default {
   name: 'NextPagePicker',
   mixins: [pageMixin],
