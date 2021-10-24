@@ -66,4 +66,8 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include RequestSpecHelper, type: :request
+
+  config.before(:suite) do
+    Rails.application.load_seed # loading seeds
+  end
 end
