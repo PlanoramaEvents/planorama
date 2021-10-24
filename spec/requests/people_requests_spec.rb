@@ -27,7 +27,7 @@ RSpec.describe 'People', type: :request do
       expect(json).not_to be_empty
     end
     it 'return a person with correct id' do
-      expect(json['data']['id']).to be == p.id
+      expect(json['data']['id'].to_i).to be == p.id
     end
   end
 end
