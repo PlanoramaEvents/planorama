@@ -37,7 +37,7 @@ git config --global core.autocrlf input
 To start the dev docker instances use
 
 ```
-docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
+docker-compose -f docker-compose-dev.yml up
 ```
 
 alternatively use
