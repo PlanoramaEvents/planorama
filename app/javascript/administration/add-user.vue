@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { Person } from '../people/people'
+// import { Person } from '../people/people'
 import toastMixin from '../toast-mixin';
 import { ADMIN_ADD_USER_SUCCESS } from '../constants/strings';
 import ModelField from '../model-field';
