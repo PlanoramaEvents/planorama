@@ -29,6 +29,7 @@ services:
       - RAILS_ENV=development
       - NODE_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/0
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -57,6 +58,7 @@ services:
       - RAILS_ENV=development
       - NODE_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/0
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -87,6 +89,8 @@ services:
     restart: always
     volumes:
       - redis-data:/data
+    ports:
+      - "6379:6379"
 
   livereload:
     image: planorama:dev
