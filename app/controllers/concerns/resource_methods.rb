@@ -139,12 +139,11 @@ module ResourceMethods
     @per_page = nil unless paginate
     @page = params[:page]&.to_i || 0 if paginate
     # Sort field could come from the nested object
-    @order = params[:sortField]
-    @order = self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
+    @order = params[:sortBy]
+    @order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
     @order ||= ''
     @direction = params[:sortOrder] || 'asc'
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
-    @order.slice!('$.')
 
     q = policy_scope(base, policy_scope_class: policy_scope_class)
       .includes(includes)
@@ -152,7 +151,16 @@ module ResourceMethods
       .joins(join_tables)
       .where(query(@filters))
 
-    q = q.order("#{@order}" => "#{@direction}") if !@order.blank?
+    # For PSQL NULLS FIRST is the default for DESC order, and NULLS LAST otherwise.
+    if !@order.blank?
+      order_str = "#{@order} #{@direction}"
+      if @direction == 'asc'
+        order_str += ' NULLS FIRST'
+      else
+        order_str += ' NULLS LAST'
+      end
+      q = q.order(order_str)
+    end
 
     if paginate
       q.page(@page).per(@per_page)
