@@ -1,6 +1,6 @@
 class LoginController < ApplicationController
   skip_before_action :authenticate_person!, only: :magic_link
-  skip_before_action :authenticate, only: :magic_link
+  # skip_before_action :authenticate, only: :magic_link
 
   def magic_link
     token = params[:magic_link]
