@@ -20,7 +20,7 @@ import { personStore, personEndpoints } from './person.store';
 // session add-ons
 import { sessionStore } from './session.store';
 
-// survey add-ons 
+// survey add-ons
 import { surveyStore, surveyEndpoints } from './survey.store';
 
 const getId = (itemOrId) => {
@@ -58,6 +58,7 @@ export const store = new Vuex.Store({
     },
     ...personStore.getters,
     ...surveyStore.getters,
+    ...sessionStore.getters,
   },
   mutations: {
     [SELECT] (state, {model, itemOrId}) {

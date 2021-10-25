@@ -1,17 +1,17 @@
 
-// login 
+// login
 import LoginScreen from './login/login_screen.vue'
 import ForgotPassword from './login/forgot_password.vue'
 import PlanLogin from './login/login.vue';
 import NewPassword from './login/new_password.vue';
 
 const loginRoutes = [
-    { path: 'forgot', component: ForgotPassword },
-    { path: 'password-reset', component: NewPassword },
-    { path: '', component: PlanLogin, name: "login" },
+  { path: 'forgot', component: ForgotPassword },
+  { path: 'password-reset', component: NewPassword },
+  { path: '', component: PlanLogin, name: "login" },
 ]
 
-// admin 
+// admin
 import AdminComponent from './administration/admin_component.vue';
 
 // people
@@ -49,11 +49,95 @@ Vue.use(VueRouter);
 
 export const router = new VueRouter({
   routes: [
-    { path: '/login', component: LoginScreen, children: loginRoutes },
-    { path: '/admin', component: AdminComponent},
-    { path: '/people', component: PeopleScreen},
-    // { path: '/surveys', component: SurveyScreen},
-    { path: '/surveys', component: SurveyScreen, children: surveyRoutes },
-    { path: '', component: Dashboard}
+    {
+      path: '/login',
+      component: LoginScreen,
+      children: loginRoutes,
+      meta: {
+        guest: true
+      }
+    },
+    {
+      path: '/admin',
+      component: AdminComponent,
+      meta: {
+        requiresAuth: true,
+        is_admin : true
+      }
+    },
+    {
+      path: '/people',
+      component: PeopleScreen,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/surveys',
+      component: SurveyScreen,
+      children: surveyRoutes,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '',
+      component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // check if logged in
+    // if not, redirect to login page.
+    // Get the session from the store and use that to check
+    let session = router.app.$store.getters.currentSession
+    // console.debug('****', session )
+    if (!session.id) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // make sure to always call next()!
+  }
+})
+
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     if (localStorage.getItem('jwt') == null) {
+//       next({
+//         path: '/login',
+//         params: { nextUrl: to.fullPath }
+//       })
+//     } else {
+//       let user = JSON.parse(localStorage.getItem('user'))
+//       if (to.matched.some(record => record.meta.is_admin)) {
+//         if (user.is_admin == 1) {
+//           next()
+//         } else {
+//           next({ name: 'userboard' })
+//         }
+//       } else {
+//         next()
+//       }
+//     }
+//   } else if (to.matched.some(record => record.meta.guest)) {
+//     if (localStorage.getItem('jwt') == null) {
+//       next()
+//     } else {
+//       next({ name: 'userboard' })
+//     }
+//   } else {
+//     next()
+//   }
+// })
+
+// export router
