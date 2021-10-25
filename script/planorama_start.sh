@@ -30,6 +30,12 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   # Run migrations and start the server, anything that comes in on 3000 is accepted
   # bin/rails db:create
   bin/rails db:seed
+elif [[ $RAILS_ENV = "staging" ]]; then
+  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
+
+  bin/rake db:migrate
+
+  bin/rails db:seed
 else
   until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST/$DB_NAME" -c 'select current_date'; do
     echo "waiting for postgres..."
