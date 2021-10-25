@@ -60,6 +60,12 @@ RSpec.describe 'People', type: :request do
     it 'was created in the db' do
       p = Person.find_by name: name
       expect(json['data']['id']).to be == p.id.to_s
+      expect(json['data']['attributes']['name']).to be == p.name
+      email_id = json['data']['relationships']['email_addresses']['data'].first['id']
+      expect(email_id).to be_a_kind_of(String)
+      result_email = json['included'].find{|a| a['id'] == email_id }
+      expect(result_email['type']).to be == 'email_address'
+      expect(result_email['attributes']['email']).to be == email
     end
   end
 
