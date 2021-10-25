@@ -29,5 +29,42 @@ RSpec.describe 'People', type: :request do
     it 'return a person with correct id' do
       expect(json['data']['id']).to be == p.id.to_s
     end
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
   end
+
+  describe 'Create a new person' do
+    name = Faker::Name.name
+    email = "#{name.gsub(' ', '_')}@test.com"
+    before {
+      post "/person",
+      params: {
+        name: name,
+        name_sort_by: name,
+        name_sort_by_confirmed: true,
+        email_addresses_attributes: [
+          {
+            isdefault: true,
+            email: email,
+            is_valid: true
+          }
+        ]
+      }.to_json,
+      headers: auth_header
+    }
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+    it 'was created in the db' do
+      p = Person.find_by name: name
+      expect(json['data']['id']).to be == p.id.to_s
+    end
+  end
+
+  # Session person/me
+  # New person
+  # Update
+  # Delete
 end

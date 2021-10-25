@@ -377,7 +377,7 @@ module ResourceMethods
       )
     else
       # We treat this as a regular rails request
-      params[_object_name] unless allowed_params
+      return params.require(_object_name).permit! unless allowed_params
 
       params.permit(
         allowed_params
