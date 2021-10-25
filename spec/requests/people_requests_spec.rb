@@ -39,28 +39,34 @@ RSpec.describe 'People', type: :request do
     email = "#{name.gsub(' ', '_')}@test.com"
     before {
       post "/person",
-      params: {
-        name: name,
-        name_sort_by: name,
-        name_sort_by_confirmed: true,
-        email_addresses_attributes: [
-          {
-            isdefault: true,
-            email: email,
-            is_valid: true
-          }
-        ]
-      }.to_json,
-      headers: auth_header
+        params: {
+          name: name,
+          name_sort_by: name,
+          name_sort_by_confirmed: true,
+          email_addresses_attributes: [
+            {
+              isdefault: true,
+              email: email,
+              is_valid: true
+            }
+          ]
+        }.to_json,
+        headers: auth_header
     }
 
     it 'returns status code 200' do
       expect(response).to have_http_status(200)
     end
-    it 'was created in the db' do
+    it 'person was created in the db' do
       p = Person.find_by name: name
       expect(json['data']['id']).to be == p.id.to_s
+    end
+    it 'created person has the same name' do
+      p = Person.find_by name: name
       expect(json['data']['attributes']['name']).to be == p.name
+    end
+    it 'created person has the same email' do
+      p = Person.find_by name: name
       email_id = json['data']['relationships']['email_addresses']['data'].first['id']
       expect(email_id).to be_a_kind_of(String)
       result_email = json['included'].find{|a| a['id'] == email_id }
