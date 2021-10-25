@@ -25,6 +25,6 @@ class Survey::QuestionSerializer
   # than a relationship.
   # @Gail - please check
   attribute :survey_answers do |question|
-    question.bio
+    question.survey_answers
   end
 end
