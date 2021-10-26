@@ -75,8 +75,22 @@ RSpec.describe 'People', type: :request do
     end
   end
 
-  # Session person/me
-  # New person
+  describe 'GET the me session' do
+    p = Person.find_by name: 'test'
+    before { get "/person/me", headers: auth_header(name: 'test') }
+
+    it 'return a session' do
+      expect(json).not_to be_empty
+      expect(json['data']['type']).to be == 'session'
+    end
+    it 'return a session with correct person id' do
+      expect(json['data']['id']).to be == p.id.to_s
+    end
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
+
   # Update
   # Delete
 end
