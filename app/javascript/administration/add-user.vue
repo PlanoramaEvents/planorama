@@ -3,7 +3,6 @@
     <model-field label="Name" v-model="person.name" type="text" stateless></model-field>
     <email-field label="Email" id="new-user-email" v-model="email"></email-field>
     <div class="d-flex justify-content-end">
-      <!-- TODO: Cancel does nothing (in old and new code) -->
       <b-button variant="link" @click="cancel">Cancel</b-button>
       <b-button variant="primary" @click="save">Save</b-button>
     </div>
