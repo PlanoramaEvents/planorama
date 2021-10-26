@@ -72,15 +72,18 @@ export const store = new Vuex.Store({
   actions: {
     /*
       NOTE: The backend does not save relationships in models
+
+      NOTE: the ...attrs did not work as an argument
     */
-    [NEW] ({commit, dispatch}, {model, selected = false, relationships = {}, ...attrs}) {
+    [NEW] ({commit, dispatch}, {model, selected = false, attrs}) {
       let newModel = {
         ...attrs,
         _jv: {
-          type: model,
-          relationships
+          type: model
+          // relationships
         }
       }
+
       return new Promise((res, rej) => {
         dispatch('jv/post', newModel).then((savedModel) => {
           if (selected) {
@@ -128,5 +131,6 @@ export const store = new Vuex.Store({
     },
     ...sessionStore.actions,
     ...surveyStore.actions,
+    ...personStore.actions,
   }
 })

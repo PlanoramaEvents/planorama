@@ -17,13 +17,18 @@ import { ADMIN_ADD_USER_SUCCESS } from '../constants/strings';
 import ModelField from '../model-field';
 import EmailField from '../shared/email_field';
 
+import { mapActions } from 'vuex';
+import { NEW_PERSON } from '../store/person.store';
+
 export default {
   name: "AddUser",
   components: {
     ModelField,
     EmailField,
   },
-  mixins: [toastMixin],
+  mixins: [
+    toastMixin
+  ],
   data: () =>  ({
     // This is minimal JSON for a new Person entity
     person: {
@@ -47,18 +52,16 @@ export default {
     }
   },
   methods: {
+    ...mapActions({newPersonAction: NEW_PERSON}),
     cancel() {
       // reset the fields to be empty...
       this.person.name = '';
       this.person.email_addresses_attributes = [{email: '', isdefault: true}];
     },
     save() {
-      // this.person.save()
-      //   .then(() => {
-      //     this.success_toast(ADMIN_ADD_USER_SUCCESS(this.person.name))
-      //     this.person = new Person();
-      //   })
-      //   .catch((error) => this.error_toast(error.message))
+      // console.debug('SAVING A PERSON', this.person);
+      // let np = this.person;
+      this.newPersonAction(this.person);
     }
   }
 }
