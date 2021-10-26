@@ -17,7 +17,7 @@
       ></login-password-field>
       <div class="pt-3"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
       <div class="d-flex flex-row-reverse">
-        <router-link to="/forgot">Forgot Password</router-link>
+        <router-link to="/login/forgot">Forgot Password</router-link>
       </div>
       <div class="d-flex flex-row-reverse">
         <b-button type="submit" variant="primary" class="px-5">Log In</b-button>
