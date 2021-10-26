@@ -3,6 +3,7 @@
     <model-field label="Name" v-model="person.name" type="text" stateless></model-field>
     <email-field label="Email" id="new-user-email" v-model="email"></email-field>
     <div class="d-flex justify-content-end">
+      <!-- TODO: Cancel does nothing (in old and new code) -->
       <b-button variant="link" @click="cancel">Cancel</b-button>
       <b-button variant="primary" @click="save">Save</b-button>
     </div>
@@ -24,30 +25,40 @@ export default {
   },
   mixins: [toastMixin],
   data: () =>  ({
-    person: new Person(),
+    // This is minimal JSON for a new Person entity
+    person: {
+      name: '',
+      email_addresses_attributes: [
+        {
+          isdefault: true,
+          email: ''
+        }
+      ]
+    },
   }),
   computed: {
     email: {
       get() {
-        return this.person.email_addresses && this.person.email_addresses[0]?.email;
+        return this.person.email_addresses_attributes && this.person.email_addresses_attributes[0]?.email;
       },
       set(val) {
-        this.person.email_addresses = [{email: val, isdefault: true}];
+        this.person.email_addresses_attributes = [{email: val, isdefault: true}];
       }
-
     }
   },
   methods: {
     cancel() {
-      this.person.reset();
+      // reset the fields to be empty...
+      this.person.name = '';
+      this.person.email_addresses_attributes = [{email: '', isdefault: true}];
     },
     save() {
-      this.person.save()
-        .then(() => {
-          this.success_toast(ADMIN_ADD_USER_SUCCESS(this.person.name))
-          this.person = new Person();
-        })
-        .catch((error) => this.error_toast(error.message))
+      // this.person.save()
+      //   .then(() => {
+      //     this.success_toast(ADMIN_ADD_USER_SUCCESS(this.person.name))
+      //     this.person = new Person();
+      //   })
+      //   .catch((error) => this.error_toast(error.message))
     }
   }
 }

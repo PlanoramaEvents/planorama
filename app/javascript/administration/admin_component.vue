@@ -16,20 +16,20 @@
           label="Event Email"
           label-for="support-email"
         >
-          <b-form-input id="support-email" type="text" v-model="configuration.event_email.parameter_value"></b-form-input>
+          <b-form-input id="support-email" type="text" zz-model="configuration.event_email.parameter_value"></b-form-input>
         </b-form-group>
         <b-form-group
           label="Event Phone Number"
           label-for="support-phone"
         >
-          <b-form-input id="support-phone" type="text" v-model="configuration.event_phone.parameter_value"></b-form-input>
+          <b-form-input id="support-phone" type="text" zz-model="configuration.event_phone.parameter_value"></b-form-input>
         </b-form-group>
         <b-form-group
           label="Event Ethics Agreement"
           label-for="event-ethics"
           description="If you save a new event agreement, you will clear the flag and everyone has to recheck the box."
         >
-          <b-form-textarea id="event-ethics" type="text" v-model="information_ethics.terms"></b-form-textarea>
+          <b-form-textarea id="event-ethics" type="text" zz-model="information_ethics.terms"></b-form-textarea>
         </b-form-group>
         <div class="d-flex justify-content-end">
           <b-button variant="link" @click="cancel">Revert all fields</b-button>
@@ -43,18 +43,18 @@
 <script>
 import AdminAccordion from './admin_accordion.vue'
 import { mapActions, mapState } from 'vuex';
-import { SAVE, UPDATED } from '../model.store';
-import { Configuration } from './configurations';
+import { SAVE, UPDATED } from '../store/model.store';
+// import { Configuration } from './configurations';
 import AddUser from './add-user.vue';
 import ChangeUserRoles from './change-user-roles';
 import toastMixin from '../toast-mixin';
-import { InformationEthicsAgreement } from './agreement';
-import { FETCH_IEA, SAVE_IEA } from './agreement.store';
+// import { InformationEthicsAgreement } from './agreement';
+// import { FETCH_IEA, SAVE_IEA } from './agreement.store';
 
 const ADMIN_CONFIGS = (x) => ['event_email', 'event_phone'].includes(x)
 
 export default {
-  components: { 
+  components: {
     AdminAccordion,
     AddUser,
     ChangeUserRoles,
@@ -69,31 +69,32 @@ export default {
     }
   }),
   computed: {
-    ...mapState('admin/configuration', {
-      configuration: state =>  state.collection
-    }),
-    ...mapState('admin/agreements', ['information_ethics']),
+    // ...mapState('admin/configuration', {
+    //   configuration: state =>  state.collection
+    // }),
+    // ...mapState('admin/agreements', ['information_ethics']),
     event_settings_dirty() {
-      return this.configuration.changed(ADMIN_CONFIGS)
+      // return this.configuration.changed(ADMIN_CONFIGS)
+      return false
     }
   },
   methods: {
-    ...mapActions('admin/agreements', {
-      fetchIea: FETCH_IEA,
-      saveIea: SAVE_IEA
-    }),
+    // ...mapActions('admin/agreements', {
+    //   fetchIea: FETCH_IEA,
+    //   saveIea: SAVE_IEA
+    // }),
     cancel() {
-      this.configuration.reset(ADMIN_CONFIGS);
-      this.information_ethics.reset();
+      // this.configuration.reset(ADMIN_CONFIGS);
+      // this.information_ethics.reset();
     },
     save() {
-      this.configuration.save(ADMIN_CONFIGS);
-      this.saveIea(this.toastSuccessFailure('information ethics saved'))
+      // this.configuration.save(ADMIN_CONFIGS);
+      // this.saveIea(this.toastSuccessFailure('information ethics saved'))
     }
   },
   mounted() {
-    this.configuration.fetch();
-    this.fetchIea();
+    // this.configuration.fetch();
+    // this.fetchIea();
   }
 }
 </script>

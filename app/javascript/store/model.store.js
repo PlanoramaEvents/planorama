@@ -70,6 +70,9 @@ export const store = new Vuex.Store({
     ...sessionStore.mutations,
   },
   actions: {
+    /*
+      NOTE: The backend does not save relationships in models
+    */
     [NEW] ({commit, dispatch}, {model, selected = false, relationships = {}, ...attrs}) {
       let newModel = {
         ...attrs,
