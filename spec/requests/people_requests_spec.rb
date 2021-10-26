@@ -91,6 +91,20 @@ RSpec.describe 'People', type: :request do
     end
   end
 
+  describe 'Delete a person' do
+    name = Faker::Name.name
+    p = Person.create(name: name)
+    id = p.id
+    before { delete "/person/#{id}", headers: auth_header(name: 'test') }
+
+    it 'check that the person is deleted' do
+      p = Person.find_by name: name
+      expect(p).to be nil
+    end
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
+
   # Update
-  # Delete
 end
