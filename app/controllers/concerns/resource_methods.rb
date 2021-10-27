@@ -1,3 +1,5 @@
+require "securerandom"
+
 module ResourceMethods
   extend ActiveSupport::Concern
   include JSONAPI::Deserialization
@@ -42,6 +44,16 @@ module ResourceMethods
     render_object(@object)
   end
 
+  # creates a new instance but does not save it to the db
+  # Frontend could use this as a template
+  # endpoint like /person/new
+  def new
+    authorize model_class, policy_class: policy_class
+    # give the new object a UUID ...
+    @object.id = SecureRandom.uuid
+    render_object(@object, includes: false)
+  end
+
   def create
     model_class.transaction do
       authorize model_class, policy_class: policy_class
@@ -81,13 +93,13 @@ module ResourceMethods
     end
   end
 
-  def render_object(object, serializer: nil)
+  def render_object(object, serializer: nil, includes: true)
     serializer_used = serializer || serializer_class
     if serializer_used
       render json: serializer_used.new(
                     object,
                     {
-                      include: serializer_includes,
+                      include: (includes ? serializer_includes : []),
                       params: {domain: "#{request.base_url}"}
                     }
                    ).serializable_hash,
@@ -377,7 +389,7 @@ module ResourceMethods
       )
     else
       # We treat this as a regular rails request
-      return params.require(_object_name).permit! unless allowed_params
+      return params.require(_object_name).permit! unless allowed_params || params[:action] == 'new'
 
       params.permit(
         allowed_params
