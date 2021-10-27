@@ -110,7 +110,7 @@ RSpec.describe 'People', type: :request do
     before { get "/person/new", headers: auth_header(name: 'test') }
 
     it 'check that it has a UUID' do
-      expect(json['data']['id']).to be != nil
+      expect(json['data']['id']).not_to be(nil)
     end
     it 'returns status code 200' do
       expect(response).to have_http_status(200)
