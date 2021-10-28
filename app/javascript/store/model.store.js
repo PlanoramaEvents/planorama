@@ -71,16 +71,16 @@ export const store = new Vuex.Store({
   },
   actions: {
     /*
-      NOTE: The backend does not save relationships in models
+      NOTE: The backend will save relationship (tested when it is the 'parent')
 
-      NOTE: the ...attrs did not work as an argument
+      NOTE: the ...attrs is weird, need to do spread in the call as well ...
     */
-    [NEW] ({commit, dispatch}, {model, selected = false, attrs}) {
+    [NEW] ({commit, dispatch}, {model, selected = false, relationships = {}, ...attrs}) {
       let newModel = {
         ...attrs,
         _jv: {
-          type: model
-          // relationships
+          type: model,
+          relationships
         }
       }
 

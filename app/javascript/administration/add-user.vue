@@ -58,8 +58,6 @@ export default {
       this.person.email_addresses_attributes = [{email: '', isdefault: true}];
     },
     save() {
-      // console.debug('SAVING A PERSON', this.person);
-      // let np = this.person;
       this.newPersonAction(this.person);
     }
   }

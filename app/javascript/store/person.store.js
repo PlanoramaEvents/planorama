@@ -9,9 +9,8 @@ export const personEndpoints = {
 
 export const personStore = {
   actions: {
-    [NEW_PERSON] ({dispatch}, newPerson) {
-      // console.debug('SAVING PERSON', newPerson);
-      return dispatch(NEW, {model: personModel, selected: false, item: newPerson})
+    [NEW_PERSON] ({dispatch}, attributes) {
+      return dispatch(NEW, {model: personModel, selected: false, ...attributes})
     },
   },
   selected: {

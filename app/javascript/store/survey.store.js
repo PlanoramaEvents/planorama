@@ -52,7 +52,7 @@ export const surveyStore = {
           }]
         }]
       }
-      return dispatch(NEW, {model: surveyModel, selected: true, ...newSurvey})
+      return dispatch(NEW, {model: surveyModel, selected: true, newSurvey})
     },
     [NEW_PAGE] ({dispatch}, {surveyId, questionIds = []}) {
       // TODO sort order?
