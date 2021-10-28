@@ -9,7 +9,7 @@ module ResourceMethods
 
     meta = {}
     meta[:total] = @collection_total if paginate
-    meta[:page] = @page if @page.present? && paginate
+    meta[:current_page] = @current_page if @current_page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
     format = params[:format]
 
@@ -149,7 +149,7 @@ module ResourceMethods
 
     @per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate
     @per_page = nil unless paginate
-    @page = params[:page]&.to_i || 0 if paginate
+    @current_page = params[:currentPage]&.to_i || 0 if paginate
     # Sort field could come from the nested object
     @order = params[:sortBy]
     @order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
@@ -175,7 +175,7 @@ module ResourceMethods
     end
 
     if paginate
-      q.page(@page).per(@per_page)
+      q.page(@current_page).per(@per_page)
     else
       q
     end
