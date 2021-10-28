@@ -7,10 +7,10 @@ class Survey::PageSerializer
   has_many :survey_questions, serializer: Survey::QuestionSerializer,
             links: {
               self: -> (object, params) {
-                "#{params[:domain]}/survey/#{object.survey_id}/page/#{object.id}"
+                "#{params[:domain]}/page/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/survey/#{object.survey_id}/page/#{object.id}/questions"
+                "#{params[:domain]}/page/#{object.id}/questions"
               }
             }
 end
