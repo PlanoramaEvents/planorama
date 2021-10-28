@@ -299,7 +299,7 @@ module ResourceMethods
   end
 
   def find_resource
-    if belong_to_class
+    if belongs_to_param_id && belong_to_class
       parent = belong_to_class.find belongs_to_param_id
       policy_scope(
         parent.send(belongs_to_relationship),
@@ -311,7 +311,7 @@ module ResourceMethods
   end
 
   def build_resource
-    if belong_to_class
+    if belongs_to_param_id && belong_to_class
       parent = belong_to_class.find belongs_to_param_id
       parent.send(belongs_to_relationship).new(strip_params(_permitted_params(object_name)))
     else

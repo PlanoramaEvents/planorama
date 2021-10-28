@@ -54,6 +54,10 @@ Rails.application.routes.draw do
     end
   end
 
+  # Shallow versions of the create endpoints ...
+  post 'page', to: 'survey/pages#create'
+  post 'question', to: 'survey/page/questions#create'
+
   # NOTE: if we want submisisons sans surveys fill in the only
   resources :submissions, path: 'submission', only: [] do
     scope module: 'submission' do
