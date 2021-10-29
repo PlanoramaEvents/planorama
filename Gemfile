@@ -55,11 +55,14 @@ gem 'webdack-uuid_migration'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem "brakeman"                                      # vulnerability and static analysis
+  gem "ruby_audit"                                    # checks for CVEs affecting Ruby and RubyGems
+end
+
+group :staging, :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'seedbank'
-  gem "brakeman"                                      # vulnerability and static analysis
-  gem "ruby_audit"                                    # checks for CVEs affecting Ruby and RubyGems
 end
 
 group :development do

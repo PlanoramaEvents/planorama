@@ -10,10 +10,21 @@
 #
 version: "3.7"
 
+#
+# docker volume create --name=pgdata
+# docker volume create --name=redis-data
+# docker volume create --name=node_modules
+# docker volume create --name=node_modules_sidekiq
+#
 volumes:
   pgdata:
+    external: true
   redis-data:
+    external: true
   node_modules:
+    external: true
+  node_modules_sidekiq:
+    external: true
   box: {} # used for the bundler, persistent store between runs
 
 services:
@@ -29,6 +40,7 @@ services:
       - RAILS_ENV=development
       - NODE_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/0
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -57,8 +69,9 @@ services:
       - RAILS_ENV=development
       - NODE_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/0
     volumes:
-      - node_modules:/opt/planorama/node_modules
+      - node_modules_sidekiq:/opt/planorama/node_modules
       - .:/opt/planorama
       - box:/var/bundler
       - type: tmpfs
@@ -87,6 +100,8 @@ services:
     restart: always
     volumes:
       - redis-data:/data
+    ports:
+      - "6379:6379"
 
   livereload:
     image: planorama:dev

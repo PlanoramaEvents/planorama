@@ -14,7 +14,7 @@ class People::PasswordsController < Devise::PasswordsController
 
   # GET /resource/password/edit?reset_password_token=abcdef
   def edit
-    redirect_to "/#/password-reset?reset_password_token=#{params[:reset_password_token]}"
+    redirect_to "/#/login/password-reset?reset_password_token=#{params[:reset_password_token]}"
   end
 
   # PUT /resource/password

@@ -10,6 +10,12 @@ export const sessionStore = {
       state.user = user
     },
   },
+  getters: {
+    // Get the current session from the store
+    currentSession(state, getters) {
+      return state.user;
+    },
+  },
   actions: {
     [GET_SESSION_USER] ({commit, dispatch, state}) {
       // only fetch session if we don't have one
@@ -21,6 +27,7 @@ export const sessionStore = {
         }).catch((error) => {
           // console.debug('******* error', error)
           // If we can not get the session then set no no user
+          console.debug("****** WE DO NOR HAVE A VALID SESSION ....")
           commit(SET_SESSION_USER, {})
         })
       }

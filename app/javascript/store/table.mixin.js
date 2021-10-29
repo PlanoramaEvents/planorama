@@ -36,11 +36,11 @@ const tableMixin = {
           sortOrder: this.sortDesc ? 'desc' : 'asc',
           sortBy: this.sortBy,
           filter: this.filter,
-          page: this.currentPage,
+          current_page: this.currentPage,
         }).then(data => {
           // this stores some metadata that returns with the fetch call
           this.correctOrder = data._jv.json.data.map(m => m.id);
-          this.currentPage = data._jv.json.meta.page;
+          this.currentPage = data._jv.json.meta.current_page;
           this.totalRows = data._jv.json.meta.total;
           res(data);
         }).catch(rej); // TODO maybe actually handle it here??

@@ -10,11 +10,14 @@
 </template>
 
 <script>
-import { Person } from '../people/people'
+// import { Person } from '../people/people'
 import toastMixin from '../toast-mixin';
 import { ADMIN_ADD_USER_SUCCESS } from '../constants/strings';
 import ModelField from '../model-field';
 import EmailField from '../shared/email_field';
+
+import { mapActions } from 'vuex';
+import { NEW_PERSON } from '../store/person.store';
 
 export default {
   name: "AddUser",
@@ -22,32 +25,40 @@ export default {
     ModelField,
     EmailField,
   },
-  mixins: [toastMixin],
+  mixins: [
+    toastMixin
+  ],
   data: () =>  ({
-    person: new Person(),
+    // This is minimal JSON for a new Person entity
+    person: {
+      name: '',
+      email_addresses_attributes: [
+        {
+          isdefault: true,
+          email: ''
+        }
+      ]
+    },
   }),
   computed: {
     email: {
       get() {
-        return this.person.email_addresses && this.person.email_addresses[0]?.email;
+        return this.person.email_addresses_attributes && this.person.email_addresses_attributes[0]?.email;
       },
       set(val) {
-        this.person.email_addresses = [{email: val, isdefault: true}];
+        this.person.email_addresses_attributes = [{email: val, isdefault: true}];
       }
-
     }
   },
   methods: {
+    ...mapActions({newPersonAction: NEW_PERSON}),
     cancel() {
-      this.person.reset();
+      // reset the fields to be empty...
+      this.person.name = '';
+      this.person.email_addresses_attributes = [{email: '', isdefault: true}];
     },
     save() {
-      this.person.save()
-        .then(() => {
-          this.success_toast(ADMIN_ADD_USER_SUCCESS(this.person.name))
-          this.person = new Person();
-        })
-        .catch((error) => this.error_toast(error.message))
+      this.newPersonAction(this.person);
     }
   }
 }

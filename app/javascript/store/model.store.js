@@ -20,7 +20,7 @@ import { personStore, personEndpoints } from './person.store';
 // session add-ons
 import { sessionStore } from './session.store';
 
-// survey add-ons 
+// survey add-ons
 import { surveyStore, surveyEndpoints } from './survey.store';
 
 const getId = (itemOrId) => {
@@ -58,6 +58,7 @@ export const store = new Vuex.Store({
     },
     ...personStore.getters,
     ...surveyStore.getters,
+    ...sessionStore.getters,
   },
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
@@ -69,6 +70,11 @@ export const store = new Vuex.Store({
     ...sessionStore.mutations,
   },
   actions: {
+    /*
+      NOTE: The backend will save relationship (tested when it is the 'parent')
+
+      NOTE: the ...attrs is weird, need to do spread in the call as well ...
+    */
     [NEW] ({commit, dispatch}, {model, selected = false, relationships = {}, ...attrs}) {
       let newModel = {
         ...attrs,
@@ -77,6 +83,7 @@ export const store = new Vuex.Store({
           relationships
         }
       }
+
       return new Promise((res, rej) => {
         dispatch('jv/post', newModel).then((savedModel) => {
           if (selected) {
@@ -124,5 +131,6 @@ export const store = new Vuex.Store({
     },
     ...sessionStore.actions,
     ...surveyStore.actions,
+    ...personStore.actions,
   }
 })

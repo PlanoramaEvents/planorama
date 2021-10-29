@@ -34,10 +34,20 @@ following command:
 git config --global core.autocrlf input
 ```
 
-To start the dev docker instances use
+The dev docker compose uses external volumes so that we can persist data
+between runs. These are created using the following:
 
 ```
-docker-compose -f docker-compose.yml -f  docker-compose-dev.yml up
+docker volume create --name=pgdata
+docker volume create --name=redis-data
+docker volume create --name=node_modules
+docker volume create --name=node_modules_sidekiq
+```
+
+Then to start the dev docker instances use
+
+```
+docker-compose -f docker-compose-dev.yml up
 ```
 
 alternatively use

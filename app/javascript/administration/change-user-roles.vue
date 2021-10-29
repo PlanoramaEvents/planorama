@@ -1,25 +1,25 @@
 <template>
   <div class="scrollable">
-    <user-role :person="p" v-for="p in people.models" :key="p.id"></user-role>
+    <!-- <user-role :person="p" v-for="p in people.models" :key="p.id"></user-role> -->
   </div>
 </template>
 
 <script>
-import UserRole from './user-role.vue';
+// import UserRole from './user-role.vue';
 import { mapState } from 'vuex';
 
 export default {
   name: "ChangeUserRoles",
-  components: { 
-    UserRole 
+  components: {
+    // UserRole
   },
   computed: {
-    ...mapState('people', {
-      people: 'collection'
-    })
+    // ...mapState('people', {
+    //   people: 'collection'
+    // })
   },
   mounted() {
-    this.people.fetch();
+    // this.people.fetch();
   }
 }
 </script>

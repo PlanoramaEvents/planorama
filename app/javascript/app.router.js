@@ -1,30 +1,33 @@
 
-// login 
+// login
 import LoginScreen from './login/login_screen.vue'
 import ForgotPassword from './login/forgot_password.vue'
 import PlanLogin from './login/login.vue';
 import NewPassword from './login/new_password.vue';
 
 const loginRoutes = [
-    { path: 'forgot', component: ForgotPassword },
-    { path: 'password-reset', component: NewPassword },
-    { path: '', component: PlanLogin, name: "login" },
+  { path: 'forgot', component: ForgotPassword },
+  { path: 'password-reset', component: NewPassword },
+  { path: '', component: PlanLogin, name: "login" },
 ]
 
-// admin 
+// admin
 import AdminComponent from './administration/admin_component.vue';
 
 // people
 import PeopleScreen from './people/people-screen.vue';
 
 // surveys
-
 import SurveyScreen from './surveys/survey-screen.vue';
 import SurveyList from './surveys/survey-list.vue';
 import EditSurvey from './surveys/edit-survey.vue';
 import TakeSurvey from './surveys/take-survey.vue';
 import SurveyPage from './surveys/survey-page.vue';
 import SurveyThankYou from './surveys/survey-thank-you.vue';
+
+// Mailings
+import MailingScreen from './mailings/mailing-screen.vue';
+import MailTemplateScreen from './mailings/mail-template-screen.vue';
 
 const surveyRoutes = [
   { path: 'edit/:id/:responses', component: EditSurvey, props: true},
@@ -49,11 +52,109 @@ Vue.use(VueRouter);
 
 export const router = new VueRouter({
   routes: [
-    { path: '/login', component: LoginScreen, children: loginRoutes },
-    { path: '/admin', component: AdminComponent},
-    { path: '/people', component: PeopleScreen},
-    // { path: '/surveys', component: SurveyScreen},
-    { path: '/surveys', component: SurveyScreen, children: surveyRoutes },
-    { path: '', component: Dashboard}
+    {
+      path: '/login',
+      component: LoginScreen,
+      children: loginRoutes,
+      meta: {
+        guest: true
+      }
+    },
+    {
+      path: '/admin',
+      component: AdminComponent,
+      meta: {
+        requiresAuth: true,
+        is_admin : true
+      }
+    },
+    {
+      path: '/people',
+      component: PeopleScreen,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/surveys',
+      component: SurveyScreen,
+      children: surveyRoutes,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/mailing',
+      component: MailingScreen,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/mail-templates',
+      component: MailTemplateScreen,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '',
+      component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // check if logged in
+    // if not, redirect to login page.
+    // Get the session from the store and use that to check
+    let session = router.app.$store.getters.currentSession
+    // console.debug('**** Session: ', session )
+    if (!session.id) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // make sure to always call next()!
+  }
+})
+
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     if (localStorage.getItem('jwt') == null) {
+//       next({
+//         path: '/login',
+//         params: { nextUrl: to.fullPath }
+//       })
+//     } else {
+//       let user = JSON.parse(localStorage.getItem('user'))
+//       if (to.matched.some(record => record.meta.is_admin)) {
+//         if (user.is_admin == 1) {
+//           next()
+//         } else {
+//           next({ name: 'userboard' })
+//         }
+//       } else {
+//         next()
+//       }
+//     }
+//   } else if (to.matched.some(record => record.meta.guest)) {
+//     if (localStorage.getItem('jwt') == null) {
+//       next()
+//     } else {
+//       next({ name: 'userboard' })
+//     }
+//   } else {
+//     next()
+//   }
+// })
+
+// export router

@@ -40,24 +40,28 @@ Rails.application.routes.draw do
   # Surveys and their nested resources
   resources :surveys, path: 'survey' do
     scope module: 'survey' do
-      resources :pages, path: 'page' do
+      resources :pages, path: 'page', shallow: true do
         scope module: 'page' do
-          resources :questions, path: 'question' do
+          resources :questions, path: 'question', shallow: true do
             scope module: 'question' do
-              resources :answers, path: 'answer'
+              resources :answers, path: 'answer', shallow: true
             end
           end
         end
       end
-      resources :submissions, path: 'submission'
+      resources :submissions, path: 'submission', shallow: true
       delete 'submission', to: 'submissions#delete_all'
     end
   end
 
+  # Shallow versions of the create endpoints ...
+  post 'page', to: 'survey/pages#create'
+  post 'question', to: 'survey/page/questions#create'
+
   # NOTE: if we want submisisons sans surveys fill in the only
   resources :submissions, path: 'submission', only: [] do
     scope module: 'submission' do
-      resources :responses, path: 'response'
+      resources :responses, path: 'response', shallow: true
     end
   end
 

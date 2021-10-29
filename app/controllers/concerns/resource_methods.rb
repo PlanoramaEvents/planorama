@@ -1,3 +1,5 @@
+require "securerandom"
+
 module ResourceMethods
   extend ActiveSupport::Concern
   include JSONAPI::Deserialization
@@ -7,7 +9,7 @@ module ResourceMethods
 
     meta = {}
     meta[:total] = @collection_total if paginate
-    meta[:page] = @page if @page.present? && paginate
+    meta[:current_page] = @current_page if @current_page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
     format = params[:format]
 
@@ -40,6 +42,16 @@ module ResourceMethods
   def show
     authorize @object, policy_class: policy_class
     render_object(@object)
+  end
+
+  # creates a new instance but does not save it to the db
+  # Frontend could use this as a template
+  # endpoint like /person/new
+  def new
+    authorize model_class, policy_class: policy_class
+    # give the new object a UUID ...
+    @object.id = SecureRandom.uuid
+    render_object(@object, includes: false)
   end
 
   def create
@@ -81,13 +93,13 @@ module ResourceMethods
     end
   end
 
-  def render_object(object, serializer: nil)
+  def render_object(object, serializer: nil, includes: true)
     serializer_used = serializer || serializer_class
     if serializer_used
       render json: serializer_used.new(
                     object,
                     {
-                      include: serializer_includes,
+                      include: (includes ? serializer_includes : []),
                       params: {domain: "#{request.base_url}"}
                     }
                    ).serializable_hash,
@@ -137,14 +149,13 @@ module ResourceMethods
 
     @per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate
     @per_page = nil unless paginate
-    @page = params[:page]&.to_i || 0 if paginate
+    @current_page = params[:currentPage]&.to_i || 0 if paginate
     # Sort field could come from the nested object
-    @order = params[:sortField]
-    @order = self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
+    @order = params[:sortBy]
+    @order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
     @order ||= ''
     @direction = params[:sortOrder] || 'asc'
     @filters = JSON.parse(params[:filter]) if params[:filter].present?
-    @order.slice!('$.')
 
     q = policy_scope(base, policy_scope_class: policy_scope_class)
       .includes(includes)
@@ -152,10 +163,19 @@ module ResourceMethods
       .joins(join_tables)
       .where(query(@filters))
 
-    q = q.order("#{@order}" => "#{@direction}") if !@order.blank?
+    # For PSQL NULLS FIRST is the default for DESC order, and NULLS LAST otherwise.
+    if !@order.blank?
+      order_str = "#{@order} #{@direction}"
+      if @direction == 'asc'
+        order_str += ' NULLS FIRST'
+      else
+        order_str += ' NULLS LAST'
+      end
+      q = q.order(order_str)
+    end
 
     if paginate
-      q.page(@page).per(@per_page)
+      q.page(@current_page).per(@per_page)
     else
       q
     end
@@ -279,7 +299,7 @@ module ResourceMethods
   end
 
   def find_resource
-    if belong_to_class
+    if belongs_to_param_id && belong_to_class
       parent = belong_to_class.find belongs_to_param_id
       policy_scope(
         parent.send(belongs_to_relationship),
@@ -291,7 +311,7 @@ module ResourceMethods
   end
 
   def build_resource
-    if belong_to_class
+    if belongs_to_param_id && belong_to_class
       parent = belong_to_class.find belongs_to_param_id
       parent.send(belongs_to_relationship).new(strip_params(_permitted_params(object_name)))
     else
@@ -369,7 +389,7 @@ module ResourceMethods
       )
     else
       # We treat this as a regular rails request
-      params[_object_name] unless allowed_params
+      return params.require(_object_name).permit! unless allowed_params || params[:action] == 'new'
 
       params.permit(
         allowed_params
