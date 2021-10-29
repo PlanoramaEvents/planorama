@@ -1,3 +1,4 @@
+// TODO move column definition out of here and then obsolete it
 import {PlanoModel, PlanoCollection} from '../model.js';
 import { SurveySubmissions } from './survey_response';
 import {

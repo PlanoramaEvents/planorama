@@ -6,6 +6,11 @@ VuexORM.use(VuexORMAxios, {axios})
 
 const database = new VuexORM.Database();
 
+// **************************************************
+// DONT USE THIS IT IS OBSOLETE!!!!!!
+// ************************************************
+// as of 10/27/21
+
 
 // admin
 import { store as admin } from './administration/admin.store';

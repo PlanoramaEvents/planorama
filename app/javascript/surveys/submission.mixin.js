@@ -2,6 +2,7 @@ import { mapGetters } from "vuex";
 import { SELECTED } from "../store/model.store";
 import { submissionModel as model } from '../store/survey.store';
 
+// CONVERTED
 const submissionMixin = {
   computed: {
     ...mapGetters({

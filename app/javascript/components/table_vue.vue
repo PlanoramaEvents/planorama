@@ -16,7 +16,6 @@
       </div>
     </div>
 
-    <!-- NOTE:  items uses 'provider' function so that sortung works-->
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
       :total-rows="totalRows"

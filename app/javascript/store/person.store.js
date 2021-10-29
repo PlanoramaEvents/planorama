@@ -1,5 +1,3 @@
-import { SELECTED } from './model.store';
-
 export const personModel = 'person';
 
 export const personEndpoints = {
@@ -11,8 +9,5 @@ export const personStore = {
     [personModel]: undefined
   },
   getters: {
-    selectedPerson(state, getters) {
-      return getters[SELECTED](personModel);
-    },
   },
 }

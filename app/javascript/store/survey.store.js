@@ -5,6 +5,7 @@ export const NEW_PAGE = 'NEW PAGE';
 export const NEW_QUESTION = 'NEW QUESTION';
 export const NEW_SUBMISSION = 'NEW SUBMISSION';
 export const SAVE_SUBMISSION = 'SAVE SUBMISSION';
+// TODO unused GET_NESTED SURVEY??
 export const GET_NESTED_SURVEY = 'GET NESTED SURVEY';
 export const CLEAR_SURVEY_SUBMISSIONS = 'CLEAR SURVEY SUBMISSIONS';
 export const DUPLICATE_SURVEY = 'DUPLICATE SURVEY';
@@ -27,6 +28,7 @@ export const surveyStore = {
     [submissionModel]: undefined,
   },
   getters: {
+    // todo these don't work remove them
     selectedPage(state, getters) {
       return getters[SELECTED](pageModel);
     },
@@ -140,12 +142,15 @@ export const surveyStore = {
         branded: item.branded,
         allow_submission_edits: true,
         anonymous: item.anonymous,
+        // TODO fix survey_pages
         survey_pages_attributes: item.survey_pages.map(p => ({
           title: p.title,
+          // TODO fix survey_questions
           survey_questions_attributes: p.survey_questions.map(q => ({
             question: q.question,
             question_type: q.question_type,
             mandatory: q.mandatory,
+            // TODO fix survey_answers 
             survey_answers_attributes: q.survey_answers.map(a => ({
               other: a.other,
               answer: a.answer,

@@ -9,13 +9,14 @@
     <template #content v-if="selected">
       <b-tabs content-class="mt-3">
         <b-tab title="Details">
+          <!-- TODO use constant -->
           <detail model="person"></detail>
         </b-tab>
         <b-tab title="Email Addresses">
           <pre>{{ selected.email_addresses }}</pre>
         </b-tab>
         <b-tab title="Bio">
-          <bio v-bind:bio="selected.bio"></bio>
+          <bio :bio="selected.bio"></bio>
         </b-tab>
         <b-tab title="Roles">
           <pre>{{ selected.person_roles }}</pre>
