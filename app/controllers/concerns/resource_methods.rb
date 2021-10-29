@@ -149,7 +149,7 @@ module ResourceMethods
 
     @per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate
     @per_page = nil unless paginate
-    @current_page = params[:currentPage]&.to_i || 0 if paginate
+    @current_page = params[:current_page]&.to_i || 1 if paginate
     # Sort field could come from the nested object
     @order = params[:sortBy]
     @order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
@@ -175,7 +175,8 @@ module ResourceMethods
     end
 
     if paginate
-      q.page(@current_page).per(@per_page)
+      page = @current_page - 1 if @current_page
+      q.page(page).per(@per_page)
     else
       q
     end
