@@ -5,6 +5,7 @@
 
         <b-button @click="edit" :disabled="editable">Edit</b-button>
         <b-button @click="save" :disabled="!editable">Save</b-button>
+        <h2>Basic Information</h2>
         <b-form-group
           label="Name"
         >
@@ -101,6 +102,16 @@
         >
           <b-form-textarea v-model="selected.comments" :disabled="!editable"></b-form-textarea>
         </b-form-group>
+        <h2>Bio</h2>
+        <bio :bio="selected.bio"></bio>
+        <h2>Email Addresses</h2>
+        <ul>
+          <li v-for="email of selected.email_addresses" :key="email.id">
+            <!-- TODO use css for this -->
+            <strong v-if="email.isdefault">{{email.email}}</strong>
+            <span v-if="!email.isdefault">{{email.email}}</span>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -108,9 +119,14 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
+import { getOrderedRelationships } from '../utils/jsonapi_utils';
+import Bio from './bio';
 
 export default {
   name: "Detail",
+  components: {
+    Bio
+  },
   mixins: [
     modelMixin
   ],
@@ -123,10 +139,7 @@ export default {
     },
     save() {
       this.editable = false
-      this.$store.dispatch('jv/update', this.selected).then((data) => {
-        // How do we get this to update the model in the store ????
-        console.log('saved: ', data.id)
-      })
+      this.saveSelected();
     }
   }
 }

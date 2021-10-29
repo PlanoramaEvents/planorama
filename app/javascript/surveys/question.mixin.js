@@ -4,7 +4,7 @@ import { SELECTED } from '../store/model.store';
 import { questionModel as model } from '../store/survey.store';
 
 // CONVERTED
-const questionMixin = {
+export const questionMixin = {
   computed: {
     ...mapGetters({
       selected: SELECTED

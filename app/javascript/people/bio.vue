@@ -22,7 +22,9 @@
       <div class="col-12">
         <h2>Social Media</h2>
       </div>
-      <div class="col-12 col-sm-4 col-lg-3">
+      <!--<div class="col-12 col-sm-4 col-lg-3">-->
+      <div>
+        <pre>Twitter: {{ bio.twitter }}</pre>
         <!-- <span v-if="!bio.twitter">No twitter info</span>
         <twitter v-model="bio.twitter" :edit="false"></twitter> -->
       </div>

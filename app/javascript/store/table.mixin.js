@@ -1,6 +1,6 @@
 import modelMixin from "./model.mixin";
 
-const tableMixin = {
+export const tableMixin = {
   mixins: [modelMixin],
   props: {
     defaultSortBy: {

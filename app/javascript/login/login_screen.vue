@@ -7,11 +7,23 @@
 
 <script>
 import PlanLogo from "../logo.vue";
+import { sessionMixin } from '@mixins';
 
 export default {
   name: "LoginScreen",
+  props: ['redirect'],
   components: {
     PlanLogo,
+  },
+  mixins: [
+    sessionMixin
+  ],
+  watch: {
+    loggedIn (newval, oldval) {
+      if (newval) {
+        this.$router.replace(this.redirect)
+      }
+    }
   },
 };
 </script>

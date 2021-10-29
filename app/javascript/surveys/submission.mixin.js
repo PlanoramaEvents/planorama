@@ -3,7 +3,7 @@ import { SELECTED } from "../store/model.store";
 import { submissionModel as model } from '../store/survey.store';
 
 // CONVERTED
-const submissionMixin = {
+export const submissionMixin = {
   computed: {
     ...mapGetters({
       selected: SELECTED

@@ -1,16 +1,16 @@
 import {mapState, mapActions } from 'vuex';
 import { GET_SESSION_USER }  from "../store/session.store";
 
-const sessionMixin = {
+export const sessionMixin = {
   computed: {
-    // don't quite understand what this part is doing
-    // map this.session to store.state.session
-    // ...mapState(['session']),
     ...mapState({
       currentUser: 'user'
     }),
     loggedIn() {
       return !!this.currentUser.id
+    },
+    currentUserIsAdmin() {
+      return !!Object.values(this.currentUser.person_roles).find(r => r.role === "admin")
     }
   },
   methods: {

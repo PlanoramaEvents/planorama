@@ -5,7 +5,7 @@ import { mapGetters } from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
 
 // CONVERTED
-const pageMixin = {
+export const pageMixin = {
   mixins: [surveyMixin],
   computed: {
     ...mapGetters({

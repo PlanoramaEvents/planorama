@@ -1,7 +1,7 @@
 import { SELECTED, SELECT, UNSELECT, FETCH } from "./model.store";
 import { mapActions } from 'vuex';
 
-const modelMixin = {
+export const modelMixin = {
   props: {
     model: {
       type: String,
@@ -30,6 +30,9 @@ const modelMixin = {
     fetch(params) {
       return this.$store.dispatch(FETCH, {model: this.model, params});
     },
+    saveSelected() {
+      return this.$store.dispatch(SAVE, {model: this.model, item: this.selected})
+    }
   }
 }
 

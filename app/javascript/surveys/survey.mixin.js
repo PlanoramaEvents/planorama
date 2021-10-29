@@ -6,7 +6,7 @@ import { surveyModel as model} from '../store/survey.store';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
 
 // CONVERTED
-const surveyMixin = {
+export const surveyMixin = {
   mixins: [toastMixin],
   computed: {
     ...mapGetters({

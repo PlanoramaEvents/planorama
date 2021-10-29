@@ -1,5 +1,5 @@
 <template>
-  <sidebar-vue model="person">
+  <sidebar-vue :model="model">
     <template #header v-if="selected">
       <h1>
         {{selected.name}}
@@ -9,23 +9,10 @@
     <template #content v-if="selected">
       <b-tabs content-class="mt-3">
         <b-tab title="Details">
-          <!-- TODO use constant -->
-          <detail model="person"></detail>
+          <detail :model="model"></detail>
         </b-tab>
-        <b-tab title="Email Addresses">
-          <pre>{{ selected.email_addresses }}</pre>
-        </b-tab>
-        <b-tab title="Bio">
-          <bio :bio="selected.bio"></bio>
-        </b-tab>
-        <b-tab title="Roles">
-          <pre>{{ selected.person_roles }}</pre>
-        </b-tab>
-        <b-tab title="Tags">
-          <pre>{{ selected.tags }}</pre>
-        </b-tab>
-        <b-tab title="Mail History">
-          <pre>{{ selected.mail_histories }}</pre>
+        <b-tab title="Admin" v-if="currentUserIsAdmin">
+          <people-admin-tab :model="model"></people-admin-tab>
         </b-tab>
       </b-tabs>
     </template>
@@ -34,19 +21,20 @@
 
 <script>
 import SidebarVue from '../components/sidebar_vue';
-import modelMixin from '../store/model.mixin';
-import Bio from './bio.vue';
+import {sessionMixin, modelMixin} from '@mixins';
 import Detail from './detail.vue';
+import PeopleAdminTab from './people_admin_tab';
 
 export default {
   name: 'PeopleSidebar',
   components: {
     SidebarVue,
-    Bio,
-    Detail
+    Detail,
+    PeopleAdminTab,
   },
   mixins: [
-    modelMixin
+    modelMixin,
+    sessionMixin
   ]
 }
 </script>

@@ -58,7 +58,8 @@ export const router = new VueRouter({
       children: loginRoutes,
       meta: {
         guest: true
-      }
+      },
+      props: route => ({ redirect: route.query.redirect })
     },
     {
       path: '/admin',
