@@ -74,6 +74,7 @@ export const store = new Vuex.Store({
       NOTE: The backend will save relationship (tested when it is the 'parent')
 
       NOTE: the ...attrs is weird, need to do spread in the call as well ...
+      Because: this means you could call [NEW]({model, selected: true, arbitrary: 'attributes' })
     */
     [NEW] ({commit, dispatch}, {model, selected = false, relationships = {}, ...attrs}) {
       let newModel = {
