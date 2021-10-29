@@ -175,8 +175,7 @@ module ResourceMethods
     end
 
     if paginate
-      page = @current_page - 1 if @current_page
-      q.page(page).per(@per_page)
+      q.page(@current_page).per(@per_page)
     else
       q
     end
