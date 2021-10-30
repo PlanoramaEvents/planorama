@@ -44,6 +44,16 @@ class PersonSerializer #< ActiveModel::Serializer
                 }
               }
 
+  has_many  :survey_submissions, serializer: Survey::SubmissionSerializer,
+              links: {
+                self: -> (object, params) {
+                  "#{params[:domain]}/person/#{object.id}"
+                },
+                related: -> (object, params) {
+                  "#{params[:domain]}/person/#{object.id}/submission"
+                }
+              }
+
   has_many  :mail_histories
 
   # tag_list

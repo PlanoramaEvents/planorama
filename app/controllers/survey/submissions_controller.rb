@@ -6,7 +6,8 @@ class Survey::SubmissionsController < ResourceController
   DEFAULT_ORDER = 'updated_at'
 
   def belong_to_class
-    Survey
+    Survey if params[:survey_id].present?
+    Person if params[:person_id].present?
   end
 
   def belongs_to_relationship
@@ -14,7 +15,7 @@ class Survey::SubmissionsController < ResourceController
   end
 
   def belongs_to_param_id
-    params[:survey_id]
+    params[:survey_id] || params[:person_id]
   end
 
   def before_save

@@ -23,6 +23,17 @@ class SurveySerializer
              }
            }
 
+  has_many :survey_submissions,
+           serializer: Survey::SubmissionSerializer,
+           links: {
+             self: -> (object, params) {
+               "#{params[:domain]}/survey/#{object.id}"
+             },
+             related: -> (object, params) {
+               "#{params[:domain]}/survey/#{object.id}/submission"
+             }
+           }
+
   belongs_to :published_by, serializer: PersonSerializer,
               if: Proc.new { |record| record.published_by_id },
               links: {
