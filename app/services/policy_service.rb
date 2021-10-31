@@ -6,14 +6,12 @@ module PolicyService
     permissions = { }
 
     classes.each do |clazz|
-      permissions["#{clazz}"] = []
+      permissions["#{clazz}"] = {}
       policy =  Pundit.policy(person, clazz)
       policy.public_methods(false).sort.each do |m|
         result = policy.send m
-        if result
-          op = m.to_s.gsub(/\?$/, '')
-          permissions["#{clazz}"] << op
-        end
+        op = m.to_s.gsub(/\?$/, '')
+        permissions["#{clazz}"][op] = result
       end
     end
 
