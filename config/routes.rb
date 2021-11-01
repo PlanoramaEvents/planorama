@@ -32,6 +32,9 @@ Rails.application.routes.draw do
   resources :configurations, path: 'configuration'
   resources :parameter_names, path: 'parameter_name'
 
+  resources :mailings, path: 'mailing'
+  resources :mail_templates, path: 'mail_template'
+
   get 'agreement/signed', to: 'agreements#signed'
   get 'agreement/unsigned', to: 'agreements#unsigned'
   put 'agreement/sign/:id', to: 'agreements#sign'
@@ -58,6 +61,8 @@ Rails.application.routes.draw do
   # Shallow versions of the create endpoints ...
   post 'page', to: 'survey/pages#create'
   post 'question', to: 'survey/page/questions#create'
+  post 'answer', to: 'survey/page/question/answers#create'
+  patch 'answer', to: 'survey/page/question/answers#create'
 
   # NOTE: if we want submisisons sans surveys fill in the only
   resources :submissions, path: 'submission', only: [] do

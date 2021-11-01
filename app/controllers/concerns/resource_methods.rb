@@ -67,11 +67,18 @@ module ResourceMethods
 
   def update
     model_class.transaction do
-      authorize @object, policy_class: policy_class
-      before_update
-      @object.update!(strip_params(_permitted_params(object_name)))
-      @object.reload
-      after_update
+      if @object.new_record?
+        authorize model_class, policy_class: policy_class
+        before_save
+        @object.save!
+        after_save
+      else
+        authorize @object, policy_class: policy_class
+        before_update
+        @object.update!(strip_params(_permitted_params(object_name)))
+        @object.reload
+        after_update
+      end
     end
     after_update_tx
     render_object(@object)
@@ -295,6 +302,8 @@ module ResourceMethods
       # client side. If we do not find it in the DB we then
       # will create it!
       find_resource || build_resource
+    else
+      build_resource
     end
   end
 
