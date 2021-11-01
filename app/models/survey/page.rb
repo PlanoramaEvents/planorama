@@ -10,8 +10,8 @@ class Survey::Page < ApplicationRecord
 
   has_many :survey_questions,
            class_name: 'Survey::Question',
-           foreign_key: 'survey_page_id',
-           inverse_of: :survey_page,
+           foreign_key: 'page_id',
+           inverse_of: :page,
            dependent: :destroy
   accepts_nested_attributes_for :survey_questions, allow_destroy: true
 

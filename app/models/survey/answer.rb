@@ -1,6 +1,6 @@
 class Survey::Answer < ApplicationRecord
   include RankedModel
-  ranks :sort_order, with_same: :survey_question_id
+  ranks :sort_order, with_same: :question_id
 
   nilify_blanks only: [
     :fuuid
@@ -16,9 +16,9 @@ class Survey::Answer < ApplicationRecord
              foreign_key: 'next_page_id',
              optional: true
 
-  belongs_to :survey_question,
+  belongs_to :question,
              class_name: 'Survey::Question',
-             foreign_key: 'survey_question_id',
+             foreign_key: 'question_id',
              inverse_of: :survey_answers
 
 

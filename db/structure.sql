@@ -700,7 +700,7 @@ CREATE TABLE public.survey_answers (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    survey_question_id uuid,
+    question_id uuid,
     sort_order integer,
     next_page_id uuid,
     fuuid character varying,
@@ -815,7 +815,7 @@ CREATE TABLE public.survey_questions (
     horizontal boolean DEFAULT false,
     private boolean DEFAULT false,
     regex character varying,
-    survey_page_id uuid,
+    page_id uuid,
     fuuid character varying,
     randomize boolean DEFAULT false,
     branching boolean DEFAULT false
@@ -831,10 +831,10 @@ CREATE TABLE public.survey_responses (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    survey_question_id uuid NOT NULL,
+    question_id uuid NOT NULL,
     response json,
     response_as_text text,
-    survey_submission_id uuid NOT NULL,
+    submission_id uuid NOT NULL,
     fuuid character varying
 );
 
@@ -1579,17 +1579,17 @@ CREATE INDEX index_survey_pages_on_survey_id ON public.survey_pages USING btree 
 
 
 --
--- Name: index_survey_questions_on_survey_page_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_survey_questions_on_page_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_survey_questions_on_survey_page_id ON public.survey_questions USING btree (survey_page_id);
+CREATE INDEX index_survey_questions_on_page_id ON public.survey_questions USING btree (page_id);
 
 
 --
--- Name: index_survey_responses_on_survey_submission_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_survey_responses_on_submission_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_survey_responses_on_survey_submission_id ON public.survey_responses USING btree (survey_submission_id);
+CREATE INDEX index_survey_responses_on_submission_id ON public.survey_responses USING btree (submission_id);
 
 
 --
@@ -1715,7 +1715,7 @@ CREATE INDEX pub_progitem_assignment_person_index ON public.published_programme_
 -- Name: survey_resp_question_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX survey_resp_question_idx ON public.survey_responses USING btree (survey_question_id);
+CREATE INDEX survey_resp_question_idx ON public.survey_responses USING btree (question_id);
 
 
 --
@@ -1760,7 +1760,7 @@ ALTER TABLE ONLY public.configurations
 --
 
 ALTER TABLE ONLY public.survey_questions
-    ADD CONSTRAINT fk_rails_35518ef583 FOREIGN KEY (survey_page_id) REFERENCES public.survey_pages(id);
+    ADD CONSTRAINT fk_rails_35518ef583 FOREIGN KEY (page_id) REFERENCES public.survey_pages(id);
 
 
 --
@@ -1776,7 +1776,7 @@ ALTER TABLE ONLY public.survey_submissions
 --
 
 ALTER TABLE ONLY public.survey_responses
-    ADD CONSTRAINT fk_rails_7fc628646e FOREIGN KEY (survey_submission_id) REFERENCES public.survey_submissions(id);
+    ADD CONSTRAINT fk_rails_7fc628646e FOREIGN KEY (submission_id) REFERENCES public.survey_submissions(id);
 
 
 --
@@ -1852,4 +1852,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210717191036'),
 ('20210811135617'),
 ('20210819204542'),
-('20210925131929');
+('20210925131929'),
+('20211101160001');
+
+

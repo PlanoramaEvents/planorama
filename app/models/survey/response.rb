@@ -1,11 +1,11 @@
 class Survey::Response < ApplicationRecord
-  belongs_to :survey_question,
+  belongs_to :question,
              class_name: 'Survey::Question',
-             foreign_key: 'survey_question_id'
+             foreign_key: 'question_id'
 
-  belongs_to :survey_submission,
+  belongs_to :submission,
              class_name: 'Survey::Submission',
-             foreign_key: 'survey_submission_id',
+             foreign_key: 'submission_id',
              inverse_of: :survey_responses
 
   before_save :set_response_text

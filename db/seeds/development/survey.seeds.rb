@@ -51,21 +51,21 @@ survey_question = Survey::Question.create(
   question_type: :textfield,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page.id
+  page_id: survey_page.id
 )
 survey_question2 = Survey::Question.create(
   question: "What is your quest?",
   question_type: :textfield,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page.id
+  page_id: survey_page.id
 )
 survey_question3 = Survey::Question.create(
   question: "What is the air speed velocity of an unladen swallow?",
   question_type: :singlechoice,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page2.id
+  page_id: survey_page2.id
 )
 Survey::Answer.create(
   survey_question_id: survey_question3.id,
@@ -121,21 +121,21 @@ survey_question = Survey::Question.create(
   question_type: :textbox,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page.id
+  page_id: survey_page.id
 )
 survey_question2 = Survey::Question.create(
   question: "Are your pants on fire?",
   question_type: :textfield,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page.id
+  page_id: survey_page.id
 )
 survey_question3 = Survey::Question.create(
   question: "What is the meaning of life?",
   question_type: :multiplechoice,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page2.id
+  page_id: survey_page2.id
 )
 Survey::Answer.create(
   survey_question_id: survey_question3.id,
@@ -188,7 +188,7 @@ p "Anna's survey created again"
       question_type: question_type,
       text_size: Faker::Number.between(from: 11, to: 16),
       horizontal: Faker::Boolean.boolean,
-      survey_page_id: survey_page.id
+      page_id: survey_page.id
     )
     case
     when :singlechoice, :multiplechoice, :dropdown

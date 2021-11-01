@@ -1,6 +1,6 @@
 class Survey::Question < ApplicationRecord
   include RankedModel
-  ranks :sort_order, with_same: :survey_page_id
+  ranks :sort_order, with_same: :page_id
 
   nilify_blanks only: [
     :fuuid
@@ -8,19 +8,19 @@ class Survey::Question < ApplicationRecord
 
   has_paper_trail
 
-  default_scope {includes(:survey_page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
+  default_scope {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
 
-  belongs_to :survey_page,
+  belongs_to :page,
              class_name: 'Survey::Page',
-             foreign_key: 'survey_page_id',
+             foreign_key: 'page_id',
              inverse_of: :survey_questions
 
   has_one :survey, through: :survey_page
 
   has_many :survey_answers,
            class_name: 'Survey::Answer',
-           foreign_key: 'survey_question_id',
-           inverse_of: :survey_question,
+           foreign_key: 'question_id',
+           inverse_of: :question,
            dependent: :destroy
   accepts_nested_attributes_for :survey_answers, :allow_destroy => true
 

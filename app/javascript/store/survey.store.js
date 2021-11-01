@@ -158,7 +158,7 @@ export const surveyStore = {
             question: q.question,
             question_type: q.question_type,
             mandatory: q.mandatory,
-            // TODO fix survey_answers 
+            // TODO fix survey_answers
             survey_answers_attributes: q.survey_answers.map(a => ({
               other: a.other,
               answer: a.answer,
@@ -188,7 +188,7 @@ export const surveyStore = {
       }
       let relationships= {
         survey_page: {
-          id: item.survey_page_id,
+          id: item.page_id,
           type: pageModel
         }
       }

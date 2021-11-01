@@ -2,7 +2,7 @@ class Survey::AnswerSerializer
   include JSONAPI::Serializer
 
   attributes :id, :answer, :default, :created_at,
-             :updated_at, :lock_version, :survey_question_id,
+             :updated_at, :lock_version, :question_id,
              :sort_order, :fuuid, :other
 
   attribute :next_page_id do |object|
