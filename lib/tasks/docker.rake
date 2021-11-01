@@ -38,7 +38,7 @@ namespace :docker do
     end
 
     task :mac_trunc_logs do
-        sh "echo", "\":> $(docker inspect planorama_planorama_1 --format '{{.LogPath}}'); exit\"", "|",  "nc",  "-U",  "~/Library/Containers/com.docker.docker/Data/debug-shell.sock"
+        sh "docker", "run", "-it", "--rm", "--privileged", "--pid=host", "planorama:dev", "nsenter",  "-t",  "1",  "-m", "-u", "-n", "-i", "--", "sh", "-c", "'truncate -s0 /var/lib/docker/containers/*/*-json.log'"
     end
 
     task :psql => :read_envrc do

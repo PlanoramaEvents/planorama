@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { jsonapiModule, utils } from 'jsonapi-vuex'
 import { http } from '../http';
+import { getId } from '../utils/jsonapi_utils';
 
 export const SELECT = 'SELECT';
 export const UNSELECT = 'UNSELECT';
@@ -22,14 +23,6 @@ import { sessionStore } from './session.store';
 
 // survey add-ons
 import { surveyStore, surveyEndpoints } from './survey.store';
-
-const getId = (itemOrId) => {
-  try {
-    return itemOrId.id || id;
-  } catch {
-    return itemOrId;
-  }
-}
 
 const endpoints = {
   ...personEndpoints,
@@ -103,8 +96,9 @@ export const store = new Vuex.Store({
       else {
         item._jv = { type: model }
       }
+
       return new Promise((res, rej) => {
-        dispatch('jv/patch', [endpoints[model], {params}]).then((savedModel) => {
+        dispatch('jv/patch', [item, {params}]).then((savedModel) => {
           // to get around the fact that the getter returns a copy,
           // re-select the saved model so that the getter updates.
           if(selected) {
@@ -114,8 +108,15 @@ export const store = new Vuex.Store({
         }).catch(rej)
       });
     },
-    [DELETE] ({dispatch}, {model, itemOrId}) {
-      return dispatch('jv/delete', `${endpoints[model]}/${getId(itemOrId)}`)
+    [DELETE] ({dispatch, commit, state}, {model, itemOrId, unselect = true}) {
+      return new Promise((res, rej) => {
+        dispatch('jv/delete', `${endpoints[model]}/${getId(itemOrId)}`).then((data) => {
+          if (unselect && state.selected[model]) {
+            commit(UNSELECT, {model})
+          }
+          res(data)
+        }).catch(rej)
+      })
     },
     [FETCH] ({dispatch}, {model, params}) {
       return dispatch('jv/get', [endpoints[model], {params}])

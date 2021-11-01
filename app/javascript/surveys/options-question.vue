@@ -1,7 +1,7 @@
 <template>
   <div class="col-12">
-    <draggable v-model="question.survey_answers" @end="save" handle=".qhandle">
-      <template v-for="(a, i) in question.survey_answers">
+    <draggable v-model="answers" @end="saveAnswerOrder" handle=".qhandle">
+      <template v-for="(a, i) in answers">
         <div class="row survey-answer" :key="a.id" v-if="!a.other">
           <div class="col-5 pb-2">
             <div class="float-left qhandle" v-if="isSelected"><b-icon-grip-vertical></b-icon-grip-vertical></div>
@@ -42,13 +42,17 @@
 <script>
 import draggable from 'vuedraggable';
 
-import { createNamespacedHelpers } from 'vuex';
-const { mapState } = createNamespacedHelpers('surveys');
-import surveyMixin from './survey.mixin';
-import pageMixin from './page.mixin';
-import questionMixin from './question.mixin';
+import {
+  surveyMixin,
+  pageMixin,
+  questionMixin,
+  answerMixin
+} from '@mixins';
 import DropdownItem from './dropdown-item';
 import NextPagePicker from './next-page-picker.vue';
+import { answerModel, questionModel } from '../store/survey.store'
+import { mapActions } from 'vuex';
+import { SAVE } from '../store/model.store';
 
 export default {
   name: 'OptionsQuestion',
@@ -62,12 +66,16 @@ export default {
     surveyMixin,
     pageMixin,
     questionMixin,
+    answerMixin
   ],
   components: {
     draggable,
     DropdownItem,
     NextPagePicker,
   },
+  data: () => ({
+    answers: []
+  }),
   computed: {
     optionComponent() {
       switch(this.question.question_type) {
@@ -86,28 +94,62 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      save: SAVE
+    }),
     pagePickerId(answer) {
       return `page-picker-answer-${answer.id}`
     },
     addOption() {
-      if (!this.question.survey_answers) {
-        this.question.survey_answers = []
+      let item = {
+        answer: 'Option',
+        _jv: {
+          type: answerModel,
+          relationships: {
+            question: {
+              data: {
+                id: this.question.id,
+                type: questionModel
+              }
+            }
+          }
+        }
       }
-      this.question.survey_answers.push({answer: 'Option'})
-      this.save()
+      this.saveAnswer(item).then((data) => {
+        // what comes back here
+        console.log(data)
+        // TODO assign to this.answers
+      })
     },
     removeOption(answer) {
+      // TODO i stopped here
       answer._destroy = true;
       this.save()
     },
     addOther() {
-      if (!this.question.survey_answers) {
-        this.question.survey_answers = []
+      let item = {
+        answer: 'Other',
+        other: true,
+        _jv: {
+          type: answerModel,
+          relationships: {
+            question: {
+              data: {
+                id: this.question.id,
+                type: questionModel
+              }
+            }
+          }
+        }
       }
-      this.question.survey_answers.push({answer: 'Other', other: true})
-      this.save()
+      this.saveAnswer(item).then((data) => {
+        // what comes back here
+        console.log(data)
+        // TODO assign to this.answers
+      })
     },
     removeOther() {
+      // TODO
       this.question.survey_answers.filter(a => a.other)[0]._destroy = true;
       this.save()
     },
@@ -118,7 +160,29 @@ export default {
         return "Submits survey"
       }
       return "Continues to next page"
+    },
+    saveAnswerOrder($event) {
+      // the answers array is totally decoupled from the question at this point
+      // thing to save
+      let answer = this.answers[$event.newIndex]
+      let item = {
+        sort_order_position: $event.newIndex,
+        _jv: {
+          id: answer.id,
+          type: answerModel
+        }
+      }
+      console.log("item", item)
+      this.saveAnswer(item).then((data) => {
+        // what comes back here
+        console.log(data)
+        // TODO assign to this.answers
+      })
     }
+  },
+  mounted() {
+    this.answers = this.getQuestionAnswers(this.question);
+    console.log('this.answers', this.answers)
   }
 }
 </script>

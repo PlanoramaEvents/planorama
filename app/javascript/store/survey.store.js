@@ -1,4 +1,5 @@
 import { SELECTED, NEW, SAVE, UNSELECT} from './model.store';
+import { getOrderedRelationships } from '../utils/jsonapi_utils';
 
 export const NEW_SURVEY = 'NEW SURVEY';
 export const NEW_PAGE = 'NEW PAGE';
@@ -9,15 +10,22 @@ export const SAVE_SUBMISSION = 'SAVE SUBMISSION';
 export const GET_NESTED_SURVEY = 'GET NESTED SURVEY';
 export const CLEAR_SURVEY_SUBMISSIONS = 'CLEAR SURVEY SUBMISSIONS';
 export const DUPLICATE_SURVEY = 'DUPLICATE SURVEY';
+export const DUPLICATE_QUESTION = 'DUPLICATE QUESTION';
 
 export const surveyModel = 'survey';
 export const pageModel = 'page';
 export const questionModel = 'question';
+export const answerModel = 'answer';
 export const submissionModel = 'submission';
 export const responseModel = 'response';
 
 export const surveyEndpoints = {
-  [surveyModel]: 'survey'
+  [surveyModel]: 'survey',
+  [pageModel]: 'page',
+  [questionModel]: 'question',
+  [answerModel]: 'answer',
+  [submissionModel]: 'submission',
+  [responseModel]: 'response'
 }
 
 export const surveyStore = {
@@ -159,6 +167,32 @@ export const surveyStore = {
         })),
       }
       return dispatch(NEW, {model: surveyModel, selected: true, ...newSurvey})
+    },
+    [DUPLICATE_QUESTION] ({dispatch}, {item, insertAt}) {
+      let newQuestion = {
+        question: item.question,
+        question_type: item.question_type,
+        mandatory: item.mandatory,
+        text_size: item.text_size,
+        horizontal: item.horizontal,
+        private: item.private,
+        regex: item.regex,
+        survey_answers_attributes: getOrderedRelationships('survey_answers', item).map(a => ({
+          answer: a.answer,
+          default: a.default,
+          other: a.other,
+        }))
+      }
+      if (insertAt) {
+        newQuestion.sort_order_position = insertAt
+      }
+      let relationships= {
+        survey_page: {
+          id: item.survey_page_id,
+          type: pageModel
+        }
+      }
+      return dispatch(NEW, {model: questionModel, selected: true, relationships, ...newQuestion})
     }
   }
 }

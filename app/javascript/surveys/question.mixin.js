@@ -1,10 +1,14 @@
-import {mapGetters} from 'vuex';
+import {mapGetters, mapMutations} from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
-import { SELECTED } from '../store/model.store';
-import { questionModel as model } from '../store/survey.store';
+import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '../store/model.store';
+import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '../store/survey.store';
+import { pageMixin } from '@mixins';
 
 // CONVERTED
 export const questionMixin = {
+  mixins: [
+    pageMixin
+  ],
   computed: {
     ...mapGetters({
       selected: SELECTED
@@ -51,10 +55,48 @@ export const questionMixin = {
     isSelected() {
       return this.question.id === this.selectedQuestion?.id;
     },
+    selectedQuestionIndex() {
+      return this.getQuestionIndex(this.selectedQuestion)
+    }
   },
   methods: {
+    ...mapMutations({
+      select: SELECT,
+      unselect: UNSELECT,
+      newQuestion: NEW_QUESTION,
+      duplicateQuestion: DUPLICATE_QUESTION,
+      delete: DELETE,
+      save: SAVE
+    }),
+    saveSelectedQuestion() {
+      return this.save({model, item: this.selectedQuestion})
+    },
+    selectQuestion(itemOrId) {
+      this.select({model, itemOrId})
+    },
+    unselectQuestion() {
+      this.unselect({model});
+    },
     getQuestionAnswers(question) {
       return getOrderedRelationships('survey_answers', question);
+    },
+    getQuestionIndex(question) {
+      if (!question) {
+        return undefined;
+      }
+      return getOrderedRelationships('survey_questions', question.survey_page).findIndex(q => q.id === question.id)
+    },
+    duplicateSelectedQuestion() {
+      if(!this.selectedQuestion) {
+        return Promise.resolve()
+      }
+      return this.duplicateQuestion({item: this.selectedQuestion, insertAt: this.selectedQuestionIndex + 1})
+    },
+    deleteSelectedQuestion() {
+      if (!this.selectedQuestion) {
+        return Promise.resolve()
+      }
+      return this.delete({model, item: this.selectedQuestion})
     }
   }
 }
