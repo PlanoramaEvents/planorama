@@ -302,7 +302,7 @@ module ResourceMethods
       # client side. If we do not find it in the DB we then
       # will create it!
       find_resource || build_resource
-    else
+    elsif update_actions.include?(action)
       build_resource
     end
   end
@@ -338,6 +338,10 @@ module ResourceMethods
 
   def new_actions
     [:new, :create]
+  end
+
+  def update_actions
+    [:update]
   end
 
   def allowed_params
