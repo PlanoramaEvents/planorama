@@ -137,7 +137,7 @@ module ActiveModel
     end
 
     def attribute_for_sheet
-      self.class._attributes.difference([:lock_version, :survey_id, :person_id, :fuuid])
+      self.class._attributes.difference([:lock_version, :survey_id, :person_id)
     end
   end
 end

@@ -5,6 +5,8 @@ class Mailing < ApplicationRecord
 
   belongs_to :mail_template, touch: true, dependent: :destroy
 
+  has_one  :survey, through: :mail_template
+
   # validate :number_and_mail_use_unique
 
   def date_sent

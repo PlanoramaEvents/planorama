@@ -6,7 +6,7 @@ class SurveySerializer
              :use_captcha, :public,
              :transition_accept_status, :transition_decline_status,
              :declined_msg, :authenticate_msg, :anonymous,
-             :published_on, :description, :fuuid,
+             :published_on, :description,
              :mandatory_star,
              :numbered_questions,
              :branded,

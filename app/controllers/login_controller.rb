@@ -12,6 +12,7 @@ class LoginController < ApplicationController
     person = magic_link.person
 
     # Authenticate the person
+    # TODO: need to return the JWT token ????
     sign_in(person, scope: :person)
 
     # Direct them the destination page

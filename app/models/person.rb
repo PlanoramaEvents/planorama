@@ -80,12 +80,13 @@ class Person < ApplicationRecord
 
   has_many  :person_mailing_assignments
   has_many  :mailings, through: :person_mailing_assignments
-  has_many  :mail_histories # , :through => :person_mailing_assignments
+  has_many  :mail_histories
 
   has_many  :email_addresses, dependent: :destroy
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
   has_many :survey_submissions, class_name: 'Survey::Submission', dependent: :destroy
+  has_many :mailed_surveys, through: :mailings, source: :survey
   # TODO: add scope for survey id
   # TODO: get list of surveys for this person ...
 

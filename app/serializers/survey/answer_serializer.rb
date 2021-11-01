@@ -3,7 +3,7 @@ class Survey::AnswerSerializer
 
   attributes :id, :answer, :default, :created_at,
              :updated_at, :lock_version, :question_id,
-             :sort_order, :fuuid, :other
+             :sort_order, :other
 
   attribute :next_page_id do |object|
     # consisteny check

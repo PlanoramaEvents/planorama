@@ -703,7 +703,6 @@ CREATE TABLE public.survey_answers (
     question_id uuid,
     sort_order integer,
     next_page_id uuid,
-    fuuid character varying,
     other boolean DEFAULT false
 );
 
@@ -758,8 +757,7 @@ CREATE TABLE public.survey_pages (
     sort_order integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    survey_id uuid,
-    fuuid character varying
+    survey_id uuid
 );
 
 
@@ -816,7 +814,6 @@ CREATE TABLE public.survey_questions (
     private boolean DEFAULT false,
     regex character varying,
     page_id uuid,
-    fuuid character varying,
     randomize boolean DEFAULT false,
     branching boolean DEFAULT false
 );
@@ -834,8 +831,7 @@ CREATE TABLE public.survey_responses (
     question_id uuid NOT NULL,
     response json,
     response_as_text text,
-    submission_id uuid NOT NULL,
-    fuuid character varying
+    submission_id uuid NOT NULL
 );
 
 
@@ -850,8 +846,7 @@ CREATE TABLE public.survey_submissions (
     person_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    fuuid character varying
+    lock_version integer DEFAULT 0
 );
 
 
@@ -880,7 +875,6 @@ CREATE TABLE public.surveys (
     created_by_id uuid,
     updated_by_id uuid,
     description text,
-    fuuid character varying,
     mandatory_star boolean DEFAULT true,
     numbered_questions boolean DEFAULT false,
     branded boolean DEFAULT true,
@@ -1853,6 +1847,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210811135617'),
 ('20210819204542'),
 ('20210925131929'),
-('20211101160001');
+('20211101160001'),
+('20211101195536');
 
 

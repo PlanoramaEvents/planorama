@@ -82,7 +82,6 @@ class SurveysController < ResourceController
       numbered_questions
       branded
       allow_submission_edits
-      fuuid
     ] << [
       survey_pages_attributes: %i[
         id
@@ -91,7 +90,6 @@ class SurveysController < ResourceController
         sort_order
         survey_id
         lock_version
-        fuuid
         _destroy
       ] << [
         survey_questions_attributes: %i[
@@ -106,7 +104,6 @@ class SurveysController < ResourceController
           horizontal
           private
           regex
-          fuuid
           branching
           _destroy
         ] << [
@@ -116,7 +113,6 @@ class SurveysController < ResourceController
             lock_version
             default
             sort_order
-            fuuid
             _destroy
             other
             next_page_id

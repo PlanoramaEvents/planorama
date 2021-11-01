@@ -2,10 +2,6 @@ class Survey::Question < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: :page_id
 
-  nilify_blanks only: [
-    :fuuid
-  ]
-
   has_paper_trail
 
   default_scope {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}

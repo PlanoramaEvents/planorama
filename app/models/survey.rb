@@ -10,6 +10,10 @@ class Survey < ApplicationRecord
 
   has_many :survey_submissions, class_name: 'Survey::Submission'
 
+  has_many :mail_templates
+  has_many :mailings, through: :mail_templates
+  has_many :mailed_submitters, though: :mailings, source: :person
+
   before_destroy :check_for_use #, :check_if_public
 
   belongs_to :published_by, class_name: 'Person', required: false
@@ -17,7 +21,7 @@ class Survey < ApplicationRecord
   belongs_to :updated_by, class_name: 'Person', required: false
 
   nilify_blanks only: [
-    :description, :fuuid
+    :description
   ]
 
   # transition_accept_status

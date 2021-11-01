@@ -4,7 +4,7 @@ class Survey::QuestionSerializer
   attributes :id, :question, :question_type,
              :created_at, :updated_at, :lock_version, :mandatory,
              :text_size, :sort_order, :horizontal,
-             :private, :regex, :page_id, :fuuid,
+             :private, :regex, :page_id,
              :branching
 
   # has_many :survey_answers, serializer: Survey::AnswerSerializer,

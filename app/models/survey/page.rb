@@ -2,10 +2,6 @@ class Survey::Page < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: :survey_id
 
-  nilify_blanks only: [
-    :fuuid
-  ]
-
   default_scope { order(['survey_pages.sort_order asc'])}
 
   has_many :survey_questions,
