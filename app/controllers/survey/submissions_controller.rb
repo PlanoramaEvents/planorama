@@ -56,8 +56,8 @@ class Survey::SubmissionsController < ResourceController
         id
         lock_version
         _destroy
-        survey_submission_id
-        survey_question_id
+        submission_id
+        question_id
         fuuid
       ] << [
         response: %i[

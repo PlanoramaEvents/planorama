@@ -23,7 +23,7 @@ export const answerMixin = {
           if (update) {
             // refresh the answers to the question
             // or it's not working so don't do that
-            this.getAnswersFromServer(data.survey_question_id).then(res).catch(rej);
+            this.getAnswersFromServer(data.question_id).then(res).catch(rej);
           } else {
             res(data)
           }

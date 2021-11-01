@@ -68,15 +68,15 @@ survey_question3 = Survey::Question.create(
   page_id: survey_page2.id
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "African"
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "European"
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "I don't know"
 )
 
@@ -138,15 +138,15 @@ survey_question3 = Survey::Question.create(
   page_id: survey_page2.id
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "42"
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "6x9"
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "Every sperm is sacred"
 )
 
@@ -194,7 +194,7 @@ p "Anna's survey created again"
     when :singlechoice, :multiplechoice, :dropdown
       Faker::Number.between(from: 3, to: 5).times.each do
         Survey::Answer.create(
-          survey_question_id: survey_question.id,
+          question_id: survey_question.id,
           answer: Faker::Lorem.words().join(" ")
         )
       end

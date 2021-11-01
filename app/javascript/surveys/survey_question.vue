@@ -330,7 +330,7 @@ export default {
   data: () => ({
     otherChecked: false,
     response: {
-      survey_question_id: null,
+      question_id: null,
       response: {text: '', answers: [], address:{
         street: null, street2: null, city: null,
         state: null, zip: null, country: null
@@ -370,7 +370,7 @@ export default {
       if (!this.selectedSubmission.survey_responses_attributes) {
         this.selectedSubmission.survey_responses_attributes = []
       }
-      let existing_response = this.selectedSubmission.survey_responses_attributes.find(r => r.survey_question_id == this.question.id)
+      let existing_response = this.selectedSubmission.survey_responses_attributes.find(r => r.question_id == this.question.id)
       if (existing_response) {
         this.response = existing_response
       } else {
@@ -388,7 +388,7 @@ export default {
     }
   },
   mounted() {
-    this.response.survey_question_id = this.question.id;
+    this.response.question_id = this.question.id;
     if (this.selectedSubmission) {
       this.linkResponse();
     }

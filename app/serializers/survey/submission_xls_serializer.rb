@@ -11,7 +11,7 @@ class Survey::SubmissionXlsSerializer < Survey::SubmissionSerializer
 
   has_many :survey_responses do
     object.survey_responses.collect { |v|
-      {v.survey_question_id => v.response_as_text}
+      {v.question_id => v.response_as_text}
     }.reduce({}, :merge)
   end
 

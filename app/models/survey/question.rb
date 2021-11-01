@@ -15,7 +15,7 @@ class Survey::Question < ApplicationRecord
              foreign_key: 'page_id',
              inverse_of: :survey_questions
 
-  has_one :survey, through: :survey_page
+  has_one :survey, through: :page
 
   has_many :survey_answers,
            class_name: 'Survey::Answer',
@@ -24,7 +24,7 @@ class Survey::Question < ApplicationRecord
            dependent: :destroy
   accepts_nested_attributes_for :survey_answers, :allow_destroy => true
 
-  has_many :survey_responses, dependent: :destroy, class_name: 'Survey::Response', foreign_key: 'survey_question_id'
+  has_many :survey_responses, dependent: :destroy, class_name: 'Survey::Response', foreign_key: 'question_id'
 
   validates_inclusion_of :question_type, in:
     [
