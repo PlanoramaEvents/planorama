@@ -23,6 +23,9 @@ Rails.application.routes.draw do
     resources :email_addresses, path: 'email_address', shallow: true
     resources :submissions, path: 'submission', shallow: true
   end
+
+  get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
+
   resources :bios, path: 'bio'
   resources :programme_items, path: 'programme_item'
   resources :programme_assignments, path: 'programme_assignment'

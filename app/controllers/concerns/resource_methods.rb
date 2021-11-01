@@ -146,6 +146,42 @@ module ResourceMethods
     params[:action].to_sym
   end
 
+  def collection_params
+    per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate
+    per_page = nil unless paginate
+    current_page = params[:current_page]&.to_i || 1 if paginate
+    # Sort field could come from the nested object
+    # order = params[:sortBy]
+    # order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
+    # order ||= ''
+    # direction = params[:sortOrder] || 'asc'
+    filters = JSON.parse(params[:filter]) if params[:filter].present?
+
+    return per_page, current_page, filters
+  end
+
+  def order_string(order_by: nil)
+    order_str = nil
+
+    order = order_by || params[:sortBy]
+    order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
+    order ||= ''
+
+    if !order.blank?
+      direction = params[:sortOrder] || 'asc'
+
+      order_str = "#{order} #{direction}"
+      # For PSQL NULLS FIRST is the default for DESC order, and NULLS LAST otherwise.
+      if direction == 'asc'
+        order_str += ' NULLS FIRST'
+      else
+        order_str += ' NULLS LAST'
+      end
+    end
+
+    order_str
+  end
+
   def collection
     base = if belong_to_class
              parent = belong_to_class.find belongs_to_param_id
@@ -154,15 +190,7 @@ module ResourceMethods
              model_class
            end
 
-    @per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate
-    @per_page = nil unless paginate
-    @current_page = params[:current_page]&.to_i || 1 if paginate
-    # Sort field could come from the nested object
-    @order = params[:sortBy]
-    @order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
-    @order ||= ''
-    @direction = params[:sortOrder] || 'asc'
-    @filters = JSON.parse(params[:filter]) if params[:filter].present?
+    @per_page, @current_page, @filters = collection_params
 
     q = policy_scope(base, policy_scope_class: policy_scope_class)
       .includes(includes)
@@ -170,16 +198,7 @@ module ResourceMethods
       .joins(join_tables)
       .where(query(@filters))
 
-    # For PSQL NULLS FIRST is the default for DESC order, and NULLS LAST otherwise.
-    if !@order.blank?
-      order_str = "#{@order} #{@direction}"
-      if @direction == 'asc'
-        order_str += ' NULLS FIRST'
-      else
-        order_str += ' NULLS LAST'
-      end
-      q = q.order(order_str)
-    end
+    q = q.order(order_string)
 
     if paginate
       q.page(@current_page).per(@per_page)

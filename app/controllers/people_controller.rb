@@ -13,6 +13,47 @@ class PeopleController < ResourceController
     render_object(me, serializer: SessionSerializer)
   end
 
+  def mailed_surveys
+    authorize current_person, policy_class: policy_class
+
+
+    collection ||= mailed_survey_collection
+    collection_total ||= collection.total_count if paginate
+    collection_total ||= collection.size unless paginate
+
+    meta = {}
+    meta[:total] = collection_total if paginate
+    meta[:current_page] = @current_page if @current_page.present? && paginate
+    meta[:perPage] = @per_page if @per_page.present? && paginate
+
+    # get the surveys
+    render json: SurveySerializer.new(collection,
+                  {
+                    meta: meta,
+                    # include: serializer_includes,
+                    params: {domain: "#{request.base_url}"}
+                  }
+                ).serializable_hash(),
+           content_type: 'application/json'
+
+  end
+
+  def mailed_survey_collection
+    @per_page, @current_page, @filters = collection_params
+
+    person = Person.find params[:person_id]
+
+    q = person.mailed_surveys
+        .where(query(@filters))
+        .order(order_string(order_by: 'name'))
+
+    if paginate
+      q.page(@current_page).per(@per_page)
+    else
+      q
+    end
+  end
+
   def serializer_includes
     [
       :bio,
