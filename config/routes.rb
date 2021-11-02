@@ -9,7 +9,7 @@ Rails.application.routes.draw do
                registrations: 'people/registrations'
              }, defaults: { format: :json }
 
-  root to: 'home#index' #, :as => :authenticated_root
+  root to: 'home#index'
 
   # TODO: we will need to rework the magic link for SPA routing
   get '/login/:magic_link', to: 'login#magic_link'
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     resources :submissions, path: 'submission', shallow: true
   end
 
-  get 'person/:person_id/submissions', to: 'people#submissions'
+  get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
   get 'person/:person_id/assigned_surveys', to: 'people#assigned_surveys'
 
   resources :bios, path: 'bio'
@@ -64,7 +64,9 @@ Rails.application.routes.draw do
 
   # Shallow versions of the create endpoints ...
   post 'page', to: 'survey/pages#create'
+  patch 'page', to: 'survey/pages#create'
   post 'question', to: 'survey/page/questions#create'
+  patch 'question', to: 'survey/page/questions#create'
   post 'answer', to: 'survey/page/question/answers#create'
   patch 'answer', to: 'survey/page/question/answers#create'
 
@@ -74,15 +76,6 @@ Rails.application.routes.draw do
       resources :responses, path: 'response', shallow: true
     end
   end
-
-  # scope module: 'survey' do
-  #   resources :pages, :questions, :answers, :submissions
-  #   delete 'submissions', to: 'submissions#delete_all'
-  # end
-  #
-  # scope module: 'submission' do
-  #   resources :responses
-  # end
 
   get 'rbac', to: 'rbac#index'
 
