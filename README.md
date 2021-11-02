@@ -22,10 +22,18 @@ You will need to create a `.envrc` file. The minimal contant should have
 ```
 export POSTGRES_USER=yourdbuser
 export POSTGRES_PASSWORD=yourpassword
+export DEVISE_SECRET=abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+export SIDEKIQ_REDIS_URL=redis://localhost:6379/0
 ```
 
-This will be used by the docker scripts to create an instance of the database
-and set up an initial user. Also by the Rails database.yml for the connection.
+The USER and PASSWORD will be used by the docker scripts to create an instance of the database
+and set up an initial user. Also by the Rails database.yml for the connection. Their value is
+unimportant and can be used as-is.
+
+DEVISE_SECRET is used by Ruby for encryption. Any long string will do. This one works fine.
+
+Redis is not running at the default port, so Sidekiq needs to be told where it is.
+
 
 If you are installing this on a Windows machine, you may need to run the
 following command:
