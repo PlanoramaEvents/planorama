@@ -8,7 +8,7 @@ module PolicyService
     permissions = { }
 
     classes.each do |clazz|
-      entity = clazz.to_s.singularize.snakecase
+      entity = clazz.to_s.singularize.snakecase.split('::').last
       permissions[entity] = {}
       policy = Pundit.policy(person, clazz.to_sym)
       policy ||= Pundit.policy(person, :Planner) # if nill use PlannerPolicy

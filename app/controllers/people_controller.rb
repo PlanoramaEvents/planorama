@@ -13,9 +13,11 @@ class PeopleController < ResourceController
     render_object(me, serializer: SessionSerializer)
   end
 
+  #
+  # Get a list of all the surveys that have been sent to the given person
+  #
   def mailed_surveys
     authorize current_person, policy_class: policy_class
-
 
     collection ||= mailed_survey_collection
     collection_total ||= collection.total_count if paginate
@@ -26,11 +28,15 @@ class PeopleController < ResourceController
     meta[:current_page] = @current_page if @current_page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
 
-    # get the surveys
     render json: SurveySerializer.new(collection,
                   {
                     meta: meta,
-                    # include: serializer_includes,
+                    include: [
+                      :survey_pages,
+                      :'survey_pages.survey_questions',
+                      :'survey_pages.survey_questions.survey_answers',
+                      :survey_submissions
+                    ],
                     params: {domain: "#{request.base_url}"}
                   }
                 ).serializable_hash(),
@@ -38,12 +44,73 @@ class PeopleController < ResourceController
 
   end
 
+  def submissions
+    authorize current_person, policy_class: policy_class
+
+    collection ||= submissions_collection
+    collection_total ||= collection.total_count if paginate
+    collection_total ||= collection.size unless paginate
+
+    meta = {}
+    meta[:total] = collection_total if paginate
+    meta[:current_page] = @current_page if @current_page.present? && paginate
+    meta[:perPage] = @per_page if @per_page.present? && paginate
+
+    render json: Survey::SubmissionSerializer.new(collection,
+                  {
+                    meta: meta,
+                    include: [
+                      :survey_responses
+                    ],
+                    params: {domain: "#{request.base_url}"}
+                  }
+                ).serializable_hash(),
+           content_type: 'application/json'
+
+  end
+
+  def submissions_collection
+    @per_page, @current_page, @filters = collection_params
+
+    person = Person.find params[:person_id]
+
+    # TODO: tweak include to optimize query pre-fetch
+    q = person.survey_submissions
+        .includes(
+          [
+            :survey_responses
+          ]
+        )
+        .where(query(@filters))
+        .order(order_string(order_by: 'name'))
+
+    if paginate
+      q.page(@current_page).per(@per_page)
+    else
+      q
+    end
+  end
+
   def mailed_survey_collection
     @per_page, @current_page, @filters = collection_params
 
     person = Person.find params[:person_id]
 
+    # TODO: tweak include to optimize query pre-fetch
     q = person.mailed_surveys
+        .includes(
+          [
+            {
+              survey_pages: {
+                survey_questions: :survey_answers
+              }
+            },
+            :survey_submissions,
+            :created_by,
+            :updated_by,
+            :published_by
+          ]
+        )
         .where(query(@filters))
         .order(order_string(order_by: 'name'))
 

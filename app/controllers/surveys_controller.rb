@@ -7,7 +7,8 @@ class SurveysController < ResourceController
     [
       :survey_pages,
       :'survey_pages.survey_questions',
-      :'survey_pages.survey_questions.survey_answers'
+      :'survey_pages.survey_questions.survey_answers',
+      :survey_submissions
       # :created_by,
       # :updated_by,
       # :published_by
@@ -21,6 +22,7 @@ class SurveysController < ResourceController
           survey_questions: :survey_answers
         }
       },
+      :survey_submissions,
       :created_by,
       :updated_by,
       :published_by

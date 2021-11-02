@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     resources :submissions, path: 'submission', shallow: true
   end
 
+  get 'person/:person_id/submissions', to: 'people#submissions'
   get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
 
   resources :bios, path: 'bio'
