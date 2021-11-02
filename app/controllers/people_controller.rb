@@ -19,9 +19,8 @@ class PeopleController < ResourceController
   def mailed_surveys
     authorize current_person, policy_class: policy_class
 
-    collection ||= mailed_survey_collection
-    collection_total ||= collection.total_count if paginate
-    collection_total ||= collection.size unless paginate
+    collection = mailed_survey_collection
+    collection_total = collection.size
 
     meta = {}
     meta[:total] = collection_total if paginate
@@ -47,9 +46,8 @@ class PeopleController < ResourceController
   def submissions
     authorize current_person, policy_class: policy_class
 
-    collection ||= submissions_collection
-    collection_total ||= collection.total_count if paginate
-    collection_total ||= collection.size unless paginate
+    collection = submissions_collection
+    collection_total = collection.size
 
     meta = {}
     meta[:total] = collection_total if paginate
@@ -70,11 +68,11 @@ class PeopleController < ResourceController
   end
 
   def submissions_collection
-    @per_page, @current_page, @filters = collection_params
+    @per_page, @current_page, @filters = collection_params(do_paginate: false)
 
     person = Person.find params[:person_id]
 
-    # TODO: tweak include to optimize query pre-fetch
+    # TODO: tweak include to optimize query pre-fetch?
     q = person.survey_submissions
         .includes(
           [
@@ -82,21 +80,17 @@ class PeopleController < ResourceController
           ]
         )
         .where(query(@filters))
-        .order(order_string(order_by: 'name'))
+        .order(order_string(order_by: 'survey_submissions.updated_at'))
 
-    if paginate
-      q.page(@current_page).per(@per_page)
-    else
-      q
-    end
+    q
   end
 
   def mailed_survey_collection
-    @per_page, @current_page, @filters = collection_params
+    @per_page, @current_page, @filters = collection_params(do_paginate: false)
 
     person = Person.find params[:person_id]
 
-    # TODO: tweak include to optimize query pre-fetch
+    # TODO: tweak include to optimize query pre-fetch?
     q = person.mailed_surveys
         .includes(
           [
@@ -111,14 +105,16 @@ class PeopleController < ResourceController
             :published_by
           ]
         )
+        .references(
+          [
+            :survey_submissions
+          ]
+        )
+        .where("survey_submissions.person_id = ?", person.id) # limit the survey_submissions to those for the person ....
         .where(query(@filters))
-        .order(order_string(order_by: 'name'))
+        .order(order_string(order_by: 'mailings.updated_at'))
 
-    if paginate
-      q.page(@current_page).per(@per_page)
-    else
-      q
-    end
+    q
   end
 
   def serializer_includes

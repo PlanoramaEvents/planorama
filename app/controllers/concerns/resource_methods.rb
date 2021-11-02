@@ -146,15 +146,10 @@ module ResourceMethods
     params[:action].to_sym
   end
 
-  def collection_params
-    per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate
-    per_page = nil unless paginate
-    current_page = params[:current_page]&.to_i || 1 if paginate
-    # Sort field could come from the nested object
-    # order = params[:sortBy]
-    # order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
-    # order ||= ''
-    # direction = params[:sortOrder] || 'asc'
+  def collection_params(do_paginate: true)
+    per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate && do_paginate
+    per_page = nil unless paginate && do_paginate
+    current_page = params[:current_page]&.to_i || 1 if paginate && do_paginate
     filters = JSON.parse(params[:filter]) if params[:filter].present?
 
     return per_page, current_page, filters
