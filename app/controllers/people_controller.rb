@@ -19,7 +19,7 @@ class PeopleController < ResourceController
   def assigned_surveys
     authorize current_person, policy_class: policy_class
 
-    collection = assigned_survey_collection
+    collection = assigned_survey_collection(person_id: params[:person_id])
     collection_total = collection.size
 
     meta = {}
@@ -36,7 +36,10 @@ class PeopleController < ResourceController
                       :'survey_pages.survey_questions.survey_answers',
                       :survey_submissions
                     ],
-                    params: {domain: "#{request.base_url}"}
+                    params: {
+                      domain: "#{request.base_url}",
+                      person_id: params[:person_id]
+                    }
                   }
                 ).serializable_hash(),
            content_type: 'application/json'
@@ -46,7 +49,10 @@ class PeopleController < ResourceController
   def submissions
     authorize current_person, policy_class: policy_class
 
-    collection = submissions_collection
+    collection = submissions_collection(
+      person_id: params[:person_id],
+      survey_id: params[:survey_id]
+    )
     collection_total = collection.size
 
     meta = {}
@@ -60,17 +66,26 @@ class PeopleController < ResourceController
                     include: [
                       :survey_responses
                     ],
-                    params: {domain: "#{request.base_url}"}
+                    params: {
+                      domain: "#{request.base_url}",
+                      person_id: params[:person_id],
+                      survey_id: params[:survey_id]
+                    }
                   }
                 ).serializable_hash(),
            content_type: 'application/json'
 
   end
 
-  def submissions_collection
+  def submissions_collection(person_id:, survey_id: nil)
     @per_page, @current_page, @filters = collection_params(do_paginate: false)
 
-    person = Person.find params[:person_id]
+    person = Person.find person_id
+
+    survey_query = nil
+    if !survey_id.nil?
+      survey_query = Survey.arel_table[:id].eq(survey_id)
+    end
 
     # TODO: tweak include to optimize query pre-fetch?
     q = person.survey_submissions
@@ -79,16 +94,18 @@ class PeopleController < ResourceController
             :survey_responses
           ]
         )
+        .joins(:survey)
+        .where(survey_query)
         .where(query(@filters))
         .order(order_string(order_by: 'survey_submissions.updated_at'))
 
     q
   end
 
-  def assigned_survey_collection
+  def assigned_survey_collection(person_id:)
     @per_page, @current_page, @filters = collection_params(do_paginate: false)
 
-    person = Person.find params[:person_id]
+    person = Person.find person_id
 
     # TODO: tweak include to optimize query pre-fetch?
     q = person.mailed_surveys

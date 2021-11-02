@@ -1,0 +1,300 @@
+openapi: 3.0.0
+info:
+  title: Planorama API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    noauthAuth:
+      type: http
+      scheme: noauth
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+tags:
+  - name: Autheticate
+  - name: People
+  - name: Surveys
+  - name: Mailings
+  - name: Program Items
+  - name: Venues
+paths:
+  /auth/sign_in:
+    post:
+      tags:
+        - Autheticate
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                person:
+                  email: test@test.com
+                  password: '111111'
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /person:
+    get:
+      tags:
+        - People
+      summary: Get People
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /person/me:
+    get:
+      tags:
+        - People
+      summary: Me Session
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /person/{person-id}:
+    get:
+      tags:
+        - People
+      summary: Get Person
+      parameters:
+        - name: person-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /person/{person-id}/assigned_surveys:
+    get:
+      tags:
+        - People
+      summary: Assigned Surveys
+      parameters:
+        - name: person-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /person/{person-id}/submissions:
+    get:
+      tags:
+        - People
+      summary: Survey Submissions
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: person-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /survey:
+    get:
+      tags:
+        - Surveys
+      summary: Get Surveys
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /survey/{survey-id}/page:
+    get:
+      tags:
+        - Surveys
+      summary: Get Pages for Survey
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: survey-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /page/{page-id}/question:
+    get:
+      tags:
+        - Surveys
+      summary: Get Questions for Page
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /survey/{survey-id}/submission:
+    get:
+      tags:
+        - Surveys
+      summary: Get Submissions for Survey
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: survey-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /mail_template:
+    get:
+      tags:
+        - Mailings
+      summary: Get Mail Templates
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Mailings
+      summary: Create Mail Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: '{{$guid}}'
+                title: '{{$randomLoremWords}}'
+                subject: '{{$randomLoremWords}}'
+                content: '{{$randomLoremParagraph}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /mailing:
+    get:
+      tags:
+        - Mailings
+      summary: Get Mailing
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Mailings
+      summary: Create Mailing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                mail_template_id: '{{mail-template-id}}'
+                scheduled: false
+                testrun: false
+                include_email: false
+                cc_all: false
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /mailing/{mailing-id}:
+    get:
+      tags:
+        - Mailings
+      summary: Get Single Mailing
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mailing-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /venue:
+    get:
+      tags:
+        - Venues
+      summary: Venues
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /room:
+    get:
+      tags:
+        - Venues
+      summary: Rooms
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /rbac:
+    get:
+      tags:
+        - default
+      summary: RBAC
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
