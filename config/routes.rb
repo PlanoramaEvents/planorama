@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   end
 
   get 'person/:person_id/submissions', to: 'people#submissions'
-  get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
+  get 'person/:person_id/assigned_surveys', to: 'people#assigned_surveys'
 
   resources :bios, path: 'bio'
   resources :programme_items, path: 'programme_item'

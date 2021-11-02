@@ -16,10 +16,10 @@ class PeopleController < ResourceController
   #
   # Get a list of all the surveys that have been sent to the given person
   #
-  def mailed_surveys
+  def assigned_surveys
     authorize current_person, policy_class: policy_class
 
-    collection = mailed_survey_collection
+    collection = assigned_survey_collection
     collection_total = collection.size
 
     meta = {}
@@ -85,7 +85,7 @@ class PeopleController < ResourceController
     q
   end
 
-  def mailed_survey_collection
+  def assigned_survey_collection
     @per_page, @current_page, @filters = collection_params(do_paginate: false)
 
     person = Person.find params[:person_id]
