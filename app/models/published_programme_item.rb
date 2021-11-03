@@ -2,10 +2,10 @@
 #
 #
 class PublishedProgrammeItem < ApplicationRecord
-  self.primary_key = :programmme_item_id
+  self.primary_key = :programme_item_id
 
   belongs_to :format
-  belongs_to :programmme_item
+  belongs_to :programme_item
 
   has_many :published_programme_assignments, dependent: :destroy do
     # get the people with the given role

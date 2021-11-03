@@ -16,7 +16,7 @@ class PeopleController < ResourceController
   #
   # Get a list of all the surveys that have been sent to the given person
   #
-  def assigned_surveys
+  def mailed_surveys
     authorize current_person, policy_class: policy_class
 
     collection = assigned_survey_collection(person_id: params[:person_id])
@@ -43,7 +43,11 @@ class PeopleController < ResourceController
                   }
                 ).serializable_hash(),
            content_type: 'application/json'
+  end
 
+  # For now mailed and assigned are the same, at some point they will not be
+  def assigned_surveys
+    mailed_surveys
   end
 
   def submissions

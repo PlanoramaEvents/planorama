@@ -54,7 +54,37 @@ class PersonSerializer #< ActiveModel::Serializer
                 }
               }
 
-  has_many  :mail_histories
+  #
+  has_many :mailed_surveys, serializer: SurveySerializer,
+             links: {
+               self: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}"
+               },
+               related: -> (object, params) {
+                 # mailed_surveys
+                 "#{params[:domain]}/person/#{object.id}/mailed_surveys"
+               }
+             }
+
+  has_many :assigned_surveys, serializer: SurveySerializer,
+            links: {
+              self: -> (object, params) {
+                "#{params[:domain]}/person/#{object.id}"
+              },
+              related: -> (object, params) {
+                # mailed_surveys
+                "#{params[:domain]}/person/#{object.id}/assigned_surveys"
+              }
+            }
+
+
+  # programme_items
+  has_many :programme_items, serializer: ProgrammeItemSerializer
+  # published_programme_items
+  has_many :published_programme_items, serializer: PublishedProgrammeItemSerializer
+
+  has_many  :mail_histories, serializer: MailHistorySerializer
+  # TOOD: links
 
   # tag_list
   attribute :tags do |person|
