@@ -1,6 +1,6 @@
 import {mapGetters} from 'vuex';
 import toastMixin from '../toast-mixin';
-import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE } from '../store/model.store';
+import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE, UNSELECT } from '../store/model.store';
 import { SURVEY_SAVE_SUCCESS, SURVEY_SAVE_SUCCESS_DELETE } from '../constants/strings'
 import { surveyModel as model} from '../store/survey.store';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
@@ -15,8 +15,13 @@ export const surveyMixin = {
     survey() {
       return this.selected({model});
     },
+    selectedSurveyPages() {
+      if (!this.survey) return []
+      return this.getSurveyPages(this.survey)
+    },
     selectedSurveyFirstPage() {
-      return this.survey && Object.values(this.survey.survey_pages).find(p => p.sort_order === 0)
+      return this.survey && this.selectedSurveyPages[0];
+      
     },
   },
   methods: {
@@ -28,6 +33,9 @@ export const surveyMixin = {
     },
     selectSurvey(itemOrId) {
       this.$store.commit(SELECT, {model, itemOrId});
+    },
+    unselectSurvey() {
+      this.$store.commit(UNSELECT, {model})
     },
     fetchSelectedSurvey() {
       return this.$store.dispatch(FETCH_SELECTED, {model});

@@ -1,7 +1,7 @@
 import surveyMixin from './survey.mixin';
-import { pageModel as model } from '../store/survey.store';
-import { SELECT, SELECTED } from '../store/model.store';
-import { mapGetters } from 'vuex';
+import { pageModel as model, questionModel } from '../store/survey.store';
+import { SELECT, SELECTED, DELETE, SAVE } from '../store/model.store';
+import { mapGetters, mapActions } from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
 
 // CONVERTED
@@ -30,14 +30,20 @@ export const pageMixin = {
       return this.selectedPage ? this.getPageQuestions(this.selectedPage) : [];
     }
   }, methods: {
+    ...mapActions({
+      delete: DELETE
+    }),
+    isSelectedPage(page) {
+      return this.selectedPage && this.selectedPage.id === page.id
+    },
     getPageIndex(id) {
       return this.survey._jv.relationships.survey_pages.data.findIndex(p => p.id === id);
     },
     getPageNumber(id) {
       return this.getPageIndex(id) + 1;
     },
-    isSelectedPage(id) {
-      return this.selectedPage.id === id;
+    isSelectedPage(page) {
+      return this.page && this.selectedPage && this.selectedPage.id === page.id;
     },
     getPageById(id) {
       return this.survey.survey_pages[id];
@@ -61,6 +67,36 @@ export const pageMixin = {
     },
     getPageQuestions(page) {
       return getOrderedRelationships('survey_questions', page)
+    },
+    saveSelectedPage() {
+      return this.$store.dispatch(SAVE, {model, item: this.selectedPage})
+    },
+    mergePage(oldPage, newPage) {
+      // move questions to new page
+      let questions = this.getPageQuestions(oldPage)
+      // save new page as question owner
+      let item = {
+        _jv: {
+          id: newPage.id,
+          type: model,
+          relationships: {
+            questions: {
+              data: questions.map(q => ({id: q.id, type: questionModel}))
+            }
+          }
+        }
+      }
+      return new Promise((res, rej) => {
+        this.$store.dispatch('jv/postRelated', item).then((data) => {
+          // delete old page
+          this.deletePage(oldPage).then(() => {
+            res(data)
+          }).catch(rej)
+        }).catch(rej)
+      })
+    },
+    deletePage(itemOrId) {
+      return this.delete({ model, itemOrId })
     }
   }
 }

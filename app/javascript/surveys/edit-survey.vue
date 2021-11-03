@@ -8,7 +8,7 @@
       label="Survey Name"
       label-for="survey-name"
     >
-      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="save"></b-form-input>
+      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey"></b-form-input>
     </b-form-group>
     <b-form-group
       class="mx-3"
@@ -17,15 +17,15 @@
       label="Survey Description"
       label-for="survey-description"
     >
-      <b-form-textarea id="survey-description" v-model="survey.description" @blur="save"></b-form-textarea>
+      <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey"></b-form-textarea>
     </b-form-group>
     <b-tabs>
       <b-tab title="Questions" :active="!responses">
         <edit-survey-controls></edit-survey-controls>
         <edit-survey-page
-          v-for="(p, i) in survey ? survey.survey_pages : []"
+          v-for="(p, i) in selectedSurveyPages"
           :key="p.id" :page="p" :i="i"
-          :n="survey.survey_pages.length">
+          :n="selectedSurveyPages.length">
         </edit-survey-page>
       </b-tab>
       <b-tab title="Responses" :active="!!responses">
@@ -42,13 +42,10 @@
 <script>
 import EditSurveyPage from './edit-survey-page'
 import EditSurveyControls from './edit-survey-controls'
-import { createNamespacedHelpers } from 'vuex';
-const { mapState, mapActions, mapMutations } = createNamespacedHelpers('surveys');
-import { UNSELECT, SAVE, SELECT } from '../model.store';
-import { SELECT_PAGE } from './survey.store';
-import { Survey } from './survey';
-import surveyMixin from './survey.mixin'
-import { surveyIdPropMixinId } from './survey-id-prop.mixin';
+import {
+  surveyMixin,
+  surveyIdPropMixinId
+}from '@mixins'
 import SurveySettingsTab from './survey-settings-tab.vue';
 import NotImplemented from '../not-implemented.vue';
 
@@ -71,16 +68,13 @@ export default {
     },
     filename() {
       return `survey_${this.survey?.id}_responses.xlsx`
-    }
+    },
   },
   methods: {
-    ...mapMutations({
-      unselect: UNSELECT,
-    }),
     back() {
       // TODO only unselect if not coming from view page
-      this.unselect();
-      this.$router.push('/');
+      this.unselectSurvey();
+      this.$router.push('/surveys');
     }
   },
 }
