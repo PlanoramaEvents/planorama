@@ -12,6 +12,11 @@ class PersonSerializer #< ActiveModel::Serializer
              :invite_status, :acceptance_status,
              :registered, :registration_type, :registration_number
 
+  # tag_list
+  attribute :tags do |person|
+   person.base_tags.collect(&:name)
+  end
+
   has_one :bio,
           if: Proc.new { |record| record.bio },
           links: {
@@ -61,7 +66,6 @@ class PersonSerializer #< ActiveModel::Serializer
                  "#{params[:domain]}/person/#{object.id}"
                },
                related: -> (object, params) {
-                 # mailed_surveys
                  "#{params[:domain]}/person/#{object.id}/mailed_surveys"
                }
              }
@@ -72,22 +76,40 @@ class PersonSerializer #< ActiveModel::Serializer
                 "#{params[:domain]}/person/#{object.id}"
               },
               related: -> (object, params) {
-                # mailed_surveys
                 "#{params[:domain]}/person/#{object.id}/assigned_surveys"
               }
             }
 
 
   # programme_items
-  has_many :programme_items, serializer: ProgrammeItemSerializer
+  has_many :programme_items, serializer: ProgrammeItemSerializer,
+             links: {
+               self: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}"
+               },
+               related: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}/programme_items"
+               }
+             }
+
   # published_programme_items
-  has_many :published_programme_items, serializer: PublishedProgrammeItemSerializer
+  has_many :published_programme_items, serializer: PublishedProgrammeItemSerializer,
+             links: {
+               self: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}"
+               },
+               related: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}/published_programme_items"
+               }
+             }
 
-  has_many  :mail_histories, serializer: MailHistorySerializer
-  # TOOD: links
-
-  # tag_list
-  attribute :tags do |person|
-    person.base_tags.collect(&:name)
-  end
+  has_many :mail_histories, serializer: MailHistorySerializer,
+             links: {
+              self: -> (object, params) {
+                "#{params[:domain]}/person/#{object.id}"
+              },
+              related: -> (object, params) {
+                "#{params[:domain]}/person/#{object.id}/mail_histories"
+              }
+            }
 end
