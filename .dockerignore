@@ -6,6 +6,10 @@ db/*.sqlite3
 db/*.sqlite3-journal
 log/*
 tmp/*
+docs/*
+docs
+postman/*
+postman
 node_modules/*
 public/assets/*
 public/packs/*
