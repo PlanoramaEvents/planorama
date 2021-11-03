@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   end
 
   get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
+  # For now mailed and assigned are the same, at some point they will not be
+  get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
   get 'person/:person_id/assigned_surveys', to: 'people#assigned_surveys'
 
   resources :bios, path: 'bio'
