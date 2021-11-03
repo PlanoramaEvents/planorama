@@ -87,11 +87,8 @@ class Person < ApplicationRecord
 
   has_many :survey_submissions, class_name: 'Survey::Submission', dependent: :destroy
   has_many :mailed_surveys, through: :mailings, source: :survey
-  # TODO: change when we distingush the two
-  has_many :assigned_surveys, through: :mailings, source: :survey
-  # alias :assigned_surveys :mailed_surveys
-  # TODO: add scope for survey id
-  # TODO: get list of assigned surveys for this person ...
+  has_and_belongs_to_many :assigned_surveys, class_name: 'Survey'
+
   # TODO: get a list of surveys assigned AND those with submissions that are not assigned
 
   has_many :person_roles, dependent: :destroy

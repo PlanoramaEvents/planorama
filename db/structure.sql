@@ -476,6 +476,16 @@ END) STORED,
 
 
 --
+-- Name: people_surveys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.people_surveys (
+    survey_id uuid,
+    person_id uuid
+);
+
+
+--
 -- Name: person_agreements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1503,6 +1513,27 @@ CREATE UNIQUE INDEX index_people_on_unlock_token ON public.people USING btree (u
 
 
 --
+-- Name: index_people_surveys_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_people_surveys_on_person_id ON public.people_surveys USING btree (person_id);
+
+
+--
+-- Name: index_people_surveys_on_survey_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_people_surveys_on_survey_id ON public.people_surveys USING btree (survey_id);
+
+
+--
+-- Name: index_people_surveys_on_survey_id_and_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_people_surveys_on_survey_id_and_person_id ON public.people_surveys USING btree (survey_id, person_id);
+
+
+--
 -- Name: index_person_agreements_on_agreement_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1848,6 +1879,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210819204542'),
 ('20210925131929'),
 ('20211101160001'),
-('20211101195536');
+('20211101195536'),
+('20211103212755');
 
 

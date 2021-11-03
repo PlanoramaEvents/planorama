@@ -20,6 +20,8 @@ class Survey < ApplicationRecord
   belongs_to :created_by, class_name: 'Person', required: false
   belongs_to :updated_by, class_name: 'Person', required: false
 
+  has_and_belongs_to_many :assigned_people, class_name: 'Person'
+
   nilify_blanks only: [
     :description
   ]
