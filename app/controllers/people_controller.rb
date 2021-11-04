@@ -19,7 +19,7 @@ class PeopleController < ResourceController
   def mailed_surveys
     authorize current_person, policy_class: policy_class
 
-    collection = assigned_survey_collection(person_id: params[:person_id])
+    collection = mailed_survey_collection(person_id: params[:person_id])
     collection_total = collection.size
 
     meta = {}
@@ -47,7 +47,39 @@ class PeopleController < ResourceController
 
   # For now mailed and assigned are the same, at some point they will not be
   def assigned_surveys
-    mailed_surveys
+    authorize current_person, policy_class: policy_class
+
+    do_paginate = false
+    person = Person.find params[:person_id]
+    # TODO: if the person is not allowed access use a scope to get their assigned surveys
+
+    @per_page, @current_page, @filters = collection_params(do_paginate: do_paginate)
+
+    collection = if do_paginate
+                   person.assigned_surveys.page(@current_page).per(@per_page)
+                 else
+                   person.assigned_surveys
+                 end
+
+    meta = {}
+    meta[:total] = collection_total if do_paginate
+    meta[:current_page] = @current_page if @current_page.present? && do_paginate
+    meta[:perPage] = @per_page if @per_page.present? && do_paginate
+
+    render json: Survey::SubmissionSerializer.new(collection,
+                  {
+                    meta: meta,
+                    include: [
+                      :survey_responses
+                    ],
+                    params: {
+                      domain: "#{request.base_url}",
+                      person_id: params[:person_id],
+                      survey_id: params[:survey_id]
+                    }
+                  }
+                ).serializable_hash(),
+           content_type: 'application/json'
   end
 
   def submissions
@@ -106,7 +138,7 @@ class PeopleController < ResourceController
     q
   end
 
-  def assigned_survey_collection(person_id:)
+  def mailed_survey_collection(person_id:)
     @per_page, @current_page, @filters = collection_params(do_paginate: false)
 
     person = Person.find person_id
