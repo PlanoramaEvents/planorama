@@ -52,7 +52,8 @@
 								"auth",
 								"sign_in"
 							]
-						}
+						},
+						"description": "Log the person into the system. It will return the JWT token in the header which is needed for subsequent requests."
 					},
 					"response": []
 				}
@@ -63,6 +64,20 @@
 			"item": [
 				{
 					"name": "Get People",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -136,7 +151,8 @@
 								"person",
 								"{{person-id}}"
 							]
-						}
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
 					},
 					"response": []
 				},
@@ -186,6 +202,39 @@
 							"path": [
 								"person",
 								"{{person-id}}",
+								"submissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Survey Submissions For Survey",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person/{{person-id}}/survey/{{survey-id}}/submissions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person",
+								"{{person-id}}",
+								"survey",
+								"{{survey-id}}",
 								"submissions"
 							]
 						}
