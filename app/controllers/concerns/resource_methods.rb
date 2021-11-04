@@ -150,6 +150,7 @@ module ResourceMethods
     per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate && do_paginate
     per_page = nil unless paginate && do_paginate
     current_page = params[:current_page]&.to_i || 1 if paginate && do_paginate
+    # Rails.logger.debug("****** #{params[:filter]}")
     filters = JSON.parse(params[:filter]) if params[:filter].present?
 
     return per_page, current_page, filters
@@ -204,28 +205,25 @@ module ResourceMethods
 
   def query(filters = nil)
     # Go through the filter and construct the where clause
-    return nil unless filters.present?
+    return nil unless filters.present? && filters['rules'].present?
 
     table = Arel::Table.new(model_class.table_name)
     q = nil
-    filters.each do |k,v|
-      next unless v.present?
+    filters['rules'].each do |rule|
+      col_table = table
+      # A rule is a tuple [key, operation, value]
+      key, operation, value = rule
 
-      a = "#{k}"
-      a.slice!('$.')
-      type = model_class.columns_hash[a].type
-
-      case type
-      when :integer
-        part = table[a.to_sym].eq(v.to_i)
-      when :boolean
-        part = table[a.to_sym].eq(['true', true, 1].include?(v))
-      when :string
-        part = table[a.to_sym].matches("%#{v}%")
-      else
-        part = table[a.to_sym].matches("%#{v}%")
+      col_table_name = nil
+      col_table_name, col = key.split('.') if key.include? '.'
+      # TODO: add magic to figure out joins
+      if col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasAndBelongsToManyReflection
+        # key = "#{model_class.reflections[col_table_name].join_table}.#{col}"
+        col_table = Arel::Table.new("#{model_class.reflections[col_table_name].join_table}")
       end
 
+      # TODO: translate operation
+      part = col_table[col.to_sym].eq("#{value}")
       q = q ? q.and(part) : part
     end
 

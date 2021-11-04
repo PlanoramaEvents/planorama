@@ -1,7 +1,7 @@
 class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
   POLICY_CLASS = 'SurveysPolicy'.freeze
-  DEFAULT_ORDER = 'updated_at'
+  DEFAULT_ORDER = 'surveys.updated_at'
 
   def assign_people
     authorize current_person, policy_class: policy_class
@@ -55,7 +55,14 @@ class SurveysController < ResourceController
       :survey_submissions,
       :created_by,
       :updated_by,
-      :published_by
+      :published_by,
+      :assigned_people
+    ]
+  end
+
+  def references
+    [
+      :assigned_people
     ]
   end
 

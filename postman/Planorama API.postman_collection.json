@@ -290,6 +290,104 @@
 					"response": []
 				},
 				{
+					"name": "Get Surveys For Person via Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/survey?filter={\"rules\":[[\"assigned_people.person_id\", \"=\", \"{{person-id}}\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"rules\":[[\"assigned_people.person_id\", \"=\", \"{{person-id}}\"]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Surveys Via Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/survey?filter={\"rules\":[[\"surveys.id\", \"=\", \"{{survey-id}}\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"rules\":[[\"surveys.id\", \"=\", \"{{survey-id}}\"]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Assign People to Survey",
 					"event": [
 						{
