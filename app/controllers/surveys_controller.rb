@@ -3,6 +3,36 @@ class SurveysController < ResourceController
   POLICY_CLASS = 'SurveysPolicy'.freeze
   DEFAULT_ORDER = 'updated_at'
 
+  def assign_people
+    authorize current_person, policy_class: policy_class
+    people_ids = params.permit(people: [:id])
+
+    Survey.transaction do
+      survey = Survey.find params[:survey_id]
+      people = Person.find people_ids.to_h[:people].collect{|a| a[:id] }
+
+      survey.assigned_people << people
+
+      render_object(survey, includes: false)
+    end
+  end
+
+  def unassign_people
+    authorize current_person, policy_class: policy_class
+    people_ids = params.permit(people: [:id])
+
+    Survey.transaction do
+      survey = Survey.find params[:survey_id]
+      people = Person.find people_ids.to_h[:people].collect{|a| a[:id] }
+
+      survey.assigned_people.delete people
+
+      render_object(survey, includes: false)
+    end
+  end
+
+  # TODO: add filter to survey index for assigned people, TEST
+
   def serializer_includes
     [
       :survey_pages,

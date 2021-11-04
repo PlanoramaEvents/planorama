@@ -8,17 +8,21 @@ class ResourceController < ApplicationController
   include ResourceMethods
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-  def user_not_authorized
-    # render status: :bad_request,
-    #        json: {error: 'You are not authorized to perform this action.'}
-    render jsonapi_errors: {error: 'You are not authorized to perform this action.'}, status: :unauthorized
+  def user_not_authorized(e)
+    error = { status: '401', title: e.message }
+    render jsonapi_errors: [error], status: :unauthorized
   end
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-  def record_not_found
-    # render status: :bad_request,
-    #        json: {error: 'Request record not found or access denied.'}
-    render jsonapi_errors: {error: 'Request record not found or access denied.'}, status: :not_found
+  def record_not_found(e)
+    error = { status: '404', title: e.message }
+    render jsonapi_errors: [error], status: :not_found
+  end
+
+  rescue_from ActiveRecord::ActiveRecordError, with: :database_error
+  def database_error(e)
+    error = { status: '422', title: e.message }
+    render jsonapi_errors: [error], status: :unprocessable_entity
   end
 
   private

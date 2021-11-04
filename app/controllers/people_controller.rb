@@ -66,16 +66,16 @@ class PeopleController < ResourceController
     meta[:current_page] = @current_page if @current_page.present? && do_paginate
     meta[:perPage] = @per_page if @per_page.present? && do_paginate
 
-    render json: Survey::SubmissionSerializer.new(collection,
+    render json: SurveySerializer.new(collection,
                   {
                     meta: meta,
                     include: [
-                      :survey_responses
+                      :survey_pages,
+                      :'survey_pages.survey_questions',
+                      :'survey_pages.survey_questions.survey_answers'
                     ],
                     params: {
-                      domain: "#{request.base_url}",
-                      person_id: params[:person_id],
-                      survey_id: params[:survey_id]
+                      domain: "#{request.base_url}"
                     }
                   }
                 ).serializable_hash(),

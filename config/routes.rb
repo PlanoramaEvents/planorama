@@ -48,6 +48,9 @@ Rails.application.routes.draw do
   resources :agreements, path: 'agreement'
 
   # Surveys and their nested resources
+  post 'survey/:survey_id/assign_people', to: 'surveys#assign_people'
+  post 'survey/:survey_id/unassign_people', to: 'surveys#unassign_people'
+
   resources :surveys, path: 'survey' do
     scope module: 'survey' do
       resources :pages, path: 'page', shallow: true do
