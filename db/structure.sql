@@ -99,7 +99,6 @@ CREATE TYPE public.mail_use_enum AS ENUM (
 --
 
 CREATE TYPE public.next_page_action_enum AS ENUM (
-    'none',
     'next_page',
     'submit'
 );
@@ -725,7 +724,7 @@ CREATE TABLE public.survey_answers (
     sort_order integer,
     next_page_id uuid,
     other boolean DEFAULT false,
-    next_page_action public.next_page_action_enum DEFAULT 'none'::public.next_page_action_enum
+    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum
 );
 
 
@@ -780,7 +779,7 @@ CREATE TABLE public.survey_pages (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     survey_id uuid,
-    next_page_action public.next_page_action_enum DEFAULT 'none'::public.next_page_action_enum
+    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum
 );
 
 

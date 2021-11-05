@@ -1,12 +1,12 @@
 class AddNextPageAction < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
-      CREATE TYPE next_page_action_enum AS ENUM ('none', 'next_page', 'submit');
+      CREATE TYPE next_page_action_enum AS ENUM ('next_page', 'submit');
     SQL
-    add_column :survey_pages, :next_page_action, :next_page_action_enum, default: 'none'
+    add_column :survey_pages, :next_page_action, :next_page_action_enum, default: 'next_page'
     add_index :survey_pages, :next_page_action
 
-    add_column :survey_answers, :next_page_action, :next_page_action_enum, default: 'none'
+    add_column :survey_answers, :next_page_action, :next_page_action_enum, default: 'next_page'
     add_index :survey_answers, :next_page_action
   end
 

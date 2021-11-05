@@ -24,7 +24,7 @@ class Survey::Page < ApplicationRecord
              foreign_key: 'next_page_id',
              optional: true
 
-  enum next_page_action: { none: 'none', next_page: 'next_page', submit: 'submit' }
+  enum next_page_action: { next_page: 'next_page', submit: 'submit' }
 
   has_many :previous_pages,
            class_name: 'Survey::Page',
