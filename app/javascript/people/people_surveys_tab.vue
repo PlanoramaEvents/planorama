@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Surveys</h2>
+    <h2>Surveys for {{currentUser.name}}</h2>
 <!--    <ul>
       <li v-for="role of selected.person_roles" :key="role.id">
         {{ role.role }}
@@ -14,6 +14,7 @@
 
 <script>
 import { modelMixin } from '@mixins'
+import sessionMixin from '../session/session.mixin';
 import { getOrderedRelationships } from '../utils/jsonapi_utils'
 import SurveyTable from '../surveys/survey_table';
 
@@ -23,7 +24,8 @@ export default {
     SurveyTable
   },
   mixins: [
-    modelMixin
+    modelMixin,
+	sessionMixin
   ],
 }
 </script>
