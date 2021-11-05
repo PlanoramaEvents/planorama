@@ -4,6 +4,8 @@ class Survey::Answer < ApplicationRecord
 
   has_paper_trail
 
+  enum next_page_action: { none: 'none', next_page: 'next_page', submit: 'submit' }
+
   default_scope {order(['survey_answers.sort_order', :answer])}
 
   # Allows null and -1 ????

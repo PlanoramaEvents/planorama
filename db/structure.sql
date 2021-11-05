@@ -95,6 +95,17 @@ CREATE TYPE public.mail_use_enum AS ENUM (
 
 
 --
+-- Name: next_page_action_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.next_page_action_enum AS ENUM (
+    'none',
+    'next_page',
+    'submit'
+);
+
+
+--
 -- Name: person_role; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -713,7 +724,8 @@ CREATE TABLE public.survey_answers (
     question_id uuid,
     sort_order integer,
     next_page_id uuid,
-    other boolean DEFAULT false
+    other boolean DEFAULT false,
+    next_page_action public.next_page_action_enum DEFAULT 'none'::public.next_page_action_enum
 );
 
 
@@ -767,7 +779,8 @@ CREATE TABLE public.survey_pages (
     sort_order integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    survey_id uuid
+    survey_id uuid,
+    next_page_action public.next_page_action_enum DEFAULT 'none'::public.next_page_action_enum
 );
 
 
@@ -1597,6 +1610,20 @@ CREATE INDEX index_published_programme_items_on_format_id ON public.published_pr
 
 
 --
+-- Name: index_survey_answers_on_next_page_action; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_answers_on_next_page_action ON public.survey_answers USING btree (next_page_action);
+
+
+--
+-- Name: index_survey_pages_on_next_page_action; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_pages_on_next_page_action ON public.survey_pages USING btree (next_page_action);
+
+
+--
 -- Name: index_survey_pages_on_survey_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1880,6 +1907,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210925131929'),
 ('20211101160001'),
 ('20211101195536'),
-('20211103212755');
+('20211103212755'),
+('20211105155118');
 
 

@@ -14,4 +14,18 @@ class Survey::Page::Question::AnswersController < ResourceController
   def belongs_to_relationship
     'survey_answers'
   end
+
+  def allowed_params
+    %i[
+      lock_version
+      id
+      answer
+      lock_version
+      default
+      sort_order
+      other
+      next_page_id
+      next_page_action
+    ]
+  end
 end

@@ -20,5 +20,22 @@ class Survey::Page::QuestionsController < ResourceController
     'survey_questions'
   end
 
+  def allowed_params
+    %i[
+      lock_version
+      id
+      title
+      question
+      question_type
+      lock_version
+      mandatory
+      text_size
+      sort_order
+      horizontal
+      private
+      regex
+      branching
+    ]
+  end
   # TODO: on save need to remove pages refs that do not exist
 end

@@ -126,6 +126,7 @@ class SurveysController < ResourceController
         id
         title
         next_page_id
+        next_page_action
         sort_order
         survey_id
         lock_version
@@ -155,6 +156,7 @@ class SurveysController < ResourceController
             _destroy
             other
             next_page_id
+            next_page_action
           ]
         ]
       ]
