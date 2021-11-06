@@ -173,6 +173,7 @@ export class Surveys extends PlanoCollection {
 export const survey_columns = [
   {
     key: 'name',
+    sortKey: 'surveys.name',
     label: 'Name',
     stickyColumn: true,
     sortable: true

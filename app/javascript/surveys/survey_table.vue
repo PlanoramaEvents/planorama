@@ -1,10 +1,10 @@
-<!-- CONVERTED 
+<!-- CONVERTED
 ISSUE - template links don't work
 -->
 <template>
   <table-vue
     @new="onNew"
-    defaultSortBy='name'
+    defaultSortBy='surveys.name'
     model="survey"
     :columns="columns"
   >
