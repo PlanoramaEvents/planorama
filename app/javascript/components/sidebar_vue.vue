@@ -35,6 +35,7 @@ import modelMixin from '../store/model.mixin';
 
 export default {
   name: 'SidebarVue',
+  components: {},
   props: {
     width: {
       type: String,

@@ -1,4 +1,4 @@
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '../store/model.store';
 import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '../store/survey.store';
@@ -63,13 +63,17 @@ export const questionMixin = {
     ...mapMutations({
       select: SELECT,
       unselect: UNSELECT,
+    }),
+    ...mapActions({
       newQuestion: NEW_QUESTION,
       duplicateQuestion: DUPLICATE_QUESTION,
       delete: DELETE,
       save: SAVE
     }),
-    saveSelectedQuestion() {
-      return this.save({model, item: this.selectedQuestion})
+    saveQuestion(item) {
+      return this.save({model, item}).then((data) => {
+        console.log(data)
+      })
     },
     selectQuestion(itemOrId) {
       this.select({model, itemOrId})

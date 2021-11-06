@@ -12,7 +12,7 @@
             :id="formId('question-text')"
             v-model="question.question"
             type="text"
-            @blur="saveSelectedQuestion"
+            @blur="saveQuestion(question)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -22,7 +22,8 @@
           label="Question Type"
           :label-for="formId('question-type')"
         >
-          <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes" @change="saveSelectedQuestion"></b-form-select>
+          <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes" @change="saveQuestion(question)"></b-form-select>
+          <!-- todo just patch things -->
         </b-form-group>
       </div>
     </div>
@@ -160,15 +161,15 @@
       </template>
       <template v-if="textonly">
         <div class="col-12">
-          <b-form-textarea v-if="isSelected" v-model="question.question" @blur="saveSelectedQuestion"></b-form-textarea>
+          <b-form-textarea v-if="isSelected" v-model="question.question" @blur="saveQuestion(question)"></b-form-textarea>
           <p v-if="!isSelected">{{question.question}}</p>
         </div>
       </template>
     </div>
     <div class="row" v-if="isSelected">
       <div class="col-6">
-        <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="saveSelectedQuestion">Required</b-form-checkbox>
-        <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="saveSelectedQuestion">Branching</b-form-checkbox>
+        <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="saveQuestion(question)">Required</b-form-checkbox>
+        <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="saveQuestion(question)">Branching</b-form-checkbox>
       </div>
       <div class="col-6 d-flex justify-content-end">
         <b-button variant="info" class="mr-2" @click="duplicateSelectedQuestion"><b-icon-files></b-icon-files></b-button>

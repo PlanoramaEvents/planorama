@@ -1,4 +1,4 @@
-const toastMixin = {
+export const toastMixin = {
   methods: {
     success_toast(text) {
       this.$bvToast.toast(text, {

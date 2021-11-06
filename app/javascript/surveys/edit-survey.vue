@@ -8,7 +8,7 @@
       label="Survey Name"
       label-for="survey-name"
     >
-      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey"></b-form-input>
+      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()"></b-form-input>
     </b-form-group>
     <b-form-group
       class="mx-3"
@@ -17,7 +17,7 @@
       label="Survey Description"
       label-for="survey-description"
     >
-      <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey"></b-form-textarea>
+      <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey()"></b-form-textarea>
     </b-form-group>
     <b-tabs>
       <b-tab title="Questions" :active="!responses">

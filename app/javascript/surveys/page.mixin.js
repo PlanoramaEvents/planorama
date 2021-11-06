@@ -3,10 +3,11 @@ import { pageModel as model, questionModel } from '../store/survey.store';
 import { SELECT, SELECTED, DELETE, SAVE } from '../store/model.store';
 import { mapGetters, mapActions } from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
+import { toastMixin }  from '../toast-mixin';
 
 // CONVERTED
 export const pageMixin = {
-  mixins: [surveyMixin],
+  mixins: [surveyMixin, toastMixin],
   computed: {
     ...mapGetters({
       selected: SELECTED
@@ -68,8 +69,11 @@ export const pageMixin = {
     getPageQuestions(page) {
       return getOrderedRelationships('survey_questions', page)
     },
-    saveSelectedPage() {
-      return this.$store.dispatch(SAVE, {model, item: this.selectedPage})
+    savePage(item) {
+      if (!item && this.selectedPage) {
+        item = this.selectedPage
+      }
+      return this.toastPromise(this.$store.dispatch(SAVE, {model, item}), "IT WORKED")
     },
     mergePage(oldPage, newPage) {
       // move questions to new page

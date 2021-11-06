@@ -9,7 +9,7 @@
         :label="i === 0 ? 'Display Title' : 'Page Title'"
         :label-for="'page-title-' + page.id"
       >
-        <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="saveSelectedPage"></b-form-input>
+        <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="savePage()"></b-form-input>
       </b-form-group>
       <div class="row" v-if="isSelected && i !== 0">
         <div class="col-12 d-flex justify-content-end">
@@ -38,12 +38,15 @@ import EditSurveyQuestion from './edit-survey-question.vue';
 import draggable from 'vuedraggable';
 import surveyMixin from './survey.mixin';
 import NextPagePicker from './next-page-picker';
+import { SAVE } from '../store/model.store'
 
 import { 
   SURVEY_CONFIRM_DELETE_PAGE_1, 
   SURVEY_CONFIRM_DELETE_PAGE_2,
+  QUESTION_ORDER_SAVE_SUCCESS,
  } from '../constants/strings';
 import pageMixin from './page.mixin';
+import toastMixin from '../toast-mixin';
 import { questionModel } from '../store/survey.store';
 
 export default {
@@ -55,7 +58,8 @@ export default {
   },
   mixins: [
     surveyMixin,
-    pageMixin
+    pageMixin,
+    toastMixin
   ],
   props: {
     page: {
@@ -97,12 +101,15 @@ export default {
           type: questionModel
         }
       }
-      return this.$store.dispatch(SAVE, {model: questionModel, item})
-      // TODO do i need to do anything here
+      return this.toastPromise(this.$store.dispatch(SAVE, {model: questionModel, item, selected: false}), QUESTION_ORDER_SAVE_SUCCESS)
     }
   }, 
-  mounted() {
-    this.questions = this.selectedPageQuestions
+  watch: {
+    selectedPage(newPage, oldPage) {
+      if(newPage && (!oldPage || oldPage.id === newPage.id)) {
+        this.questions = this.selectedPageQuestions
+      }
+    }
   }
 }
 </script>
