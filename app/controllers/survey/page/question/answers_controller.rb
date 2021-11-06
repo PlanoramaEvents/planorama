@@ -15,17 +15,17 @@ class Survey::Page::Question::AnswersController < ResourceController
     'survey_answers'
   end
 
-  def allowed_params
-    %i[
-      lock_version
-      id
-      answer
-      lock_version
-      default
-      sort_order
-      other
-      next_page_id
-      next_page_action
-    ]
-  end
+  # def allowed_params
+  #   %i[
+  #     lock_version
+  #     id
+  #     answer
+  #     lock_version
+  #     default
+  #     sort_order
+  #     other
+  #     next_page_id
+  #     next_page_action
+  #   ]
+  # end
 end
