@@ -12,7 +12,7 @@
             :id="formId('question-text')"
             v-model="question.question"
             type="text"
-            @blur="saveQuestion(question)"
+            @blur="patchSelectedQuestion({question: $event.target.value})"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -22,8 +22,7 @@
           label="Question Type"
           :label-for="formId('question-type')"
         >
-          <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes" @change="saveQuestion(question)"></b-form-select>
-          <!-- todo just patch things -->
+          <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes" @change="patchSelectedQuestion({question_type: $event})"></b-form-select>
         </b-form-group>
       </div>
     </div>
@@ -161,15 +160,15 @@
       </template>
       <template v-if="textonly">
         <div class="col-12">
-          <b-form-textarea v-if="isSelected" v-model="question.question" @blur="saveQuestion(question)"></b-form-textarea>
+          <b-form-textarea v-if="isSelected" v-model="question.question" @blur="patchSelectedQuestion({question: $event.target.value})"></b-form-textarea>
           <p v-if="!isSelected">{{question.question}}</p>
         </div>
       </template>
     </div>
     <div class="row" v-if="isSelected">
       <div class="col-6">
-        <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="saveQuestion(question)">Required</b-form-checkbox>
-        <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="saveQuestion(question)">Branching</b-form-checkbox>
+        <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Required</b-form-checkbox>
+        <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="patchSelectedQuestion({branching: $event})">Branching</b-form-checkbox>
       </div>
       <div class="col-6 d-flex justify-content-end">
         <b-button variant="info" class="mr-2" @click="duplicateSelectedQuestion"><b-icon-files></b-icon-files></b-button>
@@ -232,6 +231,9 @@ export default {
     },
   },
   methods: {
+    whateven(evt) {
+      console.log(event)
+    },
     formId(string) {
       return `${string}-${this.question.id}`
     },

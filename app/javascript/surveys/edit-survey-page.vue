@@ -24,7 +24,7 @@
     </draggable>
     <div v-if="!isLastPage(page.id)" class="mt-3">
       After page {{i + 1}}
-      <next-page-picker :for-page="page.id" :id="pagePickerId" class="ml-1" v-model="page.next_page_id"></next-page-picker>
+      <next-page-picker :for-page="page.id" :id="pagePickerId" class="ml-1" v-model="page.next_page_id" @change="savePage()"></next-page-picker>
     </div>
     <b-modal v-if="isSelected" :id="deleteModalId" @ok="deletePage" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_1}}</p>
@@ -105,10 +105,15 @@ export default {
     }
   }, 
   watch: {
-    selectedPage(newPage, oldPage) {
+    page(newPage, oldPage) {
       if(newPage && (!oldPage || oldPage.id === newPage.id)) {
-        this.questions = this.selectedPageQuestions
+        this.questions = this.getPageQuestions(newPage)
       }
+    }
+  },
+  mounted() {
+    if(this.page) {
+      this.questions = this.getPageQuestions(this.page)
     }
   }
 }

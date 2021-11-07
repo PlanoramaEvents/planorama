@@ -1,5 +1,5 @@
 <template>  
-  <b-select :id="id" class="d-inline next-page" :value="value" @input="$emit('input', $event)" :options="nextPageOptions" @change="savePage()"></b-select>
+  <b-select :id="id" class="d-inline next-page" :value="value" @input="$emit('input', $event)" :options="nextPageOptions" @change="$emit('change', $event)"></b-select>
 </template>
 
 <script>

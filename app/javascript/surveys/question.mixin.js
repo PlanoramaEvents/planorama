@@ -3,6 +3,9 @@ import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '../store/model.store';
 import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '../store/survey.store';
 import { pageMixin } from '@mixins';
+import {
+  QUESTION_SAVE_SUCCESS
+} from '../constants/strings'
 
 // CONVERTED
 export const questionMixin = {
@@ -46,7 +49,7 @@ export const questionMixin = {
     textonly() {
       return this.question.question_type === "textonly";
     },
-    other() {
+    otherFromQuestion() {
       return this.getQuestionAnswers(this.question)?.find(a => a.other);
     },
     formatting() {
@@ -101,6 +104,15 @@ export const questionMixin = {
         return Promise.resolve()
       }
       return this.delete({model, item: this.selectedQuestion})
+    },
+    patchQuestion(question, data, message = QUESTION_SAVE_SUCCESS) {
+      return this.toastPromise(this.$store.dispatch('jv/patch', { ...data, _jv: {
+        id: question.id,
+        type: model
+      }}), message)
+    },
+    patchSelectedQuestion(data, message = QUESTION_SAVE_SUCCESS) {
+      return this.patchQuestion(this.selectedQuestion, data, message)
     }
   }
 }
