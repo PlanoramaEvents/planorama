@@ -7,6 +7,7 @@ ISSUE - template links don't work
     defaultSortBy='surveys.name'
     model="survey"
     :columns="columns"
+	:editable="false"
   >
     <template #cell(description)="{ item }">
       <tooltip-overflow :title="item.description">{{item.description}}</tooltip-overflow>

@@ -1,6 +1,6 @@
 <template>
   <div class="scrollable">
-    <div class="d-flex justify-content-end my-3">
+    <div v-if="editable" class="d-flex justify-content-end my-3">
       <div class="d-inline" title="Upload">
         <b-button disabled >
           <b-icon-upload></b-icon-upload>
@@ -74,7 +74,11 @@ export default {
     tableMixin, // covers pagination and sorting
   ],
   props: {
-    columns : { type: Array }
+    columns : { type: Array },
+	editable: {
+	  type: Boolean,
+	  default: true
+	}
   },
   data() {
     return {
