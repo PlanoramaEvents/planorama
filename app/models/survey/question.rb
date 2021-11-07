@@ -4,7 +4,7 @@ class Survey::Question < ApplicationRecord
 
   has_paper_trail
 
-  default_scope {includes(:page).order(['survey_pages.sort_order asc', 'questions.sort_order asc'])}
+  default_scope {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
 
   belongs_to :page,
              class_name: 'Survey::Page',
