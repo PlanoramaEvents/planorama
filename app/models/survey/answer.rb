@@ -6,7 +6,7 @@ class Survey::Answer < ApplicationRecord
 
   enum next_page_action: { next_page: 'next_page', submit: 'submit' }
 
-  default_scope {order(['survey_answers.sort_order', :answer])}
+  default_scope {order(['answers.sort_order', :answer])}
 
   # Allows null and -1 ????
   belongs_to :next_page,
@@ -17,7 +17,7 @@ class Survey::Answer < ApplicationRecord
   belongs_to :question,
              class_name: 'Survey::Question',
              foreign_key: 'question_id',
-             inverse_of: :survey_answers
+             inverse_of: :answers
 
 
   # TODO: on save need to remove next_page refs that do not exist

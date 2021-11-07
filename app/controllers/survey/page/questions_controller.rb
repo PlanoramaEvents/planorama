@@ -4,7 +4,7 @@ class Survey::Page::QuestionsController < ResourceController
 
   def includes
     [
-      :survey_answers
+      :answers
     ]
   end
 
@@ -17,7 +17,7 @@ class Survey::Page::QuestionsController < ResourceController
   end
 
   def belongs_to_relationship
-    'survey_questions'
+    'questions'
   end
 
   # def allowed_params

@@ -4,23 +4,23 @@ class Survey::Question < ApplicationRecord
 
   has_paper_trail
 
-  default_scope {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
+  default_scope {includes(:page).order(['survey_pages.sort_order asc', 'questions.sort_order asc'])}
 
   belongs_to :page,
              class_name: 'Survey::Page',
              foreign_key: 'page_id',
-             inverse_of: :survey_questions
+             inverse_of: :questions
 
   has_one :survey, through: :page
 
-  has_many :survey_answers,
+  has_many :answers,
            class_name: 'Survey::Answer',
            foreign_key: 'question_id',
            inverse_of: :question,
            dependent: :destroy
-  accepts_nested_attributes_for :survey_answers, :allow_destroy => true
+  accepts_nested_attributes_for :answers, :allow_destroy => true
 
-  has_many :survey_responses, dependent: :destroy, class_name: 'Survey::Response', foreign_key: 'question_id'
+  has_many :responses, dependent: :destroy, class_name: 'Survey::Response', foreign_key: 'question_id'
 
   validates_inclusion_of :question_type, in:
     [
@@ -45,24 +45,24 @@ class Survey::Question < ApplicationRecord
     updates = Hash[ new_answers.map { |a| ( (a[:id] && (a[:id].to_i > 0)) ? [a[:id].to_i, a] : nil) }.compact ]
     newAnswers = new_answers.collect { |a| ( (a[:id] && (a[:id].to_i > 0)) ? nil : a) }.compact
 
-    survey_answers.each do |answer|
+    answers.each do |answer|
       if updates[answer.id]
         answer.update_attributes( updates[answer.id] )
       else
         # delete it and remove it from the collection
-        candidate = survey_answers.delete(answer)
+        candidate = answers.delete(answer)
       end
     end
 
     # now create the new ones
     newAnswers.each do |answer|
-      survey_answers << SurveyAnswer.new(answer)
+      answers << SurveyAnswer.new(answer)
     end
   end
 
 private
   def check_for_use
-    if survey.survey_submissions.any?
+    if survey.submissions.any?
       raise 'can not delete a question for a survey that has responses in the system'
     end
   end

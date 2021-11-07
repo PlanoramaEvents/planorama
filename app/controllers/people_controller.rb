@@ -31,10 +31,10 @@ class PeopleController < ResourceController
                   {
                     meta: meta,
                     include: [
-                      :survey_pages,
-                      :'survey_pages.survey_questions',
-                      :'survey_pages.survey_questions.survey_answers',
-                      :survey_submissions
+                      :pages,
+                      :'pages.questions',
+                      :'pages.questions.answers',
+                      :submissions
                     ],
                     params: {
                       domain: "#{request.base_url}",
@@ -70,9 +70,9 @@ class PeopleController < ResourceController
                   {
                     meta: meta,
                     include: [
-                      :survey_pages,
-                      :'survey_pages.survey_questions',
-                      :'survey_pages.survey_questions.survey_answers'
+                      :pages,
+                      :'pages.questions',
+                      :'pages.questions.answers'
                     ],
                     params: {
                       domain: "#{request.base_url}"
@@ -100,7 +100,7 @@ class PeopleController < ResourceController
                   {
                     meta: meta,
                     include: [
-                      :survey_responses
+                      :responses
                     ],
                     params: {
                       domain: "#{request.base_url}",
@@ -124,16 +124,16 @@ class PeopleController < ResourceController
     end
 
     # TODO: tweak include to optimize query pre-fetch?
-    q = person.survey_submissions
+    q = person.submissions
         .includes(
           [
-            :survey_responses
+            :responses
           ]
         )
         .joins(:survey)
         .where(survey_query)
         .where(query(@filters))
-        .order(order_string(order_by: 'survey_submissions.updated_at'))
+        .order(order_string(order_by: 'submissions.updated_at'))
 
     q
   end
@@ -148,11 +148,11 @@ class PeopleController < ResourceController
         .includes(
           [
             {
-              survey_pages: {
-                survey_questions: :survey_answers
+              pages: {
+                questions: :answers
               }
             },
-            :survey_submissions,
+            :submissions,
             :created_by,
             :updated_by,
             :published_by
@@ -160,10 +160,10 @@ class PeopleController < ResourceController
         )
         .references(
           [
-            :survey_submissions
+            :submissions
           ]
         )
-        .where("survey_submissions.person_id = ?", person.id) # limit the survey_submissions to those for the person ....
+        .where("submissions.person_id = ?", person.id) # limit the submissions to those for the person ....
         .where(query(@filters))
         .order(order_string(order_by: 'mailings.updated_at'))
 

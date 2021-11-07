@@ -12,7 +12,7 @@ class SurveySerializer
              :branded,
              :allow_submission_edits
 
-  has_many :survey_pages,
+  has_many :pages,
            serializer: Survey::PageSerializer,
            links: {
              self: -> (object, params) {
@@ -23,7 +23,7 @@ class SurveySerializer
              }
            }
 
-  has_many :survey_submissions,
+  has_many :submissions,
            serializer: Survey::SubmissionSerializer,
            links: {
              self: -> (object, params) {
@@ -68,6 +68,6 @@ class SurveySerializer
               }
 
   attribute :nbr_submissions do |object|
-    object.survey_submissions.size
+    object.submissions.size
   end
 end

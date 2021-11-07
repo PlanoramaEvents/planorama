@@ -6,7 +6,7 @@ class Survey::Response < ApplicationRecord
   belongs_to :submission,
              class_name: 'Survey::Submission',
              foreign_key: 'submission_id',
-             inverse_of: :survey_responses
+             inverse_of: :responses
 
   before_save :set_response_text
 

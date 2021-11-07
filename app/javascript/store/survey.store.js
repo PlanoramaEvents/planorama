@@ -51,9 +51,9 @@ export const surveyStore = {
     [NEW_SURVEY] ({dispatch}) {
       let newSurvey = {
         name: 'New Survey',
-        survey_pages_attributes: [{
+        pages_attributes: [{
           title: 'New Survey',
-          survey_questions_attributes: [{
+          questions_attributes: [{
             question: 'New Question',
             question_type: "textfield",
             survey_answers_attributes: [{
@@ -151,10 +151,10 @@ export const surveyStore = {
         allow_submission_edits: true,
         anonymous: item.anonymous,
         // TODO fix survey_pages
-        survey_pages_attributes: item.survey_pages.map(p => ({
+        pages_attributes: item.pages.map(p => ({
           title: p.title,
-          // TODO fix survey_questions
-          survey_questions_attributes: p.survey_questions.map(q => ({
+          // TODO fix questions
+          questions_attributes: p.questions.map(q => ({
             question: q.question,
             question_type: q.question_type,
             mandatory: q.mandatory,
