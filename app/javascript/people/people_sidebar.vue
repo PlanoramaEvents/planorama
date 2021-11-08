@@ -14,6 +14,9 @@
         <b-tab title="Admin" v-if="currentUserIsAdmin">
           <people-admin-tab :model="model"></people-admin-tab>
         </b-tab>
+        <b-tab title="Surveys">
+          <people-surveys-tab :model="model"></people-surveys-tab>
+        </b-tab>
       </b-tabs>
     </template>
   </sidebar-vue>
@@ -24,6 +27,7 @@ import SidebarVue from '../components/sidebar_vue';
 import {sessionMixin, modelMixin} from '@mixins';
 import Detail from './detail.vue';
 import PeopleAdminTab from './people_admin_tab';
+import PeopleSurveysTab from './people_surveys_tab';
 
 export default {
   name: 'PeopleSidebar',
@@ -31,6 +35,7 @@ export default {
     SidebarVue,
     Detail,
     PeopleAdminTab,
+	PeopleSurveysTab,
   },
   mixins: [
     modelMixin,
