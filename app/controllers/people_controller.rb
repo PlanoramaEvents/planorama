@@ -133,7 +133,7 @@ class PeopleController < ResourceController
         .joins(:survey)
         .where(survey_query)
         .where(query(@filters))
-        .order(order_string(order_by: 'submissions.updated_at'))
+        .order(order_string(order_by: 'survey_submissions.updated_at'))
 
     q
   end

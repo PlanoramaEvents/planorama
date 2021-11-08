@@ -4,8 +4,8 @@ class Survey::Submission < ApplicationRecord
 
   has_many :responses,
            class_name: 'Survey::Response',
-           foreign_key: 'survey_submission_id',
-           inverse_of: :survey_submission,
+           foreign_key: 'submission_id',
+           inverse_of: :submission,
            dependent: :destroy
   accepts_nested_attributes_for :responses, allow_destroy: true
 end
