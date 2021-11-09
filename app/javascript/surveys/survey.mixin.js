@@ -47,7 +47,7 @@ export const surveyMixin = {
       return this.toastPromise(this.$store.dispatch(DELETE, {model, itemOrId}), success_text);
     },
     getSurveyPages(survey) {
-      return getOrderedRelationships('survey_pages', survey);
+      return getOrderedRelationships('pages', survey);
     }
   }
 }

@@ -40,11 +40,11 @@
           >{{choice.answer}}</b-form-radio>
           <b-form-radio
             class="mt-2"
-            v-if="other"
-            :value="choiceValue(other)"
+            v-if="otherFromQuestion"
+            :value="choiceValue(otherFromQuestion)"
             v-model="otherChecked"
             :disabled="!answerable"
-            @input="changeNextPage($event, other)"
+            @input="changeNextPage($event, otherFromQuestion)"
           >
             <b-form-group
               label="Other"
@@ -78,8 +78,8 @@
           >{{choice.answer}}</b-form-checkbox>
           <b-form-checkbox
             class="mt-2"
-            v-if="other"
-            :value="choiceValue(other)"
+            v-if="otherFromQuestion"
+            :value="choiceValue(otherFromQuestion)"
             :disabled="!answerable"
             v-model="otherChecked"
           >

@@ -15,6 +15,8 @@ export const NEW = 'NEW';
 export const SAVE = 'SAVE';
 export const DELETE = 'DELETE';
 
+export const PATCH_RELATED = 'PATCH_RELATED';
+
 // people add-ons
 import { personStore, personEndpoints } from './person.store';
 
@@ -63,6 +65,24 @@ export const store = new Vuex.Store({
     ...sessionStore.mutations,
   },
   actions: {
+    /**
+     * this method isn't in our version of jsonapi-vuex, so we're writing our own
+     * right now it only works on one to many
+     */
+    [PATCH_RELATED] ({dispatch}, {item, parentRelName, childIdName}) {
+      let relId = item?.id
+      let rels = item?._jv?.relationships?.[parentRelName]?.data
+      if(!rels || !rels.length) {
+        // no relationships found, what to do here? returning true for now
+        return Promise.resolve(true)
+      }
+      let itemsToSend = rels.map( r => ({
+        // TODO optimistic locking
+        [childIdName]: relId,
+        _jv: r
+      }));
+      return Promise.all(itemsToSend.map(i => dispatch('jv/patch', i)))
+    },
     /*
       NOTE: The backend will save relationship (tested when it is the 'parent')
 

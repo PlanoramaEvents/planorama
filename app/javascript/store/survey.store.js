@@ -56,24 +56,25 @@ export const surveyStore = {
           questions_attributes: [{
             question: 'New Question',
             question_type: "textfield",
-            survey_answers_attributes: [{
-              answer: 'Option 1'
+            answers_attributes: [{
+              answer: 'Option'
             }]
           }]
         }]
       }
       return dispatch(NEW, {model: surveyModel, selected: true, newSurvey})
     },
-    [NEW_PAGE] ({dispatch}, {surveyId, questionIds = []}) {
+    [NEW_PAGE] ({dispatch}, {surveyId, questionIds = [], insertAt}) {
       // TODO sort order?
       let newPage = {
         title: 'New Page',
+        sort_order_position: insertAt,
         relationships: {
           survey: {
-            data: [{
+            data: {
               type: surveyModel,
               id: surveyId
-            }]
+            }
           },
           question: {
             data: questionIds.map(id => ({type: questionModel, id}))
@@ -82,21 +83,15 @@ export const surveyStore = {
       }
       return dispatch(NEW, {model: pageModel, selected: true, ...newPage})
     },
-    [NEW_QUESTION] ({dispatch}, {surveyId, pageId, questionType = "textfield"}) {
-      // TODO sort order?
+    [NEW_QUESTION] ({dispatch}, {pageId, questionType = "textfield", insertAt}) {
       let newQuestion = {
         question: 'New Question',
         question_type: questionType,
-        survey_answers_attributes: [{
+        answers_attributes: [{
           answer: 'Option 1'
         }],
+        sort_order_position: insertAt,
         relationships: {
-          survey: {
-            data: [{
-              type: surveyModel,
-              id: surveyId
-            }]
-          },
           page: {
             data: [{
               type: pageModel,

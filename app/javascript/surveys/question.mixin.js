@@ -85,13 +85,13 @@ export const questionMixin = {
       this.unselect({model});
     },
     getQuestionAnswers(question) {
-      return getOrderedRelationships('survey_answers', question);
+      return getOrderedRelationships('answers', question);
     },
     getQuestionIndex(question) {
       if (!question) {
         return undefined;
       }
-      return getOrderedRelationships('survey_questions', question.survey_page).findIndex(q => q.id === question.id)
+      return getOrderedRelationships('questions', question.survey_page).findIndex(q => q.id === question.id)
     },
     duplicateSelectedQuestion() {
       if(!this.selectedQuestion) {
