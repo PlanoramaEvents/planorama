@@ -50,7 +50,7 @@ export default {
   methods: {
     ...mapActions({newSurvey: NEW_SURVEY}),
     previewLink(item) {
-      return `/surveys/${item.id}/preview`;
+      return `/#/surveys/${item.id}/preview`;
     },
     surveyLink(item) {
       // TODO add authenticity key to stop robots?

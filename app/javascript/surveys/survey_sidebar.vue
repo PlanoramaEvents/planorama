@@ -102,7 +102,7 @@ export default {
       return `/surveys/${this.survey.id}`;
     },
     previewLink() {
-      return `${this.surveyLink}/preview`;
+      return `/#${this.surveyLink}/preview`;
     }
   },
   methods: {
