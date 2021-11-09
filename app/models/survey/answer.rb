@@ -17,7 +17,7 @@ class Survey::Answer < ApplicationRecord
   belongs_to :question,
              class_name: 'Survey::Question',
              foreign_key: 'question_id',
-             inverse_of: :survey_answers
+             inverse_of: :answers
 
 
   # TODO: on save need to remove next_page refs that do not exist

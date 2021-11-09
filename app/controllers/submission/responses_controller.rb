@@ -10,7 +10,7 @@ class Submission::ResponsesController < ResourceController
   end
 
   def belongs_to_relationship
-    'survey_responses'
+    'responses'
   end
 
 end

@@ -35,10 +35,10 @@ class SurveysController < ResourceController
 
   def serializer_includes
     [
-      :survey_pages,
-      :'survey_pages.survey_questions',
-      :'survey_pages.survey_questions.survey_answers',
-      :survey_submissions
+      :pages,
+      :'pages.questions',
+      :'pages.questions.answers',
+      :submissions
       # :created_by,
       # :updated_by,
       # :published_by
@@ -48,11 +48,11 @@ class SurveysController < ResourceController
   def includes
     [
       {
-        survey_pages: {
-          survey_questions: :survey_answers
+        pages: {
+          questions: :answers
         }
       },
-      :survey_submissions,
+      :submissions,
       :created_by,
       :updated_by,
       :published_by,
@@ -122,7 +122,7 @@ class SurveysController < ResourceController
       branded
       allow_submission_edits
     ] << [
-      survey_pages_attributes: %i[
+      pages_attributes: %i[
         id
         title
         next_page_id
@@ -132,7 +132,7 @@ class SurveysController < ResourceController
         lock_version
         _destroy
       ] << [
-        survey_questions_attributes: %i[
+        questions_attributes: %i[
           id
           title
           question
@@ -147,7 +147,7 @@ class SurveysController < ResourceController
           branching
           _destroy
         ] << [
-          survey_answers_attributes: %i[
+          answers_attributes: %i[
             id
             answer
             lock_version

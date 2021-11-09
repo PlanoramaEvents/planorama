@@ -1,16 +1,16 @@
 <template>  
-  <b-select :id="id" class="d-inline next-page" :value="value" @input="$emit('input', $event)" :options="nextPageOptions" @change="save"></b-select>
+  <b-select :id="id" class="d-inline next-page" :value="value" @input="$emit('input', $event)" :options="nextPageOptions" @change="$emit('change', $event)"></b-select>
 </template>
 
 <script>
-import pageMixin from './page.mixin'
+import { pageMixin, surveyMixin } from '@mixins'
 export default {
   name: 'NextPagePicker',
-  mixins: [pageMixin],
+  mixins: [pageMixin, surveyMixin],
   props: {
     value: {},
     forPage: {
-      type: Number
+      type: String
     },
     id: {
       type: String,
@@ -24,7 +24,7 @@ export default {
     nextPageOptions() {
       return [
         {value: null, text: 'Continue to next page'},
-        ...this.survey.survey_pages.filter(p => p.id != this.pageId).map((p, i) => ({
+        ...this.selectedSurveyPages.filter(p => p.id != this.pageId).map((p, i) => ({
           value: p.id, text: `Go to page ${this.getPageDescriptor(p.id)}`
         })),
         {value: -1, text: 'Submit survey'}

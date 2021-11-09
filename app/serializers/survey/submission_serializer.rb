@@ -7,7 +7,7 @@ class Survey::SubmissionSerializer
     object.person.name if object.person
   end
 
-  has_many :survey_responses,
+  has_many :responses,
             links: {
               self: -> (object, params) {
                 "#{params[:domain]}/submission/#{object.id}"
@@ -16,6 +16,6 @@ class Survey::SubmissionSerializer
                 "#{params[:domain]}/submission/#{object.id}/survey_response"
               }
             } do |object|
-              object.survey_responses.collect{|r| {r.survey_question.question => r.response_as_text}}
+              object.responses.collect{|r| {r.survey_question.question => r.response_as_text}}
             end
 end

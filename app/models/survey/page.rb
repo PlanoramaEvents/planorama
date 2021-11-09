@@ -4,16 +4,16 @@ class Survey::Page < ApplicationRecord
 
   default_scope { order(['survey_pages.sort_order asc'])}
 
-  has_many :survey_questions,
+  has_many :questions,
            class_name: 'Survey::Question',
            foreign_key: 'page_id',
            inverse_of: :page,
            dependent: :destroy
-  accepts_nested_attributes_for :survey_questions, allow_destroy: true
+  accepts_nested_attributes_for :questions, allow_destroy: true
 
   belongs_to :survey
 
-  has_many :survey_answers,
+  has_many :answers,
            class_name: 'Survey::Answer',
            foreign_key: 'next_page_id',
            inverse_of: :next_page
@@ -49,6 +49,6 @@ class Survey::Page < ApplicationRecord
   def on_delete_next_page_consistency
     previous_pages.update_all(next_page_id: nil)
 
-    survey_answers.update_all(next_page_id: nil)
+    answers.update_all(next_page_id: nil)
   end
 end

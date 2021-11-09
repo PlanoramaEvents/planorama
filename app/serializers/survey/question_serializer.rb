@@ -7,7 +7,7 @@ class Survey::QuestionSerializer
              :private, :regex, :page_id,
              :branching
 
-  has_many :survey_answers, serializer: Survey::AnswerSerializer,
+  has_many :answers, serializer: Survey::AnswerSerializer,
             links: {
               self: -> (object, params) {
                 "#{params[:domain]}/question/#{object.id}"
@@ -24,7 +24,7 @@ class Survey::QuestionSerializer
   # It probably makes more sense for answers to be nested in here rather
   # than a relationship.
   # @Gail - please check
-  # attribute :survey_answers do |question|
-  #   question.survey_answers
+  # attribute :answers do |question|
+  #   question.answers
   # end
 end

@@ -40,11 +40,11 @@
           >{{choice.answer}}</b-form-radio>
           <b-form-radio
             class="mt-2"
-            v-if="other"
-            :value="choiceValue(other)"
+            v-if="otherFromQuestion"
+            :value="choiceValue(otherFromQuestion)"
             v-model="otherChecked"
             :disabled="!answerable"
-            @input="changeNextPage($event, other)"
+            @input="changeNextPage($event, otherFromQuestion)"
           >
             <b-form-group
               label="Other"
@@ -78,8 +78,8 @@
           >{{choice.answer}}</b-form-checkbox>
           <b-form-checkbox
             class="mt-2"
-            v-if="other"
-            :value="choiceValue(other)"
+            v-if="otherFromQuestion"
+            :value="choiceValue(otherFromQuestion)"
             :disabled="!answerable"
             v-model="otherChecked"
           >
@@ -367,14 +367,14 @@ export default {
       return `${this.formId(string)}-group`
     },
     linkResponse() {
-      if (!this.selectedSubmission.survey_responses_attributes) {
-        this.selectedSubmission.survey_responses_attributes = []
+      if (!this.selectedSubmission.responses_attributes) {
+        this.selectedSubmission.responses_attributes = []
       }
-      let existing_response = this.selectedSubmission.survey_responses_attributes.find(r => r.question_id == this.question.id)
+      let existing_response = this.selectedSubmission.responses_attributes.find(r => r.question_id == this.question.id)
       if (existing_response) {
         this.response = existing_response
       } else {
-        this.submission.survey_responses_attributes.push(this.response)
+        this.submission.responses_attributes.push(this.response)
       }
     },
     choiceValue(choice) {

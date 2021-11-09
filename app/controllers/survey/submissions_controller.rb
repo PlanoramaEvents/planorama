@@ -11,7 +11,7 @@ class Survey::SubmissionsController < ResourceController
   end
 
   def belongs_to_relationship
-    'survey_submissions'
+    'submissions'
   end
 
   def belongs_to_param_id
@@ -26,7 +26,7 @@ class Survey::SubmissionsController < ResourceController
 
   def serializer_includes
     [
-      :survey_responses
+      :responses
     ]
   end
 
@@ -39,7 +39,7 @@ class Survey::SubmissionsController < ResourceController
       survey = Survey.find_by(id: params[:survey_id])
       authorize survey, policy_class: policy_class
 
-      survey.survey_submissions.destroy_all
+      survey.submissions.destroy_all
 
       render status: :ok, json: {}.to_json, content_type: 'application/json'
     end
@@ -49,9 +49,9 @@ class Survey::SubmissionsController < ResourceController
     %i[
       person_id
       survey_id
-      survey_responses
+      responses
     ] << [
-      survey_responses_attributes: %i[
+      responses_attributes: %i[
         id
         lock_version
         _destroy

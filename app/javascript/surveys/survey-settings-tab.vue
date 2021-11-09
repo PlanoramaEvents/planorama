@@ -74,8 +74,10 @@ export default {
       this.publishVal = this.survey.public;
     },
   },
-  mounted() {
-    this.publishVal = this.survey.public;
+  watch: {
+    survey(newval) {
+      this.publishVal = newval.public
+    }
   }
 }
 </script>

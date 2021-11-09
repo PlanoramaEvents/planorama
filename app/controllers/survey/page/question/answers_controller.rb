@@ -12,7 +12,7 @@ class Survey::Page::Question::AnswersController < ResourceController
   end
 
   def belongs_to_relationship
-    'survey_answers'
+    'answers'
   end
 
   # def allowed_params

@@ -5,15 +5,15 @@ class Survey::PagesController < ResourceController
 
   def serializer_includes
     [
-      :survey_questions,
-      :'survey_questions.survey_answers'
+      :questions,
+      :'questions.answers'
     ]
   end
 
   def includes
     [
       {
-        survey_questions: :survey_answers
+        questions: :answers
       }
     ]
   end
@@ -27,7 +27,7 @@ class Survey::PagesController < ResourceController
   end
 
   def belongs_to_relationship
-    'survey_pages'
+    'pages'
   end
 
   # def allowed_params

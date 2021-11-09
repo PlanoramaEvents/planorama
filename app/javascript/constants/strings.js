@@ -32,4 +32,8 @@ module.exports = {
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added.`,
     IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",
+    QUESTION_ORDER_SAVE_SUCCESS: "Gail should not write copy also question order saved",
+    QUESTION_SAVE_SUCCESS: "Gail should not write copy also queston saved",
+    ANSWER_ORDER_SAVE_SUCCESS: "Gail should not write copy also answer order saved",
+    ANSWER_SAVE_SUCCESS: "Gail should not write copy also answer saved",
 }

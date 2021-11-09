@@ -1,12 +1,13 @@
 import surveyMixin from './survey.mixin';
-import { pageModel as model, questionModel } from '../store/survey.store';
-import { SELECT, SELECTED, DELETE, SAVE } from '../store/model.store';
+import { pageModel as model, questionModel, NEW_PAGE } from '../store/survey.store';
+import { SELECT, SELECTED, DELETE, SAVE, PATCH_RELATED } from '../store/model.store';
 import { mapGetters, mapActions } from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
+import { toastMixin }  from '../toast-mixin';
 
 // CONVERTED
 export const pageMixin = {
-  mixins: [surveyMixin],
+  mixins: [surveyMixin, toastMixin],
   computed: {
     ...mapGetters({
       selected: SELECTED
@@ -24,20 +25,21 @@ export const pageMixin = {
       return this.selectedNumber === this.survey._jv.relationships.survey_pags.data.length;
     },
     singlePage() {
-      return this.survey._jv.relationships.survey_pages.data.length < 2;
+      return this.survey._jv.relationships.pages.data.length < 2;
     },
     selectedPageQuestions() {
       return this.selectedPage ? this.getPageQuestions(this.selectedPage) : [];
     }
   }, methods: {
     ...mapActions({
-      delete: DELETE
+      delete: DELETE,
+      newPage: NEW_PAGE
     }),
     isSelectedPage(page) {
       return this.selectedPage && this.selectedPage.id === page.id
     },
     getPageIndex(id) {
-      return this.survey._jv.relationships.survey_pages.data.findIndex(p => p.id === id);
+      return this.survey._jv.relationships.pages.data.findIndex(p => p.id === id);
     },
     getPageNumber(id) {
       return this.getPageIndex(id) + 1;
@@ -46,14 +48,24 @@ export const pageMixin = {
       return this.page && this.selectedPage && this.selectedPage.id === page.id;
     },
     getPageById(id) {
-      return this.survey.survey_pages[id];
+      return this.survey.pages[id];
+    },
+    isFirstPage(id) {
+      return this.getPageNumber(id) === 1;
     },
     isLastPage(id) {
-      return this.getPageNumber(id) === this.survey._jv.relationships.survey_pages.data.length;
+      return this.getPageNumber(id) === this.survey._jv.relationships.pages.data.length;
     },
     getPageDescriptor(id) {
       let page = this.getPageById(id);
       return `${this.getPageNumber(id)} (${page.title})`;
+    },
+    getPreviousPage(id) {
+      if (this.isFirstPage(id)) {
+        return null;
+      }
+
+      return this.getSurveyPages(this.survey)[this.getPageIndex(id) - 1];
     },
     getNextPage(id) {
       if(this.isLastPage(id)) {
@@ -66,10 +78,19 @@ export const pageMixin = {
       this.$store.commit(SELECT, {model, itemOrId});
     },
     getPageQuestions(page) {
-      return getOrderedRelationships('survey_questions', page)
+      return getOrderedRelationships('questions', page)
     },
-    saveSelectedPage() {
-      return this.$store.dispatch(SAVE, {model, item: this.selectedPage})
+    savePage(item) {
+      if (!item && this.selectedPage) {
+        item = this.selectedPage
+      }
+      return new Promise((res, rej) => {
+        this.toastPromise(this.$store.dispatch(SAVE, {model, item}), "IT WORKED").then((data) => {
+          this.fetchSelectedSurvey().then(() => {
+            res(data);
+          }).catch(rej);
+        }).catch(rej);
+      })
     },
     mergePage(oldPage, newPage) {
       // move questions to new page
@@ -87,7 +108,7 @@ export const pageMixin = {
         }
       }
       return new Promise((res, rej) => {
-        this.$store.dispatch('jv/postRelated', item).then((data) => {
+        this.$store.dispatch(PATCH_RELATED, {item, parentRelName: 'questions', childIdName: 'page_id'}).then((data) => {
           // delete old page
           this.deletePage(oldPage).then(() => {
             res(data)

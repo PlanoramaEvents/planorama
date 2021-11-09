@@ -1,12 +1,12 @@
 <template>
   <div>
+    <h2>Surveys</h2>
     <survey-table></survey-table>
  </div>
 </template>
 
 <script>
 import { modelMixin } from '@mixins'
-//import sessionMixin from '../session/session.mixin';
 import { getOrderedRelationships } from '../utils/jsonapi_utils'
 import SurveyTable from '../surveys/survey_table';
 

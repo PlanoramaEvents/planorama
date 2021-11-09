@@ -49,7 +49,7 @@ class PersonSerializer #< ActiveModel::Serializer
                 }
               }
 
-  has_many  :survey_submissions, serializer: Survey::SubmissionSerializer,
+  has_many  :submissions, serializer: Survey::SubmissionSerializer,
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"

@@ -1,8 +1,11 @@
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '../store/model.store';
 import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '../store/survey.store';
 import { pageMixin } from '@mixins';
+import {
+  QUESTION_SAVE_SUCCESS
+} from '../constants/strings'
 
 // CONVERTED
 export const questionMixin = {
@@ -46,7 +49,7 @@ export const questionMixin = {
     textonly() {
       return this.question.question_type === "textonly";
     },
-    other() {
+    otherFromQuestion() {
       return this.getQuestionAnswers(this.question)?.find(a => a.other);
     },
     formatting() {
@@ -63,13 +66,17 @@ export const questionMixin = {
     ...mapMutations({
       select: SELECT,
       unselect: UNSELECT,
+    }),
+    ...mapActions({
       newQuestion: NEW_QUESTION,
       duplicateQuestion: DUPLICATE_QUESTION,
       delete: DELETE,
       save: SAVE
     }),
-    saveSelectedQuestion() {
-      return this.save({model, item: this.selectedQuestion})
+    saveQuestion(item) {
+      return this.save({model, item}).then((data) => {
+        console.log(data)
+      })
     },
     selectQuestion(itemOrId) {
       this.select({model, itemOrId})
@@ -78,13 +85,13 @@ export const questionMixin = {
       this.unselect({model});
     },
     getQuestionAnswers(question) {
-      return getOrderedRelationships('survey_answers', question);
+      return getOrderedRelationships('answers', question);
     },
     getQuestionIndex(question) {
       if (!question) {
         return undefined;
       }
-      return getOrderedRelationships('survey_questions', question.survey_page).findIndex(q => q.id === question.id)
+      return getOrderedRelationships('questions', question.survey_page).findIndex(q => q.id === question.id)
     },
     duplicateSelectedQuestion() {
       if(!this.selectedQuestion) {
@@ -97,6 +104,15 @@ export const questionMixin = {
         return Promise.resolve()
       }
       return this.delete({model, item: this.selectedQuestion})
+    },
+    patchQuestion(question, data, message = QUESTION_SAVE_SUCCESS) {
+      return this.toastPromise(this.$store.dispatch('jv/patch', { ...data, _jv: {
+        id: question.id,
+        type: model
+      }}), message)
+    },
+    patchSelectedQuestion(data, message = QUESTION_SAVE_SUCCESS) {
+      return this.patchQuestion(this.selectedQuestion, data, message)
     }
   }
 }

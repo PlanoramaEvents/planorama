@@ -21,7 +21,11 @@ class ResourceController < ApplicationController
 
   rescue_from ActiveRecord::ActiveRecordError, with: :database_error
   def database_error(e)
-    error = { status: '422', title: e.message }
+    Rails.logger.error e.message if Rails.env.development?
+    Rails.logger.error e.backtrace.join("\n\t") if Rails.env.development?
+
+    error = { status: '422', title: e.message, detail: e.full_message, source: e.cause }
+    # error = { status: '422', title: e.message, detail: e.cause, source: e.cause }
     render jsonapi_errors: [error], status: :unprocessable_entity
   end
 
