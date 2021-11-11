@@ -32,6 +32,7 @@ ISSUE - template links don't work
 import { SAVE } from '../model.store';
 import TableVue from '../components/table_vue';
 import TooltipOverflow from '../tooltip-overflow';
+import surveyMixin from './survey.mixin';
 import { survey_columns as columns } from './survey';
 import { mapActions } from 'vuex';
 import { NEW_SURVEY } from '../store/survey.store';
@@ -42,6 +43,7 @@ export default {
     TableVue,
     TooltipOverflow,
   },
+  mixins: [surveyMixin],
   data() {
     return {
       columns
@@ -49,13 +51,6 @@ export default {
   },
   methods: {
     ...mapActions({newSurvey: NEW_SURVEY}),
-    previewLink(item) {
-      return `/#/surveys/${item.id}/preview`;
-    },
-    surveyLink(item) {
-      // TODO add authenticity key to stop robots?
-      return `/surveys/${item.id}`;
-    },
     onNew() {
       this.newSurvey().then((survey) => {
         this.$router.push({path: `/edit/${survey.id}`})

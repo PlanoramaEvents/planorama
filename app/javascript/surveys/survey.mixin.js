@@ -48,8 +48,15 @@ export const surveyMixin = {
     },
     getSurveyPages(survey) {
       return getOrderedRelationships('pages', survey);
+    },
+    previewLink(item) {
+      return `/#/surveys/${item.id}/preview`;
+    },
+    surveyLink(item) {
+      // TODO add authenticity key to stop robots?
+      return `/surveys/${item.id}`;
     }
-  }
+   }
 }
 
 export default surveyMixin;
