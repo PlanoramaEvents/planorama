@@ -26,7 +26,7 @@
       After page {{i + 1}}
       <next-page-picker :for-page="page.id" :id="pagePickerId" class="ml-1" v-model="page.next_page_id" @change="savePage()"></next-page-picker>
     </div>
-    <b-modal v-if="isSelected" :id="deleteModalId" @ok="deletePage" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
+    <b-modal v-if="isSelected" :id="deleteModalId" @ok="deletePage(page)" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_1}}</p>
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_2}}</p>
     </b-modal>
@@ -39,8 +39,8 @@ import draggable from 'vuedraggable';
 import NextPagePicker from './next-page-picker';
 import { SAVE } from '../store/model.store'
 
-import { 
-  SURVEY_CONFIRM_DELETE_PAGE_1, 
+import {
+  SURVEY_CONFIRM_DELETE_PAGE_1,
   SURVEY_CONFIRM_DELETE_PAGE_2,
   QUESTION_ORDER_SAVE_SUCCESS,
  } from '../constants/strings';
@@ -55,9 +55,9 @@ import { questionModel } from '../store/survey.store';
 
 export default {
   name: "EditSurveyPage",
-  components: { 
+  components: {
     EditSurveyQuestion,
-    draggable, 
+    draggable,
     NextPagePicker,
   },
   mixins: [
@@ -115,7 +115,7 @@ export default {
       }
       return this.toastPromise(this.$store.dispatch(SAVE, {model: questionModel, item, selected: false}), QUESTION_ORDER_SAVE_SUCCESS)
     }
-  }, 
+  },
   watch: {
     page(newPage, oldPage) {
       if(newPage && (!oldPage || oldPage.id === newPage.id)) {
