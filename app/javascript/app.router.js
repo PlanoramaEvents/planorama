@@ -32,8 +32,8 @@ import MailTemplateScreen from './mailings/mail-template-screen.vue';
 const surveyRoutes = [
   { path: 'edit/:id/:responses', component: EditSurvey, props: true},
   { path: 'edit/:id', component: EditSurvey, props: true },
-  { path: ':survey_id/page/:id/:preview', component: SurveyPage, props: true},
-  { path: ':survey_id/page/:id', component: SurveyPage, props: true},
+  { path: ':surveyId/page/:id/:preview', component: SurveyPage, props: true},
+  { path: ':surveyId/page/:id', component: SurveyPage, props: true},
   { path: ':id/thankyou', component: SurveyThankYou, props: true},
   { path: ':id/:preview', component: TakeSurvey, props: true },
   { path: ':id', component: TakeSurvey, props: true},

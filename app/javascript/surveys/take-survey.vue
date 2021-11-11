@@ -25,8 +25,8 @@ export default {
   },
   mounted() {
     this.surveyLoadedPromise.then(() => {
-      this.newSubmission();
-      let path = `/${this.id}/page/${this.selectedPage.id}${this.preview ? '/preview' : ''}`
+      this.newSubmission({surveyId: this.id});
+      let path = `/surveys/${this.id}/page/${this.selectedPage.id}${this.preview ? '/preview' : ''}`
       console.log('redirecting to ', path)
       this.$router.push({path})
     })

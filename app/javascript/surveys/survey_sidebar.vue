@@ -99,7 +99,7 @@ export default {
       return `/surveys/${this.editLink}/responses`;
     },
     surveyLink() {
-      return `/surveys/${this.survey.id}`;
+      return `/#/surveys/${this.survey.id}`;
     },
     previewLink() {
       return `${this.surveyLink}/preview`;

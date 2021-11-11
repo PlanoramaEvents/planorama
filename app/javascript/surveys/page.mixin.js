@@ -16,16 +16,16 @@ export const pageMixin = {
       return this.selected({model});
     },
     selectedNumber() {
-      return this.getPageNumber(this.selectedPage.id)
+      return this.getPageNumber(this.selectedPage?.id)
     },
     firstPage() {
       return this.selectedNumber === 1;
     },
     lastPage() {
-      return this.selectedNumber === this.survey._jv.relationships.survey_pags.data.length;
+      return this.selectedNumber === this.survey?._jv.relationships.pages.data.length;
     },
     singlePage() {
-      return this.survey._jv.relationships.pages.data.length < 2;
+      return this.survey?._jv.relationships.pages.data.length < 2;
     },
     selectedPageQuestions() {
       return this.selectedPage ? this.getPageQuestions(this.selectedPage) : [];
@@ -39,7 +39,7 @@ export const pageMixin = {
       return this.selectedPage && this.selectedPage.id === page.id
     },
     getPageIndex(id) {
-      return this.survey._jv.relationships.pages.data.findIndex(p => p.id === id);
+      return this.survey?._jv.relationships.pages.data.findIndex(p => p.id === id);
     },
     getPageNumber(id) {
       return this.getPageIndex(id) + 1;
@@ -54,7 +54,7 @@ export const pageMixin = {
       return this.getPageNumber(id) === 1;
     },
     isLastPage(id) {
-      return this.getPageNumber(id) === this.survey._jv.relationships.pages.data.length;
+      return this.getPageNumber(id) === this.survey?._jv.relationships.pages.data.length;
     },
     getPageDescriptor(id) {
       let page = this.getPageById(id);

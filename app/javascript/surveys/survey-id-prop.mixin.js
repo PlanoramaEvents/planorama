@@ -13,6 +13,8 @@ const surveyIdPropMixin = (idProp = 'id') => ({
   }),
   mounted() {
     this.surveyLoadedPromise = new Promise((res, rej) =>  {
+      console.log("selected survey", this.survey)
+      console.log("id prop", idProp, this[idProp])
       if ((!this.survey && this[idProp]) || (this[idProp] && this.survey.id !== this[idProp])) {
         console.log('trying to load survey id', this[idProp])
         this.selectSurvey(this[idProp]);
@@ -30,5 +32,5 @@ const surveyIdPropMixin = (idProp = 'id') => ({
 
 export default surveyIdPropMixin;
 
-export const surveyIdPropMixinId = surveyIdPropMixin();
+export const surveyIdPropMixinId = surveyIdPropMixin('id');
 export const surveyIdPropMixinSurveyId = surveyIdPropMixin('surveyId');

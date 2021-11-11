@@ -1,11 +1,11 @@
 <!-- CONVERTED -->
 <template>
   <div class="scrollable">
-    <div class="survey-page">
+    <div class="survey-page" v-if="selectedPage">
       <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
       <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
       <survey-question
-        v-for="q in selectedPageSurveyQuestions"
+        v-for="q in selectedPageQuestions"
         :key="q.id"
         :question="q"
         answerable
@@ -29,12 +29,14 @@
 </template>
 
 <script>
-import pageMixin from './page.mixin';
-import { surveyIdPropMixinSurveyId } from './survey-id-prop.mixin';
-import surveyMixin from './survey.mixin';
-import { NEW_SUBMISSION, SAVE_SUBMISSION } from '../store/survey.store'
 import SurveyQuestion from './survey_question';
 import { mapActions } from 'vuex';
+import {
+  pageMixin,
+  surveyIdPropMixinSurveyId,
+  surveyMixin,
+  submissionMixin
+} from '@mixins';
 
 export default {
   name: "SurveyPage",
@@ -50,6 +52,7 @@ export default {
     surveyMixin,
     pageMixin,
     surveyIdPropMixinSurveyId,
+    submissionMixin
   ],
   computed: {
     next_page() {
@@ -65,13 +68,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      newSubmission: NEW_SUBMISSION,
-      submit: SAVE_SUBMISSION
-    }),
     submit() {
       if(!this.submit_disabled) {
-        this.submit().then(() => {
+        this.submitSelectedSubmission().then(() => {
           this.submitted = true;
           this.$router.push(`/${this.survey.id}/thankyou`);
         })
@@ -101,8 +100,9 @@ export default {
   mounted() {
     console.log('mounting page...')
     this.surveyLoadedPromise.then((surveyLoaded) => {
+      console.log("i get here! and should have a survey", this.survey)
       if (surveyLoaded) {
-        this.newSubmission();
+        this.newSubmission({surveyId: this.surveyId});
       } else if((!this.selectedPage && this.id) || this.id && this.selectedPage.id != this.id) {
         this.selectPage(this.id);
       }
