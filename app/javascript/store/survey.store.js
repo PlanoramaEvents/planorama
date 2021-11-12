@@ -1,5 +1,7 @@
-import { SELECTED, NEW, SAVE, UNSELECT} from './model.store';
+import { SELECTED, NEW, SAVE, UNSELECT, SELECT} from './model.store';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
+
+import { v4 as uuidv4 } from 'uuid';
 
 export const NEW_SURVEY = 'NEW SURVEY';
 export const NEW_PAGE = 'NEW PAGE';
@@ -36,16 +38,6 @@ export const surveyStore = {
     [submissionModel]: undefined,
   },
   getters: {
-    // todo these don't work remove them
-    selectedPage(state, getters) {
-      return getters[SELECTED](pageModel);
-    },
-    selectedQuestion(state, getters) {
-      return getters[SELECTED](questionModel);
-    },
-    selectedSubmission(state, getters) {
-      return getters[SELECTED](submissionModel);
-    },
   },
   actions: {
     [NEW_SURVEY] ({dispatch}) {
@@ -102,18 +94,27 @@ export const surveyStore = {
       };
       return dispatch(NEW, {model: questionModel, selected: true, ...newQuestion});
     },
-    [NEW_SUBMISSION] ({dispatch}, {surveyId}) {
+    [NEW_SUBMISSION] ({commit}, {surveyId}) {
+      const id = uuidv4();
       let newSubmission = {
-        relationships: {
-          survey: {
-            data: [{
-              type: surveyModel,
-              id: surveyId
-            }]
+        survey_id: surveyId,
+        responses_attributes: [],
+        id,
+        _jv: {
+          id,
+          type: submissionModel,
+          relationships: {
+            survey: {
+              data: {
+                type: surveyModel,
+                id: surveyId
+              }
+            }
           }
         }
       };
-      return dispatch(NEW, {model: submissionModel, selected: true, ...newSubmission});
+      commit('jv/addRecords', newSubmission)
+      return commit(SELECT, {model: submissionModel, itemOrId: newSubmission})
     },
     [SAVE_SUBMISSION] ({dispatch, getters, commit}, {item}) {
       if (!item) {
@@ -145,16 +146,13 @@ export const surveyStore = {
         branded: item.branded,
         allow_submission_edits: true,
         anonymous: item.anonymous,
-        // TODO fix survey_pages
-        pages_attributes: item.pages.map(p => ({
+        pages_attributes: getOrderedRelationships('pages', item).map(p => ({
           title: p.title,
-          // TODO fix questions
-          questions_attributes: p.questions.map(q => ({
+          questions_attributes: getOrderedRelationships('questions', p).map(q => ({
             question: q.question,
             question_type: q.question_type,
             mandatory: q.mandatory,
-            // TODO fix survey_answers
-            survey_answers_attributes: q.survey_answers.map(a => ({
+            answers_attributes: getOrderedRelationships('answers', q).map(a => ({
               other: a.other,
               answer: a.answer,
             })),

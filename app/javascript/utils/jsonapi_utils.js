@@ -1,4 +1,5 @@
 export const getOrderedRelationships = (relationship_name, target) => {
+  if (!target) return [];
   let rel_objects = target[relationship_name];
   if (!rel_objects || !Object.keys(rel_objects).length) return [];
   let sortFunc;

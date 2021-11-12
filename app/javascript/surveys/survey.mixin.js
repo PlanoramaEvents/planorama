@@ -54,7 +54,7 @@ export const surveyMixin = {
     },
     surveyLink(item) {
       // TODO add authenticity key to stop robots?
-      return `/surveys/${item.id}`;
+      return `/#/surveys/${item.id}`;
     }
    }
 }

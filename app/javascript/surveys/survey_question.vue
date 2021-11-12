@@ -367,14 +367,11 @@ export default {
       return `${this.formId(string)}-group`
     },
     linkResponse() {
-      if (!this.selectedSubmission.responses_attributes) {
-        this.selectedSubmission.responses_attributes = []
-      }
       let existing_response = this.selectedSubmission.responses_attributes.find(r => r.question_id == this.question.id)
       if (existing_response) {
         this.response = existing_response
       } else {
-        this.submission.responses_attributes.push(this.response)
+        this.selectedSubmission.responses_attributes.push(this.response)
       }
     },
     choiceValue(choice) {
