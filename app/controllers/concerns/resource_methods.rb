@@ -322,11 +322,19 @@ module ResourceMethods
   def find_resource
     if belongs_to_param_id && belong_to_class
       parent = belong_to_class.find belongs_to_param_id
+
+      return nil unless policy_scope(
+        parent.send(belongs_to_relationship),
+        policy_scope_class: policy_scope_class
+      ).exists?(resource_id)
+
       policy_scope(
         parent.send(belongs_to_relationship),
         policy_scope_class: policy_scope_class
       ).find(resource_id)
     else
+      return nil unless policy_scope(model_class, policy_scope_class: policy_scope_class).exists?(resource_id)
+
       policy_scope(model_class, policy_scope_class: policy_scope_class).find(resource_id)
     end
   end
