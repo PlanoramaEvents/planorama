@@ -3,8 +3,10 @@
     <div class="row">
       <top-navbar></top-navbar>
       <side-navbar v-if="loggedIn"></side-navbar>
-      <div :class="['col-12', { 'col-sm-9': loggedIn, 'col-xl-10': loggedIn}]">
-        <router-view></router-view>
+	  <div class="scrollable">
+        <div :class="['col-12', { 'col-sm-9': loggedIn, 'col-xl-10': loggedIn}]">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
     <bottom-navbar></bottom-navbar>
@@ -29,6 +31,9 @@ export default  {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.router-view-wrapper {
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
 </style>
