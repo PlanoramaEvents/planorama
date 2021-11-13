@@ -21,7 +21,6 @@ Rails.application.routes.draw do
   resources :people, path: 'person' do
     resources :person_roles, path: 'person_role', shallow: true
     resources :email_addresses, path: 'email_address', shallow: true
-    resources :submissions, path: 'submission', shallow: true
   end
 
   get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
