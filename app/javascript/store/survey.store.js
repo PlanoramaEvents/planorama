@@ -57,7 +57,6 @@ export const surveyStore = {
       return dispatch(NEW, {model: surveyModel, selected: true, newSurvey})
     },
     [NEW_PAGE] ({dispatch}, {surveyId, questionIds = [], insertAt}) {
-      // TODO sort order?
       let newPage = {
         title: 'New Page',
         sort_order_position: insertAt,
@@ -94,11 +93,12 @@ export const surveyStore = {
       };
       return dispatch(NEW, {model: questionModel, selected: true, ...newQuestion});
     },
-    [NEW_SUBMISSION] ({commit}, {surveyId}) {
+    [NEW_SUBMISSION] ({commit, state}, {surveyId}) {
       const id = uuidv4();
       let newSubmission = {
         survey_id: surveyId,
         responses_attributes: [],
+        person_id: state.user.id,
         id,
         _jv: {
           id,

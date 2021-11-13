@@ -1,6 +1,7 @@
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import { SELECTED, SAVE, UNSELECT } from "../store/model.store";
 import { submissionModel as model, NEW_SUBMISSION } from '../store/survey.store';
+import { getOrderedRelationships } from "../utils/jsonapi_utils";
 
 // CONVERTED
 export const submissionMixin = {
@@ -11,11 +12,16 @@ export const submissionMixin = {
     selectedSubmission() {
       return this.selected({model});
     },
+    selectedSubmissionResponses() {
+      return getOrderedRelationships('responses', this.selectedSubmission);
+    }
   },
   methods: {
+    ...mapMutations({
+      unselect: UNSELECT,
+    }),
     ...mapActions({
       save: SAVE,
-      unselect: UNSELECT,
       newSubmission: NEW_SUBMISSION
     }),
     submitSelectedSubmission() {

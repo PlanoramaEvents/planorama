@@ -15,6 +15,7 @@
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
           :required="question.mandatory"
+          @blur="updateSubmission"
         >{{response.response.text}}</b-form-textarea>
         <b-form-input
           :class="{'w-50': answerable}"
@@ -22,7 +23,9 @@
           v-model="response.response.text"
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
-          :required="question.mandatory" />
+          :required="question.mandatory"
+          @blur="updateSubmission"
+        ></b-form-input>
         <b-form-radio-group
           :class="{'w-50': answerable}"
           stacked
@@ -30,6 +33,7 @@
           v-model="radioButtonResponse"
           :aria-describedBy="ariaDescribedBy"
           :required="question.mandatory"
+          @change="updateSubmission"
         >
           <b-form-radio
             v-for="choice in choices.filter(a => !a.other)"
@@ -69,6 +73,7 @@
           v-model="response.response.answers"
           :aria-describedBy="ariaDescribedBy"
           :required="question.mandatory"
+          @change="updateSubmission"
         >
           <b-form-checkbox
             v-for="choice in choices.filter(a => !a.other)"
@@ -105,6 +110,7 @@
           v-model="response.response.text"
           :required="question.mandatory"
           :aria-describedby="ariaDescribedBy"
+          @change="updateSubmission"
         >
           <b-form-select-option
             v-for="choice in choices"
@@ -121,6 +127,7 @@
           v-model="response.response.text"
           :disabled="!answerable"
           :aria-describedBy="ariaDescribedBy"
+          @blur="updateSubmission"
         ></email-field>
       </template>
     </b-form-group>
@@ -141,6 +148,7 @@
             :disabled="!answerable"
             :id="formId('address-1')"
             v-model="response.response.address.street"
+            @blur="updateSubmission"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -154,6 +162,7 @@
             :disabled="!answerable"
             :id="formId('address-2')"
             v-model="response.response.address.street2"
+            @blur="updateSubmission"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -167,6 +176,7 @@
             :disabled="!answerable"
             :id="formId('city')"
             v-model="response.response.address.city"
+            @blur="updateSubmission"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -180,6 +190,7 @@
           :disabled="!answerable"
           :id="formId('state')"
           v-model="response.response.address.state"
+          @blur="updateSubmission"
         ></b-form-input>
         </b-form-group>
       </div>
@@ -193,6 +204,7 @@
             :disabled="!answerable"
             :id="formId('zip')"
             v-model="response.response.address.zip"
+            @blur="updateSubmission"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -206,6 +218,7 @@
             :disabled="!answerable"
             :id="formId('country')"
             v-model="response.response.address.country"
+            @blur="updateSubmission"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -215,17 +228,19 @@
       <div :class="['row', 'ml-0', {'w-50': answerable}]">
         <div class="col-12 px-0">
           <simple-social
-              label="Twitter"
-              prepend="@"
-              :disabled="!answerable"
-              :id="formId('socials-twitter')"
-              v-model="response.response.socialmedia.twitter"
-            ></simple-social>
+            label="Twitter"
+            prepend="@"
+            :disabled="!answerable"
+            :id="formId('socials-twitter')"
+            v-model="response.response.socialmedia.twitter"
+            @blur="updateSubmission"
+          ></simple-social>
           <simple-social
             label="Facebook"
             :disabled="!answerable"
             :id="formId('socials-facebook')"
             v-model="response.response.socialmedia.facebook"
+            @blur="updateSubmission"
           >
             <template #prepend>
               <b-input-group-text>facebook.com&sol;</b-input-group-text>
@@ -237,12 +252,14 @@
             :disabled="!answerable"
             :id="formId('socials-website')"
             v-model="response.response.socialmedia.website"
+            @blur="updateSubmission"
           ></simple-social>
           <simple-social
             label="Instagram"
             :disabled="!answerable"
             :id="formId('socials-insta')"
             v-model="response.response.socialmedia.instagram"
+            @blur="updateSubmission"
           >
             <template #prepend>
               <b-input-group-text>instagram.com&sol;</b-input-group-text>
@@ -253,6 +270,7 @@
             :disabled="!answerable"
             :id="formId('socials-twitch')"
             v-model="response.response.socialmedia.twitch"
+            @blur="updateSubmission"
           >
             <template #prepend>
               <b-input-group-text>twitch.tv&sol;</b-input-group-text>
@@ -263,6 +281,7 @@
             :disabled="!answerable"
             :id="formId('socials-youtube')"
             v-model="response.response.socialmedia.youtube"
+            @blur="updateSubmission"
           >
             <template #prepend>
               <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
@@ -274,12 +293,14 @@
             :disabled="!answerable"
             :id="formId('socials-tiktok')"
             v-model="response.response.socialmedia.tiktok"
+            @blur="updateSubmission"
           ></simple-social>
           <simple-social
             label="LinkedIn"
             :disabled="!answerable"
             :id="formId('socials-linkedin')"
             v-model="response.response.socialmedia.linkedin"
+            @blur="updateSubmission"
           >
             <template #prepend>
               <b-input-group-text>linkedin.com&sol;in&sol;</b-input-group-text>
@@ -290,6 +311,7 @@
             :disabled="!answerable"
             :id="formId('socials-other')"
             v-model="response.response.socialmedia.other"
+            @blur="updateSubmission"
           ></simple-social>
         </div>
       </div>
@@ -300,10 +322,14 @@
 <script>
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
-import questionMixin from './question.mixin';
 import EmailField from '../shared/email_field';
-import surveyMixin from './survey.mixin';
-import submissionMixin from './submission.mixin';
+import {
+  questionMixin,
+  surveyMixin,
+  submissionMixin
+} from '@mixins';
+import { v4 as uuidv4 } from 'uuid';
+import { submissionModel } from '../store/survey.store';
 
 export default {
   name: "SurveyQuestion",
@@ -330,6 +356,7 @@ export default {
   data: () => ({
     otherChecked: false,
     response: {
+      id: uuidv4(),
       question_id: null,
       response: {text: '', answers: [], address:{
         street: null, street2: null, city: null,
@@ -367,11 +394,24 @@ export default {
       return `${this.formId(string)}-group`
     },
     linkResponse() {
+      console.log("trying to link response", this.response)
       let existing_response = this.selectedSubmission.responses_attributes.find(r => r.question_id == this.question.id)
       if (existing_response) {
+        console.log("found an existing response!");
         this.response = existing_response
       } else {
-        this.selectedSubmission.responses_attributes.push(this.response)
+        console.log("pushing this response");
+        let item = {
+          responses_attributes: [
+            ...this.selectedSubmission.responses_attributes,
+            this.response
+          ],
+          _jv: {
+            type: submissionModel,
+            id: this.selectedSubmission.id
+          }
+        }
+        this.$store.commit('jv/mergeRecords', item)
       }
     },
     choiceValue(choice) {
@@ -382,6 +422,20 @@ export default {
         console.log("emitting", choice.next_page_id)
         this.$emit('nextPage', choice.next_page_id)
       }
+    },
+    updateSubmission() {
+      console.log("updating the submission")
+      let item = {
+        responses_attributes: [
+          ...this.selectedSubmission.responses_attributes.filter(r => r.id !== this.response.id),
+          this.response
+        ],
+        _jv: {
+          id: this.selectedSubmission.id,
+          type: submissionModel
+        }
+      }
+      this.$store.commit('jv/mergeRecords', item)
     }
   },
   mounted() {
@@ -392,8 +446,13 @@ export default {
   },
   watch: {
     selectedSubmission(val, oldVal) {
-      if (!oldVal && val) {
+      console.log("selected Submission", val)
+      if ((!oldVal && val) || (oldVal && oldVal !== val)) {
         this.linkResponse();
+      }
+    },
+    response(val, oldVal) {
+      if (val !== oldVal) {
       }
     }
   }

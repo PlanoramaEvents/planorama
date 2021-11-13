@@ -56,7 +56,7 @@ export default {
   ],
   computed: {
     next_page() {
-      return `/${this.survey_id}/page/${this.nextPageId}${this.preview ? '/preview' : ''}`
+      return `/surveys/${this.surveyId}/page/${this.nextPageId}${this.preview ? '/preview' : ''}`
     },
     submit_disabled() {
       return this.preview || !(this.survey && this.survey.public);
@@ -69,10 +69,11 @@ export default {
   },
   methods: {
     submit() {
+      console.log("attempting to submit", this.selectedSubmission);
       if(!this.submit_disabled) {
         this.submitSelectedSubmission().then(() => {
           this.submitted = true;
-          this.$router.push(`/${this.survey.id}/thankyou`);
+          this.$router.push(`/surveys/${this.survey.id}/thankyou`);
         })
       }
     },
@@ -93,7 +94,7 @@ export default {
     }
   },
   beforeRouteUpdate(to, from, next) {
-    this.selectPage(this.survey.survey_pages[to.params.id])
+    this.selectPage(this.survey.pages[to.params.id])
     this.setNextPageId(this.selectedPage?.next_page_id);
     next()
   },
@@ -103,7 +104,9 @@ export default {
       console.log("i get here! and should have a survey", this.survey)
       if (surveyLoaded) {
         this.newSubmission({surveyId: this.surveyId});
-      } else if((!this.selectedPage && this.id) || this.id && this.selectedPage.id != this.id) {
+      }
+      if((!this.selectedPage && this.id) || (this.id && this.selectedPage.id != this.id)) {
+        console.log("i am on the wrong page!")
         this.selectPage(this.id);
       }
       this.setNextPageId(this.selectedPage.next_page_id);

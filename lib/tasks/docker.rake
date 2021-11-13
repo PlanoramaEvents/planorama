@@ -38,7 +38,7 @@ namespace :docker do
     end
 
     task :mac_trunc_logs do
-        sh "docker", "run", "-it", "--rm", "--privileged", "--pid=host", "planorama:dev", "nsenter",  "-t",  "1",  "-m", "-u", "-n", "-i", "--", "sh", "-c", "'truncate -s0 /var/lib/docker/containers/*/*-json.log'"
+        puts "run the following command\ndocker run -it --rm --privileged --pid=host planorama:dev nsenter -t 1 -m -u -n -i -- sh -c 'truncate -s0 /var/lib/docker/containers/*/*-json.log'"
     end
 
     task :psql => :read_envrc do
