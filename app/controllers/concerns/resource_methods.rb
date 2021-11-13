@@ -68,7 +68,8 @@ module ResourceMethods
   def update
     model_class.transaction do
       if @object.new_record?
-        authorize model_class, policy_class: policy_class
+        # authorize model_class, policy_class: policy_class
+        authorize @object, policy_class: policy_class
         before_save
         @object.save!
         after_save
