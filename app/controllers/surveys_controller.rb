@@ -102,64 +102,65 @@ class SurveysController < ResourceController
     @object.published_on = Time.now
   end
 
-  def allowed_params
-    %i[
-      lock_version
-      name
-      thank_you
-      submit_string
-      use_captcha
-      public
-      transition_accept_status
-      transition_decline_status
-      declined_msg
-      authenticate_msg
-      anonymous
-      welcome
-      description
-      mandatory_star
-      numbered_questions
-      branded
-      allow_submission_edits
-    ] << [
-      pages_attributes: %i[
-        id
-        title
-        next_page_id
-        next_page_action
-        sort_order
-        survey_id
-        lock_version
-        _destroy
-      ] << [
-        questions_attributes: %i[
-          id
-          title
-          question
-          question_type
-          lock_version
-          mandatory
-          text_size
-          sort_order
-          horizontal
-          private
-          regex
-          branching
-          _destroy
-        ] << [
-          answers_attributes: %i[
-            id
-            answer
-            lock_version
-            default
-            sort_order
-            _destroy
-            other
-            next_page_id
-            next_page_action
-          ]
-        ]
-      ]
-    ]
-  end
+  # def allowed_params
+  #   %i[
+  #     id
+  #     lock_version
+  #     name
+  #     thank_you
+  #     submit_string
+  #     use_captcha
+  #     public
+  #     transition_accept_status
+  #     transition_decline_status
+  #     declined_msg
+  #     authenticate_msg
+  #     anonymous
+  #     welcome
+  #     description
+  #     mandatory_star
+  #     numbered_questions
+  #     branded
+  #     allow_submission_edits
+  #   ] << [
+  #     pages_attributes: %i[
+  #       id
+  #       title
+  #       next_page_id
+  #       next_page_action
+  #       sort_order
+  #       survey_id
+  #       lock_version
+  #       _destroy
+  #     ] << [
+  #       questions_attributes: %i[
+  #         id
+  #         title
+  #         question
+  #         question_type
+  #         lock_version
+  #         mandatory
+  #         text_size
+  #         sort_order
+  #         horizontal
+  #         private
+  #         regex
+  #         branching
+  #         _destroy
+  #       ] << [
+  #         answers_attributes: %i[
+  #           id
+  #           answer
+  #           lock_version
+  #           default
+  #           sort_order
+  #           _destroy
+  #           other
+  #           next_page_id
+  #           next_page_action
+  #         ]
+  #       ]
+  #     ]
+  #   ]
+  # end
 end

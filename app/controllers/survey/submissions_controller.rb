@@ -45,44 +45,45 @@ class Survey::SubmissionsController < ResourceController
     end
   end
 
-  def allowed_params
-    %i[
-      person_id
-      survey_id
-      responses
-    ] << [
-      responses_attributes: %i[
-        id
-        lock_version
-        _destroy
-        submission_id
-        question_id
-      ] << [
-        response: %i[
-          text
-        ] << [
-          answers: [],
-          address: %i[
-            street
-            street2
-            city
-            state
-            zip
-            country
-          ],
-          socialmedia: %i[
-            twitter
-            facebook
-            linkedin
-            twitch
-            youtube
-            instagram
-            website
-            other
-            tiktok
-          ]
-        ]
-      ]
-    ]
-  end
+  # def allowed_params
+  #   %i[
+  #     id
+  #     person_id
+  #     survey_id
+  #     responses
+  #   ] << [
+  #     responses_attributes: %i[
+  #       id
+  #       lock_version
+  #       _destroy
+  #       submission_id
+  #       question_id
+  #     ] << [
+  #       response: %i[
+  #         text
+  #       ] << [
+  #         answers: [],
+  #         address: %i[
+  #           street
+  #           street2
+  #           city
+  #           state
+  #           zip
+  #           country
+  #         ],
+  #         socialmedia: %i[
+  #           twitter
+  #           facebook
+  #           linkedin
+  #           twitch
+  #           youtube
+  #           instagram
+  #           website
+  #           other
+  #           tiktok
+  #         ]
+  #       ]
+  #     ]
+  #   ]
+  # end
 end
