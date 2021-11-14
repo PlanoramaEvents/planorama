@@ -1,7 +1,7 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
-import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '../store/model.store';
-import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '../store/survey.store';
+import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '@/store/model.store';
+import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '@/store/survey';
 import { pageMixin } from '@mixins';
 import {
   QUESTION_SAVE_SUCCESS

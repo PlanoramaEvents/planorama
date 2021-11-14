@@ -2,7 +2,7 @@ import {mapGetters} from 'vuex';
 import toastMixin from '../toast-mixin';
 import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE, UNSELECT } from '../store/model.store';
 import { SURVEY_SAVE_SUCCESS, SURVEY_SAVE_SUCCESS_DELETE } from '../constants/strings'
-import { surveyModel as model} from '../store/survey.store';
+import { surveyModel as model} from '@/store/survey';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
 
 // CONVERTED

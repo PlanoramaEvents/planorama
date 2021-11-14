@@ -15,7 +15,8 @@ export const NEW = 'NEW';
 export const SAVE = 'SAVE';
 export const DELETE = 'DELETE';
 
-export const PATCH_RELATED = 'PATCH_RELATED';
+export const PATCH_RELATED = 'PATCH RELATED';
+export const PATCH_FIELDS = 'PATCH FIELDS';
 
 // people add-ons
 import { personStore, personEndpoints } from './person.store';
@@ -24,7 +25,7 @@ import { personStore, personEndpoints } from './person.store';
 import { sessionStore } from './session.store';
 
 // survey add-ons
-import { surveyStore, surveyEndpoints } from './survey.store';
+import { surveyStore, surveyEndpoints } from './survey/survey.store';
 
 const endpoints = {
   ...personEndpoints,
@@ -150,6 +151,27 @@ export const store = new Vuex.Store({
     [FETCH_BY_ID] ({dispatch}, {model, id}) {
       // TODO do we ever need this? or is model always selected
       return dispatch('jv/get', `${endpoints[model]}/${id}`)
+    },
+    [PATCH_FIELDS] ({dispatch, commit}, {model, item, fields=[], selected = true}) {
+      // limited field selection
+      let smallItem = {
+        // always include lock version so that we have optimistic locking
+        lock_version: item.lock_version || 0,
+        ...fields.map(field => ({[field]: item[field]})).reduce((p, c) => ({...p, ...c}), {}),
+        id: item.id,
+        _jv: {
+          type: model,
+          id: item.id
+        }
+      }
+      return new Promise((res, rej) => {
+        dispatch('jv/patch', smallItem).then((savedModel) => {
+          if (selected) {
+            commit(SELECT, {model, itemOrId: savedModel});
+          }
+          res(savedModel);
+        }).catch(rej);
+      });
     },
     ...sessionStore.actions,
     ...surveyStore.actions,

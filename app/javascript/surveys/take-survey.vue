@@ -7,9 +7,11 @@
 
 <script>
 import {mapActions} from 'vuex';
-import pageMixin from './page.mixin';
-import { NEW_SUBMISSION } from '../store/survey.store';
-import { surveyIdPropMixinId } from './survey-id-prop.mixin';
+import {
+  pageMixin,
+  surveyIdPropMixinId
+} from '@mixins';
+import { NEW_SUBMISSION } from '@/store/survey';
 
 export default {
   name: "TakeSurvey",

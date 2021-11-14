@@ -1,6 +1,6 @@
 import surveyMixin from './survey.mixin';
-import { pageModel as model, questionModel, NEW_PAGE } from '../store/survey.store';
-import { SELECT, SELECTED, DELETE, SAVE, PATCH_RELATED } from '../store/model.store';
+import { pageModel as model, questionModel, NEW_PAGE } from '@/store/survey';
+import { SELECT, SELECTED, DELETE, SAVE, PATCH_RELATED } from '@/store/model.store';
 import { mapGetters, mapActions } from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { toastMixin }  from '../toast-mixin';

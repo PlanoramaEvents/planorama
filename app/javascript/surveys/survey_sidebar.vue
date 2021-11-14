@@ -63,7 +63,6 @@ import SurveyQuestion from './survey_question';
 import surveyMixin from './survey.mixin';
 import SurveySettingsTab from './survey-settings-tab';
 import SidebarVue from '../components/sidebar_vue';
-import { CLEAR_SUBMISSIONS } from './survey.store';
 import {
   SURVEY_RESULTS_CLEAR_CONFIRM,
   SURVEY_SAVE_SUCCESS_DELETE,
@@ -72,7 +71,7 @@ import {
   SURVEY_RESULTS_UNFREEZE_SUCCESS,
   SURVEY_CONFIRM_DELETE,
 } from '../constants/strings';
-import { DUPLICATE_SURVEY } from '../store/survey.store';
+import { DUPLICATE_SURVEY } from '@/store/survey';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
 
 export default {

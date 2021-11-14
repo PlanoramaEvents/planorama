@@ -33,7 +33,7 @@ import TableVue from '../components/table_vue';
 import TooltipOverflow from '../tooltip-overflow';
 import { survey_columns as columns } from './survey';
 import { mapActions } from 'vuex';
-import { NEW_SURVEY } from '../store/survey.store';
+import { NEW_SURVEY } from '@/store/survey';
 
 export default {
   name: 'SurveyTable',

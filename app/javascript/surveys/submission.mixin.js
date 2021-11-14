@@ -1,6 +1,6 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { SELECTED, SAVE, UNSELECT } from "../store/model.store";
-import { submissionModel as model, NEW_SUBMISSION } from '../store/survey.store';
+import { submissionModel as model, NEW_SUBMISSION } from "@/store/survey";
 import { getOrderedRelationships } from "../utils/jsonapi_utils";
 
 // CONVERTED

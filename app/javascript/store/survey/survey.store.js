@@ -1,25 +1,27 @@
-import { SELECTED, NEW, SAVE, UNSELECT, SELECT} from './model.store';
-import { getOrderedRelationships } from '../utils/jsonapi_utils';
+import { NEW, SAVE, UNSELECT, SELECT} from '../model.store';
+import { getOrderedRelationships } from '@/utils/jsonapi_utils';
+import {
+  NEW_SURVEY,
+  NEW_PAGE,
+  NEW_QUESTION,
+  NEW_SUBMISSION,
+  SAVE_SUBMISSION,
+  CLEAR_SURVEY_SUBMISSIONS,
+  DUPLICATE_SURVEY,
+  DUPLICATE_QUESTION,
+  NEW_RESPONSE
+} from './survey.actions';
+import {
+  surveyModel,
+  pageModel,
+  questionModel,
+  answerModel,
+  submissionModel,
+  responseModel,
+} from './survey.model';
 
 import { v4 as uuidv4 } from 'uuid';
 
-export const NEW_SURVEY = 'NEW SURVEY';
-export const NEW_PAGE = 'NEW PAGE';
-export const NEW_QUESTION = 'NEW QUESTION';
-export const NEW_SUBMISSION = 'NEW SUBMISSION';
-export const SAVE_SUBMISSION = 'SAVE SUBMISSION';
-// TODO unused GET_NESTED SURVEY??
-export const GET_NESTED_SURVEY = 'GET NESTED SURVEY';
-export const CLEAR_SURVEY_SUBMISSIONS = 'CLEAR SURVEY SUBMISSIONS';
-export const DUPLICATE_SURVEY = 'DUPLICATE SURVEY';
-export const DUPLICATE_QUESTION = 'DUPLICATE QUESTION';
-
-export const surveyModel = 'survey';
-export const pageModel = 'page';
-export const questionModel = 'question';
-export const answerModel = 'answer';
-export const submissionModel = 'submission';
-export const responseModel = 'response';
 
 export const surveyEndpoints = {
   [surveyModel]: 'survey',
@@ -186,6 +188,19 @@ export const surveyStore = {
         }
       }
       return dispatch(NEW, {model: questionModel, selected: true, relationships, ...newQuestion})
+    },
+    [NEW_RESPONSE] ({dispatch}, {relationships = {}}) {
+      let item = {
+        response: {text: '', answers: [], address:{
+          street: null, street2: null, city: null,
+          state: null, zip: null, country: null
+        }, socialmedia: {
+          twitter: null, facebook: null, linkedin: null,
+          twitch: null, youtube: null, instagram: null,
+          tiktok: null, other: null, website: null
+        }}
+      };
+      return dispatch(NEW, {model: responseModel, ...item, relationships})
     }
   }
 }

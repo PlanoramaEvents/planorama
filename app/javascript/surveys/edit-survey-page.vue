@@ -51,7 +51,7 @@ import {
   toastMixin,
   questionMixin
 } from '@mixins';
-import { questionModel } from '../store/survey.store';
+import { questionModel } from '@/store/survey';
 
 export default {
   name: "EditSurveyPage",
