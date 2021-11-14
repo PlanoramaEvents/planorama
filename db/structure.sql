@@ -129,6 +129,16 @@ CREATE TYPE public.phone_type_enum AS ENUM (
 
 
 --
+-- Name: submission_state_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.submission_state_enum AS ENUM (
+    'draft',
+    'submitted'
+);
+
+
+--
 -- Name: visibility_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -868,7 +878,8 @@ CREATE TABLE public.survey_submissions (
     person_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    lock_version integer DEFAULT 0
+    lock_version integer DEFAULT 0,
+    submission_state public.submission_state_enum DEFAULT 'draft'::public.submission_state_enum
 );
 
 
@@ -1651,6 +1662,13 @@ CREATE INDEX index_survey_submissions_on_person_id ON public.survey_submissions 
 
 
 --
+-- Name: index_survey_submissions_on_submission_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_submissions_on_submission_state ON public.survey_submissions USING btree (submission_state);
+
+
+--
 -- Name: index_survey_submissions_on_survey_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1907,6 +1925,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211101160001'),
 ('20211101195536'),
 ('20211103212755'),
-('20211105155118');
+('20211105155118'),
+('20211114155546');
 
 

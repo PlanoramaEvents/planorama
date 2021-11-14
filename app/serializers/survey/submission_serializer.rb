@@ -1,7 +1,9 @@
 class Survey::SubmissionSerializer
   include JSONAPI::Serializer
 
-  attributes :id, :lock_version, :survey_id, :person_id, :created_at, :updated_at
+  attributes :id, :lock_version, :survey_id, :person_id, :submission_state,
+             :created_at, :updated_at
+
 
   attribute :submitter do |object|
     object.person.name if object.person
