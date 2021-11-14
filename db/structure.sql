@@ -490,8 +490,7 @@ END) STORED,
 CASE
     WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
     ELSE name_sort_by
-END) STORED,
-    jti character varying NOT NULL
+END) STORED
 );
 
 
@@ -1515,13 +1514,6 @@ CREATE UNIQUE INDEX index_people_on_confirmation_token ON public.people USING bt
 
 
 --
--- Name: index_people_on_jti; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_people_on_jti ON public.people USING btree (jti);
-
-
---
 -- Name: index_people_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1926,6 +1918,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211101195536'),
 ('20211103212755'),
 ('20211105155118'),
-('20211114155546');
+('20211114155546'),
+('20211114191042');
 
 

@@ -37,7 +37,7 @@ import IeaModal from './iea-modal';
 import sessionMixin from '../session/session.mixin';
 
 import { validateFields } from "../utils";
-import {jwtToken, setJWTToken} from '../utils/jwt_utils';
+// import {jwtToken, setJWTToken} from '../utils/jwt_utils';
 
 import {
   LOGIN_401,
@@ -140,7 +140,7 @@ export default {
         const loginInfo = new LoginModel({ person: this.person });
         loginInfo
           .save()
-          .then((m) => { setJWTToken(m.response.headers['authorization']) })
+          // .then((m) => { setJWTToken(m.response.headers['authorization']) })
           .then(() => this.$bvModal.show('iea-modal'))
           .then(() => this.fetchSession())
           .catch((error) => this.onSaveFailure(error));

@@ -28,12 +28,6 @@ class ApplicationController < ActionController::Base
     current_person ? current_person.published_name : 'Anon user'
   end
 
-  # We are not going to use cookies - all security/sessions will be JWT based
-  def remove_cookies_action
-    response.headers.delete 'Set-Cookie'
-    request.session_options[:skip] = true
-  end
-
   protected
 
   def configure_permitted_parameters

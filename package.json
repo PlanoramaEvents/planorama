@@ -8,7 +8,6 @@
     "@vuex-orm/core": "^0.36.4",
     "@vuex-orm/plugin-axios": "^0.9.4",
     "axios": "^0.21.1",
-    "axios-jwt": "^1.7.1",
     "axios-observable": "^1.2.1",
     "bootstrap-vue": "^2.21.2",
     "ckeditor4": "^4.16.1",
@@ -52,7 +51,7 @@
     "webpack": "^4.46.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
-    
+
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
