@@ -1,14 +1,14 @@
 // import { csrfToken, csrfParam } from '@rails/ujs';
 import axios from 'axios';
-import {jwtToken} from './utils/jwt_utils';
+// import {jwtToken} from './utils/jwt_utils';
 
 const authMixin = {
   methods: {
     signOut() {
       const body = new FormData();
       body.append("_method", "delete")
-      const headers = {'Authorization': jwtToken()}
-      return axios.post('/auth/sign_out', body, {headers});
+      // const headers = {'Authorization': jwtToken()}
+      return axios.post('/auth/sign_out', body);
     }
   }
 }
