@@ -10,14 +10,11 @@ class People::SessionsController < Devise::SessionsController
 
   private
     def respond_with(resource, _opts = {})
-      # Rails.logger.debug "******* #{resource.to_json}, #{_opts}"
       super unless resource.id
 
       if resource.id
-        # Rails.logger.debug "****** #{request.env['warden-jwt_auth.token']}"
         render json: {
-          message: 'You are logged in.',
-          jwt: request.env['warden-jwt_auth.token']
+          message: 'You are logged in.'
         }, status: :ok
       end
     end
