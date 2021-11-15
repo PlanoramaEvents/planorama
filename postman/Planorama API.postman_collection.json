@@ -15,11 +15,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"const newAccessToken = responseHeaders['Authorization'].replace('Bearer','');",
+									"// const newAccessToken = responseHeaders['Authorization'].replace('Bearer','');",
 									"// console.log('****', newAccessToken);",
 									"// postman.setEnvironmentVariable(\"jwt-token\", newAccessToken);",
 									"// Save the JWT in the collection variable for use by other requests",
-									"pm.collectionVariables.set('jwt-token', newAccessToken);",
+									"// pm.collectionVariables.set('jwt-token', newAccessToken);",
 									""
 								],
 								"type": "text/javascript"
@@ -57,67 +57,37 @@
 					},
 					"response": []
 				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
 			]
 		},
 		{
 			"name": "People",
 			"item": [
 				{
-					"name": "Get People",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"//console.log('***', jsonData['data'][0].id);",
-									"pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt-token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:3000/person",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"person"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Me Session",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt-token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -136,23 +106,38 @@
 					"response": []
 				},
 				{
-					"name": "Get Person",
+					"name": "Get People",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/person/{{person-id}}",
+							"raw": "http://localhost:3000/person",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"person",
-								"{{person-id}}"
+								"person"
 							]
-						},
-						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+						}
 					},
 					"response": []
 				},
@@ -236,6 +221,42 @@
 								"survey",
 								"{{survey-id}}",
 								"submissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get People Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person"
 							]
 						}
 					},
@@ -541,9 +562,9 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"//console.log('***', jsonData['data'][0].id);",
-									"pm.collectionVariables.set(\"page-id\", jsonData['data'][0].id);",
+									"// var jsonData = JSON.parse(responseBody);",
+									"// //console.log('***', jsonData['data'][0].id);",
+									"// pm.collectionVariables.set(\"page-id\", jsonData['data'][0].id);",
 									""
 								],
 								"type": "text/javascript"
@@ -918,6 +939,176 @@
 			]
 		},
 		{
+			"name": "Agreements",
+			"item": [
+				{
+					"name": "Get My Agreements Signed",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement/signed",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement",
+								"signed"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Agreements UnSigned (only latest versions)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement/unsigned",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement",
+								"unsigned"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Latest Agreements",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"agreement-id\", jsonData['data'][0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement/latest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement",
+								"latest"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Sign an Agreement",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement/sign/{{agreement-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement",
+								"sign",
+								"{{agreement-id}}"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Agreements",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Create an Agreement",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"title\": \"{{$randomLoremWords}}\",\n    \"terms\": \"{{$randomLoremParagraph}}\",\n    \"agrement_type\": \"stuff\",\n    \"target\": \"all\"\n    // created_by_id\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/agreement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "RBAC",
 			"request": {
 				"auth": {
@@ -947,16 +1138,6 @@
 			"response": []
 		}
 	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{jwt-token}}",
-				"type": "string"
-			}
-		]
-	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -1034,6 +1215,10 @@
 		},
 		{
 			"key": "person-id",
+			"value": ""
+		},
+		{
+			"key": "agreement-id",
 			"value": ""
 		}
 	]

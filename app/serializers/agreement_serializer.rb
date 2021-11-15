@@ -5,6 +5,7 @@ class AgreementSerializer
              :target, :title, :terms, :agreement_type
 
   # TODO: need type??
-  belongs_to :created_by
-  belongs_to :updated_by
+  belongs_to :created_by, serializer: PersonSerializer
+
+  belongs_to :updated_by, serializer: PersonSerializer
 end
