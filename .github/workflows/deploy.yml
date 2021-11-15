@@ -85,7 +85,7 @@ jobs:
           build-args: |
             DEVISE_SECRET=${{ env.DEVISE_SECRET }}
             RAILS_ENV=production
-            NODE_ENV=production
+            NODE_ENV=development
           push: false
           load: true
           # target: development
