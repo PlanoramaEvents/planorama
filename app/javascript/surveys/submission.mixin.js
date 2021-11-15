@@ -1,5 +1,5 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
-import { SELECTED, SAVE, UNSELECT } from "../store/model.store";
+import { SELECTED, SAVE, UNSELECT, PATCH_FIELDS } from "../store/model.store";
 import { submissionModel as model, NEW_SUBMISSION } from "@/store/survey";
 import { getOrderedRelationships } from "../utils/jsonapi_utils";
 
@@ -21,12 +21,12 @@ export const submissionMixin = {
       unselect: UNSELECT,
     }),
     ...mapActions({
-      save: SAVE,
+      patch: PATCH_FIELDS,
       newSubmission: NEW_SUBMISSION
     }),
     submitSelectedSubmission() {
       return new Promise((res, rej) => {
-        this.save({model, item: this.selectedSubmission, selected: false}).then((data) => {
+        this.patch({model, item: this.selectedSubmission, fields: ['submission_state']}).then((data) => {
           this.unselect({model}) 
           res(data)
         }).catch(rej)

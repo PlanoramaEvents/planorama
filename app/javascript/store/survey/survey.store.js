@@ -1,11 +1,10 @@
-import { NEW, SAVE, UNSELECT, SELECT} from '../model.store';
+import { NEW, FETCH_BY_ID} from '../model.store';
 import { getOrderedRelationships } from '@/utils/jsonapi_utils';
 import {
   NEW_SURVEY,
   NEW_PAGE,
   NEW_QUESTION,
   NEW_SUBMISSION,
-  SAVE_SUBMISSION,
   CLEAR_SURVEY_SUBMISSIONS,
   DUPLICATE_SURVEY,
   DUPLICATE_QUESTION,
@@ -20,7 +19,7 @@ import {
   responseModel,
 } from './survey.model';
 
-import { v4 as uuidv4 } from 'uuid';
+import { personModel } from '../person.store';
 
 
 export const surveyEndpoints = {
@@ -95,44 +94,34 @@ export const surveyStore = {
       };
       return dispatch(NEW, {model: questionModel, selected: true, ...newQuestion});
     },
-    [NEW_SUBMISSION] ({commit, state}, {surveyId}) {
-      const id = uuidv4();
-      let newSubmission = {
-        survey_id: surveyId,
-        responses_attributes: [],
-        person_id: state.user.id,
-        id,
-        _jv: {
-          id,
-          type: submissionModel,
-          relationships: {
-            survey: {
-              data: {
-                type: surveyModel,
-                id: surveyId
-              }
-            }
+    [NEW_SUBMISSION] ({dispatch, state}, {surveyId}) {
+      let relationships = {
+        survey: {
+          data: {
+            type: surveyModel,
+            id: surveyId
+          }
+        },
+        person: {
+          data: {
+            id: state.user.id,
+            type: personModel
           }
         }
       };
-      commit('jv/addRecords', newSubmission)
-      return commit(SELECT, {model: submissionModel, itemOrId: newSubmission})
+      return dispatch(NEW, {model: submissionModel, relationships, selected: true})
     },
-    [SAVE_SUBMISSION] ({dispatch, getters, commit}, {item}) {
-      if (!item) {
-        item = getters.selectedSubmission;
-      }
+    [CLEAR_SURVEY_SUBMISSIONS] ({dispatch}, {itemOrId}) {
+      let id = getId(itemOrId)
       return new Promise((res, rej) => {
-        dispatch(SAVE, {model: submissionModel, item}).then((result) => {
-          commit(UNSELECT, {model: submissionModel});
-          res(result);
-        }).catch(rej);
+        dispatch('jv/delete', `${surveyModel}/{${id}}/${submissionModel}`).then((maybeData) => {
+          console.log("is this the survey model? ", maybeData)
+          // if this returns the survey without the submissions, don't need the second call
+          dispatch(FETCH_BY_ID, {model: surveyModel, itemOrId}).then((data) => {
+            res(data);
+          }).catch(rej)
+        }).catch(rej)
       });
-    },
-    [CLEAR_SURVEY_SUBMISSIONS] ({dispatch}, {item}) {
-      return new Promise((res, rej) => {
-        res("This has not been implemented yet")
-      })
     },
     [DUPLICATE_SURVEY] ({dispatch}, {item}) {
       let newSurvey = {
