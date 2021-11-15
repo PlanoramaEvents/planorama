@@ -1,6 +1,6 @@
 <!-- CONVERTED? -->
 <template>
-  <div class="survey-question mt-3 pl-1" v-if="localResponse">
+  <div class="survey-question mt-3 pl-1" >
     <b-form-group
       v-if="!formatting && !address && !socialmedia"
     >
@@ -359,7 +359,7 @@ export default {
   },
   data: () => ({
     otherChecked: false,
-    localResponse: undefined
+    localResponse: null
 
   }),
   computed: {
@@ -401,7 +401,7 @@ export default {
     response(newVal, oldVal) {
       if(typeof newVal?.then === 'function') {
         // newVal is a promise and needs to resolve before we do the other thing
-        // this is why i like observables better :( 
+        // this is why i like observables better :(
         this.toastPromise(newVal).then((actualResponse) => {
           this.localResponse = actualResponse
         });
