@@ -37,18 +37,16 @@ RSpec.describe 'People', type: :request do
 
       post "/person",
         params: {
-          person: {
-            name: name,
-            name_sort_by: name,
-            name_sort_by_confirmed: true,
-            email_addresses_attributes: [
-              {
-                isdefault: true,
-                email: email,
-                is_valid: true
-              }
-            ]
-          }
+          name: name,
+          name_sort_by: name,
+          name_sort_by_confirmed: true,
+          email_addresses_attributes: [
+            {
+              isdefault: true,
+              email: email,
+              is_valid: true
+            }
+          ]
         }
 
       expect(response).to have_http_status(200)

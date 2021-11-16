@@ -30,18 +30,18 @@ class Survey::PagesController < ResourceController
     'pages'
   end
 
-  # def allowed_params
-  #   %i[
-  #     lock_version
-  #     id
-  #     title
-  #     next_page_id
-  #     next_page_action
-  #     sort_order
-  #     survey_id
-  #     lock_version
-  #   ]
-  # end
+  def allowed_params
+    %i[
+      lock_version
+      id
+      title
+      next_page_id
+      next_page_action
+      sort_order
+      survey_id
+      lock_version
+    ]
+  end
 
   # TODO: on delete need to clean up any references in branches to this
 end

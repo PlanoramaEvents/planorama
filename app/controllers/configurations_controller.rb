@@ -18,6 +18,7 @@ class ConfigurationsController < ResourceController
 
   def allowed_params
     %i[
+      id
       lock_version
       parameter
       parameter_value

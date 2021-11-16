@@ -92,6 +92,7 @@ class AgreementsController < ResourceController
   # need to add includes etc to speed up query
   def allowed_params
     %i[
+      id
       lock_version
       target
       title

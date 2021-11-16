@@ -28,9 +28,7 @@ RSpec.describe 'Survey Pages', type: :request do
 
       post "/survey/#{s.id}/page",
         params: {
-          page: {
-            title: page_title
-          }
+          title: page_title
         }
 
       expect(response).to have_http_status(200)

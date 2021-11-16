@@ -198,45 +198,46 @@ class PeopleController < ResourceController
     ]
   end
 
-  # def allowed_params
-  #   %i[
-  #     lock_version
-  #     comments
-  #     organization
-  #     job_title
-  #     pronouns
-  #     year_of_birth
-  #     gender
-  #     ethnicity
-  #     opted_in
-  #     invite_status
-  #     acceptance_status
-  #     registered
-  #     registration_type
-  #     can_share
-  #     registration_number
-  #     can_photo
-  #     can_record
-  #     name
-  #     name_sort_by
-  #     name_sort_by_confirmed
-  #     pseudonym
-  #     pseudonym_sort_by
-  #     pseudonym_sort_by_confirmed
-  #   ] << [
-  #     email_addresses_attributes: %i[
-  #       id
-  #       lock_version
-  #       email
-  #       isdefault
-  #     ],
-  #     person_roles_attributes: %i[
-  #       id
-  #       role
-  #       _destroy
-  #     ]
-  #   ]
-  # end
+  def allowed_params
+    %i[
+      id
+      lock_version
+      comments
+      organization
+      job_title
+      pronouns
+      year_of_birth
+      gender
+      ethnicity
+      opted_in
+      invite_status
+      acceptance_status
+      registered
+      registration_type
+      can_share
+      registration_number
+      can_photo
+      can_record
+      name
+      name_sort_by
+      name_sort_by_confirmed
+      pseudonym
+      pseudonym_sort_by
+      pseudonym_sort_by_confirmed
+    ] << [
+      email_addresses_attributes: %i[
+        id
+        lock_version
+        email
+        isdefault
+      ],
+      person_roles_attributes: %i[
+        id
+        role
+        _destroy
+      ]
+    ]
+  end
   # TODO: these to be dealt with in seperate controllers ??
   # tags
   # :bio
