@@ -96,7 +96,6 @@ class Person < ApplicationRecord
 
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements
-  # signed, to be re-signed etc
 
   enum acceptance_status: {
     unknown: 'unknown',
