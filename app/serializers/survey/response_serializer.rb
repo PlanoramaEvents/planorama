@@ -4,9 +4,7 @@ class Survey::ResponseSerializer
   attributes :id, :lock_version, :submission_id,
              :question_id,
              :response
-  # TODO: test that response comes back ok as JSON
 
-  # belongs_to :submission #, serializer: PersonSerializer
   belongs_to :submission,
     links: {
       self: -> (object, params) {

@@ -1,6 +1,7 @@
 class Submission::ResponsesController < ResourceController
   MODEL_CLASS = 'Survey::Response'.freeze
   DEFAULT_ORDER = 'id'
+  SERIALIZER_CLASS = 'Survey::ResponseSerializer'.freeze
 
   # TODO: need the survey id etc as a parameter to the collection/index method
 
