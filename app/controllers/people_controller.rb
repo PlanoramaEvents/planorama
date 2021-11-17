@@ -163,7 +163,7 @@ class PeopleController < ResourceController
             :submissions
           ]
         )
-        .where("submissions.person_id = ?", person.id) # limit the submissions to those for the person ....
+        .where("survey_submissions.person_id = ?", person.id) # limit the submissions to those for the person ....
         .where(query(@filters))
         .order(order_string(order_by: 'mailings.updated_at'))
 

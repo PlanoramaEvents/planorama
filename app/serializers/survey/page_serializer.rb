@@ -11,7 +11,7 @@ class Survey::PageSerializer
                 "#{params[:domain]}/page/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/page/#{object.id}/question"
+                "#{params[:domain]}/page/#{object.id}/questions"
               }
             }
 end

@@ -6,11 +6,15 @@ class Submission::ResponsesController < ResourceController
 
   # TODO: do we need this controller
   def belong_to_class
-    Submission
+    Survey::Submission
   end
 
   def belongs_to_relationship
     'responses'
+  end
+
+  def belongs_to_param_id
+    params[:submission_id]
   end
 
 end

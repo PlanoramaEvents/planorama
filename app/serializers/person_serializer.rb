@@ -35,7 +35,7 @@ class PersonSerializer #< ActiveModel::Serializer
                 "#{params[:domain]}/person/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/people/#{object.id}/person_role"
+                "#{params[:domain]}/person/#{object.id}/person_roles"
               }
             }
 
@@ -45,7 +45,7 @@ class PersonSerializer #< ActiveModel::Serializer
                   "#{params[:domain]}/person/#{object.id}"
                 },
                 related: -> (object, params) {
-                  "#{params[:domain]}/person/#{object.id}/email_address"
+                  "#{params[:domain]}/person/#{object.id}/email_addresses"
                 }
               }
 
@@ -55,7 +55,7 @@ class PersonSerializer #< ActiveModel::Serializer
                   "#{params[:domain]}/person/#{object.id}"
                 },
                 related: -> (object, params) {
-                  "#{params[:domain]}/person/#{object.id}/submission"
+                  "#{params[:domain]}/person/#{object.id}/submissions"
                 }
               }
 
