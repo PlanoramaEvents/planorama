@@ -29,6 +29,12 @@ class PeoplePolicy < PlannerPolicy
     @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end
 
+  def mailed_surveys?
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
   class Scope < Scope
     def resolve
       if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }

@@ -13,7 +13,7 @@ class Survey::QuestionSerializer
                 "#{params[:domain]}/question/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/question/#{object.id}/answer"
+                "#{params[:domain]}/question/#{object.id}/answers"
               }
             }
 

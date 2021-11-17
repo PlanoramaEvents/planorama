@@ -19,7 +19,7 @@ class SurveySerializer
                "#{params[:domain]}/survey/#{object.id}"
              },
              related: -> (object, params) {
-               "#{params[:domain]}/survey/#{object.id}/page"
+               "#{params[:domain]}/survey/#{object.id}/pages"
              }
            }
 
@@ -30,7 +30,7 @@ class SurveySerializer
                "#{params[:domain]}/survey/#{object.id}"
              },
              related: -> (object, params) {
-               "#{params[:domain]}/survey/#{object.id}/submission"
+               "#{params[:domain]}/survey/#{object.id}/submissions"
              }
            }
 
