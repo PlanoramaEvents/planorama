@@ -62,7 +62,7 @@ Rails.application.routes.draw do
   resources :submissions, path: 'submission', controller: 'survey/submissions',  except: [:index] do
     get 'responses', to: 'submission/responses#index'
   end
-  resources :responses, path: 'response', except: [:index]
+  resources :responses, path: 'response', controller: 'submission/responses', except: [:index]
 
   get 'rbac', to: 'rbac#index'
 
