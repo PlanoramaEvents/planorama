@@ -8,4 +8,4 @@ export { tableMixin } from './store/table.mixin';
 export { answerMixin } from './surveys/answer.mixin';
 export * from './surveys/survey-id-prop.mixin';
 export { toastMixin } from './toast-mixin';
-export { responseMixin } from './surveys/resposne.mixin';
+export { responseMixin } from './surveys/response.mixin';
