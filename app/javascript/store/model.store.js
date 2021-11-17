@@ -44,6 +44,7 @@ export const store = new Vuex.Store({
       ...surveyStore.selected,
     },
     ...sessionStore.state,
+    ...surveyStore.state,
   },
   getters: {
     [SELECTED] (state, getters) {
@@ -64,6 +65,7 @@ export const store = new Vuex.Store({
       state.selected[model] = undefined;
     },
     ...sessionStore.mutations,
+    ...surveyStore.mutations,
   },
   actions: {
     /**

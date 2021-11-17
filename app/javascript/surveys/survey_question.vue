@@ -1,6 +1,6 @@
 <!-- CONVERTED? -->
 <template>
-  <div class="survey-question mt-3 pl-1" >
+  <div class="survey-question mt-3 pl-1" v-if="localResponse">
     <b-form-group
       v-if="!formatting && !address && !socialmedia"
     >
@@ -332,6 +332,7 @@ import {
 } from '@mixins';
 import { v4 as uuidv4 } from 'uuid';
 import { submissionModel } from '@/store/survey';
+import { mapState } from 'vuex';
 
 export default {
   name: "SurveyQuestion",
@@ -363,6 +364,7 @@ export default {
 
   }),
   computed: {
+    ...mapState(['previewMode']),
     questionText() {
       return this.question.question;
       // todo implement question numbering
@@ -373,10 +375,10 @@ export default {
     },
     radioButtonResponse: {
       get() {
-        return this.response.response.answers ? this.response.response.answers[0] : null
+        return this.localResponse.response.answers ? this.localResponse.response.answers[0] : null
       },
       set(val) {
-        this.response.response.answers = [val]
+        this.localResponse.response.answers = [val]
       }
     }
   },
@@ -392,10 +394,28 @@ export default {
     },
     changeNextPage(event, choice) {
       if (this.question.branching && this.choiceValue(choice) === event) {
-        console.log("emitting", choice.next_page_id)
+        console.debug("emitting", choice.next_page_id)
         this.$emit('nextPage', choice.next_page_id)
       }
     },
+    createDummyResponse() {
+      this.localResponse = {
+        response: {text: '', answers: [], address:{
+          street: null, street2: null, city: null,
+          state: null, zip: null, country: null
+        }, socialmedia: {
+          twitter: null, facebook: null, linkedin: null,
+          twitch: null, youtube: null, instagram: null,
+          tiktok: null, other: null, website: null
+        }}
+      }
+    }
+  },
+  mounted() {
+    if (!this.answerable || this.previewMode) {
+      // create dummy response so it stops complaining.
+      this.createDummyResponse()
+    }
   },
   watch: {
     response(newVal, oldVal) {
@@ -407,6 +427,11 @@ export default {
         });
       } else {
         this.localResponse = newVal
+      }
+    },
+    previewMode(newVal) {
+      if (newVal) {
+        this.createDummyResponse();
       }
     }
   }

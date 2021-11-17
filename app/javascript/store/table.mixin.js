@@ -53,7 +53,7 @@ export const tableMixin = {
   },
   watch: {
     currentPage(newVal, oldVal) {
-      console.log("currentpage changed:", newVal, oldVal)
+      console.debug("currentpage changed:", newVal, oldVal)
       // when we change the desired page to a new one, fetch again
       if(newVal != oldVal) {
         // at this point, this.currentPage reflects newVal so we don't
@@ -62,11 +62,11 @@ export const tableMixin = {
       }
     },
     sortDesc(newVal, oldVal) {
-      console.log("sortdesc changed:", newVal, oldVal)
+      console.debug("sortdesc changed:", newVal, oldVal)
       if (newVal != oldVal) this.fetchPaged();
     },
     sortBy(newVal, oldVal) {
-      console.log("sortby changed:", newVal, oldVal)
+      console.debug("sortby changed:", newVal, oldVal)
       if (newVal != oldVal) this.fetchPaged();
     }
   }

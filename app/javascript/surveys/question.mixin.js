@@ -75,7 +75,7 @@ export const questionMixin = {
     }),
     saveQuestion(item) {
       return this.save({model, item}).then((data) => {
-        console.log(data)
+        console.debug(data)
       })
     },
     selectQuestion(itemOrId) {

@@ -158,7 +158,7 @@ export default {
           type: answerModel
         }
       }
-      console.log("item", item)
+      console.debug("item", item)
       this.toastPromise(this.saveAnswer(item), ANSWER_ORDER_SAVE_SUCCESS)
     }
   },

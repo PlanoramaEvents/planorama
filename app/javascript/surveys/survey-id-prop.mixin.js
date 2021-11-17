@@ -1,5 +1,7 @@
 import surveyMixin from "./survey.mixin";
 import pageMixin from "./page.mixin";
+import { mapMutations } from "vuex";
+import { SET_PREVIEW_MODE } from "../store/survey/survey.actions";
 
 // CONVERTED
 const surveyIdPropMixin = (idProp = 'id') => ({
@@ -11,13 +13,17 @@ const surveyIdPropMixin = (idProp = 'id') => ({
   data: () => ({
     surveyLoadedPromise: undefined
   }),
+  methods: {
+    ...mapMutations({
+      setPreviewMode: SET_PREVIEW_MODE
+    })
+  },
   mounted() {
     this.surveyLoadedPromise = new Promise((res, rej) =>  {
-      console.log("selected survey", this.survey)
-      console.log("id prop", idProp, this[idProp])
       if ((!this.survey && this[idProp]) || (this[idProp] && this.survey.id !== this[idProp])) {
-        console.log('trying to load survey id', this[idProp])
+        console.debug('trying to load survey id', this[idProp])
         this.selectSurvey(this[idProp]);
+        this.setPreviewMode(false);
         this.fetchSelectedSurvey().then(() => {
           this.selectPage(this.selectedSurveyFirstPage);
           res(true);

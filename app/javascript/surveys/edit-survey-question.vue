@@ -231,9 +231,6 @@ export default {
     },
   },
   methods: {
-    whateven(evt) {
-      console.log(event)
-    },
     formId(string) {
       return `${string}-${this.question.id}`
     },

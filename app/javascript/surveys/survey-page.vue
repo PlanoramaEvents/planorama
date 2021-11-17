@@ -30,13 +30,14 @@
 
 <script>
 import SurveyQuestion from './survey_question';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import {
   pageMixin,
   surveyIdPropMixinSurveyId,
   surveyMixin,
   submissionMixin
 } from '@mixins';
+import { SET_PREVIEW_MODE } from '@/store/survey';
 
 export default {
   name: "SurveyPage",
@@ -59,7 +60,7 @@ export default {
       return `/surveys/${this.surveyId}/page/${this.nextPageId}${this.preview ? '/preview' : ''}`
     },
     submit_disabled() {
-      return this.preview || !(this.survey && this.survey.public);
+      return !!this.preview || !(this.survey && this.survey.public);
     },
     submit_disabled_tooltip() {
       return this.preview
@@ -68,6 +69,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      setPreviewMode: SET_PREVIEW_MODE
+    }),
     submit() {
       console.log("attempting to submit", this.selectedSubmission);
       if(!this.submit_disabled) {
@@ -84,11 +88,11 @@ export default {
       this.$router.go(-1);
     },
     setNextPageId(id) {
-      console.log('setting next page id to', id)
+      console.debug('setting next page id to', id)
       if(!id) {
-        console.log('attempting to get actual next page id')
+        console.debug('attempting to get actual next page id')
         id = this.getNextPage(this.selectedPage.id)?.id;
-        console.log('actual next page id:', id)
+        console.debug('actual next page id:', id)
       }
       this.nextPageId = id;
     }
@@ -99,14 +103,15 @@ export default {
     next()
   },
   mounted() {
-    console.log('mounting page...')
+    console.debug('mounting page...')
     this.surveyLoadedPromise.then((surveyLoaded) => {
-      console.log("i get here! and should have a survey", this.survey)
-      if (surveyLoaded) {
+      console.debug("i get here! and should have a survey", this.survey)
+      this.setPreviewMode(!!this.preview);
+      if (surveyLoaded && !this.preview) {
         this.newSubmission({surveyId: this.surveyId});
       }
       if((!this.selectedPage && this.id) || (this.id && this.selectedPage.id != this.id)) {
-        console.log("i am on the wrong page!")
+        console.debug("i am on the wrong page!")
         this.selectPage(this.id);
       }
       this.setNextPageId(this.selectedPage.next_page_id);

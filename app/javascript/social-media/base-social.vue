@@ -42,7 +42,7 @@ export default {
       return `${this.linkPrefix}/${this.value}`
     },
     style() {
-      console.log(this.logo)
+      console.debug(this.logo)
       return this.logo ? `--logo-image: url(${this.logo.replace('\\', '')});` : '';
 
     }

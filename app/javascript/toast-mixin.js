@@ -31,7 +31,7 @@ export const toastMixin = {
           res(item);
         })
         .catch((error) => {
-          console.log(error)
+          console.error(error)
           this.error_toast(error.message)
           rej(error);
         })

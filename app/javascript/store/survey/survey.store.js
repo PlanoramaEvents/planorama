@@ -8,7 +8,8 @@ import {
   CLEAR_SURVEY_SUBMISSIONS,
   DUPLICATE_SURVEY,
   DUPLICATE_QUESTION,
-  NEW_RESPONSE
+  NEW_RESPONSE,
+  SET_PREVIEW_MODE
 } from './survey.actions';
 import {
   surveyModel,
@@ -38,7 +39,16 @@ export const surveyStore = {
     [questionModel]: undefined,
     [submissionModel]: undefined,
   },
+  state: {
+    previewMode: false
+  },
   getters: {
+  },
+  mutations: {
+    [SET_PREVIEW_MODE](state, previewMode) {
+      console.debug("previewMode", previewMode)
+      state.previewMode = previewMode
+    }
   },
   actions: {
     [NEW_SURVEY] ({dispatch}) {
@@ -115,7 +125,7 @@ export const surveyStore = {
       let id = getId(itemOrId)
       return new Promise((res, rej) => {
         dispatch('jv/delete', `${surveyModel}/{${id}}/${submissionModel}`).then((maybeData) => {
-          console.log("is this the survey model? ", maybeData)
+          console.debug("is this the survey model? ", maybeData)
           // if this returns the survey without the submissions, don't need the second call
           dispatch(FETCH_BY_ID, {model: surveyModel, itemOrId}).then((data) => {
             res(data);
