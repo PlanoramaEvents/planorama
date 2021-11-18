@@ -15,7 +15,7 @@ RSpec.describe 'EmailAddresses', type: :request do
   describe 'Emails' do
     it 'List email addresses' do
       p = Person.first
-      get "/person/#{p.id}/email_address"
+      get "/person/#{p.id}/email_addresses"
 
       expect(json).not_to be_empty
       expect(json['meta']['total']).to be > 0
@@ -25,12 +25,13 @@ RSpec.describe 'EmailAddresses', type: :request do
     it 'Created a new email for a person' do
       p = Person.first
       new_email = 'email+test@test.com'
-      post "/person/#{p.id}/email_address",
+      post "/email_address",
             params: {
               email_address: {
                 isdefault: false,
                 email: new_email,
-                is_valid: true
+                is_valid: true,
+                person_id: p.id
               }
             }
 

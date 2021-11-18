@@ -15,27 +15,14 @@ RSpec.describe 'Survey Pages', type: :request do
   describe 'Survey Pages' do
     it 'Get a list of survey pages' do
       s = Survey.first
-      get "/survey/#{s.id}/page?perPage=1"
+      get "/survey/#{s.id}/pages?perPage=1"
       # puts "******* #{json}"
       expect(response).to have_http_status(200)
       expect(json).not_to be_empty
       expect(json['meta']['total']).to be > 0
     end
 
-    it 'Create survey page (deep method)' do
-      s = Survey.first
-      page_title = Faker::Books::CultureSeries.civ
-
-      post "/survey/#{s.id}/page",
-        params: {
-          title: page_title
-        }
-
-      expect(response).to have_http_status(200)
-      expect(json).not_to be_empty
-    end
-
-    it 'Create survey page (shallow method)' do
+    it 'Create survey page' do
       s = Survey.first
       page_title = Faker::Books::CultureSeries.civ
       post "/page",
