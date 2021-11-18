@@ -41,16 +41,12 @@
 # );
 
 class Person < ApplicationRecord
-  # include Devise::JWT::RevocationStrategies::JTIMatcher
-
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  # database_authenticatable,
+  # :confirmable, and :omniauthable
   devise :database_authenticatable,
          :registerable, :timeoutable,
-         :recoverable, :rememberable, :validatable, :lockable
-         # :jwt_authenticatable,
-         # jwt_revocation_strategy: self
+         :recoverable, :rememberable,
+         :validatable, :lockable, :trackable
 
   # TODO: add a deleted_at mechanism
 
