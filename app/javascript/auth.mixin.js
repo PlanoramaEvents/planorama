@@ -1,3 +1,5 @@
+import {http as axios} from './http';
+
 export const authMixin = {
   methods: {
     signOut() {
