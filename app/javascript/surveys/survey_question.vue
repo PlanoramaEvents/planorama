@@ -15,7 +15,7 @@
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
           :required="question.mandatory"
-          @blur="saveResponse"
+          @blur="saveResponse(localResponse)"
         >{{localResponse.response.text}}</b-form-textarea>
         <b-form-input
           :class="{'w-50': answerable}"
@@ -24,7 +24,7 @@
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
           :required="question.mandatory"
-          @blur="saveResponse"
+          @blur="saveResponse(localResponse)"
         ></b-form-input>
         <b-form-radio-group
           :class="{'w-50': answerable}"
@@ -33,7 +33,7 @@
           v-model="radioButtonResponse"
           :aria-describedBy="ariaDescribedBy"
           :required="question.mandatory"
-          @change="saveResponse"
+          @change="saveResponse(localResponse)"
         >
           <b-form-radio
             v-for="choice in choices.filter(a => !a.other)"
@@ -73,7 +73,7 @@
           v-model="localResponse.response.answers"
           :aria-describedBy="ariaDescribedBy"
           :required="question.mandatory"
-          @change="saveResponse"
+          @change="saveResponse(localResponse)"
         >
           <b-form-checkbox
             v-for="choice in choices.filter(a => !a.other)"
@@ -110,7 +110,7 @@
           v-model="localResponse.response.text"
           :required="question.mandatory"
           :aria-describedby="ariaDescribedBy"
-          @change="saveResponse"
+          @change="saveResponse(localResponse)"
         >
           <b-form-select-option
             v-for="choice in choices"
@@ -127,7 +127,7 @@
           v-model="localResponse.response.text"
           :disabled="!answerable"
           :aria-describedBy="ariaDescribedBy"
-          @blur="saveResponse"
+          @blur="saveResponse(localResponse)"
         ></email-field>
       </template>
     </b-form-group>
@@ -148,7 +148,7 @@
             :disabled="!answerable"
             :id="formId('address-1')"
             v-model="localResponse.response.address.street"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -162,7 +162,7 @@
             :disabled="!answerable"
             :id="formId('address-2')"
             v-model="localResponse.response.address.street2"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -176,7 +176,7 @@
             :disabled="!answerable"
             :id="formId('city')"
             v-model="localResponse.response.address.city"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -190,7 +190,7 @@
           :disabled="!answerable"
           :id="formId('state')"
           v-model="localResponse.response.address.state"
-          @blur="saveResponse"
+          @blur="saveResponse(localResponse)"
         ></b-form-input>
         </b-form-group>
       </div>
@@ -204,7 +204,7 @@
             :disabled="!answerable"
             :id="formId('zip')"
             v-model="localResponse.response.address.zip"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -218,7 +218,7 @@
             :disabled="!answerable"
             :id="formId('country')"
             v-model="localResponse.response.address.country"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -233,14 +233,14 @@
             :disabled="!answerable"
             :id="formId('socials-twitter')"
             v-model="localResponse.response.socialmedia.twitter"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           ></simple-social>
           <simple-social
             label="Facebook"
             :disabled="!answerable"
             :id="formId('socials-facebook')"
             v-model="localResponse.response.socialmedia.facebook"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           >
             <template #prepend>
               <b-input-group-text>facebook.com&sol;</b-input-group-text>
@@ -252,14 +252,14 @@
             :disabled="!answerable"
             :id="formId('socials-website')"
             v-model="localResponse.response.socialmedia.website"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           ></simple-social>
           <simple-social
             label="Instagram"
             :disabled="!answerable"
             :id="formId('socials-insta')"
             v-model="localResponse.response.socialmedia.instagram"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           >
             <template #prepend>
               <b-input-group-text>instagram.com&sol;</b-input-group-text>
@@ -270,7 +270,7 @@
             :disabled="!answerable"
             :id="formId('socials-twitch')"
             v-model="localResponse.response.socialmedia.twitch"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           >
             <template #prepend>
               <b-input-group-text>twitch.tv&sol;</b-input-group-text>
@@ -281,7 +281,7 @@
             :disabled="!answerable"
             :id="formId('socials-youtube')"
             v-model="localResponse.response.socialmedia.youtube"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           >
             <template #prepend>
               <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
@@ -293,14 +293,14 @@
             :disabled="!answerable"
             :id="formId('socials-tiktok')"
             v-model="localResponse.response.socialmedia.tiktok"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           ></simple-social>
           <simple-social
             label="LinkedIn"
             :disabled="!answerable"
             :id="formId('socials-linkedin')"
             v-model="localResponse.response.socialmedia.linkedin"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           >
             <template #prepend>
               <b-input-group-text>linkedin.com&sol;in&sol;</b-input-group-text>
@@ -311,7 +311,7 @@
             :disabled="!answerable"
             :id="formId('socials-other')"
             v-model="localResponse.response.socialmedia.other"
-            @blur="saveResponse"
+            @blur="saveResponse(localResponse)"
           ></simple-social>
         </div>
       </div>
@@ -415,25 +415,28 @@ export default {
     if (!this.answerable || this.previewMode) {
       // create dummy response so it stops complaining.
       this.createDummyResponse()
-    }
+   } else {
+      let promise = this.getResponse(this.question)
+      if (promise) {
+        promise.then((resp) => {
+          this.localResponse = resp;
+        })
+      }
+   }
   },
   watch: {
-    response(newVal, oldVal) {
-      if(typeof newVal?.then === 'function') {
-        // newVal is a promise and needs to resolve before we do the other thing
-        // this is why i like observables better :(
-        this.toastPromise(newVal).then((actualResponse) => {
-          this.localResponse = actualResponse
-        });
-      } else {
-        this.localResponse = newVal
-      }
-    },
     previewMode(newVal) {
       if (newVal) {
         this.createDummyResponse();
       }
-    }
+    },
+    selectedSubmission(newVal) {
+      if (newVal) {
+        this.getResponse(this.question).then((resp) => {
+          this.localResponse = resp;
+        })
+      }
+    },
   }
 }
 </script>

@@ -8,7 +8,7 @@ export async function validateFields(...fields) {
 }
 
 import Vue from 'vue';
-import RenderString from './render_string.vue'
+import RenderString from '../render_string.vue'
 export function renderString(template, data) {
     const ComponentClass = Vue.extend(RenderString);
     const instance = new ComponentClass({

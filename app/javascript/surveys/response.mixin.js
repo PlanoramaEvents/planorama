@@ -7,9 +7,15 @@ import { NEW_RESPONSE } from "@/store/survey";
 export const responseMixin = {
   computed: {
     ...mapState(['previewMode']),
-    response() {
+  },
+  methods: {
+    ...mapActions({
+      patch: PATCH_FIELDS,
+      newResponse: NEW_RESPONSE
+    }),
+    getResponse(question) {
       console.debug('getting response...')
-      if (!this.question || !this.selectedSubmission) {
+      if (!question || !this.selectedSubmission) {
         console.debug('missing one of question or selectedSubmission', this.question, this.selectedSubmission)
         return undefined
       }
@@ -17,7 +23,7 @@ export const responseMixin = {
       let relationships = {
         question: {
           data: {
-            id: this.question.id,
+            id: question.id,
             type: questionModel
           }
         },
@@ -28,13 +34,14 @@ export const responseMixin = {
           }
         }
       }
-      let existingResponse = this.$store.getters['jv/get']({_jv: {
+      let existingResponses = this.$store.getters['jv/get']({_jv: {
         type: model,
         relationships
       }})
+      let existingResponse = Object.values(existingResponses)[0]
       if (existingResponse?.id) {
         console.debug("found an existing response", existingResponse)
-        return utils.deepCopy(existingResponse)
+        return Promise.resolve(utils.deepCopy(existingResponse))
       }
       // if there's not one, create a new one
       console.debug("getting a new response")
@@ -43,18 +50,13 @@ export const responseMixin = {
           res(utils.deepCopy(data))
         }).catch(rej);
       });
-    }
-  },
-  methods: {
-    ...mapActions({
-      patch: PATCH_FIELDS,
-      newResponse: NEW_RESPONSE
-    }),
-    saveResponse(){
-      // saving this.response.response only
-      if (!this.prevewMode && this.response?.id) {
+    },
+    saveResponse(response){
+      // saving the response only
+      console.log("attempting to save response", response)
+      if (!this.prevewMode && response.id) {
         // only save if not in preview mode and if the response was already saved!
-        return this.patch({model, item: this.response, fields: ['response'], selected: false})
+        return this.patch({model, item: response, fields: ['response'], selected: false})
       }
     }
   }

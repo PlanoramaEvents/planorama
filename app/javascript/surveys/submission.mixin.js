@@ -1,7 +1,7 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
-import { SELECTED, SAVE, UNSELECT, PATCH_FIELDS } from "../store/model.store";
+import { SELECTED, UNSELECT, PATCH_FIELDS } from "@/store/model.store";
 import { submissionModel as model, NEW_SUBMISSION, SubmissionStatus } from "@/store/survey";
-import { getOrderedRelationships } from "../utils/jsonapi_utils";
+import { getOrderedRelationships } from "@/utils/jsonapi_utils";
 
 // CONVERTED
 export const submissionMixin = {

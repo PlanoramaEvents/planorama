@@ -28,16 +28,17 @@
 </template>
 
 <script>
-import {PlanoModel} from "../model";
-import EmailField from "../shared/email_field";
+import EmailField from "@/shared/email_field";
 import LoginPasswordField from "./login_password_field";
-import PrivacyPolicyLink from "../administration/privacy_policy_link"
-import authMixin from '../auth.mixin';
+import PrivacyPolicyLink from "@/administration/privacy_policy_link"
 import IeaModal from './iea-modal';
-import sessionMixin from '../session/session.mixin';
+import axios from 'axios';
+import {
+  authMixin,
+  sessionMixin
+} from '@mixins';
 
-import { validateFields } from "../utils";
-// import {jwtToken, setJWTToken} from '../utils/jwt_utils';
+import { validateFields } from "@/utils";
 
 import {
   LOGIN_401,
@@ -47,32 +48,8 @@ import {
   LOGIN_PASSWORD_CHANGED,
   LOGIN_CLICK_TO_AGREE,
   IEA_FAILURE_TO_SIGN
-} from "../constants/strings";
-import { http } from '../http';
+} from "@/constants/strings";
 
-export class LoginModel extends PlanoModel {
-  default() {
-    return {
-      commit: "Log in",
-      person: {
-        email: "",
-        password: "",
-      },
-    };
-  }
-
-  getDefaultHeaders() {
-    // on save we do not want a jwt token to be sent
-    let res = {}
-    return res
-  }
-
-  routes() {
-    return {
-      save: "/auth/sign_in",
-    };
-  }
-}
 
 export default {
   name: "PlanLogin",
@@ -127,24 +104,22 @@ export default {
     }
   },
   methods: {
-    onSubmit: async function (event) {
+    onSubmit(event) {
       event.preventDefault();
-      await validateFields(this.form.email, this.form.password);
-      if (
-        this.form.email.valid === false ||
-        this.form.password.valid === false
-      ) {
-        this.error.text = LOGIN_INVALID_FIELDS;
-        this.error.visible = true;
-      } else {
-        const loginInfo = new LoginModel({ person: this.person });
-        loginInfo
-          .save()
-          // .then((m) => { setJWTToken(m.response.headers['authorization']) })
-          .then(() => this.$bvModal.show('iea-modal'))
-          .then(() => this.fetchSession())
-          .catch((error) => this.onSaveFailure(error));
-      }
+      validateFields(this.form.email, this.form.password).then(() => {
+        if (
+          this.form.email.valid === false ||
+          this.form.password.valid === false
+        ) {
+          this.error.text = LOGIN_INVALID_FIELDS;
+          this.error.visible = true;
+        } else {
+          axios.post('/auth/sign_in', {person: this.person})
+            .then(() => this.$bvModal.show('iea-modal'))
+            .then(() => this.fetchSession())
+            .catch((error) => this.onSaveFailure(error));
+        }
+      })
     },
     onSaveFailure: function (error) {
       if (error.response.response.status === 401) {
