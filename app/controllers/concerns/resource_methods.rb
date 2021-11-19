@@ -101,13 +101,14 @@ module ResourceMethods
     end
   end
 
-  def render_object(object, serializer: nil, includes: true)
+  def render_object(object, serializer: nil, includes: true, jsonapi_included: nil)
     serializer_used = serializer || serializer_class
+    jsonapi_included ||= serializer_includes
     if serializer_used
       render json: serializer_used.new(
                     object,
                     {
-                      include: (includes ? serializer_includes : []),
+                      include: (includes ? jsonapi_included : []),
                       params: {domain: "#{request.base_url}"}
                     }
                    ).serializable_hash,
