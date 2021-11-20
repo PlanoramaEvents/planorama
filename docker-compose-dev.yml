@@ -116,5 +116,8 @@ services:
 
   mailcatcher:
     image: schickling/mailcatcher
+    entrypoint: "mailcatcher -f --ip 0.0.0.0"
+    restart: always
     ports:
+      - 10025:1025
       - 1080:1080

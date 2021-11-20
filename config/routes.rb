@@ -79,10 +79,14 @@ Rails.application.routes.draw do
   resources :mailings, path: 'mailing'
   resources :mail_templates, path: 'mail_template'
 
+  get 'mailing/schedule/:id', to: 'mailings#schedule'
+  post 'mailing/:mailing_id/assign_people', to: 'mailings#assign_people'
+  post 'mailing/:mailing_id/unassign_people', to: 'mailings#unassign_people'
+
   # Access to the sidekiq monitoring app...
-  # authenticate :person, lambda { |p| p.admin? } do
-  #   mount Sidekiq::Web => '/sidekiq'
-  # end
+  authenticate :person, lambda { |p| p.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   # force everything back to the SPA home page
   # This has to be at the end otherwise we do not match the resource endpoints
