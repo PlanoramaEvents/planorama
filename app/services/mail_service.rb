@@ -37,12 +37,10 @@ module MailService
   #     begin
   #       PlannerMailer.send_email(
   #         {
-  #           from:     Dirac::ConfigurationService.parameter_value('email_from_address'),
-  #           reply_to: Dirac::ConfigurationService.parameter_value('email_reply_to_address'),
   #           to:       to,
   #           subject:  template.subject,
   #           title:    template.title,
-  #           return_path: Dirac::ConfigurationService.parameter_value('email_from_address'),
+  #           return_path: parameter_value('email_from_address'),
   #           skip_premailer: true,
   #           content_type: "text/html",
   #           body: content
@@ -113,7 +111,7 @@ module MailService
   #         PlannerMailer.send_email(
   #           {
   #             from:     mailing.from_address,
-  #             reply_to: Dirac::ConfigurationService.parameter_value('email_reply_to_address'),
+  #             reply_to: parameter_value('email_reply_to_address'),
   #             to:       to,
   #             cc:       cc,
   #             subject:  subject,
@@ -164,10 +162,7 @@ module MailService
     )
 
     # TODO: transition person state? baaed on mailing
-
     self.send_email(
-      # from:     mailing.from_address,
-      # reply_to: Dirac::ConfigurationService.parameter_value('email_reply_to_address'),
       # cc:       cc,
       to:             person.primary_email,
       subject:        mailing.mail_template.subject,
@@ -178,11 +173,7 @@ module MailService
   end
 
   def self.send_email(from: nil, reply_to: nil, to:, cc: nil, subject:, title:, content:, person: nil, mailing: nil, skip_premailer: false)
-    Rails.logger.debug "******** #{Rails.application.config.action_mailer.perform_deliveries}"
-    Rails.logger.debug "******** #{Rails.application.config.action_mailer.delivery_method}"
-    Rails.logger.debug "******** #{Rails.application.config.action_mailer.smtp_settings}"
-
-    mail = ActionMailer::Base.mail(
+    mail = ApplicationMailer.mail(
       {
         from:           from,
         reply_to:       reply_to,
@@ -190,14 +181,14 @@ module MailService
         cc:             cc,
         subject:        subject,
         title:          title,
-        # skip_premailer: skip_premailer,
+        skip_premailer: skip_premailer,
         content_type:   'text/html',
         body:           content
       }
       # content
-    )
+    ).deliver_now
 
-    mail.deliver_now
+    # mail.deliver_now
 
     # save_mail_history(
     #   person:       person,
@@ -210,28 +201,41 @@ module MailService
 
   rescue Net::SMTPSyntaxError
     Rails.logger.debug "******** SMTP error"
+    # save_mail_history(
+    #   person:       person,
+    #   email:        to,
+    #   subject:      subject,
+    #   content:      content,
+    #   email_status: 'Failed',
+    #   mailing:      mailing
+    # )
 
   rescue Net::SMTPServerBusy => error
-    Rails.logger.debug "******** SMTP busy"
-
     # Recipient address rejected
-    throw error unless error.message.include?('Recipient address rejected')
-    save_mail_history(
-      person:       person,
-      email:        to,
-      subject:      subject,
-      content:      content,
-      email_status: 'Failed',
-      mailing:      mailing
-    )
+    raise unless error.message.include?('Recipient address rejected')
+
+    # save_mail_history(
+    #   person:       person,
+    #   email:        to,
+    #   subject:      subject,
+    #   content:      content,
+    #   email_status: 'Failed',
+    #   mailing:      mailing
+    # )
   rescue EOFError
-    Rails.logger.debug "******** in invalid email?"
     # this indicates that the email address is not valid
-  # rescue => msg
-  #   # EOFError
-  #   throw msg
-  #   # THROW ERROR ??? - this would cause a retry of the whole list, which would be an issue for dups
-  #   # do not do a retry unless we can resume from the failed message only
+
+    # save_mail_history(
+    #   person:       person,
+    #   email:        to,
+    #   subject:      subject,
+    #   content:      content,
+    #   email_status: 'Failed',
+    #   mailing:      mailing
+    # )
+  rescue
+    raise
+    # do not do a retry unless we can resume from the failed message only
   end
 
   # TODO = move to mailer ???
@@ -250,7 +254,7 @@ module MailService
 
   # TODO - do we need this?
   # def self.get_magic_link(person)
-  #   magic_link = Dirac::MagicLinksService.generate_magic_link(person)
+  #   magic_link = generate_magic_link(person)
   #   magic_link
   # end
 
