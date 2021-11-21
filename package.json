@@ -50,8 +50,6 @@
     "postcss-loader": "3",
     "rails-erb-loader": "^5.5.2",
     "raw-loader": "3",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0",
     "style-loader": "1",
     "vue-loader": "^15.9.6",
     "vue-template-compiler": "^2.6.12",
