@@ -51,6 +51,8 @@ class Survey::SubmissionsController < ResourceController
       person_id
       survey_id
       responses
+      person
+      survey
     ] << [
       responses_attributes: %i[
         id
