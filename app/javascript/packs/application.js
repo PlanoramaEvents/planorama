@@ -33,10 +33,12 @@ const imagePath = (name) => images(name, true)
 import Vue from 'vue';
 import {BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import { CustomIconsPlugin } from '../icons';
+import AsyncComputed from 'vue-async-computed';
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(CustomIconsPlugin);
+Vue.use(AsyncComputed);
 
 import PlanoramaApp from '../app.vue';
 import { router } from '../app.router';
