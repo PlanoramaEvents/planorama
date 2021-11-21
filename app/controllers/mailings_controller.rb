@@ -32,6 +32,7 @@ class MailingsController < ResourceController
 
   def schedule
     mailing = Mailing.find params[:id]
+    authorize current_person, policy_class: policy_class
 
     # Only schedule a mailing that is not already scheduled
     if !mailing.scheduled
