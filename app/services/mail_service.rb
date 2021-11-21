@@ -151,104 +151,90 @@ module MailService
       mailing.mail_template,
       {
         person: person,
-        # :survey             => survey,
-        # :survey_url         => (base_url && survey) ? (base_url + '/form/' + survey.alias) : '',
-      # },
-      # {
-      #   title: mailing.mail_template.subject || mailing.mail_template.title,
-      #   batch: mailing.mailing_number.to_s
-      #   # add in organization and conference?
+        # survey: survey,
+        # survey_url: (base_url && survey) ? (base_url + '/form/' + survey.alias) : '',
       }
     )
 
-    # TODO: transition person state? baaed on mailing
     self.send_email(
-      # cc:       cc,
       to:             person.primary_email,
       subject:        mailing.mail_template.subject,
       title:          mailing.mail_template.title,
-      skip_premailer: true,
       content:        content
     )
+
+    # TODO: transition person state? baaed on mailing and survey?
   end
 
   def self.send_email(from: nil, reply_to: nil, to:, cc: nil, subject:, title:, content:, person: nil, mailing: nil, skip_premailer: false)
-    mail = ApplicationMailer.mail(
-      {
-        from:           from,
-        reply_to:       reply_to,
-        to:             to,
-        cc:             cc,
-        subject:        subject,
-        title:          title,
-        skip_premailer: skip_premailer,
-        content_type:   'text/html',
-        body:           content
-      }
-      # content
-    ).deliver_now
+    args = {
+      subject:        subject,
+      title:          title,
+      content_type:   'text/html',
+      body:           content
+    }
 
-    # mail.deliver_now
+    args[:from] = from if from
+    args[:reply_to] = reply_to if reply_to
+    args[:to] = to if to
+    args[:cc] = cc if cc
+    args[:skip_premailer] = skip_premailer if skip_premailer
 
-    # save_mail_history(
-    #   person:       person,
-    #   email:        to,
-    #   subject:      subject,
-    #   content:      content,
-    #   email_status: 'Sent',
-    #   mailing:      mailing
-    # )
+    mail = ApplicationMailer.new.mail(args) #.deliver_now
 
+    mail.deliver
+
+    self.save_mail_history(
+      person: person,
+      email_status: MailHistory::email_statuses[:sent],
+      mailing: mailing,
+      mail: mail
+    )
   rescue Net::SMTPSyntaxError
-    Rails.logger.debug "******** SMTP error"
-    # save_mail_history(
-    #   person:       person,
-    #   email:        to,
-    #   subject:      subject,
-    #   content:      content,
-    #   email_status: 'Failed',
-    #   mailing:      mailing
-    # )
-
+    # Rails.logger.debug "******** SMTP error"
+    self.save_mail_history(
+      person:       person,
+      email_status: MailHistory.email_statuses[:failed],
+      mailing:      mailing,
+      mail: mail
+    )
   rescue Net::SMTPServerBusy => error
     # Recipient address rejected
     raise unless error.message.include?('Recipient address rejected')
 
-    # save_mail_history(
-    #   person:       person,
-    #   email:        to,
-    #   subject:      subject,
-    #   content:      content,
-    #   email_status: 'Failed',
-    #   mailing:      mailing
-    # )
+    self.save_mail_history(
+      person:       person,
+      email_status: MailHistory.email_statuses[:failed],
+      mailing:      mailing,
+      mail: mail
+    )
   rescue EOFError
+    # Rails.logger.debug "******** SMTP email invalid"
     # this indicates that the email address is not valid
-
-    # save_mail_history(
-    #   person:       person,
-    #   email:        to,
-    #   subject:      subject,
-    #   content:      content,
-    #   email_status: 'Failed',
-    #   mailing:      mailing
-    # )
+    self.save_mail_history(
+      person:       person,
+      email_status: MailHistory.email_statuses[:failed],
+      mailing:      mailing,
+      mail: mail
+    )
   rescue
     raise
     # do not do a retry unless we can resume from the failed message only
   end
 
   # TODO = move to mailer ???
-  def self.save_mail_history(person: , email: nil, subject: nil,  content:, email_status: 'Sent', mailing: nil)
+  def self.save_mail_history(person:, email_status: MailHistory.email_statuses[:sent], mailing: nil, mail:)
+    return unless mail
+
     mail_history = MailHistory.create(
-      email:        email || person.primary_email,
       person:       person,
       mailing:      mailing,
-      testrun:      (mailing ? mailing.testrun : false),
       date_sent:    DateTime.now,
-      subject:      subject,
-      content:      content,
-      email_status: email_status
+      email_status: email_status,
+      testrun:      (mailing ? mailing.testrun : false),
+      email:        mail.to,
+      subject:      mail.subject,
+      content:      mail.body.to_s
     )
   end
 
