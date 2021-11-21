@@ -30,17 +30,19 @@ class MailingsController < ResourceController
     end
   end
 
-  # TODO: send a mailing
-  # need to get sidekiq job done
   def schedule
     mailing = Mailing.find params[:id]
 
-    mailing.scheduled = true
-    mailing.last_person_idx = -1
-    mailing.save!
+    # Only schedule a mailing that is not already scheduled
+    if !mailing.scheduled
+      mailing.scheduled = true
+      mailing.last_person_idx = -1
+      mailing.save!
 
-    MailingWorker.perform_async(mailing.id)
-    # MailingWorker.perform(mailing.id, send_test: false, test_address: nil, test_person_id: nil)
+      MailingWorker.perform_async(mailing.id)
+      # TODO
+      # MailingWorker.perform(mailing.id, send_test: false, test_address: nil, test_person_id: nil)
+    end
 
     render_object(mailing, includes: false)
   end
