@@ -418,9 +418,9 @@ module ResourceMethods
       jsonapi_deserialize(
         params,
         {
-          except: except_params,
+          except: except_params
           # then all params are allowed ....
-          only: allowed_params
+          # only: allowed_params,
         }
       )
     else
