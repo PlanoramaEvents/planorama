@@ -2,12 +2,27 @@ class MailingsController < ResourceController
   SERIALIZER_CLASS = 'MailingSerializer'.freeze
   POLICY_CLASS = 'MailingsPolicy'.freeze
 
+  # before check
+  def before_save
+    check_editable(mailing: @object)
+  end
+
+  def before_update
+    check_editable(mailing: @object)
+  end
+
+  def check_editable(mailing:)
+    raise "Mailing is scheduled, you can not edit it" if mailing.scheduled
+  end
+
   def assign_people
     authorize current_person, policy_class: policy_class
     people_ids = params.permit(people: [:id])
 
     Survey.transaction do
       mailing = Mailing.find params[:mailing_id]
+      check_editable(mailing: mailing)
+
       people = Person.find people_ids.to_h[:people].collect{|a| a[:id] }
 
       mailing.people << people
@@ -22,6 +37,8 @@ class MailingsController < ResourceController
 
     Survey.transaction do
       mailing = Mailing.find params[:mailing_id]
+      check_editable(mailing: mailing)
+
       people = Person.find people_ids.to_h[:people].collect{|a| a[:id] }
 
       mailing.people.delete people
