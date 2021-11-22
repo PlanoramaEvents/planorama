@@ -1,12 +1,4 @@
 module MailService
-  # 1. Invite a person to fill in a survey
-  # 2. Schedule confirmation
-  # 3. Completed survey - thank you email
-  # 4. Informational email
-
-  # TODO - add variable to the survey template to say what state the person's acceptance status should be after they complete the survey
-  # QUESTION - should we do this for the invite status as well?
-
   def self.send_mailing(
     person:,
     mailing:
@@ -15,8 +7,9 @@ module MailService
       mailing.mail_template,
       {
         person: person,
-        survey: mailing.survey
-        # survey_url: (base_url && survey) ? (base_url + '/form/' + survey.alias) : '',
+        survey: mailing.survey,
+        survey_url: self.generate_survey_url(survey: mailing.survey, person: person),
+        login_url: self.generate_login_url(person: person)
       }
     )
 
@@ -112,11 +105,29 @@ module MailService
     )
   end
 
-  # TODO - do we need this?
-  # def self.get_magic_link(person)
-  #   magic_link = generate_magic_link(person)
-  #   magic_link
-  # end
+  def self.generate_login_url(person:)
+    return nil unless person
+
+    ml = MagicLinkService.generate(
+      person_id: person.id,
+      redirect_url: "/",
+      valid_for: 1.week
+    )
+
+    UrlService.url_for path: "/login/#{ml.token}"
+  end
+
+  def self.generate_survey_url(survey:, person:)
+    return nil unless survey && person
+
+    ml = MagicLinkService.generate(
+      person_id: person.id,
+      redirect_url: "/#/surveys/#{survey.id}",
+      valid_for: 1.week
+    )
+
+    UrlService.url_for path: "/login/#{ml.token}"
+  end
 
   def self.post_mail_transition(person: , mailing: nil)
     return unless mailing
