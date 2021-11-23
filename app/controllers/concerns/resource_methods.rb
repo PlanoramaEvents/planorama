@@ -216,20 +216,73 @@ module ResourceMethods
       # A rule is a tuple [key, operation, value]
       key, operation, value = rule
 
-      col_table_name = nil
-      col_table_name, col = key.split('.') if key.include? '.'
-      # TODO: add magic to figure out joins
-      if col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasAndBelongsToManyReflection
-        # key = "#{model_class.reflections[col_table_name].join_table}.#{col}"
-        col_table = Arel::Table.new("#{model_class.reflections[col_table_name].join_table}")
+      # if key == all then we do something special ...
+      col_table = get_table(column: key)
+      if key == 'all'
+        model_class.columns.each do |col|
+          next unless [:text, :string].include?(col.type)
+          part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
+          q = q ? q.or(part) : part
+        end
+      else
+        col = get_column(column: key)
+        part = get_query_part(table: col_table, column: col, operation: operation, value: value)
+        q = q ? q.and(part) : part
       end
-
-      # TODO: translate operation
-      part = col_table[col.to_sym].eq("#{value}")
-      q = q ? q.and(part) : part
     end
 
     q
+  end
+
+  def get_table(column:)
+    col_table = Arel::Table.new(model_class.table_name)
+    col_table_name, col = column.split('.') if column.include? '.'
+
+    if col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasAndBelongsToManyReflection
+      # key = "#{model_class.reflections[col_table_name].join_table}.#{col}"
+      col_table = Arel::Table.new("#{model_class.reflections[col_table_name].join_table}")
+    end
+
+    return col_table
+  end
+
+  def get_column(column:)
+    col = column
+    col_table_name, col = column.split('.') if column.include? '.'
+
+    return col
+  end
+
+  def get_query_part(table:, column:, operation:, value:)
+    op = translate_operator(operation: operation)
+
+    val = value
+    val = "%#{value}%" if op == :matches
+
+    part = table[column.to_sym].send(op, val)
+  end
+
+  # Convert the operation passed in via teh filter into
+  # an arel predicate op
+  def translate_operator(operation:)
+    case operation.downcase
+    when 'like'
+      :'matches' # "%val%"
+    when '='
+      :eq
+    when '!='
+      :neq
+    when '<'
+      :lt
+    when '>'
+      :gt
+    when '<='
+      :lteq
+    when '>='
+      :gteq
+    end
+    # does_not_match, #does_not_match_all, #does_not_match_any, #does_not_match_regexp,
+    # in, not_in etc
   end
 
   def model_name
