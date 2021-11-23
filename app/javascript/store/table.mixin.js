@@ -5,7 +5,7 @@ export const tableMixin = {
   props: {
     defaultSortBy: {
       type: String,
-      default: undefined,
+      default: null
     },
     perPage: {
       type: Number,
@@ -15,7 +15,7 @@ export const tableMixin = {
   data: () => ({
     sortDesc: false,
     sortBy: undefined,
-    filter: undefined,
+    filter: null,
     currentPage: 1,
     totalRows: 0,
     correctOrder: [],
@@ -58,6 +58,12 @@ export const tableMixin = {
       if(newVal != oldVal) {
         // at this point, this.currentPage reflects newVal so we don't
         // have to pass anything in here, it should just work
+        this.fetchPaged();
+      }
+    },
+    filter(newVal, oldVal) {
+      console.debug("filter changed:", newVal, oldVal)
+      if(newVal != oldVal) {
         this.fetchPaged();
       }
     },
