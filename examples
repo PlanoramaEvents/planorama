@@ -1,0 +1,95 @@
+
+
+http://localhost:3000/login/cuKNGpLvrH6OhTSw
+
+MagicLinkService.generate(
+  person_id: pid,
+  redirect_url: '/#/surveys/d46b9d77-9cb9-4219-b06a-ac518d610a62'
+)
+
+
+
+CSRF and json api
+https://pragmaticstudio.com/tutorials/rails-session-cookies-for-api-authentication
+
+
+
+
+https://github.com/marketplace/actions/swagger-ui-action
+https://github.com/peter-evans/swagger-github-pages
+
+https://joolfe.github.io/postman-to-openapi/
+
+Uses rspec
+https://github.com/rswag/rswag
+
+https://coderwall.com/p/bjk3pa/documenting-rails-based-rest-api-using-swagger-ui
+
+YARD to pages
+
+https://floryn.tech/documentation/2021/02/02/static-docs-on-github.html
+https://github.com/trhodeos/yard-ghpages
+
+
+p
+-----
+Query Builders
+https://dabernathy89.github.io/vue-query-builder/
+https://akumatus.github.io/FilterBuilder/
+
+https://github.com/moreta/vue-search-select
+https://gitlab-org.gitlab.io/gitlab-ui/?path=/story/base-filtered-search--default
+
+https://itnext.io/a-few-handy-vue-js-tricks-832703cff426
+
+
+Error codes
+https://gist.github.com/mlanett/a31c340b132ddefa9cca
+
+advance auto increment value
+SELECT nextval('sequence_name');
+
+agreements_id_seq for Agreement
+
+see
+https://www.postgresql.org/docs/current/functions-sequence.html
+
+or
+
+https://pawelurbanek.com/uuid-order-rails
+https://github.com/kreatio-sw/webdack-uuid_migration
+
+curl -XPOST -i -H "Content-Type: application/json" -d '{ "person": { "email": "test@test.com", "password": "111111" } }' http://localhost:3000/auth/sign_in
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwZDEwMzk4MC1mY2QyLTQ3ZGYtYWY3Yy0yOTZjYzljZTUxY2IiLCJzdWIiOiIxMWUzYWZiNS0wMDg0LTRiNmMtOGRlYS02N2EzMTNhNGEzMmUiLCJzY3AiOiJwZXJzb24iLCJhdWQiOm51bGwsImlhdCI6MTYzNTM2NTU4MCwiZXhwIjoiMTYzNTk3MDM4MCJ9.10x7hDr7viD630eGYaZGYkKa9uwEjBRAuxzDHsEs9WY
+
+curl -XGET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwZDEwMzk4MC1mY2QyLTQ3ZGYtYWY3Yy0yOTZjYzljZTUxY2IiLCJzdWIiOiIxMWUzYWZiNS0wMDg0LTRiNmMtOGRlYS02N2EzMTNhNGEzMmUiLCJzY3AiOiJwZXJzb24iLCJhdWQiOm51bGwsImlhdCI6MTYzNTM2NTU4MCwiZXhwIjoiMTYzNTk3MDM4MCJ9.10x7hDr7viD630eGYaZGYkKa9uwEjBRAuxzDHsEs9WY"  http://localhost:3000/person
+curl -XGET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwZDEwMzk4MC1mY2QyLTQ3ZGYtYWY3Yy0yOTZjYzljZTUxY2IiLCJzdWIiOiIxMWUzYWZiNS0wMDg0LTRiNmMtOGRlYS02N2EzMTNhNGEzMmUiLCJzY3AiOiJwZXJzb24iLCJhdWQiOm51bGwsImlhdCI6MTYzNTM2NTU4MCwiZXhwIjoiMTYzNTk3MDM4MCJ9.10x7hDr7viD630eGYaZGYkKa9uwEjBRAuxzDHsEs9WY"  http://localhost:3000/person/new
+
+curl -XGET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1MWYxOGVjMS0xMDcyLTQxNjctYjllYy0zOTcxODA3MGY4NmYiLCJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAxMDEiLCJzY3AiOiJwZXJzb24iLCJhdWQiOm51bGwsImlhdCI6MTYzMjU4MzA5NiwiZXhwIjoxNjMyNTg2Njk2fQ.dIArzcYeSphFwzL17-tDL-UR9MiwUB-DFAOHd_eHxzM"  http://localhost:3000/rbac/access.json
+
+----
+
+https://jsonapi-resources.com/
+
+https://github.com/mrichar1/jsonapi-vuex
+
+for pundit:
+
+https://github.com/venuu/jsonapi-authorization
+
+-----
+
+Or try out
+
+https://github.com/jsonapi-serializer/jsonapi-serializer
+
+As we could probably keep the rest of our login the same (paging etc)
+
+
+Devise.setup do |config|
+ config.jwt do |jwt|
+    jwt.secret = ENV["DEVISE_SECRET"]
+    jwt.expiration_time = 1.weeks
+ end
+end
