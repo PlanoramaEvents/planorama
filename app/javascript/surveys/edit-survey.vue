@@ -47,7 +47,7 @@ import {
   surveyIdPropMixinId
 }from '@mixins'
 import SurveySettingsTab from './survey-settings-tab.vue';
-import NotImplemented from '../not-implemented.vue';
+import NotImplemented from '../shared/not-implemented.vue';
 
 export default {
   name: "EditSurvey",

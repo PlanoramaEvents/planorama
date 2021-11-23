@@ -30,7 +30,7 @@ ISSUE - template links don't work
 <script>
 import { SAVE } from '../model.store';
 import TableVue from '../components/table_vue';
-import TooltipOverflow from '../tooltip-overflow';
+import TooltipOverflow from '../shared/tooltip-overflow';
 import { survey_columns as columns } from './survey';
 import { mapActions } from 'vuex';
 import { NEW_SURVEY } from '@/store/survey';

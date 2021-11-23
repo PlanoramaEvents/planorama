@@ -27,7 +27,7 @@
 <script>
 import SidebarVuex from './sidebar_vuex';
 import { mapState } from 'vuex';
-import ModelField from './model-field';
+import ModelField from './shared/model-field';
 import EditButton from './edit-button';
 import SaveButton from './save-button'
 
