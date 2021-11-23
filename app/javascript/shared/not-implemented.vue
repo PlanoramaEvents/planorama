@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {NOT_IMPLEMENTED} from './constants/strings'
+import {NOT_IMPLEMENTED} from '../constants/strings'
 
 export default {
   name: "NotImplemented",

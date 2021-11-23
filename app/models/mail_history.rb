@@ -1,11 +1,10 @@
 class MailHistory < ApplicationRecord
-  belongs_to :person_mailing_assignment
-  belongs_to :person
-  belongs_to :mailing
+  belongs_to :person, optional: true
+  belongs_to :mailing, optional: true
 
   enum email_status: {
-    pending: 'Pending',
-    sent: 'Sent',
-    failed: 'Failed'
+    pending: 'pending',
+    sent: 'sent',
+    failed: 'failed'
   }
 end

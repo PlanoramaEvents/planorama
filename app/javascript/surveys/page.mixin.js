@@ -3,7 +3,7 @@ import { pageModel as model, questionModel, NEW_PAGE } from '@/store/survey';
 import { SELECT, SELECTED, DELETE, SAVE, PATCH_RELATED } from '@/store/model.store';
 import { mapGetters, mapActions } from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
-import { toastMixin }  from '../toast-mixin';
+import { toastMixin }  from '../shared/toast-mixin';
 
 // CONVERTED
 export const pageMixin = {
@@ -71,7 +71,7 @@ export const pageMixin = {
       if(this.isLastPage(id)) {
         return null;
       }
-      
+
       return this.getSurveyPages(this.survey)[this.getPageIndex(id) + 1]
     },
     selectPage(itemOrId) {

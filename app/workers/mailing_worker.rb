@@ -6,15 +6,11 @@ class MailingWorker
     Sidekiq.logger.info "****** Starting mailing for #{mailing_id}"
     mailing = Mailing.find mailing_id
 
-    Sidekiq.logger.info "****** 1. Starting mailing for #{mailing}"
     mailing.with_lock do
-      Sidekiq.logger.info "** Attempting to find and send mailing #{mailing_id}" if Sidekiq.logger
       return unless mailing.scheduled # Check just in case this is a dup
 
       last_person_index = mailing.last_person_idx
-      Sidekiq.logger.info "** Mailing #{mailing.id} is scheduled and will begin sending soon" if Sidekiq.logger
       mailing.people.each_with_index do |person, idx|
-        Sidekiq.logger.info "** Mailing at #{idx} and last was #{last_person_index}"
         next unless (last_person_index == -1) || (idx > last_person_index)
 
         begin
@@ -25,7 +21,6 @@ class MailingWorker
             #   test_address: nil,
             #   send_test: false
           )
-          Sidekiq.logger.info "** Passed mailing '#{mailing.display_name} - #{mailing.id}' to mail service for sending" if Sidekiq.logger
 
           # note the last person processes so we can continue from there if job stopped and restarted
 

@@ -6,7 +6,6 @@
     :columns="columns"
   >
   </table-vue>
-
 </template>
 
 <script>

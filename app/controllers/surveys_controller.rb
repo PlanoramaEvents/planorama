@@ -122,6 +122,7 @@ class SurveysController < ResourceController
       numbered_questions
       branded
       allow_submission_edits
+      pages
     ] << [
       pages_attributes: %i[
         id
@@ -132,6 +133,7 @@ class SurveysController < ResourceController
         survey_id
         lock_version
         _destroy
+        questions
       ] << [
         questions_attributes: %i[
           id
@@ -147,6 +149,7 @@ class SurveysController < ResourceController
           regex
           branching
           _destroy
+          answers
         ] << [
           answers_attributes: %i[
             id

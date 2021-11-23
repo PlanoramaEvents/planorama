@@ -20,6 +20,8 @@ import {
   responseModel,
 } from './survey.model';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import { personModel } from '../person.store';
 
 
@@ -188,8 +190,10 @@ export const surveyStore = {
       }
       return dispatch(NEW, {model: questionModel, selected: true, relationships, ...newQuestion})
     },
-    [NEW_RESPONSE] ({dispatch}, {relationships = {}}) {
+    [NEW_RESPONSE] ({commit}, {relationships = {}}) {
+      let id = uuidv4();
       let item = {
+        id,
         response: {text: '', answers: [], address:{
           street: null, street2: null, city: null,
           state: null, zip: null, country: null
@@ -197,9 +201,14 @@ export const surveyStore = {
           twitter: null, facebook: null, linkedin: null,
           twitch: null, youtube: null, instagram: null,
           tiktok: null, other: null, website: null
-        }}
+        }},
+        _jv: {
+          id,
+          relationships,
+          type: responseModel
+        }
       };
-      return dispatch(NEW, {model: responseModel, ...item, relationships})
+      return commit('jv/addRecords', item)
     }
   }
 }

@@ -47,7 +47,7 @@ import { SAVE, UPDATED } from '../store/model.store';
 // import { Configuration } from './configurations';
 import AddUser from './add-user.vue';
 import ChangeUserRoles from './change-user-roles';
-import toastMixin from '../toast-mixin';
+import toastMixin from '../shared/toast-mixin';
 // import { InformationEthicsAgreement } from './agreement';
 // import { FETCH_IEA, SAVE_IEA } from './agreement.store';
 

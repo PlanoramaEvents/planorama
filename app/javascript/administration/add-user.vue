@@ -11,9 +11,9 @@
 
 <script>
 // import { Person } from '../people/people'
-import toastMixin from '../toast-mixin';
+import toastMixin from '../shared/toast-mixin';
 import { ADMIN_ADD_USER_SUCCESS } from '../constants/strings';
-import ModelField from '../model-field';
+import ModelField from '../shared/model-field';
 import EmailField from '../shared/email_field';
 
 import { mapActions } from 'vuex';

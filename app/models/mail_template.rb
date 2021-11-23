@@ -1,5 +1,5 @@
 class MailTemplate < ApplicationRecord
-  belongs_to :survey
+  belongs_to :survey, optional: true
   has_many :mailings
 
   enum transiton_invite_status: {

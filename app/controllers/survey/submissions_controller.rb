@@ -24,6 +24,26 @@ class Survey::SubmissionsController < ResourceController
     @object.person_id = current_person.id if current_person
   end
 
+  # After save and if state changes to submitted we may need
+  # to transistion the person's state?
+  # based on survey.transition_accept_status
+  def after_save
+    post_submission_transition if @object.submission_state == Survey::Submission.submission_states[:submitted]
+  end
+
+  def after_update
+    post_submission_transition if @object.submission_state == Survey::Submission.submission_states[:submitted]
+  end
+
+  def post_submission_transition
+    acceptance_status = @object.transition_accept_status
+    return unless acceptance_status
+    return unless @object.person_id || (@object.person_id != current_person.id)
+
+    current_person.acceptance_status = acceptance_status
+    current_person.save!
+  end
+
   def serializer_includes
     [
       :responses
@@ -51,6 +71,8 @@ class Survey::SubmissionsController < ResourceController
       person_id
       survey_id
       responses
+      person
+      survey
     ] << [
       responses_attributes: %i[
         id

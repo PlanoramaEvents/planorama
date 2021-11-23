@@ -1,5 +1,5 @@
 import {mapGetters} from 'vuex';
-import toastMixin from '../toast-mixin';
+import toastMixin from '../shared/toast-mixin';
 import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE, UNSELECT } from '../store/model.store';
 import { SURVEY_SAVE_SUCCESS, SURVEY_SAVE_SUCCESS_DELETE } from '../constants/strings'
 import { surveyModel as model} from '@/store/survey';
@@ -21,7 +21,7 @@ export const surveyMixin = {
     },
     selectedSurveyFirstPage() {
       return this.survey && this.selectedSurveyPages[0];
-      
+
     },
   },
   methods: {

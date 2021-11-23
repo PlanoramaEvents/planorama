@@ -7,6 +7,10 @@ class MailingsPolicy < PlannerPolicy
     @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end
 
+  def schedule?
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
   # class Scope < Scope
   #   def resolve
   #     if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
