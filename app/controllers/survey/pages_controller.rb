@@ -41,6 +41,7 @@ class Survey::PagesController < ResourceController
       survey_id
       lock_version
       survey
+      questions_attributes
     ]
   end
 

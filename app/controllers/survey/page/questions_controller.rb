@@ -36,6 +36,7 @@ class Survey::Page::QuestionsController < ResourceController
       regex
       branching
       page
+      answers_attributes
     ]
   end
   # TODO: on save need to remove pages refs that do not exist
