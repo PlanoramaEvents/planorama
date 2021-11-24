@@ -9,7 +9,6 @@
       <b-form-input
         type="text"
         v-model="value"
-        v-on:change="$emit('change', filter)"
         debounce="500"
       ></b-form-input>
 
@@ -39,6 +38,13 @@ export default {
           rules: [
             ["all", "like", this.value]
           ]
+      }
+    }
+  },
+  watch: {
+    value (newval, oldval) {
+      if (newval != oldval) {
+        this.$emit('change', this.filter)
       }
     }
   },
