@@ -18,4 +18,36 @@ class Submission::ResponsesController < ResourceController
     params[:submission_id]
   end
 
+  # def allowed_params
+  #   %i[
+  #     id
+  #     text
+  #     submission
+  #   ] << [
+  #     answers: [],
+  #     address: %i[
+  #       id
+  #       street
+  #       street2
+  #       city
+  #       state
+  #       zip
+  #       country
+  #       response
+  #     ],
+  #     socialmedia: %i[
+  #       id
+  #       twitter
+  #       facebook
+  #       linkedin
+  #       twitch
+  #       youtube
+  #       instagram
+  #       website
+  #       other
+  #       tiktok
+  #       response
+  #     ]
+  #   ]
+  # end
 end
