@@ -54,10 +54,10 @@ Rails.application.routes.draw do
     get 'questions', to: 'survey/page/questions#index'
   end
 
-  resources :questions, controller: 'survey/page/question', path: 'question', except: [:index] do
+  resources :questions, controller: 'survey/page/questions', path: 'question', except: [:index] do
     get 'answers', to: 'survey/page/question/answers#index'
   end
-  resources :answers, controller: 'survey/page/question/answer', path: 'answer', except: [:index]
+  resources :answers, controller: 'survey/page/question/answers', path: 'answer', except: [:index]
 
   resources :submissions, path: 'submission', controller: 'survey/submissions',  except: [:index] do
     get 'responses', to: 'submission/responses#index'
