@@ -31,7 +31,7 @@ RSpec.describe 'Survey Pages', type: :request do
             "data": {
               "type": "page",
               "attributes": {
-                title: page_title
+                "title": page_title
               },
               "relationships": {
                 "survey": {
