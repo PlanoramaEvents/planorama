@@ -28,7 +28,8 @@
     "validator": "^13.7.0",
     "tar": "^6.1.9",
     "nth-check": "^2.0.1",
-    "url-parse": "^1.5.2"
+    "url-parse": "^1.5.2",
+    "vue-query-builder": "^0.8"
   },
   "version": "0.2.0",
   "devDependencies": {
