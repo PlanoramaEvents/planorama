@@ -57,7 +57,7 @@ export default {
     },
     onNew() {
       this.newSurvey().then((survey) => {
-        this.$router.push({path: `/edit/${survey.id}`})
+        this.$router.push({path: `/surveys/edit/${survey.id}`})
       });
     }
   }

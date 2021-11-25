@@ -123,47 +123,49 @@ class SurveysController < ResourceController
       branded
       allow_submission_edits
       pages
-    ] << [
-      pages_attributes: %i[
-        id
-        title
-        next_page_id
-        next_page_action
-        sort_order
-        survey_id
-        lock_version
-        _destroy
-        questions
-      ] << [
-        questions_attributes: %i[
-          id
-          title
-          question
-          question_type
-          lock_version
-          mandatory
-          text_size
-          sort_order
-          horizontal
-          private
-          regex
-          branching
-          _destroy
-          answers
-        ] << [
-          answers_attributes: %i[
-            id
-            answer
-            lock_version
-            default
-            sort_order
-            _destroy
-            other
-            next_page_id
-            next_page_action
-          ]
-        ]
-      ]
+      pages_attributes
     ]
+    # << [
+    #   pages_attributes: %i[
+    #     id
+    #     title
+    #     next_page_id
+    #     next_page_action
+    #     sort_order
+    #     survey_id
+    #     lock_version
+    #     _destroy
+    #     questions
+    #   ] << [
+    #     questions_attributes: %i[
+    #       id
+    #       title
+    #       question
+    #       question_type
+    #       lock_version
+    #       mandatory
+    #       text_size
+    #       sort_order
+    #       horizontal
+    #       private
+    #       regex
+    #       branching
+    #       _destroy
+    #       answers
+    #     ] << [
+    #       answers_attributes: %i[
+    #         id
+    #         answer
+    #         lock_version
+    #         default
+    #         sort_order
+    #         _destroy
+    #         other
+    #         next_page_id
+    #         next_page_action
+    #       ]
+    #     ]
+    #   ]
+    # ]
   end
 end

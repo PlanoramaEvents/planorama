@@ -1,6 +1,5 @@
 //import Axios from 'axios-observable';
 import axios from 'axios';
-// import {jwtToken, setJWTToken} from './utils/jwt_utils';
 
 // here
 export const http = axios.create({})

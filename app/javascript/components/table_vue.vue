@@ -3,9 +3,10 @@
 
     <div class="d-flex justify-content-between my-3">
       <search-vue
-        class="w-50"
+        class="w-75"
         :value="filter"
         @change="onSearchChanged"
+        :columns="columns"
       >
       </search-vue>
 
@@ -15,9 +16,11 @@
             <b-icon-upload></b-icon-upload>
           </b-button>
         </div>
-        <b-button @click="$emit('new')" class="mx-1" variant="primary" title="New">
-          <b-icon-plus scale="2"></b-icon-plus>
-        </b-button>
+        <div class="d-inline mx-1" title="newval">
+          <b-button @click="$emit('new')" variant="primary" title="New">
+            <b-icon-plus scale="2"></b-icon-plus>
+          </b-button>
+        </div>
         <div class="d-inline" title="Settings">
           <b-button disabled>
             <b-icon-gear-fill></b-icon-gear-fill>
