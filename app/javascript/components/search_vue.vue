@@ -38,6 +38,7 @@
 
 <script>
 import VueQueryBuilder from 'vue-query-builder';
+import { query_to_rules } from "../utils";
 
 export default {
   name: 'SearchVue',
@@ -59,99 +60,37 @@ export default {
       // compute based on the columns
       this.columns.forEach(
         (col) => {
-          rule_set.push(
-            {
-              type: col.type,
-              id: col.key,
-              label: col.label,
-              choices: col.choices
-            }
-          )
+          // only cols with types are searchable
+          if (col.type) {
+            rule_set.push(
+              {
+                type: col.type,
+                id: col.key,
+                label: col.label,
+                choices: col.choices
+              }
+            )
+          }
         }
       )
       return rule_set
     },
     filter_by_value() {
-      // Going to be the new way
-      // return {
-      //   rules: {
-      //     op: 'all',
-      //     queries: [
-      //       ["all", "like", this.value]
-      //     ]
-      //   }
-      // }
       // OLD way
+      // return {
+      //   rules: [
+      //     ["all", "like", this.value]
+      //   ]
+      // }
       return {
-        rules: [
-          ["all", "like", this.value]
+        "op":"all",
+        "queries":[
+          ["all","contains",this.value]
         ]
       }
     },
     filter_by_query() {
-      // {
-      //   "logicalOperator":"all",
-      //   "children": [
-      //     {
-      //       "type":"query-builder-rule",
-      //       "query":{
-      //         "rule":"pronouns",
-      //         "operator":"equals",
-      //         "operand":"Pronouns",
-      //         "value":null
-      //       }
-      //     },
-      //     {
-      //       "type":"query-builder-group",
-      //       "query":{
-      //         "logicalOperator":"any",
-      //         "children":[
-      //           {
-      //             "type":"query-builder-rule",
-      //             "query":{
-      //               "rule":"published_name",
-      //               "operator":"equals",
-      //               "operand":"Published Name",
-      //               "value":null
-      //             }
-      //           },
-      //           {
-      //             "type":"query-builder-rule",
-      //             "query":{
-      //               "rule":"registered",
-      //               "operand":"Registered",
-      //               "value":null
-      //             }
-      //           }
-      //         ]
-      //       }
-      //     }
-      //   ]
-      // }
-      // {
-      //   op: 'all',
-      //   queries: [
-      //     ['col','op',val],
-      //     ['col','op',val],
-      //     {
-      //       op: 'any',
-      //       queries: [
-      //         ['col','op',val],
-      //         ['col','op',val]
-      //       ]
-      //     }
-      //   ]
-      // }
-      console.debug('** op', this.query.logicalOperator)
-      console.debug('** children', this.query.children)
-      return {
-        rules: {
-          op: 'all',
-          queries: [
-            ["all", "like", this.value]
-          ]
-        }
-      }
+      return query_to_rules(this.query)
     }
   },
   watch: {
@@ -172,6 +111,7 @@ export default {
     },
     onQuerySearch: function() {
       console.debug('*** QUERY THIS ', JSON.stringify(this.filter_by_query) )
+      this.$emit('change', this.filter_by_query)
     }
   }
 }

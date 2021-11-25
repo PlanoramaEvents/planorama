@@ -207,28 +207,34 @@ module ResourceMethods
 
   def query(filters = nil)
     # Go through the filter and construct the where clause
-    return nil unless filters.present? && filters['rules'].present?
+    return nil unless filters.present?
 
-    table = Arel::Table.new(model_class.table_name)
+    query_part(filter: filters)
+  end
+
+  def query_part(filter:)
     q = nil
-    filters['rules'].each do |rule|
-      col_table = table
-      # A rule is a tuple [key, operation, value]
-      key, operation, value = rule
-
-      # if key == all then we do something special ...
-      col_table = get_table(column: key)
-      if key == 'all'
-        model_class.columns.each do |col|
-          next unless [:text, :string].include?(col.type)
-          part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
-          q = q ? q.or(part) : part
-        end
+    global_op = filter['op'] == 'all' ? :and : :or
+    filter['queries'].each do |query|
+      if query.is_a? Hash
+        part = query_part(filter: query)
       else
-        col = get_column(column: key)
-        part = get_query_part(table: col_table, column: col, operation: operation, value: value)
-        q = q ? q.and(part) : part
+        key, operation, value = query
+
+        col_table = get_table(column: key)
+        if key == 'all'
+          model_class.columns.each do |col|
+            next unless [:text, :string].include?(col.type)
+            query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
+            part = part ? part.or(query_part) : query_part
+          end
+        else
+          col = get_column(column: key)
+          part = get_query_part(table: col_table, column: col, operation: operation, value: value)
+        end
       end
+
+      q = q ? q.send(global_op, part) : part
     end
 
     q
@@ -254,24 +260,43 @@ module ResourceMethods
   end
 
   def get_query_part(table:, column:, operation:, value:)
+    Rails.logger.debug "** QUERY PART #{table} #{column} #{operation} #{value}"
     op = translate_operator(operation: operation)
 
     val = value
     val = "%#{value}%" if op == :matches
+    val = "%#{value}%" if op == :does_not_match
+    val = "%#{value}" if operation == 'ends with'
+    val = "#{value}%" if operation == 'begins with'
+    val = "''" if operation == 'is empty'
+    val = "''" if operation == 'is not empty'
 
     part = table[column.to_sym].send(op, val)
   end
 
   # Convert the operation passed in via teh filter into
   # an arel predicate op
+  # is empty
+  # is not empty
+  # begins with
+  # ends with
   def translate_operator(operation:)
+    Rails.logger.debug "*** Translate op #{operation}"
     case operation.downcase
+    when 'does not contain'
+      :'does_not_match' # "%val%"
+    when 'contains'
+      :'matches' # "%val%"
     when 'like'
       :'matches' # "%val%"
+    when 'equals'
+      :eq
     when '='
       :eq
+    when 'does not equal'
+      :not_eq
     when '!='
-      :neq
+      :not_eq
     when '<'
       :lt
     when '>'
@@ -280,6 +305,16 @@ module ResourceMethods
       :lteq
     when '>='
       :gteq
+    when 'is empty'
+      :eq
+    when 'is not empty'
+      :not_eq
+    when 'begins with'
+      :'matches'
+    when 'ends with'
+      :'matches'
+    else
+      :eq
     end
     # does_not_match, #does_not_match_all, #does_not_match_any, #does_not_match_regexp,
     # in, not_in etc

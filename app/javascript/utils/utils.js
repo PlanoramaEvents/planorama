@@ -17,3 +17,32 @@ export function renderString(template, data) {
     instance.$mount()
     return instance
 }
+
+// Convert query object from query builder
+// into a more compact one for our backend
+export function query_to_rules(query) {
+  let computed_rules = {}
+  if (query) {
+    computed_rules['op'] = query.logicalOperator
+    computed_rules['queries'] = []
+    query.children.forEach(
+      (child) => {
+        if (child.type == "query-builder-rule") {
+          computed_rules['queries'].push(
+            [
+              child.query.rule,
+              child.query.operator ? child.query.operator : '=',
+              child.query.value
+            ]
+          )
+        } else {
+          computed_rules['queries'].push(
+            query_to_rules(child.query)
+          )
+        }
+      }
+    )
+  }
+
+  return computed_rules
+}
