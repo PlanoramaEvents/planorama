@@ -101,3 +101,6 @@ yarn-debug.log*
 
 # rbenv
 .ruby-version
+
+# test coverage
+/coverage
