@@ -42,10 +42,11 @@
 
 class Person < ApplicationRecord
   # Include default devise modules. Others available are:
-  # :confirmable, and :omniauthable
   devise :database_authenticatable,
-         :registerable, :timeoutable,
-         :recoverable, :rememberable,
+         :timeoutable,
+         :rememberable,
+         :registerable,
+         :recoverable,
          :validatable, :lockable, :trackable
 
   # TODO: add a deleted_at mechanism
