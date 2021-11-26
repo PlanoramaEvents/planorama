@@ -5,15 +5,14 @@ export const people_columns = [
     type: "text",
     sortable: true,
     // sortKey: 'published_name_sort_by',
-    sticky: true
+    // stickyColumn: true,
   },
   {
     key: 'name',
     label: 'Name',
     type: "text",
     sortable: true,
-    // sortKey: 'name_sort_by',
-    sticky: true
+    // stickyColumn: true
   },
   {
     key: 'pseudonym',
@@ -25,6 +24,18 @@ export const people_columns = [
   {
     key: 'pronouns',
     label: 'Pronouns',
+    type: "text",
+    sortable: false
+  },
+  {
+    key: 'organization',
+    label: 'Organization',
+    type: "text",
+    sortable: true
+  },
+  {
+    key: 'job_title',
+    label: 'Job Ttile',
     type: "text",
     sortable: false
   },
@@ -47,6 +58,30 @@ export const people_columns = [
     label: 'Registration Number',
     type: "text",
     sortable: true
+  },
+  {
+    key: 'gender',
+    label: 'Gender',
+    type: "text",
+    sortable: false
+  },
+  {
+    key: 'opted_in',
+    label: 'Opted In',
+    type: "radio",
+    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+    sortable: false
+  },
+  {
+    key: 'comments',
+    label: 'Comments',
+    type: "text",
+    sortable: false
+  },
+  {
+    key: 'last_sign_in_at',
+    label: 'Last Signed In',
+    sortable: false
   }
   // TODO: test for nested object
   // {
