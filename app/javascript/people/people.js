@@ -5,15 +5,14 @@ export const people_columns = [
     type: "text",
     sortable: true,
     // sortKey: 'published_name_sort_by',
-    sticky: true
+    // stickyColumn: true,
   },
   {
     key: 'name',
     label: 'Name',
     type: "text",
     sortable: true,
-    // sortKey: 'name_sort_by',
-    sticky: true
+    // stickyColumn: true
   },
   {
     key: 'pseudonym',
