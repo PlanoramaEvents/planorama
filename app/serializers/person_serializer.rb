@@ -10,7 +10,8 @@ class PersonSerializer #< ActiveModel::Serializer
              :opted_in, :comments,
              :can_share, :can_photo, :can_record,
              :invite_status, :acceptance_status,
-             :registered, :registration_type, :registration_number
+             :registered, :registration_type, :registration_number,
+             :last_sign_in_at
 
   # tag_list
   attribute :tags do |person|
