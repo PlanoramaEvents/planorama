@@ -65,7 +65,7 @@ export default {
             rule_set.push(
               {
                 type: col.type,
-                id: col.key,
+                id: col.search_key ? col.search_key : col.key,
                 label: col.label,
                 choices: col.choices
               }

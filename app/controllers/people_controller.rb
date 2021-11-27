@@ -192,6 +192,13 @@ class PeopleController < ResourceController
     ]
   end
 
+  def references
+    [
+      :email_addresses,
+      :person_roles
+    ]
+  end
+
   # TODO: on create must have at least one email_addresses_attributes
 
   # def references
