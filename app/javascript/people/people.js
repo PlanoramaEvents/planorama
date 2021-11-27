@@ -29,8 +29,9 @@ export const people_columns = [
   },
   {
     key: 'primary_email',
+    search_key: 'email_addresses.email',
     label: 'Email',
-    // type: "text",
+    type: "text",
     sortable: false
   },
   {

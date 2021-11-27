@@ -195,6 +195,7 @@ module ResourceMethods
       .references(references)
       .joins(join_tables)
       .where(query(@filters))
+      # .joins(query_join_tables(@filters))
 
     q = q.order(order_string)
 
@@ -247,10 +248,18 @@ module ResourceMethods
     if col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasAndBelongsToManyReflection
       # key = "#{model_class.reflections[col_table_name].join_table}.#{col}"
       col_table = Arel::Table.new("#{model_class.reflections[col_table_name].join_table}")
+    elsif col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasManyReflection
+      # need to join with the people table
+      col_table = Arel::Table.new("#{col_table_name}")
     end
 
     return col_table
   end
+
+  # def query_join_tables(filters = nil)
+  #   return [] unless filters
+  #   # TODO: create a join clause for relationships
+  # end
 
   def get_column(column:)
     col = column
