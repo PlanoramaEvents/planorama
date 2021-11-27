@@ -175,12 +175,14 @@ export const survey_columns = [
     key: 'name',
     sortKey: 'surveys.name',
     label: 'Name',
+    type: "text",
     stickyColumn: true,
     sortable: true
   },
   {
     key: 'description',
     label: 'Description',
+    type: "text",
     sortable: true,
   },
   {

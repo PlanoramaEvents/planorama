@@ -28,6 +28,12 @@ export const people_columns = [
     sortable: false
   },
   {
+    key: 'primary_email',
+    label: 'Email',
+    // type: "text",
+    sortable: false
+  },
+  {
     key: 'organization',
     label: 'Organization',
     type: "text",

@@ -11,7 +11,7 @@ class PersonSerializer #< ActiveModel::Serializer
              :can_share, :can_photo, :can_record,
              :invite_status, :acceptance_status,
              :registered, :registration_type, :registration_number,
-             :last_sign_in_at
+             :last_sign_in_at, :primary_email
 
   # tag_list
   attribute :tags do |person|

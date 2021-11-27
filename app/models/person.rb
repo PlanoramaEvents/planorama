@@ -82,6 +82,10 @@ class Person < ApplicationRecord
   has_many  :email_addresses, dependent: :destroy
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
+  has_one :primary_email,
+          -> { where(['isdefault = true']) },
+          through: :email_addresses
+
   has_many :submissions, class_name: 'Survey::Submission', dependent: :destroy
   has_many :mailed_surveys, through: :mailings, source: :survey
   has_and_belongs_to_many :assigned_surveys, class_name: 'Survey'
