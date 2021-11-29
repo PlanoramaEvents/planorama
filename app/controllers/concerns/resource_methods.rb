@@ -1,5 +1,9 @@
 require "securerandom"
 
+# TODO: add include parameter as option
+# If an endpoint does not support the include parameter,
+# it MUST respond with 400 Bad Request to any requests that include it.
+#
 module ResourceMethods
   extend ActiveSupport::Concern
   include JSONAPI::Deserialization
@@ -21,13 +25,15 @@ module ResourceMethods
       end
     else
       if serializer_class
-        render json: serializer_class.new(@collection,
-                      {
-                        meta: meta,
-                        include: serializer_includes,
-                        params: {domain: "#{request.base_url}"}
-                      }
-                    ).serializable_hash(),
+        options = {
+          meta: meta,
+          include: filtered_serializer_includes(fields: fields), # need to adjust based omn field
+          params: {domain: "#{request.base_url}"}
+        }
+        options[:fields] = fields
+        # Example for sparse field set
+        # options[:fields] = {person: [:name, :email_addresses], email_address: [:email]}
+        render json: serializer_class.new(@collection,options).serializable_hash(),
                content_type: 'application/json'
       else
         render json: @collection,
@@ -105,13 +111,16 @@ module ResourceMethods
     serializer_used = serializer || serializer_class
     jsonapi_included ||= serializer_includes
     if serializer_used
-      render json: serializer_used.new(
-                    object,
-                    {
-                      include: (includes ? jsonapi_included : []),
-                      params: {domain: "#{request.base_url}"}
-                    }
-                   ).serializable_hash,
+      options = {
+        include: filtered_serializer_includes(
+                   fields: fields,
+                   serialized_includes: jsonapi_included
+                 ),
+        params: {domain: "#{request.base_url}"}
+      }
+      options[:fields] = fields
+
+      render json: serializer_used.new(object, options).serializable_hash,
              content_type: 'application/json'
     else
       render json: object,
@@ -469,6 +478,24 @@ module ResourceMethods
 
   def except_params
     nil
+  end
+
+  # TODO: optimize
+  def fields
+    _fields = params.permit(fields: {})[:fields].to_h
+    _fields.each do |k,v|
+      _fields[k] = v.split(',')
+    end
+
+    _fields
+  end
+
+  def filtered_serializer_includes(fields: , serialized_includes: nil)
+    serialized_includes ||= serializer_includes
+    return serialized_includes if fields.empty?
+
+    keys = fields.flatten(2)
+    serialized_includes.select{|v| keys.include?(v.to_s)}
   end
 
   def serializer_includes
