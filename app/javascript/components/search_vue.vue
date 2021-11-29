@@ -1,39 +1,35 @@
 <template>
-    <div>
-      <b-input-group>
-        <b-input-group-prepend>
-          <b-input-group-text>
-            <b-icon icon="search" />
-          </b-input-group-text>
-        </b-input-group-prepend>
+  <div class="p0">
+    <b-input-group>
+      <b-input-group-prepend>
+        <b-input-group-text>
+          <b-icon icon="search" />
+        </b-input-group-text>
+      </b-input-group-prepend>
 
-        <b-form-input
-          type="text"
-          v-model="value"
-          debounce="500"
-        ></b-form-input>
+      <b-form-input
+        type="text"
+        v-model="value"
+        debounce="500"
+      ></b-form-input>
 
-        <b-input-group-append>
-          <b-input-group-text>
-            <b-icon
-              icon="x"
-              @click="onSearchClear"
-            />
-          </b-input-group-text>
-          <b-button v-b-toggle.advanced-search variant="primary">Advanced Search</b-button>
-        </b-input-group-append>
-      </b-input-group>
+      <b-input-group-append>
+        <b-button variant="primary" @click="onSearch">Search</b-button>
+      </b-input-group-append>
+    </b-input-group>
 
-      <b-collapse id="advanced-search" class="mt-2">
-        <vue-query-builder
-          v-model="query"
-          :rules="rules"
-          :maxDepth="2"
-        >
-        </vue-query-builder>
-        <b-button variant="primary" @click="onQuerySearch">Search</b-button>
-      </b-collapse>
-    </div>
+    <b-button v-b-toggle.advanced-search variant="primary">Advanced Search</b-button>
+
+    <b-collapse id="advanced-search" class="">
+      <vue-query-builder
+        v-model="query"
+        :rules="rules"
+        :maxDepth="2"
+      >
+      </vue-query-builder>
+      <b-button variant="primary" @click="onQuerySearch">Search</b-button>
+    </b-collapse>
+  </div>
 </template>
 
 <script>
@@ -76,12 +72,6 @@ export default {
       return rule_set
     },
     filter_by_value() {
-      // OLD way
-      // return {
-      //   rules: [
-      //     ["all", "like", this.value]
-      //   ]
-      // }
       return {
         "op":"all",
         "queries":[
@@ -93,24 +83,16 @@ export default {
       return query_to_rules(this.query)
     }
   },
-  watch: {
-    value (newval, oldval) {
-      if (newval != oldval) {
-        this.$emit('change', this.filter_by_value)
-      }
-    },
-    query (newval, oldval) {
-      // For testing/debug purposes
-      console.debug('*** SEARCH QUERY ', JSON.stringify(newval) )
-    }
-  },
   methods: {
-    onSearchClear: function (event) {
-      this.value = null
-      this.$emit('change', null)
+    onSearch: function (event) {
+      this.$emit('change', this.filter_by_value)
     },
+    // onSearchClear: function (event) {
+    //   this.value = null
+    //   this.$emit('change', null)
+    // },
     onQuerySearch: function() {
-      console.debug('*** QUERY THIS ', JSON.stringify(this.filter_by_query) )
+      // console.debug('*** QUERY THIS ', JSON.stringify(this.filter_by_query) )
       this.$emit('change', this.filter_by_query)
     }
   }
