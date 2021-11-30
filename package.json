@@ -29,7 +29,8 @@
     "vue-query-builder": "^0.8",
     "vue-router": "^3.5.1",
     "vuedraggable": "^2.24.3",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "xlsx": "^0.17.4"
   },
   "version": "0.2.0",
   "devDependencies": {
@@ -57,13 +58,13 @@
     "postcss-loader": "3",
     "rails-erb-loader": "^5.5.2",
     "raw-loader": "3",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
     "style-loader": "1",
     "vue-loader": "^15.9.6",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.46.0",
-    "webpack-dev-server": "^3.11.2",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0"
+    "webpack-dev-server": "^3.11.2"
   },
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",

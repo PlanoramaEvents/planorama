@@ -51,6 +51,8 @@ gem 'jsonapi.rb'
 
 gem "nokogiri", ">= 1.12.5"
 
+gem 'truemail'
+
 # This is needed to run the migrations from id to uuid for primary keys
 gem 'webdack-uuid_migration'
 
