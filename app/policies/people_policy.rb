@@ -5,6 +5,10 @@ class PeoplePolicy < PlannerPolicy
     false
   end
 
+  def import?
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
   def assigned_surveys?
     return true if @record.class != Symbol && @record.id == @person.id
 

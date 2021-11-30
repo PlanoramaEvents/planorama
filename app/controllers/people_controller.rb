@@ -22,6 +22,8 @@ class PeopleController < ResourceController
 
   # email, name, pseudonym,
   def import
+    authorize current_person, policy_class: policy_class
+
     sheet = params[:sheet]
     ignore_first_line = params[:ignore_first_line] == 'true'
     count = 0
