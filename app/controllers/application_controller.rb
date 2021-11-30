@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   end
 
   def application_time_zone(&block)
-    app_time_zone = ENV['TIME_ZONE'] || 'Central Time (US & Canada)'
+    app_time_zone = ENV['TIME_ZONE'] || 'UTC'
 
     Time.use_zone(app_time_zone, &block)
   end

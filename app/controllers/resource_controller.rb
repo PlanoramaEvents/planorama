@@ -19,8 +19,9 @@ class ResourceController < ApplicationController
     render jsonapi_errors: [error], status: :not_found
   end
 
-  rescue_from ActiveRecord::ActiveRecordError, with: :database_error
-  def database_error(e)
+  rescue_from ActiveRecord::ActiveRecordError, with: :processing_error
+  rescue_from RuntimeError, with: :processing_error
+  def processing_error(e)
     Rails.logger.error e.message if Rails.env.development?
     Rails.logger.error e.backtrace.join("\n\t") if Rails.env.development?
 
@@ -32,6 +33,7 @@ class ResourceController < ApplicationController
   private
 
   def render_jsonapi_internal_server_error(exception)
+    # Rails.logger.error "**** INTERNAL ERROR #{exception.class}"
     Rails.logger.error exception.message if Rails.env.development?
     Rails.logger.error exception.backtrace.join("\n\t") if Rails.env.development?
     # NOTE: if we have a central log put it in here

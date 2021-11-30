@@ -332,6 +332,8 @@ GEM
       sidekiq (>= 3)
       thwait
       tilt (>= 1.4.0)
+    simpleidn (0.2.1)
+      unf (~> 0.1.4)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -348,11 +350,16 @@ GEM
     thwait (0.2.0)
       e2mmap
     tilt (2.0.10)
+    truemail (2.5.3)
+      simpleidn (~> 0.2.1)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.8)
     unicode-display_width (2.1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -423,6 +430,7 @@ DEPENDENCIES
   sidekiq-scheduler
   spring
   spring-watcher-listen (~> 2.0.0)
+  truemail
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)

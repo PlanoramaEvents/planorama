@@ -6,7 +6,11 @@
         <add-user></add-user>
       </admin-accordion>
       <admin-accordion id="import-users-accordion" title="Import Users">
-        <b-card-text>Import all the users!!!1!</b-card-text>
+        <!-- TODO - add people upload endpoint and title -->
+        <sheet-importer-vue
+          title="Import People"
+          import-url="/person/import"
+        ></sheet-importer-vue>
       </admin-accordion>
       <admin-accordion id="edit-roles-accordion" title="Edit Roles">
         <change-user-roles></change-user-roles>
@@ -51,6 +55,8 @@ import toastMixin from '../shared/toast-mixin';
 // import { InformationEthicsAgreement } from './agreement';
 // import { FETCH_IEA, SAVE_IEA } from './agreement.store';
 
+import SheetImporterVue from '../components/sheet_importer_vue.vue';
+
 const ADMIN_CONFIGS = (x) => ['event_email', 'event_phone'].includes(x)
 
 export default {
@@ -58,6 +64,7 @@ export default {
     AdminAccordion,
     AddUser,
     ChangeUserRoles,
+    SheetImporterVue
   },
   mixins: [toastMixin],
   name: 'AdminComponent',

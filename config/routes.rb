@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get 'session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
   get 'people/me', to: 'people#me'
+  post 'person/import', to: 'people#import'
   resources :people, path: 'person' do
     get 'person_roles', to: 'person_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
