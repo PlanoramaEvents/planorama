@@ -60,11 +60,9 @@ export const store = new Vuex.Store({
   },
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
-      console.debug('selecting', model, itemOrId);
       state.selected[model] = getId(itemOrId);
     },
     [UNSELECT] (state, {model}) {
-      console.debug('unselecting', model, '(was', state.selected[model], ')')
       state.selected[model] = undefined;
     },
     ...sessionStore.mutations,

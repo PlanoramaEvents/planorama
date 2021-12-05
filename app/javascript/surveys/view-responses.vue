@@ -4,9 +4,9 @@
     <p>There are <em>{{submissions.length}}</em> total responses.</p>
     <ul>
       <li v-for="submission of submissions" :key="submission.id">
-        {{new Date(submission.created_at).toLocaleString()}} by {{submission.person_id}}
+        {{new Date(submission.created_at).toLocaleString()}} by {{submission.submitter}}
         <ul v-if="getResponses(submission).length">
-          <li v-for="response of getResponses(submission)" :key="response.id">{{response.question_id}}: {{response.response.text || response.response.answers}}</li>
+          <li v-for="response of getResponses(submission)" :key="response.id">{{response.question_text}}: {{response.response.text || response.response.answers}}</li>
         </ul>
       </li>
     </ul>
