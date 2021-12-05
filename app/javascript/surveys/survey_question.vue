@@ -1,6 +1,6 @@
 <!-- CONVERTED? -->
 <template>
-  <div class="survey-question mt-3 pl-1" v-if="localResponse">
+  <div class="survey-question mt-3 pl-1" v-if="!!localResponse">
     <b-form-group
       v-if="!formatting && !address && !socialmedia"
     >
@@ -417,6 +417,7 @@ export default {
       this.createDummyResponse()
    } else {
       this.localResponse = this.getResponse(this.question, this.selectedSubmission)
+      console.log("*******************", this.localResponse)
    }
   },
   watch: {
@@ -428,6 +429,7 @@ export default {
     selectedSubmission(newVal) {
       if (newVal) {
         this.localResponse = this.getResponse(this.question, newVal)
+        console.log("*******************111111111", this.localResponse)
       }
     },
   }

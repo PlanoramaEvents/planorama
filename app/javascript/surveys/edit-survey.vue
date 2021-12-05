@@ -29,8 +29,7 @@
         </edit-survey-page>
       </b-tab>
       <b-tab title="Responses" :active="!!responses">
-        <p>There are <em>TODO GET THIS NUMBER</em> total responses.</p>
-        <p>Download responses: <a :href="downloadLink" :download="filename">{{filename}}</a></p>
+        <view-responses></view-responses>
       </b-tab>
       <survey-settings-tab></survey-settings-tab>
       <b-tab title="Audit Log" disabled>
@@ -48,6 +47,7 @@ import {
 }from '@mixins'
 import SurveySettingsTab from './survey-settings-tab.vue';
 import NotImplemented from '../shared/not-implemented.vue';
+import ViewResponses from './view-responses';
 
 export default {
   name: "EditSurvey",
@@ -61,14 +61,9 @@ export default {
     EditSurveyControls,
     SurveySettingsTab,
     NotImplemented,
+    ViewResponses
   },
   computed: {
-    downloadLink() {
-      return `/surveys/${this.survey?.id}/submissions.xlsx`
-    },
-    filename() {
-      return `survey_${this.survey?.id}_responses.xlsx`
-    },
   },
   methods: {
     back() {

@@ -9,6 +9,7 @@ export const UNSELECT = 'UNSELECT';
 
 export const SELECTED = 'SELECTED';
 export const FETCH_SELECTED = 'FETCH SELECTED';
+export const FETCH_BY_RELATIONSHIPS = 'FETCH BY RELATIONSHIPS';
 export const FETCH_BY_ID = 'FETCH BY ID'
 export const FETCH = 'FETCH';
 export const NEW = 'NEW';
@@ -59,9 +60,11 @@ export const store = new Vuex.Store({
   },
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
+      console.debug('selecting', model, itemOrId);
       state.selected[model] = getId(itemOrId);
     },
     [UNSELECT] (state, {model}) {
+      console.debug('unselecting', model, '(was', state.selected[model], ')')
       state.selected[model] = undefined;
     },
     ...sessionStore.mutations,
@@ -143,6 +146,12 @@ export const store = new Vuex.Store({
     },
     [FETCH] ({dispatch}, {model, params}) {
       return dispatch('jv/get', [endpoints[model], {params}])
+    },
+    [FETCH_BY_RELATIONSHIPS] ({dispatch}, {model, relationships, params}) { 
+      return dispatch('jv/get', [{_jv: {
+        type: model,
+        relationships,
+      }}, params])
     },
     [FETCH_SELECTED] ({state, dispatch}, {model}) {
       if (!state.selected[model]) {

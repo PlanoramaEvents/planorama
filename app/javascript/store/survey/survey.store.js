@@ -22,6 +22,9 @@ import {
 
 import { v4 as uuidv4 } from 'uuid';
 
+import { utils } from 'jsonapi-vuex';
+import { getId } from '@/utils';
+
 import { personModel } from '../person.store';
 
 
@@ -50,6 +53,28 @@ export const surveyStore = {
     [SET_PREVIEW_MODE](state, previewMode) {
       console.debug("previewMode", previewMode)
       state.previewMode = previewMode
+    },
+    [NEW_RESPONSE] (state, {relationships = {}}) {
+      let id = uuidv4();
+      let item = {
+        id,
+        response: {text: '', answers: [], address:{
+          street: null, street2: null, city: null,
+          state: null, zip: null, country: null
+        }, socialmedia: {
+          twitter: null, facebook: null, linkedin: null,
+          twitch: null, youtube: null, instagram: null,
+          tiktok: null, other: null, website: null
+        }},
+        _jv: {
+          id,
+          relationships,
+          type: responseModel
+        }
+      };
+      utils.updateRecords(state.jv, {[id]: item})
+      console.log(item);
+      return item;
     }
   },
   actions: {
@@ -190,25 +215,5 @@ export const surveyStore = {
       }
       return dispatch(NEW, {model: questionModel, selected: true, relationships, ...newQuestion})
     },
-    [NEW_RESPONSE] ({commit}, {relationships = {}}) {
-      let id = uuidv4();
-      let item = {
-        id,
-        response: {text: '', answers: [], address:{
-          street: null, street2: null, city: null,
-          state: null, zip: null, country: null
-        }, socialmedia: {
-          twitter: null, facebook: null, linkedin: null,
-          twitch: null, youtube: null, instagram: null,
-          tiktok: null, other: null, website: null
-        }},
-        _jv: {
-          id,
-          relationships,
-          type: responseModel
-        }
-      };
-      return commit('jv/addRecords', item)
-    }
   }
 }
