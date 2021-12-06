@@ -1,7 +1,7 @@
 <template>
   <div>
     <modal-form
-      title="FFFF"
+      title="Add Person"
       ref="add-person-modal"
     >
       <person-add
