@@ -1,9 +1,9 @@
-<template>
+<!-- <template>
 <div>
   <table-vue defaultSortBy="name" model="survey" :columns="columns"></table-vue>
   <sidebar-vue model="survey"></sidebar-vue>
 </div>
-  
+
 </template>
 
 <script>
@@ -25,4 +25,4 @@ export default {
 
 <style>
 
-</style>
+</style> -->

@@ -22,7 +22,7 @@ export default {
   }
 }
 .truncated-span {
-  max-width: 20rem;
+  max-width: 15rem;
   display: inline-block;
 }
 </style>
