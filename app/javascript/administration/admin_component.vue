@@ -3,10 +3,10 @@
     <h1>Admin stuff goes here.  <b-icon-minecart-loaded></b-icon-minecart-loaded></h1>
     <div class="accordion" role="tablist">
       <admin-accordion id="add-user-accordion" title="Add User">
-        <add-user></add-user>
+        <person-add></person-add>
       </admin-accordion>
       <admin-accordion id="import-users-accordion" title="Import Users">
-        <!-- TODO - add people upload endpoint and title -->
+        <!-- TODO - make this inline -->
         <sheet-importer-vue
           title="Import People"
           import-url="/person/import"
@@ -49,7 +49,7 @@ import AdminAccordion from './admin_accordion.vue'
 import { mapActions, mapState } from 'vuex';
 import { SAVE, UPDATED } from '../store/model.store';
 // import { Configuration } from './configurations';
-import AddUser from './add-user.vue';
+import PersonAdd from '../people/person_add.vue';
 import ChangeUserRoles from './change-user-roles';
 import toastMixin from '../shared/toast-mixin';
 // import { InformationEthicsAgreement } from './agreement';
@@ -62,7 +62,7 @@ const ADMIN_CONFIGS = (x) => ['event_email', 'event_phone'].includes(x)
 export default {
   components: {
     AdminAccordion,
-    AddUser,
+    PersonAdd,
     ChangeUserRoles,
     SheetImporterVue
   },
