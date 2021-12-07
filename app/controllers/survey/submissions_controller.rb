@@ -51,7 +51,12 @@ class Survey::SubmissionsController < ResourceController
   end
 
   def includes
-    serializer_includes
+    [
+      :person,
+      responses: [
+        :question
+      ]
+    ]
   end
 
   def delete_all
