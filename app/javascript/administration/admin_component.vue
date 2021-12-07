@@ -6,7 +6,6 @@
         <person-add></person-add>
       </admin-accordion>
       <admin-accordion id="import-users-accordion" title="Import Users">
-        <!-- TODO - make this inline -->
         <sheet-importer-vue
           title="Import People"
           import-url="/person/import"
@@ -14,6 +13,9 @@
       </admin-accordion>
       <admin-accordion id="edit-roles-accordion" title="Edit Roles">
         <change-user-roles></change-user-roles>
+      </admin-accordion>
+      <admin-accordion id="mailings-accordion" title="Mailings">
+        <mailings-manager></mailings-manager>
       </admin-accordion>
       <admin-accordion id="event-settings-accordion" title="Event Settings" :dirty="event_settings_dirty">
         <b-form-group
@@ -54,6 +56,7 @@ import ChangeUserRoles from './change-user-roles';
 import toastMixin from '../shared/toast-mixin';
 // import { InformationEthicsAgreement } from './agreement';
 // import { FETCH_IEA, SAVE_IEA } from './agreement.store';
+import MailingsManager from '../mailings/mailings_manager';
 
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
 
@@ -64,7 +67,8 @@ export default {
     AdminAccordion,
     PersonAdd,
     ChangeUserRoles,
-    SheetImporterVue
+    SheetImporterVue,
+    MailingsManager
   },
   mixins: [toastMixin],
   name: 'AdminComponent',
