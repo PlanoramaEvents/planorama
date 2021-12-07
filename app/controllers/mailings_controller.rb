@@ -2,6 +2,18 @@ class MailingsController < ResourceController
   SERIALIZER_CLASS = 'MailingSerializer'.freeze
   POLICY_CLASS = 'MailingsPolicy'.freeze
 
+  def serializer_includes
+    [
+      :mail_template
+    ]
+  end
+
+  def includes
+    [
+      :mail_template
+    ]
+  end
+
   # before check
   def before_save
     check_editable(mailing: @object)
@@ -52,8 +64,8 @@ class MailingsController < ResourceController
     authorize current_person, policy_class: policy_class
 
     # Only schedule a mailing that is not already scheduled
-    if !mailing.scheduled
-      mailing.scheduled = true
+    if mailing.mailing_state == Mailing.mailing_states[:draft]
+      mailing.mailing_state == Mailing.mailing_states[:submitted]
       mailing.last_person_idx = -1
       mailing.save!
 

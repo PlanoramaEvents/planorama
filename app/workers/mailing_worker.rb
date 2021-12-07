@@ -3,11 +3,12 @@ class MailingWorker
   # sidekiq_options retry: true
 
   def perform(mailing_id, send_test: false, test_address: nil, test_person_id: nil)
-    Sidekiq.logger.info "****** Starting mailing for #{mailing_id}"
+    # Sidekiq.logger.info "****** Starting mailing for #{mailing_id}"
     mailing = Mailing.find mailing_id
 
     mailing.with_lock do
-      return unless mailing.scheduled # Check just in case this is a dup
+      # TODO
+      return unless mailing.mailing_state == Mailing.mailing_states[:submitted] # Check just in case this is a dup
 
       last_person_index = mailing.last_person_idx
       mailing.people.each_with_index do |person, idx|
@@ -17,7 +18,6 @@ class MailingWorker
           MailService.send_mailing(
             person: person,
             mailing: mailing,
-            # base_url
             #   test_address: nil,
             #   send_test: false
           )
@@ -36,7 +36,8 @@ class MailingWorker
       end
 
       # When the mailing is done mark the mailing as completed, by "unscheduling"
-      mailing.scheduled = false
+      mailing.mailing_state = Mailing.mailing_states[:sent] unless sent_test
+      mailing.mailing_state = Mailing.mailing_states[:draft] if send_test
       mailing.save
       Sidekiq.logger.info "Mailing '#{mailing.display_name} - #{mailing.id}' has finished sending and is now 'unscheduled'" if Sidekiq.logger
 

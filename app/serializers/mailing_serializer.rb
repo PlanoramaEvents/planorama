@@ -2,7 +2,8 @@ class MailingSerializer
   include JSONAPI::Serializer
 
   attributes :id, :lock_version, :created_at, :updated_at,
-             :scheduled, :testrun, :include_email, :cc_all,
+             :testrun, :include_email, :cc_all,
+             :mailing_state, :title,
              :mail_template_id, :last_person_idx
 
   belongs_to :mail_template,

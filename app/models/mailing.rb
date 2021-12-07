@@ -7,28 +7,14 @@ class Mailing < ApplicationRecord
 
   has_one  :survey, through: :mail_template
 
-  # validate :number_and_mail_use_unique
+  enum mailing_state: {
+    draft: 'draft',
+    submitted: 'submitted',
+    sent: 'sent'
+  }
 
   def date_sent
     mail_histories.any? ? mail_histories.pluck(:date_sent).last : nil
-  end
-
-  # Make sure that the combination of number and mail_use_id is unique
-  # def number_and_mail_use_unique
-  #   Mailing.references(:mail_template)
-  #          .includes(:mail_template)
-  #          .where(
-  #            [
-  #              'mailing_number = ? AND mail_templates.mail_use_id = ?',
-  #              mailing_number, mail_template.mail_use_id
-  #            ]
-  #          ).first
-  #
-  #   errors.add(:mailing_number, 'Unique-mailing-error') if m != nil && m.id != id
-  # end
-
-  def title
-    mail_template ? mail_template.title : nil
   end
 
   def subject

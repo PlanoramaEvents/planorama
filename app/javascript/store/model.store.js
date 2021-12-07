@@ -22,6 +22,9 @@ export const PATCH_FIELDS = 'PATCH FIELDS';
 // people add-ons
 import { personStore, personEndpoints } from './person.store';
 
+// mailings
+import { mailingStore, mailingEndpoints } from './mailing.store';
+
 // session add-ons
 import { sessionStore } from './session.store';
 
@@ -31,6 +34,7 @@ import { surveyStore, surveyEndpoints } from './survey/survey.store';
 const endpoints = {
   ...personEndpoints,
   ...surveyEndpoints,
+  ...mailingEndpoints
 }
 
 // NOTE: this is really the store
@@ -43,9 +47,11 @@ export const store = new Vuex.Store({
     selected: {
       ...personStore.selected,
       ...surveyStore.selected,
+      ...mailingStore.selected
     },
     ...sessionStore.state,
     ...surveyStore.state,
+    // ...mailingStore.state
   },
   getters: {
     [SELECTED] (state, getters) {
@@ -57,6 +63,7 @@ export const store = new Vuex.Store({
     ...personStore.getters,
     ...surveyStore.getters,
     ...sessionStore.getters,
+    ...mailingStore.getters
   },
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
@@ -145,7 +152,7 @@ export const store = new Vuex.Store({
     [FETCH] ({dispatch}, {model, params}) {
       return dispatch('jv/get', [endpoints[model], {params}])
     },
-    [FETCH_BY_RELATIONSHIPS] ({dispatch}, {model, relationships, params}) { 
+    [FETCH_BY_RELATIONSHIPS] ({dispatch}, {model, relationships, params}) {
       return dispatch('jv/get', [{_jv: {
         type: model,
         relationships,
@@ -185,5 +192,6 @@ export const store = new Vuex.Store({
     ...sessionStore.actions,
     ...surveyStore.actions,
     ...personStore.actions,
+    ...mailingStore.actions
   }
 })

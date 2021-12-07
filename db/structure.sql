@@ -95,6 +95,17 @@ CREATE TYPE public.mail_use_enum AS ENUM (
 
 
 --
+-- Name: mailing_state_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.mailing_state_enum AS ENUM (
+    'draft',
+    'submitted',
+    'sent'
+);
+
+
+--
 -- Name: next_page_action_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -392,7 +403,6 @@ CREATE TABLE public.mail_histories (
 
 CREATE TABLE public.mail_templates (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    title character varying DEFAULT ''::character varying,
     subject character varying DEFAULT ''::character varying,
     content text,
     survey_id uuid,
@@ -410,16 +420,16 @@ CREATE TABLE public.mail_templates (
 
 CREATE TABLE public.mailings (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    mailing_number integer,
     mail_template_id uuid,
-    scheduled boolean,
     testrun boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     last_person_idx integer DEFAULT '-1'::integer,
     include_email boolean DEFAULT true,
-    cc_all boolean DEFAULT false
+    cc_all boolean DEFAULT false,
+    mailing_state public.mailing_state_enum DEFAULT 'draft'::public.mailing_state_enum,
+    title character varying
 );
 
 
@@ -1507,6 +1517,13 @@ CREATE INDEX index_magic_links_on_person_id ON public.magic_links USING btree (p
 
 
 --
+-- Name: index_mailings_on_mailing_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mailings_on_mailing_state ON public.mailings USING btree (mailing_state);
+
+
+--
 -- Name: index_people_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1919,6 +1936,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211103212755'),
 ('20211105155118'),
 ('20211114155546'),
-('20211114191042');
+('20211114191042'),
+('20211207192534'),
+('20211207192624');
 
 
