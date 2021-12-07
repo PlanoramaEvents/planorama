@@ -5,7 +5,7 @@
 ## Configuration
 
 Rails 6.x
-Vue.js and vue-mc
+Vue.js
 
 ### Devise
 We are using encrypted secrets for now. For dev please request key file.
