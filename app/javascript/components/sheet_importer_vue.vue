@@ -1,40 +1,33 @@
 <template>
   <div>
-    <b-button v-b-modal.sheet-import-modal>{{title}}</b-button>
-    <b-modal
-      id="sheet-import-modal" size="xl"
-      :title="title"
-      @show='showModal'
-      @ok='submitData'
+    <label>File
+      <input
+        type="file"
+        id="files"
+        ref="files"
+        v-on:change="handleFilesUpload()"
+      />
+    </label>
+    <b-form-checkbox
+      v-model="ignoreFirstLine"
+      value="true"
+      unchecked-value="false"
     >
-      <b-alert variant="danger" show v-if="errorMessage">
-        {{ errorMessage }}
-      </b-alert>
-      <label>File
-        <input
-          type="file"
-          id="files"
-          ref="files"
-          v-on:change="handleFilesUpload()"
-        />
-      </label>
-      <b-form-checkbox
-        v-model="ignoreFirstLine"
-        value="true"
-        unchecked-value="false"
+      Ignore the first line.
+    </b-form-checkbox>
+    <div>
+      <b-table
+        striped
+        sticky-header
+        thead-class="hidden_header"
+        :items="sheetData"
       >
-        Ignore the first line.
-      </b-form-checkbox>
-      <div>
-        <b-table
-          striped
-          sticky-header
-          thead-class="hidden_header"
-          :items="sheetData"
-        >
-        </b-table>
-      </div>
-    </b-modal>
+      </b-table>
+    </div>
+    <div class="d-flex justify-content-end">
+      <b-button variant="link" @click="clear">Cancel</b-button>
+      <b-button variant="primary" @click="submitData">Save</b-button>
+    </div>
   </div>
 </template>
 
@@ -58,7 +51,7 @@
       }
     },
     methods: {
-      showModal() {
+      clear() {
         // reset on re-show
         this.file = this.sheetData = this.errorMessage = null
         this.ignoreFirstLine = false
