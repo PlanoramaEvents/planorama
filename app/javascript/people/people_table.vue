@@ -11,7 +11,7 @@
     <table-vue
       @new="onNew"
       defaultSortBy='name'
-      model="person"
+      :model="model"
       :columns="columns"
     >
       <template #cell(primary_email)="{ item }">
@@ -38,7 +38,8 @@ import TableVue from '../components/table_vue';
 import ModalForm from '../components/modal_form';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import PersonAdd from '../people/person_add.vue';
-import { people_columns } from './people';
+import { people_columns as columns } from './people';
+import { personModel as model } from '@/store/person.store'
 
 export default {
   name: 'PeopleTable',
@@ -48,11 +49,10 @@ export default {
     ModalForm,
     PersonAdd
   },
-  data() {
-    return {
-      columns: people_columns
-    }
-  },
+  data: () => ({
+    columns,
+    model
+  }),
   methods: {
     onNew() {
       this.$refs['add-person-modal'].showModal()

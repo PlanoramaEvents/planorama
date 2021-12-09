@@ -1,7 +1,12 @@
-import { SELECTED, SELECT, UNSELECT, FETCH } from "./model.store";
+import { SELECTED, SELECT, UNSELECT, FETCH, PATCH_FIELDS, SAVE } from "./model.store";
 import { mapActions } from 'vuex';
+import { toastMixin } from "@/mixins";
+import { SAVE_SUCCESS } from "@/constants/strings";
 
 export const modelMixin = {
+  mixins: [
+    toastMixin
+  ],
   props: {
     model: {
       type: String,
@@ -31,7 +36,10 @@ export const modelMixin = {
       return this.$store.dispatch(FETCH, {model: this.model, params});
     },
     saveSelected() {
-      return this.$store.dispatch(SAVE, {model: this.model, item: this.selected})
+      return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, item: this.selected}), SAVE_SUCCESS(this.model));
+    },
+    patchSelected(data) {
+      return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model: this.model, item: {...this.selected, ...data}, fields: Object.keys(data), selected: false}), SAVE_SUCCESS(this.model));
     }
   }
 }

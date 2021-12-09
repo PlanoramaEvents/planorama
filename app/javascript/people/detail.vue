@@ -97,11 +97,6 @@
             :disabled="!editable"></b-form-input>
         </b-form-group>
 
-        <b-form-group
-          label="Comments"
-        >
-          <b-form-textarea v-model="selected.comments" :disabled="!editable"></b-form-textarea>
-        </b-form-group>
         <h2>Bio</h2>
         <bio :bio="selected.bio"></bio>
         <h2>Email Addresses</h2>
@@ -119,7 +114,6 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
-import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import Bio from './bio';
 
 export default {

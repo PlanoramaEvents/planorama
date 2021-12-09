@@ -36,4 +36,5 @@ module.exports = {
     QUESTION_SAVE_SUCCESS: "Gail should not write copy also queston saved",
     ANSWER_ORDER_SAVE_SUCCESS: "Gail should not write copy also answer order saved",
     ANSWER_SAVE_SUCCESS: "Gail should not write copy also answer saved",
+    SAVE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} saved.`
 }
