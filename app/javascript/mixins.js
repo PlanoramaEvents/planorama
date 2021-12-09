@@ -1,5 +1,5 @@
 export { toastMixin } from './shared/toast-mixin';
-export { modelMixin } from './store/model.mixin';
+export * from './store/model.mixin';
 export { sessionMixin } from './session/session.mixin';
 export { surveyMixin } from './surveys/survey.mixin';
 export { pageMixin } from './surveys/page.mixin';

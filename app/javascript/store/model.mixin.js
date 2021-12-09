@@ -44,6 +44,41 @@ export const modelMixin = {
   }
 }
 
+/**
+ * Returns a mixin that provides a mirrored copy of the given field in
+ * currently selected model, which updates when the selected
+ * model updates.
+ *
+ * Provides:
+ * data: { [field]: null }
+ * mounted & watch on selected[field]
+ *
+ *  See people/people_admin_tab.vue for a good example
+ *
+ * @param {string} field
+ * @returns The field mixin.
+ */
+export const makeSelectedFieldMixin = (field) => ({
+  mixins: [
+    modelMixin
+  ],
+  data: () => ({
+    [field]: null
+  }),
+  mounted() {
+    if (this.selected) {
+      this[field] = this.selected[field];
+    }
+  },
+  watch: {
+    selected(newVal, oldVal) {
+      if (newVal && (!oldVal || oldVal[field] !== newVal[field])) {
+        this[field] = newVal[field];
+      }
+    }
+  }
+})
+
 /* obsolete
 const mapStateHelper = (mapState) => {
   let states = mapState;

@@ -15,28 +15,15 @@
 </template>
 
 <script>
-import { modelMixin } from '@mixins'
+import { modelMixin, makeSelectedFieldMixin } from '@/mixins'
+const commentsMixin = makeSelectedFieldMixin('comments');
 
 export default {
   name: 'PeopleAdminTab',
   mixins: [
-    modelMixin
-  ],
-  data: () => ({
-    comments: ""
-  }),
-  mounted() {
-    if(this.selected) {
-      this.comments = this.selected.comments;
-    }
-  },
-  watch: {
-    selected(newVal, oldVal) {
-      if(newVal && (!oldVal || oldVal.comments !== newVal.comments)) {
-        this.comments = newVal.comments;
-      }
-    }
-  }
+    modelMixin,
+    commentsMixin
+  ]
 }
 </script>
 
