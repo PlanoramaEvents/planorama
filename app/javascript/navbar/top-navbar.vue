@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12">
+  <div class="col-12 px-0">
     <b-navbar toggleable="lg" type="light" class="align-items-baseline">
       <b-navbar-brand to="/">Planorama</b-navbar-brand>
       <b-navbar-nav class="ml-auto">

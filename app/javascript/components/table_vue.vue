@@ -77,7 +77,6 @@
 <script>
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
-import { personModel } from '../store/person.store';
 import SearchVue from './search_vue'
 export default {
   name: 'TableVue',
@@ -98,7 +97,9 @@ export default {
   },
   methods: {
     onRowSelected(items) {
-      this.select(items[0]);
+      if (items[0]) {
+        this.select(items[0]);
+      }
     },
     onSortChanged(ctx) {
       this.sortBy = ctx.sortBy;

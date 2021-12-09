@@ -99,11 +99,15 @@ export const router = new VueRouter({
       }
     },
     {
-      path: '',
+      path: '/dashboard',
       component: Dashboard,
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '',
+      redirect: '/dashboard'
     }
   ]
 });

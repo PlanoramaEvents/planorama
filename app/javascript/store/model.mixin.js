@@ -1,7 +1,12 @@
-import { SELECTED, SELECT, UNSELECT, FETCH, SEARCH } from "./model.store";
+import { SELECTED, SELECT, UNSELECT, FETCH, SEARCH, PATCH_FIELDS, SAVE } from "./model.store";
 import { mapActions } from 'vuex';
+import { toastMixin } from "@/mixins";
+import { SAVE_SUCCESS } from "@/constants/strings";
 
 export const modelMixin = {
+  mixins: [
+    toastMixin
+  ],
   props: {
     model: {
       type: String,
@@ -35,10 +40,48 @@ export const modelMixin = {
       return this.$store.dispatch(SEARCH, {model: this.model, params});
     },
     saveSelected() {
-      return this.$store.dispatch(SAVE, {model: this.model, item: this.selected})
+      return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, item: this.selected}), SAVE_SUCCESS(this.model));
+    },
+    patchSelected(data) {
+      return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model: this.model, item: {...this.selected, ...data}, fields: Object.keys(data), selected: false}), SAVE_SUCCESS(this.model));
     }
   }
 }
+
+/**
+ * Returns a mixin that provides a mirrored copy of the given field in
+ * currently selected model, which updates when the selected
+ * model updates.
+ *
+ * Provides:
+ * data: { [field]: null }
+ * mounted & watch on selected[field]
+ *
+ *  See people/people_admin_tab.vue for a good example
+ *
+ * @param {string} field
+ * @returns The field mixin.
+ */
+export const makeSelectedFieldMixin = (field) => ({
+  mixins: [
+    modelMixin
+  ],
+  data: () => ({
+    [field]: null
+  }),
+  mounted() {
+    if (this.selected) {
+      this[field] = this.selected[field];
+    }
+  },
+  watch: {
+    selected(newVal, oldVal) {
+      if (newVal && (!oldVal || oldVal[field] !== newVal[field])) {
+        this[field] = newVal[field];
+      }
+    }
+  }
+})
 
 /* obsolete
 const mapStateHelper = (mapState) => {

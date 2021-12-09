@@ -24,7 +24,7 @@
 
 <script>
 import SidebarVue from '../components/sidebar_vue';
-import {sessionMixin, modelMixin} from '@mixins';
+import {sessionMixin, modelMixin} from '@/mixins';
 import Detail from './detail.vue';
 import PeopleAdminTab from './people_admin_tab';
 import PeopleSurveysTab from './people_surveys_tab';
