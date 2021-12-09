@@ -96,7 +96,7 @@ export default {
       return `/surveys/edit/${this.survey.id}`;
     },
     responsesLink() {
-      return `/surveys/${this.editLink}/responses`;
+      return `${this.editLink}/responses`;
     },
     surveyLink() {
       return `/#/surveys/${this.survey.id}`;

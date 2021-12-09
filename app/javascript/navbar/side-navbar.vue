@@ -1,5 +1,5 @@
 <template>
-  <div id="side-navbar" class="col-12 col-sm-3 col-xl-2">
+  <div id="side-navbar" class="col-12 col-sm-3 col-xl-2 pl-0">
     <b-nav vertical>
       <b-nav-item to="/" active-class="active"><b-icon-pie-chart-fill class="mr-2"></b-icon-pie-chart-fill>Dashboard</b-nav-item>
       <b-nav-item to="/venues" active-class="active"><b-icon-building class="mr-2"></b-icon-building>Venues</b-nav-item>

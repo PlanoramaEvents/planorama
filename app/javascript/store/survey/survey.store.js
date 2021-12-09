@@ -122,10 +122,10 @@ export const surveyStore = {
         sort_order_position: insertAt,
         relationships: {
           page: {
-            data: [{
+            data: {
               type: pageModel,
               id: pageId
-            }]
+            }
           }
         }
       };
