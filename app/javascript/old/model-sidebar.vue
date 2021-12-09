@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <sidebar-vuex v-bind="{namespace}">
     <template #header v-if="selected">
       <h1 class="title">{{ selected[titleField] || selected[Object.keys(fields)[0]] }}</h1>
@@ -66,4 +66,4 @@ export default {
     },
   },
 }
-</script>
+</script> -->
