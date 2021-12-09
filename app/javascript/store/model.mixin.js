@@ -1,4 +1,4 @@
-import { SELECTED, SELECT, UNSELECT, FETCH } from "./model.store";
+import { SELECTED, SELECT, UNSELECT, FETCH, SEARCH } from "./model.store";
 import { mapActions } from 'vuex';
 
 export const modelMixin = {
@@ -18,6 +18,7 @@ export const modelMixin = {
   },
   methods: {
     ...mapActions('jv', ['get']),
+    ...mapActions('jv', ['search']),
     select(itemOrId) {
       this.$store.commit(SELECT, {model: this.model, itemOrId});
     },
@@ -29,6 +30,9 @@ export const modelMixin = {
     },
     fetch(params) {
       return this.$store.dispatch(FETCH, {model: this.model, params});
+    },
+    search(params) {
+      return this.$store.dispatch(SEARCH, {model: this.model, params});
     },
     saveSelected() {
       return this.$store.dispatch(SAVE, {model: this.model, item: this.selected})

@@ -15,7 +15,9 @@
         <change-user-roles></change-user-roles>
       </admin-accordion>
       <admin-accordion id="mailings-accordion" title="Mailings">
-        <mailings-manager></mailings-manager>
+        <mailings-manager
+          model="person"
+        ></mailings-manager>
       </admin-accordion>
       <admin-accordion id="event-settings-accordion" title="Event Settings" :dirty="event_settings_dirty">
         <b-form-group

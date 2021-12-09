@@ -30,7 +30,7 @@
 
 <script>
 import { createNamespacedHelpers, mapMutations } from 'vuex';
-import { UNSELECT } from './model.store';
+import { UNSELECT } from './store/model.store';
 import namespacedMixin from './namespaced.mixin';
 
 export default {

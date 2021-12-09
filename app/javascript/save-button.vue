@@ -4,7 +4,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import { SAVE } from './model.store'
+import { SAVE } from './store/model.store'
 
 export default {
   name: 'SaveButton',

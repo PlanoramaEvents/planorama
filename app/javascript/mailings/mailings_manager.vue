@@ -1,15 +1,18 @@
 <template>
   <div>
-    HERE
+    <b-form-select
+      v-model="theone"
+      :options="options"
+      :select-size="4"
+    ></b-form-select>
   </div>
 </template>
 
 <script>
 import toastMixin from '../shared/toast-mixin';
-// import eventBus from '../utils/event_bus'
-
-// import { mapActions } from 'vuex';
-// import { NEW_PERSON } from '../store/person.store';
+import modelMixin from '../store/model.mixin';
+// TODO: change
+import { personModel as model } from '../store/person.store';
 
 export default {
   name: "MailingsManager",
@@ -18,19 +21,13 @@ export default {
     // EmailField,
   },
   mixins: [
+    modelMixin,
     toastMixin
   ],
   data: () =>  ({
-    // // This is minimal JSON for a new Person entity
-    // person: {
-    //   name: '',
-    //   email_addresses_attributes: [
-    //     {
-    //       isdefault: true,
-    //       email: ''
-    //     }
-    //   ]
-    // },
+    // model,
+    theone: null,
+    options: []
   }),
   props: {
     // showButtons: {
@@ -39,54 +36,27 @@ export default {
     // }
   },
   computed: {
-    // email: {
-    //   get() {
-    //     return this.person.email_addresses_attributes && this.person.email_addresses_attributes[0]?.email;
-    //   },
-    //   set(val) {
-    //     this.person.email_addresses_attributes = [{email: val, isdefault: true}];
-    //   }
-    // }
   },
   methods: {
-    // ...mapActions({newPersonAction: NEW_PERSON}),
-    // clear() {
-    //   this.person.name = '';
-    //   this.person.email_addresses_attributes = [{email: '', isdefault: true}];
-    // },
-    // onSave() {
-    //   let res = this.newPersonAction(this.person);
-    //   res.then(
-    //     (obj) => {
-    //       this.$bvToast.toast(
-    //         ADMIN_ADD_USER_SUCCESS(obj.name),
-    //         {
-    //           variant: 'success',
-    //           title: 'Person Created'
-    //         }
-    //       )
-    //       this.clear()
-    //     }
-    //   ).catch(
-    //     (err) => {
-    //       this.$bvToast.toast(
-    //         err.response.data.errors[0].title,
-    //         {
-    //           variant: 'danger',
-    //           title: err.response.data.errors[0].title
-    //         }
-    //       )
-    //     }
-    //   );
-    // }
-  // },
-  // mounted() {
-  //   eventBus.$on(
-  //     'submit-inner-form',
-  //     () => {
-  //       this.onSave()
-  //     }
-  //   )
+    init() {
+      this.search({})
+        .then(data => {
+          console.debug("**** THE DATA IS", data)
+          this.options = [
+            { value: null, text: 'Please select some item' },
+            { value: 'a', text: 'This is option a' },
+            { value: 'b', text: 'Default Selected Option b' },
+            { value: 'c', text: 'This is option c' },
+            { value: 'd', text: 'This one is disabled', disabled: true },
+            { value: 'e', text: 'This is option e' },
+            { value: 'e', text: 'This is option f' }
+          ]
+        })
+    }
+    // TODO: need edit/select?
+  },
+  mounted() {
+    this.init()
   }
 }
 </script>

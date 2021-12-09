@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { SELECT } from './model.store';
+import { SELECT } from './store/model.store';
 import namespacedMixin from './namespaced.mixin';
 
 export default {

@@ -28,7 +28,7 @@ ISSUE - template links don't work
 </template>
 
 <script>
-import { SAVE } from '../model.store';
+import { SAVE } from '../store/model.store';
 import TableVue from '../components/table_vue';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import { survey_columns as columns } from './survey';

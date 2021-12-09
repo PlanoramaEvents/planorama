@@ -15,6 +15,7 @@ export const FETCH = 'FETCH';
 export const NEW = 'NEW';
 export const SAVE = 'SAVE';
 export const DELETE = 'DELETE';
+export const SEARCH = 'SEARCH';
 
 export const PATCH_RELATED = 'PATCH RELATED';
 export const PATCH_FIELDS = 'PATCH FIELDS';
@@ -148,6 +149,9 @@ export const store = new Vuex.Store({
           res(data)
         }).catch(rej)
       })
+    },
+    [SEARCH] ({dispatch}, {model, params}) {
+      return dispatch('jv/search', [endpoints[model], {params}])
     },
     [FETCH] ({dispatch}, {model, params}) {
       return dispatch('jv/get', [endpoints[model], {params}])
