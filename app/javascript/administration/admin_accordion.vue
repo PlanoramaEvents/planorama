@@ -10,7 +10,7 @@
         <span class="float-right when-open"><b-icon-caret-up-fill></b-icon-caret-up-fill></span>
       </b-button>
     </b-card-header>
-    <b-collapse :id="id" accordion="admin-accordion" role="tabpanel">
+    <b-collapse :id="id" accordion="admin-accordion" role="tabpanel" @show="show">
       <b-card-body>
         <slot></slot>
       </b-card-body>
@@ -32,6 +32,11 @@ export default {
     dirty: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    show(ev) {
+      this.$emit('show', ev)
     }
   }
 }

@@ -1,62 +1,56 @@
 <template>
   <div>
-    <b-form-select
-      v-model="theone"
-      :options="options"
-      :select-size="4"
-    ></b-form-select>
+    <combo-box
+      :options='options'
+      v-bind:select-size="4"
+    ></combo-box>
   </div>
 </template>
 
 <script>
-import toastMixin from '../shared/toast-mixin';
+import ComboBox from '../components/combo_box';
 import modelMixin from '../store/model.mixin';
-// TODO: change
-import { personModel as model } from '../store/person.store';
 
 export default {
   name: "MailingsManager",
   components: {
-    // ModelField,
-    // EmailField,
+    ComboBox
+  },
+  data () {
+    return {
+      options: [],
+      data: []
+    }
+  },
+  props: {
+    attribute: String
   },
   mixins: [
-    modelMixin,
-    toastMixin
+    modelMixin
   ],
-  data: () =>  ({
-    // model,
-    theone: null,
-    options: []
-  }),
-  props: {
-    // showButtons: {
-    //   default: true,
-    //   tyep: Boolean
-    // }
-  },
-  computed: {
+  watch: {
+    data(newVal, oldVal) {
+      if (newVal) {
+        this.options = Object.values(newVal).filter(
+          obj => (typeof obj.json === 'undefined')
+        ).map(
+          obj => (
+            {
+              value: obj.id,
+              text: obj[this.attribute]
+            }
+          )
+        )
+      } else {
+        this.options = []
+      }
+    }
   },
   methods: {
     init() {
-      this.search({})
-        .then(data => {
-          console.debug("**** THE DATA IS", data)
-          this.options = [
-            { value: null, text: 'Please select some item' },
-            { value: 'a', text: 'This is option a' },
-            { value: 'b', text: 'Default Selected Option b' },
-            { value: 'c', text: 'This is option c' },
-            { value: 'd', text: 'This one is disabled', disabled: true },
-            { value: 'e', text: 'This is option e' },
-            { value: 'e', text: 'This is option f' }
-          ]
-        })
+      // TODO: optimize by putting in field filter
+      this.search({}).then(data => {this.data = data})
     }
-    // TODO: need edit/select?
-  },
-  mounted() {
-    this.init()
   }
 }
 </script>

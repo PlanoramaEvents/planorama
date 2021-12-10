@@ -14,9 +14,11 @@
       <admin-accordion id="edit-roles-accordion" title="Edit Roles">
         <change-user-roles></change-user-roles>
       </admin-accordion>
-      <admin-accordion id="mailings-accordion" title="Mailings">
+      <admin-accordion id="mailings-accordion" title="Mailings" @show="showMailings">
         <mailings-manager
+          attribute='name'
           model="person"
+          ref="mailing-manager"
         ></mailings-manager>
       </admin-accordion>
       <admin-accordion id="event-settings-accordion" title="Event Settings" :dirty="event_settings_dirty">
@@ -96,6 +98,9 @@ export default {
     //   fetchIea: FETCH_IEA,
     //   saveIea: SAVE_IEA
     // }),
+    showMailings() {
+      this.$refs['mailing-manager'].init()
+    },
     cancel() {
       // this.configuration.reset(ADMIN_CONFIGS);
       // this.information_ethics.reset();
