@@ -32,6 +32,6 @@ class Mailing < ApplicationRecord
   def display_name
     title_part = "[#{title}]" if title.present? && title != subject
     subject_part = subject || 'No Subject'
-    [title_part, subject_part].join(' ')
+    [title_part, subject_part].join(' ').strip
   end
 end

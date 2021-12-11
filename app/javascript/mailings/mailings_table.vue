@@ -5,6 +5,11 @@
       :model="model"
       :columns="columns"
     >
+      <template #cell(content)="{ item }">
+        <tooltip-overflow :title="item.content">
+          {{item.content}}
+        </tooltip-overflow>
+      </template>
     </table-vue>
   </div>
 </template>

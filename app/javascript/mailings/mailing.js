@@ -1,27 +1,30 @@
 export const mailing_columns = [
   {
-    key: 'title',
-    label: 'Title',
+    key: 'display_name',
+    label: 'Name',
     type: "text",
     sortable: true,
-    // sortKey: 'published_name_sort_by',
-    // stickyColumn: true,
   },
   {
-    key: 'Status',
-    label: 'mailing_state',
+    key: 'mailing_state',
+    label: 'Status',
     type: "text",
-    // sortable: true,
-    // sortKey: 'published_name_sort_by',
-    // stickyColumn: true,
   },
-  // TODO: add subject, sent at, sent by
+  {
+    key: 'date_sent',
+    label: 'Date Sent',
+    sortable: true,
+    formatter: (d) => (d ? new Date(d).toLocaleDateString() : 'n/a')
+  },
+  {
+    key: 'content',
+    label: 'Content',
+    type: "text"
+  },
+  // TODO: add sent by
   // {
-  //   key: 'subject',
-  //   label: 'Subject',
+  //   key: 'sent_by',
+  //   label: 'Sent By',
   //   type: "text",
-  //   // sortable: true,
-  //   // sortKey: 'published_name_sort_by',
-  //   // stickyColumn: true,
-  // },
+  // }
 ]

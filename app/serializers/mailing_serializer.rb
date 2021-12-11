@@ -4,7 +4,9 @@ class MailingSerializer
   attributes :id, :lock_version, :created_at, :updated_at,
              :testrun, :include_email, :cc_all,
              :mailing_state, :title,
-             :mail_template_id, :last_person_idx
+             :mail_template_id, :last_person_idx,
+             :date_sent, :subject, :content,
+             :display_name
 
   belongs_to :mail_template,
              links: {
