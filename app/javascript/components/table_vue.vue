@@ -11,11 +11,12 @@
       </search-vue>
 
       <div class="d-flex justify-content-end">
-        <div class="d-inline" title="Upload">
+        <!-- TODO: uploads are done in admin, UI shows this as a download which does not exist yet -->
+        <!-- <div class="d-inline" title="Upload">
           <b-button disabled >
             <b-icon-upload></b-icon-upload>
           </b-button>
-        </div>
+        </div> -->
         <div class="d-inline mx-1" title="newval">
           <b-button @click="$emit('new')" variant="primary" title="New">
             <b-icon-plus scale="2"></b-icon-plus>

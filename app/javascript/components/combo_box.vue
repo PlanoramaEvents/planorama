@@ -13,6 +13,7 @@
         v-model="selectedOption"
         v-bind:options="filtered_options"
         v-bind:select-size="selectSize"
+        class="mt-1"
       ></b-form-select>
     </b-overlay>
   </div>
