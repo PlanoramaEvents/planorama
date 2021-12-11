@@ -1,7 +1,7 @@
 <template>
   <div class="scrollable">
 
-    <div class="d-flex justify-content-between my-3">
+    <div class="d-flex justify-content-between my-3" v-if="showControls">
       <search-vue
         class="w-75"
         :value="filter"
@@ -89,7 +89,15 @@ export default {
     tableMixin, // covers pagination and sorting
   ],
   props: {
-    columns : { type: Array }
+    columns : { type: Array },
+    showControls: {
+      type: Boolean,
+      default: true
+    },
+    initial_filter: {
+      type: String,
+      default: ""
+    }
   },
   data() {
     return {

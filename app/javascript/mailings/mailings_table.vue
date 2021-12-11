@@ -4,6 +4,8 @@
       defaultSortBy='title'
       :model="model"
       :columns="columns"
+      :show-controls="false"
+      defaultFilter='{"op":"all","queries":[["mailing_state", "!=", "draft"]]}'
     >
       <template #cell(content)="{ item }">
         <tooltip-overflow :title="item.content">

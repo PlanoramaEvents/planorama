@@ -10,6 +10,10 @@ export const tableMixin = {
     perPage: {
       type: Number,
       default: 10
+    },
+    defaultFilter: {
+      type: String,
+      default: null
     }
   },
   data: () => ({
@@ -49,6 +53,7 @@ export const tableMixin = {
   },
   mounted() {
     this.sortBy = this.defaultSortBy;
+    this.filter = this.defaultFilter;
     this.fetchPaged();
   },
   watch: {
