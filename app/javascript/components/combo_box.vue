@@ -8,11 +8,13 @@
       ></b-form-input>
     </b-input-group>
 
-    <b-form-select
-      v-model="selectedOption"
-      v-bind:options="filtered_options"
-      v-bind:select-size="selectSize"
-    ></b-form-select>
+    <b-overlay :show="loading" rounded="sm">
+      <b-form-select
+        v-model="selectedOption"
+        v-bind:options="filtered_options"
+        v-bind:select-size="selectSize"
+      ></b-form-select>
+    </b-overlay>
   </div>
 </template>
 
@@ -22,7 +24,11 @@ export default {
   name: 'ComboBox',
   props: {
     selectSize: Number,
-    options: Array
+    options: Array,
+    loading: {
+      type: Boolean,
+      default: false
+    }
   },
   data: () =>  ({
     selectedOption: null,

@@ -3,6 +3,7 @@
     <combo-box
       :options='options'
       v-bind:select-size="4"
+      :loading="loading"
     ></combo-box>
   </div>
 </template>
@@ -19,7 +20,8 @@ export default {
   data () {
     return {
       options: [],
-      data: []
+      data: [],
+      loading: true
     }
   },
   props: {
@@ -49,7 +51,10 @@ export default {
   methods: {
     init() {
       // TODO: optimize by putting in field filter
-      this.search({}).then(data => {this.data = data})
+      this.search({}).then(data => {
+        this.data = data
+        this.loading = false
+      })
     }
   }
 }
