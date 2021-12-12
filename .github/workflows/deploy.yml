@@ -91,7 +91,7 @@ jobs:
           # target: development
           tags: "${{ env.CONTAINER_TEST_REPOSITORY }}"
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
 
       - name: Run specs
         run: |
