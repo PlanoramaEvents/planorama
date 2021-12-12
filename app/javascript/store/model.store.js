@@ -16,6 +16,7 @@ export const NEW = 'NEW';
 export const SAVE = 'SAVE';
 export const DELETE = 'DELETE';
 export const SEARCH = 'SEARCH';
+export const CLEAR = 'CLEAR';
 
 export const PATCH_RELATED = 'PATCH RELATED';
 export const PATCH_FIELDS = 'PATCH FIELDS';
@@ -42,7 +43,17 @@ const endpoints = {
 Vue.use(Vuex)
 export const store = new Vuex.Store({
   modules: {
-    jv: jsonapiModule(http, {preserveJson: true, clearOnUpdate: true})
+    // TODO: change clearOnUpdate behavoir
+    // see the following for table requests ...
+    // Remove all records of type 'widget' from the store
+    // store.commit('jv/clearRecords', { _jv: { type: 'widget' } })
+    jv: jsonapiModule(
+      http,
+      {
+        preserveJson: true,
+        clearOnUpdate: false
+      }
+    )
   },
   state: {
     selected: {
@@ -155,6 +166,9 @@ export const store = new Vuex.Store({
     },
     [FETCH] ({dispatch}, {model, params}) {
       return dispatch('jv/get', [endpoints[model], {params}])
+    },
+    [CLEAR] ({dispatch}, {model}) {
+      this.commit('jv/clearRecords', { _jv: { type: model } })
     },
     [FETCH_BY_RELATIONSHIPS] ({dispatch}, {model, relationships, params}) {
       return dispatch('jv/get', [{_jv: {

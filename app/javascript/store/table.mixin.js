@@ -34,21 +34,27 @@ export const tableMixin = {
   },
   methods: {
     fetchPaged() {
-      return new Promise((res, rej) => {
-        this.fetch({
-          perPage: this.perPage,
-          sortOrder: this.sortDesc ? 'desc' : 'asc',
-          sortBy: this.sortBy,
-          filter: this.filter,
-          current_page: this.currentPage,
-        }).then(data => {
-          // this stores some metadata that returns with the fetch call
-          this.correctOrder = data._jv.json.data.map(m => m.id);
-          this.currentPage = data._jv.json.meta.current_page;
-          this.totalRows = data._jv.json.meta.total;
-          res(data);
-        }).catch(rej); // TODO maybe actually handle it here??
-      })
+      // clear the models first then do the fetch
+      // TODO: check that this works properly
+      return this.clear().then(
+        () => {
+          return new Promise((res, rej) => {
+            this.fetch({
+              perPage: this.perPage,
+              sortOrder: this.sortDesc ? 'desc' : 'asc',
+              sortBy: this.sortBy,
+              filter: this.filter,
+              current_page: this.currentPage,
+            }).then(data => {
+              // this stores some metadata that returns with the fetch call
+              this.correctOrder = data._jv.json.data.map(m => m.id);
+              this.currentPage = data._jv.json.meta.current_page;
+              this.totalRows = data._jv.json.meta.total;
+              res(data);
+            }).catch(rej); // TODO maybe actually handle it here??
+          })
+        }
+      )
     }
   },
   mounted() {
