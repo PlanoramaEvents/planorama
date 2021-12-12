@@ -23,7 +23,7 @@ jobs:
         with:
           swap-size-mb: 4096
           temp-reserve-mb: 4096
-          root-reserve-mb: 24576
+          root-reserve-mb: 16384
           remove-dotnet: 'true'
           remove-android: 'true'
           remove-haskell: 'true'
@@ -112,6 +112,12 @@ jobs:
         run: |
           docker tag $CONTAINER_TEST_REPOSITORY $CONTAINER_DEPLOY_REPOSITORY
           docker push $CONTAINER_DEPLOY_REPOSITORY
+
+      # Needed to prevent cache from growing forever (see https://github.com/docker/build-push-action/issues/252)
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       # I think this is not needed since the "test" image is not pushed
       # - name: Clean up the CI testing tag
