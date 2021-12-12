@@ -18,7 +18,7 @@ class Survey::QuestionSerializer
             }
 
   # attribute :sort_order_position do |object|
-  #   object.sort_order
+  #   object.sort_order_rank
   # end
 
   # It probably makes more sense for answers to be nested in here rather

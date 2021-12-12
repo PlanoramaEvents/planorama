@@ -38,11 +38,16 @@ class Survey::PagesController < ResourceController
       next_page_id
       next_page_action
       sort_order
+      sort_order_position
       survey_id
       lock_version
       survey
       questions_attributes
     ]
+  end
+
+  def after_save
+    @object.update(sort_order_position: _permitted_params(object_name)['sort_order_position']) if _permitted_params(object_name)['sort_order_position'].present?
   end
 
   # TODO: on delete need to clean up any references in branches to this

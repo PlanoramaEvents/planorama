@@ -23,11 +23,16 @@ class Survey::Page::Question::AnswersController < ResourceController
       lock_version
       default
       sort_order
+      sort_order_position
       other
       next_page_id
       next_page_action
       question
       question_id
     ]
+  end
+
+  def after_save
+    @object.update(sort_order_position: _permitted_params(object_name)['sort_order_position']) if _permitted_params(object_name)['sort_order_position'].present?
   end
 end
