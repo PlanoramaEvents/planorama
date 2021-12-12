@@ -36,6 +36,7 @@ class Survey::Page::QuestionsController < ResourceController
       regex
       branching
       page
+      page_id
       answers_attributes
     ]
   end
