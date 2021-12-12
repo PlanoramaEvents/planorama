@@ -11,6 +11,7 @@
         type="text"
         v-model="value"
         debounce="500"
+        v-on:keyup.enter="onSearch"
       ></b-form-input>
 
       <b-input-group-append>
