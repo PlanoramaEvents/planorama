@@ -8,12 +8,8 @@
         v-on:change="handleFilesUpload()"
       />
     </label>
-    <b-form-checkbox
-      v-model="ignoreFirstLine"
-      value="true"
-      unchecked-value="false"
-    >
-      Ignore the first line.
+    <b-form-checkbox v-model="ignoreFirstLine" >
+      Ignore the first line
     </b-form-checkbox>
     <div>
       <b-table
@@ -32,7 +28,6 @@
 </template>
 
 <script>
-  import Vue from 'vue';
   import XLSX from 'xlsx';
   import {http as axios} from '../http';
 
@@ -53,7 +48,9 @@
     methods: {
       clear() {
         // reset on re-show
-        this.file = this.sheetData = this.errorMessage = null
+        this.file = null
+        this.sheetData = null
+        this.errorMessage = null
         this.ignoreFirstLine = false
       },
       submitData(event) {
@@ -63,7 +60,7 @@
         axios.post(
           this.importUrl,
           {
-            'ignore_first_line': this.ignoreFirstLine,
+            ignore_first_line: this.ignoreFirstLine,
             sheet: this.sheetData
           },
           { synchronous: true }

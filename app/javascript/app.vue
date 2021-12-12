@@ -6,8 +6,8 @@
       <div :class="['col-12 pr-0', { 'col-sm-9': loggedIn, 'col-xl-10': loggedIn}]">
         <router-view></router-view>
       </div>
+      <bottom-navbar></bottom-navbar>
     </div>
-    <bottom-navbar></bottom-navbar>
   </div>
 </template>
 

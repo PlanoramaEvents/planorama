@@ -1,6 +1,6 @@
 <!-- CONVERTED -->
 <template>
-  <div>
+  <div class="mb-3">
     <router-view></router-view>
   </div>
 </template>
