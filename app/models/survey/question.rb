@@ -28,7 +28,7 @@ class Survey::Question < ApplicationRecord
       :dropdown, :address, :email, :socialmedia, :textonly
     ]
 
-  before_destroy :check_for_use #, :check_if_published
+  before_destroy :check_for_use, prepend: true #, :check_if_published
 
   def question_type
     read_attribute(:question_type).to_sym
