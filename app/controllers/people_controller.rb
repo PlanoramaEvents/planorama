@@ -25,7 +25,7 @@ class PeopleController < ResourceController
     authorize current_person, policy_class: policy_class
 
     sheet = params[:sheet]
-    ignore_first_line = params[:ignore_first_line] == 'true'
+    ignore_first_line = params[:ignore_first_line] #== 'true'
     count = 0
     sheet_length = sheet.length
     sheet_length = sheet.length - 1 if ignore_first_line
