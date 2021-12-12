@@ -27,6 +27,7 @@ class Survey::Page::Question::AnswersController < ResourceController
       next_page_id
       next_page_action
       question
+      question_id
     ]
   end
 end
