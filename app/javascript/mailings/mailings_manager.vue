@@ -1,33 +1,43 @@
 <template>
   <div>
-    <div class="d-flex flex-row">
-      <h4>Draft Mailings</h4>
-    </div>
-    <div class="d-flex flex-row">
-      <div class="p-6 col-sm">
-        <combo-box
-          :options='options'
-          v-bind:select-size="4"
-          :loading="loading"
-        ></combo-box>
-      </div>
+    <b-tabs content-class="mt-3" v-model="tabIndex" no-nav-style no-key-nav nav-class="nav-tabs-style">
+      <b-tab title="First" active lazy>
+        <div class="d-flex flex-row">
+          <h4>Draft Mailings</h4>
+        </div>
+        <div class="d-flex flex-row">
+          <div class="p-6 col-sm">
+            <combo-box
+              :options='options'
+              v-bind:select-size="4"
+              :loading="loading"
+            ></combo-box>
+          </div>
 
-      <div class="d-flex flex-column">
-        <b-button variant="primary" class="m-1">
-          <b-icon-plus scale="2"></b-icon-plus>
-        </b-button>
-        <b-button variant="primary" class="m-1">View</b-button>
-        <b-button variant="primary" class="m-1">Delete</b-button>
-      </div>
+          <div class="d-flex flex-column">
+            <b-button variant="primary" class="m-1" @click="onView">
+              <b-icon-plus scale="2"></b-icon-plus>
+            </b-button>
+            <b-button variant="primary" class="m-1" @click="onView">View</b-button>
+            <b-button variant="primary" class="m-1">Delete</b-button>
+          </div>
 
-    </div>
-    <div class="d-flex flex-row">
-      <h4>Sent Mailings</h4>
-    </div>
-    <div class="d-flex flex-row">
-      <!-- TODO: add filter for search ... -->
-      <mailings-table></mailings-table>
-    </div>
+        </div>
+        <div class="d-flex flex-row">
+          <h4>Sent Mailings</h4>
+        </div>
+        <div class="d-flex flex-row">
+          <mailings-table
+            defaultFilter='{"op":"all","queries":[["mailing_state", "!=", "draft"]]}'
+          ></mailings-table>
+        </div>
+      </b-tab>
+      <b-tab title="Second" lazy>
+        <b-button variant="primary" class="m-1" @click="onManage">Back</b-button>
+
+        TODO
+      </b-tab>
+    </b-tabs>
   </div>
 </template>
 
@@ -46,12 +56,13 @@ export default {
     return {
       options: [],
       data: [],
-      loading: true
+      loading: true,
+      tabIndex: 0
     }
   },
-  props: {
-    attribute: String
-  },
+  // props: {
+  //   attribute: String
+  // },
   mixins: [
     modelMixin
   ],
@@ -64,7 +75,7 @@ export default {
           obj => (
             {
               value: obj.id,
-              text: obj[this.attribute]
+              text: obj['display_name']
             }
           )
         )
@@ -74,10 +85,21 @@ export default {
     }
   },
   methods: {
+    onView() {
+      this.tabIndex = 1
+    },
+    onManage() {
+      this.tabIndex = 0
+    },
     init() {
       this.loading = true
-      // TODO: optimize by putting in field filter
-      this.search({}).then(data => {
+      // Optimize by putting in field filter
+      this.search({
+        // This specifies limited set of fields to get
+        "fields[mailing]": "id,display_name",
+        // This specifies filtering i.e. we want only draft mailings
+        filter: '{"op":"all","queries":[["mailing_state", "=", "draft"]]}'
+      }).then(data => {
         this.data = data
         this.loading = false
       })
@@ -86,6 +108,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.nav-tabs-style {
+  display: none !important;
+}
 </style>

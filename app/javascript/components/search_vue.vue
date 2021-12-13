@@ -71,7 +71,9 @@ export default {
         }
       )
       return rule_set
-    },
+    }
+  },
+  methods: {
     filter_by_value() {
       return {
         "op":"all",
@@ -82,11 +84,9 @@ export default {
     },
     filter_by_query() {
       return query_to_rules(this.query)
-    }
-  },
-  methods: {
+    },
     onSearch: function (event) {
-      this.$emit('change', this.filter_by_value)
+      this.$emit('change', this.filter_by_value())
     },
     // onSearchClear: function (event) {
     //   this.value = null
@@ -94,7 +94,7 @@ export default {
     // },
     onQuerySearch: function() {
       // console.debug('*** QUERY THIS ', JSON.stringify(this.filter_by_query) )
-      this.$emit('change', this.filter_by_query)
+      this.$emit('change', this.filter_by_query())
     }
   }
 }

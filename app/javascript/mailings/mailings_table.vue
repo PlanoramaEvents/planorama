@@ -4,8 +4,8 @@
       defaultSortBy='title'
       :model="model"
       :columns="columns"
-      :show-controls="false"
-      defaultFilter='{"op":"all","queries":[["mailing_state", "!=", "draft"]]}'
+      :show-controls="true"
+      :defaultFilter="defaultFilter"
     >
       <template #cell(content)="{ item }">
         <tooltip-overflow :title="item.content">
@@ -27,6 +27,9 @@ export default {
   components: {
     TableVue,
     TooltipOverflow
+  },
+  props: {
+    defaultFilter: null
   },
   data: () => ({
     columns,

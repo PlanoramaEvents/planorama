@@ -16,7 +16,6 @@
       </admin-accordion>
       <admin-accordion id="mailings-accordion" title="Mailings" @show="showMailings">
         <mailings-manager
-          attribute='title'
           model="mailing"
           ref="mailing-manager"
         ></mailings-manager>

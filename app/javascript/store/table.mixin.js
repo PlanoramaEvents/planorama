@@ -33,9 +33,28 @@ export const tableMixin = {
     }
   },
   methods: {
+    mergeFilters(filter1, filter2) {
+      return {
+        op: 'all',
+        queries: [
+          JSON.parse(filter1),
+          JSON.parse(filter2),
+        ]
+      }
+    },
     fetchPaged() {
-      // clear the models first then do the fetch
-      // TODO: check that this works properly
+      let _filter = JSON.stringify(this.filter)
+
+      if (!this.filter && this.defaultFilter) {
+        _filter = this.defaultFilter
+      }
+
+      // if this.filter AND this.defaultFilter then we merge
+      if (this.filter && this.defaultFilter) {
+        let merged = this.mergeFilters(this.defaultFilter, _filter)
+        _filter = merged
+      }
+
       return this.clear().then(
         () => {
           return new Promise((res, rej) => {
@@ -43,7 +62,7 @@ export const tableMixin = {
               perPage: this.perPage,
               sortOrder: this.sortDesc ? 'desc' : 'asc',
               sortBy: this.sortBy,
-              filter: this.filter,
+              filter: _filter,
               current_page: this.currentPage,
             }).then(data => {
               // this stores some metadata that returns with the fetch call
@@ -59,12 +78,11 @@ export const tableMixin = {
   },
   mounted() {
     this.sortBy = this.defaultSortBy;
-    this.filter = this.defaultFilter;
     this.fetchPaged();
   },
   watch: {
     currentPage(newVal, oldVal) {
-      console.debug("currentpage changed:", newVal, oldVal)
+      // console.debug("currentpage changed:", newVal, oldVal)
       // when we change the desired page to a new one, fetch again
       if(newVal != oldVal) {
         // at this point, this.currentPage reflects newVal so we don't
@@ -73,17 +91,17 @@ export const tableMixin = {
       }
     },
     filter(newVal, oldVal) {
-      console.debug("filter changed:", newVal, oldVal)
+      // console.debug("filter changed:", newVal, oldVal)
       if(newVal != oldVal) {
         this.fetchPaged();
       }
     },
     sortDesc(newVal, oldVal) {
-      console.debug("sortdesc changed:", newVal, oldVal)
+      // console.debug("sortdesc changed:", newVal, oldVal)
       if (newVal != oldVal) this.fetchPaged();
     },
     sortBy(newVal, oldVal) {
-      console.debug("sortby changed:", newVal, oldVal)
+      // console.debug("sortby changed:", newVal, oldVal)
       if (newVal != oldVal) this.fetchPaged();
     }
   }

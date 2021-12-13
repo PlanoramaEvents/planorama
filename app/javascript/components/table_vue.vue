@@ -93,10 +93,6 @@ export default {
     showControls: {
       type: Boolean,
       default: true
-    },
-    initial_filter: {
-      type: String,
-      default: ""
     }
   },
   data() {
