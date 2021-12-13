@@ -11,6 +11,7 @@
     <b-overlay :show="loading" rounded="sm">
       <b-form-select
         v-model="selectedOption"
+        @change="onChange"
         v-bind:options="filtered_options"
         v-bind:select-size="selectSize"
         class="mt-1"
@@ -35,6 +36,11 @@ export default {
     selectedOption: null,
     term: null
   }),
+  methods: {
+    onChange(arg) {
+      this.$emit('change', arg)
+    }
+  },
   computed: {
     filtered_options() {
       return this.options.filter(

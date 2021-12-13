@@ -1,4 +1,4 @@
-import { SELECTED, SELECT, UNSELECT, FETCH, CLEAR, SEARCH, PATCH_FIELDS, SAVE } from "./model.store";
+import { SELECTED, SELECT, UNSELECT, FETCH, FETCH_BY_ID, CLEAR, SEARCH, PATCH_FIELDS, SAVE } from "./model.store";
 import { mapActions } from 'vuex';
 import { toastMixin } from "@/mixins";
 import { SAVE_SUCCESS } from "@/constants/strings";
@@ -35,6 +35,9 @@ export const modelMixin = {
     },
     fetch(params) {
       return this.$store.dispatch(FETCH, {model: this.model, params});
+    },
+    fetch_by_id(id) {
+      return this.$store.dispatch(FETCH_BY_ID, {model: this.model, id: id});
     },
     search(params) {
       return this.$store.dispatch(SEARCH, {model: this.model, params});

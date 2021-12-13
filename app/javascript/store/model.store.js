@@ -183,7 +183,7 @@ export const store = new Vuex.Store({
       return dispatch(FETCH_BY_ID, {model, id: state.selected[model]})
     },
     [FETCH_BY_ID] ({dispatch}, {model, id}) {
-      // TODO do we ever need this? or is model always selected
+      // We do need this - not all fetch by id will be selected models
       return dispatch('jv/get', `${endpoints[model]}/${id}`)
     },
     [PATCH_FIELDS] ({dispatch, commit}, {model, item, fields=[], selected = true}) {

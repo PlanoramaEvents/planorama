@@ -1,6 +1,7 @@
-import { NEW } from './model.store';
+import { NEW, FETCH_BY_ID} from './model.store';
 
 export const NEW_MAILING = 'NEW MAILING';
+export const GET_MAILING = "GET MAILING";
 
 export const mailingModel = 'mailing';
 
@@ -14,6 +15,9 @@ export const mailingStore = {
     [NEW_MAILING] ({dispatch}, attributes) {
       return dispatch(NEW, {model: mailingModel, selected: false, ...attributes})
     },
+    // [GET_MAILING] ({commit, dispatch, state}) {
+    //
+    // },
   },
   selected: {
     [mailingModel]: undefined

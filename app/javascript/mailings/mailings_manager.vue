@@ -11,6 +11,7 @@
               :options='options'
               v-bind:select-size="4"
               :loading="loading"
+              @change="onChange"
             ></combo-box>
           </div>
 
@@ -35,7 +36,10 @@
       <b-tab title="Second" lazy>
         <b-button variant="primary" class="m-1" @click="onManage">Back</b-button>
 
-        TODO
+        <mailing-editor
+          :selectedId="selectedId"
+          model="mailing"
+        ></mailing-editor>
       </b-tab>
     </b-tabs>
   </div>
@@ -45,19 +49,22 @@
 import ComboBox from '../components/combo_box';
 import modelMixin from '../store/model.mixin';
 import MailingsTable from './mailings_table.vue';
+import MailingEditor from './mailing_editor.vue'
 
 export default {
   name: "MailingsManager",
   components: {
     ComboBox,
-    MailingsTable
+    MailingsTable,
+    MailingEditor
   },
   data () {
     return {
       options: [],
       data: [],
       loading: true,
-      tabIndex: 0
+      tabIndex: 0,
+      selectedId: null
     }
   },
   // props: {
@@ -85,6 +92,9 @@ export default {
     }
   },
   methods: {
+    onChange(arg) {
+      this.selectedId = arg
+    },
     onView() {
       this.tabIndex = 1
     },

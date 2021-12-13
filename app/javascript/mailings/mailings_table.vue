@@ -4,7 +4,7 @@
       defaultSortBy='title'
       :model="model"
       :columns="columns"
-      :show-controls="true"
+      :show-controls="false"
       :defaultFilter="defaultFilter"
     >
       <template #cell(content)="{ item }">
