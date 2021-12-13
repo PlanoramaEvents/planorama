@@ -398,29 +398,11 @@ CREATE TABLE public.mail_histories (
 
 
 --
--- Name: mail_templates; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.mail_templates (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    subject character varying DEFAULT ''::character varying,
-    content text,
-    survey_id uuid,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    transiton_invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
-    mail_use public.mail_use_enum
-);
-
-
---
 -- Name: mailings; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.mailings (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    mail_template_id uuid,
     testrun boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -429,7 +411,12 @@ CREATE TABLE public.mailings (
     include_email boolean DEFAULT true,
     cc_all boolean DEFAULT false,
     mailing_state public.mailing_state_enum DEFAULT 'draft'::public.mailing_state_enum,
-    title character varying
+    title character varying,
+    subject character varying,
+    content text,
+    survey_id uuid,
+    date_sent timestamp without time zone,
+    transiton_invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum
 );
 
 
@@ -1185,14 +1172,6 @@ ALTER TABLE ONLY public.mail_histories
 
 
 --
--- Name: mail_templates mail_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_templates
-    ADD CONSTRAINT mail_templates_pkey PRIMARY KEY (id);
-
-
---
 -- Name: mailings mailings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1938,6 +1917,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211114155546'),
 ('20211114191042'),
 ('20211207192534'),
-('20211207192624');
+('20211207192624'),
+('20211213180751');
 
 

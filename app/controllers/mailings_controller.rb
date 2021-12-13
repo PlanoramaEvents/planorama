@@ -4,13 +4,11 @@ class MailingsController < ResourceController
 
   def serializer_includes
     [
-      :mail_template
     ]
   end
 
   def includes
     [
-      :mail_template
     ]
   end
 
@@ -24,7 +22,7 @@ class MailingsController < ResourceController
   end
 
   def check_editable(mailing:)
-    raise "Mailing is scheduled, you can not edit it" if mailing.scheduled
+    # raise "Mailing is scheduled, you can not edit it" if mailing.scheduled
   end
 
   def assign_people

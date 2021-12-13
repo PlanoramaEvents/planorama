@@ -4,7 +4,7 @@ module MailService
     mailing:
   )
     content = self.generate_email_content(
-      mailing.mail_template,
+      mailing.content,
       {
         person: person,
         survey: mailing.survey,
@@ -15,8 +15,8 @@ module MailService
 
     self.send_email(
       to:             person.primary_email,
-      subject:        mailing.mail_template.subject,
-      title:          mailing.mail_template.title,
+      subject:        mailing.subject,
+      title:          mailing.title,
       content:        content
     )
 
@@ -133,7 +133,7 @@ module MailService
     return unless mailing
     return if mailing.testrun
 
-    to_invite_status = mailing.mail_template.transiton_invite_status
+    to_invite_status = mailing.transiton_invite_status
     return unless to_invite_status
 
     person.invite_status = invite_status
@@ -141,12 +141,12 @@ module MailService
   end
 
   # Given an email template and a set of argument generate the body for the email
-  def self.generate_email_content(template, arguments)
+  def self.generate_email_content(content, arguments)
     # This turns thge arguments hash into variables for the ERB
     namespace = ErbNamespace.new(arguments)
 
     return ERB.new(
-      template.content,
+      content,
       0, "%<>"
     ).result(namespace.get_binding) # pass in a context with the parameters i.e. ruby binding
   end

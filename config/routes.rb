@@ -78,7 +78,6 @@ Rails.application.routes.draw do
   resources :parameter_names, path: 'parameter_name'
 
   resources :mailings, path: 'mailing'
-  resources :mail_templates, path: 'mail_template'
 
   get 'mailing/schedule/:id', to: 'mailings#schedule'
   post 'mailing/:mailing_id/assign_people', to: 'mailings#assign_people'

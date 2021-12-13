@@ -4,20 +4,11 @@ class MailingSerializer
   attributes :id, :lock_version, :created_at, :updated_at,
              :testrun, :include_email, :cc_all,
              :mailing_state, :title,
-             :mail_template_id, :last_person_idx,
+             :last_person_idx,
              :date_sent, :subject, :content,
-             :display_name
+             :display_name,
+             :transiton_invite_status
 
-  belongs_to :mail_template,
-             links: {
-               self: -> (object, params) {
-                 "#{params[:domain]}/mailing/#{object.id}"
-               },
-               related: -> (object, params) {
-                 "#{params[:domain]}/mail_template/#{object.mail_template_id}"
-               }
-            }
-
+  belongs_to :survey
   has_many :people
-
 end
