@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   # TODO: retest with SPA, should be ok
   get '/login/:magic_link', to: 'login#magic_link'
 
+  post '/validator/email', to: 'validator/email#validate' #, controller: 'validator/email'
+
   # REST based resources
   get 'session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
