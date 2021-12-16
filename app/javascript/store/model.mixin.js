@@ -43,7 +43,7 @@ export const modelMixin = {
       return this.$store.dispatch(CLEAR, {model: this.model});
     },
     saveSelected() {
-      return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, item: this.selected}), SAVE_SUCCESS(this.model));
+      return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, item: this.selected}), MODEL_SAVE_SUCCESS(this.model));
     },
     patchSelected(data) {
       return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model: this.model, item: {...this.selected, ...data}, fields: Object.keys(data), selected: false}), SAVE_SUCCESS(this.model));
