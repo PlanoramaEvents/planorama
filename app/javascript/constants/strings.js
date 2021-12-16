@@ -53,7 +53,7 @@ module.exports = {
     ADMIN_ADD_USER_ERROR: (name) => `${name} failed to be added to Planorama.`,
     IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",   
     MODEL_SAVE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully saved.`,
-    MODEL_SAVE_ERROR: (model) => (errorCode) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be saved.\nError code: ${errorCode}`,
+    MODEL_SAVE_ERROR: (model) => (errorCode) => (h) => h('p', {}, [`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be saved.`, h('br'), `Error code: ${errorCode}`]),
     MODEL_ADD_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully added.`,
     MODEL_ADD_ERROR: (model) => (errorCode) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be added.\nError code: ${errorCode}`,
     MODEL_DELETE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully deleted.`,
@@ -69,7 +69,7 @@ module.exports = {
     QUESTION_DELETE_SUCCESS: "Question successfully deleted",
     QUESTION_DELETE_ERROR: (errorCode) => `Question failed to be deleted. \nError code: ${errorCode}`,
     QUESTION_DUPLICATE_SUCCESS: "Question successfully duplicated",
-    QUESTION_DUPLICATE_ERROR: (errorCode) => `Question failed to be duplicated. \nError code: ${errorCode}`,
+    QUESTION_DUPLICATE_ERROR: (errorCode) => (h) =>  h('p', {}, ['Question failed to be duplicated.', h('br'), `Error code: ${errorCode}`]),
     QUESTION_ADD_SAVE_SUCCESS: "Question successfully added",
     QUESTION_ADD_SAVE_ERROR: (errorCode) => `Question failed to be added. \nError code: ${errorCode}`,
     
