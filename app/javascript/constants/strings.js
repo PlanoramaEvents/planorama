@@ -1,4 +1,5 @@
 const twoLines = (line1, line2) => (h) =>  h('p', {}, [line1, h('br'), line2]);
+const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`
 
 module.exports = {
     // login page
@@ -54,7 +55,7 @@ module.exports = {
     ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added to Planorama.`,
     ADMIN_ADD_USER_ERROR: (name) => `${name} failed to be added to Planorama.`,
     IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",   
-    MODEL_SAVE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully saved.`,
+    MODEL_SAVE_SUCCESS: (model) => `${titleCase(model)} sucessfully saved.`,
     MODEL_SAVE_ERROR: (model) => (errorCode) => twoLines(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be saved.`, `Error code: ${errorCode}`),
     MODEL_ADD_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully added.`,
     MODEL_ADD_ERROR: (model) => (errorCode) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be added.\nError code: ${errorCode}`,
