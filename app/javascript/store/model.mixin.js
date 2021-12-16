@@ -1,7 +1,7 @@
 import { SELECTED, SELECT, UNSELECT, FETCH, CLEAR, SEARCH, PATCH_FIELDS, SAVE } from "./model.store";
 import { mapActions } from 'vuex';
 import { toastMixin } from "@/mixins";
-import { SAVE_SUCCESS } from "@/constants/strings";
+import { MODEL_SAVE_SUCCESS } from "@/constants/strings";
 
 export const modelMixin = {
   mixins: [
