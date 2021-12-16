@@ -48,9 +48,13 @@ module.exports = {
     //generic app wide 
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added to Planorama.`,
+    ADMIN_ADD_USER_ERROR: (name) => `${name} failed to be added to Planorama.`,
     IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",   
     MODEL_SAVE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully saved.`,
     MODEL_SAVE_ERROR: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be saved.`,
+    MODEL_ADD_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully added.`,
+    MODEL_ADD_ERROR: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be added.`,
+    
     //add user failure, add, delete
     
     
