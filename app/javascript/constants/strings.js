@@ -32,6 +32,8 @@ module.exports = {
     SURVEY_SAVE_ERROR_CLOSE: (errorCode) => `Survey failed to be closed. \nError code: ${errorCode}`,
     SURVEY_SAVE_SUCCESS_DELETE: "Survey successfully deleted.",
     SURVEY_SAVE_ERROR_DELETE: (errorCode) => `Survey failed to be deleted. \nError code: ${errorCode}`,
+    SURVEY_SAVE_SUCCESS_ADD: "Survey successfully added.",
+    SURVEY_SAVE_ERROR_ADD: (errorCode) => `Survey failed to be added. \nError code: ${errorCode}`,
     
     // survey results actions
     SURVEY_RESULTS_CLEAR_SUCCESS: "Results successfully cleared.",
@@ -53,9 +55,10 @@ module.exports = {
     MODEL_SAVE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully saved.`,
     MODEL_SAVE_ERROR: (model) => (errorCode) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be saved.\nError code: ${errorCode}`,
     MODEL_ADD_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully added.`,
-    MODEL_ADD_ERROR: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be added.`,
-    
-    //add user failure, add, delete
+    MODEL_ADD_ERROR: (model) => (errorCode) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be added.\nError code: ${errorCode}`,
+    MODEL_DELETE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully deleted.`,
+    MODEL_DELETE_ERROR: (model) => (errorCode) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be deleted.\nError code: ${errorCode}`,
+   
     
     
     //question actions
@@ -67,12 +70,16 @@ module.exports = {
     QUESTION_DELETE_ERROR: (errorCode) => `Question failed to be deleted. \nError code: ${errorCode}`,
     QUESTION_DUPLICATE_SUCCESS: "Question successfully duplicated",
     QUESTION_DUPLICATE_ERROR: (errorCode) => `Question failed to be duplicated. \nError code: ${errorCode}`,
+    QUESTION_ADD_SAVE_SUCCESS: "Question successfully added",
+    QUESTION_ADD_SAVE_ERROR: (errorCode) => `Question failed to be added. \nError code: ${errorCode}`,
     
     //answer actions
     ANSWER_ORDER_SAVE_SUCCESS: "Answer reorder sucessfully saved",
     ANSWER_ORDER_SAVE_ERROR: (errorCode) => `Answer reorder failed to be saved. \nError code: ${errorCode}`,
     ANSWER_SAVE_SUCCESS: "Answer sucessfully saved",
-    ANSWER_SAVE_ERROR: (errorCode) => `Answer reorder failed to be saved. \nError code: ${errorCode}`,
+    ANSWER_SAVE_ERROR: (errorCode) => `Answer failed to be saved. \nError code: ${errorCode}`,
+    ANSWER_ADD_SUCCESS: "Answer sucessfully added",
+    ANSWER_ADD_ERROR: (errorCode) => `Answer failed to be added. \nError code: ${errorCode}`,
     
     //page actions 
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
@@ -80,8 +87,9 @@ module.exports = {
     PAGE_MERGE_SUCCESS: "Page successfully merged",
     PAGE_MERGE_ERROR: (errorCode) => `Page failed to be merged. \nError code: ${errorCode}`,
     SURVEY_CONFIRM_DELETE_PAGE_1: "Deleting a page also deletes the questions and response options it contains.",
-    SURVEY_CONFIRM_DELETE_PAGE_2: "To preserve the questions, choose \"Merge page up\" from the page options."
+    SURVEY_CONFIRM_DELETE_PAGE_2: "To preserve the questions, choose \"Merge page up\" from the page options.",
+    PAGE_ADD_SUCCESS: "Page successfully added",
+    PAGE_ADD_ERROR: (errorCode) => `Page failed to be added. \nError code: ${errorCode}`,
 
-
-    // put in all the adds
+    
 }
