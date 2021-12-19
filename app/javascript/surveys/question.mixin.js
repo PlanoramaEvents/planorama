@@ -6,6 +6,8 @@ import { pageMixin, surveyMixin } from '@/mixins';
 import {
   QUESTION_ADD_SAVE_ERROR,
   QUESTION_ADD_SAVE_SUCCESS,
+  QUESTION_DELETE_ERROR,
+  QUESTION_DELETE_SUCCESS,
   QUESTION_DUPLICATE_ERROR,
   QUESTION_DUPLICATE_SUCCESS,
   QUESTION_SAVE_SUCCESS
@@ -115,11 +117,7 @@ export const questionMixin = {
       if (!this.selectedQuestion) {
         return Promise.resolve()
       }
-      return this.toastPromise(new Promise((res, rej) => {
-        this.delete({model, itemOrId: this.selectedQuestion}).then((data) => {
-          this.fetchSelectedSurvey().then(() => res(data)).catch(rej)
-        }).catch(rej)
-      }));
+      return this.fetchSurveyToastPromise( this.delete({model, itemOrId: this.selectedQuestion}), QUESTION_DELETE_SUCCESS, QUESTION_DELETE_ERROR);
     },
     patchQuestion(question, data, message = QUESTION_SAVE_SUCCESS) {
       return this.toastPromise(this.$store.dispatch('jv/patch', { ...data, _jv: {
