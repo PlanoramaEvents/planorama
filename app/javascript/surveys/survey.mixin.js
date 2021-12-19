@@ -55,6 +55,13 @@ export const surveyMixin = {
     patchSurveyField(survey, field, success_text = SURVEY_SAVE_SUCCESS) {
       console.debug("attempting to patch survey field", field, "with value", survey[field])
       this.toastPromise(this.patch({model, item: survey, fields: [field]}), success_text)
+    },
+    fetchSurveyToastPromise(promise, success_text, error_text) {
+      return this.toastPromise(new Promise((res, rej) => {
+        promise.then((data) => {
+          this.fetchSelectedSurvey().then(()=> res(data)).catch(rej)
+        }).catch(rej)
+      }), success_text, error_text);
     }
   }
 }
