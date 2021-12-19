@@ -3,6 +3,9 @@
     {{selectedId}}
     <br />
     {{ mailing }}
+    <br/>
+    <email-list-input></email-list-input>
+  </br/>
   </div>
 </template>
 
@@ -11,9 +14,13 @@
 
 import modelMixin from '../store/model.mixin';
 import { mailingModel as model } from '../store/mailing.store'
+import EmailListInput from '../components/email_list_input'
 
 export default {
   name: "MailingEditor",
+  components: {
+    EmailListInput
+  },
   mixins: [
     modelMixin,
   ],
