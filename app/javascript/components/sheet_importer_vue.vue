@@ -9,7 +9,7 @@
       />
     </label>
     <b-form-checkbox v-model="ignoreFirstLine" >
-      Ignore the first line
+      Ignore the first line of data
     </b-form-checkbox>
     <div>
       <b-table

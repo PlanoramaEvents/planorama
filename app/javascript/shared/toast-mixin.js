@@ -1,17 +1,25 @@
+import { SUCCESS_TOAST_TITLE, ERROR_TOAST_TITLE } from "@/constants/strings"
+
 export const toastMixin = {
   methods: {
     success_toast(text) {
+      if (typeof text === "function") {
+        text = text(this.$createElement)
+      }
       this.$bvToast.toast(text, {
         variant: 'success',
-        title: 'Success',
-        // toaster: 'planotoaster'
+        title: SUCCESS_TOAST_TITLE,
+        //toaster: 'planotoaster'
       })
     },
     error_toast(text) {
+      if (typeof text === "function") {
+        text = text(this.$createElement)
+      }
       this.$bvToast.toast(text, {
         variant: 'danger',
-        title: 'Something went wrong',
-        // toaster: 'planotoaster'
+        title: ERROR_TOAST_TITLE,
+        //toaster: 'planotoaster'
       })
     },
     toastCallback(method, success_message) {
@@ -24,7 +32,7 @@ export const toastMixin = {
         failure: (error) => this.error_toast(error.message)
       }
     },
-    toastPromise(promise, success_text) {
+    toastPromise(promise, success_text, error_text) {
       return new Promise((res, rej) => {
         promise.then((item) => {
           this.success_toast(success_text);
@@ -32,7 +40,7 @@ export const toastMixin = {
         })
         .catch((error) => {
           console.error(error)
-          this.error_toast(error.message)
+          this.error_toast(error_text(error.response?.status || 418))
           rej(error);
         })
       });
