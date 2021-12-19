@@ -4,6 +4,7 @@ import { SELECT, SELECTED, DELETE, SAVE, PATCH_RELATED } from '@/store/model.sto
 import { mapGetters, mapActions } from 'vuex';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { toastMixin }  from '../shared/toast-mixin';
+import { PAGE_ADD_ERROR, PAGE_ADD_SUCCESS, PAGE_DELETE_ERROR, PAGE_DELETE_SUCCESS, PAGE_MERGE_ERROR, PAGE_MERGE_SUCCESS, PAGE_SAVE_ERROR, PAGE_SAVE_SUCCESS } from '@/constants/strings';
 
 // CONVERTED
 export const pageMixin = {
@@ -33,7 +34,7 @@ export const pageMixin = {
   }, methods: {
     ...mapActions({
       delete: DELETE,
-      newPage: NEW_PAGE
+      newPageAction: NEW_PAGE
     }),
     isSelectedPage(page) {
       return this.selectedPage && this.selectedPage.id === page.id
@@ -80,17 +81,14 @@ export const pageMixin = {
     getPageQuestions(page) {
       return getOrderedRelationships('questions', page)
     },
+    newPage(...args) {
+      return this.fetchSurveyToastPromise(this.newPageAction(...args), PAGE_ADD_SUCCESS, PAGE_ADD_ERROR);
+    },
     savePage(item) {
       if (!item && this.selectedPage) {
         item = this.selectedPage
       }
-      return new Promise((res, rej) => {
-        this.toastPromise(this.$store.dispatch(SAVE, {model, item}), "IT WORKED").then((data) => {
-          this.fetchSelectedSurvey().then(() => {
-            res(data);
-          }).catch(rej);
-        }).catch(rej);
-      })
+      return this.fetchSurveyToastPromise(this.$store.dispatch(SAVE, {model, item}), PAGE_SAVE_SUCCESS, PAGE_SAVE_ERROR);
     },
     mergePage(oldPage, newPage) {
       // move questions to new page
@@ -107,17 +105,18 @@ export const pageMixin = {
           }
         }
       }
-      return new Promise((res, rej) => {
+      return this.toastPromise(new Promise((res, rej) => {
         this.$store.dispatch(PATCH_RELATED, {item, parentRelName: 'questions', childIdName: 'page_id'}).then((data) => {
           // delete old page
           this.deletePage(oldPage).then(() => {
-            res(data)
+            // reload the survey
+            this.fetchSelectedSurvey().then(() => res(data)).catch(rej)
           }).catch(rej)
         }).catch(rej)
-      })
+      }), PAGE_MERGE_SUCCESS, PAGE_MERGE_ERROR)
     },
     deletePage(itemOrId) {
-      return this.delete({ model, itemOrId })
+      return this.fetchSurveyToastPromise(this.delete({model, itemOrId}), PAGE_DELETE_SUCCESS, PAGE_DELETE_ERROR);
     }
   }
 }

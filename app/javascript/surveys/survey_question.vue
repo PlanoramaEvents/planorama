@@ -5,7 +5,7 @@
       v-if="!formatting && !address && !socialmedia"
     >
       <template #label>
-        <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
+        <span v-html="questionText"></span><mandatory-star :mandatory="question.mandatory"></mandatory-star>
       </template>
       <template #default="{ ariaDescribedBy }">
         <b-form-textarea

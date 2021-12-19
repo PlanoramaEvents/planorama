@@ -1,4 +1,4 @@
-import { NEW, FETCH_BY_ID} from '../model.store';
+import { NEW, FETCH_BY_ID, FETCH_SELECTED} from '../model.store';
 import { getOrderedRelationships } from '@/utils/jsonapi_utils';
 import {
   NEW_SURVEY,
@@ -191,6 +191,7 @@ export const surveyStore = {
     },
     [DUPLICATE_QUESTION] ({dispatch}, {item, insertAt}) {
       let newQuestion = {
+        page_id: item.page_id,
         question: item.question,
         question_type: item.question_type,
         mandatory: item.mandatory,
@@ -198,7 +199,7 @@ export const surveyStore = {
         horizontal: item.horizontal,
         private: item.private,
         regex: item.regex,
-        survey_answers_attributes: getOrderedRelationships('survey_answers', item).map(a => ({
+        answers_attributes: getOrderedRelationships('answers', item).map(a => ({
           answer: a.answer,
           default: a.default,
           other: a.other,
@@ -208,12 +209,19 @@ export const surveyStore = {
         newQuestion.sort_order_position = insertAt
       }
       let relationships= {
-        survey_page: {
-          id: item.page_id,
-          type: pageModel
+        page: {
+          data: {
+            id: item.page_id,
+            type: pageModel
+          }
         }
       }
-      return dispatch(NEW, {model: questionModel, selected: true, relationships, ...newQuestion})
+      return new Promise((res, rej) => {
+        // TODO maybe someday instead of re-fetching the survey, we should cache the loaded questions with a local mirror instead?
+        dispatch(NEW, {model: questionModel, selected: true, relationships, ...newQuestion}).then((data) => {
+          dispatch(FETCH_SELECTED, {model: surveyModel}).then(res).catch(rej)
+        }).catch(rej)
+      })
     },
   }
 }

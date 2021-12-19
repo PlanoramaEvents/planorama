@@ -93,6 +93,7 @@ module.exports = {
     SURVEY_CONFIRM_DELETE_PAGE_2: "To preserve the questions, choose \"Merge page up\" from the page options.",
     PAGE_ADD_SUCCESS: "Page successfully added",
     PAGE_ADD_ERROR: (errorCode) => twoLines("Page failed to be added.",  `Error code: ${errorCode}`),
-
+    PAGE_SAVE_SUCCESS: "Page successfully saved",
+    PAGE_SAVE_ERROR: (errorCode) => twoLines("Page failed to be saved.",  `Error code: ${errorCode}`),
     
 }
