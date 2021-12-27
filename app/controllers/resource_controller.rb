@@ -9,7 +9,8 @@ class ResourceController < ApplicationController
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   def user_not_authorized(e)
-    error = { status: '401', title: e.message }
+    # should be 403, need a redirect ????
+    error = { status: '403', title: e.message }
     render jsonapi_errors: [error], status: :unauthorized
   end
 
