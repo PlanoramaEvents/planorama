@@ -39,6 +39,7 @@ export const modelMixin = {
     fetch_by_id(id) {
       return this.$store.dispatch(FETCH_BY_ID, {model: this.model, id: id});
     },
+    // TODO: model needs to be passed in
     search(params) {
       return this.$store.dispatch(SEARCH, {model: this.model, params});
     },
@@ -50,7 +51,11 @@ export const modelMixin = {
     },
     patchSelected(data) {
       return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model: this.model, item: {...this.selected, ...data}, fields: Object.keys(data), selected: false}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
-    }
+    },
+    // need a save instance
+    save(instance) {
+      return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, selected: false, item: instance}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
+    },
   }
 }
 

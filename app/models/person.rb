@@ -84,7 +84,7 @@ class Person < ApplicationRecord
 
   has_one :primary_email,
           -> { where(['isdefault = true']) },
-          through: :email_addresses
+          class_name: 'EmailAddress'
 
   has_many :submissions, class_name: 'Survey::Submission', dependent: :destroy
   has_many :mailed_surveys, through: :mailings, source: :survey
@@ -172,11 +172,11 @@ class Person < ApplicationRecord
     email_addresses.first&.saved_change_to_email?
   end
 
-  def primary_email
-    # TODO: change to find the primary email
-    email_addresses.first&.email
-    # emails.primary || (emails.first if new_record?)
-  end
+  # def primary_email
+  #   # TODO: change to find the primary email
+  #   email_addresses.first&.email
+  #   # emails.primary || (emails.first if new_record?)
+  # end
 
   # def self.find_for_database_authentication warden_condition
   #   Rails.logger.error "******** WARDEN AUTH #{warden_condition.to_json}"

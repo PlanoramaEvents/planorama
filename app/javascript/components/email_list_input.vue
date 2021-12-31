@@ -35,14 +35,27 @@ TODO: space, comma, enter etc, and paste ?
 import {http as axios} from '../http';
 
 export default {
-  name: 'PlanoTagInput',
+  name: 'EmailListInput',
+  props: {
+    value: {
+      type: Array,
+      default: () => []
+    }
+  },
   data () {
     return {
-      // tags: [],
       newTag: "",
-      valid_tags: [],
+      valid_tags: this.value,
       invalid_tags: [],
       loadingEmails: false
+    }
+  },
+  watch: {
+    value(n,o) {
+      this.valid_tags = n
+    },
+    valid_tags(n,o) {
+      this.$emit('input', n)
     }
   },
   methods: {

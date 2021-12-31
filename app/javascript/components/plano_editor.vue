@@ -1,11 +1,25 @@
 <template>
-  <ckeditor ref="editor" class="form-control" type="inline" :config="config" :value="value" v-on="$listeners"></ckeditor>
+  <ckeditor
+    ref="editor"
+    :type="type"
+    :class="inputClass"
+    :config="config"
+    :value="value"
+    v-on="$listeners"
+  ></ckeditor>
 </template>
 
 <script>
 export default {
   name: 'PlanoEditor',
-  props: ['value'],
+  // <!-- TODO: add in configs -->
+  props: {
+    value: null,
+    type: {
+      type: String,
+      default: 'inline'
+    }
+  },
   data: () => ({
     config: {
       removeButtons: "Subscript, Superscript",
@@ -16,11 +30,22 @@ export default {
         { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
         '/',
         { name: 'styles', items: [ 'Format' ] },
-        { name: 'editing', items: [ 'Scayt' ] },
+        // SCAYT does not appear to work with out setup
+        // { name: 'editing', items: [ 'Scayt' ] },
         { name: 'clipboard', items: [ 'Undo', 'Redo' ] },
       ]
     }
   }),
+  computed: {
+    // This is because form-control screws up classic display
+    inputClass: function() {
+      if (this.type == 'inline') {
+        return 'form-control'
+      } else {
+        return 'plano-form-control'
+      }
+    }
+  }
 }
 </script>
 

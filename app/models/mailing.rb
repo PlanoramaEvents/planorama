@@ -3,6 +3,9 @@ class Mailing < ApplicationRecord
   has_many  :people, through: :person_mailing_assignments
   has_many  :mail_histories, dependent: :destroy
 
+  # has_many :email_addresses, through: :people
+  has_many :primary_email, through: :people
+
   belongs_to :survey, optional: true
 
   enum mailing_state: {

@@ -43,6 +43,7 @@ module MailService
 
     args[:from] = from if from
     args[:reply_to] = reply_to if reply_to
+    # change the to if this is a test run
     args[:to] = to if to
     # TODO: if not test and include cc then we need to get the other emails
     args[:cc] = cc if cc && !mailing&.testrun

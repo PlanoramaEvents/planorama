@@ -7,7 +7,7 @@ class MailingWorker
     mailing = Mailing.find mailing_id
 
     mailing.with_lock do
-      # TODO
+      # TODO - if test run then send to the requestor
       return unless mailing.mailing_state == Mailing.mailing_states[:submitted] # Check just in case this is a dup
 
       last_person_index = mailing.last_person_idx

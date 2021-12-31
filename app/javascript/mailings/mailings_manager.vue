@@ -16,11 +16,11 @@
           </div>
 
           <div class="d-flex flex-column">
-            <b-button variant="primary" class="m-1" @click="onView">
+            <b-button variant="primary" class="m-1" @click="onNewView">
               <b-icon-plus scale="2"></b-icon-plus>
             </b-button>
-            <b-button variant="primary" class="m-1" @click="onView">View</b-button>
-            <b-button variant="primary" class="m-1">Delete</b-button>
+            <b-button variant="primary" class="m-1" @click="onView" :disabled="!selectedId">View</b-button>
+            <b-button variant="primary" class="m-1" @click="onDelete" :disabled="!selectedId">Delete</b-button>
           </div>
 
         </div>
@@ -34,12 +34,15 @@
         </div>
       </b-tab>
       <b-tab title="Second" lazy>
-        <b-button variant="primary" class="m-1" @click="onManage">Back</b-button>
-
+        <!-- Put this in a slot -->
         <mailing-editor
           :selectedId="selectedId"
           model="mailing"
-        ></mailing-editor>
+        >
+          <template v-slot:controls>
+            <b-button variant="primary" @click="onManage">Back</b-button>
+          </template>
+        </mailing-editor>
       </b-tab>
     </b-tabs>
   </div>
@@ -96,13 +99,24 @@ export default {
       this.selectedId = arg
     },
     onView() {
+      if (this.selectedId) {
+        this.tabIndex = 1
+      }
+    },
+    onNewView() {
+      this.selectedId = null
       this.tabIndex = 1
+    },
+    onDelete() {
+      // TODO:
     },
     onManage() {
       this.tabIndex = 0
+      this.initialize()
     },
-    init() {
+    initialize() {
       this.loading = true
+      this.selectedId = null
       // Optimize by putting in field filter
       this.search({
         // This specifies limited set of fields to get
@@ -113,6 +127,9 @@ export default {
         this.data = data
         this.loading = false
       })
+    },
+    init() {
+      this.initialize()
     }
   }
 }

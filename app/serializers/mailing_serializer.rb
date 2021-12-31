@@ -7,8 +7,15 @@ class MailingSerializer
              :last_person_idx,
              :date_sent, :subject, :content,
              :display_name,
-             :transiton_invite_status
+             :transiton_invite_status,
+             :survey_id
 
-  belongs_to :survey
-  has_many :people
+  # TODO: we do not need the list of people as yet
+  # belongs_to :survey
+  # has_many :people
+
+  attribute :emails do |mailing|
+   mailing.primary_email.collect(&:email)
+  end
+
 end

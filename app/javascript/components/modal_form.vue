@@ -6,6 +6,9 @@
     ref='model-form'
   >
     <slot></slot>
+    <template #modal-footer>
+      <slot name="footer"></slot>
+    </template>
   </b-modal>
 </template>
 
@@ -25,7 +28,9 @@ export default {
   methods: {
     showModal() {
       this.$refs['model-form'].show()
-
+    },
+    hideModal() {
+      this.$refs['model-form'].hide()
     },
     submitData(event) {
       eventBus.$emit("submit-inner-form")

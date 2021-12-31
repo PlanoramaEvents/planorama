@@ -74,4 +74,13 @@ class MailingsController < ResourceController
 
     render_object(mailing, includes: false)
   end
+
+  def except_params
+    # TODO: need to deal with adding people that match the emails
+    %i[
+      emails
+      display_name
+    ]
+  end
+
 end
