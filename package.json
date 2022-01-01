@@ -25,6 +25,7 @@
     "validator": "^13.7.0",
     "vue": "^2.6.12",
     "vue-async-computed": "^3.9.0",
+    "vue-pluralize": "^0.0.2",
     "vue-query-builder": "^0.8",
     "vue-router": "^3.5.1",
     "vuedraggable": "^2.24.3",

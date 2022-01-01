@@ -35,12 +35,14 @@ import {BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import { CustomIconsPlugin } from '../icons';
 import AsyncComputed from 'vue-async-computed';
 import CKEditor from 'ckeditor4-vue';
+import VuePluralize from 'vue-pluralize';
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(CustomIconsPlugin);
 Vue.use(AsyncComputed);
 Vue.use(CKEditor);
+Vue.use(VuePluralize);
 
 import PlanoramaApp from '../app.vue';
 import { router } from '../app.router';
@@ -51,7 +53,7 @@ const app = new Vue({
   router,
   store,
   mounted() {
-    console.debug('*** APP X MOUNTED')
+    // console.debug('*** APP X MOUNTED')
     // console.debug('****** ST ', store)
   }
 })

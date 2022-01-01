@@ -61,8 +61,12 @@ export default {
       this.loading = true
       let fields = `fields[${this.model}]`
       let field_name = `id,${this.field}`
+      let models = this.$pluralize(this.model)
+      let sort_by = `${models}.${this.field}`
       this.search({
         fields: field_name,
+        "sortBy": sort_by,
+        "sortOrder": 'asc'
       }).then(data => {
         this.data = data
         this.loading = false

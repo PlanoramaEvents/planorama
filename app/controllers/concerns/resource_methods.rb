@@ -171,11 +171,13 @@ module ResourceMethods
     order_str = nil
 
     order = order_by || params[:sortBy]
-    order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
+    order ||= self.class::DEFAULT_SORTBY if defined? self.class::DEFAULT_SORTBY
     order ||= ''
 
     if !order.blank?
-      direction = params[:sortOrder] || 'asc'
+      direction = params[:sortOrder]
+      direction ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
+      direction ||= 'asc'
 
       order_str = "#{order} #{direction}"
       # For PSQL NULLS FIRST is the default for DESC order, and NULLS LAST otherwise.

@@ -1,7 +1,8 @@
 class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
   POLICY_CLASS = 'SurveysPolicy'.freeze
-  DEFAULT_ORDER = 'surveys.updated_at'
+  DEFAULT_SORTBY = 'surveys.updated_at'.freeze
+  DEFAULT_ORDER = 'desc'.freeze
 
   def assign_people
     authorize current_person, policy_class: policy_class

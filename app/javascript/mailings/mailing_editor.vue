@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ mailing }}
     <modal-form
       title="Save Mailing"
       ref="save-mailing-modal"
@@ -130,7 +129,7 @@ export default {
   // test@test.com, dfdf, aa@aa.com
   data () {
     /*
-    To schedule
+    To schedule, need to do as part of save ?
     http://localhost:3000/mailing/schedule/{{mailing-id}}
     To preview
     need mailing-id and person_id ???
@@ -199,6 +198,7 @@ export default {
       ).then(data => {
         this.mailing = data
         this.loading = false
+        this.has_survey = data.survey_id != null
       })
     }
   },
