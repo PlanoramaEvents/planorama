@@ -81,7 +81,7 @@ Rails.application.routes.draw do
 
   resources :mailings, path: 'mailing'
 
-  get 'mailing/schedule/:id', to: 'mailings#schedule'
+  get 'mailing/schedule/:id(/:test)(/:email)', to: 'mailings#schedule', constraints: { email: /[^\/]+/ }
   post 'mailing/:mailing_id/assign_people', to: 'mailings#assign_people'
   post 'mailing/:mailing_id/unassign_people', to: 'mailings#unassign_people'
 

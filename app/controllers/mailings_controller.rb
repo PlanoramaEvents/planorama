@@ -62,15 +62,23 @@ class MailingsController < ResourceController
     mailing = Mailing.find params[:id]
     authorize current_person, policy_class: policy_class
 
-    # Only schedule a mailing that is not already scheduled
-    if mailing.mailing_state == Mailing.mailing_states[:draft]
-      mailing.mailing_state == Mailing.mailing_states[:submitted]
-      mailing.last_person_idx = -1
-      mailing.save!
+    send_test = params[:test].present?
+    test_address = params[:email]
 
-      MailingWorker.perform_async(mailing.id)
-      # TODO
-      # MailingWorker.perform(mailing.id, send_test: false, test_address: nil, test_person_id: nil)
+    # Only schedule a mailing that is not already scheduled
+    if (mailing.mailing_state == Mailing.mailing_states[:draft]) || send_test
+      if !send_test
+        mailing.mailing_state = Mailing.mailing_states[:submitted]
+        mailing.last_person_idx = -1
+        mailing.save!
+      end
+
+      MailingWorker.perform_async(
+        mailing.id,
+        send_test,
+        test_address,
+        (send_test ? current_person.id : nil)
+      )
     end
 
     render_object(mailing, includes: false)

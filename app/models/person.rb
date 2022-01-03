@@ -105,7 +105,7 @@ class Person < ApplicationRecord
     declined: 'declined'
   }
 
-  enum invitestatus: {
+  enum invite_status: {
     not_set: 'not_set',
     do_not_invite: 'do_not_invite',
     potential_invite: 'potential_invite',

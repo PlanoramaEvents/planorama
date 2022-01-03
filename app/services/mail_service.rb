@@ -1,7 +1,8 @@
 module MailService
   def self.send_mailing(
     person:,
-    mailing:
+    mailing:,
+    tester: nil
   )
     content = self.generate_email_content(
       mailing.content,
@@ -14,13 +15,14 @@ module MailService
     )
 
     self.send_email(
-      to:             person.primary_email,
+      to:             tester ? tester.primary_email.email : person.primary_email.email,
       subject:        mailing.subject,
       title:          mailing.title,
-      content:        content
+      content:        content,
+      is_test:        tester != nil
     )
 
-    self.post_mail_transition(person: person, mailing: mailing)
+    self.post_mail_transition(person: person, mailing: mailing) unless tester
   end
 
   def self.send_email(
@@ -32,7 +34,8 @@ module MailService
     content:,
     person: nil,
     mailing: nil,
-    skip_premailer: false
+    skip_premailer: false,
+    is_test: false
   )
     args = {
       subject:        subject,
@@ -53,12 +56,14 @@ module MailService
 
     mail.deliver
 
-    self.save_mail_history(
-      person: person,
-      email_status: MailHistory::email_statuses[:sent],
-      mailing: mailing,
-      mail: mail
-    )
+    if !is_test
+      self.save_mail_history(
+        person: person,
+        email_status: MailHistory::email_statuses[:sent],
+        mailing: mailing,
+        mail: mail
+      )
+    end
   rescue Net::SMTPSyntaxError
     self.save_mail_history(
       person:       person,
@@ -137,13 +142,13 @@ module MailService
     to_invite_status = mailing.transiton_invite_status
     return unless to_invite_status
 
-    person.invite_status = invite_status
+    person.invite_status = to_invite_status
     person.save!
   end
 
   # Given an email template and a set of argument generate the body for the email
   def self.generate_email_content(content, arguments)
-    # This turns thge arguments hash into variables for the ERB
+    # This turns the arguments hash into variables for the ERB
     namespace = ErbNamespace.new(arguments)
 
     return ERB.new(
