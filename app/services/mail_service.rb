@@ -25,6 +25,18 @@ module MailService
     self.post_mail_transition(person: person, mailing: mailing) unless tester
   end
 
+  def self.preview_email_content(person:, mailing:)
+    self.generate_email_content(
+      mailing.content,
+      {
+        person: person,
+        survey: mailing.survey,
+        survey_url: self.generate_survey_url(survey: mailing.survey, person: person),
+        login_url: self.generate_login_url(person: person)
+      }
+    )
+  end
+
   def self.send_email(
     from: nil,
     reply_to: nil,

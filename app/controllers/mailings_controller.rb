@@ -84,6 +84,27 @@ class MailingsController < ResourceController
     render_object(mailing, includes: false)
   end
 
+  def preview
+    mailing = Mailing.find params[:id]
+    authorize current_person, policy_class: policy_class
+
+    test_address = params[:email]
+    addr = EmailAddress.find_by(email: test_address)
+
+    content = MailService.preview_email_content(
+                person: addr.person,
+                mailing: mailing
+              )
+
+    # render_object(content) # TODO: verify ok for content
+    render json: {
+             to: test_address,
+             content: content
+           },
+           content_type: 'application/json'
+
+  end
+
   def except_params
     # TODO: need to deal with adding people that match the emails
     %i[
