@@ -35,9 +35,11 @@ class MailingsController < ResourceController
   end
 
   def assign_people_by_email
-    emails = params[:emails]
-    # emails = params.permit(mailing: [:emails])
-    Rails.logger.debug "**** EMAILS: #{emails.to_json}"
+    emails = if params[:data]
+               params[:data][:attributes][:emails]
+             else
+               params[:emails]
+             end
 
     # get the id od people with those emails
     email_addresses = EmailAddress.where("email in (?)", emails)

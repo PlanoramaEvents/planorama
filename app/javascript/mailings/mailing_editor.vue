@@ -42,11 +42,7 @@
     </b-form-group>
     <b-form-group
     >
-      <b-form-checkbox
-        v-model="has_survey"
-        value="true"
-        unchecked-value="false"
-      >
+      <b-form-checkbox v-model="has_survey">
         This mailing has a survey attached
       </b-form-checkbox>
     </b-form-group>
@@ -67,7 +63,7 @@
           @change="onSurveyChange"
           model="survey"
           field="name"
-          :disabled="has_survey == 'false'"
+          :disabled="has_survey == false"
         ></model-select>
       </b-form-group>
     </b-form-group>
@@ -137,15 +133,13 @@ export default {
     return {
       loading: true,
       mailing: this.starter_mailing(),
-      has_survey: 'false',
-      // TODO: survey list selector
-      options: [],
+      has_survey: false,
       surveys: []
     }
   },
   watch: {
     has_survey(n,o) {
-      if (n == 'false') {
+      if (n == false) {
         this.mailing.survey_id = null
       }
     }
@@ -160,7 +154,8 @@ export default {
     onConfirmedSave() {
       let res = this.save_or_update();
       res.then(
-        () => {
+        (data) => {
+          this.mailing = data
           this.$refs['save-mailing-modal'].hideModal()
         }
       )
@@ -188,6 +183,7 @@ export default {
     },
     init() {
       if (this.selectedId == null) {
+        this.has_survey = false
         this.mailing = this.starter_mailing()
         return
       }
