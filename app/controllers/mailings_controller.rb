@@ -14,16 +14,41 @@ class MailingsController < ResourceController
   end
 
   # before check
-  def before_save
-    check_editable(mailing: @object)
-  end
+  # def before_save
+  #   check_editable(mailing: @object)
+  # end
 
   def before_update
     check_editable(mailing: @object)
   end
 
   def check_editable(mailing:)
-    # raise "Mailing is scheduled, you can not edit it" if mailing.scheduled
+    raise "Mailing is scheduled, you can not edit it" unless mailing.mailing_state == Mailing.mailing_states[:draft]
+  end
+
+  def after_save
+    assign_people_by_email
+  end
+
+  def after_update
+    assign_people_by_email
+  end
+
+  def assign_people_by_email
+    emails = params[:emails]
+    # emails = params.permit(mailing: [:emails])
+    Rails.logger.debug "**** EMAILS: #{emails.to_json}"
+
+    # get the id od people with those emails
+    email_addresses = EmailAddress.where("email in (?)", emails)
+    people = Person.find email_addresses.collect{|a| a.person_id }
+
+    # remove any that are not in the list but in the mailing
+    # add any in the mailing that are not in the list
+    @object.people.delete_all
+
+    # add them to the mailing, make sure unique ...
+    @object.people << people
   end
 
   def assign_people
