@@ -32,9 +32,6 @@ class MailingWorker
           mailing: mailing
         )
 
-        # If we are sending a test then we do not need to do anything more
-        # break if send_test
-
         # note the last person processes so we can continue from there if job stopped and restarted
         mailing.last_person_idx = idx # use a counter
         mailing.save

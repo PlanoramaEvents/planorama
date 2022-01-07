@@ -80,19 +80,21 @@
     <plano-editor
       v-model="mailing.content"
       type='classic'
+      show-mail-merge=true
     ></plano-editor>
     <div class="d-flex justify-content-end">
       <b-button variant="primary" class="m-1 btn-sm" @click="onSave">Save Mailing</b-button>
     </div>
     <div class="d-flex justify-content-end">
-      <b-button variant="primary" class="m-1">Send test to self</b-button>
-      <b-button variant="primary" class="m-1">Preview</b-button>
-      <b-button variant="danger" class="m-1">Send</b-button>
+      <b-button variant="primary" class="m-1" @click="onSendTest">Send test to self</b-button>
+      <b-button variant="primary" class="m-1" @click="onPreview">Preview</b-button>
+      <b-button variant="danger" class="m-1" @click="onSend">Send</b-button>
     </div>
   </div>
 </template>
 
 <script>
+import {http as axios} from '../http';
 import modelMixin from '../store/model.mixin';
 import { mailingModel as model } from '../store/mailing.store'
 import EmailListInput from '../components/email_list_input'
@@ -122,14 +124,7 @@ export default {
       default: null
     }
   },
-  // test@test.com, dfdf, aa@aa.com
   data () {
-    /*
-    To schedule, need to do as part of save ?
-    http://localhost:3000/mailing/schedule/{{mailing-id}}
-    To preview
-    need mailing-id and person_id ???
-    */
     return {
       loading: true,
       mailing: this.starter_mailing(),
@@ -146,10 +141,59 @@ export default {
   },
   methods: {
     ...mapActions({newMailingAction: NEW_MAILING}),
-
     onSave() {
       // Show dialog then save the actual entity
       this.$refs['save-mailing-modal'].showModal()
+    },
+    onSend() {
+      // Tell parent component to go back??
+      // this.tabIndex = 0
+      let res = this.onConfirmedSave()
+
+      res.then(
+        () => {
+          // To schedule, need to do as part of save ?
+          // http://localhost:3000/mailing/schedule/{{mailing-id}}
+          // Also schedule should close the edit and return the user to the mgmt screen
+          let url = `/mailing/schedule/${this.mailing.id}`
+          axios.get(url).then(
+            () => {
+              console.debug("***** WE HAVE SCHEDULED THE EMAILS")
+            }
+          )
+        }
+      )
+    },
+    onSendTest() {
+      let res = this.onConfirmedSave()
+
+      console.debug("**** SAVED: ", res)
+
+      res.then(
+        () => {
+          // To test
+          // http://localhost:3000/mailing/schedule/{{mailing-id}}/{{email}}/true
+          let recipient = this.mailing.emails[0]
+          if (recipient) {
+            let url = `/mailing/schedule/${this.mailing.id}/${recipient}/true`
+            axios.get(url).then(
+              () => {
+                console.debug("***** WE HAVE SCHEDULED A TEST")
+              }
+            )
+          }
+        }
+      )
+    },
+    onPreview() {
+      let res = this.onConfirmedSave()
+
+      res.then(
+        () => {
+          // To preview
+          // http://localhost:3000/mailing/preview/{{mailing-id}}/{{email}}
+        }
+      )
     },
     onConfirmedSave() {
       let res = this.save_or_update();
@@ -159,6 +203,8 @@ export default {
           this.$refs['save-mailing-modal'].hideModal()
         }
       )
+
+      return res
     },
     save_or_update() {
       if (this.mailing.id == null) {

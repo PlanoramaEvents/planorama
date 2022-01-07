@@ -4,12 +4,13 @@ module MailService
     mailing:,
     tester: nil
   )
+    survey = mailing.survey
     content = self.generate_email_content(
       mailing.content,
       {
         person: person,
-        survey: mailing.survey,
-        survey_url: self.generate_survey_url(survey: mailing.survey, person: person),
+        survey: survey,
+        survey_url: self.generate_survey_url(survey: survey, person: person),
         login_url: self.generate_login_url(person: person)
       }
     )
@@ -132,7 +133,7 @@ module MailService
       valid_for: 1.week
     )
 
-    UrlService.url_for path: "/login/#{ml.token}"
+    UrlService.url_for path: "login/#{ml.token}"
   end
 
   def self.generate_survey_url(survey:, person:)
@@ -144,7 +145,7 @@ module MailService
       valid_for: 1.week
     )
 
-    UrlService.url_for path: "/login/#{ml.token}"
+    UrlService.url_for path: "login/#{ml.token}"
   end
 
   def self.post_mail_transition(person: , mailing: nil)

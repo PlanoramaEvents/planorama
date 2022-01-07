@@ -47,3 +47,12 @@ $sidebar-mobile-width: 60%;
 body {
   overflow-x: hidden;
 }
+
+/* for CKEditor */
+.cke_button_label.cke_button__insert-plano-email-fields_label {
+  display: inline;
+}
+
+.plono-ck-button .cke_button_icon {
+  display: none;
+}
