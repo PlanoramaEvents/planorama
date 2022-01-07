@@ -18,11 +18,11 @@ module.exports = {
     LOGIN_PASSWORD_CHANGED: "You successfully changed your password.",
     LOGIN_TOKEN_EXPIRED: (resetPasswordLink) => `The password reset link you used is no longer valid. Please request another link here: ${resetPasswordLink}`,
     LOGIN_CLICK_TO_AGREE: "By clicking ‘Log In’ below, I agree to Chicon 8 storing and using my personal data as documented in the",
-        
+
     // toast titles
     ERROR_TOAST_TITLE: "Error",
     SUCCESS_TOAST_TITLE: "Success",
-    
+
     //survey actions
     SURVEY_SAVE_SUCCESS: "Survey successfully saved.",
     SURVEY_SAVE_ERROR: (errorCode) => twoLines("Survey failed to be saved.", `Error code: ${errorCode}`),
@@ -37,7 +37,7 @@ module.exports = {
     SURVEY_SAVE_ERROR_DELETE: (errorCode) => twoLines("Survey failed to be deleted.", `Error code: ${errorCode}`),
     SURVEY_SAVE_SUCCESS_ADD: "Survey successfully added.",
     SURVEY_SAVE_ERROR_ADD: (errorCode) => twoLines("Survey failed to be added.", `Error code: ${errorCode}`),
-    
+
     // survey results actions
     SURVEY_RESULTS_CLEAR_SUCCESS: "Results successfully cleared.",
     SURVEY_RESULTS_CLEAR_ERROR: (errorCode) => twoLines("Results failed to be cleared.", `Error code: ${errorCode}`),
@@ -46,24 +46,26 @@ module.exports = {
     SURVEY_RESULTS_FREEZE_ERROR: (errorCode) => twoLines("Response edits failed to be frozen.", `Error code: ${errorCode}`),
     SURVEY_RESULTS_UNFREEZE_SUCCESS: "Response edits successfully unfrozen.",
     SURVEY_RESULTS_UNFREEZE_ERROR: (errorCode) => twoLines("Response edits failed to be unfrozen.", `Error code: ${errorCode}`),
-    
+
     //survey defaults
     SURVEY_DEFAULT_THANK_YOU: "Your responses have been recorded.",
-    
-    //generic app wide 
+
+    //generic app wide
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added to Planorama.`,
     ADMIN_ADD_USER_ERROR: (name) => (errorCode) => twoLines(`${name} failed to be added to Planorama.`, `Error code: ${errorCode}`),
-    IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",   
+    IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",
     MODEL_SAVE_SUCCESS: (model) => `${titleCase(model)} sucessfully saved.`,
     MODEL_SAVE_ERROR: (model) => (errorCode) => twoLines(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be saved.`, `Error code: ${errorCode}`),
     MODEL_ADD_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully added.`,
     MODEL_ADD_ERROR: (model) => (errorCode) => twoLines(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be added.`, `Error code: ${errorCode}`),
     MODEL_DELETE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully deleted.`,
     MODEL_DELETE_ERROR: (model) => (errorCode) => twoLines(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be deleted.`, `Error code: ${errorCode}`),
-   
-    
-    
+
+    // Mailing messages
+    MAILING_SCHEDULED: (title) => `The mailing ${title} has been scheduled.`,
+    MAILING_TEST_SCHEDULED: (title) => `A test of the mailing ${title} has been scheduled.`,
+
     //question actions
     QUESTION_ORDER_SAVE_SUCCESS: "Question reorder successfully saved",
     QUESTION_ORDER_SAVE_ERROR: (errorCode) => twoLines("Question reorder failed to be saved.", `Error code: ${errorCode}`),
@@ -75,7 +77,7 @@ module.exports = {
     QUESTION_DUPLICATE_ERROR: (errorCode) => twoLines("Question failed to be duplicated.", `Error code: ${errorCode}`),
     QUESTION_ADD_SAVE_SUCCESS: "Question successfully added",
     QUESTION_ADD_SAVE_ERROR: (errorCode) => twoLines("Question failed to be added.", `Error code: ${errorCode}`),
-    
+
     //answer actions
     ANSWER_ORDER_SAVE_SUCCESS: "Answer reorder sucessfully saved",
     ANSWER_ORDER_SAVE_ERROR: (errorCode) => twoLines("Answer reorder failed to be saved.", `Error code: ${errorCode}`),
@@ -83,8 +85,8 @@ module.exports = {
     ANSWER_SAVE_ERROR: (errorCode) => twoLines("Answer failed to be saved.", `Error code: ${errorCode}`),
     ANSWER_ADD_SUCCESS: "Answer sucessfully added",
     ANSWER_ADD_ERROR: (errorCode) => twoLines("Answer failed to be added.",  `Error code: ${errorCode}`),
-    
-    //page actions 
+
+    //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
     PAGE_DELETE_ERROR: (errorCode) => twoLines("Page failed to be deleted.", `Error code: ${errorCode}`),
     PAGE_MERGE_SUCCESS: "Page successfully merged",
@@ -95,5 +97,5 @@ module.exports = {
     PAGE_ADD_ERROR: (errorCode) => twoLines("Page failed to be added.",  `Error code: ${errorCode}`),
     PAGE_SAVE_SUCCESS: "Page successfully saved",
     PAGE_SAVE_ERROR: (errorCode) => twoLines("Page failed to be saved.",  `Error code: ${errorCode}`),
-    
+
 }

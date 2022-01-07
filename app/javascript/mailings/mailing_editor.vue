@@ -3,6 +3,7 @@
     <modal-form
       title="Save Mailing"
       ref="save-mailing-modal"
+      @close="onClose"
     >
       <b-form
         v-on:save="onConfirmedSave"
@@ -60,7 +61,6 @@
       >
         <model-select
           v-model="mailing.survey_id"
-          @change="onSurveyChange"
           model="survey"
           field="name"
           :disabled="has_survey == false"
@@ -80,7 +80,7 @@
     <plano-editor
       v-model="mailing.content"
       type='classic'
-      show-mail-merge=true
+      :show-mail-merge="true"
     ></plano-editor>
     <div class="d-flex justify-content-end">
       <b-button variant="primary" class="m-1 btn-sm" @click="onSave">Save Mailing</b-button>
@@ -102,6 +102,9 @@ import PlanoEditor from '@/components/plano_editor';
 import ModalForm from '../components/modal_form';
 import ModelField from '../shared/model-field';
 import ModelSelect from '../components/model_select';
+import toastMixin from '../shared/toast-mixin';
+import { MAILING_SCHEDULED } from '../constants/strings';
+import { MAILING_TEST_SCHEDULED } from '../constants/strings';
 
 import { mapActions } from 'vuex';
 import { NEW_MAILING } from '../store/mailing.store';
@@ -117,6 +120,7 @@ export default {
   },
   mixins: [
     modelMixin,
+    toastMixin
   ],
   props: {
     selectedId: {
@@ -129,7 +133,8 @@ export default {
       loading: true,
       mailing: this.starter_mailing(),
       has_survey: false,
-      surveys: []
+      surveys: [],
+      next_action: null
     }
   },
   watch: {
@@ -142,58 +147,24 @@ export default {
   methods: {
     ...mapActions({newMailingAction: NEW_MAILING}),
     onSave() {
+      // How to so the show modal with different onConfirmedSave actions
       // Show dialog then save the actual entity
       this.$refs['save-mailing-modal'].showModal()
     },
+    onClose() {
+      this.next_action = null
+    },
     onSend() {
-      // Tell parent component to go back??
-      // this.tabIndex = 0
-      let res = this.onConfirmedSave()
-
-      res.then(
-        () => {
-          // To schedule, need to do as part of save ?
-          // http://localhost:3000/mailing/schedule/{{mailing-id}}
-          // Also schedule should close the edit and return the user to the mgmt screen
-          let url = `/mailing/schedule/${this.mailing.id}`
-          axios.get(url).then(
-            () => {
-              console.debug("***** WE HAVE SCHEDULED THE EMAILS")
-            }
-          )
-        }
-      )
+      this.next_action = 'send'
+      this.onSave()
     },
     onSendTest() {
-      let res = this.onConfirmedSave()
-
-      console.debug("**** SAVED: ", res)
-
-      res.then(
-        () => {
-          // To test
-          // http://localhost:3000/mailing/schedule/{{mailing-id}}/{{email}}/true
-          let recipient = this.mailing.emails[0]
-          if (recipient) {
-            let url = `/mailing/schedule/${this.mailing.id}/${recipient}/true`
-            axios.get(url).then(
-              () => {
-                console.debug("***** WE HAVE SCHEDULED A TEST")
-              }
-            )
-          }
-        }
-      )
+      this.next_action = 'send-test'
+      this.onSave()
     },
     onPreview() {
-      let res = this.onConfirmedSave()
-
-      res.then(
-        () => {
-          // To preview
-          // http://localhost:3000/mailing/preview/{{mailing-id}}/{{email}}
-        }
-      )
+      this.next_action = 'preview'
+      this.onSave()
     },
     onConfirmedSave() {
       let res = this.save_or_update();
@@ -201,6 +172,21 @@ export default {
         (data) => {
           this.mailing = data
           this.$refs['save-mailing-modal'].hideModal()
+          // TODO: next action
+          if (this.next_action) {
+            switch(this.next_action) {
+              case 'send':
+                this.performSend()
+                break;
+              case 'send-test':
+                this.performSendTest()
+                break;
+              case 'preview':
+                this.performPreview()
+                break;
+            }
+            this.next_action = null
+          }
         }
       )
 
@@ -213,6 +199,46 @@ export default {
         return this.save(this.mailing)
       }
     },
+    performSend(res) {
+      let url = `/mailing/schedule/${this.mailing.id}`
+      axios.get(url).then(
+        () => {
+          this.$bvToast.toast(
+            MAILING_SCHEDULED(this.mailing.title),
+            {
+              variant: 'success',
+              title: 'Mail Scheduled'
+            }
+          )
+        }
+      )
+    },
+    performSendTest(res) {
+      let recipient = this.mailing.emails[0]
+      if (recipient) {
+        let url = `/mailing/schedule/${this.mailing.id}/${recipient}/true`
+        axios.get(url).then(
+          () => {
+            this.$bvToast.toast(
+              MAILING_TEST_SCHEDULED(this.mailing.title),
+              {
+                variant: 'success',
+                title: 'Mail Scheduled'
+              }
+            )
+          }
+        )
+      }
+    },
+    performPreview(res) {
+      // Preview needs to be another component - shown in an overlay
+      // res.then(
+      //   () => {
+      //     // To preview
+      //     // http://localhost:3000/mailing/preview/{{mailing-id}}/{{email}}
+      //   }
+      // )
+    },
     starter_mailing() {
       return {
         id: null,
@@ -223,9 +249,6 @@ export default {
         content: '',
         testrun: false
       }
-    },
-    onSurveyChange() {
-
     },
     init() {
       if (this.selectedId == null) {

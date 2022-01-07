@@ -4,6 +4,7 @@
     :title="title"
     @ok='submitData'
     ref='model-form'
+    @close="onClose"
   >
     <slot></slot>
     <template #modal-footer>
@@ -28,6 +29,10 @@ export default {
   methods: {
     showModal() {
       this.$refs['model-form'].show()
+    },
+    onClose() {
+      // console.debug("**** HIDEEEEE")
+      this.$emit('close')
     },
     hideModal() {
       this.$refs['model-form'].hide()
