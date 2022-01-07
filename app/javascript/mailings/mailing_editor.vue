@@ -210,6 +210,7 @@ export default {
               title: 'Mail Scheduled'
             }
           )
+          this.$emit('mailingSent')
         }
       )
     },

@@ -31,7 +31,6 @@ export default {
       this.$refs['model-form'].show()
     },
     onClose() {
-      // console.debug("**** HIDEEEEE")
       this.$emit('close')
     },
     hideModal() {

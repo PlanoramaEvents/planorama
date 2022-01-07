@@ -38,6 +38,7 @@
         <mailing-editor
           :selectedId="selectedId"
           model="mailing"
+          @mailingSent="onManage"
         >
           <template v-slot:controls>
             <b-button variant="primary" @click="onManage">Back</b-button>
