@@ -8,12 +8,12 @@
          label="Question Text"
          :label-for="formId('question-text')"
         >
-          <b-form-input
+
+          <plano-editor
             :id="formId('question-text')"
             v-model="question.question"
-            type="text"
-            @blur="patchSelectedQuestion({question: $event.target.value})"
-          ></b-form-input>
+            @blur="patchSelectedQuestion({question: $event.editor._.data})"
+          ></plano-editor>
         </b-form-group>
       </div>
       <div class="col-6 offset-1">
@@ -28,7 +28,7 @@
     </div>
     <div class="row" v-if="!formatting && !isSelected"> 
       <div class="col-12">
-        <h4>{{question.question}}</h4>
+        <div v-html="question.question"></div>
       </div>
     </div>
     <div class="row">
@@ -179,14 +179,15 @@
 </template>
 
 <script>
-import { SurveyQuestion } from './survey_question'
 import draggable from 'vuedraggable';
 import OptionsQuestion from './options-question.vue';
+import PlanoEditor from '@/components/plano_editor';
 import {
   surveyMixin,
   pageMixin,
   questionMixin
 } from '@mixins';
+import Plano_editor from '@/components/plano_editor.vue';
 
 
 export default {
@@ -194,6 +195,8 @@ export default {
   components: {
     draggable,
     OptionsQuestion,
+    PlanoEditor,
+    Plano_editor
   },
   data: () => ({
     questionTypes: [
@@ -231,9 +234,6 @@ export default {
     },
   },
   methods: {
-    whateven(evt) {
-      console.log(event)
-    },
     formId(string) {
       return `${string}-${this.question.id}`
     },

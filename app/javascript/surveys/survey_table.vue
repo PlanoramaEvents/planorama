@@ -29,13 +29,12 @@ ISSUE - template links don't work
 </template>
 
 <script>
-import { SAVE } from '../model.store';
+import { SAVE } from '../store/model.store';
 import TableVue from '../components/table_vue';
-import TooltipOverflow from '../tooltip-overflow';
-import surveyMixin from './survey.mixin';
+import TooltipOverflow from '../shared/tooltip-overflow';
 import { survey_columns as columns } from './survey';
 import { mapActions } from 'vuex';
-import { NEW_SURVEY } from '../store/survey.store';
+import { NEW_SURVEY } from '@/store/survey';
 
 export default {
   name: 'SurveyTable',
@@ -53,7 +52,7 @@ export default {
     ...mapActions({newSurvey: NEW_SURVEY}),
     onNew() {
       this.newSurvey().then((survey) => {
-        this.$router.push({path: `/edit/${survey.id}`})
+        this.$router.push({path: `/surveys/edit/${survey.id}`})
       });
     }
   }

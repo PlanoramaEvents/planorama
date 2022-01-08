@@ -51,7 +51,7 @@ import {
 } from '@mixins';
 import DropdownItem from './dropdown-item';
 import NextPagePicker from './next-page-picker.vue';
-import { answerModel, questionModel } from '../store/survey.store'
+import { answerModel, questionModel } from '@/store/survey'
 import { mapActions } from 'vuex';
 import { SAVE } from '../store/model.store';
 
@@ -158,7 +158,7 @@ export default {
           type: answerModel
         }
       }
-      console.log("item", item)
+      console.debug("item", item)
       this.toastPromise(this.saveAnswer(item), ANSWER_ORDER_SAVE_SUCCESS)
     }
   },

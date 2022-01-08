@@ -1,5 +1,6 @@
 #surveys
 
+return if Survey.count > 0
 
 Survey::Submission.destroy_all
 Survey.destroy_all

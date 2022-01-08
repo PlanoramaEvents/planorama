@@ -8,18 +8,22 @@
     </ul>
     <h2>Mail History</h2>
     <pre>{{ selected.mail_histories }}</pre>
+    <h2>Comments</h2> 
+    <b-form-textarea v-model="comments"></b-form-textarea>
+    <b-button class="float-right" @click="patchSelected({comments})" variant="primary">Save Comments</b-button>
   </div>
 </template>
 
 <script>
-import { modelMixin } from '@mixins'
-import { getOrderedRelationships } from '../utils/jsonapi_utils'
+import { modelMixin, makeSelectedFieldMixin } from '@/mixins'
+const commentsMixin = makeSelectedFieldMixin('comments');
 
 export default {
   name: 'PeopleAdminTab',
   mixins: [
-    modelMixin
-  ],
+    modelMixin,
+    commentsMixin
+  ]
 }
 </script>
 

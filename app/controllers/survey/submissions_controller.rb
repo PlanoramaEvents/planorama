@@ -3,7 +3,7 @@ class Survey::SubmissionsController < ResourceController
   MODEL_CLASS = 'Survey::Submission'.freeze
   POLICY_CLASS = 'Survey::SubmissionsPolicy'.freeze
   XLS_SERIALIZER_CLASS = 'Survey::SubmissionXlsSerializer'.freeze
-  DEFAULT_ORDER = 'updated_at'
+  DEFAULT_SORTBY = 'updated_at'
 
   def belong_to_class
     Survey if params[:survey_id].present?
@@ -24,6 +24,26 @@ class Survey::SubmissionsController < ResourceController
     @object.person_id = current_person.id if current_person
   end
 
+  # After save and if state changes to submitted we may need
+  # to transistion the person's state?
+  # based on survey.transition_accept_status
+  def after_save
+    post_submission_transition if @object.submission_state == Survey::Submission.submission_states[:submitted]
+  end
+
+  def after_update
+    post_submission_transition if @object.submission_state == Survey::Submission.submission_states[:submitted]
+  end
+
+  def post_submission_transition
+    acceptance_status = @object.transition_accept_status
+    return unless acceptance_status
+    return unless @object.person_id || (@object.person_id != current_person.id)
+
+    current_person.acceptance_status = acceptance_status
+    current_person.save!
+  end
+
   def serializer_includes
     [
       :responses
@@ -31,7 +51,12 @@ class Survey::SubmissionsController < ResourceController
   end
 
   def includes
-    serializer_includes
+    [
+      :person,
+      responses: [
+        :question
+      ]
+    ]
   end
 
   def delete_all
@@ -47,9 +72,12 @@ class Survey::SubmissionsController < ResourceController
 
   def allowed_params
     %i[
+      id
       person_id
       survey_id
       responses
+      person
+      survey
     ] << [
       responses_attributes: %i[
         id
@@ -59,10 +87,12 @@ class Survey::SubmissionsController < ResourceController
         question_id
       ] << [
         response: %i[
+          id
           text
         ] << [
           answers: [],
           address: %i[
+            id
             street
             street2
             city
@@ -71,6 +101,7 @@ class Survey::SubmissionsController < ResourceController
             country
           ],
           socialmedia: %i[
+            id
             twitter
             facebook
             linkedin

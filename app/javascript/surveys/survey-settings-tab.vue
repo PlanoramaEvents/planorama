@@ -9,30 +9,30 @@
           Published&nbsp;<span v-if="survey.public">on {{new Date(survey.published_on).toLocaleDateString()}}</span>
         </b-col>
       </b-row>
-      <survey-setting disabled v-model="survey.anonymous">
+      <survey-setting disabled v-model="survey.anonymous" field="anonymous">
         Anonymous
       </survey-setting>
-      <survey-setting bool v-model="survey.mandatory_star">
+      <survey-setting bool v-model="survey.mandatory_star" field="mandatory_star">
         Show star for required questions <small>(What is your name? <span class="text-danger" title="required">*</span>&nbsp;)</small>
       </survey-setting>
-      <survey-setting bool disabled v-model="survey.captcha">
+      <survey-setting bool disabled v-model="survey.captcha" field="captcha">
         Use CAPTCHA
       </survey-setting>
-      <survey-setting bool disabled v-model="survey.numbered_questions">
+      <survey-setting bool disabled v-model="survey.numbered_questions" field="numbered_questions">
         Show numbers on questions
       </survey-setting>
-      <survey-setting bool disabled v-model="survey.branded">
+      <survey-setting bool disabled v-model="survey.branded" field="branded">
         Show logo
       </survey-setting>
-      <survey-setting text v-model="survey.submit_string">
+      <survey-setting text v-model="survey.submit_string" field="submit_string">
         Text for submit button
       </survey-setting>
-      <survey-setting text v-model="survey.thank_you">
+      <survey-setting text v-model="survey.thank_you" field="thank_you">
         Confirmation message
       </survey-setting>
       <b-modal v-if="survey" id="confirmPublish" @ok="togglePublish" @cancel="cancelPublish" ok-title="Yes" cancel-variant="link">
-        <p v-if="!survey.public">{{SURVEY_CONFIRM_CLOSE}}</p>
-        <p v-if="survey.public">{{SURVEY_CONFIRM_PUBLISH}}</p>
+        <p v-if="survey.public">{{SURVEY_CONFIRM_CLOSE}}</p>
+        <p v-if="!survey.public">{{SURVEY_CONFIRM_PUBLISH}}</p>
       </b-modal>
     </div>
     <div v-if="!survey">
@@ -64,15 +64,21 @@ export default {
   mixins: [surveyMixin],
   methods: {
     togglePublish() {
-      let publicValue = !this.survey.public;
+      let publicValue = this.publishVal;
+      console.log(this.publicValue)
       let message = this.publicValue
         ? SURVEY_SAVE_SUCCESS_PUBLISH
         : SURVEY_SAVE_SUCCESS_CLOSE;
-      this.saveSurvey({...this.survey, public: publicValue}, message);
+      this.patchSurveyField({...this.survey, public: publicValue}, 'public', message);
     },
     cancelPublish() {
       this.publishVal = this.survey.public;
     },
+  },
+  mounted() {
+    if (this.survey) {
+      this.publishVal = this.survey.public;
+    }
   },
   watch: {
     survey(newval) {

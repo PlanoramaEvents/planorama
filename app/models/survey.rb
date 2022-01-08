@@ -10,8 +10,7 @@ class Survey < ApplicationRecord
 
   has_many :submissions, class_name: 'Survey::Submission'
 
-  has_many :mail_templates
-  has_many :mailings, through: :mail_templates
+  has_many :mailings
   has_many :mailed_submitters, through: :mailings, source: :person
 
   before_destroy :check_for_use #, :check_if_public

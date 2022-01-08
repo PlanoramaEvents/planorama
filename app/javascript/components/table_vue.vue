@@ -1,18 +1,32 @@
 <template>
   <div class="scrollable">
-    <div v-if="editable" class="d-flex justify-content-end my-3">
-      <div class="d-inline" title="Upload">
-        <b-button disabled >
-          <b-icon-upload></b-icon-upload>
-        </b-button>
-      </div>
-      <b-button @click="$emit('new')" class="mx-1" variant="primary" title="New">
-        <b-icon-plus scale="2"></b-icon-plus>
-      </b-button>
-      <div class="d-inline" title="Settings">
-        <b-button disabled>
-          <b-icon-gear-fill></b-icon-gear-fill>
-        </b-button>
+
+    <div class="d-flex justify-content-between my-3" v-if="showControls">
+      <search-vue
+        class="w-75"
+        :value="filter"
+        @change="onSearchChanged"
+        :columns="columns"
+      >
+      </search-vue>
+
+      <div class="d-flex justify-content-end">
+        <!-- TODO: uploads are done in admin, UI shows this as a download which does not exist yet -->
+        <!-- <div class="d-inline" title="Upload">
+          <b-button disabled >
+            <b-icon-upload></b-icon-upload>
+          </b-button>
+        </div> -->
+        <div class="d-inline mx-1" title="newval">
+          <b-button @click="$emit('new')" variant="primary" title="New">
+            <b-icon-plus scale="2"></b-icon-plus>
+          </b-button>
+        </div>
+        <div class="d-inline" title="Settings">
+          <b-button disabled>
+            <b-icon-gear-fill></b-icon-gear-fill>
+          </b-button>
+        </div>
       </div>
     </div>
 
@@ -40,8 +54,6 @@
       :sort-by="sortBy"
       :sort-desc="sortDesc"
 
-      :filter="filter"
-
       @row-selected="onRowSelected"
       @sort-changed="onSortChanged"
     >
@@ -66,19 +78,22 @@
 <script>
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
-import { personModel } from '../store/person.store';
+import SearchVue from './search_vue'
 export default {
   name: 'TableVue',
+  components: {
+    SearchVue
+  },
   mixins: [
     modelMixin,
     tableMixin, // covers pagination and sorting
   ],
   props: {
     columns : { type: Array },
-	editable: {
-	  type: Boolean,
-	  default: true
-	}
+    showControls: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -87,11 +102,16 @@ export default {
   },
   methods: {
     onRowSelected(items) {
-      this.select(items[0]);
+      if (items[0]) {
+        this.select(items[0]);
+      }
     },
     onSortChanged(ctx) {
       this.sortBy = ctx.sortBy;
       this.sortDesc = ctx.sortDesc;
+    },
+    onSearchChanged(arg) {
+      this.filter = arg
     }
   },
   watch: {

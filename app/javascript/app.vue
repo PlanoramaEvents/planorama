@@ -3,11 +3,11 @@
     <div class="row">
       <top-navbar></top-navbar>
       <side-navbar v-if="loggedIn"></side-navbar>
-      <div :class="['col-12 scrollable', { 'col-sm-9': loggedIn, 'col-xl-10': loggedIn}]">
+      <div :class="['col-12 pr-0', { 'col-sm-9': loggedIn, 'col-xl-10': loggedIn}]">
         <router-view></router-view>
       </div>
+      <bottom-navbar></bottom-navbar>
     </div>
-    <bottom-navbar></bottom-navbar>
   </div>
 </template>
 

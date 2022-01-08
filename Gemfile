@@ -11,7 +11,7 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'activerecord-postgres_enum'
 
 # Use Puma as the app server
-gem 'puma', '~> 4.3'
+gem 'puma', '>= 4.3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
@@ -34,7 +34,7 @@ gem 'kaminari'
 gem 'active_model_serializers', '~> 0.10.0'
 
 gem 'devise'
-gem 'devise-jwt'
+# gem 'devise-jwt'
 gem 'rack-cors'
 
 gem 'ranked-model'
@@ -48,6 +48,10 @@ gem 'io-wait'
 gem 'fast_excel'
 gem 'jsonapi-serializer'
 gem 'jsonapi.rb'
+
+gem "nokogiri", ">= 1.12.5"
+
+gem 'truemail'
 
 # This is needed to run the migrations from id to uuid for primary keys
 gem 'webdack-uuid_migration'

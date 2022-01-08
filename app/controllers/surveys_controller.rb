@@ -1,7 +1,8 @@
 class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
   POLICY_CLASS = 'SurveysPolicy'.freeze
-  DEFAULT_ORDER = 'surveys.updated_at'
+  DEFAULT_SORTBY = 'surveys.updated_at'.freeze
+  DEFAULT_ORDER = 'desc'.freeze
 
   def assign_people
     authorize current_person, policy_class: policy_class
@@ -104,6 +105,7 @@ class SurveysController < ResourceController
 
   def allowed_params
     %i[
+      id
       lock_version
       name
       thank_you
@@ -121,45 +123,50 @@ class SurveysController < ResourceController
       numbered_questions
       branded
       allow_submission_edits
-    ] << [
-      pages_attributes: %i[
-        id
-        title
-        next_page_id
-        next_page_action
-        sort_order
-        survey_id
-        lock_version
-        _destroy
-      ] << [
-        questions_attributes: %i[
-          id
-          title
-          question
-          question_type
-          lock_version
-          mandatory
-          text_size
-          sort_order
-          horizontal
-          private
-          regex
-          branching
-          _destroy
-        ] << [
-          answers_attributes: %i[
-            id
-            answer
-            lock_version
-            default
-            sort_order
-            _destroy
-            other
-            next_page_id
-            next_page_action
-          ]
-        ]
-      ]
+      pages
+      pages_attributes
     ]
+    # << [
+    #   pages_attributes: %i[
+    #     id
+    #     title
+    #     next_page_id
+    #     next_page_action
+    #     sort_order
+    #     survey_id
+    #     lock_version
+    #     _destroy
+    #     questions
+    #   ] << [
+    #     questions_attributes: %i[
+    #       id
+    #       title
+    #       question
+    #       question_type
+    #       lock_version
+    #       mandatory
+    #       text_size
+    #       sort_order
+    #       horizontal
+    #       private
+    #       regex
+    #       branching
+    #       _destroy
+    #       answers
+    #     ] << [
+    #       answers_attributes: %i[
+    #         id
+    #         answer
+    #         lock_version
+    #         default
+    #         sort_order
+    #         _destroy
+    #         other
+    #         next_page_id
+    #         next_page_action
+    #       ]
+    #     ]
+    #   ]
+    # ]
   end
 end

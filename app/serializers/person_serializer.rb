@@ -10,7 +10,8 @@ class PersonSerializer #< ActiveModel::Serializer
              :opted_in, :comments,
              :can_share, :can_photo, :can_record,
              :invite_status, :acceptance_status,
-             :registered, :registration_type, :registration_number
+             :registered, :registration_type, :registration_number,
+             :last_sign_in_at, :primary_email
 
   # tag_list
   attribute :tags do |person|
@@ -35,7 +36,7 @@ class PersonSerializer #< ActiveModel::Serializer
                 "#{params[:domain]}/person/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/people/#{object.id}/person_role"
+                "#{params[:domain]}/person/#{object.id}/person_roles"
               }
             }
 
@@ -45,7 +46,7 @@ class PersonSerializer #< ActiveModel::Serializer
                   "#{params[:domain]}/person/#{object.id}"
                 },
                 related: -> (object, params) {
-                  "#{params[:domain]}/person/#{object.id}/email_address"
+                  "#{params[:domain]}/person/#{object.id}/email_addresses"
                 }
               }
 
@@ -55,7 +56,7 @@ class PersonSerializer #< ActiveModel::Serializer
                   "#{params[:domain]}/person/#{object.id}"
                 },
                 related: -> (object, params) {
-                  "#{params[:domain]}/person/#{object.id}/submission"
+                  "#{params[:domain]}/person/#{object.id}/submissions"
                 }
               }
 

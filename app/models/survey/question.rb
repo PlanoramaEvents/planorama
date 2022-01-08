@@ -28,7 +28,7 @@ class Survey::Question < ApplicationRecord
       :dropdown, :address, :email, :socialmedia, :textonly
     ]
 
-  before_destroy :check_for_use #, :check_if_published
+  before_destroy :check_for_use, prepend: true #, :check_if_published
 
   def question_type
     read_attribute(:question_type).to_sym
@@ -62,7 +62,8 @@ class Survey::Question < ApplicationRecord
 
 private
   def check_for_use
-    if survey.submissions.any?
+    # Check if the question has responses
+    if responses.any?
       raise 'can not delete a question for a survey that has responses in the system'
     end
   end

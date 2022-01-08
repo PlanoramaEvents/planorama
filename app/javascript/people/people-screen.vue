@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-3">
     <people-table></people-table>
     <people-sidebar :model="model"></people-sidebar>
   </div>

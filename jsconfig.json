@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "allowSyntheticDefaultImports": false,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["app/javascript/*"],
+      "@mixins": ["@/mixins"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "db", "public", "postman", "bin", "docs", "lib", "log"]
+}

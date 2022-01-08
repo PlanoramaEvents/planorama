@@ -6,10 +6,12 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
-import pageMixin from './page.mixin';
-import { NEW_SUBMISSION } from '../store/survey.store';
-import { surveyIdPropMixinId } from './survey-id-prop.mixin';
+import {mapActions, mapMutations } from 'vuex';
+import {
+  pageMixin,
+  surveyIdPropMixinId
+} from '@mixins';
+import { NEW_SUBMISSION, SET_PREVIEW_MODE } from '@/store/survey';
 
 export default {
   name: "TakeSurvey",
@@ -19,13 +21,19 @@ export default {
     pageMixin
   ],
   methods: {
+    ...mapMutations({
+      setPreviewMode: SET_PREVIEW_MODE
+    }),
     ...mapActions({
       newSubmission: NEW_SUBMISSION,
     }),
   },
   mounted() {
     this.surveyLoadedPromise.then(() => {
-      this.newSubmission({surveyId: this.id});
+      this.setPreviewMode(!!this.preview)
+      if (!this.preview) {
+        this.newSubmission({surveyId: this.id});
+      }
       let path = `/surveys/${this.id}/page/${this.selectedPage.id}${this.preview ? '/preview' : ''}`
       console.log('redirecting to ', path)
       this.$router.push({path})

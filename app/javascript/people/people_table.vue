@@ -1,43 +1,61 @@
 <template>
-  <table-vue
-    @new="onNew"
-    defaultSortBy='name'
-    model="person"
-    :columns="columns"
-  >
-  </table-vue>
-
+  <div>
+    <modal-form
+      title="Add Person"
+      ref="add-person-modal"
+    >
+      <person-add
+        :show-buttons='false'
+      ></person-add>
+    </modal-form>
+    <table-vue
+      @new="onNew"
+      defaultSortBy='name'
+      :model="model"
+      :columns="columns"
+    >
+      <template #cell(primary_email)="{ item }">
+        <tooltip-overflow :title="item.primary_email">
+          {{item.primary_email}}
+        </tooltip-overflow>
+      </template>
+      <template #cell(comments)="{ item }">
+        <tooltip-overflow :title="item.comments">
+          {{item.comments}}
+        </tooltip-overflow>
+      </template>
+      <template #cell(last_sign_in_at)="{ item }">
+        <span v-if="item.public" v-b-tooltip="{title: item.last_sign_in_at}">
+          {{new Date(item.last_sign_in_at).toLocaleDateString()}}
+        </span>
+      </template>
+    </table-vue>
+  </div>
 </template>
 
 <script>
 import TableVue from '../components/table_vue';
-import { people_columns } from './people';
+import ModalForm from '../components/modal_form';
+import TooltipOverflow from '../shared/tooltip-overflow';
+import PersonAdd from '../people/person_add.vue';
+import { people_columns as columns } from './people';
+import { personModel as model } from '@/store/person.store'
 
 export default {
   name: 'PeopleTable',
   components: {
-    TableVue
-    // TooltipOverflow,
+    TableVue,
+    TooltipOverflow,
+    ModalForm,
+    PersonAdd
   },
-  data() {
-    return {
-      columns: people_columns
-    }
-  },
+  data: () => ({
+    columns,
+    model
+  }),
   methods: {
-    // ...mapActions({newSurvey: NEW_SURVEY}),
-    // previewLink(item) {
-    //   return `/surveys/${item.id}/preview`;
-    // },
-    // surveyLink(item) {
-    //   // TODO add authenticity key to stop robots?
-    //   return `/surveys/${item.id}`;
-    // },
     onNew() {
-      console.debug("**** NEW PERSON")
-      // this.newSurvey().then((survey) => {
-      //   this.$router.push({path: `/edit/${survey.id}`})
-      // });
+      this.$refs['add-person-modal'].showModal()
     }
   }
 }

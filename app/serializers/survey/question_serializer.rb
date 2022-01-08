@@ -13,13 +13,13 @@ class Survey::QuestionSerializer
                 "#{params[:domain]}/question/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/question/#{object.id}/answer"
+                "#{params[:domain]}/question/#{object.id}/answers"
               }
             }
 
-  attribute :sort_order_position do |object|
-    object.sort_order
-  end
+  # attribute :sort_order_position do |object|
+  #   object.sort_order_rank
+  # end
 
   # It probably makes more sense for answers to be nested in here rather
   # than a relationship.

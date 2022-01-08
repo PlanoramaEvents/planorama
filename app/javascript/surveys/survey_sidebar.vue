@@ -58,12 +58,11 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../model.store';
+import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../store/model.store';
 import SurveyQuestion from './survey_question';
 import surveyMixin from './survey.mixin';
 import SurveySettingsTab from './survey-settings-tab';
 import SidebarVue from '../components/sidebar_vue';
-import { CLEAR_SUBMISSIONS } from './survey.store';
 import {
   SURVEY_RESULTS_CLEAR_CONFIRM,
   SURVEY_SAVE_SUCCESS_DELETE,
@@ -72,8 +71,9 @@ import {
   SURVEY_RESULTS_UNFREEZE_SUCCESS,
   SURVEY_CONFIRM_DELETE,
 } from '../constants/strings';
-import { DUPLICATE_SURVEY } from '../store/survey.store';
+import { DUPLICATE_SURVEY } from '@/store/survey';
 import { getOrderedRelationships } from '../utils/jsonapi_utils';
+import { CLEAR_SURVEY_SUBMISSIONS } from '../store/survey/survey.actions';
 
 export default {
   name: 'SurveySidebar',
@@ -96,7 +96,13 @@ export default {
       return `/surveys/edit/${this.survey.id}`;
     },
     responsesLink() {
-      return `/surveys/${this.editLink}/responses`;
+      return `${this.editLink}/responses`;
+    },
+    surveyLink() {
+      return `/#/surveys/${this.survey.id}`;
+    },
+    previewLink() {
+      return `${this.surveyLink}/preview`;
     }
   },
   methods: {
@@ -105,15 +111,7 @@ export default {
       this.deleteSurvey()
     },
     clearResponses() {
-      this.error_toast('Has not been converted from vuemc');
-      /*
-      this.$store.dispatch(`surveys/${CLEAR_SUBMISSIONS}`, {item: this.survey})
-        .then(() => this.success_toast(SURVEY_RESULTS_CLEAR_SUCCESS))
-        .catch((error) => {
-          console.log(error)
-          this.error_toast(error.message)
-        });
-        */
+      this.toastPromise(this.$store.dispatch(CLEAR_SURVEY_SUBMISSIONS, {item: this.survey}), SURVEY_RESULTS_CLEAR_SUCCESS)
     },
     toggleSubmissionEdits(val) {
       this.survey.allow_submission_edits = val
@@ -135,5 +133,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
- 
+
 </style>

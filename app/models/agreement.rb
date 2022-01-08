@@ -31,4 +31,32 @@ class Agreement < ApplicationRecord
         ['person_agreements.person_id = ?', person.id]
       )
   end
+
+  # Get the latest agreements for each target
+  # uses a PG window and partition to acheive this
+  def self.latest
+    agreements = Agreement.arel_table
+
+    window = Arel::Nodes::Window.new.partition(
+              agreements[:target]
+            ).order(agreements[:created_at].desc)
+
+    row_number = Arel::Nodes::NamedFunction.new('row_number', [])
+
+    sub = Agreement.select(
+      Arel.star,
+      row_number.over(window).as('row_number')
+    )
+
+    Agreement.where(
+      'agreements.id in (:ids)',
+      ids:
+        Agreement.select('id').from(
+          sub
+        )
+        .where(
+          Arel::Nodes::SqlLiteral.new("row_number = 1")
+        )
+    )
+  end
 end

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import toastMixin from '../toast-mixin'
+import toastMixin from '../shared/toast-mixin'
 export default {
   name: "UserRole",
   mixins: [toastMixin],

@@ -4,7 +4,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-import { EDIT } from './model.store';
+import { EDIT } from './store/model.store';
 
 export default {
   name: "EditButton",

@@ -12,26 +12,21 @@ class ApplicationController < ActionController::Base
   #  based on current_user
   before_action :set_paper_trail_whodunnit
 
+  around_action :application_time_zone
+
   # Tell pundit to use the current person
   def pundit_user
     current_person
   end
 
-  # TODO: timezone ..
-  # def application_time_zone(&block)
-  #   cfg = SiteConfig.first # for now we only have one convention... change when we have many
-  #   zone = cfg ? cfg.time_zone : Time.zone
-  #   Time.use_zone(zone, &block)
-  # end
-
   def user_for_paper_trail
     current_person ? current_person.published_name : 'Anon user'
   end
 
-  # We are not going to use cookies - all security/sessions will be JWT based
-  def remove_cookies_action
-    response.headers.delete 'Set-Cookie'
-    request.session_options[:skip] = true
+  def application_time_zone(&block)
+    app_time_zone = ENV['TIME_ZONE'] || 'UTC'
+
+    Time.use_zone(app_time_zone, &block)
   end
 
   protected

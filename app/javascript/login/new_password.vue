@@ -52,15 +52,15 @@
 </template>
 
 <script>
-import { http } from "../http";
+import { http } from "@/http";
 import {
   LOGIN_MISSING_NEW_PASSWORD,
   LOGIN_PASSWORDS_MUST_MATCH,
   LOGIN_TOKEN_EXPIRED,
   SOMETHING_WENT_WRONG,
-} from "../constants/strings";
+} from "@/constants/strings";
 import LoginPasswordField from "./login_password_field";
-import { validateFields } from "../utils";
+import { validateFields } from "@/utils";
 
 export default {
   name: "NewPassword",

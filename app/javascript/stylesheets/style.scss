@@ -5,11 +5,6 @@
 $sidebar-width: 35%;
 $sidebar-mobile-width: 60%;
 
-.container-fluid {
-  padding: 0px;
-  padding-right: 15px;
-}
-
 .navbar.navbar-light {
   height: 100px;
   background: linear-gradient(to right, #ffffff, $color-primary-4 67%);
@@ -39,13 +34,25 @@ $sidebar-mobile-width: 60%;
   max-height: calc(100vh - 150px);
   overflow-y: auto;
   overflow-x: auto;
-}
-
-footer#bottom-navbar {
+  padding-right: 1em;
 }
 
 #planotoast {
   position: absolute;
   right: 5px;
   top: 105px;
+}
+
+// why do i have to do this?!
+body {
+  overflow-x: hidden;
+}
+
+/* for CKEditor */
+.cke_button_label.cke_button__insert-plano-email-fields_label {
+  display: inline;
+}
+
+.plono-ck-button .cke_button_icon {
+  display: none;
 }

@@ -41,16 +41,13 @@
 # );
 
 class Person < ApplicationRecord
-  include Devise::JWT::RevocationStrategies::JTIMatcher
-
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  # database_authenticatable,
   devise :database_authenticatable,
-         :jwt_authenticatable,
-         :registerable, :timeoutable,
-         :recoverable, :rememberable, :validatable, :lockable,
-         jwt_revocation_strategy: self
+         :timeoutable,
+         :rememberable,
+         :registerable,
+         :recoverable,
+         :validatable, :lockable, :trackable
 
   # TODO: add a deleted_at mechanism
 
@@ -85,6 +82,10 @@ class Person < ApplicationRecord
   has_many  :email_addresses, dependent: :destroy
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
+  has_one :primary_email,
+          -> { where(['isdefault = true']) },
+          class_name: 'EmailAddress'
+
   has_many :submissions, class_name: 'Survey::Submission', dependent: :destroy
   has_many :mailed_surveys, through: :mailings, source: :survey
   has_and_belongs_to_many :assigned_surveys, class_name: 'Survey'
@@ -96,7 +97,6 @@ class Person < ApplicationRecord
 
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements
-  # signed, to be re-signed etc
 
   enum acceptance_status: {
     unknown: 'unknown',
@@ -105,7 +105,7 @@ class Person < ApplicationRecord
     declined: 'declined'
   }
 
-  enum invitestatus: {
+  enum invite_status: {
     not_set: 'not_set',
     do_not_invite: 'do_not_invite',
     potential_invite: 'potential_invite',
@@ -172,11 +172,11 @@ class Person < ApplicationRecord
     email_addresses.first&.saved_change_to_email?
   end
 
-  def primary_email
-    # TODO: change to find the primary email
-    email_addresses.first&.email
-    # emails.primary || (emails.first if new_record?)
-  end
+  # def primary_email
+  #   # TODO: change to find the primary email
+  #   email_addresses.first&.email
+  #   # emails.primary || (emails.first if new_record?)
+  # end
 
   # def self.find_for_database_authentication warden_condition
   #   Rails.logger.error "******** WARDEN AUTH #{warden_condition.to_json}"

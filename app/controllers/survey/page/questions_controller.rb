@@ -20,22 +20,30 @@ class Survey::Page::QuestionsController < ResourceController
     'questions'
   end
 
-  # def allowed_params
-  #   %i[
-  #     lock_version
-  #     id
-  #     title
-  #     question
-  #     question_type
-  #     lock_version
-  #     mandatory
-  #     text_size
-  #     sort_order
-  #     horizontal
-  #     private
-  #     regex
-  #     branching
-  #   ]
-  # end
+  def allowed_params
+    %i[
+      lock_version
+      id
+      title
+      question
+      question_type
+      lock_version
+      mandatory
+      text_size
+      sort_order
+      horizontal
+      private
+      regex
+      branching
+      page
+      page_id
+      answers_attributes
+      sort_order_position
+    ]
+  end
+
+  def after_save
+    @object.update(sort_order_position: _permitted_params(object_name)['sort_order_position']) if _permitted_params(object_name)['sort_order_position'].present?
+  end
   # TODO: on save need to remove pages refs that do not exist
 end

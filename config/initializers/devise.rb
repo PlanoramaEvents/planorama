@@ -10,19 +10,13 @@
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
 
-  # Use the devise key for JWT for now
-  config.jwt do |jwt|
-    # Rails.application.credentials.config[:secret_key_base]
-    jwt.secret = ENV["DEVISE_SECRET"]
-    jwt.expiration_time = 1.weeks
-  end
-
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = 'be32b405469624f1311d897aa2602f446aace158d78789d6be02842f1526d2027b887526d6496515513e4fbf55872b0e8d9cc87d90db1f4150d36160ee88c647'
+  # config.secret_key = ENV["DEVISE_SECRET"]
+  config.secret_key = ENV['DEVISE_SECRET']
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -32,7 +26,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'planorama@chicon.org'
+  config.mailer_sender = ENV['PROGRAM_EMAIL'] || ENV['SMTP_USER_NAME']
 
   # Configure the class responsible to send e-mails.
   config.mailer = 'Devise::Mailer'
@@ -107,7 +101,7 @@ Devise.setup do |config|
   # Notice that if you are skipping storage for all authentication paths, you
   # may want to disable generating routes to Devise's sessions controller by
   # passing skip: :sessions to `devise_for` in your config/routes.rb
-  config.skip_session_storage = [:http_auth, :params_auth]
+  config.skip_session_storage = [:http_auth]
 
   # By default, Devise cleans up the CSRF token on authentication to
   # avoid CSRF token fixation attacks. This means that, when using AJAX
@@ -174,7 +168,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :rememberable
   # The time the user will be remembered without asking for credentials again.
-  # config.remember_for = 2.weeks
+  config.remember_for = 2.weeks
 
   # Invalidates all the remember me tokens when the user signs out.
   config.expire_all_remember_me_on_sign_out = true

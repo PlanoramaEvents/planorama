@@ -95,6 +95,17 @@ CREATE TYPE public.mail_use_enum AS ENUM (
 
 
 --
+-- Name: mailing_state_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.mailing_state_enum AS ENUM (
+    'draft',
+    'submitted',
+    'sent'
+);
+
+
+--
 -- Name: next_page_action_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -125,6 +136,16 @@ CREATE TYPE public.phone_type_enum AS ENUM (
     'work',
     'fax',
     'other'
+);
+
+
+--
+-- Name: submission_state_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.submission_state_enum AS ENUM (
+    'draft',
+    'submitted'
 );
 
 
@@ -377,39 +398,25 @@ CREATE TABLE public.mail_histories (
 
 
 --
--- Name: mail_templates; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.mail_templates (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    title character varying DEFAULT ''::character varying,
-    subject character varying DEFAULT ''::character varying,
-    content text,
-    survey_id uuid,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    transiton_invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
-    mail_use public.mail_use_enum
-);
-
-
---
 -- Name: mailings; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.mailings (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    mailing_number integer,
-    mail_template_id uuid,
-    scheduled boolean,
     testrun boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     last_person_idx integer DEFAULT '-1'::integer,
     include_email boolean DEFAULT true,
-    cc_all boolean DEFAULT false
+    cc_all boolean DEFAULT false,
+    mailing_state public.mailing_state_enum DEFAULT 'draft'::public.mailing_state_enum,
+    title character varying,
+    subject character varying,
+    content text,
+    survey_id uuid,
+    date_sent timestamp without time zone,
+    transiton_invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum
 );
 
 
@@ -480,8 +487,7 @@ END) STORED,
 CASE
     WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
     ELSE name_sort_by
-END) STORED,
-    jti character varying NOT NULL
+END) STORED
 );
 
 
@@ -868,7 +874,8 @@ CREATE TABLE public.survey_submissions (
     person_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    lock_version integer DEFAULT 0
+    lock_version integer DEFAULT 0,
+    submission_state public.submission_state_enum DEFAULT 'draft'::public.submission_state_enum
 );
 
 
@@ -1162,14 +1169,6 @@ ALTER TABLE ONLY public.magic_links
 
 ALTER TABLE ONLY public.mail_histories
     ADD CONSTRAINT mail_histories_pkey PRIMARY KEY (id);
-
-
---
--- Name: mail_templates mail_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_templates
-    ADD CONSTRAINT mail_templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -1497,17 +1496,17 @@ CREATE INDEX index_magic_links_on_person_id ON public.magic_links USING btree (p
 
 
 --
+-- Name: index_mailings_on_mailing_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mailings_on_mailing_state ON public.mailings USING btree (mailing_state);
+
+
+--
 -- Name: index_people_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_people_on_confirmation_token ON public.people USING btree (confirmation_token);
-
-
---
--- Name: index_people_on_jti; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_people_on_jti ON public.people USING btree (jti);
 
 
 --
@@ -1648,6 +1647,13 @@ CREATE INDEX index_survey_responses_on_submission_id ON public.survey_responses 
 --
 
 CREATE INDEX index_survey_submissions_on_person_id ON public.survey_submissions USING btree (person_id);
+
+
+--
+-- Name: index_survey_submissions_on_submission_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_submissions_on_submission_state ON public.survey_submissions USING btree (submission_state);
 
 
 --
@@ -1907,6 +1913,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211101160001'),
 ('20211101195536'),
 ('20211103212755'),
-('20211105155118');
+('20211105155118'),
+('20211114155546'),
+('20211114191042'),
+('20211207192534'),
+('20211207192624'),
+('20211213180751');
 
 

@@ -8,4 +8,6 @@ class Survey::Submission < ApplicationRecord
            inverse_of: :submission,
            dependent: :destroy
   accepts_nested_attributes_for :responses, allow_destroy: true
+
+  enum submission_state: { draft: 'draft', submitted: 'submitted' }
 end

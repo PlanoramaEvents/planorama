@@ -1,5 +1,9 @@
 require "securerandom"
 
+# TODO: add include parameter as option
+# If an endpoint does not support the include parameter,
+# it MUST respond with 400 Bad Request to any requests that include it.
+#
 module ResourceMethods
   extend ActiveSupport::Concern
   include JSONAPI::Deserialization
@@ -21,13 +25,15 @@ module ResourceMethods
       end
     else
       if serializer_class
-        render json: serializer_class.new(@collection,
-                      {
-                        meta: meta,
-                        include: serializer_includes,
-                        params: {domain: "#{request.base_url}"}
-                      }
-                    ).serializable_hash(),
+        options = {
+          meta: meta,
+          include: filtered_serializer_includes(fields: fields), # need to adjust based omn field
+          params: {domain: "#{request.base_url}"}
+        }
+        options[:fields] = fields
+        # Example for sparse field set
+        # options[:fields] = {person: [:name, :email_addresses], email_address: [:email]}
+        render json: serializer_class.new(@collection,options).serializable_hash(),
                content_type: 'application/json'
       else
         render json: @collection,
@@ -68,7 +74,8 @@ module ResourceMethods
   def update
     model_class.transaction do
       if @object.new_record?
-        authorize model_class, policy_class: policy_class
+        # authorize model_class, policy_class: policy_class
+        authorize @object, policy_class: policy_class
         before_save
         @object.save!
         after_save
@@ -100,16 +107,20 @@ module ResourceMethods
     end
   end
 
-  def render_object(object, serializer: nil, includes: true)
+  def render_object(object, serializer: nil, includes: true, jsonapi_included: nil)
     serializer_used = serializer || serializer_class
+    jsonapi_included ||= serializer_includes
     if serializer_used
-      render json: serializer_used.new(
-                    object,
-                    {
-                      include: (includes ? serializer_includes : []),
-                      params: {domain: "#{request.base_url}"}
-                    }
-                   ).serializable_hash,
+      options = {
+        include: filtered_serializer_includes(
+                   fields: fields,
+                   serialized_includes: jsonapi_included
+                 ),
+        params: {domain: "#{request.base_url}"}
+      }
+      options[:fields] = fields
+
+      render json: serializer_used.new(object, options).serializable_hash,
              content_type: 'application/json'
     else
       render json: object,
@@ -160,11 +171,13 @@ module ResourceMethods
     order_str = nil
 
     order = order_by || params[:sortBy]
-    order ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
+    order ||= self.class::DEFAULT_SORTBY if defined? self.class::DEFAULT_SORTBY
     order ||= ''
 
     if !order.blank?
-      direction = params[:sortOrder] || 'asc'
+      direction = params[:sortOrder]
+      direction ||= self.class::DEFAULT_ORDER if defined? self.class::DEFAULT_ORDER
+      direction ||= 'asc'
 
       order_str = "#{order} #{direction}"
       # For PSQL NULLS FIRST is the default for DESC order, and NULLS LAST otherwise.
@@ -193,6 +206,7 @@ module ResourceMethods
       .references(references)
       .joins(join_tables)
       .where(query(@filters))
+      # .joins(query_join_tables(@filters))
 
     q = q.order(order_string)
 
@@ -205,29 +219,125 @@ module ResourceMethods
 
   def query(filters = nil)
     # Go through the filter and construct the where clause
-    return nil unless filters.present? && filters['rules'].present?
+    return nil unless filters.present?
 
-    table = Arel::Table.new(model_class.table_name)
+    query_part(filter: filters)
+  end
+
+  def query_part(filter:)
     q = nil
-    filters['rules'].each do |rule|
-      col_table = table
-      # A rule is a tuple [key, operation, value]
-      key, operation, value = rule
+    global_op = filter['op'] == 'all' ? :and : :or
+    filter['queries'].each do |query|
+      if query.is_a? Hash
+        part = query_part(filter: query)
+      else
+        key, operation, value = query
 
-      col_table_name = nil
-      col_table_name, col = key.split('.') if key.include? '.'
-      # TODO: add magic to figure out joins
-      if col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasAndBelongsToManyReflection
-        # key = "#{model_class.reflections[col_table_name].join_table}.#{col}"
-        col_table = Arel::Table.new("#{model_class.reflections[col_table_name].join_table}")
+        col_table = get_table(column: key)
+        if key == 'all'
+          model_class.columns.each do |col|
+            next unless [:text, :string].include?(col.type)
+            query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
+            part = part ? part.or(query_part) : query_part
+          end
+        else
+          col = get_column(column: key)
+          part = get_query_part(table: col_table, column: col, operation: operation, value: value)
+        end
       end
 
-      # TODO: translate operation
-      part = col_table[col.to_sym].eq("#{value}")
-      q = q ? q.and(part) : part
+      q = q ? q.send(global_op, part) : part
     end
 
     q
+  end
+
+  def get_table(column:)
+    col_table = Arel::Table.new(model_class.table_name)
+    col_table_name, col = column.split('.') if column.include? '.'
+
+    if col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasAndBelongsToManyReflection
+      # key = "#{model_class.reflections[col_table_name].join_table}.#{col}"
+      col_table = Arel::Table.new("#{model_class.reflections[col_table_name].join_table}")
+    elsif col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasManyReflection
+      # need to join with the people table
+      col_table = Arel::Table.new("#{col_table_name}")
+    end
+
+    return col_table
+  end
+
+  # def query_join_tables(filters = nil)
+  #   return [] unless filters
+  #   # TODO: create a join clause for relationships
+  # end
+
+  def get_column(column:)
+    col = column
+    col_table_name, col = column.split('.') if column.include? '.'
+
+    return col
+  end
+
+  def get_query_part(table:, column:, operation:, value:)
+    Rails.logger.debug "** QUERY PART #{table} #{column} #{operation} #{value}"
+    op = translate_operator(operation: operation)
+
+    val = value
+    val = "%#{value}%" if op == :matches
+    val = "%#{value}%" if op == :does_not_match
+    val = "%#{value}" if operation == 'ends with'
+    val = "#{value}%" if operation == 'begins with'
+    val = "''" if operation == 'is empty'
+    val = "''" if operation == 'is not empty'
+
+    part = table[column.to_sym].send(op, val)
+  end
+
+  # Convert the operation passed in via teh filter into
+  # an arel predicate op
+  # is empty
+  # is not empty
+  # begins with
+  # ends with
+  def translate_operator(operation:)
+    Rails.logger.debug "*** Translate op #{operation}"
+    case operation.downcase
+    when 'does not contain'
+      :'does_not_match' # "%val%"
+    when 'contains'
+      :'matches' # "%val%"
+    when 'like'
+      :'matches' # "%val%"
+    when 'equals'
+      :eq
+    when '='
+      :eq
+    when 'does not equal'
+      :not_eq
+    when '!='
+      :not_eq
+    when '<'
+      :lt
+    when '>'
+      :gt
+    when '<='
+      :lteq
+    when '>='
+      :gteq
+    when 'is empty'
+      :eq
+    when 'is not empty'
+      :not_eq
+    when 'begins with'
+      :'matches'
+    when 'ends with'
+      :'matches'
+    else
+      :eq
+    end
+    # does_not_match, #does_not_match_all, #does_not_match_any, #does_not_match_regexp,
+    # in, not_in etc
   end
 
   def model_name
@@ -372,6 +482,24 @@ module ResourceMethods
     nil
   end
 
+  # TODO: optimize
+  def fields
+    _fields = params.permit(fields: {})[:fields].to_h
+    _fields.each do |k,v|
+      _fields[k] = v.split(',')
+    end
+
+    _fields
+  end
+
+  def filtered_serializer_includes(fields: , serialized_includes: nil)
+    serialized_includes ||= serializer_includes
+    return serialized_includes if fields.empty?
+
+    keys = fields.flatten(2)
+    serialized_includes.select{|v| keys.include?(v.to_s)}
+  end
+
   def serializer_includes
     []
   end
@@ -416,8 +544,9 @@ module ResourceMethods
       jsonapi_deserialize(
         params,
         {
-          only: allowed_params,
-          except: except_params
+          except: except_params,
+          # NOTE: allowed params need to include relationship name if there needed for save
+          only: allowed_params
         }
       )
     else

@@ -1,3 +1,3 @@
-import { BasePlanoStore } from '../model.store'
-
-export const store = new BasePlanoStore('admin', true);
+// import { BasePlanoStore } from '../model.store'
+//
+// export const store = new BasePlanoStore('admin', true);

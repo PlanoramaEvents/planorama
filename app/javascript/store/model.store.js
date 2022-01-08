@@ -9,40 +9,61 @@ export const UNSELECT = 'UNSELECT';
 
 export const SELECTED = 'SELECTED';
 export const FETCH_SELECTED = 'FETCH SELECTED';
+export const FETCH_BY_RELATIONSHIPS = 'FETCH BY RELATIONSHIPS';
 export const FETCH_BY_ID = 'FETCH BY ID'
 export const FETCH = 'FETCH';
 export const NEW = 'NEW';
 export const SAVE = 'SAVE';
 export const DELETE = 'DELETE';
+export const SEARCH = 'SEARCH';
+export const CLEAR = 'CLEAR';
 
-export const PATCH_RELATED = 'PATCH_RELATED';
+export const PATCH_RELATED = 'PATCH RELATED';
+export const PATCH_FIELDS = 'PATCH FIELDS';
 
 // people add-ons
 import { personStore, personEndpoints } from './person.store';
+
+// mailings
+import { mailingStore, mailingEndpoints } from './mailing.store';
 
 // session add-ons
 import { sessionStore } from './session.store';
 
 // survey add-ons
-import { surveyStore, surveyEndpoints } from './survey.store';
+import { surveyStore, surveyEndpoints } from './survey/survey.store';
 
 const endpoints = {
   ...personEndpoints,
   ...surveyEndpoints,
+  ...mailingEndpoints
 }
 
 // NOTE: this is really the store
 Vue.use(Vuex)
 export const store = new Vuex.Store({
   modules: {
-    jv: jsonapiModule(http, {preserveJson: true, clearOnUpdate: true})
+    // TODO: change clearOnUpdate behavoir
+    // see the following for table requests ...
+    // Remove all records of type 'widget' from the store
+    // store.commit('jv/clearRecords', { _jv: { type: 'widget' } })
+    jv: jsonapiModule(
+      http,
+      {
+        preserveJson: true,
+        clearOnUpdate: false
+      }
+    )
   },
   state: {
     selected: {
       ...personStore.selected,
       ...surveyStore.selected,
+      ...mailingStore.selected
     },
     ...sessionStore.state,
+    ...surveyStore.state,
+    // ...mailingStore.state
   },
   getters: {
     [SELECTED] (state, getters) {
@@ -54,6 +75,7 @@ export const store = new Vuex.Store({
     ...personStore.getters,
     ...surveyStore.getters,
     ...sessionStore.getters,
+    ...mailingStore.getters
   },
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
@@ -63,6 +85,7 @@ export const store = new Vuex.Store({
       state.selected[model] = undefined;
     },
     ...sessionStore.mutations,
+    ...surveyStore.mutations,
   },
   actions: {
     /**
@@ -138,8 +161,20 @@ export const store = new Vuex.Store({
         }).catch(rej)
       })
     },
+    [SEARCH] ({dispatch}, {model, params}) {
+      return dispatch('jv/search', [endpoints[model], {params}])
+    },
     [FETCH] ({dispatch}, {model, params}) {
       return dispatch('jv/get', [endpoints[model], {params}])
+    },
+    [CLEAR] ({dispatch}, {model}) {
+      this.commit('jv/clearRecords', { _jv: { type: model } })
+    },
+    [FETCH_BY_RELATIONSHIPS] ({dispatch}, {model, relationships, params}) {
+      return dispatch('jv/get', [{_jv: {
+        type: model,
+        relationships,
+      }}, params])
     },
     [FETCH_SELECTED] ({state, dispatch}, {model}) {
       if (!state.selected[model]) {
@@ -148,11 +183,33 @@ export const store = new Vuex.Store({
       return dispatch(FETCH_BY_ID, {model, id: state.selected[model]})
     },
     [FETCH_BY_ID] ({dispatch}, {model, id}) {
-      // TODO do we ever need this? or is model always selected
+      // We do need this - not all fetch by id will be selected models
       return dispatch('jv/get', `${endpoints[model]}/${id}`)
+    },
+    [PATCH_FIELDS] ({dispatch, commit}, {model, item, fields=[], selected = true}) {
+      // limited field selection
+      let smallItem = {
+        // always include lock version so that we have optimistic locking
+        lock_version: item.lock_version || 0,
+        ...fields.map(field => ({[field]: item[field]})).reduce((p, c) => ({...p, ...c}), {}),
+        id: item.id,
+        _jv: {
+          type: model,
+          id: item.id
+        }
+      }
+      return new Promise((res, rej) => {
+        dispatch('jv/patch', smallItem).then((savedModel) => {
+          if (selected) {
+            commit(SELECT, {model, itemOrId: savedModel});
+          }
+          res(savedModel);
+        }).catch(rej);
+      });
     },
     ...sessionStore.actions,
     ...surveyStore.actions,
     ...personStore.actions,
+    ...mailingStore.actions
   }
 })

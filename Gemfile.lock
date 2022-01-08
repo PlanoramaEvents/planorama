@@ -50,8 +50,8 @@ GEM
     activerecord (6.0.4.1)
       activemodel (= 6.0.4.1)
       activesupport (= 6.0.4.1)
-    activerecord-postgres_enum (1.6.1)
-      activerecord (>= 5, < 6.2)
+    activerecord-postgres_enum (1.7.0)
+      activerecord (>= 5)
       pg
     activestorage (6.0.4.1)
       actionpack (= 6.0.4.1)
@@ -73,14 +73,15 @@ GEM
     bindex (0.8.1)
     bootsnap (1.9.1)
       msgpack (~> 1.0)
-    brakeman (5.1.1)
+    brakeman (5.1.2)
     builder (3.2.4)
     bundler-audit (0.8.0)
       bundler (>= 1.2.0, < 3)
       thor (~> 1.0)
     byebug (11.1.3)
-    capybara (3.35.3)
+    capybara (3.36.0)
       addressable
+      matrix
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
       rack (>= 1.6.0)
@@ -100,26 +101,13 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    devise-jwt (0.9.0)
-      devise (~> 4.0)
-      warden-jwt_auth (~> 0.6)
     diff-lcs (1.4.4)
-    dry-auto_inject (0.8.0)
-      dry-container (>= 0.3.4)
-    dry-configurable (0.13.0)
-      concurrent-ruby (~> 1.0)
-      dry-core (~> 0.6)
-    dry-container (0.9.0)
-      concurrent-ruby (~> 1.0)
-      dry-configurable (~> 0.13, >= 0.13.0)
-    dry-core (0.7.1)
-      concurrent-ruby (~> 1.0)
     e2mmap (0.1.0)
-    em-websocket (0.5.2)
+    em-websocket (0.5.3)
       eventmachine (>= 0.12.9)
-      http_parser.rb (~> 0.6.0)
+      http_parser.rb (~> 0)
     erubi (1.10.0)
-    et-orbi (1.2.5)
+    et-orbi (1.2.6)
       tzinfo
     eventmachine (1.2.7)
     factory_bot (6.2.0)
@@ -153,11 +141,11 @@ GEM
       guard (~> 2.8)
       guard-compat (~> 1.0)
       multi_json (~> 1.8)
-    http_parser.rb (0.6.0)
-    i18n (1.8.10)
+    http_parser.rb (0.8.0)
+    i18n (1.8.11)
       concurrent-ruby (~> 1.0)
-    io-wait (0.1.0)
-    jbuilder (2.11.2)
+    io-wait (0.2.1)
+    jbuilder (2.11.3)
       activesupport (>= 5.0.0)
     jsonapi-renderer (0.2.2)
     jsonapi-serializer (2.2.0)
@@ -166,7 +154,6 @@ GEM
       jsonapi-serializer
       rack
       ransack
-    jwt (2.3.0)
     kaminari (1.2.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.1)
@@ -189,6 +176,7 @@ GEM
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.2)
+    matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.6.1)
@@ -218,7 +206,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (4.0.6)
-    puma (4.3.10)
+    puma (5.5.2)
       nio4r (~> 2.0)
     pundit (2.1.1)
       activesupport (>= 3.0.0)
@@ -298,8 +286,8 @@ GEM
       rspec-expectations (~> 3.10)
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
-    rspec-support (3.10.2)
-    rubocop (1.22.2)
+    rspec-support (3.10.3)
+    rubocop (1.23.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -308,7 +296,7 @@ GEM
       rubocop-ast (>= 1.12.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.12.0)
+    rubocop-ast (1.13.0)
       parser (>= 3.0.1.1)
     ruby-progressbar (1.11.0)
     ruby_audit (2.0.0)
@@ -333,7 +321,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
     shellany (0.0.1)
-    sidekiq (6.2.2)
+    sidekiq (6.3.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
@@ -344,6 +332,8 @@ GEM
       sidekiq (>= 3)
       thwait
       tilt (>= 1.4.0)
+    simpleidn (0.2.1)
+      unf (~> 0.1.4)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -351,29 +341,29 @@ GEM
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.2.2)
-      actionpack (>= 4.0)
-      activesupport (>= 4.0)
+    sprockets-rails (3.4.0)
+      actionpack (>= 5.2)
+      activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     thor (1.1.0)
     thread_safe (0.3.6)
     thwait (0.2.0)
       e2mmap
     tilt (2.0.10)
+    truemail (2.5.3)
+      simpleidn (~> 0.2.1)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.8)
     unicode-display_width (2.1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
-    warden-jwt_auth (0.6.0)
-      dry-auto_inject (~> 0.8)
-      dry-configurable (~> 0.13)
-      jwt (~> 2.1)
-      warden (~> 1.2)
-    web-console (4.1.0)
+    web-console (4.2.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
@@ -408,7 +398,6 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   devise
-  devise-jwt
   factory_bot_rails
   faker
   fast_excel
@@ -421,9 +410,10 @@ DEPENDENCIES
   kaminari
   listen (~> 3.2)
   nilify_blanks
+  nokogiri (>= 1.12.5)
   paper_trail
   pg (>= 0.18, < 2.0)
-  puma (~> 4.3)
+  puma (>= 4.3)
   pundit
   rack-cors
   rack-livereload
@@ -440,6 +430,7 @@ DEPENDENCIES
   sidekiq-scheduler
   spring
   spring-watcher-listen (~> 2.0.0)
+  truemail
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)

@@ -1,6 +1,6 @@
 import { mapActions } from "vuex";
 import { SAVE, NEW, DELETE } from "../store/model.store";
-import { answerModel as model, questionModel } from '../store/survey.store';
+import { answerModel as model, questionModel } from '@/store/survey';
 import { getId } from "../utils/jsonapi_utils";
 
 import {
