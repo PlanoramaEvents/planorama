@@ -7,7 +7,6 @@ ISSUE - template links don't work
     defaultSortBy='surveys.name'
     model="survey"
     :columns="columns"
-	:editable="false"
   >
     <template #cell(description)="{ item }">
       <tooltip-overflow :title="item.description">{{item.description}}</tooltip-overflow>
@@ -35,7 +34,6 @@ import TooltipOverflow from '../shared/tooltip-overflow';
 import { survey_columns as columns } from './survey';
 import { mapActions } from 'vuex';
 import { NEW_SURVEY } from '@/store/survey';
-export { surveyMixin } from './survey.mixin';
 
 export default {
   name: 'SurveyTable',
@@ -43,7 +41,6 @@ export default {
     TableVue,
     TooltipOverflow,
   },
-  mixins: [surveyMixin],
   data() {
     return {
       columns
@@ -51,6 +48,13 @@ export default {
   },
   methods: {
     ...mapActions({newSurvey: NEW_SURVEY}),
+    previewLink(item) {
+      return `/surveys/${item.id}/preview`;
+    },
+    surveyLink(item) {
+      // TODO add authenticity key to stop robots?
+      return `/surveys/${item.id}`;
+    },
     onNew() {
       this.newSurvey().then((survey) => {
         this.$router.push({path: `/surveys/edit/${survey.id}`})
