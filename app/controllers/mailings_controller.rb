@@ -3,15 +3,15 @@ class MailingsController < ResourceController
   POLICY_CLASS = 'MailingsPolicy'.freeze
   DEFAULT_SORTBY = 'title'.freeze
 
-  def serializer_includes
-    [
-    ]
-  end
-
-  def includes
-    [
-    ]
-  end
+  # def serializer_includes
+  #   [
+  #   ]
+  # end
+  #
+  # def includes
+  #   [
+  #   ]
+  # end
 
   # before check
   # def before_save
@@ -115,8 +115,8 @@ class MailingsController < ResourceController
     mailing = Mailing.find params[:id]
     authorize current_person, policy_class: policy_class
 
-    test_address = params[:email]
-    addr = EmailAddress.find_by(email: test_address)
+    recipient_address = params[:email]
+    addr = EmailAddress.find_by(email: recipient_address)
 
     content = MailService.preview_email_content(
                 person: addr.person,
@@ -125,7 +125,8 @@ class MailingsController < ResourceController
 
     # render_object(content) # TODO: verify ok for content
     render json: {
-             to: test_address,
+             to: recipient_address,
+             subject: mailing.subject,
              content: content
            },
            content_type: 'application/json'
@@ -133,7 +134,6 @@ class MailingsController < ResourceController
   end
 
   def except_params
-    # TODO: need to deal with adding people that match the emails
     %i[
       emails
       display_name

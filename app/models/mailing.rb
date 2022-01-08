@@ -8,6 +8,8 @@ class Mailing < ApplicationRecord
 
   belongs_to :survey, optional: true
 
+  # TODO: add sent_by person x
+
   enum mailing_state: {
     draft: 'draft',
     submitted: 'submitted',

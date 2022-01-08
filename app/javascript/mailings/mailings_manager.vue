@@ -28,13 +28,13 @@
           <h4>Sent Mailings</h4>
         </div>
         <div class="d-flex flex-row">
+          <!-- TODO: clone, refresh, view of selected row, handle as events -->
           <mailings-table
             defaultFilter='{"op":"all","queries":[["mailing_state", "!=", "draft"]]}'
           ></mailings-table>
         </div>
       </b-tab>
       <b-tab title="Second" lazy>
-        <!-- Put this in a slot -->
         <mailing-editor
           :selectedId="selectedId"
           model="mailing"

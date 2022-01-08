@@ -1,5 +1,6 @@
 <template>
   <div>
+    <mailing-preview :mailing="mailing" ref="preview-mailing"></mailing-preview>
     <modal-form
       title="Save Mailing"
       ref="save-mailing-modal"
@@ -59,6 +60,7 @@
         label="Select Survey:"
         label-for="email-survey"
       >
+        <!-- TODO: only published surveys -->
         <model-select
           v-model="mailing.survey_id"
           model="survey"
@@ -82,6 +84,7 @@
       type='classic'
       :show-mail-merge="true"
     ></plano-editor>
+    <!-- TODO: put in sending to count -->
     <div class="d-flex justify-content-end">
       <b-button variant="primary" class="m-1 btn-sm" @click="onSave">Save Mailing</b-button>
     </div>
@@ -103,6 +106,7 @@ import ModalForm from '../components/modal_form';
 import ModelField from '../shared/model-field';
 import ModelSelect from '../components/model_select';
 import toastMixin from '../shared/toast-mixin';
+import MailingPreview from './mailing_preview';
 import { MAILING_SCHEDULED } from '../constants/strings';
 import { MAILING_TEST_SCHEDULED } from '../constants/strings';
 
@@ -116,7 +120,8 @@ export default {
     PlanoEditor,
     ModalForm,
     ModelField,
-    ModelSelect
+    ModelSelect,
+    MailingPreview
   },
   mixins: [
     modelMixin,
@@ -172,7 +177,6 @@ export default {
         (data) => {
           this.mailing = data
           this.$refs['save-mailing-modal'].hideModal()
-          // TODO: next action
           if (this.next_action) {
             switch(this.next_action) {
               case 'send':
@@ -232,13 +236,7 @@ export default {
       }
     },
     performPreview(res) {
-      // Preview needs to be another component - shown in an overlay
-      // res.then(
-      //   () => {
-      //     // To preview
-      //     // http://localhost:3000/mailing/preview/{{mailing-id}}/{{email}}
-      //   }
-      // )
+      this.$refs['preview-mailing'].showModal()
     },
     starter_mailing() {
       return {
