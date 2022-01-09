@@ -69,6 +69,7 @@ export default {
       let tags = this.newTag.trim().split(' ')
       if (tags.length > 0) {
         // remove spaces and commas from the tags ends
+        tags = tags.map(t => t.trim().replace(/,\s*$/, ""))
         let all_tags = this.valid_tags.concat(this.invalid_tags, tags)
         this.validate(all_tags)
         this.newTag = ""

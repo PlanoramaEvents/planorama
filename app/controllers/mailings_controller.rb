@@ -7,11 +7,12 @@ class MailingsController < ResourceController
   #   [
   #   ]
   # end
-  #
-  # def includes
-  #   [
-  #   ]
-  # end
+
+  def includes
+    [
+      :sent_by
+    ]
+  end
 
   # before check
   # def before_save
@@ -97,6 +98,7 @@ class MailingsController < ResourceController
       if !send_test
         mailing.mailing_state = Mailing.mailing_states[:submitted]
         mailing.last_person_idx = -1
+        mailing.sent_by = current_person
         mailing.save!
       end
 

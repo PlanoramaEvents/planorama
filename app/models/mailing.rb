@@ -7,8 +7,7 @@ class Mailing < ApplicationRecord
   has_many :primary_email, through: :people
 
   belongs_to :survey, optional: true
-
-  # TODO: add sent_by person x
+  belongs_to :sent_by, class_name: 'Person', required: false
 
   enum mailing_state: {
     draft: 'draft',

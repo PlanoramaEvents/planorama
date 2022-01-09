@@ -6,6 +6,11 @@ export const mailing_columns = [
     sortable: true,
   },
   {
+    key: 'description',
+    label: 'Description',
+    type: "text",
+  },
+  {
     key: 'mailing_state',
     label: 'Status',
     type: "text",
