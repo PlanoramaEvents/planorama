@@ -7,15 +7,22 @@ class MailingSerializer
              :last_person_idx,
              :date_sent, :subject, :content,
              :display_name,
+             :description,
              :transiton_invite_status,
              :survey_id
 
-  # TODO: we do not need the list of people as yet
-  # belongs_to :survey
-  # has_many :people
+  belongs_to :sent_by, serializer: PersonSerializer,
+              if: Proc.new { |record| record.sent_by_id },
+              links: {
+                self: -> (object, params) {
+                  "#{params[:domain]}/mailing/#{object.id}"
+                },
+                related: -> (object, params) {
+                  "#{params[:domain]}/person/#{object.sent_by_id}"
+                }
+              }
 
   attribute :emails do |mailing|
    mailing.primary_email.collect(&:email)
   end
-
 end

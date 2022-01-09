@@ -416,7 +416,9 @@ CREATE TABLE public.mailings (
     content text,
     survey_id uuid,
     date_sent timestamp without time zone,
-    transiton_invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum
+    transiton_invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
+    description text,
+    sent_by_id uuid
 );
 
 
@@ -1918,6 +1920,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211114191042'),
 ('20211207192534'),
 ('20211207192624'),
-('20211213180751');
+('20211213180751'),
+('20220109171844');
 
 
