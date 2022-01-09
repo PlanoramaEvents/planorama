@@ -63,7 +63,7 @@ export const surveyMixin = {
         }).catch(rej)
       }), success_text, error_text);
     }
-   }
+  }
 }
 
 export default surveyMixin;
