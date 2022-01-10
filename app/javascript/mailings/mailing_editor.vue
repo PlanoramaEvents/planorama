@@ -11,7 +11,7 @@
         ref='add-person-form'
       >
         <model-field label="Name" v-model="mailing.title" type="text" stateless></model-field>
-        <model-field label="Name" v-model="mailing.description" type="textarea" stateless></model-field>
+        <model-field label="Description" v-model="mailing.description" type="textarea" stateless></model-field>
       </b-form>
       <template #footer>
         <div class="w-100">
