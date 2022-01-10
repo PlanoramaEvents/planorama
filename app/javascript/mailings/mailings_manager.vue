@@ -73,9 +73,6 @@ export default {
       selectedId: null
     }
   },
-  // props: {
-  //   attribute: String
-  // },
   mixins: [
     modelMixin
   ],
@@ -109,6 +106,9 @@ export default {
     },
     onClone() {
       console.debug("**** RO Clone")
+      if (this.selected) {
+        this.load_draft_mailings()
+      }
     },
     onView() {
       if (this.selectedId) {
@@ -122,13 +122,19 @@ export default {
       this.tabIndex = 1
     },
     onDelete() {
-      // TODO:
+      if (this.selectedId) {
+        this.delete_by_id(this.selectedId).then(
+          () => {
+            this.load_draft_mailings()
+          }
+        )
+      }
     },
     onManage() {
       this.tabIndex = 0
-      this.initialize()
+      this.load_draft_mailings()
     },
-    initialize() {
+    load_draft_mailings() {
       this.loading = true
       this.selectedId = null
       // Optimize by putting in field filter
@@ -143,7 +149,7 @@ export default {
       })
     },
     init() {
-      this.initialize()
+      this.load_draft_mailings()
     }
   }
 }

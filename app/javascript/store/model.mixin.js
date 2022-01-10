@@ -1,7 +1,7 @@
-import { SELECTED, SELECT, UNSELECT, FETCH, FETCH_BY_ID, CLEAR, SEARCH, PATCH_FIELDS, SAVE } from "./model.store";
+import { SELECTED, SELECT, UNSELECT, FETCH, FETCH_BY_ID, CLEAR, SEARCH, PATCH_FIELDS, SAVE, DELETE } from "./model.store";
 import { mapActions } from 'vuex';
 import { toastMixin } from "@/mixins";
-import { MODEL_SAVE_ERROR, MODEL_SAVE_SUCCESS } from "@/constants/strings";
+import { MODEL_SAVE_ERROR, MODEL_SAVE_SUCCESS, MODEL_DELETE_SUCCESS, MODEL_DELETE_ERROR } from "@/constants/strings";
 
 export const modelMixin = {
   mixins: [
@@ -55,6 +55,9 @@ export const modelMixin = {
     // need a save instance
     save(instance) {
       return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, selected: false, item: instance}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
+    },
+    delete_by_id(id) {
+      return this.toastPromise(this.$store.dispatch(DELETE, {model: this.model, itemOrId: id}), MODEL_DELETE_SUCCESS(this.model), MODEL_DELETE_ERROR(this.model));
     },
   }
 }
