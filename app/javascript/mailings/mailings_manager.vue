@@ -52,10 +52,12 @@
 </template>
 
 <script>
+import {http as axios} from '../http';
 import ComboBox from '../components/combo_box';
 import modelMixin from '../store/model.mixin';
 import MailingsTable from './mailings_table.vue';
 import MailingEditor from './mailing_editor.vue'
+import { MAILING_CLONED } from '../constants/strings';
 
 export default {
   name: "MailingsManager",
@@ -105,9 +107,20 @@ export default {
       }
     },
     onClone() {
-      console.debug("**** RO Clone")
       if (this.selected) {
-        this.load_draft_mailings()
+        let url = `/mailing/clone/${this.selected.id}`
+        axios.get(url).then(
+          () => {
+            this.$bvToast.toast(
+              MAILING_CLONED(this.selected.title),
+              {
+                variant: 'success',
+                title: 'Mailing Cloned'
+              }
+            )
+            this.load_draft_mailings()
+          }
+        )
       }
     },
     onView() {

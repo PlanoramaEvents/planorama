@@ -49,6 +49,8 @@ gem 'fast_excel'
 gem 'jsonapi-serializer'
 gem 'jsonapi.rb'
 
+gem 'deep_cloneable', '~> 3.2.0'
+
 gem "nokogiri", ">= 1.12.5"
 
 gem 'truemail'
