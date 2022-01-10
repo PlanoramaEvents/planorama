@@ -91,7 +91,7 @@ export default {
     onNamespaceLoaded( CKEDITOR ) {
       // Add our own plugin to use with the editor
       if (this.showMailMerge) {
-        CKEDITOR.plugins.addExternal( 'planobuttons', '/assets/ckeditor/plugins/planobuttons/', 'plugin.js' )
+        CKEDITOR.plugins.addExternal( 'planobuttons', '/ckeditor/plugins/planobuttons/', 'plugin.js' )
       }
     }
   }

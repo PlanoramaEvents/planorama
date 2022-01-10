@@ -12,7 +12,7 @@ module Planorama
     config.load_defaults 6.0
 
     # Disable asset pipeline, should all be moved to webpacker now
-    config.assets.enabled = true
+    config.assets.enabled = false
     # config.assets.compile = true
     # config.generators { |g| g.assets false }
     config.assets.precompile += %W(
