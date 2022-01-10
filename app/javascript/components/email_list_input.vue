@@ -1,6 +1,6 @@
 <template>
   <b-overlay :show="loadingEmails" rounded="sm">
-    <div class="tag-input">
+    <div class="tag-input" v-if="!disabled">
       <div
         v-for="(tag, index) in valid_tags" :key="tag"
         class="badge badge-secondary p-form-tag"
@@ -25,6 +25,20 @@
         @keydown.delete.stop='removeLastTag'
       />
     </div>
+    <div class="tag-input" v-if="disabled">
+      <div
+        v-for="(tag, index) in valid_tags" :key="tag"
+        class="badge badge-secondary p-form-tag"
+      >
+        {{ tag }}
+      </div>
+      <div
+        v-for="(tag, index) in invalid_tags" :key="tag"
+        class="badge badge-danger p-form-tag"
+      >
+        {{ tag }}
+      </div>
+    </div>
   </b-overlay>
 </template>
 
@@ -40,6 +54,10 @@ export default {
     value: {
       type: Array,
       default: () => []
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

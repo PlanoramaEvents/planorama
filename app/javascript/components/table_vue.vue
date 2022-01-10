@@ -7,8 +7,11 @@
         :value="filter"
         @change="onSearchChanged"
         :columns="columns"
+        v-if="showSearch"
       >
       </search-vue>
+      <div class="w-75" v-if="!showSearch">
+      </div>
 
       <div class="d-flex justify-content-end">
         <!-- TODO: uploads are done in admin, UI shows this as a download which does not exist yet -->
@@ -17,12 +20,27 @@
             <b-icon-upload></b-icon-upload>
           </b-button>
         </div> -->
-        <div class="d-inline mx-1" title="newval">
+        <div class="d-inline mx-1" title="clone" v-if="showClone">
+          <b-button @click="$emit('clone')" variant="primary" title="clone">
+            <b-icon-files scale="2"></b-icon-files>
+          </b-button>
+        </div>
+        <div class="d-inline mx-1" title="refresh" v-if="showRefresh">
+          <b-button @click="onRefresh" variant="primary" title="refresh">
+            <b-icon-arrow-repeat scale="2"></b-icon-arrow-repeat>
+          </b-button>
+        </div>
+        <div class="d-inline mx-1" title="newval" v-if="showAdd">
           <b-button @click="$emit('new')" variant="primary" title="New">
             <b-icon-plus scale="2"></b-icon-plus>
           </b-button>
         </div>
-        <div class="d-inline" title="Settings">
+        <div class="d-inline mx-1" title="show" v-if="showView">
+          <b-button @click="$emit('view')" variant="primary" title="View">
+            View
+          </b-button>
+        </div>
+        <div class="d-inline" title="Settings" v-if="showSettings">
           <b-button disabled>
             <b-icon-gear-fill></b-icon-gear-fill>
           </b-button>
@@ -93,6 +111,30 @@ export default {
     showControls: {
       type: Boolean,
       default: true
+    },
+    showSearch: {
+      type: Boolean,
+      default: true
+    },
+    showAdd: {
+      type: Boolean,
+      default: true
+    },
+    showSettings: {
+      type: Boolean,
+      default: true
+    },
+    showRefresh: {
+      type: Boolean,
+      default: false
+    },
+    showClone: {
+      type: Boolean,
+      default: false
+    },
+    showView: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -101,6 +143,9 @@ export default {
     }
   },
   methods: {
+    onRefresh() {
+      this.$refs.table.refresh()
+    },
     onRowSelected(items) {
       if (items[0]) {
         this.select(items[0]);

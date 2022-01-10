@@ -1,13 +1,19 @@
 <template>
-  <ckeditor
-    ref="editor"
-    :type="type"
-    :class="inputClass"
-    :config="config"
-    :value="value"
-    v-on="$listeners"
-    @namespaceloaded="onNamespaceLoaded"
-  ></ckeditor>
+  <div>
+    <div v-if="disabled">
+      <p v-html="value"></p>
+    </div>
+    <ckeditor
+      v-if="!disabled"
+      ref="editor"
+      :type="type"
+      :class="inputClass"
+      :config="config"
+      :value="value"
+      v-on="$listeners"
+      @namespaceloaded="onNamespaceLoaded"
+    ></ckeditor>
+  </div>
 </template>
 
 <script>
@@ -20,6 +26,10 @@ export default {
       default: 'inline'
     },
     showMailMerge: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     }
