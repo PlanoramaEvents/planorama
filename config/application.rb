@@ -12,8 +12,12 @@ module Planorama
     config.load_defaults 6.0
 
     # Disable asset pipeline, should all be moved to webpacker now
-    # config.assets.enabled = false
+    config.assets.enabled = false
+    # config.assets.compile = true
     # config.generators { |g| g.assets false }
+    config.assets.precompile += %W(
+      ckeditor/plugins/planobuttons/plugin.js
+    )
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
