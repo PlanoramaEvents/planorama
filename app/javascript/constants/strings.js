@@ -65,6 +65,7 @@ module.exports = {
     // Mailing messages
     MAILING_SCHEDULED: (title) => `The mailing ${title} has been scheduled.`,
     MAILING_TEST_SCHEDULED: (title) => `A test of the mailing ${title} has been scheduled.`,
+    MAILING_CLONED: (title) => `A clone of the mailing ${title} has been created.`,
 
     //question actions
     QUESTION_ORDER_SAVE_SUCCESS: "Question reorder successfully saved",

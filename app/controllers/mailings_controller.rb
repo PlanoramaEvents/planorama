@@ -20,6 +20,22 @@ class MailingsController < ResourceController
   #   check_editable(mailing: @object)
   # end
 
+  def clone
+    model_class.transaction do
+      authorize @object, policy_class: policy_class
+
+      cloned = @object.deep_clone(
+        include: [:person_mailing_assignments],
+        except: [ :sent_by_id, :mailing_state ],
+        use_dictionary: true
+      )
+
+      cloned.save!
+
+      render_object(cloned, includes: false)
+    end
+  end
+
   def before_update
     check_editable(mailing: @object)
   end

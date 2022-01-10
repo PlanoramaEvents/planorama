@@ -13,7 +13,11 @@ class MailingsPolicy < PlannerPolicy
 
   def preview?
     @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
-  end  
+  end
+
+  def clone?
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
 
   # class Scope < Scope
   #   def resolve
