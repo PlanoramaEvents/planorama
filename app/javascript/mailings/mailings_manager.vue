@@ -28,15 +28,17 @@
           <h4>Sent Mailings</h4>
         </div>
         <div class="d-flex flex-row">
-          <!-- TODO: clone, refresh, view of selected row, handle as events -->
           <mailings-table
             defaultFilter='{"op":"all","queries":[["mailing_state", "!=", "draft"]]}'
+            @view="onReadOnlyView"
+            @clone="onClone"
           ></mailings-table>
         </div>
       </b-tab>
       <b-tab title="Second" lazy>
         <mailing-editor
           :selectedId="selectedId"
+          :readOnly="selected != null"
           model="mailing"
           @mailingSent="onManage"
         >
@@ -99,12 +101,23 @@ export default {
     onChange(arg) {
       this.selectedId = arg
     },
+    onReadOnlyView() {
+      if (this.selected) {
+        this.selectedId = this.selected.id
+        this.tabIndex = 1
+      }
+    },
+    onClone() {
+      console.debug("**** RO Clone")
+    },
     onView() {
       if (this.selectedId) {
+        this.select(null);
         this.tabIndex = 1
       }
     },
     onNewView() {
+      this.select(null);
       this.selectedId = null
       this.tabIndex = 1
     },

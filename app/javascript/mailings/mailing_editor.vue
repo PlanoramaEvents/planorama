@@ -41,11 +41,10 @@
       label="Add Names:"
       label-for="email-addresses"
     >
-      <email-list-input id="email-addresses" v-model="mailing.emails"></email-list-input>
+      <email-list-input id="email-addresses" v-model="mailing.emails" :disabled="readOnly"></email-list-input>
     </b-form-group>
-    <b-form-group
-    >
-      <b-form-checkbox v-model="has_survey">
+    <b-form-group>
+      <b-form-checkbox v-model="has_survey" :disabled="readOnly">
         This mailing has a survey attached
       </b-form-checkbox>
     </b-form-group>
@@ -78,18 +77,19 @@
       label="Subject:"
       label-for="email-subject"
     >
-      <b-form-input id="email-subject" v-model="mailing.subject"></b-form-input>
+      <b-form-input id="email-subject" v-model="mailing.subject" :disabled="readOnly"></b-form-input>
     </b-form-group>
     <plano-editor
       v-model="mailing.content"
       type='classic'
       :show-mail-merge="true"
+      :disabled="readOnly"
     ></plano-editor>
     <!-- TODO: put in sending to count -->
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end" v-if="!readOnly">
       <b-button variant="primary" class="m-1 btn-sm" @click="onSave">Save Mailing</b-button>
     </div>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end" v-if="!readOnly">
       <b-button variant="primary" class="m-1" @click="onSendTest">Send test to self</b-button>
       <b-button variant="primary" class="m-1" @click="onPreview">Preview</b-button>
       <b-button variant="danger" class="m-1" @click="onSend">Send</b-button>
@@ -132,6 +132,10 @@ export default {
     selectedId: {
       type: String,
       default: null
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

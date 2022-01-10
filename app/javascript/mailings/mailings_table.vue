@@ -4,12 +4,19 @@
       defaultSortBy='title'
       :model="model"
       :columns="columns"
-      :show-controls="false"
       :defaultFilter="defaultFilter"
+      :show-search="false"
+      :show-add="false"
+      :show-settings="false"
+      :show-refresh="true"
+      :show-clone="true"
+      :show-view="true"
+      @view="$emit('view')"
+      @clone="$emit('clone')"
     >
       <template #cell(content)="{ item }">
         <tooltip-overflow :title="item.content">
-          {{item.content}}
+          <div v-html="item.content"></div>
         </tooltip-overflow>
       </template>
     </table-vue>
@@ -34,11 +41,6 @@ export default {
   data: () => ({
     columns,
     model
-  }),
-  methods: {
-    // onNew() {
-    //   this.$refs['add-person-modal'].showModal()
-    // }
-  }
+  })
 }
 </script>

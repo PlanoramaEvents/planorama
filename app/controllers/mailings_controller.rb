@@ -3,10 +3,11 @@ class MailingsController < ResourceController
   POLICY_CLASS = 'MailingsPolicy'.freeze
   DEFAULT_SORTBY = 'title'.freeze
 
-  # def serializer_includes
-  #   [
-  #   ]
-  # end
+  def serializer_includes
+    [
+      :sent_by
+    ]
+  end
 
   def includes
     [

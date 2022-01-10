@@ -22,6 +22,10 @@ export const mailing_columns = [
     formatter: (d) => (d ? new Date(d).toLocaleDateString() : 'n/a')
   },
   {
+    key: 'sent_by.name',
+    label: 'Sent By',
+  },
+  {
     key: 'content',
     label: 'Content',
     type: "text"
