@@ -25,10 +25,6 @@ import TakeSurvey from './surveys/take-survey.vue';
 import SurveyPage from './surveys/survey-page.vue';
 import SurveyThankYou from './surveys/survey-thank-you.vue';
 
-// Mailings
-import MailingScreen from './mailings/mailing-screen.vue';
-import MailTemplateScreen from './mailings/mail-template-screen.vue';
-
 const surveyRoutes = [
   { path: 'edit/:id/:responses', component: EditSurvey, props: true},
   { path: 'edit/:id', component: EditSurvey, props: true },
@@ -80,20 +76,6 @@ export const router = new VueRouter({
       path: '/surveys',
       component: SurveyScreen,
       children: surveyRoutes,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/mailing',
-      component: MailingScreen,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/mail-templates',
-      component: MailTemplateScreen,
       meta: {
         requiresAuth: true
       }

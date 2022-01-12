@@ -22,10 +22,13 @@ export const toastMixin = {
         //toaster: 'planotoaster'
       })
     },
-    toastCallback(method, success_message) {
-      method().then(() => this.success_toast(success_message))
-        .catch((error) => this.error_toast(error.message))
-    },
+    // Not used anywhere ....
+    // toastCallback(method, success_message) {
+    //   // fuck
+    //   console.debug('***** ', method)
+    //   method().then(() => this.success_toast(success_message))
+    //     .catch((error) => this.error_toast(error.message))
+    // },
     toastSuccessFailure(success_message) {
       return {
         success: () => this.success_toast(success_message),

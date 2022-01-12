@@ -29,11 +29,5 @@ export const mailing_columns = [
     key: 'content',
     label: 'Content',
     type: "text"
-  },
-  // TODO: add sent by
-  // {
-  //   key: 'sent_by',
-  //   label: 'Sent By',
-  //   type: "text",
-  // }
+  }
 ]

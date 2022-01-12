@@ -11,8 +11,8 @@
           import-url="/person/import"
         ></sheet-importer-vue>
       </admin-accordion>
-      <admin-accordion id="edit-roles-accordion" title="Edit Roles">
-        <change-user-roles></change-user-roles>
+      <admin-accordion id="edit-roles-accordion" title="Edit Roles" @show="showPeopleRoles">
+        <change-user-roles model="person" ref="role-manager"></change-user-roles>
       </admin-accordion>
       <admin-accordion id="mailings-accordion" title="Mailings" @show="showMailings">
         <mailings-manager
@@ -99,6 +99,9 @@ export default {
     // }),
     showMailings() {
       this.$refs['mailing-manager'].init()
+    },
+    showPeopleRoles() {
+      this.$refs['role-manager'].init()
     },
     cancel() {
       // this.configuration.reset(ADMIN_CONFIGS);
