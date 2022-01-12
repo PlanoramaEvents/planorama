@@ -3,10 +3,16 @@
     <modal-form
       title="Add Person"
       ref="add-person-modal"
+      @save="onSave"
     >
       <person-add
         :show-buttons='false'
+        ref="add-person-form"
       ></person-add>
+      <template #footer="{ ok, cancel }">
+        <b-button variant="link" @click="cancel()">Cancel</b-button>
+        <b-button variant="primary" @click="ok()">Save</b-button>
+      </template>
     </modal-form>
     <table-vue
       @new="onNew"
@@ -15,7 +21,7 @@
       :columns="columns"
     >
       <template #cell(primary_email)="{ item }">
-        <tooltip-overflow :title="item.primary_email.email">
+        <tooltip-overflow v-if="item.primary_email" :title="item.primary_email.email">
           {{item.primary_email.email}}
         </tooltip-overflow>
       </template>
@@ -58,6 +64,9 @@ export default {
   methods: {
     onNew() {
       this.$refs['add-person-modal'].showModal()
+    },
+    onSave() {
+      this.$refs['add-person-form'].savePerson()
     }
   }
 }

@@ -287,6 +287,7 @@ class PeopleController < ResourceController
       pseudonym_sort_by
       pseudonym_sort_by_confirmed
       person_roles_attributes
+      email_addresses_attributes
     ] << [
       email_addresses_attributes: %i[
         id
