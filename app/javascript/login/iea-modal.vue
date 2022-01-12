@@ -58,7 +58,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { FETCH_IEA, SIGN_IEA, GET_IEA_UNSIGNED } from '../administration/agreement.store'
+// import { FETCH_IEA, SIGN_IEA, GET_IEA_UNSIGNED } from '../administration/agreement.store'
 import toastMixin from '../shared/toast-mixin'
 export default {
   name: "IeaModal",
@@ -70,11 +70,11 @@ export default {
     showModal: false
   }),
   methods: {
-    ...mapActions('admin/agreements', {
-      fetchIea: FETCH_IEA,
-      signIea: SIGN_IEA,
-      getIeaUnsigned: GET_IEA_UNSIGNED,
-    }),
+    // ...mapActions('admin/agreements', {
+    //   fetchIea: FETCH_IEA,
+    //   signIea: SIGN_IEA,
+    //   getIeaUnsigned: GET_IEA_UNSIGNED,
+    // }),
     okAction(event) {
       this.$emit('ok', event)
       // Got to the "home page"

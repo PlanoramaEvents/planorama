@@ -2,19 +2,16 @@
   <b-modal
     size="xl"
     :title="title"
-    @ok='submitData'
     ref='model-form'
-    @close="onClose"
   >
     <slot></slot>
-    <template #modal-footer>
-      <slot name="footer"></slot>
+    <template #modal-footer="{ ok, cancel, hide }">
+      <slot name="footer" v-bind:ok="close" v-bind:cancel="onCancel"></slot>
     </template>
   </b-modal>
 </template>
 
 <script>
-import eventBus from '../utils/event_bus'
 
 export default {
   name: 'ModalForm',
@@ -30,14 +27,13 @@ export default {
     showModal() {
       this.$refs['model-form'].show()
     },
-    onClose() {
-      this.$emit('close')
-    },
-    hideModal() {
+    close() {
       this.$refs['model-form'].hide()
+      this.$emit('save')
     },
-    submitData(event) {
-      eventBus.$emit("submit-inner-form")
+    onCancel() {
+      this.$refs['model-form'].hide()
+      this.$emit('cancel')
     }
   }
 }

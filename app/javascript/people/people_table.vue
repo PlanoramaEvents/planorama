@@ -3,10 +3,16 @@
     <modal-form
       title="Add Person"
       ref="add-person-modal"
+      @save="onSave"
     >
       <person-add
         :show-buttons='false'
+        ref="add-person-form"
       ></person-add>
+      <template #footer="{ ok, cancel }">
+        <b-button variant="link" @click="cancel()">Cancel</b-button>
+        <b-button variant="primary" @click="ok()">Save</b-button>
+      </template>
     </modal-form>
     <table-vue
       @new="onNew"
@@ -58,6 +64,9 @@ export default {
   methods: {
     onNew() {
       this.$refs['add-person-modal'].showModal()
+    },
+    onSave() {
+      this.$refs['add-person-form'].savePerson()
     }
   }
 }

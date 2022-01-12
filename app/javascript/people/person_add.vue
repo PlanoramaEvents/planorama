@@ -1,13 +1,12 @@
 <template>
   <b-form
-    v-on:save="onSave"
     ref='add-person-form'
   >
     <model-field label="Name" v-model="person.name" type="text" stateless></model-field>
     <email-field label="Email" id="new-user-email" v-model="email"></email-field>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
-      <b-button variant="primary" @click="onSave">Save</b-button>
+      <b-button variant="primary" @click="savePerson">Save</b-button>
     </div>
   </b-form>
 </template>
@@ -17,8 +16,6 @@ import toastMixin from '../shared/toast-mixin';
 import { ADMIN_ADD_USER_SUCCESS } from '../constants/strings';
 import ModelField from '../shared/model-field';
 import EmailField from '../shared/email_field';
-
-import eventBus from '../utils/event_bus'
 
 import { mapActions } from 'vuex';
 import { NEW_PERSON } from '../store/person.store';
@@ -66,7 +63,7 @@ export default {
       this.person.name = '';
       this.person.email_addresses_attributes = [{email: '', isdefault: true}];
     },
-    onSave() {
+    savePerson() {
       let res = this.newPersonAction(this.person);
       res.then(
         (obj) => {
@@ -91,14 +88,6 @@ export default {
         }
       );
     }
-  },
-  mounted() {
-    eventBus.$on(
-      'submit-inner-form',
-      () => {
-        this.onSave()
-      }
-    )
   }
 }
 </script>
