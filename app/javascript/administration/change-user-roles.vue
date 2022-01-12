@@ -62,7 +62,8 @@ export default {
       this.search({
         "fields[person]": "id,name",
         "sortBy": 'name',
-        "sortOrder": 'asc'
+        "sortOrder": 'asc',
+        "perPage": 10000
       }).then(data => {
         this.data = data
         this.loading = false

@@ -15,8 +15,8 @@
       :columns="columns"
     >
       <template #cell(primary_email)="{ item }">
-        <tooltip-overflow :title="item.primary_email">
-          {{item.primary_email}}
+        <tooltip-overflow :title="item.primary_email.email">
+          {{item.primary_email.email}}
         </tooltip-overflow>
       </template>
       <template #cell(comments)="{ item }">
@@ -25,8 +25,10 @@
         </tooltip-overflow>
       </template>
       <template #cell(last_sign_in_at)="{ item }">
-        <span v-if="item.public" v-b-tooltip="{title: item.last_sign_in_at}">
-          {{new Date(item.last_sign_in_at).toLocaleDateString()}}
+        <span v-if="item.public">
+          <tooltip-overflow :title="item.last_sign_in_at">
+            {{new Date(item.last_sign_in_at).toLocaleDateString()}}
+          </tooltip-overflow>
         </span>
       </template>
     </table-vue>
