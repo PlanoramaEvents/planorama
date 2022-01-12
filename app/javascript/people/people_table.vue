@@ -15,7 +15,7 @@
       :columns="columns"
     >
       <template #cell(primary_email)="{ item }">
-        <tooltip-overflow :title="item.primary_email.email">
+        <tooltip-overflow v-if="item.primary_email" :title="item.primary_email.email">
           {{item.primary_email.email}}
         </tooltip-overflow>
       </template>
