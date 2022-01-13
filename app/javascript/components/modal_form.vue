@@ -27,6 +27,9 @@ export default {
     showModal() {
       this.$refs['model-form'].show()
     },
+    hideModal() {
+      this.$refs['model-form'].hide()
+    },
     close() {
       this.$refs['model-form'].hide()
       this.$emit('save')
