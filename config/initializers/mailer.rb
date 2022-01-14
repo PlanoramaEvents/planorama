@@ -12,7 +12,7 @@ Rails.application.config.action_mailer.tap do |action_mailer|
     action_mailer.tap do |action_mailer|
       action_mailer.smtp_settings = {
         address:              ENV.fetch("SMTP_SERVER") { 'localhost' },
-        port:                 ENV.fetch("SMTP_PORT") { 1025 },
+        port:                 ENV.fetch("SMTP_PORT") { 10025 },
         domain:               ENV.fetch("SMTP_SERVER") { 'localhost' }
       }
     end
