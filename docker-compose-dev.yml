@@ -41,6 +41,8 @@ services:
       - NODE_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
       - SIDEKIQ_REDIS_URL=redis://redis:6379/0
+      - SMTP_SERVER=mailcatcher
+      - SMTP_PORT=1025
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -56,6 +58,7 @@ services:
     links:
       - redis
       - postgres
+      - mailcatcher
 
   planorama-sidekiq:
     command: /opt/planorama/script/planorama_sidekiq.sh
@@ -70,6 +73,8 @@ services:
       - NODE_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
       - SIDEKIQ_REDIS_URL=redis://redis:6379/0
+      - SMTP_SERVER=mailcatcher
+      - SMTP_PORT=1025
     volumes:
       - node_modules_sidekiq:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -82,6 +87,7 @@ services:
     links:
       - redis
       - postgres
+      - mailcatcher
 
   # The database server - only needed for dev and test
   # The Postgre DB
