@@ -6,7 +6,9 @@ Rails.application.routes.draw do
              controllers: {
                sessions: 'people/sessions',
                passwords: 'people/passwords',
-               registrations: 'people/registrations'
+               registrations: 'people/registrations',
+               unlocks: 'people/unlocks'
+               # UnlocksController
              }, defaults: { format: :json }
 
   root to: 'home#index'
