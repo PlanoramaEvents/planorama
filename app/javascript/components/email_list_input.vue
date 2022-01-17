@@ -20,6 +20,7 @@
         placeholder="Enter email(s) ..."
         class="p-form-new-tag"
         v-model="newTag"
+        @blur="addTags"
         @keydown.enter='addTags'
         @keydown.188.stop='addTags'
         @keydown.delete.stop='removeLastTag'
