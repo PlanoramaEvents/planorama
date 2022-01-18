@@ -15,11 +15,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"const newAccessToken = responseHeaders['Authorization'].replace('Bearer','');",
+									"// const newAccessToken = responseHeaders['Authorization'].replace('Bearer','');",
 									"// console.log('****', newAccessToken);",
 									"// postman.setEnvironmentVariable(\"jwt-token\", newAccessToken);",
 									"// Save the JWT in the collection variable for use by other requests",
-									"pm.collectionVariables.set('jwt-token', newAccessToken);",
+									"// pm.collectionVariables.set('jwt-token', newAccessToken);",
 									""
 								],
 								"type": "text/javascript"
@@ -52,9 +52,33 @@
 								"auth",
 								"sign_in"
 							]
-						}
+						},
+						"description": "Log the person into the system. It will return the JWT token in the header which is needed for subsequent requests."
 					},
 					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		},
@@ -62,47 +86,8 @@
 			"name": "People",
 			"item": [
 				{
-					"name": "Get People",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt-token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:3000/person",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"person"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Me Session",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt-token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -121,20 +106,36 @@
 					"response": []
 				},
 				{
-					"name": "Get Person",
+					"name": "Get People",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/person/{{person-id}}",
+							"raw": "http://localhost:3000/person",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"person",
-								"{{person-id}}"
+								"person"
 							]
 						}
 					},
@@ -191,6 +192,75 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Survey Submissions For Survey",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person/{{person-id}}/survey/{{survey-id}}/submissions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person",
+								"{{person-id}}",
+								"survey",
+								"{{survey-id}}",
+								"submissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get People Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -241,6 +311,206 @@
 					"response": []
 				},
 				{
+					"name": "Get Surveys For Person via Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/survey?filter={\"rules\":[[\"assigned_people.person_id\", \"=\", \"{{person-id}}\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"rules\":[[\"assigned_people.person_id\", \"=\", \"{{person-id}}\"]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Surveys Via Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/survey?filter={\"rules\":[[\"surveys.id\", \"=\", \"{{survey-id}}\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"rules\":[[\"surveys.id\", \"=\", \"{{survey-id}}\"]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign People to Survey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"people\": [\n        {\n            \"id\": \"{{person-id}}\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/survey/{{survey-id}}/assign_people",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey",
+								"{{survey-id}}",
+								"assign_people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UnAssign People to Survey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"people\": [\n        {\n            \"id\": \"{{person-id}}\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/survey/{{survey-id}}/unassign_people",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey",
+								"{{survey-id}}",
+								"unassign_people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Pages for Survey",
 					"event": [
 						{
@@ -280,6 +550,50 @@
 								"survey",
 								"{{survey-id}}",
 								"page"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get A Survey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// //console.log('***', jsonData['data'][0].id);",
+									"// pm.collectionVariables.set(\"page-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/survey/{{survey-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey",
+								"{{survey-id}}"
 							]
 						}
 					},
@@ -625,6 +939,176 @@
 			]
 		},
 		{
+			"name": "Agreements",
+			"item": [
+				{
+					"name": "Get My Agreements Signed",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement/signed",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement",
+								"signed"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Agreements UnSigned (only latest versions)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement/unsigned",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement",
+								"unsigned"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Latest Agreements",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"agreement-id\", jsonData['data'][0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement/latest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement",
+								"latest"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Sign an Agreement",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement/sign/{{agreement-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement",
+								"sign",
+								"{{agreement-id}}"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Agreements",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/agreement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				},
+				{
+					"name": "Create an Agreement",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"title\": \"{{$randomLoremWords}}\",\n    \"terms\": \"{{$randomLoremParagraph}}\",\n    \"agrement_type\": \"stuff\",\n    \"target\": \"all\"\n    // created_by_id\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/agreement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"agreement"
+							]
+						},
+						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "RBAC",
 			"request": {
 				"auth": {
@@ -654,16 +1138,6 @@
 			"response": []
 		}
 	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{jwt-token}}",
-				"type": "string"
-			}
-		]
-	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -741,6 +1215,10 @@
 		},
 		{
 			"key": "person-id",
+			"value": ""
+		},
+		{
+			"key": "agreement-id",
 			"value": ""
 		}
 	]

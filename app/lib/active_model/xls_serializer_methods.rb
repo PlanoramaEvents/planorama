@@ -33,8 +33,8 @@ module ActiveModel
         associated_serializers unless @associated_serializers
 
         cname = name.split('.')
-        if name.include?('survey_responses')
-          association = self._reflections[:survey_responses].build_association(self, {})
+        if name.include?('responses')
+          association = self._reflections[:responses].build_association(self, {})
 
           obj = association.object[cname[1].to_i]
 
@@ -137,7 +137,7 @@ module ActiveModel
     end
 
     def attribute_for_sheet
-      self.class._attributes.difference([:lock_version, :survey_id, :person_id, :fuuid])
+      self.class._attributes.difference([:lock_version, :survey_id, :person_id])
     end
   end
 end

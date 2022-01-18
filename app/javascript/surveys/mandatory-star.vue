@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { surveyMixin } from '@mixins'
 export default {
   name: "MandatoryStar",
   props: {
@@ -12,9 +12,10 @@ export default {
       default: false
     }
   },
-  computed: mapState({
-    survey: 'selected'
-  })
+  mixins: [
+    surveyMixin
+  ]
+
 }
 </script>
 

@@ -18,26 +18,30 @@ class AgreementsController < ResourceController
   def latest
     authorize model_class, policy_class: policy_class
 
-    agreement = collection.order('updated_at desc').first
+    agreements = Agreement.latest
 
-    if agreement
-      render_object(agreement)
-    else
-      raise 'agreement not found'
-    end
+    # raise ActiveRecord::RecordNotFound.new('agreement not found') unless agreement
+    render json: serializer_class.new(agreements,
+                  {
+                    include: serializer_includes,
+                    params: {domain: "#{request.base_url}"}
+                  }
+                ).serializable_hash(),
+           content_type: 'application/json'
   end
 
   # list agreements that I have not signed
   def unsigned
     authorize model_class, policy_class: policy_class
 
-    agreements = Agreement.unsigned(person: current_person)
+    agreements = Agreement.latest.unsigned(person: current_person)
 
-    render json: agreements,
-           each_serializer: serializer_class,
-           root: 'data',
-           include: serializer_includes,
-           adapter: :json,
+    render json: serializer_class.new(agreements,
+                  {
+                    include: serializer_includes,
+                    params: {domain: "#{request.base_url}"}
+                  }
+                ).serializable_hash(),
            content_type: 'application/json'
   end
 
@@ -47,11 +51,12 @@ class AgreementsController < ResourceController
 
     agreements = Agreement.signed(person: current_person)
 
-    render json: agreements,
-           each_serializer: serializer_class,
-           root: 'data',
-           include: serializer_includes,
-           adapter: :json,
+    render json: serializer_class.new(agreements,
+                  {
+                    include: serializer_includes,
+                    params: {domain: "#{request.base_url}"}
+                  }
+                ).serializable_hash(),
            content_type: 'application/json'
   end
 
@@ -87,6 +92,7 @@ class AgreementsController < ResourceController
   # need to add includes etc to speed up query
   def allowed_params
     %i[
+      id
       lock_version
       target
       title

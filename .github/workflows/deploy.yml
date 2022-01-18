@@ -85,18 +85,18 @@ jobs:
           build-args: |
             DEVISE_SECRET=${{ env.DEVISE_SECRET }}
             RAILS_ENV=production
-            NODE_ENV=production
+            NODE_ENV=development
           push: false
           load: true
           # target: development
           tags: "${{ env.CONTAINER_TEST_REPOSITORY }}"
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
 
       - name: Run specs
         run: |
           docker run -d --name="test-database" --hostname "postgres" -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" postgres:latest
-          docker run --network "container:test-database" -e RAILS_ENV=test -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY /bin/sh -c "bundle exec rake db:create db:structure:load; bundle exec rspec"
+          docker run --network "container:test-database" -e RAILS_ENV=test -e DEVISE_SECRET=${{ env.DEVISE_SECRET }} -e "POSTGRES_PASSWORD=test" $CONTAINER_TEST_REPOSITORY /bin/sh -c "bundle exec rake db:create db:structure:load; bundle exec rake db:seed; bundle exec rspec"
 
       # The docker pull does not work
       - name: Run security tests
@@ -112,6 +112,12 @@ jobs:
         run: |
           docker tag $CONTAINER_TEST_REPOSITORY $CONTAINER_DEPLOY_REPOSITORY
           docker push $CONTAINER_DEPLOY_REPOSITORY
+
+      # Needed to prevent cache from growing forever (see https://github.com/docker/build-push-action/issues/252)
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       # I think this is not needed since the "test" image is not pushed
       # - name: Clean up the CI testing tag

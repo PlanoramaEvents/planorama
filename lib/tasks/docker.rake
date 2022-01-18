@@ -2,11 +2,11 @@ desc "A bunch of docker env utilities because I'm sick of typing"
 
 namespace :docker do
     task :build do
-        sh "docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose-dev.yml", "build"
+        sh "docker-compose", "-f", "docker-compose-dev.yml", "build"
     end
 
     task :restart, [:service] do |t, args|
-        new_args = [ "docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose-dev.yml", "restart"]
+        new_args = [ "docker-compose", "-f", "docker-compose-dev.yml", "restart"]
         if args[:service]
             new_args += [args[:service]]
         end
@@ -14,19 +14,19 @@ namespace :docker do
     end
 
     task :quickstart do
-        sh "docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose-dev.yml", "up", "-d"
+        sh "docker-compose", "-f", "docker-compose-dev.yml", "up", "-d"
     end
 
     task :start do
-        sh "docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose-dev.yml", "up", "--build", "-d"
+        sh "docker-compose", "-f", "docker-compose-dev.yml", "up", "--build", "-d"
     end
 
     task :stop do
-        sh "docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose-dev.yml", "down"
+        sh "docker-compose", "-f", "docker-compose-dev.yml", "down"
     end
 
     task :logs do
-        sh "docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose-dev.yml", "logs", "-f"
+        sh "docker-compose", "-f", "docker-compose-dev.yml", "logs", "-f"
     end
 
     task :test do
@@ -38,7 +38,7 @@ namespace :docker do
     end
 
     task :mac_trunc_logs do
-        sh "echo", "\":> $(docker inspect planorama_planorama_1 --format '{{.LogPath}}'); exit\"", "|",  "nc",  "-U",  "~/Library/Containers/com.docker.docker/Data/debug-shell.sock"
+        puts "run the following command\ndocker run -it --rm --privileged --pid=host planorama:dev nsenter -t 1 -m -u -n -i -- sh -c 'truncate -s0 /var/lib/docker/containers/*/*-json.log'"
     end
 
     task :psql => :read_envrc do

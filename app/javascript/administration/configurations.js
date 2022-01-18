@@ -1,27 +1,27 @@
-import {PlanoModel} from '../model.js';
+// import {PlanoModel} from '../model.js';
 import { http}  from '../http';
 
-export class Configuration extends PlanoModel {
-  defaults() {
-    return {
-      id: null,
-      parameter: null,
-      parameter_value: null,
-      updated_at: new Date(),
-      created_at: new Date()
-    }
-  }
-
-  routes() {
-    return {
-      fetch: '/configurations/{id}',
-      create: '/configurations',
-      save: '/configurations/{id}',
-      update: '/configurations/{id}',
-      delete: '/configurations/{id}',
-    }
-  }
-}
+// export class Configuration extends PlanoModel {
+//   defaults() {
+//     return {
+//       id: null,
+//       parameter: null,
+//       parameter_value: null,
+//       updated_at: new Date(),
+//       created_at: new Date()
+//     }
+//   }
+//
+//   routes() {
+//     return {
+//       fetch: '/configurations/{id}',
+//       create: '/configurations',
+//       save: '/configurations/{id}',
+//       update: '/configurations/{id}',
+//       delete: '/configurations/{id}',
+//     }
+//   }
+// }
 
 export class Configurations {
 
@@ -39,19 +39,19 @@ export class Configurations {
     return configs
   }
 
-  fetch() {
-    return new Promise((res, rej) => {
-      http.get('/configurations').then(resp => {
-        for (let key in resp.data) {
-          let val = resp.data[key]
-          this[key] = val ? new Configuration(val) : new Configuration({parameter: key});
-        }
-        this.data = resp.data;
-        this.config_names = Object.keys(resp.data);
-        res(this)
-      }).catch(e => rej(e))
-    })
-  }
+  // fetch() {
+  //   return new Promise((res, rej) => {
+  //     http.get('/configurations').then(resp => {
+  //       for (let key in resp.data) {
+  //         let val = resp.data[key]
+  //         this[key] = val ? new Configuration(val) : new Configuration({parameter: key});
+  //       }
+  //       this.data = resp.data;
+  //       this.config_names = Object.keys(resp.data);
+  //       res(this)
+  //     })
+  //   })
+  // }
 
   save(predicate) {
     return Promise.all(this.configs(predicate).map(c => c.changed() ? c.save() : null).filter(x => x))

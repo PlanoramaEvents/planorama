@@ -42,10 +42,12 @@
 
 class Person < ApplicationRecord
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  # database_authenticatable,
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :lockable
+  devise :database_authenticatable,
+         :timeoutable,
+         :rememberable,
+         :registerable,
+         :recoverable,
+         :validatable, :lockable, :trackable
 
   # TODO: add a deleted_at mechanism
 
@@ -75,21 +77,26 @@ class Person < ApplicationRecord
 
   has_many  :person_mailing_assignments
   has_many  :mailings, through: :person_mailing_assignments
-  has_many  :mail_histories # , :through => :person_mailing_assignments
+  has_many  :mail_histories
 
   has_many  :email_addresses, dependent: :destroy
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
-  has_many :survey_submissions, class_name: 'Survey::Submission', dependent: :destroy
-  # TODO: add scope for survey id
-  # TODO: get list of surveys for this person ...
+  has_one :primary_email,
+          -> { where(['isdefault = true']) },
+          class_name: 'EmailAddress'
+
+  has_many :submissions, class_name: 'Survey::Submission', dependent: :destroy
+  has_many :mailed_surveys, through: :mailings, source: :survey
+  has_and_belongs_to_many :assigned_surveys, class_name: 'Survey'
+
+  # TODO: get a list of surveys assigned AND those with submissions that are not assigned
 
   has_many :person_roles, dependent: :destroy
   accepts_nested_attributes_for :person_roles, allow_destroy: true
 
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements
-  # signed, to be re-signed etc
 
   enum acceptance_status: {
     unknown: 'unknown',
@@ -98,7 +105,7 @@ class Person < ApplicationRecord
     declined: 'declined'
   }
 
-  enum invitestatus: {
+  enum invite_status: {
     not_set: 'not_set',
     do_not_invite: 'do_not_invite',
     potential_invite: 'potential_invite',
@@ -114,6 +121,10 @@ class Person < ApplicationRecord
 
   validates :name, presence: true
 
+  # Needed for JWT revocation strategy
+  # def jwt_payload
+  #   super.merge('foo' => 'bar')
+  # end
 
   # TODO:
   # - there is talk about having a workflow, including whether a person
@@ -161,11 +172,11 @@ class Person < ApplicationRecord
     email_addresses.first&.saved_change_to_email?
   end
 
-  def primary_email
-    # TODO: change to find the primary email
-    email_addresses.first&.email
-    # emails.primary || (emails.first if new_record?)
-  end
+  # def primary_email
+  #   # TODO: change to find the primary email
+  #   email_addresses.first&.email
+  #   # emails.primary || (emails.first if new_record?)
+  # end
 
   # def self.find_for_database_authentication warden_condition
   #   Rails.logger.error "******** WARDEN AUTH #{warden_condition.to_json}"

@@ -4,6 +4,14 @@ class SurveysPolicy < PlannerPolicy
     return true
   end
 
+  def assign_people?
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
+  def unassign_people?
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
   # class Scope < Scope
   #   def resolve
   #     if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }

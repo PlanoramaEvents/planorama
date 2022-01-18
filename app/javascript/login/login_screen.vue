@@ -1,17 +1,31 @@
 <template>
-  <div class="login-screen container">
-    <plan-logo></plan-logo>
-    <router-view></router-view>
+  <div class="scrollable">
+    <div class="login-screen container mb-3">
+      <plan-logo></plan-logo>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import PlanLogo from "../logo.vue";
+import PlanLogo from "@/logo";
+import { sessionMixin } from '@mixins';
 
 export default {
   name: "LoginScreen",
+  props: ['redirect'],
   components: {
     PlanLogo,
+  },
+  mixins: [
+    sessionMixin
+  ],
+  watch: {
+    loggedIn (newval, oldval) {
+      if (newval) {
+        this.$router.replace(this.redirect)
+      }
+    }
   },
 };
 </script>

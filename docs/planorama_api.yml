@@ -183,35 +183,6 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /mail_template:
-    get:
-      tags:
-        - Mailings
-      summary: Get Mail Templates
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-    post:
-      tags:
-        - Mailings
-      summary: Create Mail Template
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                id: '{{$guid}}'
-                title: '{{$randomLoremWords}}'
-                subject: '{{$randomLoremWords}}'
-                content: '{{$randomLoremParagraph}}'
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
   /mailing:
     get:
       tags:
@@ -234,8 +205,6 @@ paths:
             schema:
               type: object
               example:
-                mail_template_id: '{{mail-template-id}}'
-                scheduled: false
                 testrun: false
                 include_email: false
                 cc_all: false

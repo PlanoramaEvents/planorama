@@ -10,10 +10,21 @@
 #
 version: "3.7"
 
+#
+# docker volume create --name=pgdata
+# docker volume create --name=redis-data
+# docker volume create --name=node_modules
+# docker volume create --name=node_modules_sidekiq
+#
 volumes:
   pgdata:
+    external: true
   redis-data:
+    external: true
   node_modules:
+    external: true
+  node_modules_sidekiq:
+    external: true
   box: {} # used for the bundler, persistent store between runs
 
 services:
@@ -29,6 +40,9 @@ services:
       - RAILS_ENV=development
       - NODE_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/0
+      - SMTP_SERVER=mailcatcher
+      - SMTP_PORT=1025
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -37,12 +51,14 @@ services:
         target: /opt/planorama/tmp
     ports:
       - "3000:3000"
+      - "3035:3035"
     depends_on:
       - postgres
       - redis
     links:
       - redis
       - postgres
+      - mailcatcher
 
   planorama-sidekiq:
     command: /opt/planorama/script/planorama_sidekiq.sh
@@ -56,8 +72,11 @@ services:
       - RAILS_ENV=development
       - NODE_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/0
+      - SMTP_SERVER=mailcatcher
+      - SMTP_PORT=1025
     volumes:
-      - node_modules:/opt/planorama/node_modules
+      - node_modules_sidekiq:/opt/planorama/node_modules
       - .:/opt/planorama
       - box:/var/bundler
       - type: tmpfs
@@ -68,6 +87,7 @@ services:
     links:
       - redis
       - postgres
+      - mailcatcher
 
   # The database server - only needed for dev and test
   # The Postgre DB
@@ -86,6 +106,8 @@ services:
     restart: always
     volumes:
       - redis-data:/data
+    ports:
+      - "6379:6379"
 
   livereload:
     image: planorama:dev
@@ -100,5 +122,8 @@ services:
 
   mailcatcher:
     image: schickling/mailcatcher
+    entrypoint: "mailcatcher -f --ip 0.0.0.0"
+    restart: always
     ports:
+      - 10025:1025
       - 1080:1080

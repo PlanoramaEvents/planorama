@@ -1,11 +1,14 @@
-class Survey::AnswerSerializer < ActiveModel::Serializer
-  attributes :id, :answer, :default, :created_at,
-             :updated_at, :lock_version, :survey_question_id,
-             :sort_order, :fuuid, :other
+class Survey::AnswerSerializer
+  include JSONAPI::Serializer
 
-  attribute :next_page_id do
-    # consisteny check
-    # next_page is either null, -1 or a valid survey_page_id
-    object.next_page_id
-  end
+  attributes :id, :answer, :default, :created_at,
+             :updated_at, :lock_version, :question_id,
+             :sort_order, :other,
+             :next_page_action, :next_page_id
+
+  # attribute :next_page_id do |object|
+  #   # consisteny check
+  #   # next_page is either null, -1 or a valid survey_page_id
+  #   object.next_page_id
+  # end
 end

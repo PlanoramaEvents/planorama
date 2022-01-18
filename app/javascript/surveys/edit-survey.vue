@@ -8,7 +8,7 @@
       label="Survey Name"
       label-for="survey-name"
     >
-      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="save"></b-form-input>
+      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()"></b-form-input>
     </b-form-group>
     <b-form-group
       class="mx-3"
@@ -17,20 +17,19 @@
       label="Survey Description"
       label-for="survey-description"
     >
-      <b-form-textarea id="survey-description" v-model="survey.description" @blur="save"></b-form-textarea>
+      <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey()"></b-form-textarea>
     </b-form-group>
     <b-tabs>
       <b-tab title="Questions" :active="!responses">
         <edit-survey-controls></edit-survey-controls>
         <edit-survey-page
-          v-for="(p, i) in survey ? survey.survey_pages : []"
+          v-for="(p, i) in selectedSurveyPages"
           :key="p.id" :page="p" :i="i"
-          :n="survey.survey_pages.length">
+          :n="selectedSurveyPages.length">
         </edit-survey-page>
       </b-tab>
       <b-tab title="Responses" :active="!!responses">
-        <p>There are <em>TODO GET THIS NUMBER</em> total responses.</p>
-        <p>Download responses: <a :href="downloadLink" :download="filename">{{filename}}</a></p>
+        <view-responses></view-responses>
       </b-tab>
       <survey-settings-tab></survey-settings-tab>
       <b-tab title="Audit Log" disabled>
@@ -42,44 +41,35 @@
 <script>
 import EditSurveyPage from './edit-survey-page'
 import EditSurveyControls from './edit-survey-controls'
-import {mapState, mapMutations, mapActions} from 'vuex';
-import { UNSELECT, SAVE, SELECT } from '../model.store';
-import { SELECT_PAGE } from './survey.store';
-import { Survey } from './survey';
-import surveyMixin from './survey-mixin'
-import surveyIdPropMixin from './survey-id-prop-mixin';
+import {
+  surveyMixin,
+  surveyIdPropMixinId
+}from '@mixins'
 import SurveySettingsTab from './survey-settings-tab.vue';
-import NotImplemented from '../not-implemented.vue';
+import NotImplemented from '../shared/not-implemented.vue';
+import ViewResponses from './view-responses';
 
 export default {
   name: "EditSurvey",
   props: ['responses'],
   mixins: [
     surveyMixin,
-    surveyIdPropMixin,
+    surveyIdPropMixinId,
   ],
   components: {
     EditSurveyPage,
     EditSurveyControls,
     SurveySettingsTab,
     NotImplemented,
+    ViewResponses
   },
   computed: {
-    downloadLink() {
-      return `/surveys/${this.survey?.id}/submissions.xlsx`
-    },
-    filename() {
-      return `survey_${this.survey?.id}_responses.xlsx`
-    }
   },
   methods: {
-    ...mapMutations({
-      unselect: UNSELECT,
-    }),
     back() {
       // TODO only unselect if not coming from view page
-      this.$store.commit(UNSELECT);
-      this.$router.push('/');
+      this.unselectSurvey();
+      this.$router.push('/surveys');
     }
   },
 }

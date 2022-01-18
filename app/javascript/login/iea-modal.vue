@@ -38,7 +38,7 @@
         </ul>
 
         <p>By clicking ‘Agree’ below I do hereby agree to abide by the above usage restrictions. I acknowledge that there may be personal, business, and legal implications if I use this system inappropriately.</p>
-        
+
         <!-- gail's shorter version -->
         <!--
         <p>This system contains the personal data for people, including some information that is considered sensitive. In order to keep that data safe, I agree to the following:</p>
@@ -58,25 +58,27 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { FETCH_IEA, SIGN_IEA, GET_IEA_UNSIGNED } from '../administration/agreement.store'
-import toastMixin from '../toast-mixin'
+// import { FETCH_IEA, SIGN_IEA, GET_IEA_UNSIGNED } from '../administration/agreement.store'
+import toastMixin from '../shared/toast-mixin'
 export default {
   name: "IeaModal",
   computed: {
-    ...mapState('agreements', ['information_ethics', 'ieaUnsigned']),
+    ...mapState('admin/agreements', ['information_ethics', 'ieaUnsigned']),
   },
   mixins: [toastMixin],
   data: () => ({
     showModal: false
   }),
   methods: {
-    ...mapActions('agreements', {
-      fetchIea: FETCH_IEA,
-      signIea: SIGN_IEA,
-      getIeaUnsigned: GET_IEA_UNSIGNED,
-    }),
+    // ...mapActions('admin/agreements', {
+    //   fetchIea: FETCH_IEA,
+    //   signIea: SIGN_IEA,
+    //   getIeaUnsigned: GET_IEA_UNSIGNED,
+    // }),
     okAction(event) {
       this.$emit('ok', event)
+      // Got to the "home page"
+      this.$router.push('/');
       // not signing for now
       /*
       this.signIea(this.toastSuccessFailure('Information Ethics Agreement Signed')).then(() => {

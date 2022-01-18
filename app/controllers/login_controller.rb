@@ -1,6 +1,10 @@
 class LoginController < ApplicationController
   skip_before_action :authenticate_person!, only: :magic_link
 
+  # TODO
+  # /magiclink#xxxxx - see if we can load the app with the link etc
+  # route takes the link as a param?
+  #
   def magic_link
     token = params[:magic_link]
 
@@ -11,6 +15,7 @@ class LoginController < ApplicationController
     person = magic_link.person
 
     # Authenticate the person
+    # TODO: need to return the JWT token ????
     sign_in(person, scope: :person)
 
     # Direct them the destination page

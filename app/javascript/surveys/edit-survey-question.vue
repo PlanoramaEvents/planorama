@@ -8,12 +8,12 @@
          label="Question Text"
          :label-for="formId('question-text')"
         >
-          <b-form-input
+
+          <plano-editor
             :id="formId('question-text')"
             v-model="question.question"
-            type="text"
-            @blur="save"
-          ></b-form-input>
+            @blur="patchSelectedQuestion({question: $event.editor._.data})"
+          ></plano-editor>
         </b-form-group>
       </div>
       <div class="col-6 offset-1">
@@ -22,13 +22,13 @@
           label="Question Type"
           :label-for="formId('question-type')"
         >
-          <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes" @change="save"></b-form-select>
+          <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes" @change="patchSelectedQuestion({question_type: $event})"></b-form-select>
         </b-form-group>
       </div>
     </div>
     <div class="row" v-if="!formatting && !isSelected"> 
       <div class="col-12">
-        <h4>{{question.question}}</h4>
+        <div v-html="question.question"></div>
       </div>
     </div>
     <div class="row">
@@ -160,34 +160,34 @@
       </template>
       <template v-if="textonly">
         <div class="col-12">
-          <b-form-textarea v-if="isSelected" v-model="question.question" @blur="save"></b-form-textarea>
+          <b-form-textarea v-if="isSelected" v-model="question.question" @blur="patchSelectedQuestion({question: $event.target.value})"></b-form-textarea>
           <p v-if="!isSelected">{{question.question}}</p>
         </div>
       </template>
     </div>
     <div class="row" v-if="isSelected">
       <div class="col-6">
-        <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="save">Required</b-form-checkbox>
-        <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="save">Branching</b-form-checkbox>
+        <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Required</b-form-checkbox>
+        <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="patchSelectedQuestion({branching: $event})">Branching</b-form-checkbox>
       </div>
       <div class="col-6 d-flex justify-content-end">
-        <b-button variant="info" class="mr-2" @click="duplicateQuestion"><b-icon-files></b-icon-files></b-button>
-        <b-button variant="info" @click="destroyQuestion"><b-icon-trash></b-icon-trash></b-button>
+        <b-button variant="info" class="mr-2" @click="duplicateSelectedQuestion"><b-icon-files></b-icon-files></b-button>
+        <b-button variant="info" @click="deleteSelectedQuestion"><b-icon-trash></b-icon-trash></b-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { SurveyQuestion } from './survey_question'
-import { mapState, mapActions, mapMutations } from 'vuex';
-import { SAVE } from '../model.store';
-import { NEW_QUESTION, SELECT_QUESTION, UNSELECT_QUESTION } from './survey.store';
 import draggable from 'vuedraggable';
-import surveyMixin from './survey-mixin';
 import OptionsQuestion from './options-question.vue';
-import pageMixin from './page-mixin';
-import questionMixin from './question.mixin';
+import PlanoEditor from '@/components/plano_editor';
+import {
+  surveyMixin,
+  pageMixin,
+  questionMixin
+} from '@mixins';
+import Plano_editor from '@/components/plano_editor.vue';
 
 
 export default {
@@ -195,6 +195,8 @@ export default {
   components: {
     draggable,
     OptionsQuestion,
+    PlanoEditor,
+    Plano_editor
   },
   data: () => ({
     questionTypes: [
@@ -220,29 +222,6 @@ export default {
     questionMixin,
   ],
   computed: {
-    ...mapState(['selected_question', 'selected_page']),
-    answerIdMap() {
-      if(!this.question.survey_answers) {
-        return {}
-      }
-      return this.question.survey_answers.reduce((p, c) => ({
-        ...p,
-        [c.answer]: c.id
-      }), {});
-
-    },
-    socialChoice: {
-      get() {
-        const answers = this.question.survey_answers; 
-        return answers ? answers.map(qa => qa.answer) : [];
-      },
-      set(val) {
-        this.question.survey_answers = val.map(answer => ({
-          answer,
-          id: this.answerIdMap[answer] || null
-        }))
-      }
-    },
     socials() {
       return [
         {value: "twitter", text: "Twitter"},
@@ -255,42 +234,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations({
-      selectQuestion: SELECT_QUESTION,
-      unselectQuestion: UNSELECT_QUESTION,
-    }),
-    ...mapActions({
-      newQuestion: NEW_QUESTION
-    }),
     formId(string) {
       return `${string}-${this.question.id}`
     },
     formGroupId(string) {
       return `${this.formId(string)}-group`
-    },
-    destroyQuestion() {
-      this.question._destroy = true
-      this.save()
-      this.unselectQuestion()
-    },
-    duplicateQuestion() {
-      let new_question = {
-        question: this.question.question,
-        question_type: this.question.question_type,
-        mandatory: this.question.mandatory,
-        text_size: this.question.text_size,
-        horizontal: this.question.horizontal,
-        private: this.question.private,
-        regex: this.question.regex,
-        survey_page_id: this.question.survey_page_id,
-        survey_answers: this.question.survey_answers.map(a => ({
-          answer: a.answer,
-          default: a.default,
-          other: a.other,
-        }))
-      }
-      let insertAt = this.selected_page.survey_questions.findIndex(q => q.id === this.question.id) + 1
-      this.newQuestion({question: new_question, insertAt})
     },
   }
 }

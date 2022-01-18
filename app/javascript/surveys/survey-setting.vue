@@ -1,3 +1,4 @@
+<!-- CONVERTED -->
 <template>
   <b-row>
     <b-col>
@@ -8,7 +9,7 @@
           </slot>
         </b-form-checkbox>
       </not-implemented>
-      <b-form-checkbox v-if="!disabled && bool" :checked="value" @input="$emit('input', $event)" @change="save">
+      <b-form-checkbox v-if="!disabled && bool" :checked="value" @input="$emit('input', $event)" @change="patchFieldHelper">
         <slot>
           {{label}}
         </slot>
@@ -20,15 +21,15 @@
         <template #label>
           <slot>{{label}}</slot>
         </template>
-        <b-form-input class="w-50" :disabled="disabled" type=text :value="value" @input="$emit('input', $event)" @blur="save"></b-form-input>
+        <b-form-input class="w-50" :disabled="disabled" type=text :value="value" @input="$emit('input', $event)" @blur="patchFieldHelperBlur"></b-form-input>
       </b-form-group>
     </b-col>
   </b-row>
 </template>
 
 <script>
-import NotImplemented from '../not-implemented.vue'
-import surveyMixin from './survey-mixin'
+import NotImplemented from '../shared/not-implemented.vue'
+import surveyMixin from './survey.mixin'
 
 export default {
   name: "SurveySetting",
@@ -55,6 +56,18 @@ export default {
       type: Boolean,
       default: false
     },
+    field: {
+      type: String,
+      required: true
+    }
+  },
+  methods: {
+    patchFieldHelper(newVal) {
+      this.patchSurveyField({...this.survey, [this.field]: newVal}, this.field)
+    },
+    patchFieldHelperBlur(evt) {
+      this.patchFieldHelper(evt.target.value)
+    }
   }
 }
 </script>

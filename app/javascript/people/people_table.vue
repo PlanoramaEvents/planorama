@@ -1,22 +1,73 @@
 <template>
-  <table-vuex
-    sortField="published_name_sort_by"
-    :modelType="modelType"
-  >
-  </table-vuex>
+  <div>
+    <modal-form
+      title="Add Person"
+      ref="add-person-modal"
+      @save="onSave"
+    >
+      <person-add
+        :show-buttons='false'
+        ref="add-person-form"
+      ></person-add>
+      <template #footer="{ ok, cancel }">
+        <b-button variant="link" @click="cancel()">Cancel</b-button>
+        <b-button variant="primary" @click="ok()">Save</b-button>
+      </template>
+    </modal-form>
+    <table-vue
+      @new="onNew"
+      defaultSortBy='name'
+      :model="model"
+      :columns="columns"
+    >
+      <template #cell(primary_email)="{ item }">
+        <tooltip-overflow v-if="item.primary_email" :title="item.primary_email.email">
+          {{item.primary_email.email}}
+        </tooltip-overflow>
+      </template>
+      <template #cell(comments)="{ item }">
+        <tooltip-overflow :title="item.comments">
+          {{item.comments}}
+        </tooltip-overflow>
+      </template>
+      <template #cell(last_sign_in_at)="{ item }">
+        <span v-if="item.public">
+          <tooltip-overflow :title="item.last_sign_in_at">
+            {{new Date(item.last_sign_in_at).toLocaleDateString()}}
+          </tooltip-overflow>
+        </span>
+      </template>
+    </table-vue>
+  </div>
 </template>
 
 <script>
-import TableVuex from '../table_vuex';
-import { Person } from './people';
+import TableVue from '../components/table_vue';
+import ModalForm from '../components/modal_form';
+import TooltipOverflow from '../shared/tooltip-overflow';
+import PersonAdd from '../people/person_add.vue';
+import { people_columns as columns } from './people';
+import { personModel as model } from '@/store/person.store'
 
 export default {
   name: 'PeopleTable',
-  data: () => ({
-    modelType: Person
-  }),
   components: {
-    TableVuex,
+    TableVue,
+    TooltipOverflow,
+    ModalForm,
+    PersonAdd
+  },
+  data: () => ({
+    columns,
+    model
+  }),
+  methods: {
+    onNew() {
+      this.$refs['add-person-modal'].showModal()
+    },
+    onSave() {
+      this.$refs['add-person-form'].savePerson()
+    }
   }
 }
 </script>

@@ -1,18 +1,40 @@
 class PeoplePolicy < PlannerPolicy
   def me?
-    return true if @record.id == @person.id
+    return true if @record.class != Symbol && @record.id == @person.id
 
     false
   end
 
+  def import?
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
+  def assigned_surveys?
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
+  def submissions?
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
   def update?
-    return true if @record.id == @person.id
+    return true if @record.class != Symbol && @record.id == @person.id
 
     @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end
 
   def show?
-    return true if @record.id == @person.id
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
+  def mailed_surveys?
+    return true if @record.class != Symbol && @record.id == @person.id
 
     @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end

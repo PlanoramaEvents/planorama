@@ -1,12 +1,10 @@
 class Survey::Answer < ApplicationRecord
   include RankedModel
-  ranks :sort_order, with_same: :survey_question_id
-
-  nilify_blanks only: [
-    :fuuid
-  ]
+  ranks :sort_order, with_same: :question_id
 
   has_paper_trail
+
+  enum next_page_action: { next_page: 'next_page', submit: 'submit' }
 
   default_scope {order(['survey_answers.sort_order', :answer])}
 
@@ -16,10 +14,10 @@ class Survey::Answer < ApplicationRecord
              foreign_key: 'next_page_id',
              optional: true
 
-  belongs_to :survey_question,
+  belongs_to :question,
              class_name: 'Survey::Question',
-             foreign_key: 'survey_question_id',
-             inverse_of: :survey_answers
+             foreign_key: 'question_id',
+             inverse_of: :answers
 
 
   # TODO: on save need to remove next_page refs that do not exist
@@ -30,7 +28,7 @@ class Survey::Answer < ApplicationRecord
   # Ensure the next page id is a valid value
   def ensure_next_page_consistency
     # next_page is either null, -1 or a valid survey_page_id
-    return unless next_page_id && next_page_id > 0
+    return unless next_page_id # && next_page_id > 0
 
     next_page_id = nil unless Survey::Page.exists? next_page_id
   end

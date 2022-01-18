@@ -1,14 +1,17 @@
 class Survey < ApplicationRecord
   # Survey contains a series of pages, pages contain a series of questions
-  has_many :survey_pages,
+  has_many :pages,
            class_name: 'Survey::Page',
            inverse_of: :survey,
            dependent: :destroy
-  accepts_nested_attributes_for :survey_pages, allow_destroy: true
+  accepts_nested_attributes_for :pages, allow_destroy: true
 
-  has_many :survey_questions, through: :survey_pages, class_name: 'Survey::Question'
+  has_many :questions, through: :pages, class_name: 'Survey::Question'
 
-  has_many :survey_submissions, class_name: 'Survey::Submission'
+  has_many :submissions, class_name: 'Survey::Submission'
+
+  has_many :mailings
+  has_many :mailed_submitters, through: :mailings, source: :person
 
   before_destroy :check_for_use #, :check_if_public
 
@@ -16,8 +19,10 @@ class Survey < ApplicationRecord
   belongs_to :created_by, class_name: 'Person', required: false
   belongs_to :updated_by, class_name: 'Person', required: false
 
+  has_and_belongs_to_many :assigned_people, class_name: 'Person'
+
   nilify_blanks only: [
-    :description, :fuuid
+    :description
   ]
 
   # transition_accept_status
@@ -29,7 +34,7 @@ class Survey < ApplicationRecord
   private
 
   def check_for_use
-    raise 'can not delete a survey that has responses in the system' if survey_submissions.any?
+    raise 'can not delete a survey that has responses in the system' if submissions.any?
   end
 
   def check_if_public

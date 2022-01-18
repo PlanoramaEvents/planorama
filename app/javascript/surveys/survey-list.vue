@@ -1,3 +1,4 @@
+<!-- CONVERTED -->
 <template>
   <div>
     <survey-table></survey-table>
@@ -13,8 +14,7 @@ export default {
   name:"SurveyList",
   components: {
     SurveyTable,
-    SurveySidebar,
+    SurveySidebar
   }
 }
 </script>
-

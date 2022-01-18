@@ -1,27 +1,31 @@
+<!-- CONVERTED? -->
 <template>
-  <div class="survey-question mt-3 pl-1">
+  <div class="survey-question mt-3 pl-1" v-if="!!localResponse">
     <b-form-group
       v-if="!formatting && !address && !socialmedia"
     >
       <template #label>
-        <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
+        <span v-html="questionText"></span><mandatory-star :mandatory="question.mandatory"></mandatory-star>
       </template>
       <template #default="{ ariaDescribedBy }">
         <b-form-textarea
           :class="{'w-50': answerable}"
           v-if="textbox"
-          v-model="response.response.text"
+          v-model="localResponse.response.text"
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
           :required="question.mandatory"
-        >{{response.response.text}}</b-form-textarea>
+          @blur="saveResponse(localResponse, selectedSubmission)"
+        >{{localResponse.response.text}}</b-form-textarea>
         <b-form-input
           :class="{'w-50': answerable}"
           v-if="textfield"
-          v-model="response.response.text"
+          v-model="localResponse.response.text"
           :aria-describedBy="ariaDescribedBy"
           :disabled="!answerable"
-          :required="question.mandatory" />
+          :required="question.mandatory"
+          @blur="saveResponse(localResponse, selectedSubmission)"
+        ></b-form-input>
         <b-form-radio-group
           :class="{'w-50': answerable}"
           stacked
@@ -29,6 +33,7 @@
           v-model="radioButtonResponse"
           :aria-describedBy="ariaDescribedBy"
           :required="question.mandatory"
+          @change="saveResponse(localResponse, selectedSubmission)"
         >
           <b-form-radio
             v-for="choice in choices.filter(a => !a.other)"
@@ -39,11 +44,11 @@
           >{{choice.answer}}</b-form-radio>
           <b-form-radio
             class="mt-2"
-            v-if="other"
-            :value="choiceValue(other)"
+            v-if="otherFromQuestion"
+            :value="choiceValue(otherFromQuestion)"
             v-model="otherChecked"
             :disabled="!answerable"
-            @input="changeNextPage($event, other)"
+            @input="changeNextPage($event, otherFromQuestion)"
           >
             <b-form-group
               label="Other"
@@ -51,11 +56,11 @@
               :label-for="'other-' + question.id"
               label-class="mt-n2"
             >
-              <b-form-input 
+              <b-form-input
                 class="mt-n2"
-                :id="'other-' + question.id" 
-                type="text" 
-                v-model="response.response.text"
+                :id="'other-' + question.id"
+                type="text"
+                v-model="localResponse.response.text"
                 :disabled="!answerable || !otherChecked"
               ></b-form-input>
             </b-form-group>
@@ -65,9 +70,10 @@
           :class="{'w-50': answerable}"
           stacked
           v-if="multiplechoice"
-          v-model="response.response.answers"
+          v-model="localResponse.response.answers"
           :aria-describedBy="ariaDescribedBy"
           :required="question.mandatory"
+          @change="saveResponse(localResponse, selectedSubmission)"
         >
           <b-form-checkbox
             v-for="choice in choices.filter(a => !a.other)"
@@ -77,8 +83,8 @@
           >{{choice.answer}}</b-form-checkbox>
           <b-form-checkbox
             class="mt-2"
-            v-if="other"
-            :value="choiceValue(other)"
+            v-if="otherFromQuestion"
+            :value="choiceValue(otherFromQuestion)"
             :disabled="!answerable"
             v-model="otherChecked"
           >
@@ -88,11 +94,11 @@
               :label-for="'other-' + question.id"
               label-class="mt-n2"
             >
-              <b-form-input 
+              <b-form-input
                 class="mt-n2"
-                :id="'other-' + question.id" 
-                type="text" 
-                v-model="response.response.text"
+                :id="'other-' + question.id"
+                type="text"
+                v-model="localResponse.response.text"
                 :disabled="!answerable || !otherChecked"
               ></b-form-input>
             </b-form-group>
@@ -101,9 +107,10 @@
         <b-form-select
           :class="{'w-50': answerable}"
           v-if="dropdown"
-          v-model="response.response.text"
+          v-model="localResponse.response.text"
           :required="question.mandatory"
           :aria-describedby="ariaDescribedBy"
+          @change="saveResponse(localResponse, selectedSubmission)"
         >
           <b-form-select-option
             v-for="choice in choices"
@@ -117,9 +124,10 @@
           v-if="email"
           label-sr-only
           :required="question.mandatory"
-          v-model="response.response.text"
+          v-model="localResponse.response.text"
           :disabled="!answerable"
           :aria-describedBy="ariaDescribedBy"
+          @blur="saveResponse(localResponse, selectedSubmission)"
         ></email-field>
       </template>
     </b-form-group>
@@ -136,10 +144,11 @@
           label="Address 1"
           :required="question.mandatory"
         >
-          <b-form-input 
-            :disabled="!answerable" 
-            :id="formId('address-1')" 
-            v-model="response.response.address.street"
+          <b-form-input
+            :disabled="!answerable"
+            :id="formId('address-1')"
+            v-model="localResponse.response.address.street"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -149,10 +158,11 @@
           :label-for="formId('address-2')"
           label="Address 2"
         >
-          <b-form-input 
-            :disabled="!answerable" 
-            :id="formId('address-2')" 
-            v-model="response.response.address.street2"
+          <b-form-input
+            :disabled="!answerable"
+            :id="formId('address-2')"
+            v-model="localResponse.response.address.street2"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -162,10 +172,11 @@
           :label-for="formId('city')"
           label="City"
         >
-          <b-form-input 
-            :disabled="!answerable" 
-            :id="formId('city')" 
-            v-model="response.response.address.city"
+          <b-form-input
+            :disabled="!answerable"
+            :id="formId('city')"
+            v-model="localResponse.response.address.city"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -175,10 +186,11 @@
           :label-for="formId('state')"
           label="State"
         >
-          <b-form-input 
+          <b-form-input
           :disabled="!answerable"
-          :id="formId('state')" 
-          v-model="response.response.address.state"
+          :id="formId('state')"
+          v-model="localResponse.response.address.state"
+          @blur="saveResponse(localResponse, selectedSubmission)"
         ></b-form-input>
         </b-form-group>
       </div>
@@ -188,10 +200,11 @@
           :label-for="formId('zip')"
           label="Postal Code"
         >
-          <b-form-input 
+          <b-form-input
             :disabled="!answerable"
             :id="formId('zip')"
-            v-model="response.response.address.zip"
+            v-model="localResponse.response.address.zip"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -204,7 +217,8 @@
           <b-form-input
             :disabled="!answerable"
             :id="formId('country')"
-            v-model="response.response.address.country"
+            v-model="localResponse.response.address.country"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           ></b-form-input>
         </b-form-group>
       </div>
@@ -213,45 +227,50 @@
       <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
       <div :class="['row', 'ml-0', {'w-50': answerable}]">
         <div class="col-12 px-0">
-          <simple-social 
-              label="Twitter"
-              prepend="@"
-              :disabled="!answerable"
-              :id="formId('socials-twitter')"
-              v-model="response.response.socialmedia.twitter"
-            ></simple-social>
-          <simple-social 
+          <simple-social
+            label="Twitter"
+            prepend="@"
+            :disabled="!answerable"
+            :id="formId('socials-twitter')"
+            v-model="localResponse.response.socialmedia.twitter"
+            @blur="saveResponse(localResponse, selectedSubmission)"
+          ></simple-social>
+          <simple-social
             label="Facebook"
             :disabled="!answerable"
             :id="formId('socials-facebook')"
-            v-model="response.response.socialmedia.facebook"
+            v-model="localResponse.response.socialmedia.facebook"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           >
             <template #prepend>
               <b-input-group-text>facebook.com&sol;</b-input-group-text>
             </template>
           </simple-social>
-          <simple-social 
-            label="Website" 
+          <simple-social
+            label="Website"
             prepend="url"
             :disabled="!answerable"
             :id="formId('socials-website')"
-            v-model="response.response.socialmedia.website"
+            v-model="localResponse.response.socialmedia.website"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           ></simple-social>
-          <simple-social 
+          <simple-social
             label="Instagram"
             :disabled="!answerable"
             :id="formId('socials-insta')"
-            v-model="response.response.socialmedia.instagram"
+            v-model="localResponse.response.socialmedia.instagram"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           >
             <template #prepend>
               <b-input-group-text>instagram.com&sol;</b-input-group-text>
             </template>
           </simple-social>
-          <simple-social 
+          <simple-social
             label="Twitch"
             :disabled="!answerable"
             :id="formId('socials-twitch')"
-            v-model="response.response.socialmedia.twitch"
+            v-model="localResponse.response.socialmedia.twitch"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           >
             <template #prepend>
               <b-input-group-text>twitch.tv&sol;</b-input-group-text>
@@ -261,24 +280,27 @@
             label="YouTube"
             :disabled="!answerable"
             :id="formId('socials-youtube')"
-            v-model="response.response.socialmedia.youtube"
+            v-model="localResponse.response.socialmedia.youtube"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           >
             <template #prepend>
               <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
             </template>
           </simple-social>
-          <simple-social 
+          <simple-social
             label="TikTok"
             prepend="@"
             :disabled="!answerable"
             :id="formId('socials-tiktok')"
-            v-model="response.response.socialmedia.tiktok"
+            v-model="localResponse.response.socialmedia.tiktok"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           ></simple-social>
           <simple-social
             label="LinkedIn"
             :disabled="!answerable"
             :id="formId('socials-linkedin')"
-            v-model="response.response.socialmedia.linkedin"
+            v-model="localResponse.response.socialmedia.linkedin"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           >
             <template #prepend>
               <b-input-group-text>linkedin.com&sol;in&sol;</b-input-group-text>
@@ -288,7 +310,8 @@
             label="Other"
             :disabled="!answerable"
             :id="formId('socials-other')"
-            v-model="response.response.socialmedia.other"
+            v-model="localResponse.response.socialmedia.other"
+            @blur="saveResponse(localResponse, selectedSubmission)"
           ></simple-social>
         </div>
       </div>
@@ -297,11 +320,19 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
-import questionMixin from './question.mixin';
 import EmailField from '../shared/email_field';
+import {
+  questionMixin,
+  surveyMixin,
+  submissionMixin,
+  responseMixin,
+  toastMixin
+} from '@mixins';
+import { v4 as uuidv4 } from 'uuid';
+import { submissionModel } from '@/store/survey';
+import { mapState } from 'vuex';
 
 export default {
   name: "SurveyQuestion",
@@ -310,7 +341,13 @@ export default {
     SimpleSocial,
     EmailField
   },
-  mixins: [questionMixin],
+  mixins: [
+    questionMixin,
+    surveyMixin,
+    submissionMixin,
+    responseMixin,
+    toastMixin
+  ],
   props: {
     question: {
       type: Object,
@@ -323,39 +360,27 @@ export default {
   },
   data: () => ({
     otherChecked: false,
-    response: {
-      survey_question_id: null,
-      response: {text: '', answers: [], address:{
-        street: null, street2: null, city: null, 
-        state: null, zip: null, country: null
-      }, socialmedia: {
-        twitter: null, facebook: null, linkedin: null,
-        twitch: null, youtube: null, instagram: null,
-        tiktok: null, other: null, website: null
-      }}
-    }
+    localResponse: null
+
   }),
   computed: {
-    ...mapState({
-      submission: 'submission',
-      survey: 'selected'
-    }),
+    ...mapState(['previewMode']),
     questionText() {
       return this.question.question;
       // todo implement question numbering
       // return `${this.question.sort_order + 1}. ${this.question.question}`
     },
     choices() {
-      return this.question.survey_answers;
+      return this.getQuestionAnswers(this.question);
     },
     radioButtonResponse: {
       get() {
-        return this.response.response.answers ? this.response.response.answers[0] : null
+        return this.localResponse.response.answers ? this.localResponse.response.answers[0] : null
       },
       set(val) {
-        this.response.response.answers = [val]
+        this.localResponse.response.answers = [val]
       }
-    }
+    },
   },
   methods: {
     formId(string) {
@@ -364,39 +389,49 @@ export default {
     formGroupId(string) {
       return `${this.formId(string)}-group`
     },
-    linkResponse() {
-      if (!this.submission.survey_responses) {
-        this.submission.survey_responses = []
-      }
-      let existing_response = this.submission.survey_responses.find(r => r.survey_question_id == this.question.id)
-      if (existing_response) {
-        this.response = existing_response
-      } else {
-        this.submission.survey_responses.push(this.response)
-      }
-    },
     choiceValue(choice) {
       return `${choice.id}-${choice.answer}`
     },
     changeNextPage(event, choice) {
       if (this.question.branching && this.choiceValue(choice) === event) {
-        console.log("emitting", choice.next_page_id)
+        console.debug("emitting", choice.next_page_id)
         this.$emit('nextPage', choice.next_page_id)
+      }
+    },
+    createDummyResponse() {
+      this.localResponse = {
+        response: {text: '', answers: [], address:{
+          street: null, street2: null, city: null,
+          state: null, zip: null, country: null
+        }, socialmedia: {
+          twitter: null, facebook: null, linkedin: null,
+          twitch: null, youtube: null, instagram: null,
+          tiktok: null, other: null, website: null
+        }}
       }
     }
   },
   mounted() {
-    this.response.survey_question_id = this.question.id;
-    if (this.submission) {
-      this.linkResponse();
-    }
+    if (!this.answerable || this.previewMode) {
+      // create dummy response so it stops complaining.
+      this.createDummyResponse()
+   } else {
+      this.localResponse = this.getResponse(this.question, this.selectedSubmission)
+      console.log("*******************", this.localResponse)
+   }
   },
   watch: {
-    submission(val, oldVal) {
-      if (!oldVal && val) {
-        this.linkResponse();
+    previewMode(newVal) {
+      if (newVal) {
+        this.createDummyResponse();
       }
-    }
+    },
+    selectedSubmission(newVal) {
+      if (newVal) {
+        this.localResponse = this.getResponse(this.question, newVal)
+        console.log("*******************111111111", this.localResponse)
+      }
+    },
   }
 }
 </script>

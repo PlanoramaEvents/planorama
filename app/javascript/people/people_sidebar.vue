@@ -1,30 +1,45 @@
 <template>
-  <model-sidebar
-    title-field="published_name"
-  >
-    <template #tabs="{selected}">
-      <b-tab title="Bio">
-        <bio></bio>
-        <ul>
-          <li v-for="(val, field) in selected.bio" :key="field">{{field}}: {{val}}</li>
-        </ul>
-      </b-tab>
-      <b-tab title="Tags">
-        <p>TODO: Tags</p>
-      </b-tab>
+  <sidebar-vue :model="model">
+    <template #header v-if="selected">
+      <h1>
+        {{selected.name}}
+      </h1>
     </template>
-  </model-sidebar>
+
+    <template #content v-if="selected">
+      <b-tabs content-class="mt-3">
+        <b-tab title="Details">
+          <detail :model="model"></detail>
+        </b-tab>
+        <b-tab title="Admin" v-if="currentUserIsAdmin">
+          <people-admin-tab :model="model"></people-admin-tab>
+        </b-tab>
+        <b-tab title="Surveys">
+          <people-surveys-tab :model="model"></people-surveys-tab>
+        </b-tab>
+      </b-tabs>
+    </template>
+  </sidebar-vue>
 </template>
 
 <script>
-import ModelSidebar from '../model-sidebar';
-import Bio from './bio';
+import SidebarVue from '../components/sidebar_vue';
+import {sessionMixin, modelMixin} from '@/mixins';
+import Detail from './detail.vue';
+import PeopleAdminTab from './people_admin_tab';
+import PeopleSurveysTab from './people_surveys_tab';
 
 export default {
   name: 'PeopleSidebar',
   components: {
-    ModelSidebar,
-    Bio
+    SidebarVue,
+    Detail,
+    PeopleAdminTab,
+	PeopleSurveysTab,
   },
+  mixins: [
+    modelMixin,
+    sessionMixin
+  ]
 }
 </script>

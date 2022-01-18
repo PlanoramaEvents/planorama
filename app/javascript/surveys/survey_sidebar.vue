@@ -1,10 +1,11 @@
+<!-- CONVERTED? -->
 <template>
   <div>
-    <sidebar-vuex v-if="survey">
+    <sidebar-vue v-if="survey" model="survey">
       <template #header>
         <h3>Survey Details</h3>
         <small class="text-muted d-block">Last updated:</small>
-        <small class="text-muted d-block"> by <em><strong>{{survey.updated_by.name}}</strong></em></small>
+        <small class="text-muted d-block"> by <em><strong>{{survey.updated_by && survey.updated_by.name}}</strong></em></small>
         <small class="text-muted d-block"> on <em><strong>{{new Date(survey.updated_at).toLocaleDateString()}}</strong></em></small>
       </template>
       <template #content v-if="survey">
@@ -45,7 +46,7 @@
           <survey-settings-tab></survey-settings-tab>
         </b-tabs>
       </template>
-    </sidebar-vuex>
+    </sidebar-vue>
     <b-modal id="confirmClearResponses" @ok="clearResponses" ok-title="Yes" cancel-variant="link">
       <p>{{SURVEY_RESULTS_CLEAR_CONFIRM}}</p>
     </b-modal>
@@ -57,12 +58,11 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../model.store';
-import SidebarVuex from '../sidebar_vuex';
+import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../store/model.store';
 import SurveyQuestion from './survey_question';
-import surveyMixin from './survey-mixin';
+import surveyMixin from './survey.mixin';
 import SurveySettingsTab from './survey-settings-tab';
-import { CLEAR_SUBMISSIONS } from './survey.store';
+import SidebarVue from '../components/sidebar_vue';
 import {
   SURVEY_RESULTS_CLEAR_CONFIRM,
   SURVEY_SAVE_SUCCESS_DELETE,
@@ -71,11 +71,14 @@ import {
   SURVEY_RESULTS_UNFREEZE_SUCCESS,
   SURVEY_CONFIRM_DELETE,
 } from '../constants/strings';
+import { DUPLICATE_SURVEY } from '@/store/survey';
+import { getOrderedRelationships } from '../utils/jsonapi_utils';
+import { CLEAR_SURVEY_SUBMISSIONS } from '../store/survey/survey.actions';
 
 export default {
   name: 'SurveySidebar',
   components: {
-    SidebarVuex,
+    SidebarVue,
     SurveyQuestion,
     SurveySettingsTab,
   },
@@ -86,55 +89,43 @@ export default {
   }),
   computed: {
     questions() {
-      return this.survey.survey_pages.map(p => p.survey_questions).reduce((p, c) => [...p, ...c],[])
+      return this.getSurveyPages(this.survey).map(p => getOrderedRelationships('questions', p)).reduce((p, c) => [...p, ...c], []);
+      //return Object.values(this.survey.survey_pages).map(p => p.survey_questions).reduce((p, c) => [...p, ...Object.values(c)],[])
     },
     editLink() {
-      return `/edit/${this.survey.id}`
+      return `/surveys/edit/${this.survey.id}`;
     },
     responsesLink() {
       return `${this.editLink}/responses`;
     },
     surveyLink() {
-      return `/page/surveys#/${this.survey.id}`;
+      return `/#/surveys/${this.survey.id}`;
     },
     previewLink() {
       return `${this.surveyLink}/preview`;
     }
   },
   methods: {
-    ...mapActions({
-      edit: EDIT
-    }),
+    ...mapActions({duplicateSurvey: DUPLICATE_SURVEY}),
     destroy() {
-      this.$store.dispatch(DELETE, {item: this.survey})
-        .then(() => this.success_toast(SURVEY_SAVE_SUCCESS_DELETE))
-        .catch((error) => {
-          console.log(error);
-          this.error_toast(error.message)
-        })
+      this.deleteSurvey()
     },
     clearResponses() {
-      this.$store.dispatch(CLEAR_SUBMISSIONS, {item: this.survey})
-        .then(() => this.success_toast(SURVEY_RESULTS_CLEAR_SUCCESS))
-        .catch((error) => {
-          console.log(error)
-          this.error_toast(error.message)
-        });
+      this.toastPromise(this.$store.dispatch(CLEAR_SURVEY_SUBMISSIONS, {item: this.survey}), SURVEY_RESULTS_CLEAR_SUCCESS)
     },
     toggleSubmissionEdits(val) {
       this.survey.allow_submission_edits = val
       let message = this.val
         ? SURVEY_RESULTS_UNFREEZE_SUCCESS
         : SURVEY_RESULTS_FREEZE_SUCCESS
-      this.save(val, message)
+      this.saveSurvey(this.survey, message)
     },
     responses() {
       this.$router.push(this.responsesLink);
     },
     duplicate() {
-      this.$store.dispatch(DUPLICATE, {item: this.survey}).then((newSurvey) => {
-        this.$store.commit(UNSELECT);
-        this.$router.push(`/edit/${newSurvey.id}`)
+      this.duplicateSurvey({item: this.survey}).then((newSurvey) => {
+        this.$router.push(`surveys/edit/${newSurvey.id}`)
       }).catch((error) => this.error_toast(error.message));
     }
   }
@@ -142,5 +133,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
- 
+
 </style>

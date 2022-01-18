@@ -25,7 +25,7 @@ import {
   LOGIN_MISSING_PASSWORD,
   LOGIN_PASSWORDS_DO_NOT_MATCH,
   LOGIN_SHORT_PASSWORD,
-} from "../constants/strings";
+} from "@/constants/strings";
 
 export default {
   name: "LoginPasswordField",

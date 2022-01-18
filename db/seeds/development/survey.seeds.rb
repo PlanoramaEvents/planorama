@@ -1,5 +1,6 @@
 #surveys
 
+return if Survey.count > 0
 
 Survey::Submission.destroy_all
 Survey.destroy_all
@@ -51,32 +52,32 @@ survey_question = Survey::Question.create(
   question_type: :textfield,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page.id
+  page_id: survey_page.id
 )
 survey_question2 = Survey::Question.create(
   question: "What is your quest?",
   question_type: :textfield,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page.id
+  page_id: survey_page.id
 )
 survey_question3 = Survey::Question.create(
   question: "What is the air speed velocity of an unladen swallow?",
   question_type: :singlechoice,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page2.id
+  page_id: survey_page2.id
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "African"
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "European"
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "I don't know"
 )
 
@@ -121,32 +122,32 @@ survey_question = Survey::Question.create(
   question_type: :textbox,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page.id
+  page_id: survey_page.id
 )
 survey_question2 = Survey::Question.create(
   question: "Are your pants on fire?",
   question_type: :textfield,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page.id
+  page_id: survey_page.id
 )
 survey_question3 = Survey::Question.create(
   question: "What is the meaning of life?",
   question_type: :multiplechoice,
   text_size: Faker::Number.between(from: 11, to: 16),
   horizontal: Faker::Boolean.boolean,
-  survey_page_id: survey_page2.id
+  page_id: survey_page2.id
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "42"
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "6x9"
 )
 Survey::Answer.create(
-  survey_question_id: survey_question3.id,
+  question_id: survey_question3.id,
   answer: "Every sperm is sacred"
 )
 
@@ -188,13 +189,13 @@ p "Anna's survey created again"
       question_type: question_type,
       text_size: Faker::Number.between(from: 11, to: 16),
       horizontal: Faker::Boolean.boolean,
-      survey_page_id: survey_page.id
+      page_id: survey_page.id
     )
     case
     when :singlechoice, :multiplechoice, :dropdown
       Faker::Number.between(from: 3, to: 5).times.each do
         Survey::Answer.create(
-          survey_question_id: survey_question.id,
+          question_id: survey_question.id,
           answer: Faker::Lorem.words().join(" ")
         )
       end

@@ -1,10 +1,11 @@
+<!-- CONVERTED -->
 <template>
   <div class="scrollable">
-    <div class="survey-page">
-      <h1>{{survey && survey.survey_pages[0].title}}</h1>
-      <h2 v-if="survey && survey.survey_pages[0].id != page.id">{{page.title}}</h2>
+    <div class="survey-page" v-if="selectedPage">
+      <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
+      <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
       <survey-question
-        v-for="q in questions"
+        v-for="q in selectedPageQuestions"
         :key="q.id"
         :question="q"
         answerable
@@ -29,15 +30,18 @@
 
 <script>
 import SurveyQuestion from './survey_question';
-import {mapState, mapMutations, mapActions} from 'vuex';
-import { UNSELECT, SAVE, SELECT } from '../model.store';
-import { NEW_SUBMISSION, SELECT_PAGE, SUBMIT } from './survey.store';
-import { Survey } from './survey';
-import pageMixin from './page-mixin';
+import { mapActions, mapMutations } from 'vuex';
+import {
+  pageMixin,
+  surveyIdPropMixinSurveyId,
+  surveyMixin,
+  submissionMixin
+} from '@mixins';
+import { SET_PREVIEW_MODE } from '@/store/survey';
 
 export default {
   name: "SurveyPage",
-  props: ['survey_id', 'id', 'preview'],
+  props: ['id', 'preview'],
   data: () =>  ({
     submitted: false,
     nextPageId: null
@@ -45,21 +49,18 @@ export default {
   components: {
     SurveyQuestion,
   },
-  mixins: [pageMixin],
+  mixins: [
+    surveyMixin,
+    pageMixin,
+    surveyIdPropMixinSurveyId,
+    submissionMixin
+  ],
   computed: {
-    ...mapState({
-      page: 'selected_page',
-      survey: 'selected',
-      surveys: 'collection',
-    }),
-    questions() {
-      return this.page && this.page.survey_questions || [];
-    },
     next_page() {
-      return `/${this.survey_id}/page/${this.nextPageId}${this.preview ? '/preview' : ''}`
+      return `/surveys/${this.surveyId}/page/${this.nextPageId}${this.preview ? '/preview' : ''}`
     },
     submit_disabled() {
-      return this.preview || !(this.survey && this.survey.public);
+      return !!this.preview || !(this.survey && this.survey.public);
     },
     submit_disabled_tooltip() {
       return this.preview
@@ -69,16 +70,14 @@ export default {
   },
   methods: {
     ...mapMutations({
-      unselect: UNSELECT,
-      select: SELECT,
-      selectPage: SELECT_PAGE,
-      newSubmission: NEW_SUBMISSION
+      setPreviewMode: SET_PREVIEW_MODE
     }),
     submit() {
+      console.log("attempting to submit", this.selectedSubmission);
       if(!this.submit_disabled) {
-        this.$store.dispatch(SUBMIT).then(() => {
+        this.submitSelectedSubmission().then(() => {
           this.submitted = true;
-          this.$router.push(`/${this.survey.id}/thankyou`);
+          this.$router.push(`/surveys/${this.survey.id}/thankyou`);
         })
       }
     },
@@ -89,40 +88,34 @@ export default {
       this.$router.go(-1);
     },
     setNextPageId(id) {
-      console.log('setting next page id to', id)
+      console.debug('setting next page id to', id)
       if(!id) {
-        console.log('attempting to get actual next page id')
-        id = this.getNextPage(this.page.id)?.id;
-        console.log('actual next page id:', id)
+        console.debug('attempting to get actual next page id')
+        id = this.getNextPage(this.selectedPage.id)?.id;
+        console.debug('actual next page id:', id)
       }
       this.nextPageId = id;
     }
   },
   beforeRouteUpdate(to, from, next) {
-    this.selectPage(this.survey.survey_pages.find(p => p.id == to.params.id))
-    this.setNextPageId(this.selected_page?.next_page_id);
+    this.selectPage(this.survey.pages[to.params.id])
+    this.setNextPageId(this.selectedPage?.next_page_id);
     next()
   },
   mounted() {
-    console.log('mounting page...')
-    if (!this.survey && this.survey_id) {
-      console.log('trying to load survey id', this.survey_id)
-      let model = new Survey({id: this.survey_id}, this.surveys);
-      model.fetch().then(() => {
-        this.select(model);
-        console.log('trying to select page:', this.id)
-        this.selectPage(model.survey_pages.find(p => p.id == this.id));
-        this.newSubmission();
-        this.setNextPageId(this.selected_page.next_page_id);
-      });
-    }
-    else if (!this.page && this.id) {
-      this.selectPage(this.survey.survey_pages.find(p => p.id == this.id))
-      this.setNextPageId(this.selected_page.next_page_id);
-    }
-    else {
-      this.setNextPageId(this.selected_page.next_page_id);
-    }
+    console.debug('mounting page...')
+    this.surveyLoadedPromise.then((surveyLoaded) => {
+      console.debug("i get here! and should have a survey", this.survey)
+      this.setPreviewMode(!!this.preview);
+      if (surveyLoaded && !this.preview) {
+        this.newSubmission({surveyId: this.surveyId});
+      }
+      if((!this.selectedPage && this.id) || (this.id && this.selectedPage.id != this.id)) {
+        console.debug("i am on the wrong page!")
+        this.selectPage(this.id);
+      }
+      this.setNextPageId(this.selectedPage.next_page_id);
+    })
   }
 }
 </script>

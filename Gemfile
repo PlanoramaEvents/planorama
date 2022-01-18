@@ -11,7 +11,7 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'activerecord-postgres_enum'
 
 # Use Puma as the app server
-gem 'puma', '~> 4.3'
+gem 'puma', '>= 4.3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
@@ -34,6 +34,9 @@ gem 'kaminari'
 gem 'active_model_serializers', '~> 0.10.0'
 
 gem 'devise'
+# gem 'devise-jwt'
+gem 'rack-cors'
+
 gem 'ranked-model'
 gem "nilify_blanks"
 gem 'paper_trail'
@@ -43,15 +46,29 @@ gem "sidekiq"
 gem "sidekiq-scheduler"
 gem 'io-wait'
 gem 'fast_excel'
+gem 'jsonapi-serializer'
+gem 'jsonapi.rb'
+
+gem 'deep_cloneable', '~> 3.2.0'
+
+gem "nokogiri", ">= 1.12.5"
+
+gem 'truemail'
+
+# This is needed to run the migrations from id to uuid for primary keys
+gem 'webdack-uuid_migration'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem "brakeman"                                      # vulnerability and static analysis
+  gem "ruby_audit"                                    # checks for CVEs affecting Ruby and RubyGems
+end
+
+group :staging, :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'seedbank'
-  gem "brakeman"                                      # vulnerability and static analysis
-  gem "ruby_audit"                                    # checks for CVEs affecting Ruby and RubyGems
 end
 
 group :development do

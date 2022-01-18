@@ -1,19 +1,21 @@
 class Survey::SubmissionsController < ResourceController
   SERIALIZER_CLASS = 'Survey::SubmissionSerializer'.freeze
   MODEL_CLASS = 'Survey::Submission'.freeze
-  POLICY_CLASS = 'SubmissionsPolicy'.freeze
+  POLICY_CLASS = 'Survey::SubmissionsPolicy'.freeze
   XLS_SERIALIZER_CLASS = 'Survey::SubmissionXlsSerializer'.freeze
+  DEFAULT_SORTBY = 'updated_at'
 
   def belong_to_class
-    Survey
+    Survey if params[:survey_id].present?
+    Person if params[:person_id].present?
   end
 
   def belongs_to_relationship
-    'survey_submissions'
+    'submissions'
   end
 
   def belongs_to_param_id
-    params[:survey_id]
+    params[:survey_id] || params[:person_id]
   end
 
   def before_save
@@ -22,14 +24,39 @@ class Survey::SubmissionsController < ResourceController
     @object.person_id = current_person.id if current_person
   end
 
+  # After save and if state changes to submitted we may need
+  # to transistion the person's state?
+  # based on survey.transition_accept_status
+  def after_save
+    post_submission_transition if @object.submission_state == Survey::Submission.submission_states[:submitted]
+  end
+
+  def after_update
+    post_submission_transition if @object.submission_state == Survey::Submission.submission_states[:submitted]
+  end
+
+  def post_submission_transition
+    acceptance_status = @object.transition_accept_status
+    return unless acceptance_status
+    return unless @object.person_id || (@object.person_id != current_person.id)
+
+    current_person.acceptance_status = acceptance_status
+    current_person.save!
+  end
+
   def serializer_includes
     [
-      :survey_responses
+      :responses
     ]
   end
 
   def includes
-    serializer_includes
+    [
+      :person,
+      responses: [
+        :question
+      ]
+    ]
   end
 
   def delete_all
@@ -37,7 +64,7 @@ class Survey::SubmissionsController < ResourceController
       survey = Survey.find_by(id: params[:survey_id])
       authorize survey, policy_class: policy_class
 
-      survey.survey_submissions.destroy_all
+      survey.submissions.destroy_all
 
       render status: :ok, json: {}.to_json, content_type: 'application/json'
     end
@@ -45,41 +72,42 @@ class Survey::SubmissionsController < ResourceController
 
   def allowed_params
     %i[
+      id
       person_id
       survey_id
-      survey_responses
-      fuuid
+      responses
+      person
+      survey
     ] << [
-      survey_responses_attributes: %i[
+      responses_attributes: %i[
         id
         lock_version
         _destroy
-        survey_submission_id
-        survey_question_id
-        fuuid
+        submission_id
+        question_id
       ] << [
         response: %i[
+          id
           text
-          fuuid
         ] << [
           answers: [],
           address: %i[
+            id
             street
             street2
             city
             state
             zip
             country
-            fuuid
           ],
           socialmedia: %i[
+            id
             twitter
             facebook
             linkedin
             twitch
             youtube
             instagram
-            fuuid
             website
             other
             tiktok
