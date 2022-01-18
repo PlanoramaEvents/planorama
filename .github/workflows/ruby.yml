@@ -56,4 +56,4 @@ jobs:
         DB_HOST: localhost
         POSTGRES_USER: admin
         POSTGRES_PASSWORD: admin
-      run: bundle exec rspec
+      run: bundle exec rake db:seed; bundle exec rspec
