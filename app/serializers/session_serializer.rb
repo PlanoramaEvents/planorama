@@ -1,7 +1,5 @@
-class SessionSerializer < PersonSerializer
+class SessionSerializer
+  include JSONAPI::Serializer
 
-  has_many :unsigned_agreements, serializer: AgreementSerializer do |person|
-    Agreement.latest.unsigned(person: person)
-  end
-
+  attributes :id, :lock_version, :created_at, :updated_at
 end

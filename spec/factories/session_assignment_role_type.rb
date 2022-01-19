@@ -1,7 +1,7 @@
 FactoryBot.define do
-    factory :programme_assignment_role_type do
+    factory :session_assignment_role_type do
         sequence :id
-        sequence(:name) { |n| "programme assignment role type #{n}"}
+        sequence(:name) { |n| "session assignment role type #{n}"}
 
         factory :participant_role do
             name { 'Participant' }

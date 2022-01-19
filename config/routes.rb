@@ -19,15 +19,15 @@ Rails.application.routes.draw do
   post '/validator/email', to: 'validator/email#validate' #, controller: 'validator/email'
 
   # REST based resources
-  get 'session/me', to: 'people#me'
+  get 'person/session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
   get 'people/me', to: 'people#me'
   post 'person/import', to: 'people#import'
   resources :people, path: 'person' do
     get 'person_roles', to: 'person_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
-    get 'programme_items', to: 'programme_items#index'
-    get 'published_programme_items', to: 'published_programme_items#index'
+    get 'sessions', to: 'sessions#index'
+    get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
   end
@@ -72,9 +72,9 @@ Rails.application.routes.draw do
   get 'rbac', to: 'rbac#index'
 
   resources :bios, path: 'bio'
-  resources :programme_items, path: 'programme_item'
-  resources :published_programme_items, path: 'published_programme_item'
-  resources :programme_assignments, path: 'programme_assignment'
+  resources :sessions, path: 'session'
+  resources :published_sessions, path: 'published_session'
+  resources :session_assignments, path: 'session_assignment'
   resources :rooms, path: 'room'
   resources :venues, path: 'venue'
   resources :tag_contexts, path: 'tag_context'

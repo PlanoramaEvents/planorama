@@ -1,5 +1,5 @@
 FactoryBot.define do
-    factory :programme_item do
+    factory :session do
         title { Faker::Educator.course_name }
         format
 
@@ -12,9 +12,9 @@ FactoryBot.define do
             start_time { Faker::Time.forward(days: 5) }
         end
 
-        factory :programme_item_with_participants do
+        factory :session_with_participants do
             after(:create) do |prog|
-                create_list(:programme_assignment, 5, programme_item: prog, programme_assignment_role_type: create(:participant_role))
+                create_list(:session_assignment, 5, session: prog, session_assignment_role_type: create(:participant_role))
             end
         end
     end

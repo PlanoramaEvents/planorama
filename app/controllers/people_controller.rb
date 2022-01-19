@@ -11,7 +11,7 @@ class PeopleController < ResourceController
     authorize me, policy_class: policy_class
     # change type in serializer
     render_object(me,
-      serializer: SessionSerializer,
+      serializer: PersonSessionSerializer,
       jsonapi_included: [
         :email_addresses,
         :person_roles,

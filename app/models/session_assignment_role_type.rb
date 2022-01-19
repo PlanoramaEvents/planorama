@@ -1,5 +1,5 @@
 ## schema
-# CREATE TABLE public.programme_assignment_role_type (
+# CREATE TABLE public.session_assignment_role_type (
 #     id integer NOT NULL,
 #     lock_version integer DEFAULT 0,
 #     created_at timestamp without time zone,
@@ -8,10 +8,10 @@
 #     role_type public.assignment_role_enum,
 #     default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 # );
-class ProgrammeAssignmentRoleType < ApplicationRecord
-  self.table_name = "programme_assignment_role_type"
-  has_many :programme_assignments
-  has_many :published_programme_assignments
+class SessionAssignmentRoleType < ApplicationRecord
+  self.table_name = "session_assignment_role_type"
+  has_many :session_assignments
+  has_many :published_session_assignments
 
   enum role_type: {
     participant: 'participant',

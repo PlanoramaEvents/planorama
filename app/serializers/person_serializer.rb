@@ -82,27 +82,27 @@ class PersonSerializer #< ActiveModel::Serializer
             }
 
 
-  # programme_items
-  has_many :programme_items, serializer: ProgrammeItemSerializer,
+  # sessions
+  has_many :sessions, serializer: SessionSerializer,
              links: {
                self: -> (object, params) {
                  "#{params[:domain]}/person/#{object.id}"
                },
                related: -> (object, params) {
-                 "#{params[:domain]}/person/#{object.id}/programme_items"
+                 "#{params[:domain]}/person/#{object.id}/sessions"
                }
              }
 
-  # published_programme_items
-  has_many :published_programme_items, serializer: PublishedProgrammeItemSerializer,
-             links: {
-               self: -> (object, params) {
-                 "#{params[:domain]}/person/#{object.id}"
-               },
-               related: -> (object, params) {
-                 "#{params[:domain]}/person/#{object.id}/published_programme_items"
-               }
-             }
+  # published_sessions
+  # has_many :published_sessions, serializer: PublishedSessionSerializer,
+  #            links: {
+  #              self: -> (object, params) {
+  #                "#{params[:domain]}/person/#{object.id}"
+  #              },
+  #              related: -> (object, params) {
+  #                "#{params[:domain]}/person/#{object.id}/published_sessions"
+  #              }
+  #            }
 
   has_many :mail_histories, serializer: MailHistorySerializer,
              links: {
