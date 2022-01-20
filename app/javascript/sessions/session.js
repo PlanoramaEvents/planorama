@@ -4,21 +4,16 @@ export const session_columns = [
     label: 'Title',
     type: "text",
     sortable: true
-    // sortKey: 'published_name_sort_by',
-    // stickyColumn: true,
   },
   {
     key: 'description',
     label: 'Description',
     type: "text",
-    sortable: true,
-    // stickyColumn: true
+    sortable: true
   },
-  // {
-  //   key: 'format',
-  //   label: 'Format',
-  //   type: "text",
-  //   // sortKey: 'pseudonym_sort_by',
-  //   sortable: true
-  // },
+  {
+    key: 'format.name',
+    label: 'Format',
+    sortable: true
+  },
 ];
