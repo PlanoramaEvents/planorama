@@ -94,3 +94,28 @@ rake docker:test
 To see mail sent by the dev environment, navigate in your browser to http://localhost:1080.
 
 (If this doesn't work, try restarting your development environment.)
+
+## Deployment/Build issues
+
+Two of us have seen this error while doing the `docker-compose` build in development.
+```
+error "@storybook/addon-essentials#@storybook/addon-docs#@storybook/builder-webpack4#postcss-loader#schema-utils#@types/json-schema" is wrong version: expected "^7.0.8", got "7.0.7"
+```
+
+There are also some yarn messages about it being out of date. The fix seems to be to delete the docker volumes used by yarn. These can be deleted from the docker client or the command line. I'll give the commandline instructions and you can figure out the equivalent instructions in the client.
+
+Before you can delete the volumes, you have to delete the container that references them. You don't have to delete all the images, just the container.
+
+`docker container prune`
+
+You'll be asked if you really want to delete all stopped containers.
+
+Now you can delete the volumes. You have to manually recreate them before you can build again.
+
+```
+docker volume rm node_modules node_modules_sidekiq
+docker volume create --name=node_modules
+docker volume create --name=node_modules_sidekiq
+```
+
+Now you can run `docker-compose`
