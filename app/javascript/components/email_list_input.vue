@@ -21,6 +21,7 @@
         class="p-form-new-tag"
         v-model="newTag"
         @blur="addTags"
+        @paste="addTags"
         @keydown.enter='addTags'
         @keydown.188.stop='addTags'
         @keydown.delete.stop='removeLastTag'
