@@ -33,10 +33,14 @@ import { personSessionStore } from './person_session.store';
 // survey add-ons
 import { surveyStore, surveyEndpoints } from './survey/survey.store';
 
+// session add-ons
+import { sessionStore, sessionEndpoints } from './session.store';
+
 const endpoints = {
   ...personEndpoints,
   ...surveyEndpoints,
-  ...mailingEndpoints
+  ...mailingEndpoints,
+  ...sessionEndpoints,
 }
 
 // NOTE: this is really the store
@@ -59,7 +63,8 @@ export const store = new Vuex.Store({
     selected: {
       ...personStore.selected,
       ...surveyStore.selected,
-      ...mailingStore.selected
+      ...mailingStore.selected,
+      ...sessionStore.selected
     },
     ...personSessionStore.state,
     ...surveyStore.state,
@@ -75,7 +80,8 @@ export const store = new Vuex.Store({
     ...personStore.getters,
     ...surveyStore.getters,
     ...personSessionStore.getters,
-    ...mailingStore.getters
+    ...mailingStore.getters,
+    ...sessionStore.getters
   },
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
@@ -210,6 +216,7 @@ export const store = new Vuex.Store({
     ...personSessionStore.actions,
     ...surveyStore.actions,
     ...personStore.actions,
-    ...mailingStore.actions
+    ...mailingStore.actions,
+    ...sessionStore.actions
   }
 })

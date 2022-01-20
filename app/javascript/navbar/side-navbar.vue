@@ -9,7 +9,7 @@
         <b-nav-item to="/mailing" active-class="active"><b-icon-mailbox class="mr-2"></b-icon-mailbox>Mailing</b-nav-item>
         <b-nav-item to="/mail-templates" active-class="active"><b-icon-card-text class="mr-2"></b-icon-card-text>Templates</b-nav-item>
       </b-collapse> -->
-      <b-nav-item to="/program" active-class="active"><b-icon-calendar2-range-fill class="mr-2"></b-icon-calendar2-range-fill>Schedule</b-nav-item>
+      <b-nav-item to="/schedule" active-class="active"><b-icon-calendar2-range-fill class="mr-2"></b-icon-calendar2-range-fill>Schedule</b-nav-item>
       <b-nav-item to="/surveys" active-class="active"><icon-survey class="mr-2"></icon-survey>Surveys</b-nav-item>
       <b-nav-item to="/reports" active-class="active"><b-icon-bar-chart-line-fill class="mr-2"></b-icon-bar-chart-line-fill>Reports</b-nav-item>
       <b-nav-item to="/admin" active-class="active"><b-icon-person-badge class="mr-2"></b-icon-person-badge>Admin</b-nav-item>
