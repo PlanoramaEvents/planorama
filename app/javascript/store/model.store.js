@@ -28,7 +28,7 @@ import { personStore, personEndpoints } from './person.store';
 import { mailingStore, mailingEndpoints } from './mailing.store';
 
 // session add-ons
-import { personSessionStore } from './session.store';
+import { personSessionStore } from './person_session.store';
 
 // survey add-ons
 import { surveyStore, surveyEndpoints } from './survey/survey.store';
