@@ -139,13 +139,15 @@ module MailService
   def self.generate_survey_url(survey:, person:)
     return nil unless survey && person
 
-    ml = MagicLinkService.generate(
-      person_id: person.id,
-      redirect_url: "/#/surveys/#{survey.id}",
-      valid_for: 1.week
-    )
+    # ml = MagicLinkService.generate(
+    #   person_id: person.id,
+    #   redirect_url: "/#/surveys/#{survey.id}",
+    #   valid_for: 1.week
+    # )
+    #
+    # UrlService.url_for path: "login/#{ml.token}"
 
-    UrlService.url_for path: "login/#{ml.token}"
+    UrlService.url_for path: "/#/surveys/#{survey.id}"
   end
 
   def self.post_mail_transition(person: , mailing: nil)
