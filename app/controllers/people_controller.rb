@@ -35,7 +35,7 @@ class PeopleController < ResourceController
 
         email = row[0]
         name = row[1]
-        pseudonym = row[3]
+        pseudonym = row[2]
 
         # validate that the email is a valid email
         email_validation = Truemail.validate(email, with: :regex)
@@ -52,11 +52,18 @@ class PeopleController < ResourceController
           pseudonym_sort_by: pseudonym
         );
         email = EmailAddress.create(
-            person: person,
-            email: email,
-            isdefault: true,
-            is_valid: true
+          person: person,
+          email: email,
+          isdefault: true,
+          is_valid: true
         );
+
+        # By default we add the person as a member of the convention
+        PersonRole.create(
+          person: person,
+          role: PersonRole.roles[:member]
+        )
+
         count += 1
       end
     end
