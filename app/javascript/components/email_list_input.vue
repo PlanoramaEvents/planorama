@@ -21,7 +21,7 @@
         class="p-form-new-tag"
         v-model="newTag"
         @blur="addTags"
-        @paste="addTags"
+        @paste="pasteTags"
         @keydown.enter='addTags'
         @keydown.188.stop='addTags'
         @keydown.delete.stop='removeLastTag'
@@ -79,9 +79,19 @@ export default {
     }
   },
   methods: {
-    async addTags (event) {
-      event.preventDefault();
+    async pasteTags(event) {
+      event.preventDefault()
+      let val = (event.clipboardData || window.clipboardData).getData('text');
+      this.newTag = val
+      this.processNewTags()
+    },
 
+    async addTags (event) {
+      event.preventDefault()
+      this.processNewTags()
+    },
+
+    processNewTags() {
       if (this.newTag.trim().length == 0) {
         return
       }
