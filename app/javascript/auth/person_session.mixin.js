@@ -1,7 +1,7 @@
 import {mapState, mapActions } from 'vuex';
 import { GET_SESSION_USER }  from "../store/person_session.store";
 
-export const personsessionMixin = {
+export const personSessionMixin = {
   computed: {
     ...mapState({
       currentUser: 'user'
@@ -24,4 +24,4 @@ export const personsessionMixin = {
   }
 }
 
-export default personsessionMixin;
+export default personSessionMixin;

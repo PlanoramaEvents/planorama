@@ -19,7 +19,7 @@
 <script>
 import HelpLink from '../administration/help_link.vue';
 import authMixin from '../auth/auth.mixin';
-import personsessionMixin from '../auth/person_session.mixin';
+import personSessionMixin from '../auth/person_session.mixin';
 
 export default {
   name: 'TopNavbar',
@@ -28,7 +28,7 @@ export default {
   },
   mixins: [
     authMixin,
-    personsessionMixin
+    personSessionMixin
   ],
   methods: {
     logout() {

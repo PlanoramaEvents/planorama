@@ -1,6 +1,6 @@
 export { toastMixin } from './shared/toast-mixin';
 export * from './store/model.mixin';
-export { personsessionMixin } from './auth/person_session.mixin';
+export { personSessionMixin } from './auth/person_session.mixin';
 export { surveyMixin } from './surveys/survey.mixin';
 export { pageMixin } from './surveys/page.mixin';
 export { submissionMixin } from './surveys/submission.mixin';
