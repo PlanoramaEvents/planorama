@@ -12,7 +12,7 @@ export const personSessionStore = {
   },
   getters: {
     // Get the current session from the store
-    currentSession(state, getters) {
+    currentPersonSession(state, getters) {
       return state.user;
     },
   },
