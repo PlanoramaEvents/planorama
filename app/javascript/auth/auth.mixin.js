@@ -1,4 +1,4 @@
-import {http as axios} from './http';
+import {http as axios} from '../http';
 
 export const authMixin = {
   methods: {

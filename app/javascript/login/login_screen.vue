@@ -9,7 +9,7 @@
 
 <script>
 import PlanLogo from "@/logo";
-import { sessionMixin } from '@mixins';
+import { personsessionMixin } from '@mixins';
 
 export default {
   name: "LoginScreen",
@@ -18,7 +18,7 @@ export default {
     PlanLogo,
   },
   mixins: [
-    sessionMixin
+    personsessionMixin
   ],
   watch: {
     loggedIn (newval, oldval) {
