@@ -7,11 +7,11 @@
 </template>
 
 <script>
-import personsessionMixin from '../auth/person_session.mixin';
+import personSessionMixin from '../auth/person_session.mixin';
 
 export default {
   name: "Dashboard",
-  mixins: [personsessionMixin]
+  mixins: [personSessionMixin]
 }
 </script>
 

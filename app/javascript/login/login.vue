@@ -35,7 +35,7 @@ import IeaModal from './iea-modal';
 import axios from 'axios';
 import {
   authMixin,
-  personsessionMixin
+  personSessionMixin
 } from '@mixins';
 
 import { validateFields } from "@/utils";
@@ -86,7 +86,7 @@ export default {
     PrivacyPolicyLink,
     IeaModal,
   },
-  mixins: [authMixin, personsessionMixin],
+  mixins: [authMixin, personSessionMixin],
   mounted: function () {
     if (this.$route.query.alert) {
       switch (this.$route.query.alert) {
