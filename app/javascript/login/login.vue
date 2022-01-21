@@ -23,7 +23,7 @@
         <b-button type="submit" variant="primary" class="px-5">Log In</b-button>
       </div>
     </b-form>
-    <iea-modal @cancel="onIeaCancel" @ok="onIeaAgree"></iea-modal>
+    <!--iea-modal @cancel="onIeaCancel" @ok="onIeaAgree"></iea-modal-->
   </div>
 </template>
 
