@@ -1,36 +1,22 @@
-export const SET_SESSION_USER = "SET SESSION USER";
-export const GET_SESSION_USER = "GET SESSION USER";
+import { NEW } from './model.store';
+
+export const NEW_SESSION = 'NEW SESSION';
+
+export const sessionModel = 'session';
+
+export const sessionEndpoints = {
+  [sessionModel]: 'session'
+}
 
 export const sessionStore = {
-  state: {
-    user: {}
-  },
-  mutations: {
-    [SET_SESSION_USER] (state, user) {
-      state.user = user
+  actions: {
+    [NEW_SESSION] ({dispatch}, attributes) {
+      return dispatch(NEW, {model: sessionModel, selected: false, ...attributes})
     },
+  },
+  selected: {
+    [sessionModel]: undefined
   },
   getters: {
-    // Get the current session from the store
-    currentSession(state, getters) {
-      return state.user;
-    },
   },
-  actions: {
-    [GET_SESSION_USER] ({commit, dispatch, state}) {
-      // only fetch session if we don't have one
-      if(!state.user.id) {
-        // console.debug('******* get the session user')
-        dispatch('jv/get','/session/me').then((user) => {
-          // console.debug('******* session user', user)
-          commit(SET_SESSION_USER, user)
-        }).catch((error) => {
-          // console.debug('******* error', error)
-          // If we can not get the session then set no no user
-          console.debug("****** WE DO NOR HAVE A VALID SESSION ....")
-          commit(SET_SESSION_USER, {})
-        })
-      }
-    },
-  }
 }

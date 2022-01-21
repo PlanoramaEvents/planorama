@@ -16,7 +16,7 @@
 import TopNavbar from "./navbar/top-navbar.vue";
 import SideNavbar from "./navbar/side-navbar.vue";
 import BottomNavbar from "./navbar/bottom-navbar.vue";
-import sessionMixin from "./session/session.mixin";
+import personSessionMixin from "./auth/person_session.mixin";
 
 export default  {
   name: "PlanoramaApp",
@@ -25,7 +25,7 @@ export default  {
     SideNavbar,
     BottomNavbar,
   },
-  mixins: [sessionMixin],
+  mixins: [personSessionMixin],
 }
 </script>
 

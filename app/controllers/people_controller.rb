@@ -11,7 +11,7 @@ class PeopleController < ResourceController
     authorize me, policy_class: policy_class
     # change type in serializer
     render_object(me,
-      serializer: SessionSerializer,
+      serializer: PersonSessionSerializer,
       jsonapi_included: [
         :email_addresses,
         :person_roles,
@@ -31,11 +31,11 @@ class PeopleController < ResourceController
     sheet_length = sheet.length - 1 if ignore_first_line
     Person.transaction do
       sheet.each do |row|
-        next if ignore_first_line
+        next if ignore_first_line && count == 0
 
         email = row[0]
         name = row[1]
-        pseudonym = row[3]
+        pseudonym = row[2]
 
         # validate that the email is a valid email
         email_validation = Truemail.validate(email, with: :regex)
@@ -52,11 +52,18 @@ class PeopleController < ResourceController
           pseudonym_sort_by: pseudonym
         );
         email = EmailAddress.create(
-            person: person,
-            email: email,
-            isdefault: true,
-            is_valid: true
+          person: person,
+          email: email,
+          isdefault: true,
+          is_valid: true
         );
+
+        # By default we add the person as a member of the convention
+        PersonRole.create(
+          person: person,
+          role: PersonRole.roles[:member]
+        )
+
         count += 1
       end
     end

@@ -17,6 +17,9 @@ import AdminComponent from './administration/admin_component.vue';
 // people
 import PeopleScreen from './people/people-screen.vue';
 
+//
+import ScheduleScreen from './sessions/schedule-screen.vue';
+
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
 import SurveyList from './surveys/survey-list.vue';
@@ -73,6 +76,13 @@ export const router = new VueRouter({
       }
     },
     {
+      path: '/schedule',
+      component: ScheduleScreen,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/surveys',
       component: SurveyScreen,
       children: surveyRoutes,
@@ -99,7 +109,7 @@ router.beforeEach((to, from, next) => {
     // check if logged in
     // if not, redirect to login page.
     // Get the session from the store and use that to check
-    let session = router.app.$store.getters.currentSession
+    let session = router.app.$store.getters.currentPersonSession
     console.debug('**** Session: ', session )
     if (!session.id) {
       next({

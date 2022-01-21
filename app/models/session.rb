@@ -1,5 +1,5 @@
 ## schema
-# CREATE TABLE public.programme_items (
+# CREATE TABLE public.sessions (
 #     id integer NOT NULL,
 #     duration integer,
 #     minimum_people integer,
@@ -22,29 +22,31 @@
 #     publish boolean DEFAULT false NOT NULL
 # );
 
-class ProgrammeItem < ApplicationRecord
+class Session < ApplicationRecord
   validates_presence_of :title
   validates_numericality_of :duration, allow_nil: true
   validates_numericality_of :minimum_people, allow_nil: true
   validates_numericality_of :maximum_people, allow_nil: true
 
-  belongs_to :format
-  has_one :published_programme_item, dependent: :destroy
+  belongs_to :format, required: false
+  has_one :published_session, dependent: :destroy
 
-  has_many :programme_assignments, dependent: :destroy do
+  belongs_to :room, required: false
+
+  has_many :session_assignments, dependent: :destroy do
     def role(role)
       # get the people with the given role
-      where(['programme_assignment_role_type_id = ?', role.id])
-        .order('programme_assignments.sort_order asc')
+      where(['session_assignment_role_type_id = ?', role.id])
+        .order('session_assignments.sort_order asc')
     end
 
     def roles(role_ids)
       # get the people with the given roles
-      where(['programme_assignment_role_type_id in (?)', role_ids])
-        .order('programme_assignments.sort_order asc')
+      where(['session_assignment_role_type_id in (?)', role_ids])
+        .order('session_assignments.sort_order asc')
     end
   end
-  has_many :people, through: :programme_assignments
+  has_many :people, through: :session_assignments
 
   enum visibility: {
     is_public: 'public',
@@ -54,10 +56,10 @@ class ProgrammeItem < ApplicationRecord
   acts_as_taggable
 
   def published?
-    !published_programme_item.nil?
+    !published_session.nil?
   end
 
-  # TODO: we want an idea that can be later promotted into an programme item
+  # TODO: we want an idea that can be later promotted into a session
   # Need to know who create the idea, and when
   # We could use inheritance or some workflow (aasm)???
 
