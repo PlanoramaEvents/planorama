@@ -723,7 +723,8 @@ CREATE TABLE public.sessions (
     publish boolean DEFAULT false NOT NULL,
     require_signup boolean DEFAULT false,
     waiting_list_size integer DEFAULT 0,
-    open_for_interest integer DEFAULT 0
+    open_for_interest integer DEFAULT 0,
+    instructions_for_interest text
 );
 
 
