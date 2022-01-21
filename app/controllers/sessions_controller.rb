@@ -7,19 +7,22 @@ class SessionsController < ResourceController
 
   def serializer_includes
     [
-      :format
+      :format,
+      :room
     ]
   end
 
   def includes
     [
-      :format
+      :format,
+      :room
     ]
   end
 
   def references
     [
-      :format
+      :format,
+      :room
     ]
   end
 
@@ -30,6 +33,18 @@ class SessionsController < ResourceController
       format_id
       title
       description
+      duration
+      minimum_people
+      maximum_people
+      item_notes
+      pub_reference_number
+      audience_size,
+      participant_notes
+      is_break
+      start_time,
+      visibility
+      publish
+      room_id
     ]
   end
 end
