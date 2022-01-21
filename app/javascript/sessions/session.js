@@ -34,7 +34,35 @@ export const session_columns = [
   },
   {
     key: 'item_notes',
-    label: 'Item Notes'
+    label: 'Item Notes',
+    type: "text"
+  },
+  {
+    key: 'open_for_interest',
+    label: 'Open for Interest',
+    type: "boolean"
+  },
+  {
+    key: 'instructions_for_interest',
+    label: 'Interest Instructions',
+    type: "text"
+  },
+  {
+    key: 'minimum_people',
+    label: 'Min Participants'
+  },
+  {
+    key: 'maximum_people',
+    label: 'Max Participants'
+  },
+  {
+    key: 'require_signup',
+    label: 'Requires Signup',
+    type: "boolean"
+  },
+  {
+    key: 'waiting_list_size',
+    label: 'Waiting List Size'
   },
   {
     key: 'audience_size',
@@ -42,11 +70,13 @@ export const session_columns = [
   },
   {
     key: 'is_break',
-    label: 'Is Break'
+    label: 'Is Break',
+    type: "boolean"
   },
   {
     key: 'publish',
-    label: 'Publish'
+    label: 'Publish',
+    type: "boolean"
   },
   {
     key: 'visibility',
@@ -54,10 +84,6 @@ export const session_columns = [
   }
 ];
 //
-//
-//            :duration, :minimum_people, :maximum_people,
-//            :item_notes, :pub_reference_number, :audience_size,
-//            :participant_notes, :is_break, :start_time,
-//            :visibility, :publish
-//
-// :room,
+// TODO: ???
+// :pub_reference_number
+// :participant_notes

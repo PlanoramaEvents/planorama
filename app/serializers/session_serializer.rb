@@ -6,7 +6,9 @@ class SessionSerializer
              :duration, :minimum_people, :maximum_people,
              :item_notes, :pub_reference_number, :audience_size,
              :participant_notes, :is_break, :start_time,
-             :visibility, :publish
+             :visibility, :publish,
+             :open_for_interest, :instructions_for_interest,
+             :require_signup, :waiting_list_size
 
   has_one :format,
           if: Proc.new { |record| record.format },

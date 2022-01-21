@@ -28,10 +28,10 @@ class Session < ApplicationRecord
   validates_numericality_of :minimum_people, allow_nil: true
   validates_numericality_of :maximum_people, allow_nil: true
 
-  belongs_to :format
+  belongs_to :format, required: false
   has_one :published_session, dependent: :destroy
 
-  belongs_to :room
+  belongs_to :room, required: false
 
   has_many :session_assignments, dependent: :destroy do
     def role(role)
