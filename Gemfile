@@ -33,6 +33,8 @@ gem 'acts-as-taggable-on', '~> 6.0'
 gem 'kaminari'
 gem 'active_model_serializers', '~> 0.10.0'
 
+gem 'aasm'
+
 gem 'devise'
 # gem 'devise-jwt'
 gem 'rack-cors'

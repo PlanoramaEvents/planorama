@@ -31,6 +31,8 @@ class Session < ApplicationRecord
   belongs_to :format
   has_one :published_session, dependent: :destroy
 
+  belongs_to :room
+
   has_many :session_assignments, dependent: :destroy do
     def role(role)
       # get the people with the given role

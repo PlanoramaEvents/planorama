@@ -19,9 +19,33 @@ class SessionAssignment < ApplicationRecord
   belongs_to  :session_assignment_role_type
   has_one     :published_session_assignment
 
-
   enum visibility: {
     is_public: 'public',
     is_private: 'private'
   }
+
+  # We use the state machine to manage the "workflow" for the assignment
+  include AASM
+
+  aasm column: :state, skip_validation_on_save: true do
+    state :proposed, initial: true
+    state :accepted
+    state :rejected
+
+    event :accept do
+      after do
+        visibility = SessionAssignment::visibilities[:is_public]
+      end
+
+      transitions from: [:proposed, :rejected], to: :accepted
+    end
+
+    event :reject do
+      after do
+        visibility = SessionAssignment::visibilities[:is_private]
+      end
+
+      transitions from: [:proposed, :accepred], to: :rejected
+    end
+  end
 end

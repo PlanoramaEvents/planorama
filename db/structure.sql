@@ -626,7 +626,9 @@ CREATE TABLE public.published_sessions (
     description text,
     start_time timestamp without time zone,
     room_id uuid,
-    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
+    require_signup boolean DEFAULT false,
+    waiting_list_size integer DEFAULT 0
 );
 
 
@@ -685,7 +687,13 @@ CREATE TABLE public.session_assignments (
     session_assignment_role_type_id uuid NOT NULL,
     session_id uuid NOT NULL,
     sort_order integer,
-    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
+    interested boolean DEFAULT false,
+    interest_ranking integer,
+    interest_notes text,
+    interest_role_type uuid,
+    state character varying,
+    planner_notes text
 );
 
 
@@ -704,7 +712,6 @@ CREATE TABLE public.sessions (
     lock_version integer DEFAULT 0,
     format_id uuid,
     pub_reference_number integer,
-    mobile_card_size integer DEFAULT 1 NOT NULL,
     audience_size integer,
     participant_notes text,
     is_break boolean DEFAULT false,
@@ -713,7 +720,10 @@ CREATE TABLE public.sessions (
     start_time timestamp without time zone,
     room_id uuid,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
-    publish boolean DEFAULT false NOT NULL
+    publish boolean DEFAULT false NOT NULL,
+    require_signup boolean DEFAULT false,
+    waiting_list_size integer DEFAULT 0,
+    open_for_interest integer DEFAULT 0
 );
 
 
@@ -1922,6 +1932,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211207192624'),
 ('20211213180751'),
 ('20220109171844'),
-('20220119205413');
+('20220119205413'),
+('20220120202502');
 
 
