@@ -31,7 +31,7 @@ class PeopleController < ResourceController
     sheet_length = sheet.length - 1 if ignore_first_line
     Person.transaction do
       sheet.each do |row|
-        next if ignore_first_line
+        next if ignore_first_line && count == 0
 
         email = row[0]
         name = row[1]
