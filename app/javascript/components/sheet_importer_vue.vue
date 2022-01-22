@@ -76,9 +76,15 @@
           }
         ).catch(
           (err) => {
-            // console.debug('********* IMPORT ERROR: ', err)
             if (err.response) {
               this.errorMessage = err.response.data.errors[0].title
+              this.$bvToast.toast(
+                'Import Failed',
+                {
+                  variant: 'error',
+                  title: this.errorMessage
+                }
+              )
             }
           }
         )
