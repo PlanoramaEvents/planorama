@@ -106,7 +106,7 @@ jobs:
           docker run -e RAILS_ENV=test $CONTAINER_TEST_REPOSITORY bundle exec brakeman --run-all-checks --no-pager
           # docker run -e RAILS_ENV=test $CONTAINER_TEST_REPOSITORY bundle exec bundler-audit check --update
           # docker run -e RAILS_ENV=test $CONTAINER_TEST_REPOSITORY bundle exec ruby-audit check
-          docker run -e RAILS_ENV=production -e NODE_ENV=production $CONTAINER_TEST_REPOSITORY yarn check --integrity
+          docker run -e RAILS_ENV=production -e NODE_ENV=production $CONTAINER_TEST_REPOSITORY /bin/sh -c "bin/yarn install --frozen-lockfile; yarn check --integrity"
 
       - name: Publish the deployable image
         run: |

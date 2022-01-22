@@ -35,7 +35,7 @@ import IeaModal from './iea-modal';
 import axios from 'axios';
 import {
   authMixin,
-  sessionMixin
+  personSessionMixin
 } from '@mixins';
 
 import { validateFields } from "@/utils";
@@ -86,7 +86,7 @@ export default {
     PrivacyPolicyLink,
     IeaModal,
   },
-  mixins: [authMixin, sessionMixin],
+  mixins: [authMixin, personSessionMixin],
   mounted: function () {
     if (this.$route.query.alert) {
       switch (this.$route.query.alert) {
@@ -122,10 +122,8 @@ export default {
       })
     },
     onSaveFailure: function (error) {
-      if (error.response.response.status === 401) {
-        this.error.text = LOGIN_401;
-        this.error.visible = true;
-      }
+      this.error.text = error.message;
+      this.error.visible = true;
     },
     onIeaAgree() {
       window.location.href = "#"

@@ -68,7 +68,7 @@ RSpec.describe 'People', type: :request do
       get "/person/me"
 
       expect(json).not_to be_empty
-      expect(json['data']['type']).to be == 'session'
+      expect(json['data']['type']).to be == 'person_session'
       expect(json['data']['id']).to be == p.id.to_s
       expect(response).to have_http_status(200)
     end
