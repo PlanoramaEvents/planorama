@@ -28,7 +28,6 @@ class PeopleController < ResourceController
     ignore_first_line = params[:ignore_first_line] #== 'true'
     count = 0
     sheet_length = sheet.length
-    sheet_length = sheet.length - 1 if ignore_first_line
     Person.transaction do
       sheet.each do |row|
         if ignore_first_line && count == 0
@@ -73,6 +72,7 @@ class PeopleController < ResourceController
       end
     end
 
+    count = count - 1 if ignore_first_line
     message = "Imported #{count} people, skipped #{sheet_length - count}"
 
     render status: :ok,
