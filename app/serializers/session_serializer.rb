@@ -10,6 +10,11 @@ class SessionSerializer
              :open_for_interest, :instructions_for_interest,
              :require_signup, :waiting_list_size
 
+  # tag_list
+  attribute :tags do |session|
+    session.base_tags.collect(&:name)
+  end
+
   has_one :format,
           if: Proc.new { |record| record.format },
           links: {

@@ -15,7 +15,12 @@ class PersonSerializer #< ActiveModel::Serializer
 
   # tag_list
   attribute :tags do |person|
-   person.base_tags.collect(&:name)
+    person.base_tags.collect(&:name)
+  end
+
+  # Indicate whether the person has a password set
+  attribute :has_password do |person|
+    !person.password.blank?
   end
 
   has_one :bio,
