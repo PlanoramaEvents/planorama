@@ -1,8 +1,6 @@
 class PeoplePolicy < PlannerPolicy
   def me?
-    return true if @record.class != Symbol && @record.id == @person.id
-
-    false
+    true
   end
 
   def import?

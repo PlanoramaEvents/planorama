@@ -22,8 +22,12 @@ class SessionAssignment < ApplicationRecord
 
   belongs_to  :person
   belongs_to  :session
-  belongs_to  :session_assignment_role_type
-  has_one     :published_session_assignment
+  belongs_to  :session_assignment_role_type, required: false
+  has_one     :published_session_assignment # TODO: cascade delete?
+
+  # TODO: we should check to see if this is a duplicate
+  # session_id, person_id and session_assignment_role_type
+  validate :check_unique
 
   # interested in mod, not interested in mod, no preference
   enum interest_role: {
@@ -61,4 +65,23 @@ class SessionAssignment < ApplicationRecord
       transitions from: [:proposed, :accepred], to: :rejected
     end
   end
+
+  private
+
+  def check_unique
+    existing = if session_assignment_role_type_id
+                 SessionAssignment.where([
+                    'person_id = ? AND session_id = ? AND session_assignment_role_type_id = ?',
+                    person_id, session_id, session_assignment_role_type_id
+                  ])
+               else
+                 SessionAssignment.where([
+                    'person_id = ? AND session_id = ?',
+                    person_id, session_id
+                  ])
+               end
+
+    errors.add(:session_assignment, "the assignment is not unique") if existing.count > 0
+  end
+
 end
