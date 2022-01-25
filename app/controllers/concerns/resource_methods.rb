@@ -192,7 +192,7 @@ module ResourceMethods
   end
 
   def collection
-    base = if belong_to_class
+    base = if belong_to_class && belongs_to_param_id
              parent = belong_to_class.find belongs_to_param_id
              parent.send(belongs_to_relationship)
            else
