@@ -708,7 +708,7 @@ CREATE TABLE public.session_assignments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    session_assignment_role_type_id uuid NOT NULL,
+    session_assignment_role_type_id uuid,
     session_id uuid NOT NULL,
     sort_order integer,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
@@ -1975,6 +1975,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220119205413'),
 ('20220120202502'),
 ('20220123161611'),
-('20220123162740');
+('20220123162740'),
+('20220124181524');
 
 
