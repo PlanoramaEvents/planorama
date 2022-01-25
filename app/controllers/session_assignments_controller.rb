@@ -3,6 +3,18 @@ class SessionAssignmentsController < ResourceController
   POLICY_CLASS = 'SessionAssignmentPolicy'.freeze
   POLICY_SCOPE_CLASS = 'SessionAssignmentPolicy::Scope'.freeze
 
+  def serializer_includes
+    [
+      :session
+    ]
+  end
+
+  def includes
+    [
+      :session
+    ]
+  end
+
   def belongs_to_param_id
     params[:session_id]
   end
