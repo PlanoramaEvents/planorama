@@ -15,6 +15,16 @@ class SessionSerializer
     session.base_tags.collect(&:name)
   end
 
+  has_many :session_assignments, serializer: SessionAssignmentSerializer,
+           links: {
+             self: -> (object, params) {
+               "#{params[:domain]}/session/#{object.id}"
+             },
+             related: -> (object, params) {
+               "#{params[:domain]}/session/#{object.id}/session_assignments"
+             }
+           }
+
   has_one :area,
           if: Proc.new { |record| record.area },
           links: {

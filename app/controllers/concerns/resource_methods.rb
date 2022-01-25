@@ -54,7 +54,7 @@ module ResourceMethods
   # Frontend could use this as a template
   # endpoint like /person/new
   def new
-    authorize model_class, policy_class: policy_class
+    authorize @object, policy_class: policy_class
     # give the new object a UUID ...
     @object.id = SecureRandom.uuid
     render_object(@object, includes: false)
@@ -62,7 +62,7 @@ module ResourceMethods
 
   def create
     model_class.transaction do
-      authorize model_class, policy_class: policy_class
+      authorize @object, policy_class: policy_class
       before_save
       @object.save!
       after_save

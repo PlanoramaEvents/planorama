@@ -7,14 +7,18 @@ class SessionsController < ResourceController
   def serializer_includes
     [
       :format,
-      :room
+      :room,
+      :area,
+      :session_assignments
     ]
   end
 
   def includes
     [
       :format,
-      :room
+      :room,
+      :area,
+      :session_assignments
     ]
   end
 
