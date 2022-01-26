@@ -25,16 +25,16 @@ class SessionSerializer
              }
            }
 
-  has_one :area,
-          if: Proc.new { |record| record.area },
-          links: {
-            self: -> (object, params) {
-              "#{params[:domain]}/session/#{object.id}"
-            },
-            related: -> (object, params) {
-              "#{params[:domain]}/area/#{object.area.id}"
-            }
-          }
+  # has_one :area,
+  #         if: Proc.new { |record| record.area },
+  #         links: {
+  #           self: -> (object, params) {
+  #             "#{params[:domain]}/session/#{object.id}"
+  #           },
+  #           related: -> (object, params) {
+  #             "#{params[:domain]}/area/#{object.area.id}"
+  #           }
+  #         }
 
   has_one :format,
           if: Proc.new { |record| record.format },
