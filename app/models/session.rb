@@ -46,6 +46,11 @@ class Session < ApplicationRecord
       where(['session_assignment_role_type_id in (?)', role_ids])
         .order('session_assignments.sort_order asc')
     end
+
+    # Get all the assignments for the given person in this session
+    def for_person(person_id)
+      where(['person_id = ?', person_id])
+    end
   end
   has_many :people, through: :session_assignments
 

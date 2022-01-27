@@ -8,7 +8,7 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      :area,
+      # :area,
       :session_assignments
     ]
   end
@@ -17,7 +17,7 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      :area,
+      # :area,
       :session_assignments
     ]
   end
@@ -48,6 +48,7 @@ class SessionsController < ResourceController
       visibility
       publish
       room_id
+      area_id
     ]
   end
 end
