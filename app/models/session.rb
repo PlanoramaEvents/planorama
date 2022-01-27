@@ -32,7 +32,6 @@ class Session < ApplicationRecord
   has_one :published_session, dependent: :destroy
 
   belongs_to :room, required: false
-  belongs_to :area, required: false
 
   has_many :session_assignments, dependent: :destroy do
     def role(role)
@@ -53,6 +52,10 @@ class Session < ApplicationRecord
     end
   end
   has_many :people, through: :session_assignments
+
+  # TODO: Will also need a published versioon of the relationship
+  has_many :session_areas
+  has_many :areas, through: :session_areas
 
   enum visibility: {
     is_public: 'public',

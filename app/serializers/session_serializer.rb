@@ -15,6 +15,13 @@ class SessionSerializer
     session.base_tags.collect(&:name)
   end
 
+  # Return the assignments to this session for the person logged in (if any)
+  has_many :my_assignments, serializer: SessionAssignmentSerializer do |session, params|
+    if params[:current_person]
+      session.session_assignments.for_person(params[:current_person].id)
+    end
+  end
+
   has_many :session_assignments, serializer: SessionAssignmentSerializer,
            links: {
              self: -> (object, params) {

@@ -28,7 +28,10 @@ module ResourceMethods
         options = {
           meta: meta,
           include: filtered_serializer_includes(fields: fields), # need to adjust based omn field
-          params: {domain: "#{request.base_url}"}
+          params: {
+            domain: "#{request.base_url}",
+            current_person: current_person
+          }
         }
         options[:fields] = fields
         # Example for sparse field set
@@ -116,7 +119,10 @@ module ResourceMethods
                    fields: fields,
                    serialized_includes: jsonapi_included
                  ),
-        params: {domain: "#{request.base_url}"}
+        params: {
+          domain: "#{request.base_url}",
+          current_person: current_person
+        }
       }
       options[:fields] = fields
 

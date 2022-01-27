@@ -684,6 +684,21 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: session_areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_areas (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    session_id uuid,
+    area_id uuid,
+    "primary" boolean,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1345,6 +1360,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: session_areas session_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session_areas
+    ADD CONSTRAINT session_areas_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: survey_answers survey_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1650,6 +1673,13 @@ CREATE INDEX index_published_programme_item_assignments_on_person_id ON public.p
 --
 
 CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions USING btree (format_id);
+
+
+--
+-- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_session_areas_on_session_id_and_area_id ON public.session_areas USING btree (session_id, area_id);
 
 
 --
@@ -1976,6 +2006,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220120202502'),
 ('20220123161611'),
 ('20220123162740'),
-('20220124181524');
+('20220124181524'),
+('20220127213449');
 
 

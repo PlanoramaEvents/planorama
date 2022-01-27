@@ -9,7 +9,8 @@ class SessionsController < ResourceController
       :format,
       :room,
       # :area,
-      :session_assignments
+      :session_assignments,
+      :my_assignments
     ]
   end
 
