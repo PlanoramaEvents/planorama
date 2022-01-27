@@ -65,8 +65,8 @@ export default {
   methods: {
     togglePublish() {
       let publicValue = this.publishVal;
-      console.log(this.publicValue)
-      let message = this.publicValue
+      console.log(publicValue)
+      let message = publicValue
         ? SURVEY_SAVE_SUCCESS_PUBLISH
         : SURVEY_SAVE_SUCCESS_CLOSE;
       this.patchSurveyField({...this.survey, public: publicValue}, 'public', message);
