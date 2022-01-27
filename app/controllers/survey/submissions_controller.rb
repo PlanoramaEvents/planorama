@@ -6,8 +6,8 @@ class Survey::SubmissionsController < ResourceController
   DEFAULT_SORTBY = 'updated_at'
 
   def belong_to_class
-    Survey if params[:survey_id].present?
-    Person if params[:person_id].present?
+    return Survey if params[:survey_id].present?
+    return Person if params[:person_id].present?
   end
 
   def belongs_to_relationship

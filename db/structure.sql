@@ -57,6 +57,17 @@ CREATE TYPE public.assignment_role_enum AS ENUM (
 
 
 --
+-- Name: interest_role_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.interest_role_enum AS ENUM (
+    'no_preference',
+    'can_moderate',
+    'not_moderate'
+);
+
+
+--
 -- Name: invite_status_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -188,6 +199,19 @@ CREATE TABLE public.agreements (
 CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.areas (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    sort_order integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -684,16 +708,16 @@ CREATE TABLE public.session_assignments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    session_assignment_role_type_id uuid NOT NULL,
+    session_assignment_role_type_id uuid,
     session_id uuid NOT NULL,
     sort_order integer,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
     interested boolean DEFAULT false,
     interest_ranking integer,
     interest_notes text,
-    interest_role_type uuid,
     state character varying,
-    planner_notes text
+    planner_notes text,
+    interest_role public.interest_role_enum DEFAULT 'no_preference'::public.interest_role_enum
 );
 
 
@@ -1102,6 +1126,14 @@ ALTER TABLE ONLY public.agreements
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: areas areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.areas
+    ADD CONSTRAINT areas_pkey PRIMARY KEY (id);
 
 
 --
@@ -1621,6 +1653,13 @@ CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions 
 
 
 --
+-- Name: index_session_assignments_on_interest_role; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_session_assignments_on_interest_role ON public.session_assignments USING btree (interest_role);
+
+
+--
 -- Name: index_survey_answers_on_next_page_action; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1934,6 +1973,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211213180751'),
 ('20220109171844'),
 ('20220119205413'),
-('20220120202502');
+('20220120202502'),
+('20220123161611'),
+('20220123162740'),
+('20220124181524');
 
 

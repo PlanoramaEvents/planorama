@@ -1,0 +1,2 @@
+class Area < ApplicationRecord
+end

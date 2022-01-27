@@ -17,6 +17,9 @@ import AdminComponent from './administration/admin_component.vue';
 // people
 import PeopleScreen from './people/people-screen.vue';
 
+// profile
+import ProfileScreen from './profile/profile-screen.vue';
+
 //
 import ScheduleScreen from './sessions/schedule-screen.vue';
 
@@ -71,6 +74,13 @@ export const router = new VueRouter({
     {
       path: '/people',
       component: PeopleScreen,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/profile',
+      component: ProfileScreen,
       meta: {
         requiresAuth: true
       }

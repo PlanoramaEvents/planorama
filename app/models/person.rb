@@ -58,7 +58,6 @@ class Person < ApplicationRecord
   # ugh which means i probably need to change allowed params
   # can you take care of that too?
 
-
   acts_as_taggable
 
   has_paper_trail

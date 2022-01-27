@@ -32,6 +32,7 @@ class Session < ApplicationRecord
   has_one :published_session, dependent: :destroy
 
   belongs_to :room, required: false
+  belongs_to :area, required: false
 
   has_many :session_assignments, dependent: :destroy do
     def role(role)
@@ -44,6 +45,11 @@ class Session < ApplicationRecord
       # get the people with the given roles
       where(['session_assignment_role_type_id in (?)', role_ids])
         .order('session_assignments.sort_order asc')
+    end
+
+    # Get all the assignments for the given person in this session
+    def for_person(person_id)
+      where(['person_id = ?', person_id])
     end
   end
   has_many :people, through: :session_assignments
@@ -64,8 +70,5 @@ class Session < ApplicationRecord
   # We could use inheritance or some workflow (aasm)???
 
   # TODO: revisit for exclusion mappings
-  # has_many :equipment_needs, dependent: :destroy
-  # has_many :equipment_types, through: :equipment_needs
   # has_many :excluded_items_survey_maps, dependent: :destroy
-  # has_many :mapped_survey_questions, :through => :excluded_items_survey_maps
 end
