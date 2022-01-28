@@ -14,27 +14,19 @@
       <template #cell(title)="{ item }">
         <h4>{{item.title}}</h4>
         <p>{{item.description}}</p>
+        <!-- {{ item.my_assignment }} -->
       </template>
       <template #cell(id)="{ item }">
-        <!-- TODO: use session assignment and create/remove etc -->
-        <b-form-checkbox
-          switch size="lg"
-          :value="item.id"
-          :unchecked-value="item.id"
-          @change="toggleSelectSession"
-        >
-        </b-form-checkbox>
+        <interest-indicator :value="item.my_assignment"></interest-indicator>
       </template>
     </b-table>
   </div>
 </template>
 
 <script>
-// import PeopleTable from './people_table.vue';
-// import PeopleSidebar from './people_sidebar.vue';
-// import { personModel as model } from '../store/person.store';
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
+import InterestIndicator from './interest_indicator.vue'
 import { sessionModel as model } from '@/store/session.store'
 
 // TODO: we need a filter applied to the sessions (only ones ready for selection)
@@ -43,13 +35,13 @@ import { sessionModel as model } from '@/store/session.store'
 // TODO: we need a selector to create/edit the person's assignments
 export default {
   name: "SessionSelector",
+  components: {
+    InterestIndicator
+  },
   mixins: [
     modelMixin,
-    tableMixin, // covers pagination and sorting
+    tableMixin // covers pagination and sorting
   ],
-  props: {
-    // model: model
-  },
   data: () => ({
     columns : [
       {
@@ -63,18 +55,7 @@ export default {
         sortable: false
       }
     ]
-  }),
-
-  components: {
-    // PeopleTable,
-    // PeopleSidebar,
-  },
-  methods: {
-    toggleSelectSession(arg) {
-      // arg is the id of the selected item
-      console.debug('Toggle select this: ', arg)
-    }
-  }
+  })
 }
 </script>
 

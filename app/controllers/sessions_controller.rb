@@ -10,7 +10,7 @@ class SessionsController < ResourceController
       :room,
       # :area,
       :session_assignments,
-      :my_assignments
+      :my_assignment
     ]
   end
 
