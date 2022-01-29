@@ -120,7 +120,7 @@ router.beforeEach((to, from, next) => {
     // if not, redirect to login page.
     // Get the session from the store and use that to check
     let session = router.app.$store.getters.currentPersonSession
-    console.debug('**** Session: ', session )
+    // console.debug('**** Session: ', session )
     if (!session.id) {
       next({
         path: '/login',

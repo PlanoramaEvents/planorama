@@ -8,34 +8,31 @@
       hover bordered responsive small striped
       :fields="columns"
       :items="sortedCollection"
-      ref="table"
+      :sort-by="sortBy"
       :no-local-sorting="true"
-    >
+  >
       <template #cell(title)="{ item }">
         <h4>{{item.title}}</h4>
         <p>{{item.description}}</p>
       </template>
       <template #cell(id)="{ item }">
-        <!-- TODO: use session assignment and create/remove etc -->
-        <b-form-checkbox
-          switch size="lg"
-          :value="item.id"
-          :unchecked-value="item.id"
-          @change="toggleSelectSession"
-        >
-        </b-form-checkbox>
+        <interest-indicator
+          :session="item"
+          :person_id="currentUser.id"
+          :model="sessionAssignmentModel"
+        ></interest-indicator>
       </template>
     </b-table>
   </div>
 </template>
 
 <script>
-// import PeopleTable from './people_table.vue';
-// import PeopleSidebar from './people_sidebar.vue';
-// import { personModel as model } from '../store/person.store';
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
-import { sessionModel as model } from '@/store/session.store'
+import personSessionMixin from '../auth/person_session.mixin';
+import InterestIndicator from './interest_indicator.vue'
+// import { sessionModel as model } from '@/store/session.store'
+import { sessionAssignmentModel } from '@/store/session_assignment.store'
 
 // TODO: we need a filter applied to the sessions (only ones ready for selection)
 // TODO: we need the area added and the search capability
@@ -43,14 +40,16 @@ import { sessionModel as model } from '@/store/session.store'
 // TODO: we need a selector to create/edit the person's assignments
 export default {
   name: "SessionSelector",
-  mixins: [
-    modelMixin,
-    tableMixin, // covers pagination and sorting
-  ],
-  props: {
-    // model: model
+  components: {
+    InterestIndicator
   },
+  mixins: [
+    personSessionMixin,
+    modelMixin,
+    tableMixin // covers pagination and sorting
+  ],
   data: () => ({
+    sessionAssignmentModel,
     columns : [
       {
         key: 'title',
@@ -64,16 +63,9 @@ export default {
       }
     ]
   }),
-
-  components: {
-    // PeopleTable,
-    // PeopleSidebar,
-  },
-  methods: {
-    toggleSelectSession(arg) {
-      // arg is the id of the selected item
-      console.debug('Toggle select this: ', arg)
-    }
+  mounted() {
+    // console.debug('MOUNT SELECTOR', this.value.id)
+    this.sortBy = 'title'
   }
 }
 </script>

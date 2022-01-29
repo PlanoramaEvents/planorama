@@ -34,7 +34,7 @@ export const modelMixin = {
       return this.$store.dispatch(FETCH_SELECTED, {model: this.model});
     },
     fetch(params) {
-      console.debug("**** FETCH", this.model, params)
+      // console.debug("**** FETCH", this.model, params)
       return this.$store.dispatch(FETCH, {model: this.model, params});
     },
     fetch_by_id(id) {
@@ -59,6 +59,9 @@ export const modelMixin = {
     },
     delete_by_id(id) {
       return this.toastPromise(this.$store.dispatch(DELETE, {model: this.model, itemOrId: id}), MODEL_DELETE_SUCCESS(this.model), MODEL_DELETE_ERROR(this.model));
+    },
+    delete(item) {
+      return this.toastPromise(this.$store.dispatch(DELETE, {model: this.model, itemOrId: item}), MODEL_DELETE_SUCCESS(this.model), MODEL_DELETE_ERROR(this.model));
     },
   }
 }
