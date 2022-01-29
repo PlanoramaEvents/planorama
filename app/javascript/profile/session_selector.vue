@@ -16,7 +16,7 @@
     ></b-pagination>
 
     <b-table
-      hover bordered responsive small striped
+      hover responsive small striped
       :fields="columns"
       :items="sortedCollection"
       :sort-by="sortBy"
@@ -74,12 +74,12 @@ export default {
     columns : [
       {
         key: 'title',
-        label: 'Session',
+        label: ' ',
         sortable: false
       },
       {
         key: 'id',
-        label: 'Select',
+        label: 'Add to Interested',
         sortable: false
       }
     ]
