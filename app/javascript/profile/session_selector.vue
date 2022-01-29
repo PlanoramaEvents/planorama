@@ -4,7 +4,7 @@
       Put in instructions here ...
     </p>
 
-    <!-- TODO: search -->
+    <!-- TODO: search  -->
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
       :total-rows="totalRows"
