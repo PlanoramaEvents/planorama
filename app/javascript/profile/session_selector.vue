@@ -3,7 +3,18 @@
     <p>
       Put in instructions here ...
     </p>
-    <!-- TODO: error messages ??? -->
+
+    <!-- TODO: search -->
+    <b-pagination class="d-flex justify-content-end"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      first-text="First"
+      last-text="Last"
+      prev-text="Prev"
+      next-text="Next"
+    ></b-pagination>
+
     <b-table
       hover bordered responsive small striped
       :fields="columns"
@@ -23,6 +34,16 @@
         ></interest-indicator>
       </template>
     </b-table>
+
+    <b-pagination class="d-flex justify-content-end"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      first-text="First"
+      last-text="Last"
+      prev-text="Prev"
+      next-text="Next"
+    ></b-pagination>
   </div>
 </template>
 
