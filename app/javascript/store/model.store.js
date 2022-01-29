@@ -44,7 +44,7 @@ const endpoints = {
   ...surveyEndpoints,
   ...mailingEndpoints,
   ...sessionEndpoints,
-  ...sessionAssignmentEndpoints,
+  ...sessionAssignmentEndpoints
 }
 
 // NOTE: this is really the store

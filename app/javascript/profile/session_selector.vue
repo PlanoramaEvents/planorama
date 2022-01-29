@@ -8,16 +8,19 @@
       hover bordered responsive small striped
       :fields="columns"
       :items="sortedCollection"
-      ref="table"
+      :sort-by="sortBy"
       :no-local-sorting="true"
-    >
+  >
       <template #cell(title)="{ item }">
         <h4>{{item.title}}</h4>
         <p>{{item.description}}</p>
-        <!-- {{ item.my_assignment }} -->
       </template>
       <template #cell(id)="{ item }">
-        <interest-indicator :value="item.my_assignment"></interest-indicator>
+        <interest-indicator
+          :session="item"
+          :person_id="currentUser.id"
+          :model="sessionAssignmentModel"
+        ></interest-indicator>
       </template>
     </b-table>
   </div>
@@ -26,8 +29,10 @@
 <script>
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
+import personSessionMixin from '../auth/person_session.mixin';
 import InterestIndicator from './interest_indicator.vue'
-import { sessionModel as model } from '@/store/session.store'
+// import { sessionModel as model } from '@/store/session.store'
+import { sessionAssignmentModel } from '@/store/session_assignment.store'
 
 // TODO: we need a filter applied to the sessions (only ones ready for selection)
 // TODO: we need the area added and the search capability
@@ -39,10 +44,12 @@ export default {
     InterestIndicator
   },
   mixins: [
+    personSessionMixin,
     modelMixin,
     tableMixin // covers pagination and sorting
   ],
   data: () => ({
+    sessionAssignmentModel,
     columns : [
       {
         key: 'title',
@@ -55,7 +62,11 @@ export default {
         sortable: false
       }
     ]
-  })
+  }),
+  mounted() {
+    // console.debug('MOUNT SELECTOR', this.value.id)
+    this.sortBy = 'title'
+  }
 }
 </script>
 

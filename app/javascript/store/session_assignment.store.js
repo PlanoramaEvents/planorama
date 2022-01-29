@@ -8,7 +8,7 @@ export const sessionAssignmentEndpoints = {
   [sessionAssignmentModel]: 'session_assignment'
 }
 
-export const sessionStore = {
+export const sessionAssignmentStore = {
   actions: {
     [NEW_SESSION_ASSIGNMENT] ({dispatch}, attributes) {
       return dispatch(NEW, {model: sessionAssignmentModel, selected: false, ...attributes})
