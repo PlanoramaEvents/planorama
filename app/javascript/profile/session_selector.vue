@@ -4,7 +4,17 @@
       Put in instructions here ...
     </p>
 
-    <!-- TODO: search  -->
+    <!-- TODO: search -->
+    <div class="my-3">
+      <session-search
+        :value="filter"
+        @change="onSearchChanged"
+        :columns="columns"
+      >
+      </session-search>
+    </div>
+
+
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
       :total-rows="totalRows"
@@ -54,6 +64,7 @@ import personSessionMixin from '../auth/person_session.mixin';
 import InterestIndicator from './interest_indicator.vue'
 // import { sessionModel as model } from '@/store/session.store'
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
+import SessionSearch from './session_search'
 
 // TODO: we need a filter applied to the sessions (only ones ready for selection)
 // TODO: we need the area added and the search capability
@@ -62,7 +73,8 @@ import { sessionAssignmentModel } from '@/store/session_assignment.store'
 export default {
   name: "SessionSelector",
   components: {
-    InterestIndicator
+    InterestIndicator,
+    SessionSearch
   },
   mixins: [
     personSessionMixin,
@@ -84,6 +96,11 @@ export default {
       }
     ]
   }),
+  methods: {
+    onSearchChanged(arg) {
+      this.filter = arg
+    }
+  },
   mounted() {
     // console.debug('MOUNT SELECTOR', this.value.id)
     this.sortBy = 'title'

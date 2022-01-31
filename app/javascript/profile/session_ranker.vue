@@ -1,22 +1,20 @@
 <template>
   <div class="mb-3">
     Session Ranker
+    <!--
+      This would be a table (again) of session assignments (interested)
+      Edit assignment, ranking etc (also need messaging and validation)
+     -->
   </div>
 </template>
 
 <script>
-// import PeopleTable from './people_table.vue';
-// import PeopleSidebar from './people_sidebar.vue';
-// import { personModel as model } from '../store/person.store';
 
 export default {
   name: "SessionRanker",
   data: () => ({
-    // model
   }),
   components: {
-    // PeopleTable,
-    // PeopleSidebar,
   }
 }
 </script>
