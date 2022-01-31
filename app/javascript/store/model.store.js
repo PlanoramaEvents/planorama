@@ -96,6 +96,9 @@ export const store = new Vuex.Store({
     [UNSELECT] (state, {model}) {
       state.selected[model] = undefined;
     },
+    [CLEAR] (state, {model}) {
+      this.commit('jv/clearRecords', { _jv: { type: model } })
+    },
     ...personSessionStore.mutations,
     ...surveyStore.mutations,
   },
@@ -179,9 +182,9 @@ export const store = new Vuex.Store({
     [FETCH] ({dispatch}, {model, params}) {
       return dispatch('jv/get', [endpoints[model], {params}])
     },
-    [CLEAR] ({dispatch}, {model}) {
-      this.commit('jv/clearRecords', { _jv: { type: model } })
-    },
+    // [CLEAR] ({dispatch}, {model}) {
+    //   this.commit('jv/clearRecords', { _jv: { type: model } })
+    // },
     [FETCH_BY_RELATIONSHIPS] ({dispatch}, {model, relationships, params}) {
       return dispatch('jv/get', [{_jv: {
         type: model,

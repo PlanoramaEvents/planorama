@@ -45,7 +45,8 @@ export const modelMixin = {
       return this.$store.dispatch(SEARCH, {model: this.model, params});
     },
     clear() {
-      return this.$store.dispatch(CLEAR, {model: this.model});
+      // NOTE: this is a sync tx not async, it is not trigerring the computed collection?
+      this.$store.commit(CLEAR, {model: this.model});
     },
     saveSelected() {
       return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, item: this.selected}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
