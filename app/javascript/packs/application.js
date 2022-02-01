@@ -20,6 +20,8 @@ import 'bootstrap/dist/js/bootstrap';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import 'vue-select/dist/vue-select.css';
+
 import '../stylesheets/custom.scss'
 import '../stylesheets/style.scss'
 

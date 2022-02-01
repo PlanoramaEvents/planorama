@@ -1,24 +1,29 @@
 <template>
   <b-overlay :show="loading" rounded="sm">
-    <b-form-select
+    <v-select
       v-model="value"
       @change="onChange"
       v-bind:options="options"
       :disabled='disabled'
-    ></b-form-select>
+      multiple
+    ></v-select>
   </b-overlay>
 </template>
 
+<!-- See: https://vue-select.org/ -->
+
 <script>
 import modelMixin from '../store/model.mixin';
+import vSelect from 'vue-select'
 
 export default {
-  name: 'ModelSelect',
+  name: 'ModelTags',
+  components: {
+    vSelect
+  },
   props: {
-    // TODO: value is prop is a problem?
     value: null,
     field: null,
-    unselectedDisplay: null,
     disabled: {
       type: Boolean,
       default: false
@@ -35,6 +40,7 @@ export default {
   }),
   watch: {
     value(n,o) {
+      // I just want the "ids"
       this.$emit('input', n)
     },
     data(newVal,o) {
@@ -44,22 +50,13 @@ export default {
         ).map(
           obj => (
             {
-              value: obj.id,
-              text: obj[this.field]
+              code: obj.id,
+              label: obj[this.field]
             }
           )
         )
       } else {
         this.options = []
-      }
-
-      if (this.unselectedDisplay) {
-        this.options.unshift(
-          {
-           value: null,
-           text: this.unselectedDisplay
-          }
-        )
       }
     }
   },

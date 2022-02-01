@@ -268,6 +268,9 @@ module ResourceMethods
     elsif col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasManyReflection
       # need to join with the people table
       col_table = Arel::Table.new("#{col_table_name}")
+    elsif col_table_name && col_table_name == 'tags'
+      Rails.logger.debug("WE HAVE TAGS")
+      col_table = ActsAsTaggableOn::Tag.arel_table #Arel::Table.new("#{ActsAsTaggableOn::Tag}")
     end
 
     return col_table
@@ -315,6 +318,8 @@ module ResourceMethods
       :'matches' # "%val%"
     when 'like'
       :'matches' # "%val%"
+    when 'in'
+      :in
     when 'equals'
       :eq
     when '='

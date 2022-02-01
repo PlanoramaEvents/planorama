@@ -27,7 +27,8 @@ class PublishedSession < ApplicationRecord
     is_private: 'private'
   }
 
-  acts_as_taggable
+  # acts_as_taggable
+  acts_as_taggable_on :tags
 
   def self.only_public
     where(visibility: 'public')

@@ -62,7 +62,32 @@ class Session < ApplicationRecord
     is_private: 'private'
   }
 
-  acts_as_taggable
+  # acts_as_taggable
+  acts_as_taggable_on :tags
+
+# # NOTE: This only matches  that have the exact set of specified tags. If a user has additional tags, they are not returned.
+# Session.tagged_with(["awesome", "cool"], :match_all => true)
+#
+# # Find  with any of the specified tags:
+# Session.tagged_with(["awesome", "cool"], :any => true)
+#
+# Get all the tags for sessions
+# Session.tags_on(:tags).order(:name)
+#
+# class_name = params[:class]
+# tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
+# taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
+# ActsAsTaggableOn::Tag.where(
+#   tags[:id].in(
+#     taggings.project(taggings[:tag_id]).where(
+#       taggings[:taggable_type]
+#       .eq(class_name)
+#     ).distinct
+#   )
+# ).where(
+#   tags[:name].matches("%#{query}%")
+# )
+
 
   def published?
     !published_session.nil?

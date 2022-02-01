@@ -4,7 +4,6 @@
       Put in instructions here ...
     </p>
 
-    <!-- TODO: search -->
     <div class="my-3">
       <session-search
         :value="filter"
@@ -13,7 +12,6 @@
       >
       </session-search>
     </div>
-
 
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
@@ -29,9 +27,8 @@
       hover responsive small striped
       :fields="columns"
       :items="sortedCollection"
-      :sort-by="sortBy"
       :no-local-sorting="true"
-  >
+    >
       <template #cell(title)="{ item }">
         <h4>{{item.title}}</h4>
         <p>{{item.description}}</p>
@@ -67,7 +64,6 @@ import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import SessionSearch from './session_search'
 
 // TODO: we need a filter applied to the sessions (only ones ready for selection)
-// TODO: we need the area added and the search capability
 // TODO: we need to get the assignments for the current person for each session in the result set
 // TODO: we need a selector to create/edit the person's assignments
 export default {
@@ -100,10 +96,6 @@ export default {
     onSearchChanged(arg) {
       this.filter = arg
     }
-  },
-  mounted() {
-    // console.debug('MOUNT SELECTOR', this.value.id)
-    this.sortBy = 'title'
   }
 }
 </script>

@@ -73,7 +73,9 @@ Rails.application.routes.draw do
 
   resources :bios, path: 'bio'
   resources :formats, path: 'format'
-  # resources :areas, path: 'area'
+  resources :areas, path: 'area'
+  resources :tags, path: 'tag'
+  get 'session/tags', to: 'sessions#tags'
   resources :sessions, path: 'session' do
     get 'session_assignments', to: 'session_assignments#index'
   end

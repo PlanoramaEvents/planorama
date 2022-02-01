@@ -1,39 +1,45 @@
 <template>
   <div class="container">
   <div class="row">
-    <!--
-    Area (drop down)
-    Tag
-    Title or Description
-    match any/match all
-    -->
     <b-form-group label="Area" class="col-2">
-      <b-form-input
-        type="text"
-      ></b-form-input>
+      <model-select
+        v-model="area_id"
+        model="area"
+        field="name"
+        unselected-display="Any Area"
+      ></model-select>
     </b-form-group>
-    <b-form-group label="Tag" class="col-3">
-      <b-form-input
-        type="text"
-      ></b-form-input>
+    <b-form-group label="Tag" class="col-2">
+      <model-tags
+        v-model="tags"
+        model="tag"
+        field="name"
+      ></model-tags>
     </b-form-group>
-    <b-form-group label="Title or Description" class="col-5">
+    <b-form-group label="Title or Description" class="col-4">
       <b-form-input
         type="text"
         v-model="title_desc"
       ></b-form-input>
     </b-form-group>
+    <b-form-group class="col-2 align-self-end">
+      <b-form-radio v-model="match" name="search-match" value="any">Match Any</b-form-radio>
+      <b-form-radio v-model="match" name="search-match" value="all">Match All</b-form-radio>
+    </b-form-group>
     <b-button variant="primary" @click="onSearch" class="col-2 align-self-end search-button">Search</b-button>
   </div>
   </div>
 </template>
-<!-- align-self-end search-button -->
+
 <script>
-// import { query_to_rules } from "../utils";
+import ModelSelect from '../components/model_select';
+import ModelTags from '../components/model_tags';
 
 export default {
   name: 'SessionSearch',
   components: {
+    ModelSelect,
+    ModelTags
   },
   props: {
     columns: Array
@@ -41,36 +47,16 @@ export default {
   data() {
     return {
       title_desc: null,
-      query: {}
+      area_id: null,
+      tags: null,
+      match: 'any'
     }
   },
-  computed: {
-    // rules() {
-    //   let rule_set = []
-    //   // compute based on the columns
-    //   this.columns.forEach(
-    //     (col) => {
-    //       // only cols with types are searchable
-    //       if (col.type) {
-    //         rule_set.push(
-    //           {
-    //             type: col.type,
-    //             id: col.search_key ? col.search_key : col.key,
-    //             label: col.label,
-    //             choices: col.choices
-    //           }
-    //         )
-    //       }
-    //     }
-    //   )
-    //   return rule_set
-    // }
-  },
   methods: {
-    filter_by_value() {
+    fields_to_query() {
       let queries = {
-        "op":"any",
-        "queries":[]
+        "op": this.match,
+        "queries": []
       }
 
       if (this.title_desc) {
@@ -80,23 +66,24 @@ export default {
         )
       }
 
-      // TODO: change
+      if (this.area_id) {
+        queries["queries"].push(
+          ["session_areas.area_id","=",this.area_id],
+        )
+      }
+
+      if (this.tags && (this.tags.length > 0)) {
+        let vals = this.tags.map(obj => (obj.label))
+        queries["queries"].push(
+          ["tags.name","in",vals],
+        )
+      }
+
       return queries
     },
-    // filter_by_query() {
-    //   return query_to_rules(this.query)
-    // },
     onSearch: function (event) {
-      this.$emit('change', this.filter_by_value())
-    },
-    // onSearchClear: function (event) {
-    //   this.value = null
-    //   this.$emit('change', null)
-    // },
-    // onQuerySearch: function() {
-    //   // console.debug('*** QUERY THIS ', JSON.stringify(this.filter_by_query) )
-    //   this.$emit('change', this.filter_by_query())
-    // }
+      this.$emit('change', this.fields_to_query())
+    }
   }
 }
 </script>

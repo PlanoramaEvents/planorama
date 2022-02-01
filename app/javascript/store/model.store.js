@@ -36,6 +36,12 @@ import { surveyStore, surveyEndpoints } from './survey/survey.store';
 // session add-ons
 import { sessionStore, sessionEndpoints } from './session.store';
 
+// area add-ons
+import { areaStore, areaEndpoints } from './area.store';
+
+// tag add-ons
+import { tagStore, tagEndpoints } from './tag.store';
+
 // session add-ons
 import { sessionAssignmentStore, sessionAssignmentEndpoints } from './session_assignment.store';
 
@@ -44,6 +50,8 @@ const endpoints = {
   ...surveyEndpoints,
   ...mailingEndpoints,
   ...sessionEndpoints,
+  ...areaEndpoints,
+  ...tagEndpoints,
   ...sessionAssignmentEndpoints
 }
 
@@ -69,6 +77,8 @@ export const store = new Vuex.Store({
       ...surveyStore.selected,
       ...mailingStore.selected,
       ...sessionStore.selected,
+      ...areaStore.selected,
+      ...tagStore.selected,
       ...sessionAssignmentStore.selected
     },
     ...personSessionStore.state,
@@ -87,6 +97,8 @@ export const store = new Vuex.Store({
     ...personSessionStore.getters,
     ...mailingStore.getters,
     ...sessionStore.getters,
+    ...areaStore.getters,
+    ...tagStore.getters,
     ...sessionAssignmentStore.getters
   },
   mutations: {
@@ -227,6 +239,8 @@ export const store = new Vuex.Store({
     ...personStore.actions,
     ...mailingStore.actions,
     ...sessionStore.actions,
+    ...areaStore.actions,
+    ...tagStore.actions,
     ...sessionAssignmentStore.actions
   }
 })
