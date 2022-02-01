@@ -24,6 +24,7 @@ export default {
   props: {
     value: null,
     field: null,
+    filter: null,
     disabled: {
       type: Boolean,
       default: false
@@ -73,7 +74,8 @@ export default {
       this.search({
         fields: field_name,
         "sortBy": sort_by,
-        "sortOrder": 'asc'
+        "sortOrder": 'asc',
+        "filter": this.filter
       }).then(data => {
         this.data = data
         this.loading = false

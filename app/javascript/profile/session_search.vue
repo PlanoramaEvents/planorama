@@ -14,6 +14,7 @@
         v-model="tags"
         model="tag"
         field="name"
+        filter='{"op":"all","queries":[["taggings.taggable_type", "=", "Session"]]}'
       ></model-tags>
     </b-form-group>
     <b-form-group label="Title or Description" class="col-4">
