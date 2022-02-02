@@ -76,7 +76,9 @@ export const tableMixin = {
   },
   mounted() {
     this.sortBy = this.defaultSortBy;
-    this.fetchPaged();
+    // NOTE: if we do fatch paged here it will ignore any filters etc that are setup
+    // and will cause some weird behavious if we have initial filters
+    // this.fetchPaged();
   },
   watch: {
     currentPage(newVal, oldVal) {

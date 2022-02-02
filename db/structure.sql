@@ -763,7 +763,7 @@ CREATE TABLE public.sessions (
     publish boolean DEFAULT false NOT NULL,
     require_signup boolean DEFAULT false,
     waiting_list_size integer DEFAULT 0,
-    open_for_interest integer DEFAULT 0,
+    open_for_interest boolean DEFAULT false,
     instructions_for_interest text
 );
 
@@ -1963,6 +1963,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220124181524'),
 ('20220127213449'),
 ('20220131184003'),
-('20220201191402');
+('20220201191402'),
+('20220202144414');
 
 

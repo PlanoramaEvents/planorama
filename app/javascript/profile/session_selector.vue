@@ -59,13 +59,10 @@ import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import personSessionMixin from '../auth/person_session.mixin';
 import InterestIndicator from './interest_indicator.vue'
-// import { sessionModel as model } from '@/store/session.store'
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import SessionSearch from './session_search'
 
-// TODO: we need a filter applied to the sessions (only ones ready for selection)
 // TODO: we need to get the assignments for the current person for each session in the result set
-// TODO: we need a selector to create/edit the person's assignments
 export default {
   name: "SessionSelector",
   components: {
@@ -77,25 +74,38 @@ export default {
     modelMixin,
     tableMixin // covers pagination and sorting
   ],
-  data: () => ({
-    sessionAssignmentModel,
-    columns : [
-      {
-        key: 'title',
-        label: ' ',
-        sortable: false
-      },
-      {
-        key: 'id',
-        label: 'Add to Interested',
-        sortable: false
-      }
-    ]
-  }),
+  data() {
+    return {
+      sessionAssignmentModel,
+      columns : [
+        {
+          key: 'title',
+          label: ' ',
+          sortable: false
+        },
+        {
+          key: 'id',
+          label: 'Add to Interested',
+          sortable: false
+        }
+      ]
+    }
+  },
   methods: {
+    initialFilter() {
+      return {
+        "op": "all",
+        "queries": [
+          ["open_for_interest","=",true]
+        ]
+      }
+    },
     onSearchChanged(arg) {
       this.filter = arg
     }
+  },
+  mounted() {
+    this.defaultFilter = this.initialFilter()
   }
 }
 </script>
