@@ -67,6 +67,7 @@ class SessionsController < ResourceController
       room_id
       open_for_interest
       instructions_for_interest
+      tag_list
     ]
     # Tags
     # format

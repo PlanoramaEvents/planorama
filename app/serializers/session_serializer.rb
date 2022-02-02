@@ -11,7 +11,7 @@ class SessionSerializer
              :require_signup, :waiting_list_size
 
   # tag_list
-  attribute :tags do |session|
+  attribute :tag_list do |session|
     session.base_tags.collect(&:name)
   end
 

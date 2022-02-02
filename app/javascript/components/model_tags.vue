@@ -5,6 +5,7 @@
       @change="onChange"
       v-bind:options="options"
       :disabled='disabled'
+      :taggable="taggable"
       multiple
     ></v-select>
   </b-overlay>
@@ -25,6 +26,8 @@ export default {
     value: null,
     field: null,
     filter: null,
+    taggable: false,
+    fieldOnly: false,
     disabled: {
       type: Boolean,
       default: false
@@ -49,12 +52,17 @@ export default {
         this.options = Object.values(newVal).filter(
           obj => (typeof obj.json === 'undefined')
         ).map(
-          obj => (
-            {
-              code: obj.id,
-              label: obj[this.field]
+          (obj) => {
+            if (this.fieldOnly) {
+              return obj[this.field]
+            } else {
+              return {
+                code: obj.id,
+                label: obj[this.field]
+              }
             }
-          )
+
+          }
         )
       } else {
         this.options = []

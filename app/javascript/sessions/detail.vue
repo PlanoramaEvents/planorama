@@ -28,15 +28,23 @@
           Open for Interest
         </b-form-checkbox>
 
-        <!-- <b-form-group
-          label="Open for Interest"
+        <b-form-group
+          label="Tags"
         >
-        </b-form-group> -->
+          <model-tags
+            :taggable="true"
+            v-model="selected.tag_list"
+            model="tag"
+            field="name"
+            fieldOnly=true
+            filter='{"op":"all","queries":[["taggings.taggable_type", "=", "Session"]]}'
+            :disabled="!editable"
+          ></model-tags>
+        </b-form-group>
 
         <!--
-          Area
-          Tags
-          Format
+          Area - selector (multiple?)
+          Format - selector
         -->
       </div>
     </div>
@@ -45,10 +53,12 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
+import ModelTags from '../components/model_tags';
 
 export default {
   name: "Detail",
   components: {
+    ModelTags
   },
   mixins: [
     modelMixin
