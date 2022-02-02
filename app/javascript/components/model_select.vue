@@ -5,6 +5,7 @@
       @change="onChange"
       v-bind:options="options"
       :disabled='disabled'
+      :multiple="multiple"
     ></b-form-select>
   </b-overlay>
 </template>
@@ -19,6 +20,7 @@ export default {
     value: null,
     field: null,
     unselectedDisplay: null,
+    multiple: false,
     disabled: {
       type: Boolean,
       default: false

@@ -20,7 +20,7 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      # :area,
+      :session_areas,
       :session_assignments,
       :my_assignment
     ]
@@ -30,7 +30,7 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      # :area,
+      :areas,
       :base_tags,
       :session_areas,
       :session_assignments
@@ -68,6 +68,7 @@ class SessionsController < ResourceController
       open_for_interest
       instructions_for_interest
       tag_list
+      session_areas_attributes
     ]
     # Tags
     # format

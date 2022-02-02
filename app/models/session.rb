@@ -54,8 +54,10 @@ class Session < ApplicationRecord
   has_many :people, through: :session_assignments
 
   # TODO: Will also need a published versioon of the relationship
-  has_many :session_areas
+  has_many :session_areas, inverse_of: :session
   has_many :areas, through: :session_areas
+  accepts_nested_attributes_for :session_areas, allow_destroy: true
+  # accepts_nested_attributes_for :areas, allow_destroy: true
 
   enum visibility: {
     is_public: 'public',
