@@ -43,11 +43,13 @@ const surveyRoutes = [
 
 // dashboard
 import Dashboard from './dashboard/dashboard.vue';
+import Agreements from './agreements/agreements.vue';
 
 // main
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
+var ua='', signed_agreements={}, doing_agreements=false;
 
 export const router = new VueRouter({
   routes: [
@@ -59,6 +61,13 @@ export const router = new VueRouter({
         guest: true
       },
       props: route => ({ redirect: route.query.redirect })
+    },
+    {
+      path: '/agreements',
+      component: Agreements,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/admin',
@@ -117,7 +126,26 @@ router.beforeEach((to, from, next) => {
         query: { redirect: to.fullPath }
       })
     } else {
-      next()
+      if (!doing_agreements) {
+        // logged in
+        // look for unsigned agreements
+        //alert("in app_router: "+session.name);
+        for (ua in session.unsigned_agreements) {
+          alert(ua + ": " + signed_agreements[ua]);
+          if (!signed_agreements[ua]) {
+            alert(session.unsigned_agreements[ua].title);
+            doing_agreements=true;
+            next({
+              path: '/agreements',
+              query: {redirect: to.fullPath}
+            });
+            signed_agreements[ua] = true;
+            break;
+          }
+        }
+      }
+      if(!doing_agreements)
+        next();
     }
   } else {
     next() // make sure to always call next()!
