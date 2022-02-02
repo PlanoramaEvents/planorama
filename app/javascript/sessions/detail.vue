@@ -23,6 +23,21 @@
             {{selected.description}}
           </b-form-textarea>
         </b-form-group>
+
+        <b-form-checkbox v-model="selected.open_for_interest" :disabled="!editable">
+          Open for Interest
+        </b-form-checkbox>
+
+        <!-- <b-form-group
+          label="Open for Interest"
+        >
+        </b-form-group> -->
+
+        <!--
+          Area
+          Tags
+          Format
+        -->
       </div>
     </div>
   </div>

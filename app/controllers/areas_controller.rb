@@ -12,7 +12,7 @@ class AreasController < ResourceController
   end
 
   def belongs_to_relationship
-    'session_assignments'
+    'areas'
   end
 
 end

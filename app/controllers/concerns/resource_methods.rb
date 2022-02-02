@@ -252,7 +252,7 @@ module ResourceMethods
         end
       end
 
-      q = q ? q.send(global_op, part) : part
+      q = q ? q.send(global_op, part) : part if part
     end
 
     q
@@ -291,6 +291,8 @@ module ResourceMethods
   def get_query_part(table:, column:, operation:, value:)
     Rails.logger.debug "** QUERY PART #{table} #{column} #{operation} #{value}"
     op = translate_operator(operation: operation)
+
+    return nil if value.blank?
 
     val = value
     val = "%#{value}%" if op == :matches

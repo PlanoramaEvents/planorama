@@ -65,7 +65,11 @@ class SessionsController < ResourceController
       visibility
       publish
       room_id
-      area_id
+      open_for_interest
+      instructions_for_interest
     ]
+    # Tags
+    # format
+    # areas
   end
 end

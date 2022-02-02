@@ -37,8 +37,8 @@ export const tableMixin = {
       return {
         op: 'all',
         queries: [
-          JSON.parse(filter1),
-          JSON.parse(filter2),
+          (typeof filter1 == 'string') ? JSON.parse(filter1) : JSON.parse(JSON.stringify(filter1)),
+          (typeof filter2 == 'string') ? JSON.parse(filter2) : JSON.parse(JSON.stringify(filter2))
         ]
       }
     },
