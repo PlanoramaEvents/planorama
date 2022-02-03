@@ -1,7 +1,7 @@
 <template>
   <b-overlay :show="loading" rounded="sm">
     <v-select
-      v-model="value"
+      v-model="selectedValue"
       @change="onChange"
       v-bind:options="options"
       :disabled='disabled'
@@ -37,14 +37,26 @@ export default {
     modelMixin
   ],
   data: () =>  ({
-    term: null,
     options: [],
     loading: false,
-    data: null
+    data: null,
+    selectedVals: null
   }),
+  computed: {
+    selectedValue: {
+      get() {
+        return this.selectedVals
+      },
+      set(v) {
+        this.selectedVals = v
+      }
+    }
+  },
   watch: {
     value(n,o) {
-      // I just want the "ids"
+      this.selectedVals = n
+    },
+    selectedVals(n,o) {
       this.$emit('input', n)
     },
     data(newVal,o) {
@@ -88,13 +100,11 @@ export default {
         this.data = data
         this.loading = false
       })
-    },
-    init() {
-      this.initialize()
     }
   },
   mounted() {
-    this.init()
+    this.initialize()
+    this.selectedVals = this.value
   }
 }
 </script>

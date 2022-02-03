@@ -6,7 +6,11 @@
         <availability-and-interests></availability-and-interests>
       </b-tab>
       <b-tab title="Session Selection" lazy>
-        <session-selector defaultSortBy='title' :model="sessionModel"></session-selector>
+        <session-selector
+          defaultSortBy='title'
+          :model="sessionModel"
+          defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
+        ></session-selector>
       </b-tab>
       <b-tab title="Session Rankings" lazy>
         <session-ranker></session-ranker>
@@ -25,9 +29,6 @@ import { sessionModel } from '@/store/session.store'
 
 export default {
   name: "ProfileScreen",
-  // data: () => ({
-  //   // model
-  // }),
   components: {
     SessionSelector,
     SessionRanker,
@@ -36,7 +37,7 @@ export default {
   },
   data: () => ({
     sessionModel
-  }),
+  })
 }
 </script>
 

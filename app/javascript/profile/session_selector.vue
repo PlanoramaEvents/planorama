@@ -62,7 +62,6 @@ import InterestIndicator from './interest_indicator.vue'
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import SessionSearch from './session_search'
 
-// TODO: we need to get the assignments for the current person for each session in the result set
 export default {
   name: "SessionSelector",
   components: {
@@ -92,20 +91,9 @@ export default {
     }
   },
   methods: {
-    initialFilter() {
-      return {
-        "op": "all",
-        "queries": [
-          ["open_for_interest","=",true]
-        ]
-      }
-    },
     onSearchChanged(arg) {
       this.filter = arg
     }
-  },
-  mounted() {
-    this.defaultFilter = this.initialFilter()
   }
 }
 </script>

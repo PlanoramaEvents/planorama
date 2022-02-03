@@ -1,7 +1,7 @@
 <template>
   <b-overlay :show="loading" rounded="sm">
     <b-form-select
-      v-model="value"
+      v-model="selectedValue"
       @change="onChange"
       v-bind:options="options"
       :disabled='disabled'
@@ -16,7 +16,6 @@ import modelMixin from '../store/model.mixin';
 export default {
   name: 'ModelSelect',
   props: {
-    // TODO: value is prop is a problem?
     value: null,
     field: null,
     unselectedDisplay: null,
@@ -33,10 +32,24 @@ export default {
     term: null,
     options: [],
     loading: false,
-    data: null
+    data: null,
+    selectedVals: []
   }),
+  computed: {
+    selectedValue: {
+      get() {
+        return this.selectedVals
+      },
+      set(v) {
+        this.selectedVals = v
+      }
+    }
+  },
   watch: {
     value(n,o) {
+      this.selectedVals = n
+    },
+    selectedValue(n,o) {
       this.$emit('input', n)
     },
     data(newVal,o) {
@@ -89,6 +102,7 @@ export default {
     }
   },
   mounted() {
+    this.selectedVals = this.value
     this.init()
   }
 }
