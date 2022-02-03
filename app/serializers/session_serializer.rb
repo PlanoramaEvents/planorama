@@ -10,6 +10,54 @@ class SessionSerializer
              :open_for_interest, :instructions_for_interest,
              :require_signup, :waiting_list_size
 
+  # tag_list
+  attribute :tag_list do |session|
+    session.base_tags.collect(&:name)
+  end
+
+  # session_areas
+  #
+  attribute :session_areas_attributes do |session|
+    session.session_areas
+  end
+
+  # Return the assignments to this session for the person logged in (if any)
+  has_one :my_assignment, serializer: SessionAssignmentSerializer do |session, params|
+    if params[:current_person]
+      session.session_assignments.for_person(params[:current_person].id).first
+    end
+  end
+
+  # has_many :areas, serializer: AreaSerializer,
+  #          links: {
+  #            self: -> (object, params) {
+  #              "#{params[:domain]}/session/#{object.id}"
+  #            },
+  #            related: -> (object, params) {
+  #              "#{params[:domain]}/session/#{object.id}/areas"
+  #            }
+  #          }
+
+  has_many :session_areas, serializer: SessionAreaSerializer
+          # links: {
+          #   self: -> (object, params) {
+          #     "#{params[:domain]}/session/#{object.id}"
+          #   },
+          #   related: -> (object, params) {
+          #     "#{params[:domain]}/session/#{object.id}/session_areas"
+          #   }
+          # }
+
+  has_many :session_assignments, serializer: SessionAssignmentSerializer,
+           links: {
+             self: -> (object, params) {
+               "#{params[:domain]}/session/#{object.id}"
+             },
+             related: -> (object, params) {
+               "#{params[:domain]}/session/#{object.id}/session_assignments"
+             }
+           }
+
   has_one :format,
           if: Proc.new { |record| record.format },
           links: {

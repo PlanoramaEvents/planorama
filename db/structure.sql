@@ -57,6 +57,17 @@ CREATE TYPE public.assignment_role_enum AS ENUM (
 
 
 --
+-- Name: interest_role_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.interest_role_enum AS ENUM (
+    'no_preference',
+    'can_moderate',
+    'not_moderate'
+);
+
+
+--
 -- Name: invite_status_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -190,6 +201,20 @@ CREATE TABLE public.ar_internal_metadata (
     value character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.areas (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    sort_order integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -660,6 +685,21 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: session_areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_areas (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    session_id uuid,
+    area_id uuid,
+    "primary" boolean,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -684,16 +724,16 @@ CREATE TABLE public.session_assignments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    session_assignment_role_type_id uuid NOT NULL,
+    session_assignment_role_type_id uuid,
     session_id uuid NOT NULL,
     sort_order integer,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
     interested boolean DEFAULT false,
     interest_ranking integer,
     interest_notes text,
-    interest_role_type uuid,
     state character varying,
-    planner_notes text
+    planner_notes text,
+    interest_role public.interest_role_enum DEFAULT 'no_preference'::public.interest_role_enum
 );
 
 
@@ -723,7 +763,7 @@ CREATE TABLE public.sessions (
     publish boolean DEFAULT false NOT NULL,
     require_signup boolean DEFAULT false,
     waiting_list_size integer DEFAULT 0,
-    open_for_interest integer DEFAULT 0,
+    open_for_interest boolean DEFAULT false,
     instructions_for_interest text
 );
 
@@ -943,10 +983,10 @@ CREATE TABLE public.tag_contexts (
 --
 
 CREATE TABLE public.taggings (
-    id integer NOT NULL,
-    tag_id integer,
-    taggable_id integer,
-    tagger_id integer,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    tag_id uuid,
+    taggable_id uuid,
+    tagger_id uuid,
     tagger_type character varying(191),
     taggable_type character varying(191),
     context character varying(191),
@@ -955,54 +995,14 @@ CREATE TABLE public.taggings (
 
 
 --
--- Name: taggings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.taggings_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: taggings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.taggings_id_seq OWNED BY public.taggings.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.tags (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying(191),
     taggings_count integer DEFAULT 0
 );
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.tags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
@@ -1068,20 +1068,6 @@ ALTER TABLE ONLY public.survey_formats ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
--- Name: taggings id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.taggings ALTER COLUMN id SET DEFAULT nextval('public.taggings_id_seq'::regclass);
-
-
---
--- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
-
-
---
 -- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1102,6 +1088,14 @@ ALTER TABLE ONLY public.agreements
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: areas areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.areas
+    ADD CONSTRAINT areas_pkey PRIMARY KEY (id);
 
 
 --
@@ -1313,6 +1307,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: session_areas session_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session_areas
+    ADD CONSTRAINT session_areas_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: survey_answers survey_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1502,6 +1504,13 @@ CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree 
 
 
 --
+-- Name: index_areas_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_areas_on_name ON public.areas USING btree (name);
+
+
+--
 -- Name: index_magic_links_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1618,6 +1627,20 @@ CREATE INDEX index_published_programme_item_assignments_on_person_id ON public.p
 --
 
 CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions USING btree (format_id);
+
+
+--
+-- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_session_areas_on_session_id_and_area_id ON public.session_areas USING btree (session_id, area_id);
+
+
+--
+-- Name: index_session_assignments_on_interest_role; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_session_assignments_on_interest_role ON public.session_assignments USING btree (interest_role);
 
 
 --
@@ -1934,6 +1957,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211213180751'),
 ('20220109171844'),
 ('20220119205413'),
-('20220120202502');
+('20220120202502'),
+('20220123161611'),
+('20220123162740'),
+('20220124181524'),
+('20220127213449'),
+('20220131184003'),
+('20220201191402'),
+('20220202144414');
 
 

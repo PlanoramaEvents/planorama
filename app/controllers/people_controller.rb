@@ -28,46 +28,51 @@ class PeopleController < ResourceController
     ignore_first_line = params[:ignore_first_line] #== 'true'
     count = 0
     sheet_length = sheet.length
-    sheet_length = sheet.length - 1 if ignore_first_line
     Person.transaction do
       sheet.each do |row|
-        next if ignore_first_line && count == 0
+        if ignore_first_line && count == 0
+          count += 1
+          next
+        end
 
         email = row[0]
         name = row[1]
         pseudonym = row[2]
 
-        # validate that the email is a valid email
-        email_validation = Truemail.validate(email, with: :regex)
-        next unless email_validation.result.success
+        if email && (email.length > 0)
+          # validate that the email is a valid email
+          email_validation = Truemail.validate(email, with: :regex)
+          next unless email_validation.result.success
 
-        # if we have a person with that email address as primary then skip the import
-        found_email = EmailAddress.find_by(email: email, isdefault: true)
-        next if found_email
+          # if we have a person with that email address as primary then skip the import
+          found_email = EmailAddress.find_by(email: email, isdefault: true)
+          next if found_email
 
-        person = Person.create(
-          name: name,
-          name_sort_by: name,
-          pseudonym: pseudonym,
-          pseudonym_sort_by: pseudonym
-        );
-        email = EmailAddress.create(
-          person: person,
-          email: email,
-          isdefault: true,
-          is_valid: true
-        );
+          person = Person.create(
+            name: name,
+            name_sort_by: name,
+            pseudonym: pseudonym,
+            pseudonym_sort_by: pseudonym
+          );
+          email = EmailAddress.create(
+            person: person,
+            email: email,
+            isdefault: true,
+            is_valid: true
+          );
 
-        # By default we add the person as a member of the convention
-        PersonRole.create(
-          person: person,
-          role: PersonRole.roles[:member]
-        )
+          # By default we add the person as a member of the convention
+          PersonRole.create(
+            person: person,
+            role: PersonRole.roles[:member]
+          )
 
-        count += 1
+          count += 1
+        end
       end
     end
 
+    count = count - 1 if ignore_first_line
     message = "Imported #{count} people, skipped #{sheet_length - count}"
 
     render status: :ok,

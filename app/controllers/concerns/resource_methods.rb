@@ -28,7 +28,10 @@ module ResourceMethods
         options = {
           meta: meta,
           include: filtered_serializer_includes(fields: fields), # need to adjust based omn field
-          params: {domain: "#{request.base_url}"}
+          params: {
+            domain: "#{request.base_url}",
+            current_person: current_person
+          }
         }
         options[:fields] = fields
         # Example for sparse field set
@@ -54,7 +57,7 @@ module ResourceMethods
   # Frontend could use this as a template
   # endpoint like /person/new
   def new
-    authorize model_class, policy_class: policy_class
+    authorize @object, policy_class: policy_class
     # give the new object a UUID ...
     @object.id = SecureRandom.uuid
     render_object(@object, includes: false)
@@ -62,7 +65,7 @@ module ResourceMethods
 
   def create
     model_class.transaction do
-      authorize model_class, policy_class: policy_class
+      authorize @object, policy_class: policy_class
       before_save
       @object.save!
       after_save
@@ -116,7 +119,10 @@ module ResourceMethods
                    fields: fields,
                    serialized_includes: jsonapi_included
                  ),
-        params: {domain: "#{request.base_url}"}
+        params: {
+          domain: "#{request.base_url}",
+          current_person: current_person
+        }
       }
       options[:fields] = fields
 
@@ -192,7 +198,7 @@ module ResourceMethods
   end
 
   def collection
-    base = if belong_to_class
+    base = if belong_to_class && belongs_to_param_id
              parent = belong_to_class.find belongs_to_param_id
              parent.send(belongs_to_relationship)
            else
@@ -246,7 +252,7 @@ module ResourceMethods
         end
       end
 
-      q = q ? q.send(global_op, part) : part
+      q = q ? q.send(global_op, part) : part if part
     end
 
     q
@@ -262,6 +268,9 @@ module ResourceMethods
     elsif col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasManyReflection
       # need to join with the people table
       col_table = Arel::Table.new("#{col_table_name}")
+    elsif col_table_name && col_table_name == 'tags'
+      Rails.logger.debug("WE HAVE TAGS")
+      col_table = ActsAsTaggableOn::Tag.arel_table #Arel::Table.new("#{ActsAsTaggableOn::Tag}")
     end
 
     return col_table
@@ -282,6 +291,8 @@ module ResourceMethods
   def get_query_part(table:, column:, operation:, value:)
     Rails.logger.debug "** QUERY PART #{table} #{column} #{operation} #{value}"
     op = translate_operator(operation: operation)
+
+    return nil if value.blank?
 
     val = value
     val = "%#{value}%" if op == :matches
@@ -309,6 +320,8 @@ module ResourceMethods
       :'matches' # "%val%"
     when 'like'
       :'matches' # "%val%"
+    when 'in'
+      :in
     when 'equals'
       :eq
     when '='

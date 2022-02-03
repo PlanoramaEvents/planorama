@@ -17,6 +17,9 @@ import AdminComponent from './administration/admin_component.vue';
 // people
 import PeopleScreen from './people/people-screen.vue';
 
+// profile
+import ProfileScreen from './profile/profile-screen.vue';
+
 //
 import ScheduleScreen from './sessions/schedule-screen.vue';
 
@@ -48,6 +51,7 @@ import Agreements from './agreements/agreements.vue';
 // main
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import { GET_SESSION_USER } from './store/person_session.store';
 Vue.use(VueRouter);
 var ua='', signed_agreements={}, doing_agreements=false;
 
@@ -80,6 +84,13 @@ export const router = new VueRouter({
     {
       path: '/people',
       component: PeopleScreen,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/profile',
+      component: ProfileScreen,
       meta: {
         requiresAuth: true
       }

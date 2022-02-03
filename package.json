@@ -29,6 +29,7 @@
     "vue-pluralize": "^0.0.2",
     "vue-query-builder": "^0.8",
     "vue-router": "^3.5.1",
+    "vue-select": "^3.16.0",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.2",
     "xlsx": "^0.17.4"

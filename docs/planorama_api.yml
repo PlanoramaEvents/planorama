@@ -12,8 +12,6 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-security:
-  - bearerAuth: []
 tags:
   - name: Autheticate
   - name: People
@@ -21,12 +19,17 @@ tags:
   - name: Mailings
   - name: Program Items
   - name: Venues
+  - name: Agreements
+  - name: Sessions
 paths:
   /auth/sign_in:
     post:
       tags:
         - Autheticate
       summary: Login
+      description: >-
+        Log the person into the system. It will return the JWT token in the
+        header which is needed for subsequent requests.
       requestBody:
         content:
           application/json:
@@ -43,25 +46,55 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /person:
-    get:
-      tags:
-        - People
-      summary: Get People
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
   /person/me:
     get:
       tags:
         - People
       summary: Me Session
       security:
-        - bearerAuth: []
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /person:
+    get:
+      tags:
+        - People
+      summary: Get People By Filter all cols
+      security:
+        - noauthAuth: []
+      parameters:
+        - name: filter
+          in: query
+          schema:
+            type: string
+          example: '{"rules":[["all", "like", "ta"]]}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - People
+      summary: Create a Person
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: '{{$randomFullName}}'
+                name_sort_by: '{{$randomFullName}}'
+                name_sort_by_confirmed: true
+                email_addresses_attributes:
+                  - isdefault: true
+                    email: '{{$randomEmail}}'
+                    is_valid: true
+      security:
+        - noauthAuth: []
       responses:
         '200':
           description: Successful response
@@ -72,12 +105,26 @@ paths:
       tags:
         - People
       summary: Get Person
+      security:
+        - noauthAuth: []
       parameters:
         - name: person-id
           in: path
           schema:
             type: string
           required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /person/84672fd3-0d90-4f81-8511-ec1d82f2b9cb:
+    get:
+      tags:
+        - People
+      summary: Get Person Copy
+      security:
+        - noauthAuth: []
       responses:
         '200':
           description: Successful response
@@ -117,23 +164,172 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /survey:
+  /person/{person-id}/survey/{survey-id}/submissions:
     get:
       tags:
-        - Surveys
-      summary: Get Surveys
+        - People
+      summary: Survey Submissions For Survey
       security:
         - bearerAuth: []
+      parameters:
+        - name: person-id
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: survey-id
+          in: path
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: Successful response
           content:
             application/json: {}
-  /survey/{survey-id}/page:
+  /validator/email:
+    post:
+      tags:
+        - People
+      summary: Email Validator
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                emails:
+                  - Orpha.Steuber27@gmail.com
+                  - arnold@aardvark.com
+                  - fuckity
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /survey:
     get:
       tags:
         - Surveys
-      summary: Get Pages for Survey
+      summary: Get Surveys Via Filter Copy
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: filter
+          in: query
+          schema:
+            type: string
+          example: >-
+            {"queries":[["surveys.id", "=",
+            "ef14a1df-fca5-45f7-9452-bd5aa0655d00"]]}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Surveys
+      summary: Create a Survey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                data:
+                  type: survey
+                  attributes:
+                    name: '{{$randomFullName}}'
+                    pages_attributes:
+                      - title: '{{$randomFullName}}'
+                        questions_attributes:
+                          - question: New Question
+                            question_type: textfield
+                            answers_attributes:
+                              - answer: Option
+      security:
+        - noauthAuth: []
+      parameters:
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+          example: surveys.name
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /page:
+    post:
+      tags:
+        - Surveys
+      summary: Create Page
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                data:
+                  type: page
+                  attributes:
+                    title: '{{$randomFullName}}'
+                  relationships:
+                    survey:
+                      data:
+                        type: survey
+                        id: '{{survey-id}}'
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /question:
+    post:
+      tags:
+        - Surveys
+      summary: Create Question Copy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                data:
+                  type: question
+                  attributes:
+                    question: New Question
+                    question_type: textfield
+                    mandatory: false
+                    sort_order_position: 0
+                  relationships:
+                    page:
+                      id: 12bb592f-f95d-4a19-ba67-2ddc8e325115
+                      type: page
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /survey/{survey-id}/assign_people:
+    post:
+      tags:
+        - Surveys
+      summary: Assign People to Survey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                people:
+                  - id: '{{person-id}}'
       security:
         - bearerAuth: []
       parameters:
@@ -147,13 +343,75 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /page/{page-id}/question:
+  /survey/{survey-id}/unassign_people:
+    post:
+      tags:
+        - Surveys
+      summary: UnAssign People to Survey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                people:
+                  - id: '{{person-id}}'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: survey-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /survey/{survey-id}/pages:
+    get:
+      tags:
+        - Surveys
+      summary: Get Pages for Survey
+      security:
+        - noauthAuth: []
+      parameters:
+        - name: survey-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /survey/{survey-id}:
+    get:
+      tags:
+        - Surveys
+      summary: Get A Survey
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: survey-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /page/{page-id}/questions:
     get:
       tags:
         - Surveys
       summary: Get Questions for Page
       security:
-        - bearerAuth: []
+        - noauthAuth: []
       parameters:
         - name: page-id
           in: path
@@ -165,13 +423,13 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /survey/{survey-id}/submission:
+  /survey/{survey-id}/submissions:
     get:
       tags:
         - Surveys
       summary: Get Submissions for Survey
       security:
-        - bearerAuth: []
+        - noauthAuth: []
       parameters:
         - name: survey-id
           in: path
@@ -187,9 +445,15 @@ paths:
     get:
       tags:
         - Mailings
-      summary: Get Mailing
+      summary: Get Mailing sparse
       security:
         - bearerAuth: []
+      parameters:
+        - name: fields[mailing]
+          in: query
+          schema:
+            type: string
+          example: id,title
       responses:
         '200':
           description: Successful response
@@ -205,9 +469,70 @@ paths:
             schema:
               type: object
               example:
+                mail_template_id: '{{mail-template-id}}'
                 testrun: false
                 include_email: false
                 cc_all: false
+                title: '{{$randomLoremWords}}'
+                subject: '{{$randomLoremWords}}'
+                content: Dear <%= person.published_name %> {{$randomLoremParagraph}}
+                emails:
+                  - test@test.com
+                  - testing8@peoplerecord.com
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /mailing/{mailing-id}/assign_people:
+    post:
+      tags:
+        - Mailings
+      summary: Assign People to Mailing Copy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                people:
+                  - id: '{{person-id}}'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mailing-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /mailing/{mailing-id}/unassign_people:
+    post:
+      tags:
+        - Mailings
+      summary: UnAssign People to Mailing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                people:
+                  - id: '{{person-id}}'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mailing-id
+          in: path
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: Successful response
@@ -218,6 +543,78 @@ paths:
       tags:
         - Mailings
       summary: Get Single Mailing
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mailing-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /mailing/schedule/{mailing-id}:
+    get:
+      tags:
+        - Mailings
+      summary: Schedule Single Mailing
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mailing-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /mailing/schedule/{mailing-id}/test@test.com/true:
+    get:
+      tags:
+        - Mailings
+      summary: Schedule Single Mailing Test
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mailing-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /mailing/preview/{mailing-id}/test@test.com:
+    get:
+      tags:
+        - Mailings
+      summary: Preview Single Mailing
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mailing-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /mailing/clone/{mailing-id}:
+    get:
+      tags:
+        - Mailings
+      summary: Clone Mailing
       security:
         - bearerAuth: []
       parameters:
@@ -250,6 +647,204 @@ paths:
       summary: Rooms
       security:
         - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /agreement/signed:
+    get:
+      tags:
+        - Agreements
+      summary: Get My Agreements Signed
+      description: >-
+        #postman-to-openapi  
+
+        | object | name | description | required | type | example |  
+
+        |---|---|---|---|---|---|  
+
+        | path | person-id | The id pf the person being retreived | true | UUID
+        |8bcac661-a82e-4461-9910-ef017566e9a8 |
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /agreement/unsigned:
+    get:
+      tags:
+        - Agreements
+      summary: Get My Agreements UnSigned (only latest versions)
+      description: >-
+        #postman-to-openapi  
+
+        | object | name | description | required | type | example |  
+
+        |---|---|---|---|---|---|  
+
+        | path | person-id | The id pf the person being retreived | true | UUID
+        |8bcac661-a82e-4461-9910-ef017566e9a8 |
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /agreement/latest:
+    get:
+      tags:
+        - Agreements
+      summary: Get Latest Agreements
+      description: >-
+        #postman-to-openapi  
+
+        | object | name | description | required | type | example |  
+
+        |---|---|---|---|---|---|  
+
+        | path | person-id | The id pf the person being retreived | true | UUID
+        |8bcac661-a82e-4461-9910-ef017566e9a8 |
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /agreement/sign/{agreement-id}:
+    put:
+      tags:
+        - Agreements
+      summary: Sign an Agreement
+      description: >-
+        #postman-to-openapi  
+
+        | object | name | description | required | type | example |  
+
+        |---|---|---|---|---|---|  
+
+        | path | person-id | The id pf the person being retreived | true | UUID
+        |8bcac661-a82e-4461-9910-ef017566e9a8 |
+      requestBody:
+        content: {}
+      security:
+        - noauthAuth: []
+      parameters:
+        - name: agreement-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /agreement:
+    get:
+      tags:
+        - Agreements
+      summary: Get All Agreements
+      description: >-
+        #postman-to-openapi  
+
+        | object | name | description | required | type | example |  
+
+        |---|---|---|---|---|---|  
+
+        | path | person-id | The id pf the person being retreived | true | UUID
+        |8bcac661-a82e-4461-9910-ef017566e9a8 |
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Agreements
+      summary: Create an Agreement
+      description: >-
+        #postman-to-openapi  
+
+        | object | name | description | required | type | example |  
+
+        |---|---|---|---|---|---|  
+
+        | path | person-id | The id pf the person being retreived | true | UUID
+        |8bcac661-a82e-4461-9910-ef017566e9a8 |
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: |
+                {
+                    "id": "{{$guid}}",
+                    "title": "{{$randomLoremWords}}",
+                    "terms": "{{$randomLoremParagraph}}",
+                    "agreement_type": "stuff",
+                    "target": "member"
+                    // created_by_id
+                }
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /session:
+    get:
+      tags:
+        - Sessions
+      summary: Get Sessions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /session_assignment:
+    get:
+      tags:
+        - Sessions
+      summary: Get Session Assignments
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Sessions
+      summary: Create Session Assignment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                session_id: '{{session-id}}'
+                person_id: '{{person-id}}'
+                interested: true
+                interest_ranking: 1
+                interest_notes: I would like to do this
+                interest_role: can_moderate
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /session_assignment/2a016b1c-7bec-4eb1-8045-cef6a0377f35:
+    delete:
+      tags:
+        - Sessions
+      summary: Delete Session Assignment
       responses:
         '200':
           description: Successful response

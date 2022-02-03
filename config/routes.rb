@@ -72,7 +72,14 @@ Rails.application.routes.draw do
   get 'rbac', to: 'rbac#index'
 
   resources :bios, path: 'bio'
-  resources :sessions, path: 'session'
+  resources :formats, path: 'format'
+  resources :areas, path: 'area'
+  resources :tags, path: 'tag'
+  get 'session/tags', to: 'sessions#tags'
+  resources :sessions, path: 'session' do
+    get 'session_assignments', to: 'session_assignments#index'
+    get 'areas', to: 'areas#index'
+  end
   resources :published_sessions, path: 'published_session'
   resources :session_assignments, path: 'session_assignment'
   resources :rooms, path: 'room'

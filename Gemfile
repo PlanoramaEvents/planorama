@@ -29,7 +29,7 @@ gem "bundler-audit"        # checks for insecure gems
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
-gem 'acts-as-taggable-on', '~> 6.0'
+gem 'acts-as-taggable-on', '~> 9.0'
 gem 'kaminari'
 gem 'active_model_serializers', '~> 0.10.0'
 
