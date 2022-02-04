@@ -22,9 +22,15 @@ class SessionSerializer
   end
 
   # Return the assignments to this session for the person logged in (if any)
-  has_one :my_assignment, serializer: SessionAssignmentSerializer do |session, params|
+  # has_one :my_assignments, serializer: SessionAssignmentSerializer do |session, params|
+  #   if params[:current_person]
+  #     session.session_assignments.for_person(params[:current_person].id)
+  #   end
+  # end
+
+  has_one :my_interest, serializer: SessionAssignmentSerializer do |session, params|
     if params[:current_person]
-      session.session_assignments.for_person(params[:current_person].id).first
+      session.session_assignments.my_interest(params[:current_person].id).first
     end
   end
 
