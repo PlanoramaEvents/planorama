@@ -27,4 +27,8 @@ class SessionAssignmentsController < ResourceController
     'session_assignments'
   end
 
+  def paginate
+    false
+  end
+
 end

@@ -13,7 +13,11 @@
         ></session-selector>
       </b-tab>
       <b-tab title="Session Rankings" lazy>
-        <session-ranker></session-ranker>
+        <session-ranker
+          defaultSortBy='sessions.title'
+          :model="sessionAssignmentModel"
+          :defaultFilter="rankedFilter"
+        ></session-ranker>
       </b-tab>
     </b-tabs>
   </div>
@@ -26,6 +30,8 @@ import ProfileManage from './profile_manage.vue';
 import AvailabilityAndInterests from './availability_and_interests.vue';
 
 import { sessionModel } from '@/store/session.store'
+import { sessionAssignmentModel } from '@/store/session_assignment.store'
+import personSessionMixin from '../auth/person_session.mixin';
 
 export default {
   name: "ProfileScreen",
@@ -35,9 +41,18 @@ export default {
     ProfileManage,
     AvailabilityAndInterests,
   },
+  mixins: [
+    personSessionMixin
+  ],
   data: () => ({
-    sessionModel
-  })
+    sessionModel,
+    sessionAssignmentModel
+  }),
+  computed: {
+    rankedFilter() {
+      return `{"op":"all","queries":[["person_id", "=", "${this.currentUser.id}"],["interested", "=", true]]}`
+    }
+  }
 }
 </script>
 
