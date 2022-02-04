@@ -3,13 +3,13 @@
     <div class="col-12">
       Be agreeable {{currentUser.name}}!
     </div>
-    <AgreementsModal @close="isModalVisible = false">
+    <!-- <AgreementsModal @close="isModalVisible = false"> -->
       <!--
         you can use custom content here to overwrite
         default content
       -->
-      <template v-slot:title>{{currentUser.unsigned_agreements[ua].title}}</template>
-    </AgreementsModal>
+      <!-- <template v-slot:title>{{currentUser.unsigned_agreements[ua].title}}</template>
+    </AgreementsModal> -->
   </div>
 </template>
 
@@ -38,7 +38,10 @@ export default {
       }
     }
   },*/
-  mixins: [personSessionMixin]
+  mixins: [personSessionMixin],
+  mounted() {
+    console.debug("AGRREMENT MOUNTED")
+  }
 }
 </script>
 

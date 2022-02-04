@@ -70,7 +70,7 @@ export const router = new VueRouter({
       path: '/agreements',
       component: Agreements,
       meta: {
-        requiresAuth: true
+        // requiresAuth: true
       }
     },
     {
@@ -129,35 +129,42 @@ router.beforeEach((to, from, next) => {
     // check if logged in
     // if not, redirect to login page.
     // Get the session from the store and use that to check
-    let session = router.app.$store.getters.currentPersonSession
-    console.debug('**** Session: ', session )
-    if (!session.id) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
-    } else {
-      if (!doing_agreements) {
-        // logged in
-        // look for unsigned agreements
-        //alert("in app_router: "+session.name);
-        for (ua in session.unsigned_agreements) {
-          alert(ua + ": " + signed_agreements[ua]);
-          if (!signed_agreements[ua]) {
-            alert(session.unsigned_agreements[ua].title);
-            doing_agreements=true;
-            next({
-              path: '/agreements',
-              query: {redirect: to.fullPath}
-            });
-            signed_agreements[ua] = true;
-            break;
-          }
-        }
+    // let session = router.app.$store.getters.currentPersonSession
+    // console.debug('**** Session: ', session )
+    // if (!session.id) {
+    //   next({
+    //     path: '/login',
+    //     query: { redirect: to.fullPath }
+    //   })
+    // } else {
+    //   next({
+    //     path: '/agreements',
+    //     query: {redirect: to.fullPath}
+    //   });
+    // }
+
+    // GET SESSION USER only fetches if we don't have one :)
+    // TODO this might mess up auto-logout we'll see
+    router.app.$store.dispatch(GET_SESSION_USER).then((session) => {
+      //console.debug('**** Session: ', session )
+      if (!session.id) {
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        })
+      } else {
+        // next()
+        next({
+          path: '/agreements',
+          query: {redirect: to.fullPath}
+        });
       }
-      if(!doing_agreements)
-        next();
-    }
+    }).catch((error) => {
+      console.error(error)
+      next();
+    })
+
+
   } else {
     next() // make sure to always call next()!
   }
