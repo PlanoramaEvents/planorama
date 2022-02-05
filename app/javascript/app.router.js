@@ -53,7 +53,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { GET_SESSION_USER } from './store/person_session.store';
 Vue.use(VueRouter);
-var ua='', signed_agreements={}, doing_agreements=false;
+// var ua='', signed_agreements={}, doing_agreements=false;
 
 export const router = new VueRouter({
   routes: [
@@ -146,18 +146,15 @@ router.beforeEach((to, from, next) => {
     // GET SESSION USER only fetches if we don't have one :)
     // TODO this might mess up auto-logout we'll see
     router.app.$store.dispatch(GET_SESSION_USER).then((session) => {
-      //console.debug('**** Session: ', session )
       if (!session.id) {
         next({
           path: '/login',
           query: { redirect: to.fullPath }
         })
       } else {
-        // next()
-        next({
-          path: '/agreements',
-          query: {redirect: to.fullPath}
-        });
+        // TODO: @RALPH - this calls check signatures on the main APP
+        router.app.$refs.planorama.check_signatures()
+        next()
       }
     }).catch((error) => {
       console.error(error)
@@ -169,35 +166,3 @@ router.beforeEach((to, from, next) => {
     next() // make sure to always call next()!
   }
 })
-
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     if (localStorage.getItem('jwt') == null) {
-//       next({
-//         path: '/login',
-//         params: { nextUrl: to.fullPath }
-//       })
-//     } else {
-//       let user = JSON.parse(localStorage.getItem('user'))
-//       if (to.matched.some(record => record.meta.is_admin)) {
-//         if (user.is_admin == 1) {
-//           next()
-//         } else {
-//           next({ name: 'userboard' })
-//         }
-//       } else {
-//         next()
-//       }
-//     }
-//   } else if (to.matched.some(record => record.meta.guest)) {
-//     if (localStorage.getItem('jwt') == null) {
-//       next()
-//     } else {
-//       next({ name: 'userboard' })
-//     }
-//   } else {
-//     next()
-//   }
-// })
-
-// export router
