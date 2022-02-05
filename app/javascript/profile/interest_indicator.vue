@@ -64,7 +64,7 @@ export default {
   },
   mounted() {
     // console.debug('MOUNT SELECTOR', this.value.id)
-    this.assignment = this.session.my_assignment
+    this.assignment = this.session.my_interest
     this.interested = typeof this.assignment.id !== 'undefined' //this.value.id == null
   }
 }

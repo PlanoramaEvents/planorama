@@ -292,7 +292,7 @@ module ResourceMethods
     Rails.logger.debug "** QUERY PART #{table} #{column} #{operation} #{value}"
     op = translate_operator(operation: operation)
 
-    return nil if value.blank?
+    return nil if value.kind_of?(String) && value.blank?
 
     val = value
     val = "%#{value}%" if op == :matches

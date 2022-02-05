@@ -50,6 +50,10 @@ class Session < ApplicationRecord
     def for_person(person_id)
       where(['person_id = ?', person_id])
     end
+
+    def my_interest(person_id)
+      where(['person_id = ? and interested = true', person_id])
+    end
   end
   has_many :people, through: :session_assignments
 

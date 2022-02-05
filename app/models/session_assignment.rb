@@ -69,6 +69,8 @@ class SessionAssignment < ApplicationRecord
   private
 
   def check_unique
+    return unless new_record?
+
     existing = if session_assignment_role_type_id
                  SessionAssignment.where([
                     'person_id = ? AND session_id = ? AND session_assignment_role_type_id = ?',
