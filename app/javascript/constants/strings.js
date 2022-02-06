@@ -94,6 +94,8 @@ module.exports = {
     SESSION_INTEREST_REMOVE_ERROR: "Session Interest failed to be removed",
     SESSION_ASSIGNMENT_SUCCESS: "Session Assignment saved",
     SESSION_ASSIGNMENT_ERROR: "Session Assignment failed to be saved",
+    SESSION_INTEREST_UPDATE_SUCCESS: "Session Interest updated",
+    SESSION_INTEREST_UPDATE_ERROR: "Session Interest failed to be updated",
 
     //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
