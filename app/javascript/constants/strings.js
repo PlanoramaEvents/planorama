@@ -87,6 +87,14 @@ module.exports = {
     ANSWER_ADD_SUCCESS: "Answer sucessfully added",
     ANSWER_ADD_ERROR: (errorCode) => twoLines("Answer failed to be added.",  `Error code: ${errorCode}`),
 
+    //
+    SESSION_INTEREST_SUCCESS: "Session Interest saved",
+    SESSION_INTEREST_ERROR: "Session Interest failed to be saved",
+    SESSION_INTEREST_REMOVE_SUCCESS: "Session Interest removed",
+    SESSION_INTEREST_REMOVE_ERROR: "Session Interest failed to be removed",
+    SESSION_ASSIGNMENT_SUCCESS: "Session Assignment saved",
+    SESSION_ASSIGNMENT_ERROR: "Session Assignment failed to be saved",
+
     //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
     PAGE_DELETE_ERROR: (errorCode) => twoLines("Page failed to be deleted.", `Error code: ${errorCode}`),

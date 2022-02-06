@@ -1,4 +1,5 @@
 import { NEW } from './model.store';
+import personSessionMixin from "../auth/person_session.mixin";
 
 export const NEW_SESSION_ASSIGNMENT = 'NEW SESSION ASSIGNMENT';
 
@@ -10,8 +11,13 @@ export const sessionAssignmentEndpoints = {
 
 export const sessionAssignmentStore = {
   actions: {
-    [NEW_SESSION_ASSIGNMENT] ({dispatch}, attributes) {
-      return dispatch(NEW, {model: sessionAssignmentModel, selected: false, ...attributes})
+    [NEW_SESSION_ASSIGNMENT] ({dispatch}, {session, person_id}) {
+      let newAssignment = {
+        person_id: person_id,
+        session_id: session.id,
+        interested: true
+      }
+      return dispatch(NEW, {model: sessionAssignmentModel, selected: false, ...newAssignment});
     },
   },
   selected: {
