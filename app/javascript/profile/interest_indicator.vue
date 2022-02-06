@@ -9,7 +9,6 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { NEW_SESSION_ASSIGNMENT } from '../store/session_assignment.store';
 import sessionAssignmentMixin from '../sessions/session_assignment.mixin';
 
 export default {
