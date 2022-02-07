@@ -97,6 +97,8 @@ module.exports = {
     SESSION_INTEREST_UPDATE_SUCCESS: "Session Interest updated",
     SESSION_INTEREST_UPDATE_ERROR: "Session Interest failed to be updated",
 
+    SESSION_RANKING_ERROR: (total, allowed) => `You have assigned ${total} exceeds the allowed ${allowed}.`,
+
     //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
     PAGE_DELETE_ERROR: (errorCode) => twoLines("Page failed to be deleted.", `Error code: ${errorCode}`),

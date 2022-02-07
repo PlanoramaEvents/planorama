@@ -32,6 +32,15 @@
       <template #cell(title)="{ item }">
         <h4>{{item.title}}</h4>
         <p>{{item.description}}</p>
+        <div v-if="item.format">
+          Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
+        </div>
+        <div v-if="item.area_list.length > 0">
+          <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list">{{area}}</span>
+        </div>
+        <div v-if="item.tag_list.length > 0">
+          <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list">{{tag}}</span>
+        </div>
       </template>
       <template #cell(id)="{ item }">
         <interest-indicator

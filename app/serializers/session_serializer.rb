@@ -15,6 +15,10 @@ class SessionSerializer
     session.base_tags.collect(&:name)
   end
 
+  attribute :area_list do |session|
+    session.areas.collect(&:name)
+  end
+
   # session_areas
   #
   attribute :session_areas_attributes do |session|
