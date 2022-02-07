@@ -22,7 +22,8 @@ class SessionsController < ResourceController
       :room,
       :session_areas,
       :session_assignments,
-      :my_interest
+      :my_interest,
+      :'session_areas.area'
     ]
   end
 

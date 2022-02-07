@@ -12,22 +12,18 @@ export default {
   ],
   watch: {
     "assignment.interest_notes" : function(val, oldVal) {
-      this.saveAssignment()
+      this.changeAssignment()
     },
     "assignment.interest_ranking" : function(val, oldVal) {
-      this.saveAssignment()
+      this.changeAssignment()
     },
     "assignment.interest_role" : function(val, oldVal) {
-      this.saveAssignment()
+      this.changeAssignment()
     }
   },
   methods: {
-    saveAssignment() {
-      this.save(this.assignment).then(
-        (data) => {
-          this.$emit('change', data)
-        }
-      )
+    changeAssignment() {
+      this.$emit('change', this.assignment)
     }
   }
 }

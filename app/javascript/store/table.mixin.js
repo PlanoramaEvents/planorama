@@ -7,6 +7,10 @@ export const tableMixin = {
       type: String,
       default: null
     },
+    defaultSortDesc: {
+      type: Boolean,
+      default: false
+    },
     perPage: {
       type: Number,
       default: 10
@@ -78,6 +82,7 @@ export const tableMixin = {
   },
   mounted() {
     this.sortBy = this.defaultSortBy;
+    this.sortDesc = this.defaultSortDesc
     // NOTE: if we do fatch paged here it will ignore any filters etc that are setup
     // and will cause some weird behavious if we have initial filters
     // this.fetchPaged();
