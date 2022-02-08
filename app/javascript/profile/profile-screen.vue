@@ -14,7 +14,7 @@
       </b-tab>
       <b-tab title="Session Rankings" lazy>
         <session-ranker
-          defaultSortBy='created_at'
+          defaultSortBy='interest_ranking,created_at'
           :defaultSortDesc="true"
           :perPage="null"
           :model="sessionAssignmentModel"
