@@ -124,7 +124,6 @@ export default {
   },
   methods: {
     changeAssignment: function(arg) {
-      // TODO: validate and save
       if (this.rank1_total > 3) {
         this.$bvToast.toast(
           SESSION_RANKING_ERROR(this.rank1_total, 3),
