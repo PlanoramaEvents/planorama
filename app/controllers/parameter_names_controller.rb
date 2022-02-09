@@ -1,6 +1,12 @@
 class ParameterNamesController < ResourceController
   SERIALIZER_CLASS = 'ParameterNameSerializer'.freeze
 
+  def serializer_includes
+    [
+      :configuration
+    ]
+  end
+
   def includes
     [
       :configuration
