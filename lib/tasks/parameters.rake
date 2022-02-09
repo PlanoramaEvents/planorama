@@ -6,7 +6,8 @@ namespace :parameters do
       ParameterName.create!(
         {
           parameter_name: 'email_from_address',
-          parameter_description: 'From email address, check the rest of the mail server requirements as this may need to match.'
+          parameter_description: 'From email address, check the rest of the mail server requirements as this may need to match.',
+          parameter_type: 'Email'
         }
       )
     end
@@ -15,7 +16,8 @@ namespace :parameters do
       ParameterName.create!(
         {
           parameter_name: 'email_reply_to_address',
-          parameter_description: 'Email address to put in the reply to field.'
+          parameter_description: 'Email address to put in the reply to field.',
+          parameter_type: 'Email'
         }
       )
     end
@@ -25,8 +27,8 @@ namespace :parameters do
       ParameterName.create!(
         {
           parameter_name: 'convention_timezone',
-          parameter_description: 'Timezone for the convention (use TZInfo subset that Rails understands...).'
-        }
+          parameter_description: 'Timezone for the convention (use TZInfo subset that Rails understands...).',
+          parameter_type: 'Timezone'        }
       )
     end
 
