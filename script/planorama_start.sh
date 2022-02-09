@@ -34,6 +34,7 @@ elif [[ $RAILS_ENV = "staging" ]]; then
   bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
 
   bin/rake db:migrate
+  bin/rake parameters:seed_names
 
   bin/rails db:seed
 else
@@ -45,6 +46,7 @@ else
   bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
 
   bin/rake db:migrate
+  bin/rake parameters:seed_names
 fi
 
 bin/rails server -b 0.0.0.0
