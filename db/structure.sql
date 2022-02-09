@@ -453,7 +453,8 @@ CREATE TABLE public.mailings (
 
 CREATE TABLE public.parameter_names (
     parameter_name character varying(45) NOT NULL,
-    parameter_description character varying(170) NOT NULL
+    parameter_description character varying(170) NOT NULL,
+    parameter_type character varying DEFAULT 'String'::character varying
 );
 
 
@@ -1955,4 +1956,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220131184003'),
 ('20220201191402'),
 ('20220202144414'),
-('20220208222821');
+('20220208222821'),
+('20220209153904');
+
+
