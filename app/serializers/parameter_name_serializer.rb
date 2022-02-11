@@ -1,7 +1,7 @@
 class ParameterNameSerializer
   include JSONAPI::Serializer
 
-  # set id?
+  attributes :parameter_name, :parameter_description, :parameter_type
 
-  attributes :parameter_name, :parameter_description, :configuration
+  has_one :configuration, serializer: ConfigurationSerializer
 end
