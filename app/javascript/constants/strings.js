@@ -99,6 +99,9 @@ module.exports = {
 
     SESSION_RANKING_ERROR: (total, allowed) => `You have assigned ${total} exceeds the allowed ${allowed}.`,
 
+    CONFIGURATION_SAVED_SUCCESS: "Configuration has been save",
+    CONFIGURATION_SAVED_ERROR: "Error on config save",
+
     //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
     PAGE_DELETE_ERROR: (errorCode) => twoLines("Page failed to be deleted.", `Error code: ${errorCode}`),

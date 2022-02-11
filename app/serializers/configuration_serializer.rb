@@ -4,6 +4,4 @@ class ConfigurationSerializer
   attributes :id, :lock_version,
              :parameter, :parameter_value,
              :created_at, :updated_at
-
-  belongs_to :parameter_name
 end
