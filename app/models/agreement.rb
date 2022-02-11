@@ -13,7 +13,7 @@ class Agreement < ApplicationRecord
 
     where(
       [
-        "agreements.id not in (select agreement_id from person_agreements where person_id = ?)",
+        "agreements.id not in (select agreement_id from person_agreements where person_id = ? and signed = false)",
         person.id
       ]
     )
@@ -28,7 +28,7 @@ class Agreement < ApplicationRecord
 
     left_outer_joins(:person_agreements)
       .where(
-        ['person_agreements.person_id = ?', person.id]
+        ['person_agreements.person_id = ? and signed = true', person.id]
       )
   end
 
