@@ -65,13 +65,13 @@ export const router = new VueRouter({
       },
       props: route => ({ redirect: route.query.redirect })
     },
-    {
-      path: '/agreements',
-      component: Agreements,
-      meta: {
-        // requiresAuth: true
-      }
-    },
+    // {
+    //   path: '/agreements',
+    //   component: Agreements,
+    //   meta: {
+    //     // requiresAuth: true
+    //   }
+    // },
     {
       path: '/admin',
       component: AdminComponent,
