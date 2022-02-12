@@ -11,8 +11,9 @@ class SessionAssignmentPolicy < PlannerPolicy
   end
 
   def update?
-    # @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
-    false
+    return true if @record.person_id == @person.id
+
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end
 
   class Scope < Scope

@@ -4,12 +4,26 @@ class SessionsController < ResourceController
   POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
+  def tags
+    res = Session.tags_on(:tags).order(:name)
+
+    render json: TagSerializer.new(res,
+                  {
+                    # include: serializer_includes,
+                    params: {domain: "#{request.base_url}"}
+                  }
+                ).serializable_hash(),
+           content_type: 'application/json'
+  end
+
   def serializer_includes
     [
       :format,
       :room,
-      # :area,
-      :session_assignments
+      :session_areas,
+      :session_assignments,
+      :my_interest,
+      :'session_areas.area'
     ]
   end
 
@@ -17,7 +31,9 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      # :area,
+      :areas,
+      :base_tags,
+      :session_areas,
       :session_assignments
     ]
   end
@@ -25,7 +41,9 @@ class SessionsController < ResourceController
   def references
     [
       :format,
-      :room
+      :room,
+      :base_tags,
+      :session_areas
     ]
   end
 
@@ -48,7 +66,13 @@ class SessionsController < ResourceController
       visibility
       publish
       room_id
-      area_id
+      open_for_interest
+      instructions_for_interest
+      tag_list
+      session_areas_attributes
     ]
+    # Tags
+    # format
+    # areas
   end
 end

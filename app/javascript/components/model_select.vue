@@ -1,11 +1,11 @@
 <template>
   <b-overlay :show="loading" rounded="sm">
     <b-form-select
-      v-model="value"
+      v-model="selectedValue"
       @change="onChange"
       v-bind:options="options"
-      class="mt-1"
       :disabled='disabled'
+      :multiple="multiple"
     ></b-form-select>
   </b-overlay>
 </template>
@@ -18,6 +18,8 @@ export default {
   props: {
     value: null,
     field: null,
+    unselectedDisplay: null,
+    multiple: false,
     disabled: {
       type: Boolean,
       default: false
@@ -30,10 +32,24 @@ export default {
     term: null,
     options: [],
     loading: false,
-    data: null
+    data: null,
+    selectedVals: []
   }),
+  computed: {
+    selectedValue: {
+      get() {
+        return this.selectedVals
+      },
+      set(v) {
+        this.selectedVals = v
+      }
+    }
+  },
   watch: {
     value(n,o) {
+      this.selectedVals = n
+    },
+    selectedValue(n,o) {
       this.$emit('input', n)
     },
     data(newVal,o) {
@@ -50,6 +66,15 @@ export default {
         )
       } else {
         this.options = []
+      }
+
+      if (this.unselectedDisplay) {
+        this.options.unshift(
+          {
+           value: null,
+           text: this.unselectedDisplay
+          }
+        )
       }
     }
   },
@@ -77,6 +102,7 @@ export default {
     }
   },
   mounted() {
+    this.selectedVals = this.value
     this.init()
   }
 }

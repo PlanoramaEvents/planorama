@@ -5,7 +5,8 @@ class SessionAssignmentsController < ResourceController
 
   def serializer_includes
     [
-      :session
+      :session,
+      :'session.format'
     ]
   end
 
@@ -25,6 +26,10 @@ class SessionAssignmentsController < ResourceController
 
   def belongs_to_relationship
     'session_assignments'
+  end
+
+  def paginate
+    false
   end
 
 end

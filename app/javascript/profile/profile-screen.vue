@@ -6,10 +6,20 @@
         <availability-and-interests></availability-and-interests>
       </b-tab>
       <b-tab title="Session Selection" lazy>
-        <session-selector :model="sessionModel"></session-selector>
+        <session-selector
+          defaultSortBy='title'
+          :model="sessionModel"
+          defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
+        ></session-selector>
       </b-tab>
       <b-tab title="Session Rankings" lazy>
-        <session-ranker></session-ranker>
+        <session-ranker
+          defaultSortBy='interest_ranking,created_at'
+          :defaultSortDesc="true"
+          :perPage="null"
+          :model="sessionAssignmentModel"
+          :defaultFilter="rankedFilter"
+        ></session-ranker>
       </b-tab>
     </b-tabs>
   </div>
@@ -22,21 +32,29 @@ import ProfileManage from './profile_manage.vue';
 import AvailabilityAndInterests from './availability_and_interests.vue';
 
 import { sessionModel } from '@/store/session.store'
+import { sessionAssignmentModel } from '@/store/session_assignment.store'
+import personSessionMixin from '../auth/person_session.mixin';
 
 export default {
   name: "ProfileScreen",
-  // data: () => ({
-  //   // model
-  // }),
   components: {
     SessionSelector,
     SessionRanker,
     ProfileManage,
     AvailabilityAndInterests,
   },
+  mixins: [
+    personSessionMixin
+  ],
   data: () => ({
-    sessionModel
+    sessionModel,
+    sessionAssignmentModel
   }),
+  computed: {
+    rankedFilter() {
+      return `{"op":"all","queries":[["person_id", "=", "${this.currentUser.id}"],["interested", "=", true]]}`
+    }
+  }
 }
 </script>
 

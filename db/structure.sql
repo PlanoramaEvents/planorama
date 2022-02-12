@@ -213,7 +213,8 @@ CREATE TABLE public.areas (
     name character varying,
     sort_order integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -452,7 +453,8 @@ CREATE TABLE public.mailings (
 
 CREATE TABLE public.parameter_names (
     parameter_name character varying(45) NOT NULL,
-    parameter_description character varying(170) NOT NULL
+    parameter_description character varying(170) NOT NULL,
+    parameter_type character varying DEFAULT 'String'::character varying
 );
 
 
@@ -684,6 +686,21 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: session_areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_areas (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    session_id uuid,
+    area_id uuid,
+    "primary" boolean,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -747,7 +764,7 @@ CREATE TABLE public.sessions (
     publish boolean DEFAULT false NOT NULL,
     require_signup boolean DEFAULT false,
     waiting_list_size integer DEFAULT 0,
-    open_for_interest integer DEFAULT 0,
+    open_for_interest boolean DEFAULT false,
     instructions_for_interest text
 );
 
@@ -967,10 +984,10 @@ CREATE TABLE public.tag_contexts (
 --
 
 CREATE TABLE public.taggings (
-    id integer NOT NULL,
-    tag_id integer,
-    taggable_id integer,
-    tagger_id integer,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    tag_id uuid,
+    taggable_id uuid,
+    tagger_id uuid,
     tagger_type character varying(191),
     taggable_type character varying(191),
     context character varying(191),
@@ -979,54 +996,14 @@ CREATE TABLE public.taggings (
 
 
 --
--- Name: taggings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.taggings_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: taggings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.taggings_id_seq OWNED BY public.taggings.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.tags (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying(191),
     taggings_count integer DEFAULT 0
 );
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.tags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
@@ -1089,20 +1066,6 @@ ALTER TABLE ONLY public.categorizations ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.survey_formats ALTER COLUMN id SET DEFAULT nextval('public.survey_formats_id_seq'::regclass);
-
-
---
--- Name: taggings id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.taggings ALTER COLUMN id SET DEFAULT nextval('public.taggings_id_seq'::regclass);
-
-
---
--- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
 
 
 --
@@ -1345,6 +1308,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: session_areas session_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session_areas
+    ADD CONSTRAINT session_areas_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: survey_answers survey_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1534,6 +1505,13 @@ CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree 
 
 
 --
+-- Name: index_areas_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_areas_on_name ON public.areas USING btree (name);
+
+
+--
 -- Name: index_magic_links_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1650,6 +1628,13 @@ CREATE INDEX index_published_programme_item_assignments_on_person_id ON public.p
 --
 
 CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions USING btree (format_id);
+
+
+--
+-- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_session_areas_on_session_id_and_area_id ON public.session_areas USING btree (session_id, area_id);
 
 
 --
@@ -1783,13 +1768,6 @@ CREATE UNIQUE INDEX index_tags_on_name ON public.tags USING btree (name);
 --
 
 CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING btree (item_type, item_id);
-
-
---
--- Name: parameter_description_UNIQUE; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX "parameter_description_UNIQUE" ON public.parameter_names USING btree (parameter_description);
 
 
 --
@@ -1941,9 +1919,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210620175724'),
 ('20210620180746'),
 ('20210626162611'),
-('20210627143358'),
 ('20210627225348'),
-('20210628120942'),
 ('20210628221900'),
 ('20210629220733'),
 ('20210702202436'),
@@ -1959,7 +1935,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210712134642'),
 ('20210716142413'),
 ('20210717191036'),
-('20210811135617'),
 ('20210819204542'),
 ('20210925131929'),
 ('20211101160001'),
@@ -1976,6 +1951,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220120202502'),
 ('20220123161611'),
 ('20220123162740'),
-('20220124181524');
+('20220124181524'),
+('20220127213449'),
+('20220131184003'),
+('20220201191402'),
+('20220202144414'),
+('20220208222821'),
+('20220209153904');
 
 

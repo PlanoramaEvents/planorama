@@ -7,6 +7,10 @@ export const tableMixin = {
       type: String,
       default: null
     },
+    defaultSortDesc: {
+      type: Boolean,
+      default: false
+    },
     perPage: {
       type: Number,
       default: 10
@@ -37,8 +41,8 @@ export const tableMixin = {
       return {
         op: 'all',
         queries: [
-          JSON.parse(filter1),
-          JSON.parse(filter2),
+          (typeof filter1 == 'string') ? JSON.parse(filter1) : JSON.parse(JSON.stringify(filter1)),
+          (typeof filter2 == 'string') ? JSON.parse(filter2) : JSON.parse(JSON.stringify(filter2))
         ]
       }
     },
@@ -55,30 +59,33 @@ export const tableMixin = {
         _filter = merged
       }
 
-      return this.clear().then(
-        () => {
-          return new Promise((res, rej) => {
-            this.fetch({
-              perPage: this.perPage,
-              sortOrder: this.sortDesc ? 'desc' : 'asc',
-              sortBy: this.sortBy,
-              filter: _filter,
-              current_page: this.currentPage,
-            }).then(data => {
-              // this stores some metadata that returns with the fetch call
-              this.correctOrder = data._jv.json.data.map(m => m.id);
-              this.currentPage = data._jv.json.meta.current_page;
-              this.totalRows = data._jv.json.meta.total;
-              res(data);
-            }).catch(rej); // TODO maybe actually handle it here??
-          })
-        }
-      )
+      return new Promise((res, rej) => {
+        this.clear() // NOTE: clear is a sync call
+        this.correctOrder = [] // we need to clear otherwise the order in the computed sorted gets weird
+        this.fetch({
+          perPage: this.perPage,
+          sortOrder: this.sortDesc ? 'desc' : 'asc',
+          sortBy: this.sortBy,
+          filter: _filter,
+          current_page: this.currentPage,
+        }).then(data => {
+          // this stores some metadata that returns with the fetch call
+          this.correctOrder = data._jv.json.data.map(m => m.id);
+          if (typeof data._jv.json.meta !== 'undefined') {
+            this.currentPage = data._jv.json.meta.current_page;
+            this.totalRows = data._jv.json.meta.total;
+          }
+          res(data);
+        }).catch(rej); // TODO maybe actually handle it here??
+      })
     }
   },
   mounted() {
     this.sortBy = this.defaultSortBy;
-    this.fetchPaged();
+    this.sortDesc = this.defaultSortDesc
+    // NOTE: if we do fatch paged here it will ignore any filters etc that are setup
+    // and will cause some weird behavious if we have initial filters
+    // this.fetchPaged();
   },
   watch: {
     currentPage(newVal, oldVal) {

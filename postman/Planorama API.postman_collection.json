@@ -88,6 +88,9 @@
 				{
 					"name": "Me Session",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -136,6 +139,250 @@
 							"port": "3000",
 							"path": [
 								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get People (sparse fields)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person?fields[person]=name,pronouns&fields[email_addresses]=email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person"
+							],
+							"query": [
+								{
+									"key": "fields[person]",
+									"value": "name,pronouns"
+								},
+								{
+									"key": "fields[email_addresses]",
+									"value": "email"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get People (sparse fields) Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person?fields[person]=name,email_addresses&fields[email_address]=email,isdefault",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person"
+							],
+							"query": [
+								{
+									"key": "fields[person]",
+									"value": "name,email_addresses"
+								},
+								{
+									"key": "fields[email_address]",
+									"value": "email,isdefault"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Person",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person/{{person-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person",
+								"{{person-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Person Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person/84672fd3-0d90-4f81-8511-ec1d82f2b9cb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person",
+								"84672fd3-0d90-4f81-8511-ec1d82f2b9cb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get People By Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// //console.log('***', jsonData['data'][0].id);",
+									"// pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person?filter={\"op\":\"all\",\"queries\":[[\"name\", \"contains\", \"staff\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"op\":\"all\",\"queries\":[[\"name\", \"contains\", \"staff\"]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get People By Filter all cols",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// //console.log('***', jsonData['data'][0].id);",
+									"// pm.collectionVariables.set(\"person-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person?filter={\"rules\":[[\"all\", \"like\", \"ta\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"rules\":[[\"all\", \"like\", \"ta\"]]}"
+								}
 							]
 						}
 					},
@@ -227,7 +474,7 @@
 					"response": []
 				},
 				{
-					"name": "Get People Copy",
+					"name": "Create a Person",
 					"event": [
 						{
 							"listen": "test",
@@ -246,8 +493,17 @@
 						"auth": {
 							"type": "noauth"
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"name_sort_by\": \"{{$randomFullName}}\",\n    \"name_sort_by_confirmed\": true,\n    \"email_addresses_attributes\": [\n        {\n            \"isdefault\": true,\n            \"email\": \"{{$randomEmail}}\",\n            \"is_valid\": true\n        }\n    ]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:3000/person",
 							"protocol": "http",
@@ -257,6 +513,35 @@
 							"port": "3000",
 							"path": [
 								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email Validator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emails\": [\n        \"Orpha.Steuber27@gmail.com\",\n        \"arnold@aardvark.com\",\n        \"fuckity\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/validator/email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"validator",
+								"email"
 							]
 						}
 					},
@@ -285,19 +570,12 @@
 					],
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt-token}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/survey",
+							"raw": "http://localhost:3000/survey?sortBy=surveys.name",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -305,6 +583,198 @@
 							"port": "3000",
 							"path": [
 								"survey"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "surveys.name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Survey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": {\n        \"type\": \"survey\",\n        \"attributes\": {\n            \"name\": \"{{$randomFullName}}\",\n            \"pages_attributes\": [\n                {\n                    \"title\": \"{{$randomFullName}}\",\n                    \"questions_attributes\": [\n                        {\n                            \"question\":\"New Question\",\n                            \"question_type\": \"textfield\",\n                            \"answers_attributes\": [\n                                {\n                                    \"answer\": \"Option\"\n                                }\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/survey?sortBy=surveys.name",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "surveys.name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": {\n    \"type\": \"page\",\n    \"attributes\": {\n        \"title\": \"{{$randomFullName}}\"\n    },\n    \"relationships\": {\n        \"survey\": {\n        \"data\": { \"type\": \"survey\", \"id\": \"{{survey-id}}\" }\n        }\n    }\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/page",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"page"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// //console.log('***', jsonData['data'][0].id);",
+									"// pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"type\": \"question\",\n    \"attributes\": {\n        \"question\": \"{{$randomFullName}} 11\",\n        \"question_type\": \"textfield\"\n    },\n    \"relationships\": {\n        \"page\": {\n            \"data\": { \"type\": \"page\", \"id\": \"{{page-id}}\" }\n        }\n    }\n  }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/question",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"question"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Question Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// //console.log('***', jsonData['data'][0].id);",
+									"// pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": {\n        \"type\": \"question\",\n        \"attributes\": {\n            \"question\": \"New Question\",\n            \"question_type\": \"textfield\",\n            \"mandatory\": false,\n            \"sort_order_position\": 0\n        },\n        \"relationships\": {\n            \"page\": {\n                \"id\": \"12bb592f-f95d-4a19-ba67-2ddc8e325115\",\n                \"type\": \"page\"\n        }\n       }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/question",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"question"
 							]
 						}
 					},
@@ -328,19 +798,12 @@
 					],
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt-token}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/survey?filter={\"rules\":[[\"assigned_people.person_id\", \"=\", \"{{person-id}}\"]]}",
+							"raw": "http://localhost:3000/survey?filter={\"queries\":[[\"assigned_people.person_id\", \"=\", \"{{person-id}}\"]]}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -352,7 +815,7 @@
 							"query": [
 								{
 									"key": "filter",
-									"value": "{\"rules\":[[\"assigned_people.person_id\", \"=\", \"{{person-id}}\"]]}"
+									"value": "{\"queries\":[[\"assigned_people.person_id\", \"=\", \"{{person-id}}\"]]}"
 								}
 							]
 						}
@@ -377,6 +840,48 @@
 					],
 					"request": {
 						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/survey?filter={\"queries\":[[\"surveys.id\", \"=\", \"{{survey-id}}\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"queries\":[[\"surveys.id\", \"=\", \"{{survey-id}}\"]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Surveys Via Filter Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
@@ -389,7 +894,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/survey?filter={\"rules\":[[\"surveys.id\", \"=\", \"{{survey-id}}\"]]}",
+							"raw": "http://localhost:3000/survey?filter={\"queries\":[[\"surveys.id\", \"=\", \"ef14a1df-fca5-45f7-9452-bd5aa0655d00\"]]}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -401,7 +906,7 @@
 							"query": [
 								{
 									"key": "filter",
-									"value": "{\"rules\":[[\"surveys.id\", \"=\", \"{{survey-id}}\"]]}"
+									"value": "{\"queries\":[[\"surveys.id\", \"=\", \"ef14a1df-fca5-45f7-9452-bd5aa0655d00\"]]}"
 								}
 							]
 						}
@@ -528,19 +1033,12 @@
 					],
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt-token}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/survey/{{survey-id}}/page",
+							"raw": "http://localhost:3000/survey/{{survey-id}}/pages",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -549,7 +1047,7 @@
 							"path": [
 								"survey",
 								"{{survey-id}}",
-								"page"
+								"pages"
 							]
 						}
 					},
@@ -603,19 +1101,12 @@
 					"name": "Get Questions for Page",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt-token}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/page/{{page-id}}/question",
+							"raw": "http://localhost:3000/page/{{page-id}}/questions",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -624,7 +1115,7 @@
 							"path": [
 								"page",
 								"{{page-id}}",
-								"question"
+								"questions"
 							]
 						}
 					},
@@ -634,19 +1125,12 @@
 					"name": "Get Submissions for Survey",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt-token}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/survey/{{survey-id}}/submission",
+							"raw": "http://localhost:3000/survey/{{survey-id}}/submissions",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -655,7 +1139,7 @@
 							"path": [
 								"survey",
 								"{{survey-id}}",
-								"submission"
+								"submissions"
 							]
 						}
 					},
@@ -666,78 +1150,6 @@
 		{
 			"name": "Mailings",
 			"item": [
-				{
-					"name": "Get Mail Templates",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"//console.log('***', jsonData['data'][0].id);",
-									"pm.collectionVariables.set(\"mail-template-id\", jsonData['data'][0].id);",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:3000/mail_template",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"mail_template"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Mail Template",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"title\": \"{{$randomLoremWords}}\",\n    \"subject\": \"{{$randomLoremWords}}\",\n    \"content\": \"{{$randomLoremParagraph}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:3000/mail_template",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"mail_template"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Get Mailing",
 					"event": [
@@ -782,13 +1194,114 @@
 					"response": []
 				},
 				{
+					"name": "Get Mailing by filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"mailing-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/mailing?filter={\"op\":\"all\",\"queries\":[[\"mailing_state\", \"=\", \"draft\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mailing"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"op\":\"all\",\"queries\":[[\"mailing_state\", \"=\", \"draft\"]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Mailing sparse",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"mailing-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/mailing?fields[mailing]=id,title",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mailing"
+							],
+							"query": [
+								{
+									"key": "fields[mailing]",
+									"value": "id,title"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Mailing",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"mail_template_id\": \"{{mail-template-id}}\",\n    \"scheduled\": false,\n    \"testrun\": false,\n    \"include_email\": false,\n    \"cc_all\": false\n}\n",
+							"raw": "{\n    \"mail_template_id\": \"{{mail-template-id}}\",\n    \"testrun\": false,\n    \"include_email\": false,\n    \"cc_all\": false,\n    \"title\": \"{{$randomLoremWords}}\",\n    \"subject\": \"{{$randomLoremWords}}\",\n    \"content\": \"Dear <%= person.published_name %> {{$randomLoremParagraph}}\",\n    \"emails\": [\"test@test.com\", \"testing8@peoplerecord.com\"]\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -804,6 +1317,108 @@
 							"port": "3000",
 							"path": [
 								"mailing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign People to Mailing Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"people\": [\n        {\n            \"id\": \"{{person-id}}\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/mailing/{{mailing-id}}/assign_people",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mailing",
+								"{{mailing-id}}",
+								"assign_people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UnAssign People to Mailing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"people\": [\n        {\n            \"id\": \"{{person-id}}\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/mailing/{{mailing-id}}/unassign_people",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mailing",
+								"{{mailing-id}}",
+								"unassign_people"
 							]
 						}
 					},
@@ -833,6 +1448,133 @@
 							"port": "3000",
 							"path": [
 								"mailing",
+								"{{mailing-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Schedule Single Mailing",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/mailing/schedule/{{mailing-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mailing",
+								"schedule",
+								"{{mailing-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Schedule Single Mailing Test",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/mailing/schedule/{{mailing-id}}/test@test.com/true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mailing",
+								"schedule",
+								"{{mailing-id}}",
+								"test@test.com",
+								"true"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Preview Single Mailing",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/mailing/preview/{{mailing-id}}/test@test.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mailing",
+								"preview",
+								"{{mailing-id}}",
+								"test@test.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clone Mailing",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/mailing/clone/{{mailing-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mailing",
+								"clone",
 								"{{mailing-id}}"
 							]
 						}
@@ -1084,7 +1826,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"title\": \"{{$randomLoremWords}}\",\n    \"terms\": \"{{$randomLoremParagraph}}\",\n    \"agrement_type\": \"stuff\",\n    \"target\": \"all\"\n    // created_by_id\n}\n",
+							"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"title\": \"{{$randomLoremWords}}\",\n    \"terms\": \"{{$randomLoremParagraph}}\",\n    \"agreement_type\": \"stuff\",\n    \"target\": \"member\"\n    // created_by_id\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1103,6 +1845,111 @@
 							]
 						},
 						"description": "#postman-to-openapi  \n| object | name | description | required | type | example |  \n|---|---|---|---|---|---|  \n| path | person-id | The id pf the person being retreived | true | UUID |8bcac661-a82e-4461-9910-ef017566e9a8 |"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sessions",
+			"item": [
+				{
+					"name": "Get Sessions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"session-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/session",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"session"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Session Assignments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/session_assignment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"session_assignment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Session Assignment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/session_assignment/2a016b1c-7bec-4eb1-8045-cef6a0377f35",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"session_assignment",
+								"2a016b1c-7bec-4eb1-8045-cef6a0377f35"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Session Assignment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"session_id\": \"{{session-id}}\",\n    \"person_id\": \"{{person-id}}\",\n    \"interested\": true,\n    \"interest_ranking\": 1,\n    \"interest_notes\": \"I would like to do this\",\n    \"interest_role\": \"can_moderate\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/session_assignment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"session_assignment"
+							]
+						}
 					},
 					"response": []
 				}
@@ -1219,6 +2066,14 @@
 		},
 		{
 			"key": "agreement-id",
+			"value": ""
+		},
+		{
+			"key": "sessiobn-id",
+			"value": ""
+		},
+		{
+			"key": "session-id",
 			"value": ""
 		}
 	]

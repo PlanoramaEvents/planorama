@@ -3,76 +3,105 @@
     <p>
       Put in instructions here ...
     </p>
-    <!-- TODO: error messages ??? -->
+
+    <div class="my-3">
+      <session-search
+        :value="filter"
+        @change="onSearchChanged"
+        :columns="columns"
+      >
+      </session-search>
+    </div>
+
+    <b-pagination class="d-flex justify-content-end"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      first-text="First"
+      last-text="Last"
+      prev-text="Prev"
+      next-text="Next"
+    ></b-pagination>
+
     <b-table
-      hover bordered responsive small striped
+      hover responsive small striped
       :fields="columns"
       :items="sortedCollection"
-      ref="table"
       :no-local-sorting="true"
     >
       <template #cell(title)="{ item }">
         <h4>{{item.title}}</h4>
         <p>{{item.description}}</p>
+        <div v-if="item.format">
+          Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
+        </div>
+        <div v-if="item.area_list.length > 0">
+          <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list">{{area}}</span>
+        </div>
+        <div v-if="item.tag_list.length > 0">
+          <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list">{{tag}}</span>
+        </div>
       </template>
       <template #cell(id)="{ item }">
-        <!-- TODO: use session assignment and create/remove etc -->
-        <b-form-checkbox
-          switch size="lg"
-          :value="item.id"
-          :unchecked-value="item.id"
-          @change="toggleSelectSession"
-        >
-        </b-form-checkbox>
+        <interest-indicator
+          :session="item"
+          :person_id="currentUser.id"
+          :model="sessionAssignmentModel"
+        ></interest-indicator>
       </template>
     </b-table>
+
+    <b-pagination class="d-flex justify-content-end"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      first-text="First"
+      last-text="Last"
+      prev-text="Prev"
+      next-text="Next"
+    ></b-pagination>
   </div>
 </template>
 
 <script>
-// import PeopleTable from './people_table.vue';
-// import PeopleSidebar from './people_sidebar.vue';
-// import { personModel as model } from '../store/person.store';
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
-import { sessionModel as model } from '@/store/session.store'
+import personSessionMixin from '../auth/person_session.mixin';
+import InterestIndicator from './interest_indicator.vue'
+import { sessionAssignmentModel } from '@/store/session_assignment.store'
+import SessionSearch from './session_search'
 
-// TODO: we need a filter applied to the sessions (only ones ready for selection)
-// TODO: we need the area added and the search capability
-// TODO: we need to get the assignments for the current person for each session in the result set
-// TODO: we need a selector to create/edit the person's assignments
 export default {
   name: "SessionSelector",
-  mixins: [
-    modelMixin,
-    tableMixin, // covers pagination and sorting
-  ],
-  props: {
-    // model: model
-  },
-  data: () => ({
-    columns : [
-      {
-        key: 'title',
-        label: 'Session',
-        sortable: false
-      },
-      {
-        key: 'id',
-        label: 'Select',
-        sortable: false
-      }
-    ]
-  }),
-
   components: {
-    // PeopleTable,
-    // PeopleSidebar,
+    InterestIndicator,
+    SessionSearch
+  },
+  mixins: [
+    personSessionMixin,
+    modelMixin,
+    tableMixin // covers pagination and sorting
+  ],
+  data() {
+    return {
+      sessionAssignmentModel,
+      columns : [
+        {
+          key: 'title',
+          label: ' ',
+          sortable: false
+        },
+        {
+          key: 'id',
+          label: 'Add to Interested',
+          sortable: false
+        }
+      ]
+    }
   },
   methods: {
-    toggleSelectSession(arg) {
-      // arg is the id of the selected item
-      console.debug('Toggle select this: ', arg)
+    onSearchChanged(arg) {
+      this.filter = arg
     }
   }
 }

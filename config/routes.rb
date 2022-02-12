@@ -12,6 +12,7 @@ Rails.application.routes.draw do
              }, defaults: { format: :json }
 
   root to: 'home#index'
+  # get '/home', to: 'home#index'
 
   # TODO: retest with SPA, should be ok
   get '/login/:magic_link', to: 'login#magic_link'
@@ -73,9 +74,12 @@ Rails.application.routes.draw do
 
   resources :bios, path: 'bio'
   resources :formats, path: 'format'
-  # resources :areas, path: 'area'
+  resources :areas, path: 'area'
+  resources :tags, path: 'tag'
+  get 'session/tags', to: 'sessions#tags'
   resources :sessions, path: 'session' do
     get 'session_assignments', to: 'session_assignments#index'
+    get 'areas', to: 'areas#index'
   end
   resources :published_sessions, path: 'published_session'
   resources :session_assignments, path: 'session_assignment'
@@ -101,5 +105,5 @@ Rails.application.routes.draw do
   # force everything back to the SPA home page
   # This has to be at the end otherwise we do not match the resource endpoints
   # as this is a catch all
-  match '*path' => redirect('/'), via: :get
+  # match '*path' => redirect('/'), via: :get
 end

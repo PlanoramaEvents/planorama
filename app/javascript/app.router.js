@@ -123,7 +123,7 @@ router.beforeEach((to, from, next) => {
     // GET SESSION USER only fetches if we don't have one :) 
     // TODO this might mess up auto-logout we'll see
     router.app.$store.dispatch(GET_SESSION_USER).then((session) => {
-      console.debug('**** Session: ', session )
+      //console.debug('**** Session: ', session )
       if (!session.id) {
         next({
           path: '/login',
