@@ -46,7 +46,7 @@ const surveyRoutes = [
 
 // dashboard
 import Dashboard from './dashboard/dashboard.vue';
-import Agreements from './agreements/agreements.vue';
+// import Agreements from './agreements/agreements.vue';
 
 // main
 import Vue from 'vue';
@@ -66,13 +66,13 @@ export const router = new VueRouter({
       },
       props: route => ({ redirect: route.query.redirect })
     },
-    {
-      path: '/agreements',
-      component: Agreements,
-      meta: {
-        // requiresAuth: true
-      }
-    },
+    // {
+    //   path: '/agreements',
+    //   component: Agreements,
+    //   meta: {
+    //     // requiresAuth: true
+    //   }
+    // },
     {
       path: '/admin',
       component: AdminComponent,

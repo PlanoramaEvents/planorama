@@ -32,7 +32,6 @@ extend('required', {
   ...required,
   message: 'This field is required'
 });
-import SignAgreements from "./agreements/sign_agreements.vue"
 
 export default  {
   name: "PlanoramaApp",
