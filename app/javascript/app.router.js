@@ -46,7 +46,6 @@ const surveyRoutes = [
 
 // dashboard
 import Dashboard from './dashboard/dashboard.vue';
-import Agreements from './agreements/agreements.vue';
 
 // main
 import Vue from 'vue';
