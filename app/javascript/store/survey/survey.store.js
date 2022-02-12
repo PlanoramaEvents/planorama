@@ -1,4 +1,4 @@
-import { NEW, FETCH_BY_ID, FETCH_SELECTED} from '../model.store';
+import { NEW, FETCH_BY_ID, FETCH_SELECTED, PATCH_RELATED} from '../model.store';
 import { getOrderedRelationships } from '@/utils/jsonapi_utils';
 import {
   NEW_SURVEY,
@@ -105,12 +105,16 @@ export const surveyStore = {
               id: surveyId
             }
           },
-          question: {
-            data: questionIds.map(id => ({type: questionModel, id}))
-          }
         }
       }
-      return dispatch(NEW, {model: pageModel, selected: true, ...newPage})
+      return new Promise((res, rej) => {
+        dispatch(NEW, {model: pageModel, selected: true, ...newPage}).then((savedNewPage) => {
+          savedNewPage._jv.relationships.questions.data = questionIds.map(id => ({type: questionModel, id}))
+          dispatch(PATCH_RELATED, {item: savedNewPage, parentRelName: 'questions', childIdName: 'page_id'}).then((data) => {
+            res(data)
+          }).catch(rej)
+        }).catch(rej)
+      })
     },
     [NEW_QUESTION] ({dispatch}, {pageId, questionType = "textfield", insertAt}) {
       let newQuestion = {

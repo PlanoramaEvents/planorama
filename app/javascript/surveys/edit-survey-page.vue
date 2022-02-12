@@ -9,7 +9,7 @@
         :label="i === 0 ? 'Display Title' : 'Page Title'"
         :label-for="'page-title-' + page.id"
       >
-        <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="savePage()"></b-form-input>
+        <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="savePage(page)"></b-form-input>
       </b-form-group>
       <div class="row" v-if="isSelected && i !== 0">
         <div class="col-12 d-flex justify-content-end">

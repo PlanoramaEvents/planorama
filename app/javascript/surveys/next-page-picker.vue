@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     pageId() {
-      return this.forPage || this.selectedPage.id;
+      return this.forPage || this.selectedPage?.id;
     },
     nextPageOptions() {
       return [
