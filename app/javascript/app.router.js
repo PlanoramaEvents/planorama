@@ -126,23 +126,6 @@ export const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // check if logged in
-    // if not, redirect to login page.
-    // Get the session from the store and use that to check
-    // let session = router.app.$store.getters.currentPersonSession
-    // console.debug('**** Session: ', session )
-    // if (!session.id) {
-    //   next({
-    //     path: '/login',
-    //     query: { redirect: to.fullPath }
-    //   })
-    // } else {
-    //   next({
-    //     path: '/agreements',
-    //     query: {redirect: to.fullPath}
-    //   });
-    // }
-
     // GET SESSION USER only fetches if we don't have one :)
     // TODO this might mess up auto-logout we'll see
     router.app.$store.dispatch(GET_SESSION_USER).then((session) => {
@@ -152,7 +135,6 @@ router.beforeEach((to, from, next) => {
           query: { redirect: to.fullPath }
         })
       } else {
-        // TODO: @RALPH - this calls check signatures on the main APP
         router.app.$refs.planorama.check_signatures()
         next()
       }
