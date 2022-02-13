@@ -24,6 +24,7 @@
     "url-parse": "^1.5.2",
     "uuid": "^8.3.2",
     "validator": "^13.7.0",
+    "vee-validate": "~3.0.0",
     "vue": "^2.6.12",
     "vue-async-computed": "^3.9.0",
     "vue-pluralize": "^0.0.2",

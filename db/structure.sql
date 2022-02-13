@@ -453,7 +453,8 @@ CREATE TABLE public.mailings (
 
 CREATE TABLE public.parameter_names (
     parameter_name character varying(45) NOT NULL,
-    parameter_description character varying(170) NOT NULL
+    parameter_description character varying(170) NOT NULL,
+    parameter_type character varying DEFAULT 'String'::character varying
 );
 
 
@@ -1770,13 +1771,6 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 
 --
--- Name: parameter_description_UNIQUE; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX "parameter_description_UNIQUE" ON public.parameter_names USING btree (parameter_description);
-
-
---
 -- Name: pia_person_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1925,9 +1919,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210620175724'),
 ('20210620180746'),
 ('20210626162611'),
-('20210627143358'),
 ('20210627225348'),
-('20210628120942'),
 ('20210628221900'),
 ('20210629220733'),
 ('20210702202436'),
@@ -1943,7 +1935,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210712134642'),
 ('20210716142413'),
 ('20210717191036'),
-('20210811135617'),
 ('20210819204542'),
 ('20210925131929'),
 ('20211101160001'),
@@ -1964,6 +1955,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220127213449'),
 ('20220131184003'),
 ('20220201191402'),
-('20220202144414');
+('20220202144414'),
+('20220208222821'),
+('20220209153904');
 
 
