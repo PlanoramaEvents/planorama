@@ -239,7 +239,6 @@ class PeopleController < ResourceController
 
   def serializer_includes
     [
-      :bio,
       :email_addresses,
       :person_roles
     ]
@@ -266,11 +265,10 @@ class PeopleController < ResourceController
   #   ]
   # end
 
-  def except_params
-    %i[
-      bio
-    ]
-  end
+  # def except_params
+  #   %i[
+  #   ]
+  # end
 
   def allowed_params
     %i[
@@ -314,7 +312,4 @@ class PeopleController < ResourceController
       ]
     ]
   end
-  # TODO: these to be dealt with in seperate controllers ??
-  # tags
-  # :bio
 end
