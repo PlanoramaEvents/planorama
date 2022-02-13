@@ -13,7 +13,7 @@ class Agreement < ApplicationRecord
 
     where(
       [
-        "agreements.id not in (select agreement_id from person_agreements where person_id = ? and signed = false)",
+        "agreements.id not in (select agreement_id from person_agreements where person_id = ? and signed = true)",
         person.id
       ]
     )
