@@ -298,6 +298,18 @@ class PeopleController < ResourceController
       pseudonym_sort_by_confirmed
       person_roles_attributes
       email_addresses_attributes
+      bio
+      website
+      twitter
+      othersocialmedia
+      facebook
+      linkedin
+      twitch
+      youtube
+      instagram
+      flickr
+      reddit
+      tiktok
     ] << [
       email_addresses_attributes: %i[
         id

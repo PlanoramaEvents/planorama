@@ -20,18 +20,28 @@
         <b-form-group
           label="Description"
         >
-          <b-form-textarea
+          <plano-editor
             id="description-text"
             v-model="selected.description"
+            type='classic'
             :disabled="!editable"
-          >
-            {{selected.description}}
-          </b-form-textarea>
+          ></plano-editor>
         </b-form-group>
 
         <b-form-checkbox v-model="selected.open_for_interest" :disabled="!editable">
           Open for Interest
         </b-form-checkbox>
+
+        <b-form-group
+          label="Interest Instructions"
+        >
+          <plano-editor
+            id="interest-instructions-text"
+            v-model="selected.instructions_for_interest"
+            type='classic'
+            :disabled="!editable"
+          ></plano-editor>
+        </b-form-group>
 
         <b-form-group
           label="Tags"
@@ -71,12 +81,14 @@
 import modelMixin from '../store/model.mixin';
 import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
+import PlanoEditor from '@/components/plano_editor';
 
 export default {
   name: "Detail",
   components: {
     ModelSelect,
-    ModelTags
+    ModelTags,
+    PlanoEditor
   },
   mixins: [
     modelMixin
