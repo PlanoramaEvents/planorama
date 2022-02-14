@@ -10,6 +10,7 @@ if Person.count < 100
       end
 
       name = Faker::Name.name
+      username = name.gsub(' ','_')
       person = Person.create(
           name: name,
           name_sort_by: name,
@@ -30,10 +31,19 @@ if Person.count < 100
           registered: registered,
           registration_number: registration_number,
           registration_type: registration_type,
-          bio: Bio.create(
-              bio: Faker::Lorem.sentences(number: 3).join('. '),
-              website: Faker::Internet.url
-          )
+          bio: Faker::Lorem.sentences(number: 3).join('. '),
+          pseudonym: username,
+          website: Faker::Internet.url,
+          twitter: username,
+          othersocialmedia: username,
+          facebook: username,
+          linkedin: username,
+          twitch: username,
+          youtube: username,
+          instagram: username,
+          flickr: username,
+          reddit: username,
+          tiktok: username
       )
       e = name.gsub(' ', '_') + i.to_s + '@test.com'
       EmailAddress.create(
@@ -52,25 +62,11 @@ if Person.count < 100
               is_valid: true
           )
       end
-      username = name.gsub(' ','_')
-      #p "Username: " + username
-      person.bio.twitter = username
-      person.bio.facebook = username
-      person.bio.linkedin = username
-      person.bio.twitch = username
-      person.bio.youtube = username
-      person.bio.instagram = username
-      person.bio.flickr = username
-      person.bio.reddit = username
-      person.bio.tiktok = username
-      person.bio.save
-      #p "Twitter is #{person.bio.twitter}"
 
       PersonRole.create(
           person: person,
           role: PersonRole.roles[:member]
         )
-
   end
 
   p "Created #{Person.count} people."

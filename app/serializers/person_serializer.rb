@@ -11,7 +11,11 @@ class PersonSerializer #< ActiveModel::Serializer
              :can_share, :can_photo, :can_record,
              :invite_status, :acceptance_status,
              :registered, :registration_type, :registration_number,
-             :last_sign_in_at, :primary_email
+             :last_sign_in_at, :primary_email,
+             :bio, :website, :twitter, :othersocialmedia,
+             :facebook, :linkedin, :twitch, :youtube,
+             :instagram, :flickr, :reddit, :tiktok
+
 
   # tag_list
   attribute :tags do |person|
@@ -22,18 +26,6 @@ class PersonSerializer #< ActiveModel::Serializer
   attribute :has_password do |person|
     !person.password.blank?
   end
-
-  has_one :bio,
-          if: Proc.new { |record| record.bio },
-          links: {
-            self: -> (object, params) {
-              "#{params[:domain]}/person/#{object.id}"
-            },
-            related: -> (object, params) {
-              "#{params[:domain]}/bio/#{object.bio.id}"
-            }
-          }
-
 
   has_many :person_roles, serializer: PersonRoleSerializer,
             links: {

@@ -63,9 +63,6 @@ class Person < ApplicationRecord
 
   has_paper_trail
 
-  has_one :bio, dependent: :destroy
-  accepts_nested_attributes_for :bio, allow_destroy: true
-
   before_destroy :check_if_assigned
 
   has_many  :session_assignments, dependent: :destroy
@@ -117,7 +114,19 @@ class Person < ApplicationRecord
   nilify_blanks only: [
     :bio,
     :pseudonym,
+    :website,
+    :twitter,
+    :othersocialmedia,
+    :facebook,
+    :linkedin,
+    :twitch,
+    :youtube,
+    :instagram,
+    :flickr,
+    :reddit,
+    :tiktok
   ]
+
 
   validates :name, presence: true
 

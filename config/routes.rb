@@ -72,7 +72,6 @@ Rails.application.routes.draw do
 
   get 'rbac', to: 'rbac#index'
 
-  resources :bios, path: 'bio'
   resources :formats, path: 'format'
   resources :areas, path: 'area'
   resources :tags, path: 'tag'
