@@ -1,23 +1,12 @@
 <template>
   <b-modal id='agreements-modal' size="lg"
-           hide-header-close no-close-on-backdrop no-close-on-esc
-           :title="title" @ok="okAction"
-           ok-title="I Agree" cancel-title="I Refuse">
-    <div class="agreements-terms">
-      <slot name="terms">{{terms}}</slot>
-    </div>
+         hide-header-close no-close-on-backdrop no-close-on-esc
+         :title="title" @ok="onAgree" @cancel="onRefuse"
+         ok-title="I Agree" cancel-title="I Refuse">
+    <div class="agreements-terms" v-html="terms"></div>
     <div>
       <footer class="modal-footer">
-        <slot name="footer">
-          <p>By clicking ‘Agree’ below I do hereby agree to abide by the above usage restrictions. I acknowledge that there may be personal, business, and legal implications if I use this system inappropriately.</p>
-        </slot>
-        <button
-            type="button"
-            class="btn-green"
-            @click="close"
-        >
-          Close Modal
-        </button>
+        <p>By clicking ‘Agree’ below I do hereby agree to abide by the above usage restrictions. I acknowledge that there may be personal, business, and legal implications if I use this system inappropriately.</p>
       </footer>
     </div>
   </b-modal>
@@ -26,12 +15,13 @@
 
 <script>
 import personSessionMixin from '../auth/person_session.mixin';
+import authMixin from '../auth/auth.mixin';
 import {http as axios} from '../http';
-var signedAgreements={};
+let signedAgreements={};
 
 export default {
   name: "SignAgreements",
-  mixins: [personSessionMixin],
+  mixins: [personSessionMixin, authMixin],
   data() {
     return {
       ua:'',
@@ -50,14 +40,15 @@ export default {
         }
       }
     },
-    okAction() {
+    onAgree() {
       signedAgreements[this.ua]=true;
-      //TODO: http://localhost:3000/agreement/sign/{{agreement-id}}
       axios.put('/agreement/sign/'+this.ua);
       setTimeout(() => { this.check_signatures(); }, 500);
     },
-    close() {
-      alert('modal closed')
+    onRefuse() {
+      this.signOut().finally(() => {
+        window.location.href="/";
+      });
     }
   }
 }
