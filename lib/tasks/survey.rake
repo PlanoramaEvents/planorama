@@ -2,6 +2,63 @@ desc "Utilities for surveys"
 
 # Takes the json api for a survey and puts it in the db
 namespace :survey do
+
+  # Compare a JSON form of a google survey with one in planorama
+  # rake survey:compare\['google_survey.json','00000000-0000-0000-0000-000000000014'\]
+  task :compare, [:google_survey, :survey_id] => :environment do |t, args|
+    json_str = File.read(args[:google_survey])
+    google_json = JSON.parse json_str
+    survey_id = args[:survey_id]
+
+    survey = Survey.find survey_id
+
+    # 1. compare the questions
+    # 2. compare answers for question of select, multi, single ....
+    p "Google has #{google_json['items'].count} items, Survey has #{survey.questions.count}"
+
+    count = 0
+    google_json['items'].each do |item|
+      q = Survey::Question
+           .references(:survey)
+           .where("survey_pages.survey_id = ?", survey_id)
+           .where("REPLACE(question, ' ', '') = ?", item['title'].gsub(/\s+/, ""))
+           .first
+
+      case item['type']
+      when 'TEXT'
+        p "Question Not found: #{item['title']}" if q.nil?
+        count += 1
+      when 'PARAGRAPH_TEXT'
+        p "Question Not found: #{item['title']}" if q.nil?
+        count += 1
+      when 'MULTIPLE_CHOICE'
+        # maps to singlechoice
+        if q
+          item['choices'].each do |choice|
+            a = q.answers.where("REPLACE(answer, ' ', '') = ?", choice.gsub(/\s+/, "")).first
+            p "Answer not found #{choice}" if a.nil?
+          end
+        end
+        p "Question Not found: #{item['title']}" if q.nil?
+        count += 1
+      when 'CHECKBOX'
+        # maps to multiplechoice
+        # puts "we have CHECKBOX with #{item['choices']}"
+        if q
+          item['choices'].each do |choice|
+            a = q.answers.where("REPLACE(answer, ' ', '') = ?", choice.gsub(/\s+/, "")).first
+            p "Answer not found #{choice}" if a.nil?
+          end
+        end
+        p "Question Not found: #{item['title']}" if q.nil?
+        count += 1
+      end
+    end
+
+    puts "we have #{count} questions"
+  end
+
+  # import a JSON API survey
   task :import, [:filename] => :environment do |t, args|
     # puts "IMPORTING #{args} #{args[:filename]}"
     json_str = File.read(args[:filename])
