@@ -19,7 +19,7 @@
      <div class='row mb-4' v-for="item in sortedCollection">
        <div class="col-8">
          <h4>{{item.session.title}}</h4>
-         <p>{{item.session.description}}</p>
+         <p v-html="item.session.description"></p>
          <div v-if="item.session.format">
            Format: <span class="badge badge-pill badge-info mr-1">{{item.session.format.name}}</span><br />
          </div>
@@ -29,8 +29,8 @@
          <div v-if="item.session.tag_list.length > 0">
            <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list">{{tag}}</span>
          </div>
-         <p>
-           <em>{{item.session.instructions_for_interest}}</em>
+         <br />
+         <p v-html="item.session.instructions_for_interest">
          </p>
          <b-textarea
            v-model="item.interest_notes"
