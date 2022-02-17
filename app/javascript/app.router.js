@@ -52,6 +52,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { GET_SESSION_USER } from './store/person_session.store';
 Vue.use(VueRouter);
+// var ua='', signed_agreements={}, doing_agreements=false;
 
 export const router = new VueRouter({
   routes: [
@@ -64,6 +65,13 @@ export const router = new VueRouter({
       },
       props: route => ({ redirect: route.query.redirect })
     },
+    // {
+    //   path: '/agreements',
+    //   component: Agreements,
+    //   meta: {
+    //     // requiresAuth: true
+    //   }
+    // },
     {
       path: '/admin',
       component: AdminComponent,
@@ -117,58 +125,25 @@ export const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // check if logged in
-    // if not, redirect to login page.
-    // Get the session from the store and use that to check
-    // GET SESSION USER only fetches if we don't have one :) 
+    // GET SESSION USER only fetches if we don't have one :)
     // TODO this might mess up auto-logout we'll see
     router.app.$store.dispatch(GET_SESSION_USER).then((session) => {
-      //console.debug('**** Session: ', session )
       if (!session.id) {
         next({
           path: '/login',
           query: { redirect: to.fullPath }
         })
       } else {
+        router.app.$refs.planorama.check_signatures()
         next()
       }
     }).catch((error) => {
       console.error(error)
       next();
     })
+
+
   } else {
     next() // make sure to always call next()!
   }
 })
-
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     if (localStorage.getItem('jwt') == null) {
-//       next({
-//         path: '/login',
-//         params: { nextUrl: to.fullPath }
-//       })
-//     } else {
-//       let user = JSON.parse(localStorage.getItem('user'))
-//       if (to.matched.some(record => record.meta.is_admin)) {
-//         if (user.is_admin == 1) {
-//           next()
-//         } else {
-//           next({ name: 'userboard' })
-//         }
-//       } else {
-//         next()
-//       }
-//     }
-//   } else if (to.matched.some(record => record.meta.guest)) {
-//     if (localStorage.getItem('jwt') == null) {
-//       next()
-//     } else {
-//       next({ name: 'userboard' })
-//     }
-//   } else {
-//     next()
-//   }
-// })
-
-// export router
