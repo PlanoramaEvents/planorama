@@ -5,7 +5,7 @@ class Survey::QuestionSerializer
              :created_at, :updated_at, :lock_version, :mandatory,
              :text_size, :sort_order, :horizontal,
              :private, :regex, :page_id,
-             :branching
+             :branching, :linked_field
 
   has_many :answers, serializer: Survey::AnswerSerializer,
             links: {
