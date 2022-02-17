@@ -39,6 +39,7 @@ class Survey::Page::QuestionsController < ResourceController
       page_id
       answers_attributes
       sort_order_position
+      linked_field
     ]
   end
 

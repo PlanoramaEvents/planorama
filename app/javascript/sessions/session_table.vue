@@ -6,6 +6,21 @@
       :model="model"
       :columns="columns"
     >
+      <template #cell(title)="{ item }">
+        <tooltip-overflow v-if="item.title" :title="item.title">
+          <div v-html="item.title"></div>
+        </tooltip-overflow>
+      </template>
+      <template #cell(description)="{ item }">
+        <tooltip-overflow v-if="item.description" :title="item.description">
+          <div v-html="item.description"></div>
+        </tooltip-overflow>
+      </template>
+      <template #cell(instructions_for_interest)="{ item }">
+        <tooltip-overflow v-if="item.instructions_for_interest" :title="item.instructions_for_interest">
+          <div v-html="item.instructions_for_interest"></div>
+        </tooltip-overflow>
+      </template>
     </table-vue>
   </div>
 </template>
