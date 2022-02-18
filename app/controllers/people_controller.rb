@@ -239,7 +239,6 @@ class PeopleController < ResourceController
 
   def serializer_includes
     [
-      :bio,
       :email_addresses,
       :person_roles
     ]
@@ -266,11 +265,10 @@ class PeopleController < ResourceController
   #   ]
   # end
 
-  def except_params
-    %i[
-      bio
-    ]
-  end
+  # def except_params
+  #   %i[
+  #   ]
+  # end
 
   def allowed_params
     %i[
@@ -300,6 +298,18 @@ class PeopleController < ResourceController
       pseudonym_sort_by_confirmed
       person_roles_attributes
       email_addresses_attributes
+      bio
+      website
+      twitter
+      othersocialmedia
+      facebook
+      linkedin
+      twitch
+      youtube
+      instagram
+      flickr
+      reddit
+      tiktok
     ] << [
       email_addresses_attributes: %i[
         id
@@ -314,7 +324,4 @@ class PeopleController < ResourceController
       ]
     ]
   end
-  # TODO: these to be dealt with in seperate controllers ??
-  # tags
-  # :bio
 end

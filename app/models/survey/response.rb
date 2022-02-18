@@ -16,7 +16,13 @@ class Survey::Response < ApplicationRecord
   #
   def set_response_text
     flattened_response = flatten_response(response)
-    self.response_as_text = flattened_response.values.join(' ').strip
+
+    strip_uuid = [:singlechoice, :multiplechoice].include?(question.question_type)
+    if strip_uuid
+      self.response_as_text = flattened_response.values.flatten.collect{|v| v[37..-1]}.reject { |e| e.to_s.empty? }.join('; ').strip
+    else
+      self.response_as_text = flattened_response.values.join(' ').strip
+    end
   end
 
   #

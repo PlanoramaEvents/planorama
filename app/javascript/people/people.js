@@ -90,12 +90,4 @@ export const people_columns = [
     label: 'Last Signed In',
     sortable: false
   }
-  // TODO: test for nested object
-  // {
-  //   field: 'bio',
-  //   label: 'Bio',
-  //   width: '250',
-  //   searchable: false,
-  //   sortable: false
-  // }
 ];

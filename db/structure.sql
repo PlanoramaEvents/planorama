@@ -515,7 +515,19 @@ END) STORED,
 CASE
     WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
     ELSE name_sort_by
-END) STORED
+END) STORED,
+    bio text,
+    website character varying,
+    twitter character varying,
+    othersocialmedia character varying,
+    facebook character varying,
+    linkedin character varying,
+    twitch character varying,
+    youtube character varying,
+    instagram character varying,
+    flickr character varying,
+    reddit character varying,
+    tiktok character varying
 );
 
 
@@ -897,7 +909,8 @@ CREATE TABLE public.survey_questions (
     regex character varying,
     page_id uuid,
     randomize boolean DEFAULT false,
-    branching boolean DEFAULT false
+    branching boolean DEFAULT false,
+    linked_field text
 );
 
 
@@ -1960,6 +1973,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220201191402'),
 ('20220202144414'),
 ('20220208222821'),
-('20220209153904');
+('20220209153904'),
+('20220213221552'),
+('20220217233651');
 
 
