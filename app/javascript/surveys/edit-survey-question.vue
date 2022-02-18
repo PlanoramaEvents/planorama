@@ -25,10 +25,16 @@
           <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes" @change="patchSelectedQuestion({question_type: $event})"></b-form-select>
         </b-form-group>
       </div>
+      <div class="offset-6 col-6">
+        <linked-field :question="question"></linked-field>
+      </div>
     </div>
     <div class="row" v-if="!formatting && !isSelected"> 
-      <div class="col-12">
-        <div v-html="question.question"></div>
+      <div :class="{'col-12': !question.linked, 'col-6': question.linked}">
+        <div v-html="question.question" class="py-3"></div>
+      </div>
+      <div v-if="question.linked" class="col-6">
+        Linked field: {{question.linked}}
       </div>
     </div>
     <div class="row">
@@ -168,6 +174,7 @@
     <div class="row" v-if="isSelected">
       <div class="col-6">
         <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Required</b-form-checkbox>
+        <b-form-checkbox inline v-if="!formatting" v-model="question.private" @change="patchSelectedQuestion({private: $event})">Sensitive</b-form-checkbox>
         <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="patchSelectedQuestion({branching: $event})">Branching</b-form-checkbox>
       </div>
       <div class="col-6 d-flex justify-content-end">
@@ -182,12 +189,12 @@
 import draggable from 'vuedraggable';
 import OptionsQuestion from './options-question.vue';
 import PlanoEditor from '@/components/plano_editor';
+import LinkedField from './linked-field';
 import {
   surveyMixin,
   pageMixin,
   questionMixin
 } from '@mixins';
-import Plano_editor from '@/components/plano_editor.vue';
 
 
 export default {
@@ -196,20 +203,8 @@ export default {
     draggable,
     OptionsQuestion,
     PlanoEditor,
-    Plano_editor
+    LinkedField,
   },
-  data: () => ({
-    questionTypes: [
-      { value: 'textfield', text: 'Short Answer'},
-      { value: 'textbox', text: 'Long Answer'},
-      { value: 'singlechoice', text: 'Multiple Choice' },
-      { value: 'multiplechoice', text: 'Checkboxes' },
-      { value: 'dropdown', text: 'Dropdown' },
-      { value: 'address', text: 'Address' },
-      { value: 'email', text: 'Email' },
-      { value: 'socialmedia', text: 'Social Media' }
-    ],
-  }),
   props: {
     question: {
       type: Object,
