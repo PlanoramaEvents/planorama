@@ -82,6 +82,7 @@ export default {
         local_config.allowedContent = true
       }
 
+      local_config.autoParagraph = false
       local_config.toolbar = toolbar
 
       return local_config
