@@ -1,4 +1,4 @@
-// import {PlanoModel, PlanoCollection} from '../model.js';
+import {PlanoModel, PlanoCollection} from '../model.js';
 import { http } from '../http';
 
 export const AgreementTarget = {
@@ -7,19 +7,19 @@ export const AgreementTarget = {
   ALL: 'all'
 }
 
-// export class Agreement extends PlanoModel {
-//   schema() {
-//     let s = super.schema()
-//     delete s.id;
-//     return s;
-//   }
-//
-//   defaults() {
-//     return {
-//       id: null,
-//       title: null,
-//       terms: null,
-//       type: null,
+export class Agreement extends PlanoModel {
+  schema() {
+    let s = super.schema()
+    delete s.id;
+    return s;
+  }
+
+  defaults() {
+    return {
+      id: null,
+      title: null,
+      terms: null,
+      type: null,
 //       created_by: {
 //         name: null
 //       },
@@ -29,20 +29,20 @@ export const AgreementTarget = {
 //       created_at: new Date(),
 //       updated_at: new Date(),
 //       lock_version: 0,
-//       target: AgreementTarget.ALL
-//     }
-//   }
-//
-//   routes() {
-//     return {
-//       fetch: '/agreement/{id}',
-//       create:  '/agreement',
+      target: AgreementTarget.ALL
+    }
+  }
+
+  routes() {
+    return {
+      fetch: '/agreement/{id}',
+      create:  '/agreement',
 //       save:  '/agreement/{id}',
 //       update: '/agreement/{id}',
 //       delete: '/agreement/{id}'
-//     }
-//   }
-// }
+    }
+  }
+}
 
 // export class Agreements extends PlanoCollection {
 //   options() {

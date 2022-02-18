@@ -26,6 +26,9 @@
           ref="configurations-manager"
         ></configurations-manager>
       </admin-accordion>
+      <admin-accordion id="agreements-accordion" title="Agreements">
+        <agreement-add></agreement-add>
+      </admin-accordion>
     </div>
   </div>
 </template>
@@ -37,6 +40,7 @@ import ChangeUserRoles from './change-user-roles';
 import MailingsManager from '../mailings/mailings_manager';
 import ConfigurationsManager from '../configurations/configurations_manager';
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
+import AgreementAdd from '../agreements/agreement_add';
 
 export default {
   components: {
@@ -45,7 +49,8 @@ export default {
     ChangeUserRoles,
     SheetImporterVue,
     MailingsManager,
-    ConfigurationsManager
+    ConfigurationsManager,
+    AgreementAdd
   },
   name: 'AdminComponent',
   data: () => ({

@@ -24,6 +24,9 @@ export const PATCH_FIELDS = 'PATCH FIELDS';
 // people add-ons
 import { personStore, personEndpoints } from './person.store';
 
+// agreement add-ons
+import { agreementStore, agreementEndpoints } from './agreement.store';
+
 // mailings
 import { mailingStore, mailingEndpoints } from './mailing.store';
 
@@ -51,6 +54,7 @@ import { sessionAssignmentStore, sessionAssignmentEndpoints } from './session_as
 
 const endpoints = {
   ...personEndpoints,
+  ...agreementEndpoints,
   ...surveyEndpoints,
   ...mailingEndpoints,
   ...sessionEndpoints,
@@ -80,6 +84,7 @@ export const store = new Vuex.Store({
   state: {
     selected: {
       ...personStore.selected,
+      ...agreementStore.selected,
       ...surveyStore.selected,
       ...mailingStore.selected,
       ...sessionStore.selected,
@@ -101,6 +106,7 @@ export const store = new Vuex.Store({
       }
     },
     ...personStore.getters,
+    ...agreementStore.getters,
     ...surveyStore.getters,
     ...personSessionStore.getters,
     ...mailingStore.getters,
@@ -247,6 +253,7 @@ export const store = new Vuex.Store({
     ...personSessionStore.actions,
     ...surveyStore.actions,
     ...personStore.actions,
+    ...agreementStore.actions,
     ...mailingStore.actions,
     ...sessionStore.actions,
     ...areaStore.actions,
