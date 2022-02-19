@@ -28,6 +28,7 @@
       </admin-accordion>
       <admin-accordion id="agreements-accordion" title="Agreements">
         <agreement-add></agreement-add>
+        <agreement-table></agreement-table>
       </admin-accordion>
     </div>
   </div>
@@ -41,9 +42,11 @@ import MailingsManager from '../mailings/mailings_manager';
 import ConfigurationsManager from '../configurations/configurations_manager';
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
 import AgreementAdd from '../agreements/agreement_add';
+import AgreementTable from "@/agreements/agreement_table";
 
 export default {
   components: {
+    AgreementTable,
     AdminAccordion,
     PersonAdd,
     ChangeUserRoles,

@@ -4,7 +4,12 @@
   >
     <model-field label="Title" v-model="agreement.title" type="text" stateless></model-field>
     <model-field label="Terms" v-model="agreement.terms" type="text" stateless></model-field>
-    <model-field label="Target" v-model="agreement.target" type="text" stateless></model-field>
+    <input type="radio" id="member" value="member" v-model="agreement.target"/>
+    <label for="member" style="padding-right: 15px">Members</label>
+    <input type="radio" id="staff" value="staff" v-model="agreement.target"/>
+    <label for="staff" style="padding-right: 15px">Staff</label>
+    <input type="radio" id="all" value="all" v-model="agreement.target"/>
+    <label for="all">All</label>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
       <b-button variant="primary" @click="savePerson">Save</b-button>
@@ -14,11 +19,11 @@
 
 <script>
 import toastMixin from '../shared/toast-mixin';
-import { ADMIN_ADD_AGREEMENT_SUCCESS } from '../constants/strings';
+import { ADMIN_ADD_AGREEMENT_SUCCESS } from '@/constants/strings';
 import ModelField from '../shared/model-field';
 
 import { mapActions } from 'vuex';
-import { NEW_AGREEMENT } from '../store/agreement.store';
+import { NEW_AGREEMENT } from '@/store/agreement.store';
 
 export default {
   name: "AgreementAdd",
@@ -33,13 +38,13 @@ export default {
     agreement: {
       title: '',
       terms: '',
-      target: '',
+      target: 'all',
     },
   }),
   props: {
     showButtons: {
       default: true,
-      tyep: Boolean
+      type: Boolean
     }
   },
   methods: {
@@ -47,7 +52,7 @@ export default {
     clear() {
       this.agreement.title = '';
       this.agreement.terms = '';
-      this.agreement.target = '';
+      this.agreement.target = 'all';
     },
     savePerson() {
       let res = this.newAgreementAction(this.agreement);

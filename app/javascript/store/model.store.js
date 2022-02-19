@@ -176,7 +176,7 @@ export const store = new Vuex.Store({
     [SAVE] ({commit, dispatch}, {model, selected = true, item, params}) {
       if(item._jv) {
         if(!item._jv.type) {
-          type = model
+          _jv.type = model
         }
       }
       else {
