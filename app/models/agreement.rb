@@ -4,6 +4,8 @@ class Agreement < ApplicationRecord
   has_many  :person_agreements
   has_many  :people, through: :person_agreements
 
+  # TODO: need version and workflow?
+
   # Get all agreements that have not been signed by person
   def self.unsigned(person:)
     raise 'Person needed to list agreements' unless person
@@ -38,7 +40,8 @@ class Agreement < ApplicationRecord
     agreements = Agreement.arel_table
 
     window = Arel::Nodes::Window.new.partition(
-              agreements[:target]
+              agreements[:target],
+              agreements[:agreement_type]
             ).order(agreements[:created_at].desc)
 
     row_number = Arel::Nodes::NamedFunction.new('row_number', [])
