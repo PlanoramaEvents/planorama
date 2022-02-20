@@ -30,11 +30,11 @@
       </div>
     </div>
     <div class="row" v-if="!formatting && !isSelected"> 
-      <div :class="{'col-12': !question.linked, 'col-6': question.linked}">
+      <div :class="{'col-12': !question.linked_field, 'col-6': question.linked_field}">
         <div v-html="question.question" class="py-3"></div>
       </div>
-      <div v-if="question.linked" class="col-6">
-        Linked field: {{question.linked}}
+      <div v-if="question.linked_field" class="text-right col-6">
+        Linked field: {{question.linked_field}}
       </div>
     </div>
     <div class="row">
