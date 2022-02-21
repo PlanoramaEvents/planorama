@@ -27,8 +27,7 @@
         ></configurations-manager>
       </admin-accordion>
       <admin-accordion id="agreements-accordion" title="Agreements">
-        <agreement-add></agreement-add>
-        <agreement-table></agreement-table>
+        <agreement-manager></agreement-manager>
       </admin-accordion>
     </div>
   </div>
@@ -43,9 +42,11 @@ import ConfigurationsManager from '../configurations/configurations_manager';
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
 import AgreementAdd from '../agreements/agreement_add';
 import AgreementTable from "@/agreements/agreement_table";
+import AgreementManager from "@/agreements/agreement_manager";
 
 export default {
   components: {
+    AgreementManager,
     AgreementTable,
     AdminAccordion,
     PersonAdd,

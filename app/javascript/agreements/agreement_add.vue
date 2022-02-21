@@ -3,7 +3,12 @@
     ref='add-agreement-form'
   >
     <model-field label="Title" v-model="agreement.title" type="text" stateless></model-field>
-    <model-field label="Terms" v-model="agreement.terms" type="text" stateless></model-field>
+    <plano-editor
+        v-model="agreement.terms"
+        type='classic'
+        :disabled="readOnly"
+    ></plano-editor>
+    <!--model-field label="Terms" v-model="agreement.terms" type="text" stateless></model-field-->
     <input type="radio" id="member" value="member" v-model="agreement.target"/>
     <label for="member" style="padding-right: 15px">Members</label>
     <input type="radio" id="staff" value="staff" v-model="agreement.target"/>
@@ -21,6 +26,7 @@
 import toastMixin from '../shared/toast-mixin';
 import { ADMIN_ADD_AGREEMENT_SUCCESS } from '@/constants/strings';
 import ModelField from '../shared/model-field';
+import PlanoEditor from '../components/plano_editor';
 
 import { mapActions } from 'vuex';
 import { NEW_AGREEMENT } from '@/store/agreement.store';
@@ -29,6 +35,7 @@ export default {
   name: "AgreementAdd",
   components: {
     ModelField,
+    PlanoEditor
   },
   mixins: [
     toastMixin
@@ -45,6 +52,10 @@ export default {
     showButtons: {
       default: true,
       type: Boolean
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
