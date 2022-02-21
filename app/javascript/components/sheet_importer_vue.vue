@@ -69,7 +69,7 @@
             // console.debug('********* IMPORT DONE: ', res.data)
             this.$bvToast.toast(res.data.message, {
               variant: 'success',
-              title: 'People Imported'
+              title: 'Sheet Imported'
             })
 
             this.$bvModal.hide('sheet-import-modal')

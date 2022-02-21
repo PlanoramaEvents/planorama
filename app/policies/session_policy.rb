@@ -1,7 +1,7 @@
 class SessionPolicy < PlannerPolicy
-  # def import?
-  #   @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
-  # end
+  def import?
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
 
   # class Scope < Scope
   #   def resolve

@@ -14,6 +14,12 @@
       <admin-accordion id="edit-roles-accordion" title="Edit Roles" @show="showPeopleRoles">
         <change-user-roles model="person" ref="role-manager"></change-user-roles>
       </admin-accordion>
+      <admin-accordion id="import-sessions-accordion" title="Import Sessions">
+        <sheet-importer-vue
+          title="Import Sessions"
+          import-url="/session/import"
+        ></sheet-importer-vue>
+      </admin-accordion>
       <admin-accordion id="mailings-accordion" title="Mailings" @show="showMailings">
         <mailings-manager
           model="mailing"
