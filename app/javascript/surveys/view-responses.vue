@@ -46,7 +46,7 @@ export default {
     selectedSurveyId() {
       return this.$store.state.selected[surveyModel];
     }
-  }
+  },
   watch: {
     selectedSurveyId(newVal, oldVal) {
       if (newVal && (!oldVal || newVal !== oldVal)) {
