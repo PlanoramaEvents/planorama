@@ -9,7 +9,15 @@
         <sheet-importer-vue
           title="Import People"
           import-url="/person/import"
-        ></sheet-importer-vue>
+          example-url="/examples/people_import.xlsx"
+        >
+          <template v-slot:import-details="result">
+            Imported: {{result.importMessage.imported}} Skipped {{result.importMessage.skipped}}<br />
+            Malformed email: {{result.importMessage.bad_email}}<br />
+            Duplicate email: {{result.importMessage.duplicate_email}}<br />
+            No name: {{result.importMessage.noname}}
+          </template>
+        </sheet-importer-vue>
       </admin-accordion>
       <admin-accordion id="edit-roles-accordion" title="Edit Roles" @show="showPeopleRoles">
         <change-user-roles model="person" ref="role-manager"></change-user-roles>
@@ -18,7 +26,14 @@
         <sheet-importer-vue
           title="Import Sessions"
           import-url="/session/import"
-        ></sheet-importer-vue>
+          example-url="/examples/session_import.xlsx"
+        >
+          <template v-slot:import-details="result">
+            Imported: {{result.importMessage.imported}} Skipped {{result.importMessage.skipped}}<br />
+            No Title: {{result.importMessage.no_title}}<br />
+            Duplicate Session: {{result.importMessage.duplicate_session}}<br />
+          </template>
+        </sheet-importer-vue>
       </admin-accordion>
       <admin-accordion id="mailings-accordion" title="Mailings" @show="showMailings">
         <mailings-manager

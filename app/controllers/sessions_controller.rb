@@ -12,8 +12,13 @@ class SessionsController < ResourceController
     ignore_first_line = params[:ignore_first_line]
     count = 0
     sheet_length = sheet.length
+    errored_rows = []
+    current_row_nbr = -1
+    no_title = 0
+    duplicate_session = 0
     Session.transaction do
       sheet.each do |row|
+        current_row_nbr += 1
         if ignore_first_line && count == 0
           count += 1
           next
@@ -34,6 +39,12 @@ class SessionsController < ResourceController
         if title && (title.length > 0)
           # Rails.logger.error "***** #{title}"
           # Rails.logger.error "***** #{notes} \n #{goh_notes}"
+          if Session.find_by title: title
+            errored_rows << current_row_nbr
+            duplicate_session += 1
+            next
+          end
+
           session = Session.create!(
             title: title,
             description: description,
@@ -58,12 +69,25 @@ class SessionsController < ResourceController
           end
 
           count += 1
+        else
+          errored_rows << current_row_nbr
+          no_title += 1
         end
       end
     end
 
     count = count - 1 if ignore_first_line
     message = "Imported #{count} sessions, skipped #{sheet_length - count}"
+
+    message = {
+      imported: "#{count}",
+      skipped: "#{sheet_length - count}",
+      no_title: "#{no_title}",
+      duplicate_session: "#{duplicate_session}",
+      other: "",
+      errored_rows: errored_rows
+    }
+
 
     render status: :ok,
            json: { message: message }.to_json,
