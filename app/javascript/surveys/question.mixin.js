@@ -105,7 +105,9 @@ export const questionMixin = {
       if (!question) {
         return undefined;
       }
-      return getOrderedRelationships('questions', question.survey_page).findIndex(q => q.id === question.id)
+      let foo = getOrderedRelationships('questions', this.getPageById(question.page_id)).findIndex(q => q.id === question.id)
+      console.log("found index", foo)
+      return foo;
     },
     duplicateSelectedQuestion() {
       if(!this.selectedQuestion) {

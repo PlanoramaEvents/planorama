@@ -130,7 +130,7 @@ export const store = new Vuex.Store({
      * right now it only works on one to many
      */
     [PATCH_RELATED] ({dispatch}, {item, parentRelName, childIdName}) {
-      let relId = item?.id
+      let relId = item?._jv?.id
       let rels = item?._jv?.relationships?.[parentRelName]?.data
       if(!rels || !rels.length) {
         // no relationships found, what to do here? returning true for now
