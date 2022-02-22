@@ -76,6 +76,7 @@ Rails.application.routes.draw do
   resources :areas, path: 'area'
   resources :tags, path: 'tag'
   get 'session/tags', to: 'sessions#tags'
+  post 'session/import', to: 'sessions#import'
   resources :sessions, path: 'session' do
     get 'session_assignments', to: 'session_assignments#index'
     get 'areas', to: 'areas#index'
