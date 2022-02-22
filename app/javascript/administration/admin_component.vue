@@ -26,8 +26,11 @@
           ref="configurations-manager"
         ></configurations-manager>
       </admin-accordion>
-      <admin-accordion id="agreements-accordion" title="Agreements">
-        <agreement-manager></agreement-manager>
+      <admin-accordion id="agreements-accordion" title="Agreements" @show="showAgreements">
+        <agreement-manager
+          model="agreement"
+          ref="agreements-manager"
+        ></agreement-manager>
       </admin-accordion>
     </div>
   </div>
@@ -73,6 +76,9 @@ export default {
     },
     showConfigs() {
       this.$refs['configurations-manager'].init()
+    },
+    showAgreements() {
+      this.$refs['agreements-manager'].init()
     }
   }
 }

@@ -2,6 +2,7 @@
   <table-vue
     model="agreement"
     :columns="columns"
+    ref="agreements-table"
   >
   </table-vue>
 </template>
@@ -24,6 +25,9 @@ export default {
   },
   methods: {
     ...mapActions({newAgreement: NEW_AGREEMENT}),
+    init() {
+      this.$refs['agreements-table'].fetchPaged()
+    }
   }
 
 }
