@@ -47,6 +47,12 @@
           ref="configurations-manager"
         ></configurations-manager>
       </admin-accordion>
+      <admin-accordion id="agreements-accordion" title="Agreements" @show="showAgreements">
+        <agreement-manager
+          model="agreement"
+          ref="agreements-manager"
+        ></agreement-manager>
+      </admin-accordion>
     </div>
   </div>
 </template>
@@ -58,15 +64,21 @@ import ChangeUserRoles from './change-user-roles';
 import MailingsManager from '../mailings/mailings_manager';
 import ConfigurationsManager from '../configurations/configurations_manager';
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
+import AgreementAdd from '../agreements/agreement_add';
+import AgreementTable from "@/agreements/agreement_table";
+import AgreementManager from "@/agreements/agreement_manager";
 
 export default {
   components: {
+    AgreementManager,
+    AgreementTable,
     AdminAccordion,
     PersonAdd,
     ChangeUserRoles,
     SheetImporterVue,
     MailingsManager,
-    ConfigurationsManager
+    ConfigurationsManager,
+    AgreementAdd
   },
   name: 'AdminComponent',
   data: () => ({
@@ -85,6 +97,9 @@ export default {
     },
     showConfigs() {
       this.$refs['configurations-manager'].init()
+    },
+    showAgreements() {
+      this.$refs['agreements-manager'].init()
     }
   }
 }
