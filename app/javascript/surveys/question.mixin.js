@@ -19,6 +19,19 @@ export const questionMixin = {
     pageMixin,
     surveyMixin
   ],
+  data: () => ({
+    // if we ever change this, we need to change linked-fields.js too
+    questionTypes: [
+      { value: 'textfield', text: 'Short Answer'},
+      { value: 'textbox', text: 'Long Answer'},
+      { value: 'singlechoice', text: 'Multiple Choice' },
+      { value: 'multiplechoice', text: 'Checkboxes' },
+      { value: 'dropdown', text: 'Dropdown' },
+      { value: 'address', text: 'Address' },
+      { value: 'email', text: 'Email' },
+      { value: 'socialmedia', text: 'Social Media' }
+    ],
+  }),
   computed: {
     ...mapGetters({
       selected: SELECTED

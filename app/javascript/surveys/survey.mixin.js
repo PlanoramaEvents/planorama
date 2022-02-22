@@ -8,6 +8,9 @@ import { getOrderedRelationships } from '../utils/jsonapi_utils';
 // CONVERTED
 export const surveyMixin = {
   mixins: [toastMixin],
+  data: () => ({
+    surveyLinkedFields: [],
+  }),
   computed: {
     ...mapGetters({
       selected: SELECTED
@@ -62,6 +65,12 @@ export const surveyMixin = {
           this.fetchSelectedSurvey().then(()=> res(data)).catch(rej)
         }).catch(rej)
       }), success_text, error_text);
+    }
+  },
+  watch: {
+    survey(newSurvey) {
+      // find all the linked fields and populate the variable
+      this.surveyLinkedFields = Object.values(newSurvey?.pages || {}).reduce((p, c) => [...p, ...(Object.values(c.questions || {}).map(q => q.linked) || [])],[]).filter(l => l)
     }
   }
 }
