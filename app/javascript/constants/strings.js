@@ -52,6 +52,7 @@ module.exports = {
 
     //generic app wide
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
+    ADMIN_ADD_AGREEMENT_SUCCESS: (title) => `${title} successfully added to Planorama.`,
     ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added to Planorama.`,
     ADMIN_ADD_USER_ERROR: (name) => (errorCode) => twoLines(`${name} failed to be added to Planorama.`, `Error code: ${errorCode}`),
     IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",
