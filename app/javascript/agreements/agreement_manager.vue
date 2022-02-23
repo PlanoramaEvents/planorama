@@ -1,10 +1,10 @@
 <template>
   <div>
+    <agreement-add></agreement-add>
     <agreement-table
       defaultFilter=''
       ref="agreements-table"
     ></agreement-table>
-    <agreement-add></agreement-add>
   </div>
 </template>
 
