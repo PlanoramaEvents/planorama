@@ -1,8 +1,10 @@
 #
 # TODO: check how this is going to work
 #
-class Survey::SubmissionXlsSerializer < Survey::SubmissionSerializer
+class Survey::SubmissionXlsSerializer < ActiveModel::Serializer #< Survey::SubmissionSerializer
   include ActiveModel::XlsSerializerMethods
+
+  attributes :id, :created_at, :updated_at
 
   def initialize(object, options = {})
     super(object, options)
