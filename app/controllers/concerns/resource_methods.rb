@@ -239,16 +239,37 @@ module ResourceMethods
       else
         key, operation, value = query
 
-        col_table = get_table(column: key)
+        col_table = if (key.include?('responses.'))
+          Arel::Table.new('survey_responses')
+        else
+          get_table(column: key)
+        end
+
         if key == 'all'
+          # change to include responses
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)
             query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
             part = part ? part.or(query_part) : query_part
           end
+          # This for survey submissions ....
+          if model_class == Survey::Submission
+            Survey::Response.columns.each do |col|
+              next unless [:text, :string].include?(col.type)
+              query_part = get_query_part(table: Arel::Table.new('survey_responses'), column: col.name, operation: 'like', value: value)
+              part = part ? part.or(query_part) : query_part
+            end
+          end
         else
-          col = get_column(column: key)
+          col = if (key.include?('responses.'))
+            'response_as_text'
+          else
+            get_column(column: key)
+          end
           part = get_query_part(table: col_table, column: col, operation: operation, value: value)
+
+          key.slice! "responses." if (key.include?('responses.'))
+          part = part.and(col_table['question_id'].eq(key))
         end
       end
 
@@ -289,7 +310,6 @@ module ResourceMethods
   end
 
   def get_query_part(table:, column:, operation:, value:)
-    Rails.logger.debug "** QUERY PART #{table} #{column} #{operation} #{value}"
     op = translate_operator(operation: operation)
 
     return nil if value.kind_of?(String) && value.blank?
