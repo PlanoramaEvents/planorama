@@ -44,6 +44,39 @@ class Survey::SubmissionsController < ResourceController
     current_person.save!
   end
 
+  def flat
+    load_resource
+    # index
+    authorize model_class, policy_class: policy_class
+
+    meta = {}
+    meta[:total] = @collection_total if paginate
+    meta[:current_page] = @current_page if @current_page.present? && paginate
+    meta[:perPage] = @per_page if @per_page.present? && paginate
+
+    options = {
+      meta: meta,
+      # include: filtered_serializer_includes(fields: fields), # need to adjust based omn field
+      params: {
+        domain: "#{request.base_url}",
+        current_person: current_person
+      }
+    }
+    options[:fields] = fields
+    # Example for sparse field set
+    # options[:fields] = {person: [:name, :email_addresses], email_address: [:email]}
+    render json: Survey::SubmissionFlatSerializer.new(@collection,options).serializable_hash(),
+           content_type: 'application/json'
+
+    # TODO: we need to flatten the reponses in the collection, name is the question id and value is the text value ...
+    # render json: {},
+    #        content_type: 'application/json'
+  end
+
+  def collection_actions
+    [:index, :flat]
+  end
+
   def serializer_includes
     [
       :responses

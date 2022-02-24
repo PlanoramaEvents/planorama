@@ -1,17 +1,34 @@
 <template>
   <div>
-    <p>Download responses: <a :href="downloadLink" :download="filename">{{filename}}</a></p>
-    <p>There are <em>{{submissions.length}}</em> total responses.</p>
-    <ul>
-      <li v-for="submission of submissions" :key="submission.id">
-        {{new Date(submission.created_at).toLocaleString()}} by {{submission.submitter}}
-        <ul>
-          <li v-for="response of submission.responses" :key="response.id">
-            {{response.question_text}}: {{response.response.text || response.response.answers}}
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <div v-if="survey && survey.submissions">
+      <p>Download responses: <a :href="downloadLink" :download="filename">{{filename}}</a></p>
+      <p>There are <em>{{Object.values(survey.submissions).length}}</em> total responses.</p>
+    </div>
+    <table-vue
+      ref="responses-table"
+      model="submission_flat"
+      defaultUrl="/survey/00000000-0000-0000-0000-000000000014/submissions/flat"
+      :show-add="false"
+      :show-settings="false"
+      :columns="question_columns"
+    >
+      <template #head()="data">
+        <tooltip-overflow :title="data.label">
+          <div v-html="data.label" style="width: 300px;"></div>
+        </tooltip-overflow>
+      </template>
+      <template #cell(created_at)="{ item }">
+        {{new Date(item.created_at).toLocaleDateString()}}
+      </template>
+      <template #cell(updated_at)="{ item }">
+        {{new Date(item.updated_at).toLocaleDateString()}}
+      </template>
+      <template #cell()="data">
+        <tooltip-overflow :title="data.value">
+          {{data.value}}
+        </tooltip-overflow>
+      </template>
+    </table-vue>
   </div>
 </template>
 
@@ -20,16 +37,22 @@ import {
   surveyMixin,
   submissionMixin,
 } from '@/mixins';
+import TableVue from '../components/table_vue';
+import TooltipOverflow from '../shared/tooltip-overflow';
 import { submissionModel, surveyModel } from '@/store/survey';
 import { getOrderedRelationships } from '@/utils'
 export default {
   name: 'ViewReponses',
+  components: {
+    TableVue,
+    TooltipOverflow
+  },
   mixins: [
     surveyMixin,
     submissionMixin
   ],
-  data: () => ({
-  }),
+  // data: () => ({
+  // }),
   computed: {
     downloadLink() {
       return `/survey/${this.selectedSurveyId}/submissions.xlsx`
@@ -37,20 +60,62 @@ export default {
     filename() {
       return `survey_${this.selectedSurveyId}_responses.xlsx`
     },
-    submissions() {
-      if (!this.selectedSurveyId) {
-        return [];
-      }
-      return Object.values(this.$store.getters['jv/get']({_jv: {type: submissionModel}}), `$[(?@.survey.id=='${this.selectedSurveyId}')]`)
-    },
     selectedSurveyId() {
       return this.$store.state.selected[surveyModel];
+    },
+    question_columns() {
+      if (!this.survey || !this.survey.pages) {
+        return [
+          {
+            key: "valx",
+            label: "",
+            type: "text"
+          }
+        ]
+      }
+
+      // TODO: we need the default of the person's name and the time
+      let res = Object.values(this.survey.pages).map(
+        p => Object.values(p.questions).filter(
+          // Filter for question types that are questions
+          // :textfield, :textbox, :singlechoice, :multiplechoice, :hr,
+          // :dropdown, :address, :email, :socialmedia, :textonly
+          qs => ["textbox", "textfield", "singlechoice", "multiplechoice", "dropdown", "email", "socialmedia"].includes(qs.question_type)
+        ).map(
+          q => (
+            {
+              key: `responses.${q.id}`,
+              label: q.question,
+              type: "text"
+            }
+          )
+        )
+      )
+
+      return [].concat.apply([
+        {
+          key: "submitter",
+          label: "submitter",
+          type: "text"
+        },
+        {
+          key: "created_at",
+          label: "created_at"
+        },
+        {
+          key: "updated_at",
+          label: "updated_at"
+        }
+      ], res)
+    },
+    init() {
+      this.$refs['responses-table'].fetchPaged()
     }
   },
   watch: {
     selectedSurveyId(newVal, oldVal) {
       if (newVal && (!oldVal || newVal !== oldVal)) {
-        this.getSubmissionsForSurvey({id: newVal});
+        this.$refs['responses-table'].fetchPaged()
       }
     }
   }
@@ -58,5 +123,8 @@ export default {
 </script>
 
 <style>
-
+/* This is so that the add rule in the advanced search does not go over the screen width */
+div.form-group select.form-control.mr-2 {
+  max-width: 500px;
+}
 </style>

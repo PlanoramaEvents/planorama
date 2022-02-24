@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     resources :pages, controller: 'survey/pages', only: [:index]
     delete 'submission', to: 'survey/submissions#delete_all'
     get 'submissions', to: 'survey/submissions#index'
+    get 'submissions/flat', to: 'survey/submissions#flat'
   end
 
   resources :pages, path: 'page', controller: 'survey/pages', except: [:index] do

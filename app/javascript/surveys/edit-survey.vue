@@ -20,33 +20,33 @@
       <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey()"></b-form-textarea>
     </b-form-group>
     <b-tabs>
-      <b-tab title="Questions" :active="!responses">
-        <edit-survey-controls></edit-survey-controls>
+      <b-tab title="Questions" :active="!responses" lazy>
+        <!-- <edit-survey-controls></edit-survey-controls>
         <edit-survey-page
           v-for="(p, i) in selectedSurveyPages"
           :key="p.id" :page="p" :i="i"
           :n="selectedSurveyPages.length">
-        </edit-survey-page>
+        </edit-survey-page> -->
       </b-tab>
-      <b-tab title="Responses" :active="!!responses">
+      <b-tab title="Responses" :active="!!responses" lazy>
         <view-responses></view-responses>
       </b-tab>
-      <survey-settings-tab></survey-settings-tab>
-      <b-tab title="Audit Log" disabled>
+      <!-- <survey-settings-tab></survey-settings-tab lazy> -->
+      <b-tab title="Audit Log" disabled lazy>
       </b-tab>
     </b-tabs>
   </div>
 </template>
 
 <script>
-import EditSurveyPage from './edit-survey-page'
-import EditSurveyControls from './edit-survey-controls'
+// import EditSurveyPage from './edit-survey-page'
+// import EditSurveyControls from './edit-survey-controls'
 import {
   surveyMixin,
   surveyIdPropMixinId
 }from '@mixins'
-import SurveySettingsTab from './survey-settings-tab.vue';
-import NotImplemented from '../shared/not-implemented.vue';
+// import SurveySettingsTab from './survey-settings-tab.vue';
+// import NotImplemented from '../shared/not-implemented.vue';
 import ViewResponses from './view-responses';
 
 export default {
@@ -57,10 +57,10 @@ export default {
     surveyIdPropMixinId,
   ],
   components: {
-    EditSurveyPage,
-    EditSurveyControls,
-    SurveySettingsTab,
-    NotImplemented,
+    // EditSurveyPage,
+    // EditSurveyControls,
+    // SurveySettingsTab,
+    // NotImplemented,
     ViewResponses
   },
   computed: {
