@@ -63,7 +63,8 @@ class SurveysController < ResourceController
 
   def references
     [
-      :assigned_people
+      :assigned_people,
+      :submissions
     ]
   end
 
