@@ -1,4 +1,6 @@
 export const getOrderedRelationships = (relationship_name, target) => {
+  console.debug("******** get ordered ....")
+  // This is bad code
   if (!target) return [];
   let rel_objects = target[relationship_name];
   if (!rel_objects || !Object.keys(rel_objects).length) return [];

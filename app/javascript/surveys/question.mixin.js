@@ -1,5 +1,4 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
-import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '@/store/model.store';
 import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '@/store/survey';
 import { pageMixin, surveyMixin } from '@/mixins';
@@ -112,14 +111,15 @@ export const questionMixin = {
       this.unselect({model});
     },
     getQuestionAnswers(question) {
-      return getOrderedRelationships('answers', question);
+      return Object.values(question.answers).sort((a, b) => a.sort_order - b.sort_order)
     },
     getQuestionIndex(question) {
       if (!question) {
         return undefined;
       }
-      let foo = getOrderedRelationships('questions', this.getPageById(question.page_id)).findIndex(q => q.id === question.id)
-      console.log("found index", foo)
+      let page = this.getPageById(question.page_id);
+      let foo = Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order).findIndex(q => q.id === question.id);
+
       return foo;
     },
     duplicateSelectedQuestion() {

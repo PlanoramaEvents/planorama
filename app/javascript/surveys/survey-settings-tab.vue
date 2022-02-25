@@ -82,7 +82,9 @@ export default {
   },
   watch: {
     survey(newval) {
-      this.publishVal = newval.public
+      if (newval) {
+        this.publishVal = newval.public
+      }
     }
   }
 }

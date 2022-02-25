@@ -1,7 +1,6 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { SELECTED, UNSELECT, PATCH_FIELDS } from "@/store/model.store";
 import { submissionModel as model, NEW_SUBMISSION, SubmissionStatus } from "@/store/survey";
-import { getOrderedRelationships } from "@/utils/jsonapi_utils";
 import { responseModel, surveyModel } from "@/store/survey/survey.model";
 
 // CONVERTED
@@ -13,9 +12,10 @@ export const submissionMixin = {
     selectedSubmission() {
       return this.selected({model});
     },
-    selectedSubmissionResponses() {
-      return getOrderedRelationships('responses', this.selectedSubmission);
-    },
+    // selectedSubmissionResponses() {
+    //   // FIX
+    //   return getOrderedRelationships('responses', this.selectedSubmission);
+    // },
   },
   methods: {
     ...mapMutations({

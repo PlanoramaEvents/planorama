@@ -14,7 +14,6 @@
 
 <script>
 import { modelMixin } from '@mixins'
-import { getOrderedRelationships } from '../utils/jsonapi_utils'
 import SurveyTable from '../surveys/survey_table';
 
 export default {

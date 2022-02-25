@@ -21,12 +21,12 @@
     </b-form-group>
     <b-tabs>
       <b-tab title="Questions" :active="!responses" lazy>
-        <!-- <edit-survey-controls></edit-survey-controls>
+        <edit-survey-controls></edit-survey-controls>
         <edit-survey-page
           v-for="(p, i) in selectedSurveyPages"
           :key="p.id" :page="p" :i="i"
           :n="selectedSurveyPages.length">
-        </edit-survey-page> -->
+        </edit-survey-page>
       </b-tab>
       <b-tab title="Responses" :active="!!responses" lazy>
         <view-responses></view-responses>

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="survey && survey.submissions">
+    <div v-if="survey">
       <p>Download responses: <a :href="downloadLink" :download="filename">{{filename}}</a></p>
-      <p>There are <em>{{Object.values(survey.submissions).length}}</em> total responses.</p>
+      <p>There are <em>{{survey.nbr_submissions}}</em> total responses.</p>
     </div>
     <table-vue
       ref="responses-table"
@@ -40,7 +40,6 @@ import {
 import TableVue from '../components/table_vue';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import { submissionModel, surveyModel } from '@/store/survey';
-import { getOrderedRelationships } from '@/utils'
 export default {
   name: 'ViewReponses',
   components: {
@@ -51,8 +50,6 @@ export default {
     surveyMixin,
     submissionMixin
   ],
-  // data: () => ({
-  // }),
   computed: {
     downloadLink() {
       return `/survey/${this.selectedSurveyId}/submissions.xlsx`
@@ -74,7 +71,6 @@ export default {
         ]
       }
 
-      // TODO: we need the default of the person's name and the time
       let res = Object.values(this.survey.pages).map(
         p => Object.values(p.questions).filter(
           // Filter for question types that are questions
@@ -95,29 +91,35 @@ export default {
       return [].concat.apply([
         {
           key: "submitter",
-          label: "submitter",
+          label: "Submitter",
           type: "text"
         },
         {
           key: "created_at",
-          label: "created_at"
+          label: "Created At"
         },
         {
           key: "updated_at",
-          label: "updated_at"
+          label: "Updated At"
         }
       ], res)
     },
+  },
+  methods: {
     init() {
       this.$refs['responses-table'].fetchPaged()
     }
   },
   watch: {
     selectedSurveyId(newVal, oldVal) {
+      console.debug("*** SELECTED SURVEY ID SET")
       if (newVal && (!oldVal || newVal !== oldVal)) {
-        this.$refs['responses-table'].fetchPaged()
+        this.init()
       }
     }
+  },
+  mounted() {
+    this.init()
   }
 }
 </script>
