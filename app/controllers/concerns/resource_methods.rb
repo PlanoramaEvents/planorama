@@ -268,8 +268,10 @@ module ResourceMethods
           end
           part = get_query_part(table: col_table, column: col, operation: operation, value: value)
 
-          key.slice! "responses." if (key.include?('responses.'))
-          part = part.and(col_table['question_id'].eq(key))
+          if (key.include?('responses.'))
+            key.slice! "responses."
+            part = part.and(col_table['question_id'].eq(key))
+          end
         end
       end
 
