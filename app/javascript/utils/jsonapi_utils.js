@@ -1,5 +1,5 @@
+// NOTE: do not use this as it is very very very slow
 export const getOrderedRelationships = (relationship_name, target) => {
-  console.debug("******** get ordered ....")
   // This is bad code
   if (!target) return [];
   let rel_objects = target[relationship_name];
