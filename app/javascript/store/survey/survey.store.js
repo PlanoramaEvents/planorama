@@ -1,5 +1,5 @@
-import { NEW, FETCH_BY_ID, FETCH_SELECTED} from '../model.store';
-import { getOrderedRelationships } from '@/utils/jsonapi_utils';
+import { NEW, FETCH_BY_ID, FETCH_SELECTED, PATCH_RELATED} from '../model.store';
+// import { getOrderedRelationships } from '@/utils/jsonapi_utils';
 import {
   NEW_SURVEY,
   NEW_PAGE,
@@ -105,12 +105,16 @@ export const surveyStore = {
               id: surveyId
             }
           },
-          question: {
-            data: questionIds.map(id => ({type: questionModel, id}))
-          }
         }
       }
-      return dispatch(NEW, {model: pageModel, selected: true, ...newPage})
+      return new Promise((res, rej) => {
+        dispatch(NEW, {model: pageModel, selected: true, ...newPage}).then((savedNewPage) => {
+          savedNewPage._jv.relationships.questions.data = questionIds.map(id => ({type: questionModel, id}))
+          dispatch(PATCH_RELATED, {item: savedNewPage, parentRelName: 'questions', childIdName: 'page_id'}).then((data) => {
+            res(data)
+          }).catch(rej)
+        }).catch(rej)
+      })
     },
     [NEW_QUESTION] ({dispatch}, {pageId, questionType = "textfield", insertAt}) {
       let newQuestion = {
@@ -174,13 +178,17 @@ export const surveyStore = {
         branded: item.branded,
         allow_submission_edits: true,
         anonymous: item.anonymous,
-        pages_attributes: getOrderedRelationships('pages', item).map(p => ({
+        // FIX - why do we want to do any sorting in the duplicates since the render also does a sort?
+        // pages_attributes: getOrderedRelationships('pages', item).map(p => ({
+        pages_attributes: Object.values(item.pages).sort((a, b) => a.sort_order - b.sort_order).map(p => ({
           title: p.title,
-          questions_attributes: getOrderedRelationships('questions', p).map(q => ({
+          // questions_attributes: getOrderedRelationships('questions', p).map(q => ({
+          questions_attributes: Object.values(p.questions).sort((a, b) => a.sort_order - b.sort_order).map(q => ({
             question: q.question,
             question_type: q.question_type,
             mandatory: q.mandatory,
-            answers_attributes: getOrderedRelationships('answers', q).map(a => ({
+            // answers_attributes: getOrderedRelationships('answers', q).map(a => ({
+            answers_attributes: Object.values(q.answers).sort((a, b) => a.sort_order - b.sort_order).map(a => ({
               other: a.other,
               answer: a.answer,
             })),
@@ -199,7 +207,8 @@ export const surveyStore = {
         horizontal: item.horizontal,
         private: item.private,
         regex: item.regex,
-        answers_attributes: getOrderedRelationships('answers', item).map(a => ({
+        // answers_attributes: getOrderedRelationships('answers', item).map(a => ({
+        answers_attributes: Object.values(item.answers).sort((a, b) => a.sort_order - b.sort_order).map(a => ({
           answer: a.answer,
           default: a.default,
           other: a.other,

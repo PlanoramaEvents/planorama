@@ -20,7 +20,7 @@
       <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey()"></b-form-textarea>
     </b-form-group>
     <b-tabs>
-      <b-tab title="Questions" :active="!responses">
+      <b-tab title="Questions" :active="!responses" lazy>
         <edit-survey-controls></edit-survey-controls>
         <edit-survey-page
           v-for="(p, i) in selectedSurveyPages"
@@ -28,11 +28,11 @@
           :n="selectedSurveyPages.length">
         </edit-survey-page>
       </b-tab>
-      <b-tab title="Responses" :active="!!responses">
+      <b-tab title="Responses" :active="!!responses" lazy>
         <view-responses></view-responses>
       </b-tab>
-      <survey-settings-tab></survey-settings-tab>
-      <b-tab title="Audit Log" disabled>
+      <survey-settings-tab></survey-settings-tab lazy>
+      <b-tab title="Audit Log" disabled lazy>
       </b-tab>
     </b-tabs>
   </div>

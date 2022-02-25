@@ -33,9 +33,8 @@ export const modelMixin = {
     fetchSelected() {
       return this.$store.dispatch(FETCH_SELECTED, {model: this.model});
     },
-    fetch(params) {
-      // console.debug("**** FETCH", this.model, params)
-      return this.$store.dispatch(FETCH, {model: this.model, params});
+    fetch(params, url = null) {
+      return this.$store.dispatch(FETCH, {model: this.model, url: url, params});
     },
     fetch_by_id(id) {
       return this.$store.dispatch(FETCH_BY_ID, {model: this.model, id: id});

@@ -24,7 +24,7 @@ export default {
     onNewQuestion(questionType="textfield") {
       let insertAt = 0;
       if(this.selectedQuestion) {
-        insertAt = this.getQuestionIndex(this.selectedQuestion)
+        insertAt = this.getQuestionIndex(this.selectedQuestion) + 1
       }
       this.newQuestion({pageId: this.selectedPage.id, questionType, insertAt});
     },
@@ -45,7 +45,7 @@ export default {
       let insertAt = Object.keys(this.survey.pages).length
       if (this.selectedPage) {
         // if there's a selected page, insert this page after.
-        insertAt = this.getPageIndex(this.selectedPage) + 1
+        insertAt = this.getPageIndex(this.selectedPage.id) + 1
       }
       this.newPage({surveyId: this.survey.id, questionIds, insertAt}).then((newPage) => {
         this.fetchSelectedSurvey()

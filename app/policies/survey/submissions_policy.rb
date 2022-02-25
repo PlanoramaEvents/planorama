@@ -4,6 +4,16 @@ class Survey::SubmissionsPolicy < PlannerPolicy
     return true #if @person
   end
 
+  def flat?
+    Rails.logger.debug "********* #{@record} #{@person}"
+    # return true if @record.class != Symbol && @record && @record.person_id == @person.id
+    # Anonymoous submission can be seen by anonymous perspn
+    # TODO: this could be an issue
+    # return true if @record.person_id == nil
+
+    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  end
+
   def delete_all?
     @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
   end

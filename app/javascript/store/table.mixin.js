@@ -18,6 +18,10 @@ export const tableMixin = {
     defaultFilter: {
       type: String,
       default: null
+    },
+    defaultUrl: {
+      type: String,
+      default: null
     }
   },
   data: () => ({
@@ -27,6 +31,7 @@ export const tableMixin = {
     currentPage: 1,
     totalRows: 0,
     correctOrder: [],
+    url: null
   }),
   computed: {
     sortedCollection() {
@@ -62,13 +67,17 @@ export const tableMixin = {
       return new Promise((res, rej) => {
         this.clear() // NOTE: clear is a sync call
         this.correctOrder = [] // we need to clear otherwise the order in the computed sorted gets weird
-        this.fetch({
-          perPage: this.perPage,
-          sortOrder: this.sortDesc ? 'desc' : 'asc',
-          sortBy: this.sortBy,
-          filter: _filter,
-          current_page: this.currentPage,
-        }).then(data => {
+        // What URL does this use
+        this.fetch(
+          {
+            perPage: this.perPage,
+            sortOrder: this.sortDesc ? 'desc' : 'asc',
+            sortBy: this.sortBy,
+            filter: _filter,
+            current_page: this.currentPage,
+          },
+          this.url
+        ).then(data => {
           // this stores some metadata that returns with the fetch call
           this.correctOrder = data._jv.json.data.map(m => m.id);
           if (typeof data._jv.json.meta !== 'undefined') {
@@ -83,6 +92,7 @@ export const tableMixin = {
   mounted() {
     this.sortBy = this.defaultSortBy;
     this.sortDesc = this.defaultSortDesc
+    this.url = this.defaultUrl
     // NOTE: if we do fatch paged here it will ignore any filters etc that are setup
     // and will cause some weird behavious if we have initial filters
     // this.fetchPaged();

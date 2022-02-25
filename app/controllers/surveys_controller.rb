@@ -38,8 +38,8 @@ class SurveysController < ResourceController
     [
       :pages,
       :'pages.questions',
-      :'pages.questions.answers',
-      :submissions
+      :'pages.questions.answers'
+      # :submissions
       # :created_by,
       # :updated_by,
       # :published_by

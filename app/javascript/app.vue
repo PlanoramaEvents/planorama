@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid">    
     <sign-agreements ref="agreement-signer"></sign-agreements>
     <div class="row">
       <top-navbar></top-navbar>

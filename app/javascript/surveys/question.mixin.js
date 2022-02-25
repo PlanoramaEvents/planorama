@@ -1,5 +1,4 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
-import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '@/store/model.store';
 import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '@/store/survey';
 import { pageMixin, surveyMixin } from '@/mixins';
@@ -19,6 +18,19 @@ export const questionMixin = {
     pageMixin,
     surveyMixin
   ],
+  data: () => ({
+    // if we ever change this, we need to change linked-fields.js too
+    questionTypes: [
+      { value: 'textfield', text: 'Short Answer'},
+      { value: 'textbox', text: 'Long Answer'},
+      { value: 'singlechoice', text: 'Multiple Choice' },
+      { value: 'multiplechoice', text: 'Checkboxes' },
+      { value: 'dropdown', text: 'Dropdown' },
+      { value: 'address', text: 'Address' },
+      { value: 'email', text: 'Email' },
+      { value: 'socialmedia', text: 'Social Media' }
+    ],
+  }),
   computed: {
     ...mapGetters({
       selected: SELECTED
@@ -99,13 +111,16 @@ export const questionMixin = {
       this.unselect({model});
     },
     getQuestionAnswers(question) {
-      return getOrderedRelationships('answers', question);
+      return Object.values(question.answers).sort((a, b) => a.sort_order - b.sort_order)
     },
     getQuestionIndex(question) {
       if (!question) {
         return undefined;
       }
-      return getOrderedRelationships('questions', question.survey_page).findIndex(q => q.id === question.id)
+      let page = this.getPageById(question.page_id);
+      let foo = Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order).findIndex(q => q.id === question.id);
+
+      return foo;
     },
     duplicateSelectedQuestion() {
       if(!this.selectedQuestion) {

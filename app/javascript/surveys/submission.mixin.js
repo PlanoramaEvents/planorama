@@ -1,7 +1,6 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { SELECTED, UNSELECT, PATCH_FIELDS } from "@/store/model.store";
 import { submissionModel as model, NEW_SUBMISSION, SubmissionStatus } from "@/store/survey";
-import { getOrderedRelationships } from "@/utils/jsonapi_utils";
 import { responseModel, surveyModel } from "@/store/survey/survey.model";
 
 // CONVERTED
@@ -13,9 +12,10 @@ export const submissionMixin = {
     selectedSubmission() {
       return this.selected({model});
     },
-    selectedSubmissionResponses() {
-      return getOrderedRelationships('responses', this.selectedSubmission);
-    },
+    // selectedSubmissionResponses() {
+    //   // FIX
+    //   return getOrderedRelationships('responses', this.selectedSubmission);
+    // },
   },
   methods: {
     ...mapMutations({
@@ -35,7 +35,7 @@ export const submissionMixin = {
       return new Promise((res, rej) => {
         this.patch({model, item: {...this.selectedSubmission, submission_state: SubmissionStatus.SUBMITTED}, fields: ['submission_state']}).then((data) => {
           Promise.all(this.getStoreResponses(this.selectedSubmission).map(r => this.jvPost(r))).then(() => {
-            this.unselect({model}) 
+            this.unselect({model})
             res(data)
           }).catch(rej)
         }).catch(rej)
@@ -45,10 +45,14 @@ export const submissionMixin = {
       // TODO un hard code me
       // this is the stupidest; needs to reload the survey after so it continues to have that data
       // because clearRecords is set; can we unset it on a per call basis?
-      this.$store.dispatch('jv/getRelated', `${surveyModel}/${survey.id}/submissions`).then((data) => {
-        this.fetchSelectedSurvey();
-      })
 
+      // TODO: can we return this collection ?
+      // NOTE: this will get all the submissions (not paged, which may be problematic)
+      return this.$store.dispatch('jv/getRelated', `${surveyModel}/${survey.id}/submissions`)
+      // .then((data) => {
+      //   // clear records is no longer set so this is not needed any more
+      //   // this.fetchSelectedSurvey();
+      // })
     }
   }
 }

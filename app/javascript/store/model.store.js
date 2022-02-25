@@ -136,7 +136,7 @@ export const store = new Vuex.Store({
      * right now it only works on one to many
      */
     [PATCH_RELATED] ({dispatch}, {item, parentRelName, childIdName}) {
-      let relId = item?.id
+      let relId = item?._jv?.id
       let rels = item?._jv?.relationships?.[parentRelName]?.data
       if(!rels || !rels.length) {
         // no relationships found, what to do here? returning true for now
@@ -207,8 +207,13 @@ export const store = new Vuex.Store({
     [SEARCH] ({dispatch}, {model, params}) {
       return dispatch('jv/search', [endpoints[model], {params}])
     },
-    [FETCH] ({dispatch}, {model, params}) {
-      return dispatch('jv/get', [endpoints[model], {params}])
+    // need a way to override the default URL
+    [FETCH] ({dispatch}, {model, url = null, params}) {
+      if (url) {
+        return dispatch('jv/get', [url, {params}])
+      } else {
+        return dispatch('jv/get', [endpoints[model], {params}])
+      }
     },
     // [CLEAR] ({dispatch}, {model}) {
     //   this.commit('jv/clearRecords', { _jv: { type: model } })
