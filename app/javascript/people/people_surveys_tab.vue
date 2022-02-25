@@ -28,9 +28,7 @@ export default {
   },
   computed: {
     queryString() {
-      alert("selected: "+this.selectedPerson)
-      alert( '{"rules":[["assigned_people.person_id", "=", "'+this.selectedPerson.id+'"]]}');
-      return '{"rules":[["assigned_people.person_id", "=", "'+this.selectedPerson.id+'"]]}';
+      return '{"queries":[["assigned_people.person_id", "=", "'+this.selectedPerson.id+'"]]}';
     }
   },
   mixins: [
