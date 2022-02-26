@@ -22,10 +22,10 @@ export const pageMixin = {
       return this.selectedNumber === 1;
     },
     lastPage() {
-      return this.selectedNumber === this.getSurveyPages(this.survey).length;
+      return this.selectedNumber === this.getNbrSurveyPages(this.survey);
     },
     singlePage() {
-      return this.getSurveyPages(this.survey).length < 2;
+      return this.getNbrSurveyPages(this.survey) < 2;
     },
     selectedPageQuestions() {
       return this.selectedPage ? this.getPageQuestions(this.selectedPage) : [];
@@ -54,7 +54,7 @@ export const pageMixin = {
       return this.getPageNumber(id) === 1;
     },
     isLastPage(id) {
-      return this.getPageNumber(id) === this.getSurveyPages(this.survey).length;
+      return this.getPageNumber(id) === this.getNbrSurveyPages(this.survey);
     },
     getPageDescriptor(id) {
       let page = this.getPageById(id);

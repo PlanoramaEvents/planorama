@@ -25,7 +25,7 @@
         <edit-survey-page
           v-for="(p, i) in selectedSurveyPages"
           :key="p.id" :page="p" :i="i"
-          :n="selectedSurveyPages.length">
+          :n="selectedSurveyPageNbr">
         </edit-survey-page>
       </b-tab>
       <b-tab title="Responses" :active="!!responses" lazy>

@@ -17,6 +17,10 @@ export const surveyMixin = {
     survey() {
       return this.selected({model});
     },
+    selectedSurveyPageNbr() {
+      if (!this.survey) return 0
+      return this.getNbrSurveyPages(this.survey)
+    },
     selectedSurveyPages() {
       if (!this.survey) return []
       return this.getSurveyPages(this.survey)
@@ -50,6 +54,13 @@ export const surveyMixin = {
         itemOrId = this.survey;
       }
       return this.toastPromise(this.$store.dispatch(DELETE, {model, itemOrId}), success_text, error_text);
+    },
+    getNbrSurveyPages(survey) {
+      if (survey.pages) {
+        return Object.values(survey.pages).length
+      } else {
+        return 0
+      }
     },
     getSurveyPages(survey) {
       if (survey.pages) {
