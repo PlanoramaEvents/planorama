@@ -15,7 +15,7 @@
           <people-admin-tab :model="model"></people-admin-tab>
         </b-tab>
         <b-tab title="Surveys">
-          <people-surveys-tab :model="model" :selected-person="selected"></people-surveys-tab>
+          <people-surveys-tab :model="model"></people-surveys-tab>
         </b-tab>
       </b-tabs>
     </template>
