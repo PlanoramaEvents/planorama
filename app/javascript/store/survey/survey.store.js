@@ -1,4 +1,4 @@
-import { NEW, FETCH_BY_ID, FETCH_SELECTED, PATCH_RELATED} from '../model.store';
+import { NEW, FETCH_BY_ID, FETCH_SELECTED, PATCH_RELATED, SELECT, UNSELECT} from '../model.store';
 // import { getOrderedRelationships } from '@/utils/jsonapi_utils';
 import {
   NEW_SURVEY,
@@ -27,6 +27,11 @@ import { getId } from '@/utils';
 
 import { personModel } from '../person.store';
 
+export const GET_CACHED_INDEX = 'GET CACHED INDEX';
+
+export const GET_CACHED_PAGES = 'GET CACHED PAGES';
+export const GET_CACHED_QUESTIONS = 'GET CACHED QUESTIONS';
+export const GET_CACHED_ANSWERS = 'GET CACHED ANSWERS';
 
 export const surveyEndpoints = {
   [surveyModel]: 'survey',
@@ -45,9 +50,32 @@ export const surveyStore = {
     [submissionModel]: undefined,
   },
   state: {
-    previewMode: false
+    previewMode: false,
+    // A cache for the survey sorting
+    indexCache: {
+      pages: [], // ordered pages
+      questions: {}, // ordered questions per page
+      answers: {} // ordered answers per question
+    }
   },
   getters: {
+    [GET_CACHED_INDEX] (state, getters) {
+      return state.indexCache
+    },
+    // Pages
+    [GET_CACHED_PAGES] (state, getters) {
+      return state.indexCache.pages
+    },
+    // Questions for a page
+    [GET_CACHED_QUESTIONS]: (state) => (page_id) => {
+      // console.debug('GET CACHED QUESTIONS')
+      return state.indexCache.questions[page_id]
+    },
+    // Answers for a Question
+    [GET_CACHED_ANSWERS]: (state) => (question_id) => {
+      // console.debug('GET CACHED ANSWERS')
+      return state.indexCache.answers[question_id]
+    },
   },
   mutations: {
     [SET_PREVIEW_MODE](state, previewMode) {
@@ -73,10 +101,45 @@ export const surveyStore = {
         }
       };
       utils.updateRecords(state.jv, {[id]: item})
-      console.log(item);
+      // console.log(item);
       return item;
     }
   },
+  plugins: [
+    (store) => {
+      store.subscribe((mutation, state) => {
+        if (mutation.type === SELECT) {
+          // Build a ordered cache of Survey elements upon select
+          let instance = mutation.payload.itemOrId;
+          state.indexCache.pages = Object.values(instance.pages).sort((a, b) => a.sort_order - b.sort_order)
+          state.indexCache.questions = {}
+          state.indexCache.answers = {}
+          state.indexCache.pages.forEach(
+            (page) => {
+              state.indexCache.questions[page.id] = Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order)
+              state.indexCache.questions[page.id].forEach(
+                (question) => {
+                  state.indexCache.answers[question.id] = Object.values(question.answers).sort((a, b) => a.sort_order - b.sort_order)
+                }
+              )
+            }
+          )
+          // console.debug("****** PLUGIN for ", state.selected.survey, state.indexCache.pages);
+          // console.debug("****** PLUGIN for ", state.selected.survey, state.indexCache.questions);
+          // console.debug("****** PLUGIN for ", state.selected.survey, state.indexCache.answers);
+          // console.debug("**** CACHE CREATED")
+        }
+        if (mutation.type === UNSELECT) {
+          // clear the cache if we unselect the survey
+          state.indexCache = {
+            pages: [],
+            questions: {},
+            answers: {}
+          }
+        }
+      })
+    }
+  ],
   actions: {
     [NEW_SURVEY] ({dispatch}) {
       let newSurvey = {

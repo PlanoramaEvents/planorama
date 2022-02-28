@@ -1,5 +1,6 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '@/store/model.store';
+import { GET_CACHED_INDEX, GET_CACHED_PAGES, GET_CACHED_QUESTIONS, GET_CACHED_ANSWERS } from '../store/survey/survey.store';
 import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '@/store/survey';
 import { pageMixin, surveyMixin } from '@/mixins';
 import {
@@ -82,6 +83,12 @@ export const questionMixin = {
     }
   },
   methods: {
+    ...mapGetters({
+      getCachedIndex: GET_CACHED_INDEX,
+      getCachedPages: GET_CACHED_PAGES,
+      getCachedQuestions: GET_CACHED_QUESTIONS,
+      getCachedAnswers: GET_CACHED_ANSWERS
+    }),
     ...mapMutations({
       select: SELECT,
       unselect: UNSELECT,
@@ -111,16 +118,24 @@ export const questionMixin = {
       this.unselect({model});
     },
     getQuestionAnswers(question) {
-      return Object.values(question.answers).sort((a, b) => a.sort_order - b.sort_order)
+      let cached = this.getCachedAnswers()(question.id)
+      if (cached) {
+          return cached
+      } else {
+        return Object.values(question.answers).sort((a, b) => a.sort_order - b.sort_order)
+      }
     },
     getQuestionIndex(question) {
       if (!question) {
         return undefined;
       }
       let page = this.getPageById(question.page_id);
-      let foo = Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order).findIndex(q => q.id === question.id);
-
-      return foo;
+      let cached = this.getCachedQuestions()(question.page_id)
+      if (cached) {
+        return cached.findIndex(q => q.id === question.id);
+      } else {
+        return Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order).findIndex(q => q.id === question.id);
+      }
     },
     duplicateSelectedQuestion() {
       if(!this.selectedQuestion) {

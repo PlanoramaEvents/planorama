@@ -89,9 +89,10 @@ export default {
   }),
   computed: {
     questions() {
-      // return this.getSurveyPages(this.survey).map(p => getOrderedRelationships('questions', p)).reduce((p, c) => [...p, ...c], []);
-      //return Object.values(this.survey.pages).map(p => p.survey_questions).reduce((p, c) => [...p, ...Object.values(c)],[])
-      return this.getSurveyPages(this.survey).map(p => Object.values(p.questions).sort((a, b) => a.sort_order - b.sort_order)).reduce((p, c) => [...p, ...c], []);
+      // TODO: do we call this when not selected/cached?
+      return this.getSurveyPages(this.survey).map(
+        (p) => {return this.getCachedQuestions()(p.id)}
+      ).reduce((p, c) => [...p, ...c], []);
     },
     editLink() {
       return `/surveys/edit/${this.survey.id}`;

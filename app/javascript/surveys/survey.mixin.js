@@ -1,10 +1,10 @@
-import {mapGetters, mapActions} from 'vuex';
+import {mapGetters, mapState, mapActions} from 'vuex';
 import toastMixin from '../shared/toast-mixin';
 import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE, UNSELECT, PATCH_FIELDS } from '../store/model.store';
 import { SURVEY_SAVE_ERROR, SURVEY_SAVE_ERROR_DELETE, SURVEY_SAVE_SUCCESS, SURVEY_SAVE_SUCCESS_DELETE } from '../constants/strings'
 import { surveyModel as model} from '@/store/survey';
+import { GET_CACHED_INDEX, GET_CACHED_PAGES, GET_CACHED_QUESTIONS, GET_CACHED_ANSWERS } from '../store/survey/survey.store';
 
-// CONVERTED
 export const surveyMixin = {
   mixins: [toastMixin],
   data: () => ({
@@ -27,10 +27,16 @@ export const surveyMixin = {
     },
     selectedSurveyFirstPage() {
       return this.survey && this.selectedSurveyPages[0];
-
-    },
+    }
   },
   methods: {
+    ...mapGetters({
+      getCachedIndex: GET_CACHED_INDEX,
+      getCachedPages: GET_CACHED_PAGES,
+      // The following have args
+      getCachedQuestions: GET_CACHED_QUESTIONS,
+      getCachedAnswers: GET_CACHED_ANSWERS
+    }),
     ...mapActions({
       patch: PATCH_FIELDS
     }),
@@ -64,7 +70,12 @@ export const surveyMixin = {
     },
     getSurveyPages(survey) {
       if (survey.pages) {
-        return Object.values(survey.pages).sort((a, b) => a.sort_order - b.sort_order)
+        let pages = this.getCachedPages()
+        if (pages && (pages.length > 0)) {
+          return pages
+        } else {
+          return Object.values(survey.pages).sort((a, b) => a.sort_order - b.sort_order)
+        }
       } else {
         return []
       }
