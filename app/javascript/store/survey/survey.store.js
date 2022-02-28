@@ -108,9 +108,13 @@ export const surveyStore = {
   plugins: [
     (store) => {
       store.subscribe((mutation, state) => {
-        if (mutation.type === SELECT) {
-          // Build a ordered cache of Survey elements upon select
+        // Build a ordered cache of Survey elements upon select
+        if ((mutation.type === SELECT) && (mutation.payload.model === 'survey')) {
           let instance = mutation.payload.itemOrId;
+          if (typeof instance == 'string') {
+            return
+          }
+
           state.indexCache.pages = Object.values(instance.pages).sort((a, b) => a.sort_order - b.sort_order)
           state.indexCache.questions = {}
           state.indexCache.answers = {}

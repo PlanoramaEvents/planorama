@@ -85,8 +85,7 @@ export const pageMixin = {
       this.$store.commit(SELECT, {model, itemOrId});
     },
     getPageQuestions(page) {
-      let cached = this.getCachedQuestions(page.id)
-      // console.debug("CACHED QUESTIONS", cached)
+      let cached = this.getCachedQuestions()(page.id)
       if (cached) {
         return cached
       } else {
