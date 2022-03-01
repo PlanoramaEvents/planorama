@@ -40,6 +40,7 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 --
 
 CREATE TYPE public.agreement_target AS ENUM (
+    'none',
     'member',
     'staff',
     'all'
@@ -199,7 +200,8 @@ CREATE TABLE public.agreements (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    target public.agreement_target
+    target public.agreement_target,
+    description character varying(10000) DEFAULT NULL::character varying
 );
 
 
@@ -2003,6 +2005,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220209153904'),
 ('20220213221552'),
 ('20220217233651'),
-('20220301184226');
+('20220301184226'),
+('20220301221956');
 
 

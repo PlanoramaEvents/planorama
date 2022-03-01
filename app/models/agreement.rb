@@ -1,10 +1,8 @@
 class Agreement < ApplicationRecord
-  enum target: { member: 'member', staff: 'staff', all: 'all' }, _suffix: true
+  enum target: { none: 'none', member: 'member', staff: 'staff', all: 'all' }, _suffix: true
 
   has_many  :person_agreements
   has_many  :people, through: :person_agreements
-
-  # TODO: need version and workflow?
 
   # Get all agreements that have not been signed by person
   def self.unsigned(person:)
