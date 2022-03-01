@@ -1,6 +1,6 @@
 const twoLines = (line1, line2) => (h) =>  h('p', {}, [line1, h('br'), line2]);
-const errorMessage = (message) => (errorCode) => twoLines(message, `Error code: ${errorCode}`),
-const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`
+const errorMessage = (message) => (errorCode) => twoLines(message, `Error code: ${errorCode}`);
+const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`;
 
 module.exports = {
     // login page
