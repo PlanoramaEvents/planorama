@@ -117,6 +117,9 @@ export const store = new Vuex.Store({
     ...parameterNameStore.getters,
     ...configurationStore.getters
   },
+  plugins: [
+    ...surveyStore.plugins
+  ],
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
       state.selected[model] = getId(itemOrId);

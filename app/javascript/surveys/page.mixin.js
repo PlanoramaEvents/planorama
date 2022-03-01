@@ -4,6 +4,7 @@ import { SELECT, SELECTED, DELETE, SAVE, PATCH_RELATED } from '@/store/model.sto
 import { mapGetters, mapActions } from 'vuex';
 import { toastMixin }  from '../shared/toast-mixin';
 import { PAGE_ADD_ERROR, PAGE_ADD_SUCCESS, PAGE_DELETE_ERROR, PAGE_DELETE_SUCCESS, PAGE_MERGE_ERROR, PAGE_MERGE_SUCCESS, PAGE_SAVE_ERROR, PAGE_SAVE_SUCCESS } from '@/constants/strings';
+import { GET_CACHED_INDEX, GET_CACHED_PAGES, GET_CACHED_QUESTIONS, GET_CACHED_ANSWERS } from '../store/survey/survey.store';
 
 // CONVERTED
 export const pageMixin = {
@@ -31,6 +32,12 @@ export const pageMixin = {
       return this.selectedPage ? this.getPageQuestions(this.selectedPage) : [];
     }
   }, methods: {
+    ...mapGetters({
+      getCachedIndex: GET_CACHED_INDEX,
+      getCachedPages: GET_CACHED_PAGES,
+      getCachedQuestions: GET_CACHED_QUESTIONS,
+      getCachedAnswers: GET_CACHED_ANSWERS
+    }),
     ...mapActions({
       delete: DELETE,
       newPageAction: NEW_PAGE
@@ -78,7 +85,12 @@ export const pageMixin = {
       this.$store.commit(SELECT, {model, itemOrId});
     },
     getPageQuestions(page) {
-      return Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order)
+      let cached = this.getCachedQuestions()(page.id)
+      if (cached) {
+        return cached
+      } else {
+        return Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order)
+      }
     },
     newPage(args) {
       return this.fetchSurveyToastPromise(this.newPageAction(args), PAGE_ADD_SUCCESS, PAGE_ADD_ERROR);

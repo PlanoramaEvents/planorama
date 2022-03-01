@@ -170,6 +170,17 @@ CREATE TYPE public.visibility_enum AS ENUM (
 );
 
 
+--
+-- Name: yesnomaybe_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.yesnomaybe_enum AS ENUM (
+    'yes',
+    'no',
+    'maybe'
+);
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -482,8 +493,6 @@ CREATE TABLE public.people (
     registration_type character varying,
     can_share boolean DEFAULT false NOT NULL,
     registration_number character varying,
-    can_photo boolean DEFAULT false NOT NULL,
-    can_record boolean DEFAULT false,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
@@ -527,7 +536,28 @@ END) STORED,
     instagram character varying,
     flickr character varying,
     reddit character varying,
-    tiktok character varying
+    tiktok character varying,
+    can_stream public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    can_record public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    can_photo public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    age_at_convention character varying,
+    romantic_sexual_orientation character varying,
+    awards character varying(10000) DEFAULT NULL::character varying,
+    needs_accommodations boolean DEFAULT false,
+    accommodations character varying(10000) DEFAULT NULL::character varying,
+    willing_to_moderate boolean DEFAULT false,
+    moderation_experience character varying(10000) DEFAULT NULL::character varying,
+    othered character varying(10000) DEFAULT NULL::character varying,
+    indigenous character varying(10000) DEFAULT NULL::character varying,
+    black_diaspora character varying(10000) DEFAULT NULL::character varying,
+    non_us_centric_perspectives character varying(10000) DEFAULT NULL::character varying,
+    demographic_categories character varying,
+    do_not_assign_with character varying(10000) DEFAULT NULL::character varying,
+    can_stream_exceptions character varying(10000) DEFAULT NULL::character varying,
+    can_record_exceptions character varying(10000) DEFAULT NULL::character varying,
+    can_photo_exceptions character varying(10000) DEFAULT NULL::character varying,
+    is_local boolean DEFAULT false,
+    langauges_fluent_in character varying(10000) DEFAULT NULL::character varying
 );
 
 
@@ -1932,9 +1962,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210620175724'),
 ('20210620180746'),
 ('20210626162611'),
-('20210627143358'),
 ('20210627225348'),
-('20210628120942'),
 ('20210628221900'),
 ('20210629220733'),
 ('20210702202436'),
@@ -1950,7 +1978,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210712134642'),
 ('20210716142413'),
 ('20210717191036'),
-('20210811135617'),
 ('20210819204542'),
 ('20210925131929'),
 ('20211101160001'),
@@ -1975,6 +2002,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220208222821'),
 ('20220209153904'),
 ('20220213221552'),
-('20220217233651');
+('20220217233651'),
+('20220301184226');
 
 
