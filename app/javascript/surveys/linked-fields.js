@@ -23,43 +23,43 @@ export const linkedFields = {
     {text: "Name", value: "people.name"},
     {text: "Published Name", value: "people.pseudonym"},
     {text: "Pronouns", value: "people.pronouns"},
-    {text: "Gender", value: "people.gender"}, // private
-    {text: "Race and/or ethnicity", value: "people.ethnicity"}, // private
-    {text: "Age at convention", value: "people.age_at_convention"}, // private
-    {text: "Romantic and/or sexual orientation", value: "people.romantic_sexual_orientation"}, //private
-    /*
-    {text: "Website"}
-    "Twitter",
-    "Facebook",
-    "Instagram",
-    "TikTok",
-    "Twitch",
-    "LinkedIn",
-    "YouTube",
-    "Other Online Presence"
+    {text: "Gender", value: "people.gender"}, // private todo
+    {text: "Race and/or ethnicity", value: "people.ethnicity"}, // private todo
+    {text: "Age at convention", value: "people.age_at_convention"}, // private todo
+    {text: "Romantic and/or sexual orientation", value: "people.romantic_sexual_orientation"}, //private todo
+    /* keep commented out
+    {text: "Website", value: "website"},
+    {text: "Twitter", value: "twitter"},
+    {text: "Facebook", value: "facebook"},
+    {text: "Instagram", value: "instagram"},
+    {text: "TikTok", value: "tiktok"},
+    {text: "Twitch", value: "twitch"},
+    {text: "LinkedIn", value: "linked"},
+    {text: "YouTube", value: "youtube"},
+    {text: "Other Online Presence", value: "otheronlinepresence"},
     */
   ],
   textbox: [
     {text: "Bio", value: "people.bio"},
-    {text: "Topics not to stream", value: "people.cant_stream"}, // todo
-    {text: "Topics not to record", value: "people.cant_record"}, //todo
+    {text: "Topics not to stream", value: "people.cant_stream"}, // todo rename
+    {text: "Topics not to record", value: "people.cant_record"}, //todo rename
     {text: "Awards?", value: "people.awards"}, //todo
     {text: "Details of Accommodations", value: "people.accommodations"}, // todo
     {text: "Moderation experience", value: "people.moderation_experience"}, //todo
-    {text: "Othered?", value: "people.othered"}, // private
-    {text: "Indigenous?", value: "people.indegenous"}, //private
-    {text: "Black Diaspora?", value: "people.black_diaspora"}, //private
-    {text: "Not US-centric?", value: "people.not_us_centric"}, //private
-    {text: "More Demographic Categories", value: "people.demographic_categories"}, //private
-    {text: "Do Not Assign With", value: "people.do_not_assign_with"}, //private
+    {text: "Othered?", value: "people.othered"}, // private todo
+    {text: "Indigenous?", value: "people.indegenous"}, //private todo
+    {text: "Black Diaspora?", value: "people.black_diaspora"}, //private todo
+    {text: "Not US-centric?", value: "people.not_us_centric"}, //private todo
+    {text: "More Demographic Categories", value: "people.demographic_categories"}, //private todo
+    {text: "Do Not Assign With", value: "people.do_not_assign_with"}, //private todo
   ],
   singlechoice: [
-    {text: "Attendance Type", value: "people.attendance_type"}, // todo
-    {text: "Permission to livestream", value: "people.can_stream"}, // todo
-    {text: "Permission to record", value: "people.can_record"}, // todo
-    {text: "Needs Accommodation?", value: "people.needs_accommodations"}, //todo
-    {text: "Is a local", value: "people.is_local"}, // todo
-    {text: "Moderation interest", value: "people.will_moderate"}, // todo
+    {text: "Attendance Type", value: "people.attendance_type"}, // todo [virtual, in-person, both]
+    {text: "Permission to livestream", value: "people.can_stream"}, // todo boolean
+    {text: "Permission to record", value: "people.can_record"}, // todo boolean
+    {text: "Needs Accommodation?", value: "people.needs_accommodations"}, //todo boolean
+    {text: "Is a local", value: "people.is_local"}, // todo boolean
+    {text: "Moderation interest", value: "people.will_moderate"}, // todo boolean
   ],
   multiplechoice: [
     {text: "Fluent languages", value: "people.fluent_langauges"}, //todo
