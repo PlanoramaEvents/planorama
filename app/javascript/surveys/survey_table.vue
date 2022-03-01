@@ -6,6 +6,7 @@ ISSUE - template links don't work
     @new="onNew"
     defaultSortBy='surveys.name'
     model="survey"
+    :defaultFilter="defaultFilter"
     :columns="columns"
   >
     <template #cell(description)="{ item }">
@@ -40,6 +41,9 @@ export default {
   components: {
     TableVue,
     TooltipOverflow,
+  },
+  props: {
+    defaultFilter: String
   },
   data() {
     return {
