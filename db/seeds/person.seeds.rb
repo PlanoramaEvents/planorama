@@ -60,9 +60,9 @@ if Person.count < 100
           )
       end
 
-      PersonRole.create(
+      PersonGroup.create(
           person: person,
-          role: PersonRole.roles[:member]
+          group: PersonGroup.groups[:participant]
         )
   end
 

@@ -77,9 +77,9 @@ class PeopleController < ResourceController
           );
 
           # By default we add the person as a member of the convention
-          PersonRole.create(
+          PersonGroup.create(
             person: person,
-            role: PersonRole.roles[:member]
+            group: PersonGroup.groups[:participant]
           )
 
           count += 1

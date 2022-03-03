@@ -12,9 +12,9 @@ if !Person.find_by(name: 'test')
         is_valid: true
     )
 
-    PersonRole.create(
+    PersonGroup.create(
         person: p,
-        role: PersonRole.roles[:admin]
+        group: PersonGroup.groups[:admin]
     )
 end
 
@@ -32,9 +32,9 @@ if !Person.find_by(name: 'staff')
         is_valid: true
     )
 
-    PersonRole.create(
+    PersonGroup.create(
         person: p,
-        role: PersonRole.roles[:planner]
+        group: PersonGroup.groups[:staff]
     )
 end
 
@@ -52,11 +52,10 @@ if !Person.find_by(name: 'participant')
         is_valid: true
     )
 
-    PersonRole.create(
+    PersonGroup.create(
         person: p,
-        role: PersonRole.roles[:member]
+        group: PersonGroup.groups[:participant]
     )
 end
 
 p "Created special test users for development environment."
-

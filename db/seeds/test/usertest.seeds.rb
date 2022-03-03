@@ -12,9 +12,9 @@ if !Person.find_by(name: 'test')
         is_valid: true
     )
 
-    PersonRole.create(
+    PersonGroup.create(
         person: p,
-        role: PersonRole.roles[:admin]
+        group: PersonGroup.groups[:admin]
     )
 end
 
