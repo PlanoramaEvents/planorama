@@ -9,8 +9,8 @@
         :disabled="readOnly"
     ></plano-editor>
     <!--model-field label="Terms" v-model="agreement.terms" type="text" stateless></model-field-->
-    <input type="radio" id="member" value="member" v-model="agreement.target"/>
-    <label for="member" style="padding-right: 15px">Members</label>
+    <input type="radio" id="participant" value="participant" v-model="agreement.target"/>
+    <label for="participant" style="padding-right: 15px">Participants</label>
     <input type="radio" id="staff" value="staff" v-model="agreement.target"/>
     <label for="staff" style="padding-right: 15px">Staff</label>
     <input type="radio" id="all" value="all" v-model="agreement.target"/>

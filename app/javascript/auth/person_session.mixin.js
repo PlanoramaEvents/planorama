@@ -11,7 +11,7 @@ export const personSessionMixin = {
     },
     currentUserIsAdmin() {
       // TODO
-      return !!Object.values(this.currentUser.person_roles).find(r => r.role === "admin")
+      return !!Object.values(this.currentUser.person_groups).find(r => r.role === "admin")
     }
   },
   methods: {

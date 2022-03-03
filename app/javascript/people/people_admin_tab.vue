@@ -3,7 +3,7 @@
     <h2>Roles</h2>
     <ul>
       <!-- TODO -->
-      <li v-for="role of selected.person_roles" :key="role.id">
+      <li v-for="role of selected.person_groups" :key="role.id">
         {{ role.role }}
       </li>
     </ul>
