@@ -9,13 +9,13 @@ export const agreement_columns = [
   },
   {
     key: 'terms',
-    label: 'Terms',
+    label: 'Body',
     type: "text",
     sortable: true,
   },
   {
     key: 'target',
-    label: 'Target',
+    label: 'Community',
     type: 'text',
     sortable: true,
   },

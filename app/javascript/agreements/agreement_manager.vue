@@ -4,6 +4,7 @@
     <agreement-table
       defaultFilter=''
       ref="agreements-table"
+      agreement-selected="onClick"
     ></agreement-table>
   </div>
 </template>
@@ -19,6 +20,9 @@ export default {
   methods: {
     init() {
       this.$refs['agreements-table'].init();
+    },
+    onClick(value) {
+      alert('in agreement_manager: value='+value);
     }
   }
 }
