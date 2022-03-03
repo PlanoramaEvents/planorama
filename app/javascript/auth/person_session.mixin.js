@@ -10,6 +10,7 @@ export const personSessionMixin = {
       return !!this.currentUser.id
     },
     currentUserIsAdmin() {
+      // TODO
       return !!Object.values(this.currentUser.person_roles).find(r => r.role === "admin")
     }
   },

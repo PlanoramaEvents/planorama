@@ -14,7 +14,7 @@ class PeopleController < ResourceController
       serializer: PersonSessionSerializer,
       jsonapi_included: [
         :email_addresses,
-        :person_roles,
+        :person_groups,
         :unsigned_agreements
       ]
     )
@@ -263,21 +263,21 @@ class PeopleController < ResourceController
   def serializer_includes
     [
       :email_addresses,
-      :person_roles
+      :person_groups
     ]
   end
 
   def includes
     [
       :email_addresses,
-      :person_roles
+      :person_groups
     ]
   end
 
   def references
     [
       :email_addresses,
-      :person_roles
+      :person_groups
     ]
   end
 
@@ -319,7 +319,7 @@ class PeopleController < ResourceController
       pseudonym
       pseudonym_sort_by
       pseudonym_sort_by_confirmed
-      person_roles_attributes
+      person_groups_attributes
       email_addresses_attributes
       bio
       website
@@ -340,9 +340,9 @@ class PeopleController < ResourceController
         email
         isdefault
       ],
-      person_roles_attributes: %i[
+      person_groups_attributes: %i[
         id
-        role
+        group
         _destroy
       ]
     ]

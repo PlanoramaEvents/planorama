@@ -1,27 +1,27 @@
 class PlannerPolicy < ApplicationPolicy
   def update?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def create?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def index?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def show?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def destroy?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   class Scope < Scope
     def resolve
-      if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+      if @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
         scope.all
       else
         if scope == Person
@@ -36,3 +36,23 @@ class PlannerPolicy < ApplicationPolicy
     end
   end
 end
+
+#
+# def permitted_attributes_for_create
+# etc to permit attribute for create and update based on role ?
+#
+# TODO: also need to adjust serializer for attributes that are not
+# allowed to be read
+# ApplicationRecord.descendants.collect(&:name)
+#
+# Person.attribute_names
+# Person.type_for_attribute('acceptance_status')
+# 'acceptance_status'.pluralize
+# Person.send 'acceptance_status'.pluralize to get the mapping
+#
+# Sensitive Information - need to be able to use this in sderializer as well
+# Class attribute name scope?
+#
+#
+# ABAC - model, attribute, action, role(s)
+#

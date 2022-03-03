@@ -35,6 +35,7 @@ export default {
       return `user-role-${this.person.id}`
     },
     roles: {
+      // TODO
       get() {
         return Object.values(this.person.person_roles).map(r => r.role) || []
       },

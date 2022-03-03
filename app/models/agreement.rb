@@ -1,5 +1,5 @@
 class Agreement < ApplicationRecord
-  enum target: { none: 'none', member: 'member', staff: 'staff', all: 'all' }, _suffix: true
+  enum target: { none: 'none', participant: 'participant', staff: 'staff', all: 'all' }, _suffix: true
 
   has_many  :person_agreements
   has_many  :people, through: :person_agreements
@@ -9,7 +9,7 @@ class Agreement < ApplicationRecord
     raise 'Person needed to list agreements' unless person
 
     scoping = Agreement.targets[:staff] if person.staff?
-    scoping = Agreement.targets[:member] if person.member? || person.no_role?
+    scoping = Agreement.targets[:participant] if person.participant? || person.no_group?
 
     where(
       [

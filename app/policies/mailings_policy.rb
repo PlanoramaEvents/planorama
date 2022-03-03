@@ -1,27 +1,27 @@
 class MailingsPolicy < PlannerPolicy
   def assign_people?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def unassign_people?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def schedule?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def preview?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def clone?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   # class Scope < Scope
   #   def resolve
-  #     if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  #     if @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   #       Rails.logger.debug "**** ALL #{@person.id}"
   #       scope.all
   #     else

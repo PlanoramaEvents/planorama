@@ -1,11 +1,11 @@
 class SessionPolicy < PlannerPolicy
   def import?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   end
 
   # class Scope < Scope
   #   def resolve
-  #     if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  #     if @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
   #       scope.all
   #     else
   #       scope.where(id: @person.id)

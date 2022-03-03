@@ -1,12 +1,12 @@
-class PersonRoleSerializer
+class PersonGroupSerializer
   include JSONAPI::Serializer
 
-  attributes :role, :id
+  attributes :group, :id
 
   belongs_to :person,
     links: {
       self: -> (object, params) {
-        "#{params[:domain]}/person_role/#{object.id}"
+        "#{params[:domain]}/person_group/#{object.id}"
       },
       related: -> (object, params) {
         "#{params[:domain]}/person/#{object.person_id}"
