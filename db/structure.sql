@@ -36,6 +36,28 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 
 
 --
+-- Name: action_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.action_enum AS ENUM (
+    'none',
+    'read',
+    'write'
+);
+
+
+--
+-- Name: action_scope_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.action_scope_enum AS ENUM (
+    'none',
+    'owner',
+    'role'
+);
+
+
+--
 -- Name: agreement_target; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -187,6 +209,23 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: action_permissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.action_permissions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    model_name character varying,
+    action character varying,
+    allowed boolean DEFAULT false,
+    person_role_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    action_scope public.action_scope_enum DEFAULT 'none'::public.action_scope_enum
+);
+
+
+--
 -- Name: agreements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -228,6 +267,22 @@ CREATE TABLE public.areas (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: attribute_permissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.attribute_permissions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    model_name character varying,
+    attribute_name character varying,
+    allowed boolean DEFAULT false,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    action public.action_enum DEFAULT 'none'::public.action_enum
 );
 
 
@@ -1121,6 +1176,14 @@ ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.ver
 
 
 --
+-- Name: action_permissions action_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.action_permissions
+    ADD CONSTRAINT action_permissions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: agreements agreements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1142,6 +1205,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.areas
     ADD CONSTRAINT areas_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: attribute_permissions attribute_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attribute_permissions
+    ADD CONSTRAINT attribute_permissions_pkey PRIMARY KEY (id);
 
 
 --
@@ -1473,6 +1544,34 @@ ALTER TABLE ONLY public.versions
 
 
 --
+-- Name: act_perm_mdl_allowed_scope_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX act_perm_mdl_allowed_scope_idx ON public.action_permissions USING btree (model_name, action, action_scope, allowed);
+
+
+--
+-- Name: act_perm_mdl_scope_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX act_perm_mdl_scope_idx ON public.action_permissions USING btree (model_name, action, action_scope);
+
+
+--
+-- Name: attr_model_allowed_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX attr_model_allowed_idx ON public.attribute_permissions USING btree (model_name, attribute_name, action, allowed);
+
+
+--
+-- Name: attr_model_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX attr_model_idx ON public.attribute_permissions USING btree (model_name, attribute_name, action);
+
+
+--
 -- Name: by_active_status; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1526,6 +1625,13 @@ CREATE INDEX fk_configurations_parameters_idx ON public.configurations USING btr
 --
 
 CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USING btree (parameter);
+
+
+--
+-- Name: index_action_permissions_on_model_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_action_permissions_on_model_name ON public.action_permissions USING btree (model_name);
 
 
 --
@@ -2006,6 +2112,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220213221552'),
 ('20220217233651'),
 ('20220301184226'),
-('20220301221956');
+('20220301221956'),
+('20220303154559'),
+('20220303154618');
 
 
