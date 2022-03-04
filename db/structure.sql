@@ -47,6 +47,17 @@ CREATE TYPE public.action_enum AS ENUM (
 
 
 --
+-- Name: action_scope_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.action_scope_enum AS ENUM (
+    'none',
+    'owner',
+    'role'
+);
+
+
+--
 -- Name: agreement_target; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -206,9 +217,11 @@ CREATE TABLE public.action_permissions (
     model_name character varying,
     action character varying,
     allowed boolean DEFAULT false,
+    person_role_id uuid,
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    action_scope public.action_scope_enum DEFAULT 'none'::public.action_scope_enum
 );
 
 
@@ -1531,6 +1544,20 @@ ALTER TABLE ONLY public.versions
 
 
 --
+-- Name: act_perm_mdl_allowed_scope_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX act_perm_mdl_allowed_scope_idx ON public.action_permissions USING btree (model_name, action, action_scope, allowed);
+
+
+--
+-- Name: act_perm_mdl_scope_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX act_perm_mdl_scope_idx ON public.action_permissions USING btree (model_name, action, action_scope);
+
+
+--
 -- Name: attr_model_allowed_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1605,20 +1632,6 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 --
 
 CREATE INDEX index_action_permissions_on_model_name ON public.action_permissions USING btree (model_name);
-
-
---
--- Name: index_action_permissions_on_model_name_and_action; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_action_permissions_on_model_name_and_action ON public.action_permissions USING btree (model_name, action);
-
-
---
--- Name: index_action_permissions_on_model_name_and_action_and_allowed; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_action_permissions_on_model_name_and_action_and_allowed ON public.action_permissions USING btree (model_name, action, allowed);
 
 
 --
