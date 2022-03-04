@@ -1,0 +1,2 @@
+class ActionPermission < ApplicationRecord
+end
