@@ -43,21 +43,19 @@ import ChangeUserRoles from './change-user-roles';
 import MailingsManager from '../mailings/mailings_manager';
 import ConfigurationsManager from '../configurations/configurations_manager';
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
-import AgreementAdd from '../agreements/agreement_add';
-import AgreementTable from "@/agreements/agreement_table";
+//import AgreementAdd from '../agreements/agreement_editor';
+//import AgreementTable from "@/agreements/agreement_table";
 import AgreementManager from "@/agreements/agreement_manager";
 
 export default {
   components: {
     AgreementManager,
-    AgreementTable,
     AdminAccordion,
     PersonAdd,
     ChangeUserRoles,
     SheetImporterVue,
     MailingsManager,
     ConfigurationsManager,
-    AgreementAdd
   },
   name: 'AdminComponent',
   data: () => ({

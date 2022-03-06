@@ -1,20 +1,20 @@
 <template>
-  <div>
-  {{selected}}
   <table-vue
-    model="agreement"
+    :model="agreement"
     :columns="columns"
+    :show-add="false"
+    :show-settings="false"
     ref="agreements-table"
   >
   </table-vue>
-  </div>
 </template>
 
 <script>
 import TableVue from '../components/table_vue';
 import { agreement_columns as columns } from './agreement';
 import { mapActions } from 'vuex';
-import { NEW_AGREEMENT, selected } from '@/store/agreement.store';
+import { NEW_AGREEMENT, agreementModel as agreement} from '@/store/agreement.store';
+import modelMixin from '../store/model.mixin'
 
 export default {
   name: 'AgreementTable',
@@ -23,17 +23,17 @@ export default {
   },
   data() {
     return {
-      columns
+      columns,
+      agreement
     }
   },
+  mixins: [
+    modelMixin,
+  ],
   methods: {
     ...mapActions({newAgreement: NEW_AGREEMENT}),
     init() {
-      alert(this.se)
       this.$refs['agreements-table'].fetchPaged()
-    },
-    onClick(value) {
-      alert('in agreement_table: value='+value);
     }
   }
 

@@ -15,7 +15,7 @@ export const agreement_columns = [
   },
   {
     key: 'target',
-    label: 'Community',
+    label: 'Role',
     type: 'text',
     sortable: true,
   },

@@ -2,22 +2,23 @@
   <b-form
     ref='add-agreement-form'
   >
-    <model-field label="Title" v-model="agreement.title" type="text" stateless></model-field>
+    <model-field label="Title" v-model="agreementData.title" type="text" stateless></model-field>
+    <label>Body</label>
     <plano-editor
-        v-model="agreement.terms"
+        v-model="agreementData.terms"
         type='classic'
         :disabled="readOnly"
     ></plano-editor>
     <!--model-field label="Terms" v-model="agreement.terms" type="text" stateless></model-field-->
-    <input type="radio" id="member" value="member" v-model="agreement.target"/>
+    <label style="padding-right: 15px">Roles:</label><input type="radio" id="member" value="member" v-model="agreementData.target"/>
     <label for="member" style="padding-right: 15px">Members</label>
-    <input type="radio" id="staff" value="staff" v-model="agreement.target"/>
+    <input type="radio" id="staff" value="staff" v-model="agreementData.target"/>
     <label for="staff" style="padding-right: 15px">Staff</label>
-    <input type="radio" id="all" value="all" v-model="agreement.target"/>
+    <input type="radio" id="all" value="all" v-model="agreementData.target"/>
     <label for="all">All</label>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
-      <b-button variant="primary" @click="savePerson">Save</b-button>
+      <b-button variant="primary" @click="saveAgreement">Save</b-button>
     </div>
   </b-form>
 </template>
@@ -32,7 +33,7 @@ import { mapActions } from 'vuex';
 import { NEW_AGREEMENT } from '@/store/agreement.store';
 
 export default {
-  name: "AgreementAdd",
+  name: "AgreementEditor",
   components: {
     ModelField,
     PlanoEditor
@@ -40,14 +41,6 @@ export default {
   mixins: [
     toastMixin
   ],
-  data: () =>  ({
-    // This is minimal JSON for a new Agreement entity
-    agreement: {
-      title: '',
-      terms: '',
-      target: 'all',
-    },
-  }),
   props: {
     showButtons: {
       default: true,
@@ -58,15 +51,29 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      agreementData: {
+        title: '',
+        terms: '',
+        target: 'all'
+      }
+    }
+  },
   methods: {
     ...mapActions({newAgreementAction: NEW_AGREEMENT}),
     clear() {
-      this.agreement.title = '';
-      this.agreement.terms = '';
-      this.agreement.target = 'all';
+      this.agreementData.title = '';
+      this.agreementData.terms = '';
+      this.agreementData.target = 'all';
     },
-    savePerson() {
-      let res = this.newAgreementAction(this.agreement);
+    setAgreementData(data) {
+      this.agreementData.title=data.title;
+      this.agreementData.terms = data.terms;
+      this.agreementData.target = data.target;
+    },
+    saveAgreement() {
+      let res = this.newAgreementAction(this.agreementData);
       res.then(
         (obj) => {
           this.$bvToast.toast(
