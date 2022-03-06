@@ -14,7 +14,7 @@ class PeopleController < ResourceController
       serializer: PersonSessionSerializer,
       jsonapi_included: [
         :email_addresses,
-        :person_groups,
+        :convention_roles,
         :unsigned_agreements
       ]
     )
@@ -77,9 +77,9 @@ class PeopleController < ResourceController
           );
 
           # By default we add the person as a member of the convention
-          PersonGroup.create(
+          ConventionRole.create(
             person: person,
-            group: PersonGroup.groups[:participant]
+            group: ConventionRole.roles[:participant]
           )
 
           count += 1
@@ -263,21 +263,21 @@ class PeopleController < ResourceController
   def serializer_includes
     [
       :email_addresses,
-      :person_groups
+      :convention_roles
     ]
   end
 
   def includes
     [
       :email_addresses,
-      :person_groups
+      :convention_roles
     ]
   end
 
   def references
     [
       :email_addresses,
-      :person_groups
+      :convention_roles
     ]
   end
 
@@ -319,7 +319,7 @@ class PeopleController < ResourceController
       pseudonym
       pseudonym_sort_by
       pseudonym_sort_by_confirmed
-      person_groups_attributes
+      convention_roles_attributes
       email_addresses_attributes
       bio
       website
@@ -340,7 +340,7 @@ class PeopleController < ResourceController
         email
         isdefault
       ],
-      person_groups_attributes: %i[
+      convention_roles_attributes: %i[
         id
         group
         _destroy

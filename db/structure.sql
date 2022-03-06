@@ -80,6 +80,17 @@ CREATE TYPE public.assignment_role_enum AS ENUM (
 
 
 --
+-- Name: convention_role_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.convention_role_enum AS ENUM (
+    'admin',
+    'staff',
+    'participant'
+);
+
+
+--
 -- Name: interest_role_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -397,6 +408,20 @@ CREATE TABLE public.conflict_exceptions (
 
 
 --
+-- Name: convention_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.convention_roles (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    role public.convention_role_enum
+);
+
+
+--
 -- Name: email_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -670,6 +695,20 @@ CREATE TABLE public.person_mailing_assignments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: person_role_assocs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_role_assocs (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    person_role_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1256,6 +1295,14 @@ ALTER TABLE ONLY public.conflict_exceptions
 
 
 --
+-- Name: convention_roles convention_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.convention_roles
+    ADD CONSTRAINT convention_roles_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: email_addresses email_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1341,6 +1388,14 @@ ALTER TABLE ONLY public.person_constraints
 
 ALTER TABLE ONLY public.person_mailing_assignments
     ADD CONSTRAINT person_mailing_assignments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: person_role_assocs person_role_assocs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_role_assocs
+    ADD CONSTRAINT person_role_assocs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1663,6 +1718,13 @@ CREATE UNIQUE INDEX index_areas_on_name ON public.areas USING btree (name);
 
 
 --
+-- Name: index_convention_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_convention_roles_on_person_id ON public.convention_roles USING btree (person_id);
+
+
+--
 -- Name: index_magic_links_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1751,6 +1813,13 @@ CREATE INDEX index_person_mailing_assignments_on_mailing_id ON public.person_mai
 --
 
 CREATE INDEX index_person_mailing_assignments_on_person_id ON public.person_mailing_assignments USING btree (person_id);
+
+
+--
+-- Name: index_person_role_assocs_on_person_id_and_person_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_person_role_assocs_on_person_id_and_person_role_id ON public.person_role_assocs USING btree (person_id, person_role_id);
 
 
 --
@@ -2114,6 +2183,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220301184226'),
 ('20220301221956'),
 ('20220303154559'),
-('20220303154618');
+('20220303154618'),
+('20220303175111'),
+('20220303175113'),
+('20220303175135');
 
 

@@ -11,9 +11,9 @@ if !Person.find_by(name: 'chicon admin')
         is_valid: true
     )
 
-    PersonGroup.create(
+    ConventionRole.create(
         person: p,
-        group: PersonGroup.groups[:admin]
+        role: ConventionRole.roles[:admin]
     )
 
 end
@@ -32,9 +32,9 @@ if !Person.find_by(name: 'test')
         is_valid: true
     )
 
-    PersonGroup.create(
+    ConventionRole.create(
         person: p,
-        group: PersonGroup.groups[:admin]
+        role: ConventionRole.roles[:admin]
     )
 end
 

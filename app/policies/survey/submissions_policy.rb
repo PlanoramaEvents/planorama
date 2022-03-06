@@ -11,11 +11,11 @@ class Survey::SubmissionsPolicy < PlannerPolicy
     # TODO: this could be an issue
     # return true if @record.person_id == nil
 
-    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
+    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def delete_all?
-    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
+    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def update?
@@ -24,7 +24,7 @@ class Survey::SubmissionsPolicy < PlannerPolicy
     # record could be a symbol
     return true if @record.class != Symbol && @record.person_id == @person.id
 
-    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
+    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def show?
@@ -33,6 +33,6 @@ class Survey::SubmissionsPolicy < PlannerPolicy
     # TODO: this could be an issue
     # return true if @record.person_id == nil
 
-    @person.person_groups.inject(false) { |res, grp| res || grp.admin? }
+    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 end

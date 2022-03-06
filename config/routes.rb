@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   get 'people/me', to: 'people#me'
   post 'person/import', to: 'people#import'
   resources :people, path: 'person' do
-    get 'person_groups', to: 'person_groups#index'
+    get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
     get 'sessions', to: 'sessions#index'
     get 'published_sessions', to: 'published_sessions#index'
@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     get 'submissions', to: 'people#submissions'
   end
 
-  resources :person_groups, path: 'person_group', except: [:index]
+  resources :convention_roles, path: 'convention_role', except: [:index]
   resources :email_addresses, path: 'email_address', except: [:index]
 
   get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'

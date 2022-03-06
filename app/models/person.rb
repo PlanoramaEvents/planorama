@@ -89,8 +89,8 @@ class Person < ApplicationRecord
 
   # TODO: get a list of surveys assigned AND those with submissions that are not assigned
 
-  has_many :person_groups, dependent: :destroy
-  accepts_nested_attributes_for :person_groups, allow_destroy: true
+  has_many :convention_roles, dependent: :destroy
+  accepts_nested_attributes_for :convention_roles, allow_destroy: true
 
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements
@@ -146,24 +146,24 @@ class Person < ApplicationRecord
   end
 
   def admin?
-    person_groups.inject(false) { |res, role| res || role.admin? }
+    convention_roles.inject(false) { |res, role| res || role.admin? }
   end
 
   def staff?
-    person_groups.inject(false) { |res, role| res || role.staff? }
+    convention_roles.inject(false) { |res, role| res || role.staff? }
   end
 
   #
   # def planner?
-  #   person_groups.inject(false) { |res, role| res || role.planner? }
+  #   convention_roles.inject(false) { |res, role| res || role.planner? }
   # end
 
   def participant?
-    person_groups.inject(false) { |res, role| res || role.participant? }
+    convention_roles.inject(false) { |res, role| res || role.participant? }
   end
 
   def no_group?
-    person_groups.size == 0
+    convention_roles.size == 0
   end
 
   #

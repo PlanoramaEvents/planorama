@@ -12,9 +12,9 @@ if !Person.find_by(name: 'test')
         is_valid: true
     )
 
-    PersonGroup.create(
+    ConventionRole.create(
         person: p,
-        group: PersonGroup.groups[:admin]
+        role: ConventionRole.roles[:admin]
     )
 end
 
@@ -32,9 +32,9 @@ if !Person.find_by(name: 'staff')
         is_valid: true
     )
 
-    PersonGroup.create(
+    ConventionRole.create(
         person: p,
-        group: PersonGroup.groups[:staff]
+        role: ConventionRole.roles[:staff]
     )
 end
 
@@ -52,9 +52,9 @@ if !Person.find_by(name: 'participant')
         is_valid: true
     )
 
-    PersonGroup.create(
+    ConventionRole.create(
         person: p,
-        group: PersonGroup.groups[:participant]
+        role: ConventionRole.roles[:participant]
     )
 end
 

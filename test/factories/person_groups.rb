@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :person_group do
+  factory :convention_role do
     
   end
 end

@@ -49,13 +49,13 @@ class PersonSerializer #< ActiveModel::Serializer
     !person.password.blank?
   end
 
-  has_many :person_groups, serializer: PersonGroupSerializer,
+  has_many :convention_roles, serializer: ConventionRoleSerializer,
             links: {
               self: -> (object, params) {
                 "#{params[:domain]}/person/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/person/#{object.id}/person_groups"
+                "#{params[:domain]}/person/#{object.id}/convention_roles"
               }
             }
 

@@ -60,9 +60,9 @@ if Person.count < 100
           )
       end
 
-      PersonGroup.create(
+      ConventionRole.create(
           person: person,
-          group: PersonGroup.groups[:participant]
+          role: ConventionRole.roles[:participant]
         )
   end
 

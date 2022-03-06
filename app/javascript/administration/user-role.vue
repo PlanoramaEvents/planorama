@@ -1,7 +1,7 @@
 <template>
   <div v-if="person">
     <b-form-group :label="person.name" label-cols="4" :label-for="formId">
-      <b-form-checkbox-group :id="formId" :name="formId" inline v-model="groups" :options="groupOptions" @change="onSave">
+      <b-form-checkbox-group :id="formId" :name="formId" inline v-model="roles" :options="roleOptions" @change="onSave">
       </b-form-checkbox-group>
     </b-form-group>
   </div>
@@ -12,7 +12,7 @@ import toastMixin from '../shared/toast-mixin'
 import modelMixin from '../store/model.mixin'
 
 export default {
-  name: "Usergroup",
+  name: "UserRole",
   mixins: [
     modelMixin,
     toastMixin
@@ -24,7 +24,7 @@ export default {
   },
   data: () => ({
     person: null,
-    groupOptions: [
+    roleOptions: [
       {text: "Admin",  value: "admin"},
       {text: "Staff", value: "staff"},
       {text: "Participant", value: "participant"}
@@ -32,31 +32,31 @@ export default {
   }),
   computed: {
     formId() {
-      return `user-group-${this.person.id}`
+      return `user-role-${this.person.id}`
     },
-    groups: {
+    roles: {
       get() {
-        return Object.values(this.person.person_groups).map(r => r.group) || []
+        return Object.values(this.person.convention_roles).map(r => r.role) || []
       },
       set(val) {
-        let existinggroups = Object.values(this.person.person_groups)
-        let newgroups = val;
-        let groupsForSaving = [];
-        for (let group of newgroups) {
-          let existing = existinggroups.find(r => r.group === group);
+        let existingroles = Object.values(this.person.convention_roles)
+        let newroles = val;
+        let rolesForSaving = [];
+        for (let role of newroles) {
+          let existing = existingroles.find(r => r.role === role);
           if(existing) {
-            groupsForSaving.push(this.buildgroup(existing));
+            rolesForSaving.push(this.buildrole(existing));
           } else {
-            groupsForSaving.push({group})
+            rolesForSaving.push({role})
           }
         }
-        for (let group of existinggroups) {
-          if(!newgroups.includes(group.group)) {
-            groupsForSaving.push({...this.buildgroup(group), _destroy: 1})
+        for (let role of existingroles) {
+          if(!newroles.includes(role.role)) {
+            rolesForSaving.push({...this.buildrole(role), _destroy: 1})
           }
         }
 
-        this.person.person_groups_attributes = groupsForSaving
+        this.person.convention_roles_attributes = rolesForSaving
       }
     }
   },
@@ -68,15 +68,15 @@ export default {
     }
   },
   methods: {
-    buildgroup(v) {
+    buildrole(v) {
       return {
         id: v.id,
-        group: v.group
+        role: v.role
       }
     },
     onSave() {
       const updatedPerson = {
-        person_groups_attributes: this.person.person_groups_attributes,
+        convention_roles_attributes: this.person.convention_roles_attributes,
         _jv: {
           type: 'person',
           id: this.person.id
