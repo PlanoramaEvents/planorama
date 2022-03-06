@@ -7,7 +7,7 @@
     <table-vue
       ref="responses-table"
       model="submission_flat"
-      defaultUrl="/survey/00000000-0000-0000-0000-000000000014/submissions/flat"
+      :defaultUrl="defaultUrl"
       :show-add="false"
       :show-settings="false"
       :columns="question_columns"
@@ -51,6 +51,9 @@ export default {
     submissionMixin
   ],
   computed: {
+    defaultUrl() {
+      return `/survey/${this.selectedSurveyId}/submissions/flat`
+    },
     downloadLink() {
       return `/survey/${this.selectedSurveyId}/submissions.xlsx`
     },
