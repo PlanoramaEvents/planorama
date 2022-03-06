@@ -36,17 +36,6 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 
 
 --
--- Name: action_enum; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.action_enum AS ENUM (
-    'none',
-    'read',
-    'write'
-);
-
-
---
 -- Name: action_scope_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -278,22 +267,6 @@ CREATE TABLE public.areas (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     lock_version integer DEFAULT 0
-);
-
-
---
--- Name: attribute_permissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.attribute_permissions (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    model_name character varying,
-    attribute_name character varying,
-    allowed boolean DEFAULT false,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    action public.action_enum DEFAULT 'none'::public.action_enum
 );
 
 
@@ -1247,14 +1220,6 @@ ALTER TABLE ONLY public.areas
 
 
 --
--- Name: attribute_permissions attribute_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attribute_permissions
-    ADD CONSTRAINT attribute_permissions_pkey PRIMARY KEY (id);
-
-
---
 -- Name: bios bios_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1610,20 +1575,6 @@ CREATE UNIQUE INDEX act_perm_mdl_allowed_scope_idx ON public.action_permissions 
 --
 
 CREATE INDEX act_perm_mdl_scope_idx ON public.action_permissions USING btree (model_name, action, action_scope);
-
-
---
--- Name: attr_model_allowed_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX attr_model_allowed_idx ON public.attribute_permissions USING btree (model_name, attribute_name, action, allowed);
-
-
---
--- Name: attr_model_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX attr_model_idx ON public.attribute_permissions USING btree (model_name, attribute_name, action);
 
 
 --
@@ -2183,7 +2134,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220301184226'),
 ('20220301221956'),
 ('20220303154559'),
-('20220303154618'),
 ('20220303175111'),
 ('20220303175113'),
 ('20220303175135');
