@@ -6,9 +6,9 @@ class Validator::EmailController < ApplicationController
   def validate
     # access control to do
     # Rails.logger.debug "******* #{permitted}"
-    emails_to_validate = permitted
+    emails_to_validate = permitted.map(&:downcase)
     # Rails.logger.debug "******* #{permitted} -- #{emails_to_validate}"
-    emails_we_have = EmailAddress.all.collect(&:email)
+    emails_we_have = EmailAddress.all.collect(&:email).map(&:downcase)
 
     good = emails_to_validate.intersection emails_we_have
     bad = emails_to_validate.difference good
