@@ -214,7 +214,7 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.action_permissions (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    model_name character varying,
+    mdl_name character varying,
     action character varying,
     allowed boolean DEFAULT false,
     person_role_id uuid,
@@ -1567,14 +1567,14 @@ ALTER TABLE ONLY public.versions
 -- Name: act_perm_mdl_allowed_scope_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX act_perm_mdl_allowed_scope_idx ON public.action_permissions USING btree (model_name, action, action_scope, allowed);
+CREATE UNIQUE INDEX act_perm_mdl_allowed_scope_idx ON public.action_permissions USING btree (mdl_name, action, action_scope, allowed);
 
 
 --
 -- Name: act_perm_mdl_scope_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX act_perm_mdl_scope_idx ON public.action_permissions USING btree (model_name, action, action_scope);
+CREATE INDEX act_perm_mdl_scope_idx ON public.action_permissions USING btree (mdl_name, action, action_scope);
 
 
 --
@@ -1634,10 +1634,10 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
--- Name: index_action_permissions_on_model_name; Type: INDEX; Schema: public; Owner: -
+-- Name: index_action_permissions_on_mdl_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_action_permissions_on_model_name ON public.action_permissions USING btree (model_name);
+CREATE INDEX index_action_permissions_on_mdl_name ON public.action_permissions USING btree (mdl_name);
 
 
 --

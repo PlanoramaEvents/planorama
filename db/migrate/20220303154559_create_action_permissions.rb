@@ -16,7 +16,7 @@ class CreateActionPermissions < ActiveRecord::Migration[6.1]
 
 
     create_table :action_permissions, id: :uuid do |t|
-      t.string  :model_name
+      t.string  :mdl_name
       t.string  :action
       t.boolean :allowed, default: false
       t.uuid    :person_role_id
@@ -26,8 +26,8 @@ class CreateActionPermissions < ActiveRecord::Migration[6.1]
     end
     add_column :action_permissions, :action_scope, :action_scope_enum, default: 'none'
 
-    add_index :action_permissions, :model_name
-    add_index :action_permissions, [:model_name, :action, :action_scope], name: 'act_perm_mdl_scope_idx'
-    add_index :action_permissions, [:model_name, :action, :action_scope, :allowed], name: 'act_perm_mdl_allowed_scope_idx', unique: true
+    add_index :action_permissions, :mdl_name
+    add_index :action_permissions, [:mdl_name, :action, :action_scope], name: 'act_perm_mdl_scope_idx'
+    add_index :action_permissions, [:mdl_name, :action, :action_scope, :allowed], name: 'act_perm_mdl_allowed_scope_idx', unique: true
   end
 end
