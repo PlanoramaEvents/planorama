@@ -110,7 +110,7 @@ export const store = new Vuex.Store({
           // need to also deep copy selected survey when we edit it's attributes.... how????
           return res
         } else {
-          console.debug('**** DEEP COPY ....', model)
+          // console.debug('**** DEEP COPY ....', model)
           return utils.deepCopy(res)
         }
       }
