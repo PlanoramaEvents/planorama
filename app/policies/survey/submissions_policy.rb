@@ -5,7 +5,7 @@ class Survey::SubmissionsPolicy < PlannerPolicy
   end
 
   def flat?
-    Rails.logger.debug "********* #{@record} #{@person}"
+    # Rails.logger.debug "********* #{@record} #{@person}"
     # return true if @record.class != Symbol && @record && @record.person_id == @person.id
     # Anonymoous submission can be seen by anonymous perspn
     # TODO: this could be an issue

@@ -42,6 +42,12 @@ import TooltipOverflow from '../shared/tooltip-overflow';
 import { submissionModel, surveyModel } from '@/store/survey';
 export default {
   name: 'ViewReponses',
+  props: {
+    surveyId: {
+      type: String,
+      default: null
+    }
+  },
   components: {
     TableVue,
     TooltipOverflow
@@ -52,16 +58,13 @@ export default {
   ],
   computed: {
     defaultUrl() {
-      return `/survey/${this.selectedSurveyId}/submissions/flat`
+      return `/survey/${this.surveyId}/submissions/flat`
     },
     downloadLink() {
-      return `/survey/${this.selectedSurveyId}/submissions.xlsx`
+      return `/survey/${this.surveyId}/submissions.xlsx`
     },
     filename() {
-      return `survey_${this.selectedSurveyId}_responses.xlsx`
-    },
-    selectedSurveyId() {
-      return this.$store.state.selected[surveyModel];
+      return `survey_${this.surveyId}_responses.xlsx`
     },
     question_columns() {
       if (!this.survey || !this.survey.pages) {
@@ -110,14 +113,13 @@ export default {
   },
   methods: {
     init() {
-      this.$refs['responses-table'].fetchPaged()
-    }
-  },
-  watch: {
-    selectedSurveyId(newVal, oldVal) {
-      console.debug("*** SELECTED SURVEY ID SET")
-      if (newVal && (!oldVal || newVal !== oldVal)) {
-        this.init()
+      if (!this.survey || !this.survey.pages) {
+        this.selectSurvey(this.surveyId)
+        this.fetchSelectedSurvey().then(() => {
+          this.$refs['responses-table'].fetchPaged()
+        });
+      } else {
+        this.$refs['responses-table'].fetchPaged()
       }
     }
   },

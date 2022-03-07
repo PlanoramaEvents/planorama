@@ -1,6 +1,6 @@
 import surveyMixin from './survey.mixin';
 import { pageModel as model, questionModel, NEW_PAGE } from '@/store/survey';
-import { SELECT, SELECTED, DELETE, SAVE, PATCH_RELATED } from '@/store/model.store';
+import { SELECT, SELECTED, DELETE, SAVE, PATCH_RELATED, UNSELECT } from '@/store/model.store';
 import { mapGetters, mapActions } from 'vuex';
 import { toastMixin }  from '../shared/toast-mixin';
 import { PAGE_ADD_ERROR, PAGE_ADD_SUCCESS, PAGE_DELETE_ERROR, PAGE_DELETE_SUCCESS, PAGE_MERGE_ERROR, PAGE_MERGE_SUCCESS, PAGE_SAVE_ERROR, PAGE_SAVE_SUCCESS } from '@/constants/strings';
@@ -128,6 +128,9 @@ export const pageMixin = {
     },
     deletePage(itemOrId) {
       return this.fetchSurveyToastPromise(this.delete({model, itemOrId}), PAGE_DELETE_SUCCESS, PAGE_DELETE_ERROR);
+    },
+    unselectPage() {
+      this.$store.commit(UNSELECT, {model})
     }
   }
 }

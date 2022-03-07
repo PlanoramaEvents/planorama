@@ -34,6 +34,7 @@ import { mailingStore, mailingEndpoints } from './mailing.store';
 import { personSessionStore } from './person_session.store';
 
 // survey add-ons
+import { surveyModel } from './survey/survey.model';
 import { surveyStore, surveyEndpoints } from './survey/survey.store';
 
 // session add-ons
@@ -102,7 +103,16 @@ export const store = new Vuex.Store({
     [SELECTED] (state, getters) {
       return ({model}) => {
         if (!state.selected[model]) return undefined;
-        return utils.deepCopy(getters['jv/get']({_jv: {id: state.selected[model], type: model}}))
+
+        let res = getters['jv/get']({_jv: {id: state.selected[model], type: model}})
+        if (model === surveyModel) {
+          // Deepcopy is a problem for surveys ... so we only do on the select of individual component ...
+          // need to also deep copy selected survey when we edit it's attributes.... how????
+          return res
+        } else {
+          console.debug('**** DEEP COPY ....', model)
+          return utils.deepCopy(res)
+        }
       }
     },
     ...personStore.getters,
