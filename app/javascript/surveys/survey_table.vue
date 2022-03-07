@@ -1,6 +1,3 @@
-<!-- CONVERTED
-ISSUE - template links don't work
--->
 <template>
   <table-vue
     @new="onNew"
