@@ -67,6 +67,7 @@ import {
   SURVEY_RESULTS_CLEAR_CONFIRM,
   SURVEY_SAVE_SUCCESS_DELETE,
   SURVEY_RESULTS_CLEAR_SUCCESS,
+  SURVEY_RESULTS_CLEAR_ERROR,
   SURVEY_RESULTS_FREEZE_SUCCESS,
   SURVEY_RESULTS_UNFREEZE_SUCCESS,
   SURVEY_CONFIRM_DELETE,
@@ -113,7 +114,7 @@ export default {
       this.deleteSurvey()
     },
     clearResponses() {
-      this.toastPromise(this.$store.dispatch(CLEAR_SURVEY_SUBMISSIONS, {item: this.survey}), SURVEY_RESULTS_CLEAR_SUCCESS)
+      this.toastPromise(this.$store.dispatch(CLEAR_SURVEY_SUBMISSIONS, {itemOrId: this.survey}), SURVEY_RESULTS_CLEAR_SUCCESS, SURVEY_RESULTS_CLEAR_ERROR)
     },
     toggleSubmissionEdits(val) {
       this.survey.allow_submission_edits = val

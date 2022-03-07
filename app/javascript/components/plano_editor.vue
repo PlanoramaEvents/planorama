@@ -35,13 +35,9 @@ export default {
     }
   },
   computed: {
-    // This is because form-control screws up classic display
+    // This is because form-control screws up the display
     inputClass: function() {
-      if (this.type == 'inline') {
-        return 'form-control'
-      } else {
-        return 'plano-form-control'
-      }
+      return 'plano-form-control'
     },
     config: function() {
       let local_config = {
@@ -82,7 +78,7 @@ export default {
         local_config.allowedContent = true
       }
 
-      local_config.autoParagraph = false
+      local_config.enterMode = 2 // This is CKEDITOR.ENTER_BR
       local_config.toolbar = toolbar
 
       return local_config
@@ -91,6 +87,7 @@ export default {
   methods: {
     onNamespaceLoaded( CKEDITOR ) {
       // Add our own plugin to use with the editor
+      // console.debug('***** CK LOADED ', CKEDITOR.ENTER_BR)
       if (this.showMailMerge) {
         CKEDITOR.plugins.addExternal( 'planobuttons', '/ckeditor/plugins/planobuttons/', 'plugin.js' )
       }
