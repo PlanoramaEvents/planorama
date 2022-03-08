@@ -165,6 +165,10 @@ export default {
         this.$refs.table.clearSelected()
       }
     }
+  },
+  mounted() {
+    // ensure that there is no model selected when the table is loaded
+    this.unselect();
   }
 }
 </script>

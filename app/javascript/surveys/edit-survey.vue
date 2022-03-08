@@ -3,15 +3,6 @@
     <b-form-group
       class="mx-3"
       v-if="survey"
-      id="survey-name-group"
-      label="Survey Name"
-      label-for="survey-name"
-    >
-      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()"></b-form-input>
-    </b-form-group>
-    <b-form-group
-      class="mx-3"
-      v-if="survey"
       id="survey-description-group"
       label="Survey Description"
       label-for="survey-description"

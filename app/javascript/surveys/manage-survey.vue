@@ -1,8 +1,16 @@
 <template>
   <div class="survey scrollable">
     <b-button variant="link" @click="back">Back</b-button>
-    <h2 class="font-weight-light" v-if="survey">{{survey.name}}</h2>
-    <p v-if="survey">{{survey.description}}</p>
+    <!-- TODO: wrap in permission  -->
+    <b-form-group
+      class="mx-3"
+      v-if="survey"
+      id="survey-name-group"
+      label="Survey Name"
+      label-for="survey-name"
+    >
+      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()"></b-form-input>
+    </b-form-group>
     <b-tabs>
       <b-tab title="Questions" :active="!responses" lazy>
         <edit-survey :survey-id="id"></edit-survey>

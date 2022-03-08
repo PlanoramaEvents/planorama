@@ -66,9 +66,6 @@ export default {
         this.$router.push({path: `/surveys/edit/${survey.id}`})
       });
     }
-  },
-  mounted() {
-    this.unselectSurvey();
   }
 }
 </script>

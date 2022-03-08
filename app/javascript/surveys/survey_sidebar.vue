@@ -1,4 +1,3 @@
-<!-- CONVERTED? -->
 <template>
   <div>
     <sidebar-vue v-if="survey" model="survey">
@@ -73,7 +72,6 @@ import {
   SURVEY_CONFIRM_DELETE,
 } from '../constants/strings';
 import { DUPLICATE_SURVEY } from '@/store/survey';
-// import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { CLEAR_SURVEY_SUBMISSIONS } from '../store/survey/survey.actions';
 
 export default {
@@ -83,17 +81,26 @@ export default {
     SurveyQuestion,
     SurveySettingsTab,
   },
-  mixins: [surveyMixin],
+  mixins: [
+    surveyMixin
+  ],
   data: () => ({
     SURVEY_RESULTS_CLEAR_CONFIRM,
     SURVEY_CONFIRM_DELETE
   }),
   computed: {
     questions() {
-      // TODO: do we call this when not selected/cached?
-      return this.getSurveyPages(this.survey).map(
-        (p) => {return this.getCachedQuestions()(p.id)}
-      ).reduce((p, c) => [...p, ...c], []);
+      if (this.selected) {
+        return this.getSurveyPages(this.survey).map(
+          (p) => {return this.getCachedQuestions()(p.id)}
+        ).reduce((p, c) => {
+          if (c) {
+            return [...p, ...c]
+          } else {
+            return []
+          }
+        });
+      }
     },
     editLink() {
       return `/surveys/edit/${this.survey.id}`;
