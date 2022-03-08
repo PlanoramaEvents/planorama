@@ -223,11 +223,7 @@ export const surveyStore = {
       let id = getId(itemOrId)
       return new Promise((res, rej) => {
         dispatch('jv/delete', `${surveyModel}/{${id}}/${submissionModel}`).then((maybeData) => {
-          console.debug("is this the survey model? ", maybeData)
-          // if this returns the survey without the submissions, don't need the second call
-          dispatch(FETCH_BY_ID, {model: surveyModel, itemOrId}).then((data) => {
-            res(data);
-          }).catch(rej)
+          res(maybeData);
         }).catch(rej)
       });
     },
