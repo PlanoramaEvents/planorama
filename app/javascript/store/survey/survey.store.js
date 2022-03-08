@@ -79,7 +79,7 @@ export const surveyStore = {
   },
   mutations: {
     [SET_PREVIEW_MODE](state, previewMode) {
-      console.debug("previewMode", previewMode)
+      // console.debug("previewMode", previewMode)
       state.previewMode = previewMode
     },
     [NEW_RESPONSE] (state, {relationships = {}}) {

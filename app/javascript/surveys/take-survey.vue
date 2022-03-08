@@ -1,4 +1,3 @@
-<!-- CONVERTED -->
 <template>
   <div class="survey scrollable">
     Loading...
@@ -35,7 +34,7 @@ export default {
         this.newSubmission({surveyId: this.id});
       }
       let path = `/surveys/${this.id}/page/${this.selectedPage.id}${this.preview ? '/preview' : ''}`
-      console.log('redirecting to ', path)
+      // console.log('redirecting to ', path)
       this.$router.push({path})
     })
   }

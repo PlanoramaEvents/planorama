@@ -26,7 +26,6 @@ import ScheduleScreen from './sessions/schedule-screen.vue';
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
 import SurveyList from './surveys/survey-list.vue';
-// TODO: change to manage survey
 import ManageSurvey from './surveys/manage-survey.vue';
 import TakeSurvey from './surveys/take-survey.vue';
 import SurveyPage from './surveys/survey-page.vue';

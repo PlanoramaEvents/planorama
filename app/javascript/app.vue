@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">    
+  <div class="container-fluid">
     <sign-agreements ref="agreement-signer"></sign-agreements>
     <div class="row">
       <top-navbar></top-navbar>
@@ -19,9 +19,7 @@ import SideNavbar from "./navbar/side-navbar.vue";
 import BottomNavbar from "./navbar/bottom-navbar.vue";
 import personSessionMixin from "./auth/person_session.mixin";
 import SignAgreements from "./agreements/sign_agreements.vue"
-import { ValidationProvider } from 'vee-validate';
-
-import { extend } from 'vee-validate';
+import { ValidationProvider, extend } from 'vee-validate';
 import { required, email, numeric } from 'vee-validate/dist/rules';
 
 extend('email', email);
