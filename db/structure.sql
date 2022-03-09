@@ -1009,7 +1009,8 @@ CREATE TABLE public.survey_questions (
     page_id uuid,
     randomize boolean DEFAULT false,
     branching boolean DEFAULT false,
-    linked_field text
+    linked_field text,
+    deleted_at timestamp without time zone
 );
 
 
@@ -2136,6 +2137,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220303154559'),
 ('20220303175111'),
 ('20220303175113'),
-('20220303175135');
+('20220303175135'),
+('20220309183902');
 
 

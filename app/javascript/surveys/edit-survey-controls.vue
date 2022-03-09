@@ -17,7 +17,7 @@ import { pageMixin, questionMixin } from '@mixins';
 export default {
   name: 'EditSurveyControls',
   mixins: [
-    pageMixin, 
+    pageMixin,
     questionMixin
   ],
   methods: {

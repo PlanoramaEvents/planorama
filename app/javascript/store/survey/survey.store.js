@@ -109,10 +109,6 @@ export const surveyStore = {
     (store) => {
       store.subscribe((mutation, state) => {
         // Build a ordered cache of Survey elements upon select
-        if (mutation.type === SELECT) {
-          console.debug('*** --- select ', mutation.payload.model)
-        }
-
         if ((mutation.type === SELECT) && (mutation.payload.model === 'survey')) {
           let instance = mutation.payload.itemOrId;
           if (typeof instance == 'string') {

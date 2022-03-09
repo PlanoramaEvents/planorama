@@ -96,7 +96,7 @@ class SurveysController < ResourceController
   def check_for_publish
     # check if going to be published
     # If we are going to publish then public is set to true
-    return unless permitted_params[:public]
+    return unless permitted_params['public']
     # If it was not already published the old value would be false
     return if @object.public
 

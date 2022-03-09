@@ -225,9 +225,17 @@ module ResourceMethods
 
   def query(filters = nil)
     # Go through the filter and construct the where clause
-    return nil unless filters.present?
+    return exclude_deleted_clause unless filters.present?
 
     query_part(filter: filters)
+  end
+
+  # if the element has a deleted_at we want the non deleted ones
+  def exclude_deleted_clause
+    return nil unless model_class.new.attributes.keys.include?('deleted_at')
+    table = Arel::Table.new(model_class.table_name)
+
+    table[:deleted_at].eq(nil)
   end
 
   def query_part(filter:)
