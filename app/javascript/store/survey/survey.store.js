@@ -109,6 +109,10 @@ export const surveyStore = {
     (store) => {
       store.subscribe((mutation, state) => {
         // Build a ordered cache of Survey elements upon select
+        if (mutation.type === SELECT) {
+          console.debug('*** --- select ', mutation.payload.model)
+        }
+
         if ((mutation.type === SELECT) && (mutation.payload.model === 'survey')) {
           let instance = mutation.payload.itemOrId;
           if (typeof instance == 'string') {
@@ -132,6 +136,10 @@ export const surveyStore = {
           // console.debug("****** PLUGIN for ", state.selected.survey, state.indexCache.questions);
           // console.debug("****** PLUGIN for ", state.selected.survey, state.indexCache.answers);
           // console.debug("**** CACHE CREATED")
+        }
+        if ((mutation.type === SELECT) && (mutation.payload.model === 'question')) {
+          // ensure that the page is also selected when a question is selected
+          store.commit(SELECT, {model: pageModel, itemOrId: mutation.payload.itemOrId.page_id});
         }
         if (mutation.type === UNSELECT) {
           // clear the cache if we unselect the survey
