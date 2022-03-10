@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   post '/validator/email', to: 'validator/email#validate' #, controller: 'validator/email'
 
+  get '/settings', to: 'settings#index'
+
   # REST based resources
   get 'person/session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
