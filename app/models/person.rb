@@ -63,9 +63,6 @@ class Person < ApplicationRecord
 
   has_paper_trail
 
-  has_one :bio, dependent: :destroy
-  accepts_nested_attributes_for :bio, allow_destroy: true
-
   before_destroy :check_if_assigned
 
   has_many  :session_assignments, dependent: :destroy
@@ -92,8 +89,8 @@ class Person < ApplicationRecord
 
   # TODO: get a list of surveys assigned AND those with submissions that are not assigned
 
-  has_many :person_roles, dependent: :destroy
-  accepts_nested_attributes_for :person_roles, allow_destroy: true
+  has_many :convention_roles, dependent: :destroy
+  accepts_nested_attributes_for :convention_roles, allow_destroy: true
 
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements
@@ -117,7 +114,19 @@ class Person < ApplicationRecord
   nilify_blanks only: [
     :bio,
     :pseudonym,
+    :website,
+    :twitter,
+    :othersocialmedia,
+    :facebook,
+    :linkedin,
+    :twitch,
+    :youtube,
+    :instagram,
+    :flickr,
+    :reddit,
+    :tiktok
   ]
+
 
   validates :name, presence: true
 
@@ -137,24 +146,24 @@ class Person < ApplicationRecord
   end
 
   def admin?
-    person_roles.inject(false) { |res, role| res || role.admin? }
+    convention_roles.inject(false) { |res, role| res || role.admin? }
   end
 
   def staff?
-    person_roles.inject(false) { |res, role| res || role.staff? }
+    convention_roles.inject(false) { |res, role| res || role.staff? }
   end
 
   #
-  def planner?
-    person_roles.inject(false) { |res, role| res || role.planner? }
+  # def planner?
+  #   convention_roles.inject(false) { |res, role| res || role.planner? }
+  # end
+
+  def participant?
+    convention_roles.inject(false) { |res, role| res || role.participant? }
   end
 
-  def member?
-    person_roles.inject(false) { |res, role| res || role.member? }
-  end
-
-  def no_role?
-    person_roles.size == 0
+  def no_group?
+    convention_roles.size == 0
   end
 
   #

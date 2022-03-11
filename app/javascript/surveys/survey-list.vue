@@ -1,4 +1,3 @@
-<!-- CONVERTED -->
 <template>
   <div>
     <survey-table></survey-table>

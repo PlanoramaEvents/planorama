@@ -1,4 +1,4 @@
-class PersonRoleSerializer
+class ConventionRoleSerializer
   include JSONAPI::Serializer
 
   attributes :role, :id
@@ -6,7 +6,7 @@ class PersonRoleSerializer
   belongs_to :person,
     links: {
       self: -> (object, params) {
-        "#{params[:domain]}/person_role/#{object.id}"
+        "#{params[:domain]}/convention_role/#{object.id}"
       },
       related: -> (object, params) {
         "#{params[:domain]}/person/#{object.person_id}"

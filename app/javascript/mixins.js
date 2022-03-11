@@ -10,3 +10,4 @@ export { answerMixin } from './surveys/answer.mixin';
 export * from './surveys/survey-id-prop.mixin';
 export { responseMixin } from './surveys/response.mixin';
 export { authMixin } from './auth/auth.mixin';
+export { linkedMixin } from './surveys/linked.mixin';

@@ -14,7 +14,7 @@ class PeopleController < ResourceController
       serializer: PersonSessionSerializer,
       jsonapi_included: [
         :email_addresses,
-        :person_roles,
+        :convention_roles,
         :unsigned_agreements
       ]
     )
@@ -28,8 +28,14 @@ class PeopleController < ResourceController
     ignore_first_line = params[:ignore_first_line] #== 'true'
     count = 0
     sheet_length = sheet.length
+    duplicate_email = 0
+    bad_email = 0
+    noname = 0
+    errored_rows = []
+    current_row_nbr = -1
     Person.transaction do
       sheet.each do |row|
+        current_row_nbr += 1
         if ignore_first_line && count == 0
           count += 1
           next
@@ -42,11 +48,20 @@ class PeopleController < ResourceController
         if email && (email.length > 0)
           # validate that the email is a valid email
           email_validation = Truemail.validate(email, with: :regex)
+          bad_email += 1 unless email_validation.result.success
+          errored_rows << current_row_nbr unless email_validation.result.success
           next unless email_validation.result.success
 
           # if we have a person with that email address as primary then skip the import
           found_email = EmailAddress.find_by(email: email, isdefault: true)
+
+          errored_rows << current_row_nbr if found_email
+          duplicate_email += 1 if found_email
           next if found_email
+
+          noname += 1 if name && name.length == 0
+          errored_rows << current_row_nbr if name && name.length == 0
+          next if name && name.length == 0
 
           person = Person.create(
             name: name,
@@ -62,9 +77,9 @@ class PeopleController < ResourceController
           );
 
           # By default we add the person as a member of the convention
-          PersonRole.create(
+          ConventionRole.create(
             person: person,
-            role: PersonRole.roles[:member]
+            group: ConventionRole.roles[:participant]
           )
 
           count += 1
@@ -73,7 +88,15 @@ class PeopleController < ResourceController
     end
 
     count = count - 1 if ignore_first_line
-    message = "Imported #{count} people, skipped #{sheet_length - count}"
+    message = {
+      imported: "#{count}",
+      skipped: "#{sheet_length - count}",
+      bad_email: "#{bad_email}",
+      duplicate_email: "#{duplicate_email}",
+      noname: "#{noname}",
+      other: "",
+      errored_rows: errored_rows
+    }
 
     render status: :ok,
            json: { message: message }.to_json,
@@ -239,23 +262,22 @@ class PeopleController < ResourceController
 
   def serializer_includes
     [
-      :bio,
       :email_addresses,
-      :person_roles
+      :convention_roles
     ]
   end
 
   def includes
     [
       :email_addresses,
-      :person_roles
+      :convention_roles
     ]
   end
 
   def references
     [
       :email_addresses,
-      :person_roles
+      :convention_roles
     ]
   end
 
@@ -266,11 +288,10 @@ class PeopleController < ResourceController
   #   ]
   # end
 
-  def except_params
-    %i[
-      bio
-    ]
-  end
+  # def except_params
+  #   %i[
+  #   ]
+  # end
 
   def allowed_params
     %i[
@@ -298,8 +319,20 @@ class PeopleController < ResourceController
       pseudonym
       pseudonym_sort_by
       pseudonym_sort_by_confirmed
-      person_roles_attributes
+      convention_roles_attributes
       email_addresses_attributes
+      bio
+      website
+      twitter
+      othersocialmedia
+      facebook
+      linkedin
+      twitch
+      youtube
+      instagram
+      flickr
+      reddit
+      tiktok
     ] << [
       email_addresses_attributes: %i[
         id
@@ -307,14 +340,11 @@ class PeopleController < ResourceController
         email
         isdefault
       ],
-      person_roles_attributes: %i[
+      convention_roles_attributes: %i[
         id
-        role
+        group
         _destroy
       ]
     ]
   end
-  # TODO: these to be dealt with in seperate controllers ??
-  # tags
-  # :bio
 end

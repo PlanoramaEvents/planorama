@@ -36,10 +36,22 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 
 
 --
+-- Name: action_scope_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.action_scope_enum AS ENUM (
+    'none',
+    'owner',
+    'role'
+);
+
+
+--
 -- Name: agreement_target; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE public.agreement_target AS ENUM (
+    'none',
     'member',
     'staff',
     'all'
@@ -53,6 +65,17 @@ CREATE TYPE public.agreement_target AS ENUM (
 CREATE TYPE public.assignment_role_enum AS ENUM (
     'participant',
     'staff'
+);
+
+
+--
+-- Name: convention_role_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.convention_role_enum AS ENUM (
+    'admin',
+    'staff',
+    'participant'
 );
 
 
@@ -170,9 +193,37 @@ CREATE TYPE public.visibility_enum AS ENUM (
 );
 
 
+--
+-- Name: yesnomaybe_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.yesnomaybe_enum AS ENUM (
+    'yes',
+    'no',
+    'maybe'
+);
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: action_permissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.action_permissions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    mdl_name character varying,
+    action character varying,
+    allowed boolean DEFAULT false,
+    person_role_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    action_scope public.action_scope_enum DEFAULT 'none'::public.action_scope_enum
+);
+
 
 --
 -- Name: agreements; Type: TABLE; Schema: public; Owner: -
@@ -188,7 +239,8 @@ CREATE TABLE public.agreements (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    target public.agreement_target
+    target public.agreement_target,
+    description character varying(10000) DEFAULT NULL::character varying
 );
 
 
@@ -325,6 +377,20 @@ CREATE TABLE public.conflict_exceptions (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     note text
+);
+
+
+--
+-- Name: convention_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.convention_roles (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    role public.convention_role_enum
 );
 
 
@@ -482,8 +548,6 @@ CREATE TABLE public.people (
     registration_type character varying,
     can_share boolean DEFAULT false NOT NULL,
     registration_number character varying,
-    can_photo boolean DEFAULT false NOT NULL,
-    can_record boolean DEFAULT false,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
@@ -515,7 +579,40 @@ END) STORED,
 CASE
     WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
     ELSE name_sort_by
-END) STORED
+END) STORED,
+    bio text,
+    website character varying,
+    twitter character varying,
+    othersocialmedia character varying,
+    facebook character varying,
+    linkedin character varying,
+    twitch character varying,
+    youtube character varying,
+    instagram character varying,
+    flickr character varying,
+    reddit character varying,
+    tiktok character varying,
+    can_stream public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    can_record public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    can_photo public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    age_at_convention character varying,
+    romantic_sexual_orientation character varying,
+    awards character varying(10000) DEFAULT NULL::character varying,
+    needs_accommodations boolean DEFAULT false,
+    accommodations character varying(10000) DEFAULT NULL::character varying,
+    willing_to_moderate boolean DEFAULT false,
+    moderation_experience character varying(10000) DEFAULT NULL::character varying,
+    othered character varying(10000) DEFAULT NULL::character varying,
+    indigenous character varying(10000) DEFAULT NULL::character varying,
+    black_diaspora character varying(10000) DEFAULT NULL::character varying,
+    non_us_centric_perspectives character varying(10000) DEFAULT NULL::character varying,
+    demographic_categories character varying,
+    do_not_assign_with character varying(10000) DEFAULT NULL::character varying,
+    can_stream_exceptions character varying(10000) DEFAULT NULL::character varying,
+    can_record_exceptions character varying(10000) DEFAULT NULL::character varying,
+    can_photo_exceptions character varying(10000) DEFAULT NULL::character varying,
+    is_local boolean DEFAULT false,
+    langauges_fluent_in character varying(10000) DEFAULT NULL::character varying
 );
 
 
@@ -571,6 +668,20 @@ CREATE TABLE public.person_mailing_assignments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: person_role_assocs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_role_assocs (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    person_role_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -897,7 +1008,9 @@ CREATE TABLE public.survey_questions (
     regex character varying,
     page_id uuid,
     randomize boolean DEFAULT false,
-    branching boolean DEFAULT false
+    branching boolean DEFAULT false,
+    linked_field text,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1076,6 +1189,14 @@ ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.ver
 
 
 --
+-- Name: action_permissions action_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.action_permissions
+    ADD CONSTRAINT action_permissions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: agreements agreements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1137,6 +1258,14 @@ ALTER TABLE ONLY public.configurations
 
 ALTER TABLE ONLY public.conflict_exceptions
     ADD CONSTRAINT conflict_exceptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: convention_roles convention_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.convention_roles
+    ADD CONSTRAINT convention_roles_pkey PRIMARY KEY (id);
 
 
 --
@@ -1225,6 +1354,14 @@ ALTER TABLE ONLY public.person_constraints
 
 ALTER TABLE ONLY public.person_mailing_assignments
     ADD CONSTRAINT person_mailing_assignments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: person_role_assocs person_role_assocs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_role_assocs
+    ADD CONSTRAINT person_role_assocs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1428,6 +1565,20 @@ ALTER TABLE ONLY public.versions
 
 
 --
+-- Name: act_perm_mdl_allowed_scope_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX act_perm_mdl_allowed_scope_idx ON public.action_permissions USING btree (mdl_name, action, action_scope, allowed);
+
+
+--
+-- Name: act_perm_mdl_scope_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX act_perm_mdl_scope_idx ON public.action_permissions USING btree (mdl_name, action, action_scope);
+
+
+--
 -- Name: by_active_status; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1484,6 +1635,13 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
+-- Name: index_action_permissions_on_mdl_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_action_permissions_on_mdl_name ON public.action_permissions USING btree (mdl_name);
+
+
+--
 -- Name: index_agreements_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1509,6 +1667,13 @@ CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree 
 --
 
 CREATE UNIQUE INDEX index_areas_on_name ON public.areas USING btree (name);
+
+
+--
+-- Name: index_convention_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_convention_roles_on_person_id ON public.convention_roles USING btree (person_id);
 
 
 --
@@ -1600,6 +1765,13 @@ CREATE INDEX index_person_mailing_assignments_on_mailing_id ON public.person_mai
 --
 
 CREATE INDEX index_person_mailing_assignments_on_person_id ON public.person_mailing_assignments USING btree (person_id);
+
+
+--
+-- Name: index_person_role_assocs_on_person_id_and_person_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_person_role_assocs_on_person_id_and_person_role_id ON public.person_role_assocs USING btree (person_id, person_role_id);
 
 
 --
@@ -1957,6 +2129,15 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220201191402'),
 ('20220202144414'),
 ('20220208222821'),
-('20220209153904');
+('20220209153904'),
+('20220213221552'),
+('20220217233651'),
+('20220301184226'),
+('20220301221956'),
+('20220303154559'),
+('20220303175111'),
+('20220303175113'),
+('20220303175135'),
+('20220309183902');
 
 

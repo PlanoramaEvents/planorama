@@ -10,8 +10,8 @@ RSpec.describe Person, '#factories' do
             expect(person.opted_in).to be false
             expect(person.registered).to be false
             expect(person.can_share).to be false
-            expect(person.can_photo).to be false
-            expect(person.can_record).to be false
+            expect(person.can_photo).to eq "no"
+            expect(person.can_record).to eq "no"
         end
         it 'should not create a person with a name' do         #name should be a required field and non-blank
             expect { person = create(:person, name: '') }.to raise_error(ActiveRecord::RecordInvalid)

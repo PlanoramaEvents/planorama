@@ -1,4 +1,3 @@
-<!-- CONVERTED? -->
 <template>
   <div class="survey-question mt-3 pl-1" v-if="!!localResponse">
     <b-form-group
@@ -8,127 +7,133 @@
         <span v-html="questionText"></span><mandatory-star :mandatory="question.mandatory"></mandatory-star>
       </template>
       <template #default="{ ariaDescribedBy }">
-        <b-form-textarea
-          :class="{'w-50': answerable}"
-          v-if="textbox"
-          v-model="localResponse.response.text"
-          :aria-describedBy="ariaDescribedBy"
-          :disabled="!answerable"
-          :required="question.mandatory"
-          @blur="saveResponse(localResponse, selectedSubmission)"
-        >{{localResponse.response.text}}</b-form-textarea>
-        <b-form-input
-          :class="{'w-50': answerable}"
-          v-if="textfield"
-          v-model="localResponse.response.text"
-          :aria-describedBy="ariaDescribedBy"
-          :disabled="!answerable"
-          :required="question.mandatory"
-          @blur="saveResponse(localResponse, selectedSubmission)"
-        ></b-form-input>
-        <b-form-radio-group
-          :class="{'w-50': answerable}"
-          stacked
-          v-if="singlechoice"
-          v-model="radioButtonResponse"
-          :aria-describedBy="ariaDescribedBy"
-          :required="question.mandatory"
-          @change="saveResponse(localResponse, selectedSubmission)"
+        <validation-provider
+          mode="eager"
+          :rules="rules"
+          v-slot="{ valid, errors, validate }"
         >
-          <b-form-radio
-            v-for="choice in choices.filter(a => !a.other)"
-            :key="choice.id"
-            :value="choiceValue(choice)"
+          <b-form-textarea
+            :class="{'w-50': answerable}"
+            v-if="textbox"
+            v-model="localResponse.response.text"
+            :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
-            @input="changeNextPage($event, choice)"
-          >{{choice.answer}}</b-form-radio>
-          <b-form-radio
-            class="mt-2"
-            v-if="otherFromQuestion"
-            :value="choiceValue(otherFromQuestion)"
-            v-model="otherChecked"
+            @blur="saveResponse(localResponse, selectedSubmission)"
+          >{{localResponse.response.text}}</b-form-textarea>
+          <b-form-input
+            :class="{'w-50': answerable}"
+            v-if="textfield"
+            v-model="localResponse.response.text"
+            :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
-            @input="changeNextPage($event, otherFromQuestion)"
+            :state="calcValid(errors,valid)"
+            @blur="saveResponse(localResponse, selectedSubmission)"
+          ></b-form-input>
+          <b-form-radio-group
+            :class="{'w-50': answerable}"
+            stacked
+            v-if="singlechoice"
+            v-model="radioButtonResponse"
+            :aria-describedBy="ariaDescribedBy"
+            :required="question.mandatory"
+            @change="saveResponse(localResponse, selectedSubmission)"
           >
-            <b-form-group
-              label="Other"
-              label-cols="2"
-              :label-for="'other-' + question.id"
-              label-class="mt-n2"
+            <b-form-radio
+              v-for="choice in choices.filter(a => !a.other)"
+              :key="choice.id"
+              :value="choiceValue(choice)"
+              :disabled="!answerable"
+              @input="changeNextPage($event, choice)"
+            >{{choice.answer}}</b-form-radio>
+            <b-form-radio
+              class="mt-2"
+              v-if="otherFromQuestion"
+              :value="choiceValue(otherFromQuestion)"
+              v-model="otherChecked"
+              :disabled="!answerable"
+              @input="changeNextPage($event, otherFromQuestion)"
             >
-              <b-form-input
-                class="mt-n2"
-                :id="'other-' + question.id"
-                type="text"
-                v-model="localResponse.response.text"
-                :disabled="!answerable || !otherChecked"
-              ></b-form-input>
-            </b-form-group>
-          </b-form-radio>
-        </b-form-radio-group>
-        <b-form-checkbox-group
-          :class="{'w-50': answerable}"
-          stacked
-          v-if="multiplechoice"
-          v-model="localResponse.response.answers"
-          :aria-describedBy="ariaDescribedBy"
-          :required="question.mandatory"
-          @change="saveResponse(localResponse, selectedSubmission)"
-        >
-          <b-form-checkbox
-            v-for="choice in choices.filter(a => !a.other)"
-            :key="choice.id"
-            :value="choiceValue(choice)"
-            :disabled="!answerable"
-          >{{choice.answer}}</b-form-checkbox>
-          <b-form-checkbox
-            class="mt-2"
-            v-if="otherFromQuestion"
-            :value="choiceValue(otherFromQuestion)"
-            :disabled="!answerable"
-            v-model="otherChecked"
+              <b-form-group
+                label="Other"
+                label-cols="2"
+                :label-for="'other-' + question.id"
+                label-class="mt-n2"
+              >
+                <b-form-input
+                  class="mt-n2"
+                  :id="'other-' + question.id"
+                  type="text"
+                  v-model="localResponse.response.text"
+                  :disabled="!answerable || !otherChecked"
+                ></b-form-input>
+              </b-form-group>
+            </b-form-radio>
+          </b-form-radio-group>
+          <b-form-checkbox-group
+            :class="{'w-50': answerable}"
+            stacked
+            v-if="multiplechoice"
+            v-model="localResponse.response.answers"
+            :aria-describedBy="ariaDescribedBy"
+            :required="question.mandatory"
+            @change="saveResponse(localResponse, selectedSubmission)"
           >
-            <b-form-group
-              label="Other"
-              label-cols="2"
-              :label-for="'other-' + question.id"
-              label-class="mt-n2"
+            <b-form-checkbox
+              v-for="choice in choices.filter(a => !a.other)"
+              :key="choice.id"
+              :value="choiceValue(choice)"
+              :disabled="!answerable"
+            >{{choice.answer}}</b-form-checkbox>
+            <b-form-checkbox
+              class="mt-2"
+              v-if="otherFromQuestion"
+              :value="choiceValue(otherFromQuestion)"
+              :disabled="!answerable"
+              v-model="otherChecked"
             >
-              <b-form-input
-                class="mt-n2"
-                :id="'other-' + question.id"
-                type="text"
-                v-model="localResponse.response.text"
-                :disabled="!answerable || !otherChecked"
-              ></b-form-input>
-            </b-form-group>
-          </b-form-checkbox>
-        </b-form-checkbox-group>
-        <b-form-select
-          :class="{'w-50': answerable}"
-          v-if="dropdown"
-          v-model="localResponse.response.text"
-          :required="question.mandatory"
-          :aria-describedby="ariaDescribedBy"
-          @change="saveResponse(localResponse, selectedSubmission)"
-        >
-          <b-form-select-option
-            v-for="choice in choices"
-            :key="choice.id"
-            :value="choice.answer"
+              <b-form-group
+                label="Other"
+                label-cols="2"
+                :label-for="'other-' + question.id"
+                label-class="mt-n2"
+              >
+                <b-form-input
+                  class="mt-n2"
+                  :id="'other-' + question.id"
+                  type="text"
+                  v-model="localResponse.response.text"
+                  :disabled="!answerable || !otherChecked"
+                ></b-form-input>
+              </b-form-group>
+            </b-form-checkbox>
+          </b-form-checkbox-group>
+          <b-form-select
+            :class="{'w-50': answerable}"
+            v-if="dropdown"
+            v-model="localResponse.response.text"
+            :required="question.mandatory"
+            :aria-describedby="ariaDescribedBy"
+            @change="saveResponse(localResponse, selectedSubmission)"
+          >
+            <b-form-select-option
+              v-for="choice in choices"
+              :key="choice.id"
+              :value="choice.answer"
+              :disabled="!answerable"
+            >{{choice.answer}}</b-form-select-option>
+          </b-form-select>
+          <email-field
+            :class="{'w-50': answerable}"
+            v-if="email"
+            label-sr-only
+            :required="question.mandatory"
+            v-model="localResponse.response.text"
             :disabled="!answerable"
-          >{{choice.answer}}</b-form-select-option>
-        </b-form-select>
-        <email-field
-          :class="{'w-50': answerable}"
-          v-if="email"
-          label-sr-only
-          :required="question.mandatory"
-          v-model="localResponse.response.text"
-          :disabled="!answerable"
-          :aria-describedBy="ariaDescribedBy"
-          @blur="saveResponse(localResponse, selectedSubmission)"
-        ></email-field>
+            :aria-describedBy="ariaDescribedBy"
+            @blur="saveResponse(localResponse, selectedSubmission)"
+          ></email-field>
+          <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+        </validation-provider>
       </template>
     </b-form-group>
     <p v-if="textonly">{{question.question}}</p>
@@ -333,13 +338,15 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { submissionModel } from '@/store/survey';
 import { mapState } from 'vuex';
+import { ValidationProvider } from 'vee-validate';
 
 export default {
   name: "SurveyQuestion",
   components: {
     MandatoryStar,
     SimpleSocial,
-    EmailField
+    EmailField,
+    ValidationProvider
   },
   mixins: [
     questionMixin,
@@ -360,11 +367,18 @@ export default {
   },
   data: () => ({
     otherChecked: false,
-    localResponse: null
-
+    localResponse: null,
+    is_valid: true
   }),
   computed: {
     ...mapState(['previewMode']),
+    rules() {
+      if (this.question.mandatory) {
+        return 'required'
+      } else {
+        return ''
+      }
+    },
     questionText() {
       return this.question.question;
       // todo implement question numbering
@@ -383,6 +397,15 @@ export default {
     },
   },
   methods: {
+    calcValid(errors, valid) {
+      if (this.rules == '') {
+        return null
+      }
+
+      let v = errors[0] ? false : (valid ? true : null);
+      this.is_valid = v
+      return v;
+    },
     formId(string) {
       return `${string}-${this.question.id}`
     },
@@ -394,7 +417,7 @@ export default {
     },
     changeNextPage(event, choice) {
       if (this.question.branching && this.choiceValue(choice) === event) {
-        console.debug("emitting", choice.next_page_id)
+        // console.debug("emitting", choice.next_page_id)
         this.$emit('nextPage', choice.next_page_id)
       }
     },
@@ -417,7 +440,7 @@ export default {
       this.createDummyResponse()
    } else {
       this.localResponse = this.getResponse(this.question, this.selectedSubmission)
-      console.log("*******************", this.localResponse)
+      // console.log("*******************", this.localResponse)
    }
   },
   watch: {
@@ -429,7 +452,7 @@ export default {
     selectedSubmission(newVal) {
       if (newVal) {
         this.localResponse = this.getResponse(this.question, newVal)
-        console.log("*******************111111111", this.localResponse)
+        // console.log("*******************111111111", this.localResponse)
       }
     },
   }

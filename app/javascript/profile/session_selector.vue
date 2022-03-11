@@ -31,7 +31,7 @@
     >
       <template #cell(title)="{ item }">
         <h4>{{item.title}}</h4>
-        <p>{{item.description}}</p>
+        <p v-html="item.description"></p>
         <div v-if="item.format">
           Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
         </div>
@@ -40,6 +40,8 @@
         </div>
         <div v-if="item.tag_list.length > 0">
           <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list">{{tag}}</span>
+        </div>
+        <div v-html="item.instructions_for_interest">
         </div>
       </template>
       <template #cell(id)="{ item }">

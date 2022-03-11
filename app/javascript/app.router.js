@@ -26,14 +26,14 @@ import ScheduleScreen from './sessions/schedule-screen.vue';
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
 import SurveyList from './surveys/survey-list.vue';
-import EditSurvey from './surveys/edit-survey.vue';
+import ManageSurvey from './surveys/manage-survey.vue';
 import TakeSurvey from './surveys/take-survey.vue';
 import SurveyPage from './surveys/survey-page.vue';
 import SurveyThankYou from './surveys/survey-thank-you.vue';
 
 const surveyRoutes = [
-  { path: 'edit/:id/:responses', component: EditSurvey, props: true},
-  { path: 'edit/:id', component: EditSurvey, props: true },
+  { path: 'edit/:id/:responses', component: ManageSurvey, props: true},
+  { path: 'edit/:id', component: ManageSurvey, props: true },
   { path: ':surveyId/page/:id/:preview', component: SurveyPage, props: true},
   { path: ':surveyId/page/:id', component: SurveyPage, props: true},
   { path: ':id/thankyou', component: SurveyThankYou, props: true},

@@ -36,7 +36,7 @@ module ActiveModel
         if name.include?('responses')
           association = self._reflections[:responses].build_association(self, {})
 
-          obj = association.object[cname[1].to_i]
+          obj = association.object[cname[1]]
 
           if obj && obj.is_a?(String)
             val = obj

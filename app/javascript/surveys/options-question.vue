@@ -1,3 +1,4 @@
+<!-- TODO -->
 <template>
   <div class="col-12">
     <draggable v-model="answers" @end="saveAnswerOrder" handle=".qhandle">
@@ -6,7 +7,13 @@
           <div class="col-5 pb-2">
             <div class="float-left qhandle" v-if="isSelected"><b-icon-grip-vertical></b-icon-grip-vertical></div>
             <component :is="optionComponent" disabled class="ml-3" :i="i + 1">
-              <b-form-input v-if="isSelected" type="text" v-model="a.answer" @blur="patchAnswer(a, {answer: $event.target.value})" class="mt-n2 mb-2"></b-form-input>
+              <plano-editor
+                v-if="isSelected"
+                v-model="a.answer"
+                @blur="patchAnswer(a, {answer: $event.target.value})"
+                class="mt-n2 mb-2"
+              >
+              </plano-editor>
               <span v-if="!isSelected">{{a.answer}}</span>
             </component>
           </div>
@@ -22,7 +29,11 @@
     <template v-if="other && !dropdown">
       <div class="row">
         <div class="col-5 pb-2">
-          <component :is="optionComponent" disabled class="ml-3"><b-form-group label="Other" label-cols="2" class="mt-n2 mb-2"><b-form-input v-if="isSelected" type="text" disabled></b-form-input></b-form-group></component>
+          <component :is="optionComponent" disabled class="ml-3">
+            <b-form-group label="Other" label-cols="2" class="mt-n2 mb-2">
+              <b-form-input v-if="isSelected" type="text" disabled></b-form-input>
+            </b-form-group>
+          </component>
         </div>
         <div class="col-1 pb-2 text-center" v-if="isSelected">
           <b-icon-x @click="removeOther" class="h3"></b-icon-x>
@@ -54,6 +65,7 @@ import NextPagePicker from './next-page-picker.vue';
 import { answerModel, questionModel } from '@/store/survey'
 import { mapActions } from 'vuex';
 import { SAVE } from '../store/model.store';
+import PlanoEditor from '@/components/plano_editor';
 
 import {
   ANSWER_ORDER_SAVE_SUCCESS
@@ -78,6 +90,7 @@ export default {
     draggable,
     DropdownItem,
     NextPagePicker,
+    PlanoEditor
   },
   data: () => ({
     answers: [],

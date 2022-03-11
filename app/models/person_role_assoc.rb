@@ -1,0 +1,2 @@
+class PersonRoleAssoc < ApplicationRecord
+end

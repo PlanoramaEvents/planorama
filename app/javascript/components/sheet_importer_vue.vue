@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-if="exampleUrl">
+      Example: <a target="_blank" :href="exampleUrl">{{ exampleUrl }}</a>
+    </div>
     <label>File
       <input
         type="file"
@@ -9,14 +12,21 @@
       />
     </label>
     <b-form-checkbox v-model="ignoreFirstLine" >
-      Ignore the first line of data
+      This file has a header
     </b-form-checkbox>
+    <div v-if="importMessage">
+      <div class="border border-secondary d-flex p-2">
+        <slot name="import-details" v-bind:importMessage="importMessage">
+          {{importMessage}}
+        </slot>
+      </div>
+    </div>
     <div>
       <b-table
         striped
         sticky-header
         thead-class="hidden_header"
-        :items="sheetData"
+        :items="formattedSheetData"
       >
       </b-table>
     </div>
@@ -35,14 +45,31 @@
     name: 'SheetImporterVue',
     props: {
       title: String,
-      importUrl: String
+      importUrl: String,
+      exampleUrl: String
     },
     data() {
       return {
         file: null,
         sheetData: null,
         errorMessage: null,
+        importMessage: null,
         ignoreFirstLine: false
+      }
+    },
+    computed: {
+      formattedSheetData() {
+        // If the row has a problem then we highlight is with "danger"
+        if (this.importMessage && this.importMessage.errored_rows) {
+          return this.sheetData.map((item, index) => {
+            if ( this.importMessage.errored_rows.includes(index) ) {
+              item._rowVariant  = 'danger'
+            }
+            return item
+          })
+        } else {
+          return this.sheetData
+        }
       }
     },
     methods: {
@@ -51,6 +78,7 @@
         this.file = null
         this.sheetData = null
         this.errorMessage = null
+        this.importMessage = null
         this.ignoreFirstLine = false
       },
       submitData(event) {
@@ -66,13 +94,7 @@
           { synchronous: true }
         ).then(
           (res) => {
-            // console.debug('********* IMPORT DONE: ', res.data)
-            this.$bvToast.toast(res.data.message, {
-              variant: 'success',
-              title: 'People Imported'
-            })
-
-            this.$bvModal.hide('sheet-import-modal')
+            this.importMessage = res.data.message
           }
         ).catch(
           (err) => {
@@ -107,6 +129,7 @@
         var worksheet = workbook.Sheets[first_sheet_name];
         this.sheetData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
         this.errorMessage = null;
+        this.importMessage = null;
       },
       removeFile(key) {
         this.files.splice(key, 1);

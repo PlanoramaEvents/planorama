@@ -3,7 +3,7 @@ class Survey::SubmissionsController < ResourceController
   MODEL_CLASS = 'Survey::Submission'.freeze
   POLICY_CLASS = 'Survey::SubmissionsPolicy'.freeze
   XLS_SERIALIZER_CLASS = 'Survey::SubmissionXlsSerializer'.freeze
-  DEFAULT_SORTBY = 'updated_at'
+  DEFAULT_SORTBY = 'survey_submissions.updated_at'
 
   def belong_to_class
     return Survey if params[:survey_id].present?
@@ -44,6 +44,34 @@ class Survey::SubmissionsController < ResourceController
     current_person.save!
   end
 
+  def flat
+    load_resource
+    authorize model_class, policy_class: policy_class
+
+    meta = {}
+    meta[:total] = @collection_total if paginate
+    meta[:current_page] = @current_page if @current_page.present? && paginate
+    meta[:perPage] = @per_page if @per_page.present? && paginate
+
+    options = {
+      meta: meta,
+      params: {
+        domain: "#{request.base_url}",
+        current_person: current_person
+      }
+    }
+    options[:fields] = fields
+
+    render json: Survey::SubmissionFlatSerializer.new(@collection,options).serializable_hash(),
+           content_type: 'application/json'
+  end
+
+  # TODO: remove name column from survey submission
+
+  def collection_actions
+    [:index, :flat]
+  end
+
   def serializer_includes
     [
       :responses
@@ -56,6 +84,12 @@ class Survey::SubmissionsController < ResourceController
       responses: [
         :question
       ]
+    ]
+  end
+
+  def references
+    [
+      :responses
     ]
   end
 

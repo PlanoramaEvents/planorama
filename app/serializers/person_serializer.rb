@@ -1,17 +1,43 @@
 class PersonSerializer #< ActiveModel::Serializer
   include JSONAPI::Serializer
+  include ::Plano::Serializer
 
   attributes :id, :lock_version,
              :name, :name_sort_by, :name_sort_by_confirmed,
              :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
              :published_name, :published_name_sort_by,
-             :job_title, :organization,
-             :pronouns, :year_of_birth, :gender, :ethnicity,
-             :opted_in, :comments,
-             :can_share, :can_photo, :can_record,
-             :invite_status, :acceptance_status,
-             :registered, :registration_type, :registration_number,
-             :last_sign_in_at, :primary_email
+             :job_title, :organization
+
+  protected_attributes :last_sign_in_at, :primary_email,
+                :pronouns, :year_of_birth, :gender, :ethnicity,
+                :opted_in, :comments,
+                :can_share,
+                :invite_status, :acceptance_status,
+                :registered, :registration_type, :registration_number,
+                :bio, :website, :twitter, :othersocialmedia,
+                :facebook, :linkedin, :twitch, :youtube,
+                :instagram, :flickr, :reddit, :tiktok,
+                :can_stream,
+                :can_record,
+                :can_photo,
+                :age_at_convention,
+                :romantic_sexual_orientation,
+                :awards,
+                :needs_accommodations,
+                :accommodations,
+                :willing_to_moderate,
+                :moderation_experience,
+                :othered,
+                :indigenous,
+                :black_diaspora,
+                :non_us_centric_perspectives,
+                :demographic_categories,
+                :do_not_assign_with,
+                :can_stream_exceptions,
+                :can_record_exceptions,
+                :can_photo_exceptions,
+                :is_local,
+                :langauges_fluent_in
 
   # tag_list
   attribute :tags do |person|
@@ -19,29 +45,17 @@ class PersonSerializer #< ActiveModel::Serializer
   end
 
   # Indicate whether the person has a password set
-  attribute :has_password do |person|
+  protected_attribute :has_password do |person|
     !person.password.blank?
   end
 
-  has_one :bio,
-          if: Proc.new { |record| record.bio },
-          links: {
-            self: -> (object, params) {
-              "#{params[:domain]}/person/#{object.id}"
-            },
-            related: -> (object, params) {
-              "#{params[:domain]}/bio/#{object.bio.id}"
-            }
-          }
-
-
-  has_many :person_roles, serializer: PersonRoleSerializer,
+  has_many :convention_roles, serializer: ConventionRoleSerializer,
             links: {
               self: -> (object, params) {
                 "#{params[:domain]}/person/#{object.id}"
               },
               related: -> (object, params) {
-                "#{params[:domain]}/person/#{object.id}/person_roles"
+                "#{params[:domain]}/person/#{object.id}/convention_roles"
               }
             }
 

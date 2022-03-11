@@ -34,6 +34,7 @@ import { mailingStore, mailingEndpoints } from './mailing.store';
 import { personSessionStore } from './person_session.store';
 
 // survey add-ons
+import { surveyModel } from './survey/survey.model';
 import { surveyStore, surveyEndpoints } from './survey/survey.store';
 
 // session add-ons
@@ -102,7 +103,16 @@ export const store = new Vuex.Store({
     [SELECTED] (state, getters) {
       return ({model}) => {
         if (!state.selected[model]) return undefined;
-        return utils.deepCopy(getters['jv/get']({_jv: {id: state.selected[model], type: model}}))
+
+        let res = getters['jv/get']({_jv: {id: state.selected[model], type: model}})
+        if (model === surveyModel) {
+          // Deepcopy is a problem for surveys ... so we only do on the select of individual component ...
+          // need to also deep copy selected survey when we edit it's attributes.... how????
+          return res
+        } else {
+          // console.debug('**** DEEP COPY ....', model)
+          return utils.deepCopy(res)
+        }
       }
     },
     ...personStore.getters,
@@ -117,6 +127,9 @@ export const store = new Vuex.Store({
     ...parameterNameStore.getters,
     ...configurationStore.getters
   },
+  plugins: [
+    ...surveyStore.plugins
+  ],
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
       state.selected[model] = getId(itemOrId);
@@ -136,7 +149,7 @@ export const store = new Vuex.Store({
      * right now it only works on one to many
      */
     [PATCH_RELATED] ({dispatch}, {item, parentRelName, childIdName}) {
-      let relId = item?.id
+      let relId = item?._jv?.id
       let rels = item?._jv?.relationships?.[parentRelName]?.data
       if(!rels || !rels.length) {
         // no relationships found, what to do here? returning true for now
@@ -207,8 +220,13 @@ export const store = new Vuex.Store({
     [SEARCH] ({dispatch}, {model, params}) {
       return dispatch('jv/search', [endpoints[model], {params}])
     },
-    [FETCH] ({dispatch}, {model, params}) {
-      return dispatch('jv/get', [endpoints[model], {params}])
+    // need a way to override the default URL
+    [FETCH] ({dispatch}, {model, url = null, params}) {
+      if (url) {
+        return dispatch('jv/get', [url, {params}])
+      } else {
+        return dispatch('jv/get', [endpoints[model], {params}])
+      }
     },
     // [CLEAR] ({dispatch}, {model}) {
     //   this.commit('jv/clearRecords', { _jv: { type: model } })

@@ -225,9 +225,17 @@ module ResourceMethods
 
   def query(filters = nil)
     # Go through the filter and construct the where clause
-    return nil unless filters.present?
+    return exclude_deleted_clause unless filters.present?
 
     query_part(filter: filters)
+  end
+
+  # if the element has a deleted_at we want the non deleted ones
+  def exclude_deleted_clause
+    return nil unless model_class.new.attributes.keys.include?('deleted_at')
+    table = Arel::Table.new(model_class.table_name)
+
+    table[:deleted_at].eq(nil)
   end
 
   def query_part(filter:)
@@ -239,16 +247,39 @@ module ResourceMethods
       else
         key, operation, value = query
 
-        col_table = get_table(column: key)
+        col_table = if (key.include?('responses.'))
+          Arel::Table.new('survey_responses')
+        else
+          get_table(column: key)
+        end
+
         if key == 'all'
+          # change to include responses
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)
             query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
             part = part ? part.or(query_part) : query_part
           end
+          # This for survey submissions ....
+          if model_class == Survey::Submission
+            Survey::Response.columns.each do |col|
+              next unless [:text, :string].include?(col.type)
+              query_part = get_query_part(table: Arel::Table.new('survey_responses'), column: col.name, operation: 'like', value: value)
+              part = part ? part.or(query_part) : query_part
+            end
+          end
         else
-          col = get_column(column: key)
+          col = if (key.include?('responses.'))
+            'response_as_text'
+          else
+            get_column(column: key)
+          end
           part = get_query_part(table: col_table, column: col, operation: operation, value: value)
+
+          if (key.include?('responses.'))
+            key.slice! "responses."
+            part = part.and(col_table['question_id'].eq(key))
+          end
         end
       end
 
@@ -261,18 +292,19 @@ module ResourceMethods
   def get_table(column:)
     col_table = Arel::Table.new(model_class.table_name)
     col_table_name, col = column.split('.') if column.include? '.'
+    Rails.logger.error "** GET TABLE: #{column}"
 
     if col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasAndBelongsToManyReflection
       # key = "#{model_class.reflections[col_table_name].join_table}.#{col}"
       col_table = Arel::Table.new("#{model_class.reflections[col_table_name].join_table}")
     elsif col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasManyReflection
       # need to join with the people table
-      col_table = Arel::Table.new("#{col_table_name}")
+      col_table = model_class.reflections[col_table_name].klass.arel_table #Arel::Table.new("#{col_table_name}")
     elsif col_table_name && col_table_name == 'tags'
-      Rails.logger.debug("WE HAVE TAGS")
       col_table = ActsAsTaggableOn::Tag.arel_table #Arel::Table.new("#{ActsAsTaggableOn::Tag}")
     end
 
+    Rails.logger.error "** GOT TABLE: #{col_table.name}"
     return col_table
   end
 
@@ -289,7 +321,6 @@ module ResourceMethods
   end
 
   def get_query_part(table:, column:, operation:, value:)
-    Rails.logger.debug "** QUERY PART #{table} #{column} #{operation} #{value}"
     op = translate_operator(operation: operation)
 
     return nil if value.kind_of?(String) && value.blank?

@@ -19,13 +19,15 @@ Rails.application.routes.draw do
 
   post '/validator/email', to: 'validator/email#validate' #, controller: 'validator/email'
 
+  get '/settings', to: 'settings#index'
+
   # REST based resources
   get 'person/session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
   get 'people/me', to: 'people#me'
   post 'person/import', to: 'people#import'
   resources :people, path: 'person' do
-    get 'person_roles', to: 'person_roles#index'
+    get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
     get 'sessions', to: 'sessions#index'
     get 'published_sessions', to: 'published_sessions#index'
@@ -33,7 +35,7 @@ Rails.application.routes.draw do
     get 'submissions', to: 'people#submissions'
   end
 
-  resources :person_roles, path: 'person_role', except: [:index]
+  resources :convention_roles, path: 'convention_role', except: [:index]
   resources :email_addresses, path: 'email_address', except: [:index]
 
   get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
@@ -54,6 +56,7 @@ Rails.application.routes.draw do
     resources :pages, controller: 'survey/pages', only: [:index]
     delete 'submission', to: 'survey/submissions#delete_all'
     get 'submissions', to: 'survey/submissions#index'
+    get 'submissions/flat', to: 'survey/submissions#flat'
   end
 
   resources :pages, path: 'page', controller: 'survey/pages', except: [:index] do
@@ -72,11 +75,11 @@ Rails.application.routes.draw do
 
   get 'rbac', to: 'rbac#index'
 
-  resources :bios, path: 'bio'
   resources :formats, path: 'format'
   resources :areas, path: 'area'
   resources :tags, path: 'tag'
   get 'session/tags', to: 'sessions#tags'
+  post 'session/import', to: 'sessions#import'
   resources :sessions, path: 'session' do
     get 'session_assignments', to: 'session_assignments#index'
     get 'areas', to: 'areas#index'

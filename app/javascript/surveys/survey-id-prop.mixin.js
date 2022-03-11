@@ -3,7 +3,6 @@ import pageMixin from "./page.mixin";
 import { mapMutations } from "vuex";
 import { SET_PREVIEW_MODE } from "../store/survey/survey.actions";
 
-// CONVERTED
 const surveyIdPropMixin = (idProp = 'id') => ({
   props: [idProp],
   mixins: [
@@ -21,7 +20,6 @@ const surveyIdPropMixin = (idProp = 'id') => ({
   mounted() {
     this.surveyLoadedPromise = new Promise((res, rej) =>  {
       if ((!this.survey && this[idProp]) || (this[idProp] && this.survey.id !== this[idProp])) {
-        console.debug('trying to load survey id', this[idProp])
         this.selectSurvey(this[idProp]);
         this.setPreviewMode(false);
         this.fetchSelectedSurvey().then(() => {

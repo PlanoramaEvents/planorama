@@ -1,6 +1,6 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
-import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '@/store/model.store';
+import { GET_CACHED_INDEX, GET_CACHED_PAGES, GET_CACHED_QUESTIONS, GET_CACHED_ANSWERS } from '../store/survey/survey.store';
 import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '@/store/survey';
 import { pageMixin, surveyMixin } from '@/mixins';
 import {
@@ -19,6 +19,19 @@ export const questionMixin = {
     pageMixin,
     surveyMixin
   ],
+  data: () => ({
+    // if we ever change this, we need to change linked-fields.js too
+    questionTypes: [
+      { value: 'textfield', text: 'Short Answer'},
+      { value: 'textbox', text: 'Long Answer'},
+      { value: 'singlechoice', text: 'Multiple Choice' },
+      { value: 'multiplechoice', text: 'Checkboxes' },
+      { value: 'dropdown', text: 'Dropdown' },
+      { value: 'address', text: 'Address' },
+      { value: 'email', text: 'Email' },
+      { value: 'socialmedia', text: 'Social Media' }
+    ],
+  }),
   computed: {
     ...mapGetters({
       selected: SELECTED
@@ -70,6 +83,12 @@ export const questionMixin = {
     }
   },
   methods: {
+    ...mapGetters({
+      getCachedIndex: GET_CACHED_INDEX,
+      getCachedPages: GET_CACHED_PAGES,
+      getCachedQuestions: GET_CACHED_QUESTIONS,
+      getCachedAnswers: GET_CACHED_ANSWERS
+    }),
     ...mapMutations({
       select: SELECT,
       unselect: UNSELECT,
@@ -99,13 +118,24 @@ export const questionMixin = {
       this.unselect({model});
     },
     getQuestionAnswers(question) {
-      return getOrderedRelationships('answers', question);
+      let cached = this.getCachedAnswers()(question.id)
+      if (cached) {
+          return cached
+      } else {
+        return Object.values(question.answers).sort((a, b) => a.sort_order - b.sort_order)
+      }
     },
     getQuestionIndex(question) {
       if (!question) {
         return undefined;
       }
-      return getOrderedRelationships('questions', question.survey_page).findIndex(q => q.id === question.id)
+      let page = this.getPageById(question.page_id);
+      let cached = this.getCachedQuestions()(question.page_id)
+      if (cached) {
+        return cached.findIndex(q => q.id === question.id);
+      } else {
+        return Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order).findIndex(q => q.id === question.id);
+      }
     },
     duplicateSelectedQuestion() {
       if(!this.selectedQuestion) {
