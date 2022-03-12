@@ -29,7 +29,10 @@ class Survey::Question < ApplicationRecord
   validates_inclusion_of :question_type, in:
     [
       :textfield, :textbox, :singlechoice, :multiplechoice, :hr,
-      :dropdown, :address, :email, :socialmedia, :textonly
+      :dropdown, :email, :socialmedia, :textonly,
+      :boolean, # true or false
+      :yesnomaybe # 'yes', 'no', 'maybe'
+      # :address
     ]
 
   before_destroy :check_for_use, prepend: true #, :check_if_published

@@ -21,9 +21,21 @@ class Survey::Answer < ApplicationRecord
 
 
   # TODO: on save need to remove next_page refs that do not exist
+  before_save :validate_answer, prepend: true
   before_save :ensure_next_page_consistency
 
   private
+
+  # need to check that answer type is valid for question
+  def validate_answer
+    # if the question type is boolean or yesnomaybe then we ensure we have correct answers
+    if question.question_type == :boolean
+      raise 'invalid answers for Boolean question type' unless ['true', 'false'].include? value
+    end
+    if question.question_type == :yesnomaybe
+      raise 'invalid answers for YewNoMaybe question type' unless ['yes', 'no', 'maybe'].include? value
+    end
+  end
 
   # Ensure the next page id is a valid value
   def ensure_next_page_consistency
