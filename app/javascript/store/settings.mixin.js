@@ -1,5 +1,5 @@
 import {mapState, mapActions } from 'vuex';
-import { GET_SETTINGS }  from "../store/settings.store";
+import { GET_SETTINGS }  from "@/store/settings.store";
 
 export const settingsMixin = {
   computed: {
@@ -16,9 +16,9 @@ export const settingsMixin = {
     })
   },
   mounted() {
-    // fetch the current session on mount !!!
+    // fetch the current settings on mount !!!
     this.fetchSettings();
   }
 }
 
-export default personSessionMixin;
+export default settingsMixin;
