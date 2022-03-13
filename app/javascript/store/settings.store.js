@@ -25,20 +25,18 @@ export const settingsStore = {
       return new Promise((res, rej) => {
         if(!state.settings.model) {
           // console.debug('******* get the settings')
-          http.get("/settings").then((settings) => {
-            console.log(settings);
-          })
 //          dispatch('jv/get','/settings').then((settings) => {
-//            // console.debug('******* settings', settings)
-//            commit(SET_SETTINGS, settings)
-//             res(settings);
-//           }).catch((error) => {
-//             // console.debug('******* error', error)
-//             // If we can not get the settings, then leave them empty
-//             console.debug("****** WE DO NOT HAVE ANY SETTINGS ....")
-//             commit(SET_SETTINGS, {})
-//             res({});
-//           })
+          http.get("/settings").then((settings) => {
+           console.debug('******* settings', settings)
+           commit(SET_SETTINGS, settings)
+            res(settings);
+          }).catch((error) => {
+            // console.debug('******* error', error)
+            // If we can not get the settings, then leave them empty
+            console.debug("****** WE DO NOT HAVE ANY SETTINGS! ....")
+            commit(SET_SETTINGS, {})
+            res({});
+          })
         } else {
           res(state.settings);
         }
