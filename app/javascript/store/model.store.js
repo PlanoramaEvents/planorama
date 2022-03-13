@@ -279,7 +279,7 @@ export const store = new Vuex.Store({
     ...personStore.actions,
     ...agreementStore.actions,
     ...mailingStore.actions,
-    ...sessionStore.actions,
+    ...settingsStore.actions,
     ...areaStore.actions,
     ...tagStore.actions,
     ...sessionAssignmentStore.actions,
