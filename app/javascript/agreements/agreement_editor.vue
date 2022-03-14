@@ -9,13 +9,13 @@
         type='classic'
         :disabled="readOnly"
     ></plano-editor>
+    <br/>{{currentSettings}}<br/>
+    <br/>{{currentSettings.agreement_types}}<br/>
+    <label style="padding-right: 15px">Roles:</label>
+    <select v-model="agreementData.target">
+      <option v-for="role in currentSettings.agreement_types">{{role}}</option>
+    </select>
     <!--model-field label="Terms" v-model="agreement.terms" type="text" stateless></model-field-->
-    <label style="padding-right: 15px">Roles:</label><input type="radio" id="member" value="member" v-model="agreementData.target"/>
-    <label for="member" style="padding-right: 15px">Members</label>
-    <input type="radio" id="staff" value="staff" v-model="agreementData.target"/>
-    <label for="staff" style="padding-right: 15px">Staff</label>
-    <input type="radio" id="all" value="all" v-model="agreementData.target"/>
-    <label for="all">All</label>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
       <b-button variant="primary" @click="saveAgreement">Save</b-button>
@@ -25,6 +25,7 @@
 
 <script>
 import toastMixin from '../shared/toast-mixin';
+import settingsMixin from "@/store/settings.mixin";
 import { ADMIN_ADD_AGREEMENT_SUCCESS } from '@/constants/strings';
 import ModelField from '../shared/model-field';
 import PlanoEditor from '../components/plano_editor';
@@ -39,7 +40,8 @@ export default {
     PlanoEditor
   },
   mixins: [
-    toastMixin
+    toastMixin,
+      settingsMixin
   ],
   props: {
     showButtons: {

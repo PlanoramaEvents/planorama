@@ -17,7 +17,6 @@ export const settingsMixin = {
   },
   mounted() {
     // fetch the current settings on mount !!!
-    console.log("fetching settings");
     this.fetchSettings();
   }
 }

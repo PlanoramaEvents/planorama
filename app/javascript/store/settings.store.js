@@ -28,7 +28,7 @@ export const settingsStore = {
 //          dispatch('jv/get','/settings').then((settings) => {
           http.get("/settings").then((settings) => {
            console.debug('******* settings', settings)
-           commit(SET_SETTINGS, settings)
+           commit(SET_SETTINGS, settings.data)
             res(settings);
           }).catch((error) => {
             // console.debug('******* error', error)
