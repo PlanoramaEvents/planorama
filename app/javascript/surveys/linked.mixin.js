@@ -1,38 +1,56 @@
-import {questionMixin, surveyMixin} from '@/mixins';
-import { linkedFields } from './linked-fields';
+import settingsMixin from "@/store/settings.mixin";
 
 export const linkedMixin = {
-  mixins: [questionMixin, surveyMixin],
-  data: {
-    cachedLinkedValue: null
-  },
+  mixins: [settingsMixin],
   methods: {
-    isLinkedFieldDisabled(question_type, value) {
-      return this.surveyLinkedFields.includes(value) || !linkedFields[question_type]?.find(l => l.value === value);
+    // Determine whether the question type can be linked to
+    canLinkField(question_type) {
+      // console.debug("***** IS LINKED??? ", question_type)
+      return question_type == 'textfield' || question_type == 'textbox' || question_type == 'email' || question_type == 'yesnomaybe' || question_type == 'boolean'
     },
-    linkField(value) {
-      if(!this.selectedQuestion) {
-        console.error("cannot link a field; there is no question selected")
-        return;
+    // Return the valid fields for this question that can be linked
+    linkedFieldsFor(question_type) {
+      // Go through current settings and build a list based on type
+      let res = []
+      let allowed_type = 'nothing'
+
+      if (question_type == 'textfield') {
+        allowed_type = 'string'
       }
-      console.debug("Linking", value, "to", this.selectedQuestion.question)
-      if (value) {
-        this.surveyLinkedFields.push(value)
-        this.cachedLinkedValue = value
-      } else if (this.cachedLinkedValue) {
-        this.surveyLinkedFields.splice(this.surveyLinkedFields.indexOf(value), 1)
-        this.cachedLinkedValue = null
+      if (question_type == 'textbox') {
+        allowed_type = 'string'
       }
-      return this.patchSelectedQuestion({linked_field: value})
-    },
-    captureLinkedValue(value) {
-      this.initialLinkedValue = value;
-    },
-    unlinkIfLinked(event) {
-      if(!event && this.cachedLinkedValue) {
-        this.linkField(null);
+      if (question_type == 'email') {
+        allowed_type = 'email'
       }
+      if (question_type == 'yesnomaybe') {
+        allowed_type = 'yesnomaybe'
+      }
+      if (question_type == 'boolean') {
+        allowed_type = 'boolean'
+      }
+
+      Object.keys(this.currentSettings.attributes).forEach(
+        (mdl) => {
+          Object.keys(this.currentSettings.attributes[mdl]).forEach(
+            (attr) => {
+              // console.debug('*** ', this.currentSettings.attributes[mdl][attr])
+              if (this.currentSettings.attributes[mdl][attr].linkable && this.currentSettings.attributes[mdl][attr].type == allowed_type) {
+                res.push(
+                  {
+                    // TODO: think about putting the display string in the setting rather than a munge here
+                    text: attr.replace(/_/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase()))),
+                    value: `${mdl}.${attr}` // "model.attr"
+                  }
+                )
+              }
+            }
+          )
+        }
+      )
+
+      // console.debug("***** OPTIONS CAN BE", res)
+      return res
     }
   }
-
 }

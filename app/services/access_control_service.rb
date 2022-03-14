@@ -3,8 +3,8 @@ module AccessControlService
     # attribute, sensitive, linkable, type, values
     {
       Person: {
-        primary_email: { sensitive: true, linkable: false, type: :string},
-        contact_email: { sensitive: true, linkable: true, type: :string},
+        primary_email: { sensitive: true, linkable: false, type: :email},
+        contact_email: { sensitive: true, linkable: true, type: :email},
         last_sign_in_at: { sensitive: true, linkable: true, type: :string},
         pronouns: { sensitive: true, linkable: true, type: :string},
         year_of_birth: { sensitive: true, linkable: true, type: :string},

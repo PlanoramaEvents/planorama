@@ -1,20 +1,19 @@
 <template>
   <div>
     <b-form-checkbox v-model="enabled" :disabled="!canLink" @change="unlinkIfLinked">Linked</b-form-checkbox>
-    <b-form-select :disabled="!enabled" v-model="question.linked_field" @change="linkField" :select-size="4">
-      <b-form-select-option value="" :disabled="!!question.linked">Select field</b-form-select-option>
-      <b-form-select-option-group v-for="group in linkedCategories" :key="group.value" :label="group.text">
-        <b-form-select-option v-for="{value, text} in linkedFields[group.value]" :key="value" :value="value" :disabled="isLinkedFieldDisabled(question.question_type, value)">
-          {{text}}
-        </b-form-select-option>
-      </b-form-select-option-group>
+    <b-form-select
+      :disabled="!enabled"
+      v-model="question.linked_field"
+      @change="linkField"
+      :select-size="4"
+      :options="fieldOptions"
+    >
     </b-form-select>
   </div>
 </template>
 
 <script>
 import { linkedMixin } from '@/mixins';
-import {linkedFields} from './linked-fields.js'
 
 export default {
   name: "LinkedField",
@@ -27,21 +26,31 @@ export default {
   },
   data: () => ({
     enabled: false,
-    linkedFields
+    // linkedFields
   }),
-  computed: {
-    canLink() {
-      return !!linkedFields[this.question?.question_type]
+  methods: {
+    unlinkIfLinked() {
+      // If the box is unchecked ensure that the question is not linked
+      // console.debug("**** UNLINK ????", this.enabled, this.question)
+      if (!this.enabled) {
+        this.question.linked_field = null
+      }
     },
-    linkedCategories() {
-      return this.questionTypes.filter(t => linkedFields[t.value])
+    linkField() {
+      console.debug('**** LINK THE FIELD')
+
     }
   },
-  watch: {
-    question(newVal, oldVal) {
-      this.captureLinkedValue(newVal?.linked_field);
-      if(newVal?.id !== oldVal?.id)
-        this.enabled = !!(newVal?.linked_field)
+  computed: {
+    canLink() {
+      console.debug('**** SEE IF WE CAN LINK', this.question.question_type)
+      // return !!linkedFields[this.question?.question_type]
+      let linkabled = this.canLinkField(this.question.question_type)
+      console.debug("AND ", linkabled)
+      return linkabled
+    },
+    fieldOptions() {
+      return this.linkedFieldsFor(this.question.question_type)
     }
   }
 }

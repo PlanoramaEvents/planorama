@@ -29,7 +29,7 @@
         <linked-field :question="question"></linked-field>
       </div>
     </div>
-    <div class="row" v-if="!formatting && !isSelected"> 
+    <div class="row" v-if="!formatting && !isSelected">
       <div :class="{'col-12': !question.linked_field, 'col-6': question.linked_field}">
         <div v-html="question.question" class="py-3"></div>
       </div>
@@ -54,67 +54,6 @@
       <template v-if="hr">
         <div class="col-12">
           <hr />
-        </div>
-      </template>
-      <template v-if="address && !isSelected">
-        <div class="col-12 col-sm-6">
-          <b-form-group
-            :id="formGroupId('address-1')"
-            :label-for="formId('address-1')"
-            label="Address 1"
-          >
-            <b-form-input disabled :id="formId('address-1')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12 col-sm-6">
-          <b-form-group
-            :id="formGroupId('address-2')"
-            :label-for="formId('address-2')"
-            label="Address 2"
-          >
-            <b-form-input disabled :id="formId('address-2')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12 col-sm-6">
-          <b-form-group
-            :id="formGroupId('city')"
-            :label-for="formId('city')"
-            label="City"
-          >
-            <b-form-input disabled :id="formId('city')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12 col-sm-3">
-          <b-form-group
-            :id="formGroupId('state')"
-            :label-for="formId('state')"
-            label="State"
-          >
-            <b-form-input disabled :id="formId('state')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12 col-sm-3">
-          <b-form-group
-            :id="formGroupId('zip')"
-            :label-for="formId('zip')"
-            label="ZIP Code"
-          >
-            <b-form-input disabled :id="formId('zip')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12">
-          <b-form-group
-            :id="formGroupId('country')"
-            :label-for="formId('country')"
-            label="Country"
-          >
-            <b-form-input disabled :id="formId('country')"></b-form-input>
-          </b-form-group>
-        </div>
-      </template>
-      <template v-if="address && isSelected">
-        <div class="col-12">
-          <small>Address fields</small>
         </div>
       </template>
       <template v-if="email">

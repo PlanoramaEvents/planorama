@@ -6,6 +6,7 @@ export const settingsMixin = {
     ...mapState({
       currentSettings: 'settings'
     }),
+    // TOOD: what is connected here used for?
     connected() {
       return !!this.currentSettings.models
     }
