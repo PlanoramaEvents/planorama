@@ -17,8 +17,9 @@ class SettingsController < ApplicationController
     settings = {
       # 1. model information
       enums: enums,
-      # 2. sensitive fields
-      # 3. Aagreement Types
+      # 2. sensitive fields etc
+      attributes: AccessControlService.attribute_meta_data,
+      # 3. Agreement Types
       # TODO: move agreement types to DB
       # At the moment we have 2 types of agreement
       agreement_types: [
