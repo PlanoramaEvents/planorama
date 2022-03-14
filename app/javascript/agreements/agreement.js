@@ -1,7 +1,7 @@
 export const agreement_columns = [
   {
     key: 'title',
-    sortKey: 'agreements.name',
+    //sortKey: 'agreements.name',
     label: 'Title',
     type: "text",
     stickyColumn: true,
@@ -9,30 +9,20 @@ export const agreement_columns = [
   },
   {
     key: 'terms',
-    label: 'Terms',
+    label: 'Body',
     type: "text",
     sortable: true,
   },
   {
     key: 'target',
-    label: 'Target',
+    label: 'Role',
     type: 'text',
     sortable: true,
   },
   {
-    key: 'published_on',
+    key: 'created_at',
     label: 'Published On',
     sortable: true,
-  },
-  {
-    key: 'updated_at',
-    label: 'Last Modified On',
-    sortable: true,
     formatter: (d) => new Date(d).toLocaleDateString()
-  },
-  {
-    key: 'updated_by.name',
-    label: 'Last Modified By',
-    sortable: true
   }
 ];

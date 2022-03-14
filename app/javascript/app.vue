@@ -18,7 +18,8 @@ import TopNavbar from "./navbar/top-navbar.vue";
 import SideNavbar from "./navbar/side-navbar.vue";
 import BottomNavbar from "./navbar/bottom-navbar.vue";
 import personSessionMixin from "./auth/person_session.mixin";
-import SignAgreements from "./agreements/sign_agreements.vue"
+import SignAgreements from "./agreements/sign_agreements.vue";
+import settingsMixin from "@/store/settings.mixin";
 import { ValidationProvider, extend } from 'vee-validate';
 import { required, email, numeric } from 'vee-validate/dist/rules';
 
@@ -40,7 +41,7 @@ export default  {
     BottomNavbar,
     SignAgreements
   },
-  mixins: [personSessionMixin],
+  mixins: [personSessionMixin, settingsMixin],
   methods: {
     check_signatures() {
       // TODO: @RALPH - this passes along the check signatures to the agreement signer ...

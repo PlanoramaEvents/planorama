@@ -30,6 +30,9 @@ import { agreementStore, agreementEndpoints } from './agreement.store';
 // mailings
 import { mailingStore, mailingEndpoints } from './mailing.store';
 
+// settings
+import { settingsStore } from "@/store/settings.store";
+
 // session add-ons
 import { personSessionStore } from './person_session.store';
 
@@ -96,6 +99,7 @@ export const store = new Vuex.Store({
       ...configurationStore.selected
     },
     ...personSessionStore.state,
+    ...settingsStore.state,
     ...surveyStore.state,
     // ...mailingStore.state
   },
@@ -141,6 +145,7 @@ export const store = new Vuex.Store({
       this.commit('jv/clearRecords', { _jv: { type: model } })
     },
     ...personSessionStore.mutations,
+    ...settingsStore.mutations,
     ...surveyStore.mutations,
   },
   actions: {
@@ -269,15 +274,16 @@ export const store = new Vuex.Store({
       });
     },
     ...personSessionStore.actions,
+    ...sessionStore.actions,
     ...surveyStore.actions,
     ...personStore.actions,
     ...agreementStore.actions,
     ...mailingStore.actions,
-    ...sessionStore.actions,
+    ...settingsStore.actions,
     ...areaStore.actions,
     ...tagStore.actions,
     ...sessionAssignmentStore.actions,
-    ...parameterNameStore.actions,
+// actions not defined    ...parameterNameStore.actions,
     ...configurationStore.actions
   }
 })

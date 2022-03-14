@@ -1,7 +1,9 @@
 <template>
   <table-vue
-    model="agreement"
+    :model="agreement"
     :columns="columns"
+    :show-add="false"
+    :show-settings="false"
     ref="agreements-table"
   >
   </table-vue>
@@ -11,7 +13,7 @@
 import TableVue from '../components/table_vue';
 import { agreement_columns as columns } from './agreement';
 import { mapActions } from 'vuex';
-import { NEW_AGREEMENT } from '@/store/agreement.store';
+import { NEW_AGREEMENT, agreementModel as agreement} from '@/store/agreement.store';
 
 export default {
   name: 'AgreementTable',
@@ -20,7 +22,8 @@ export default {
   },
   data() {
     return {
-      columns
+      columns,
+      agreement
     }
   },
   methods: {
@@ -29,6 +32,5 @@ export default {
       this.$refs['agreements-table'].fetchPaged()
     }
   }
-
 }
 </script>
