@@ -127,13 +127,43 @@ class Person < ApplicationRecord
     :tiktok
   ]
 
+  enum can_stream: { yes: 'yes', no: 'no', maybe: 'maybe'}, _prefix: true
+  enum can_record: { yes: 'yes', no: 'no', maybe: 'maybe'}, _prefix: true
+  enum can_photo: { yes: 'yes', no: 'no', maybe: 'maybe'}, _prefix: true
 
   validates :name, presence: true
 
-  # Needed for JWT revocation strategy
-  # def jwt_payload
-  #   super.merge('foo' => 'bar')
-  # end
+  # protected_attributes :last_sign_in_at, :primary_email,
+  #               :pronouns, :year_of_birth, :gender, :ethnicity,
+  #               :opted_in, :comments,
+  #               :can_share,
+  #               :invite_status, :acceptance_status,
+  #               :registered, :registration_type, :registration_number,
+  #               :bio, :website, :twitter, :othersocialmedia,
+  #               :facebook, :linkedin, :twitch, :youtube,
+  #               :instagram, :flickr, :reddit, :tiktok,
+  #               :can_stream,
+  #               :can_record,
+  #               :can_photo,
+  #               :age_at_convention,
+  #               :romantic_sexual_orientation,
+  #               :awards,
+  #               :needs_accommodations,
+  #               :accommodations,
+  #               :willing_to_moderate,
+  #               :moderation_experience,
+  #               :othered,
+  #               :indigenous,
+  #               :black_diaspora,
+  #               :non_us_centric_perspectives,
+  #               :demographic_categories,
+  #               :do_not_assign_with,
+  #               :can_stream_exceptions,
+  #               :can_record_exceptions,
+  #               :can_photo_exceptions,
+  #               :is_local,
+  #               :langauges_fluent_in
+
 
   # TODO:
   # - there is talk about having a workflow, including whether a person
@@ -152,11 +182,6 @@ class Person < ApplicationRecord
   def staff?
     convention_roles.inject(false) { |res, role| res || role.staff? }
   end
-
-  #
-  # def planner?
-  #   convention_roles.inject(false) { |res, role| res || role.planner? }
-  # end
 
   def participant?
     convention_roles.inject(false) { |res, role| res || role.participant? }

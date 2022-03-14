@@ -27,9 +27,10 @@ export const questionMixin = {
       { value: 'singlechoice', text: 'Multiple Choice' },
       { value: 'multiplechoice', text: 'Checkboxes' },
       { value: 'dropdown', text: 'Dropdown' },
-      { value: 'address', text: 'Address' },
       { value: 'email', text: 'Email' },
-      { value: 'socialmedia', text: 'Social Media' }
+      { value: 'socialmedia', text: 'Social Media' },
+      { value: 'yesnomaybe', text: 'Yes/No/Maybe' },
+      { value: 'boolean', text: 'Boolean (Yes/No)' }
     ],
   }),
   computed: {
@@ -57,9 +58,6 @@ export const questionMixin = {
     dropdown() {
       return this.question.question_type === "dropdown";
     },
-    address() {
-      return this.question.question_type === "address";
-    },
     email() {
       return this.question.question_type === "email";
     },
@@ -68,6 +66,12 @@ export const questionMixin = {
     },
     textonly() {
       return this.question.question_type === "textonly";
+    },
+    yesnomaybe() {
+      return this.question.question_type === "yesnomaybe";
+    },
+    boolean() {
+      return this.question.question_type === "boolean";
     },
     otherFromQuestion() {
       return this.getQuestionAnswers(this.question)?.find(a => a.other);

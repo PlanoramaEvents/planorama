@@ -10,8 +10,8 @@
               <plano-editor
                 v-if="isSelected"
                 v-model="a.answer"
-                @blur="patchAnswer(a, {answer: $event.target.value})"
                 class="mt-n2 mb-2"
+                @change="patchAnswerText(a, $event)"
               >
               </plano-editor>
               <span v-if="!isSelected">{{a.answer}}</span>
@@ -117,6 +117,9 @@ export default {
     ...mapActions({
       save: SAVE
     }),
+    patchAnswerText(a, value) {
+      this.patchAnswer(a, {answer: value})
+    },
     pagePickerId(answer) {
       return `page-picker-answer-${answer.id}`
     },

@@ -71,7 +71,13 @@ class Session < ApplicationRecord
   # acts_as_taggable
   acts_as_taggable_on :tags
 
-# # NOTE: This only matches  that have the exact set of specified tags. If a user has additional tags, they are not returned.
+  # TODO: need to add required setup (allowed to be null)
+
+  def published?
+    !published_session.nil?
+  end
+
+# NOTE: This only matches  that have the exact set of specified tags. If a user has additional tags, they are not returned.
 # Session.tagged_with(["awesome", "cool"], :match_all => true)
 #
 # # Find  with any of the specified tags:
@@ -93,16 +99,6 @@ class Session < ApplicationRecord
 # ).where(
 #   tags[:name].matches("%#{query}%")
 # )
-
-
-  def published?
-    !published_session.nil?
-  end
-
-  # TODO: we want an idea that can be later promotted into a session
-  # Need to know who create the idea, and when
-  # We could use inheritance or some workflow (aasm)???
-
   # TODO: revisit for exclusion mappings
   # has_many :excluded_items_survey_maps, dependent: :destroy
 end

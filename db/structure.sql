@@ -895,7 +895,8 @@ CREATE TABLE public.survey_answers (
     sort_order integer,
     next_page_id uuid,
     other boolean DEFAULT false,
-    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum
+    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum,
+    value character varying
 );
 
 
@@ -2138,6 +2139,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220303175111'),
 ('20220303175113'),
 ('20220303175135'),
-('20220309183902');
+('20220309183902'),
+('20220312172347');
 
 

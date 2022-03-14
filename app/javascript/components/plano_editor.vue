@@ -12,6 +12,7 @@
       :value="value"
       v-on="$listeners"
       @namespaceloaded="onNamespaceLoaded"
+      @blur="onBlur"
     ></ckeditor>
   </div>
 </template>
@@ -85,6 +86,9 @@ export default {
     }
   },
   methods: {
+    onBlur(eventInfo, data) {
+      this.$emit('change', eventInfo.editor.getData())
+    },
     onNamespaceLoaded( CKEDITOR ) {
       // Add our own plugin to use with the editor
       // console.debug('***** CK LOADED ', CKEDITOR.ENTER_BR)
