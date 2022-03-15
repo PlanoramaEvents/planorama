@@ -53,10 +53,10 @@ class SurveysController < ResourceController
           questions: :answers
         }
       },
-      :submissions,
-      :created_by,
-      :updated_by,
-      :published_by,
+      # :submissions,
+      # :created_by,
+      # :updated_by,
+      # :published_by,
       :assigned_people
     ]
   end
