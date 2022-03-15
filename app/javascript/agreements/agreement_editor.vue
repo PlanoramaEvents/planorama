@@ -9,11 +9,13 @@
         type='classic'
         :disabled="readOnly"
     ></plano-editor>
-    <br/>{{currentSettings}}<br/>
-    <br/>{{currentSettings.agreement_types}}<br/>
-    <label style="padding-right: 15px">Roles:</label>
+    <label>Agreement Type:</label>
+    <select v-model="agreementData.agreement_type" style="padding-right: 15px">
+      <option v-for="type in currentSettings.agreement_types" :selected="type === agreementData.selected_agreement_type">{{type}}</option>
+    </select>
+    <label>Role:</label>
     <select v-model="agreementData.target">
-      <option v-for="role in currentSettings.agreement_types">{{role}}</option>
+      <option v-for="role in currentSettings.enums.Agreement.target" :selected="role === agreementData.selected_target">{{role}}</option>
     </select>
     <!--model-field label="Terms" v-model="agreement.terms" type="text" stateless></model-field-->
     <div class="d-flex justify-content-end" v-if='showButtons'>
@@ -58,7 +60,10 @@ export default {
       agreementData: {
         title: '',
         terms: '',
-        target: 'all'
+        agreement_type: '',
+        selected_agreement_type: 'Terms and Conditions',
+        target: '',
+        selected_target: 'none'
       }
     }
   },
@@ -67,12 +72,17 @@ export default {
     clear() {
       this.agreementData.title = '';
       this.agreementData.terms = '';
-      this.agreementData.target = 'all';
+      this.agreementData.agreement_type = '';
+      this.selected_agreement_type = 'Terms and Conditions';
+      this.target = '';
+      this.selected_target = 'none';
     },
     setAgreementData(data) {
+      console.log("setAgreementData: ", data);
       this.agreementData.title=data.title;
       this.agreementData.terms = data.terms;
-      this.agreementData.target = data.target;
+      this.agreementData.selected_agreement_type=this.agreementData.agreement_type = data.agreement_type;
+      this.agreementData.selected_target=this.agreementData.target = data.target;
     },
     saveAgreement() {
       let res = this.newAgreementAction(this.agreementData);
