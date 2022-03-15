@@ -25,33 +25,29 @@ export default {
     }
   },
   data: () => ({
-    enabled: false,
-    // linkedFields
+    enabled: false
   }),
   methods: {
     unlinkIfLinked() {
       // If the box is unchecked ensure that the question is not linked
-      // console.debug("**** UNLINK ????", this.enabled, this.question)
       if (!this.enabled) {
         this.question.linked_field = null
       }
     },
-    linkField() {
-      console.debug('**** LINK THE FIELD')
-
+    linkField(arg) {
+      this.$emit('change', arg)
     }
   },
   computed: {
     canLink() {
-      console.debug('**** SEE IF WE CAN LINK', this.question.question_type)
-      // return !!linkedFields[this.question?.question_type]
-      let linkabled = this.canLinkField(this.question.question_type)
-      console.debug("AND ", linkabled)
-      return linkabled
+      return this.canLinkField(this.question.question_type)
     },
     fieldOptions() {
       return this.linkedFieldsFor(this.question.question_type)
     }
+  },
+  mounted() {
+    this.enabled = this.question.linked_field != null
   }
 }
 </script>

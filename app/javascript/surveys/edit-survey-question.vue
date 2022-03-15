@@ -26,7 +26,7 @@
         </b-form-group>
       </div>
       <div class="offset-6 col-6">
-        <linked-field :question="question"></linked-field>
+        <linked-field :question="question" @change="patchSelectedQuestion({linked_field: $event})"></linked-field>
       </div>
     </div>
     <div class="row" v-if="!formatting && !isSelected">
