@@ -1,7 +1,5 @@
 <template>
-  <b-form
-    ref='add-agreement-form'
-  >
+  <b-form ref='add-agreement-form'>
     <model-field label="Title" v-model="agreementData.title" type="text" stateless></model-field>
     <label>Body</label>
     <plano-editor
@@ -11,13 +9,12 @@
     ></plano-editor>
     <label>Agreement Type:</label>
     <select v-model="agreementData.agreement_type" style="padding-right: 15px">
-      <option v-for="type in currentSettings.agreement_types" :selected="type === agreementData.selected_agreement_type">{{type}}</option>
+      <option v-for="type in currentSettings.agreement_types" :selected="type === selected_agreement_type">{{type}}</option>
     </select>
     <label>Role:</label>
     <select v-model="agreementData.target">
-      <option v-for="role in currentSettings.enums.Agreement.target" :selected="role === agreementData.selected_target">{{role}}</option>
+      <option v-for="role in currentSettings.enums.Agreement.target" :selected="role === selected_target">{{role}}</option>
     </select>
-    <!--model-field label="Terms" v-model="agreement.terms" type="text" stateless></model-field-->
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
       <b-button variant="primary" @click="saveAgreement">Save</b-button>
@@ -61,10 +58,10 @@ export default {
         title: '',
         terms: '',
         agreement_type: '',
-        selected_agreement_type: 'Terms and Conditions',
-        target: '',
-        selected_target: 'none'
-      }
+        target: ''
+      },
+      selected_agreement_type: 'Terms and Conditions',
+      selected_target: 'none'
     }
   },
   methods: {
@@ -73,16 +70,16 @@ export default {
       this.agreementData.title = '';
       this.agreementData.terms = '';
       this.agreementData.agreement_type = '';
+      this.agreementData.target = '';
       this.selected_agreement_type = 'Terms and Conditions';
-      this.target = '';
       this.selected_target = 'none';
     },
     setAgreementData(data) {
-      console.log("setAgreementData: ", data);
+      //console.log("setAgreementData: ", data);
       this.agreementData.title=data.title;
       this.agreementData.terms = data.terms;
-      this.agreementData.selected_agreement_type=this.agreementData.agreement_type = data.agreement_type;
-      this.agreementData.selected_target=this.agreementData.target = data.target;
+      this.selected_agreement_type=this.agreementData.agreement_type = data.agreement_type;
+      this.selected_target=this.agreementData.target = data.target;
     },
     saveAgreement() {
       let res = this.newAgreementAction(this.agreementData);
