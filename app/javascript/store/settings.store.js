@@ -26,8 +26,8 @@ export const settingsStore = {
         if(!state.settings.model) {
           // console.debug('******* get the settings')
           http.get("/settings").then((settings) => {
-            // console.debug('******* settings', settings)
-            commit(SET_SETTINGS, settings.data)
+           console.debug('******* settings', settings)
+           commit(SET_SETTINGS, settings.data)
             res(settings);
           }).catch((error) => {
             // console.debug('******* error', error)

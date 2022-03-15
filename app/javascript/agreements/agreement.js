@@ -14,6 +14,12 @@ export const agreement_columns = [
     sortable: true,
   },
   {
+    key: 'agreement_type',
+    label: 'Agreement Type',
+    type: 'text',
+    sortable: true,
+  },
+  {
     key: 'target',
     label: 'Role',
     type: 'text',
