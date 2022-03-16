@@ -32,6 +32,7 @@ export default {
       // If the box is unchecked ensure that the question is not linked
       if (!this.enabled) {
         this.question.linked_field = null
+        this.$emit('change', this.question.linked_field)
       }
     },
     linkField(arg) {
