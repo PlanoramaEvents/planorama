@@ -5,7 +5,6 @@ export const linkedMixin = {
   methods: {
     // Determine whether the question type can be linked to
     canLinkField(question_type) {
-      // console.debug("***** IS LINKED??? ", question_type)
       return question_type == 'textfield' ||
         question_type == 'textbox' ||
         question_type == 'email' ||
