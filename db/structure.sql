@@ -407,7 +407,8 @@ CREATE TABLE public.email_addresses (
     lock_version integer DEFAULT 0,
     label character varying,
     person_id uuid,
-    is_valid boolean DEFAULT true NOT NULL
+    is_valid boolean DEFAULT true NOT NULL,
+    iscontact boolean DEFAULT false
 );
 
 
@@ -2140,6 +2141,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220303175113'),
 ('20220303175135'),
 ('20220309183902'),
-('20220312172347');
+('20220312172347'),
+('20220316150515');
 
 

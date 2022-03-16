@@ -39,7 +39,10 @@ class PersonSerializer #< ActiveModel::Serializer
                 :is_local,
                 :langauges_fluent_in
 
-  # tag_list
+  protected_attributes :contact_email do |person|
+    person.contact_email
+  end
+
   attribute :tags do |person|
     person.base_tags.collect(&:name)
   end
