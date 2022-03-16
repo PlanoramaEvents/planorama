@@ -9,23 +9,63 @@ class Survey::Response < ApplicationRecord
              inverse_of: :responses
 
   before_save :set_response_text
+  after_save :update_linked
 
   #
   # Deal with linked_field from question
   #
   def update_linked
     if question.linked_field && submission.person
-      # TODO
       # we can set the linked field on the person
+      details = question.linked_field.split('.',2)
+
+      if details[0] == 'Person'
+        val = case question.question_type
+              when :textfield
+                response['text']
+              when :textbox
+                response['text']
+              when :email
+                response['email']
+              when :socialmedia
+                # TODO: need to process etc
+                response['socialmedia']
+              when :boolean
+                response['boolean'].to_s.downcase == "true"
+              when :yesnomaybe
+                response['yesnomaybe']
+              else
+                nil
+              end
+
+        # Rails.logger.debug "***** GOING TO SET person linked field #{details[1]} with #{val}"
+        if val
+          if question.question_type == :socialmedia
+            submission.person.twitter = val['twitter']
+            submission.person.facebook = val['facebook']
+            submission.person.linkedin = val['linkedin']
+            submission.person.twitch = val['twitch']
+            submission.person.youtube = val['youtube']
+            submission.person.instagram = val['instagram']
+            submission.person.tiktok = val['tiktok']
+            submission.person.other = val['other']
+            submission.person.website = val['website']
+          else
+            submission.person.send("#{details[1]}=", val)
+          end
+          submission.person.save!
+        end
+      end
     end
   end
 
-  def get_linked
-    if question.linked_field && submission.person
-      # TODO
-      # we can get the linked field on the person and set the value accordingly
-    end
-  end
+  # TODO: this may not be needed
+  # def get_linked
+  #   if question.linked_field && submission.person
+  #     # TODO
+  #     # we can get the linked field on the person and set the value accordingly
+  #   end
+  # end
 
   def self.create_response(question:, submission:, value:)
     json_val = empty_json
@@ -40,20 +80,15 @@ class Survey::Response < ApplicationRecord
            json_val[:answers] = value
          when :dropdown
            json_val[:answers] = value
-         # when :address
-         #   empty_json[:address] = value
          when :socialmedia
            json_val[:socialmedia] = value
+         when :boolean
+           json_val[:boolean] = value
+         when :yesnomaybe
+           json_val[:yesnomaybe] = value
+         when :email
+           json_val[:email] = value
          # when :textonly, :hr are not actual questions
-         # when :email
-         #   {
-         #     text: nil,
-         #     answers: [nil],
-         #     address: value,
-         #     socialmedia: {
-         #       twitter: nil, facebook: nil, linkedin: nil, twitch: nil, youtube: nil, instagram: nil, tiktok: nil, other: nil, website: nil
-         #     }
-         #   }
          else
            json_val = nil
          end
@@ -105,12 +140,12 @@ class Survey::Response < ApplicationRecord
     {
       text: "",
       answers: [],
-      address: {
-        street: nil, street2: nil, city: nil, state: nil, zip: nil, country:nil
-      },
       socialmedia: {
         twitter: nil, facebook: nil, linkedin: nil, twitch: nil, youtube: nil, instagram: nil, tiktok: nil, other: nil, website: nil
-      }
+      },
+      boolean: nil,
+      yesnomaybe: nil,
+      email: nil
     }
   end
 end

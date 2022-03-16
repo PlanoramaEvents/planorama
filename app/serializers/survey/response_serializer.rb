@@ -4,10 +4,10 @@ class Survey::ResponseSerializer
   attributes :id, :lock_version, :submission_id,
              :question_id,
              :response
-  
-  attribute :question_text do |object|
-    object.question.question if object.question
-  end
+
+  # attribute :question_text do |object|
+  #   object.question.question if object.question
+  # end
 
   belongs_to :submission,
     links: {
