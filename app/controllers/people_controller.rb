@@ -288,11 +288,6 @@ class PeopleController < ResourceController
   #   ]
   # end
 
-  # def except_params
-  #   %i[
-  #   ]
-  # end
-
   def allowed_params
     %i[
       id

@@ -12,7 +12,7 @@ import toastMixin from '../shared/toast-mixin'
 import modelMixin from '../store/model.mixin'
 
 export default {
-  name: "UserRole",
+  name: "UserConventionRole",
   mixins: [
     modelMixin,
     toastMixin
@@ -36,6 +36,7 @@ export default {
     },
     roles: {
       get() {
+        console.debug("-- person is ", this.person)
         return Object.values(this.person.convention_roles).map(r => r.role) || []
       },
       set(val) {

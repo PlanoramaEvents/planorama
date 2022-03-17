@@ -1,4 +1,6 @@
 module AccessControlService
+  # Return meta information on sensitive attributes
+  # at the moment this is a pre-determined structure
   def self.attribute_meta_data
     {
       # Need grouping for linked fields - by type and show all of them in the drop down
@@ -58,5 +60,74 @@ module AccessControlService
     }
   end
 
-  # TODO: add rbac check with DB
+  # Return a list of sensitive attributes for the given model
+  def self.sensitive_attributes(model:)
+    attribute_meta_data[model.to_sym].filter{|k,v| v[:sensitive]}.keys
+  end
+
+  # Return a list of linkable attributes for the given model
+  def self.linkable_attributes(model:)
+    attribute_meta_data[model.to_sym].filter{|k,v| v[:linkable]}.keys
+  end
+
+  # Return whether the person is allowed access to any sensitive attributes
+  def self.allowed_sensitive_access?(person:)
+    # TODO: add rbac check with DB, based on the role
+    true
+  end
+
+  # Return a list of attributes that are not allowed for the person from this instance
+  def self.banned_attributes(model:, instance: nil, person:)
+    if instance.is_a? Person
+      return [] if instance.id == person.id
+    end
+
+    banned = sensitive_attributes(model: model)
+
+    banned
+  end
+
+  # Return true if the person is allowed access to the
+  # the specific attribute of the given model
+  def self.sensitive_access?(person:, model:, attribute:)
+    # if the attribute is not sensitive then access is always allowed
+    return true unless sensitive_attributes(model: model).include? attribute
+
+    # check if the person is allowed access to sensitive attributes
+    allowed_sensitive_access?(person: person)
+  end
+
+  # Return true if the person is allowed access to the
+  # sensitive attributes of this instance
+  def self.allowed_access?(instance:, person:)
+    # if the instance is a person and the requesting person
+    # is the same then they are allowed access
+    if instance.is_a? Person
+      return true if instance.id == person.id
+    end
+
+    # test to see if person is allowed access to sensitive info
+    allowed_sensitive_access?(person: person)
+  end
+
+  # Return true if the person is allowed access to the specific attribute
+  # of the instance
+  def self.allowed_attribute_access?(instance:, attributes:, person:)
+    # if the instance is a person and the requesting person
+    # is the same then they are allowed access
+    if instance.is_a? Person
+      return true if instance.id == person.id
+    end
+
+    res = true
+    attributes.each do |attr|
+      res = res && sensitive_access?(
+                      person: person,
+                      model: instance.class.name,
+                      attribute: attr
+                    )
+    end
+
+    res
+  end
 end

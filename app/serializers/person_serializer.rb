@@ -2,49 +2,44 @@ class PersonSerializer #< ActiveModel::Serializer
   include JSONAPI::Serializer
   include ::Plano::Serializer
 
-  attributes :id, :lock_version,
-             :name, :name_sort_by, :name_sort_by_confirmed,
-             :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
-             :published_name, :published_name_sort_by,
-             :job_title, :organization
-
-  protected_attributes :last_sign_in_at, :primary_email,
-                :pronouns, :year_of_birth, :gender, :ethnicity,
-                :opted_in, :comments,
-                :can_share,
-                :invite_status, :acceptance_status,
-                :registered, :registration_type, :registration_number,
-                :bio, :website, :twitter, :othersocialmedia,
-                :facebook, :linkedin, :twitch, :youtube,
-                :instagram, :flickr, :reddit, :tiktok,
-                :can_stream,
-                :can_record,
-                :can_photo,
-                :age_at_convention,
-                :romantic_sexual_orientation,
-                :awards,
-                :needs_accommodations,
-                :accommodations,
-                :willing_to_moderate,
-                :moderation_experience,
-                :othered,
-                :indigenous,
-                :black_diaspora,
-                :non_us_centric_perspectives,
-                :demographic_categories,
-                :do_not_assign_with,
-                :can_stream_exceptions,
-                :can_record_exceptions,
-                :can_photo_exceptions,
-                :is_local,
-                :langauges_fluent_in
+  protected_attributes :id, :lock_version,
+              :name, :name_sort_by, :name_sort_by_confirmed,
+              :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
+              :published_name, :published_name_sort_by,
+              :job_title, :organization,
+              :last_sign_in_at, :primary_email,
+              :pronouns, :year_of_birth, :gender, :ethnicity,
+              :opted_in, :comments,
+              :can_share,
+              :invite_status, :acceptance_status,
+              :registered, :registration_type, :registration_number,
+              :bio, :website, :twitter, :othersocialmedia,
+              :facebook, :linkedin, :twitch, :youtube,
+              :instagram, :flickr, :reddit, :tiktok,
+              :can_stream,
+              :can_record,
+              :can_photo,
+              :age_at_convention,
+              :romantic_sexual_orientation,
+              :awards,
+              :needs_accommodations,
+              :accommodations,
+              :willing_to_moderate,
+              :moderation_experience,
+              :othered,
+              :indigenous,
+              :black_diaspora,
+              :non_us_centric_perspectives,
+              :demographic_categories,
+              :do_not_assign_with,
+              :can_stream_exceptions,
+              :can_record_exceptions,
+              :can_photo_exceptions,
+              :is_local,
+              :langauges_fluent_in
 
   protected_attributes :contact_email do |person|
     person.contact_email
-  end
-
-  attribute :tags do |person|
-    person.base_tags.collect(&:name)
   end
 
   # Indicate whether the person has a password set
@@ -52,17 +47,12 @@ class PersonSerializer #< ActiveModel::Serializer
     !person.password.blank?
   end
 
-  has_many :convention_roles, serializer: ConventionRoleSerializer,
-            links: {
-              self: -> (object, params) {
-                "#{params[:domain]}/person/#{object.id}"
-              },
-              related: -> (object, params) {
-                "#{params[:domain]}/person/#{object.id}/convention_roles"
-              }
-            }
+  attribute :tags do |person|
+    person.base_tags.collect(&:name)
+  end
 
   has_many  :email_addresses, serializer: EmailAddressSerializer,
+              if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"
@@ -72,7 +62,19 @@ class PersonSerializer #< ActiveModel::Serializer
                 }
               }
 
+  has_many :convention_roles, serializer: ConventionRoleSerializer,
+              if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
+              links: {
+                self: -> (object, params) {
+                  "#{params[:domain]}/person/#{object.id}"
+                },
+                related: -> (object, params) {
+                  "#{params[:domain]}/person/#{object.id}/convention_roles"
+                }
+              }
+
   has_many  :submissions, serializer: Survey::SubmissionSerializer,
+              if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"
@@ -105,15 +107,16 @@ class PersonSerializer #< ActiveModel::Serializer
 
 
   # sessions
-  has_many :sessions, serializer: SessionSerializer,
-             links: {
-               self: -> (object, params) {
-                 "#{params[:domain]}/person/#{object.id}"
-               },
-               related: -> (object, params) {
-                 "#{params[:domain]}/person/#{object.id}/sessions"
-               }
-             }
+  # has_many :sessions, serializer: SessionSerializer,
+  #            if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
+  #            links: {
+  #              self: -> (object, params) {
+  #                "#{params[:domain]}/person/#{object.id}"
+  #              },
+  #              related: -> (object, params) {
+  #                "#{params[:domain]}/person/#{object.id}/sessions"
+  #              }
+  #            }
 
   # published_sessions
   # has_many :published_sessions, serializer: PublishedSessionSerializer,
@@ -127,6 +130,7 @@ class PersonSerializer #< ActiveModel::Serializer
   #            }
 
   has_many :mail_histories, serializer: MailHistorySerializer,
+             if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
              links: {
               self: -> (object, params) {
                 "#{params[:domain]}/person/#{object.id}"

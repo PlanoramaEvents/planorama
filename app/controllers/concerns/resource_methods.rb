@@ -85,7 +85,7 @@ module ResourceMethods
       else
         authorize @object, policy_class: policy_class
         before_update
-        @object.update!(strip_params(_permitted_params(object_name)))
+        @object.update!(strip_params(_permitted_params(model: object_name, instance: @object)))
         @object.reload
         after_update
       end
@@ -496,9 +496,9 @@ module ResourceMethods
   def build_resource
     if belongs_to_param_id && belong_to_class
       parent = belong_to_class.find belongs_to_param_id
-      parent.send(belongs_to_relationship).new(strip_params(_permitted_params(object_name)))
+      parent.send(belongs_to_relationship).new(strip_params(_permitted_params(model: object_name)))
     else
-      model_class.new(strip_params(_permitted_params(object_name)))
+      model_class.new(strip_params(_permitted_params(model: object_name)))
     end
   end
 
@@ -576,13 +576,13 @@ module ResourceMethods
     true
   end
 
-  def permitted_params
-    _permitted_params(object_name)
-  end
-
-  def _permitted_params(_object_name)
+  def _permitted_params(model:, instance: nil)
     # NOTE: if params[:data] to determine if this is JSON-API packet
     # that is received, if so we need to deserialize it
+    _allowed_params = if !allowed_params.blank?
+                        # need to subtract the params that are not allowed because of permissions
+                        allowed_params - AccessControlService.banned_attributes(model: model.capitalize, instance: instance, person: current_person)
+                      end
     if params[:data]
       # NOTE: JSPON API does not save nested data structures ....
       jsonapi_deserialize(
@@ -590,15 +590,15 @@ module ResourceMethods
         {
           except: except_params,
           # NOTE: allowed params need to include relationship name if there needed for save
-          only: allowed_params
+          only: _allowed_params
         }
       )
     else
       # We treat this as a regular rails request
-      return params.require(_object_name).permit! unless allowed_params || params[:action] == 'new'
+      return params.require(model).permit! unless _allowed_params || params[:action] == 'new'
 
       params.permit(
-        allowed_params
+        _allowed_params
       )
     end
   end

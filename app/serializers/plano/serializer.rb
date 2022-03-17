@@ -4,16 +4,14 @@ module Plano
 
     class_methods do
       def protected_attribute(*attributes_list, &block)
-        # Rails.logger.debug("*** ADD ATTR #{attributes_list}")
         proc = Proc.new { |record, params|
-          # Rails.logger.debug("*** ADD ATTR #{attributes_list}")
-          # Rails.logger.debug("*** P: #{record} => #{params[:domain]}")
-          # params => domain and current_person
-          # TODO: put in logic to test if the person has access
-          # record class, attributes_list, and current_person
-          true
+          # logic to test if the person has access
+          AccessControlService.allowed_attribute_access?(
+            instance: record,
+            attributes: attributes_list,
+            person: params[:current_person]
+          )
         }
-        # Rails.logger.debug("*** ADD ATTR #{attributes_list} AND #{proc}")
         # if proc is at the end remove it and add the new one
         new_list = attributes_list + [{if: proc}]
         attributes(*new_list, &block)

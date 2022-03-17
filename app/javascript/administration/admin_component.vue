@@ -19,8 +19,8 @@
           </template>
         </sheet-importer-vue>
       </admin-accordion>
-      <admin-accordion id="edit-roles-accordion" title="Edit Groups" @show="showPeopleRoles">
-        <change-user-roles model="person" ref="role-manager"></change-user-roles>
+      <admin-accordion id="edit-roles-accordion" title="Assign Convention Class" @show="showPeopleRoles">
+        <change-user-convention-roles model="person" ref="role-manager"></change-user-convention-roles>
       </admin-accordion>
       <admin-accordion id="import-sessions-accordion" title="Import Sessions">
         <sheet-importer-vue
@@ -60,7 +60,7 @@
 <script>
 import AdminAccordion from './admin_accordion.vue'
 import PersonAdd from '../people/person_add.vue';
-import ChangeUserRoles from './change-user-roles';
+import ChangeUserConventionRoles from './change-user-con-roles';
 import MailingsManager from '../mailings/mailings_manager';
 import ConfigurationsManager from '../configurations/configurations_manager';
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
@@ -73,7 +73,7 @@ export default {
     AgreementManager,
     AdminAccordion,
     PersonAdd,
-    ChangeUserRoles,
+    ChangeUserConventionRoles,
     SheetImporterVue,
     MailingsManager,
     ConfigurationsManager,
