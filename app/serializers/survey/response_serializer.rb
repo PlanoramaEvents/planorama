@@ -1,13 +1,12 @@
 class Survey::ResponseSerializer
   include JSONAPI::Serializer
+  include Plano::AccessHelper
 
   attributes :id, :lock_version, :submission_id,
-             :question_id,
-             :response
+             :question_id
 
-  # attribute :question_text do |object|
-  #   object.question.question if object.question
-  # end
+  attribute :response, if: Proc.new { |record, params| self.can_access_response?(record,params[:current_person]) }
+
 
   belongs_to :submission,
     links: {
@@ -18,5 +17,4 @@ class Survey::ResponseSerializer
         "#{params[:domain]}/submission/#{object.submission_id}"
       }
     }
-
 end

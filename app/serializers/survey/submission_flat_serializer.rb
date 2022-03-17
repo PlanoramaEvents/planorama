@@ -1,5 +1,6 @@
 class Survey::SubmissionFlatSerializer
   include JSONAPI::Serializer
+  include Plano::AccessHelper
 
   attributes :id, :lock_version, :survey_id, :person_id, :submission_state,
              :created_at, :updated_at
@@ -9,16 +10,11 @@ class Survey::SubmissionFlatSerializer
     object.person.name if object.person
   end
 
-  attribute :xx do |object|
-    "xx"
-  end
-
   # Provide a flat view of responses question id => value
-  attribute :responses do |object|
-    # object.responses.collect{|r| {r.question.id => r.response_as_text}}
+  attribute :responses do |object, params|
     res = {}
     object.responses.each do |r|
-      res[r.question.id] = r.response_as_text
+      res[r.question.id] = r.response_as_text if self.can_access_response?(r,params[:current_person])
     end
     res
   end

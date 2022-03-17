@@ -73,18 +73,19 @@ module AccessControlService
   # Return whether the person is allowed access to any sensitive attributes
   def self.allowed_sensitive_access?(person:)
     # TODO: add rbac check with DB, based on the role
+    # Rails.logger.debug("******** ALLOWED FOR #{person}")
     true
   end
 
   # Return a list of attributes that are not allowed for the person from this instance
   def self.banned_attributes(model:, instance: nil, person:)
-    if instance.is_a? Person
+    if instance.is_a?(Person)
       return [] if instance.id == person.id
     end
 
-    banned = sensitive_attributes(model: model)
+    # TODO: add rbac check with DB, based on the role
 
-    banned
+    sensitive_attributes(model: model)
   end
 
   # Return true if the person is allowed access to the
@@ -97,12 +98,22 @@ module AccessControlService
     allowed_sensitive_access?(person: person)
   end
 
+  def self.linked_field_access?(linked_field:, person:)
+    fields = linked_field.split('.',2)
+    return true unless sensitive_attributes(model: fields[0]).include? fields[1].to_sym
+
+    allowed_sensitive_access?(person: person)
+
+    false
+  end
+
   # Return true if the person is allowed access to the
   # sensitive attributes of this instance
-  def self.allowed_access?(instance:, person:)
+  def self.allowed_access?(instance:, person: nil)
+    # Rails.logger.debug("******** ALLOWED ACCESS FOR #{instance} - #{person}")
     # if the instance is a person and the requesting person
     # is the same then they are allowed access
-    if instance.is_a? Person
+    if instance.is_a?(Person) && person
       return true if instance.id == person.id
     end
 
@@ -115,7 +126,7 @@ module AccessControlService
   def self.allowed_attribute_access?(instance:, attributes:, person:)
     # if the instance is a person and the requesting person
     # is the same then they are allowed access
-    if instance.is_a? Person
+    if instance.is_a?(Person)
       return true if instance.id == person.id
     end
 

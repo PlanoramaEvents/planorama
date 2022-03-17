@@ -402,9 +402,12 @@ module ResourceMethods
 
   def generate_xls(serializer = nil, opts = {})
     opts[:each_serializer] = serializer ? serializer : xls_serializer_class
+    opts[:serializer] = {} unless opts[:serializer]
+    opts[:serializer][:current_person] = current_person
     cookies[:fileDownload] = true
     fname = self.class::XLS_SERIALIZER_FILENAME if defined? self.class::XLS_SERIALIZER_FILENAME
     fname ||= controller_name.downcase
+    # How do we pass the current person to the serializer?
     send_data ActiveModel::XlsArraySerializer.new(
       @collection,
       opts
