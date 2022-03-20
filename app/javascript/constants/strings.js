@@ -116,4 +116,36 @@ module.exports = {
     PAGE_SAVE_SUCCESS: "Page successfully saved",
     PAGE_SAVE_ERROR: errorMessage("Page failed to be saved."),
 
+    // linked field names
+    LINKED_FIELD_LABELS: {
+        Person: {
+            name: "Name",
+            pseudonym: "Published Name",
+            pronouns: "Pronouns",
+            gender: "Gender",
+            ethnicity: "Race and/or ethnicity",
+            age_at_convention: "Age at convention",
+            romantic_sexual_orientation: "Romantic and/or sexual orientation",
+            bio: "Bio",
+            can_stream_exceptions: "Topics not to stream",
+            can_record_exceptions: "Topics not to record",
+            accommodations: "Details of accommodations",
+            moderation_experience: "Moderation experience",
+            othered: "Othered?",
+            indigenous: "Indigenous?",
+            black_diaspora: "Black Diaspora?",
+            non_us_centric_perspectives: "Not US-centric?",
+            demographic_categories: "More demographic categories",
+            do_not_assign_with: "Do not assign with",
+            attendance_type: "Attendance Type",
+            can_stream: "Permission to livestream",
+            can_record: "Permission to record",
+            can_photo: "Permission to photograph",
+            needs_accommodations: "Needs Accommodation?",
+            is_local: "Is a local",
+            willing_to_moderate: "Moderation interest",
+            langauges_fluent_in: "Fluent languages",
+            contact_email: "Email"
+        },
+    },
 }
