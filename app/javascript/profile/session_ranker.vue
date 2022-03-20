@@ -46,7 +46,7 @@
          <b-form-group label="Rank">
            <b-form-select
              v-model="item.interest_ranking"
-             :state="item != errored"
+             :state="errored(item)"
              :options="rankOptions">
            </b-form-select>
          </b-form-group>
@@ -82,12 +82,6 @@ export default {
   ],
   data() {
     return {
-      // rankOptions: [
-      //   { value: 1, text: '1' },
-      //   { value: 2, text: '2' },
-      //   { value: 3, text: '3' },
-      //   { value: null, text: 'Unranked' }
-      // ],
       moderatorOptions: [
         { text: 'Do not override', value: 'no_preference' },
         { text: 'I would like to moderate this', value: 'can_moderate' },
@@ -104,8 +98,7 @@ export default {
           label: ' ',
           sortable: false
         }
-      ],
-      errored: null
+      ]
     }
   },
   computed: {
@@ -131,8 +124,18 @@ export default {
     }
   },
   methods: {
+    errored: function(item) {
+      if (item.interest_ranking == 1 && this.rank1_total > 5) {
+        return false
+      }
+
+      if (item.interest_ranking == 2 && this.rank2_total > 5) {
+        return false
+      }
+
+      return true
+    },
     changeAssignment: function(arg) {
-      // console.debug("**** RANKS", arg, this.rank1_total, this.rank2_total)
       if (arg.interest_ranking == 1 && this.rank1_total > 5) {
         this.$bvToast.toast(
           SESSION_RANKING_ERROR(this.rank1_total, 5),
@@ -141,7 +144,6 @@ export default {
             title: "Ranking Error"
           }
         )
-        this.errored = arg
         return
       }
       if (arg.interest_ranking == 2 && this.rank2_total > 5) {
@@ -152,10 +154,8 @@ export default {
             title: "Ranking Error"
           }
         )
-        this.errored = arg
         return
       }
-      this.errored = false
       this.save(arg)
     }
   },
