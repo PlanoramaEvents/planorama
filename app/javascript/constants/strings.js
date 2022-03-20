@@ -144,7 +144,7 @@ module.exports = {
             needs_accommodations: "Needs Accommodation?",
             is_local: "Is a local",
             willing_to_moderate: "Moderation interest",
-            langauges_fluent_in: "Fluent languages",
+            languages_fluent_in: "Fluent languages",
             contact_email: "Email"
         },
     },
