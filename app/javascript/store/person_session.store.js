@@ -1,19 +1,29 @@
 export const SET_SESSION_USER = "SET SESSION USER";
 export const GET_SESSION_USER = "GET SESSION USER";
+export const GET_ROLE_BASED_ACCESS_CONTROL = "GET ROLE BASED ACCESS CONTROL";
+export const SET_ROLE_BASED_ACCESS_CONTROL = "SET ROLE BASED ACCESS CONTROL";
 
 export const personSessionStore = {
   state: {
-    user: {}
+    user: {},
+    rbac: {},
   },
   mutations: {
     [SET_SESSION_USER] (state, user) {
       state.user = user
+    },
+    [SET_ROLE_BASED_ACCESS_CONTROL] (state, rbac) {
+      state.rbac = rbac
     },
   },
   getters: {
     // Get the current session from the store
     currentPersonSession(state, getters) {
       return state.user;
+    },
+    currentUserRoles(state, getters) {
+      return Object.entries(state.user.person_roles)
+      .map(r => r[1].role)
     },
   },
   actions: {
@@ -38,6 +48,18 @@ export const personSessionStore = {
           res(state.user);
         }
       })
+    },
+    async [GET_ROLE_BASED_ACCESS_CONTROL] ({commit, dispatch}) {
+      let rbacJson = {};
+        const rbacResponse = await fetch('/rbac');
+        rbacJson = await rbacResponse.json();
+        if (rbacResponse.ok) {
+          await commit(SET_ROLE_BASED_ACCESS_CONTROL, rbacJson);
+        } else {
+          // If we can't get the rbac list then deny permissions to everything
+          await commit(SET_ROLE_BASED_ACCESS_CONTROL, rbacJson)
+        }
+      return rbacJson
     },
   }
 }
