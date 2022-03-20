@@ -40,7 +40,7 @@ class Survey::PagesController < ResourceController
       sort_order
       sort_order_position
       survey_id
-      lock_version
+      survey
       questions_attributes
     ]
   end
