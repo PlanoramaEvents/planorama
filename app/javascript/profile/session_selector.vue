@@ -96,7 +96,8 @@ export default {
         {
           key: 'id',
           label: 'Add to Interested',
-          sortable: false
+          sortable: false,
+          thClass: 'interest-column'
         }
       ]
     }
@@ -110,5 +111,9 @@ export default {
 </script>
 
 <style>
+
+.interest-column {
+  width: 7em;
+}
 
 </style>
