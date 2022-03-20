@@ -41,6 +41,7 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 
 CREATE TYPE public.agreement_target AS ENUM (
     'none',
+    'participant',
     'member',
     'staff',
     'all'
@@ -2095,6 +2096,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220312172347'),
 ('20220316150515'),
 ('20220317222958'),
-('20220320194817');
+('20220320194817'),
+('20220320225237');
 
 
