@@ -587,7 +587,6 @@ END) STORED,
     can_photo public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
     age_at_convention character varying,
     romantic_sexual_orientation character varying,
-    awards character varying(10000) DEFAULT NULL::character varying,
     needs_accommodations boolean DEFAULT false,
     accommodations character varying(10000) DEFAULT NULL::character varying,
     willing_to_moderate boolean DEFAULT false,
@@ -602,7 +601,7 @@ END) STORED,
     can_record_exceptions character varying(10000) DEFAULT NULL::character varying,
     can_photo_exceptions character varying(10000) DEFAULT NULL::character varying,
     is_local boolean DEFAULT false,
-    langauges_fluent_in character varying(10000) DEFAULT NULL::character varying
+    languages_fluent_in character varying(10000) DEFAULT NULL::character varying
 );
 
 
@@ -2095,6 +2094,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220309183902'),
 ('20220312172347'),
 ('20220316150515'),
-('20220317222958');
+('20220317222958'),
+('20220320194817');
 
 

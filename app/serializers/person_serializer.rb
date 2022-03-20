@@ -20,7 +20,6 @@ class PersonSerializer #< ActiveModel::Serializer
               :can_photo,
               :age_at_convention,
               :romantic_sexual_orientation,
-              :awards,
               :needs_accommodations,
               :accommodations,
               :willing_to_moderate,
@@ -35,7 +34,7 @@ class PersonSerializer #< ActiveModel::Serializer
               :can_record_exceptions,
               :can_photo_exceptions,
               :is_local,
-              :langauges_fluent_in
+              :languages_fluent_in
 
   # status and comments hidden except for staff
   protected_attributes :invite_status, :acceptance_status, :comments

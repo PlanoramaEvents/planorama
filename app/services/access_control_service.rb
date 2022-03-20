@@ -39,7 +39,7 @@ module AccessControlService
         can_photo: { sensitive: true, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
         age_at_convention: { sensitive: true, linkable: true, type: :string},
         romantic_sexual_orientation: { sensitive: true, linkable: true, type: :string},
-        awards: { sensitive: true, linkable: true, type: :text},
+        # awards: { sensitive: true, linkable: true, type: :text},
         needs_accommodations: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
         accommodations: { sensitive: true, linkable: true, type: :text},
         willing_to_moderate: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
@@ -54,7 +54,7 @@ module AccessControlService
         can_record_exceptions: { sensitive: true, linkable: true, type: :text},
         can_photo_exceptions: { sensitive: true, linkable: true, type: :text},
         is_local: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
-        langauges_fluent_in: { sensitive: true, linkable: true, type: :string},
+        languages_fluent_in: { sensitive: true, linkable: true, type: :string},
         socialmedia: { sensitive: false, linkable: true, type: :socialmedia}
       }
     }
