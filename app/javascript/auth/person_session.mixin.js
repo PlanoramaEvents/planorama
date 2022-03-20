@@ -11,8 +11,13 @@ export const personSessionMixin = {
       return !!this.currentUser.id
     },
     currentUserIsAdmin() {
-      // TODO
       return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "admin")
+    },
+    currentUserIsStaff() {
+      return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "staff")
+    },
+    currentUserIsParticipant() {
+      return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "participant")
     }
   },
   methods: {
