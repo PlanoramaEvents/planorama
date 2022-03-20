@@ -3,7 +3,7 @@
     <div class='row mb-4 sticky-top bg-white border-bottom border-light'>
       <div class="col-8">
         <p>
-          Text here explaining that you must rank sessions form 1 to 3, that you can only have 3 1s and 3 2s but unlimited 3s or unranked.
+          Text here explaining that you must rank sessions form 1 to 3, that you can only have 5 1s and 5 2s but unlimited 3s or unranked.
           also 1 means 'i really want to be on this panel' 2 means 'i have meaningful contributions to this panel' and 3 means 'i am willing to be on this panel'
         </p>
       </div>
@@ -82,12 +82,12 @@ export default {
   ],
   data() {
     return {
-      rankOptions: [
-        { value: 1, text: '1' },
-        { value: 2, text: '2' },
-        { value: 3, text: '3' },
-        { value: null, text: 'Unranked' }
-      ],
+      // rankOptions: [
+      //   { value: 1, text: '1' },
+      //   { value: 2, text: '2' },
+      //   { value: 3, text: '3' },
+      //   { value: null, text: 'Unranked' }
+      // ],
       moderatorOptions: [
         { text: 'Do not override', value: 'no_preference' },
         { text: 'I would like to moderate this', value: 'can_moderate' },
@@ -109,6 +109,14 @@ export default {
     }
   },
   computed: {
+    rankOptions() {
+      return [
+        { value: 1, text: '1', disabled: this.rank1_total > 5},
+        { value: 2, text: '2', disabled: this.rank2_total > 5},
+        { value: 3, text: '3' },
+        { value: null, text: 'Unranked' }
+      ]
+    },
     rank1_total() {
       let count = this.sortedCollection.filter(obj => obj.interest_ranking === 1).length
       return count
@@ -124,9 +132,10 @@ export default {
   },
   methods: {
     changeAssignment: function(arg) {
-      if (this.rank1_total > 3) {
+      // console.debug("**** RANKS", arg, this.rank1_total, this.rank2_total)
+      if (arg.interest_ranking == 1 && this.rank1_total > 5) {
         this.$bvToast.toast(
-          SESSION_RANKING_ERROR(this.rank1_total, 3),
+          SESSION_RANKING_ERROR(this.rank1_total, 5),
           {
             variant: 'error',
             title: "Ranking Error"
@@ -135,9 +144,9 @@ export default {
         this.errored = arg
         return
       }
-      if (this.rank2_total > 3) {
+      if (arg.interest_ranking == 2 && this.rank2_total > 5) {
         this.$bvToast.toast(
-          SESSION_RANKING_ERROR(this.rank2_total, 3),
+          SESSION_RANKING_ERROR(this.rank2_total, 5),
           {
             variant: 'error',
             title: "Ranking Error"
