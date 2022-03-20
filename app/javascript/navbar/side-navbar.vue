@@ -13,7 +13,7 @@
       <b-nav-item v-if="can_see_this" to="/surveys" active-class="active"><icon-survey class="mr-2"></icon-survey>Surveys</b-nav-item>
       <b-nav-item v-if="can_see_this" to="/reports" active-class="active"><b-icon-bar-chart-line-fill class="mr-2"></b-icon-bar-chart-line-fill>Reports</b-nav-item>
       <b-nav-item to="/profile" active-class="active"><b-icon-person-badge class="mr-2"></b-icon-person-badge>Profile</b-nav-item>
-      <b-nav-item v-if="can_see_this" to="/admin" active-class="active"><b-icon-person-badge class="mr-2"></b-icon-person-badge>Admin</b-nav-item>
+      <b-nav-item v-if="currentUserIsAdmin" to="/admin" active-class="active"><b-icon-person-badge class="mr-2"></b-icon-person-badge>Admin</b-nav-item>
     </b-nav>
   </div>
 </template>
