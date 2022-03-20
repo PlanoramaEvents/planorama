@@ -23,17 +23,17 @@ module AccessControlService
         registration_type: { sensitive: true, linkable: false, type: :string},
         registration_number: { sensitive: true, linkable: false, type: :string},
         bio: { sensitive: true, linkable: true, type: :text},
-        website: { sensitive: true, linkable: true, type: :string},
-        twitter: { sensitive: true, linkable: true, type: :string},
-        othersocialmedia: { sensitive: true, linkable: true, type: :string},
-        facebook: { sensitive: true, linkable: true, type: :string},
-        linkedin: { sensitive: true, linkable: true, type: :string},
-        twitch: { sensitive: true, linkable: true, type: :string},
-        youtube: { sensitive: true, linkable: true, type: :string},
-        instagram: { sensitive: true, linkable: true, type: :string},
-        flickr: { sensitive: true, linkable: true, type: :string},
-        reddit: { sensitive: true, linkable: true, type: :string},
-        tiktok: { sensitive: true, linkable: true, type: :string},
+        website: { sensitive: false, linkable: true, type: :string},
+        twitter: { sensitive: false, linkable: true, type: :string},
+        othersocialmedia: { sensitive: false, linkable: true, type: :string},
+        facebook: { sensitive: false, linkable: true, type: :string},
+        linkedin: { sensitive: false, linkable: true, type: :string},
+        twitch: { sensitive: false, linkable: true, type: :string},
+        youtube: { sensitive: false, linkable: true, type: :string},
+        instagram: { sensitive: false, linkable: true, type: :string},
+        flickr: { sensitive: false, linkable: true, type: :string},
+        reddit: { sensitive: false, linkable: true, type: :string},
+        tiktok: { sensitive: false, linkable: true, type: :string},
         can_stream: { sensitive: true, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
         can_record: { sensitive: true, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
         can_photo: { sensitive: true, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
@@ -83,7 +83,7 @@ module AccessControlService
     # NOTE: this is the hard-wired mechanism to limit sensitive information to
     # admins for now
     person.convention_roles.collect(&:role).include?('admin')
-    # true
+    # false
   end
 
   # Return a list of attributes that are not allowed for the person from this instance

@@ -9,9 +9,8 @@ class PersonSerializer #< ActiveModel::Serializer
               :job_title, :organization,
               :last_sign_in_at, :primary_email,
               :pronouns, :year_of_birth, :gender, :ethnicity,
-              :opted_in, :comments,
+              :opted_in,
               :can_share,
-              :invite_status, :acceptance_status,
               :registered, :registration_type, :registration_number,
               :bio, :website, :twitter, :othersocialmedia,
               :facebook, :linkedin, :twitch, :youtube,
@@ -37,6 +36,9 @@ class PersonSerializer #< ActiveModel::Serializer
               :can_photo_exceptions,
               :is_local,
               :langauges_fluent_in
+
+  # status and comments hidden except for staff
+  protected_attributes :invite_status, :acceptance_status, :comments
 
   protected_attributes :contact_email do |person|
     person.contact_email
