@@ -1,10 +1,11 @@
 import {mapState, mapActions } from 'vuex';
-import { GET_SESSION_USER }  from "../store/person_session.store";
+import { GET_ROLE_BASED_ACCESS_CONTROL, GET_SESSION_USER }  from "../store/person_session.store";
 
 export const personSessionMixin = {
   computed: {
     ...mapState({
-      currentUser: 'user'
+      currentUser: 'user',
+      rbac: 'rbac',
     }),
     loggedIn() {
       return !!this.currentUser.id
@@ -16,12 +17,30 @@ export const personSessionMixin = {
   },
   methods: {
     ...mapActions({
-      fetchSession: GET_SESSION_USER
-    })
+      fetchSession: GET_SESSION_USER,
+      fetchRbac: GET_ROLE_BASED_ACCESS_CONTROL,
+    }),
+    // Each item in the rbac JSON will be called a 'subject'
+    canCreate(subject) {
+      return this.rbac[subject]?.create
+    },
+    canDestroy(subject) {
+      return this.rbac[subject]?.destroy
+    },
+    canIndex(subject) {
+      return this.rbac[subject]?.edit
+    },
+    canShow(subject) {
+      return this.rbac[subject]?.edit
+    },
+    canUpdate(subject) {
+      return this.rbac[subject]?.edit
+    },
   },
   mounted() {
     // fetch the current session on mount !!!
     this.fetchSession();
+    this.fetchRbac();
   }
 }
 

@@ -36,17 +36,6 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 
 
 --
--- Name: action_scope_enum; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.action_scope_enum AS ENUM (
-    'none',
-    'owner',
-    'role'
-);
-
-
---
 -- Name: agreement_target; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -221,7 +210,7 @@ CREATE TABLE public.action_permissions (
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    action_scope public.action_scope_enum DEFAULT 'none'::public.action_scope_enum
+    action_scope character varying
 );
 
 
@@ -598,7 +587,6 @@ END) STORED,
     can_photo public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
     age_at_convention character varying,
     romantic_sexual_orientation character varying,
-    awards character varying(10000) DEFAULT NULL::character varying,
     needs_accommodations boolean DEFAULT false,
     accommodations character varying(10000) DEFAULT NULL::character varying,
     willing_to_moderate boolean DEFAULT false,
@@ -613,7 +601,7 @@ END) STORED,
     can_record_exceptions character varying(10000) DEFAULT NULL::character varying,
     can_photo_exceptions character varying(10000) DEFAULT NULL::character varying,
     is_local boolean DEFAULT false,
-    langauges_fluent_in character varying(10000) DEFAULT NULL::character varying
+    languages_fluent_in character varying(10000) DEFAULT NULL::character varying
 );
 
 
@@ -692,10 +680,9 @@ CREATE TABLE public.person_role_assocs (
 
 CREATE TABLE public.person_roles (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    role public.person_role
+    can_access_sensitive_data boolean DEFAULT false
 );
 
 
@@ -1567,20 +1554,6 @@ ALTER TABLE ONLY public.versions
 
 
 --
--- Name: act_perm_mdl_allowed_scope_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX act_perm_mdl_allowed_scope_idx ON public.action_permissions USING btree (mdl_name, action, action_scope, allowed);
-
-
---
--- Name: act_perm_mdl_scope_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX act_perm_mdl_scope_idx ON public.action_permissions USING btree (mdl_name, action, action_scope);
-
-
---
 -- Name: by_active_status; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1774,20 +1747,6 @@ CREATE INDEX index_person_mailing_assignments_on_person_id ON public.person_mail
 --
 
 CREATE UNIQUE INDEX index_person_role_assocs_on_person_id_and_person_role_id ON public.person_role_assocs USING btree (person_id, person_role_id);
-
-
---
--- Name: index_person_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_person_roles_on_person_id ON public.person_roles USING btree (person_id);
-
-
---
--- Name: index_person_roles_on_role; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_person_roles_on_role ON public.person_roles USING btree (role);
 
 
 --
@@ -2041,14 +2000,6 @@ ALTER TABLE ONLY public.survey_responses
 
 
 --
--- Name: person_roles fk_rails_8139558243; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_roles
-    ADD CONSTRAINT fk_rails_8139558243 FOREIGN KEY (person_id) REFERENCES public.people(id);
-
-
---
 -- Name: survey_pages fk_rails_c9027d3929; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2093,9 +2044,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210620175724'),
 ('20210620180746'),
 ('20210626162611'),
-('20210627143358'),
 ('20210627225348'),
-('20210628120942'),
 ('20210628221900'),
 ('20210629220733'),
 ('20210702202436'),
@@ -2111,7 +2060,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210712134642'),
 ('20210716142413'),
 ('20210717191036'),
-('20210811135617'),
 ('20210819204542'),
 ('20210925131929'),
 ('20211101160001'),
@@ -2145,6 +2093,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220303175135'),
 ('20220309183902'),
 ('20220312172347'),
-('20220316150515');
+('20220316150515'),
+('20220317222958'),
+('20220320194817');
 
 

@@ -8,19 +8,19 @@
     ></combo-box>
 
     <!-- TODO: change to passing in the id of the person instead of the actual person -->
-    <user-role model="person" :person-id="selectedId" v-if="selectedId"></user-role>
+    <user-convention-role model="person" :person-id="selectedId" v-if="selectedId"></user-convention-role>
   </div>
 </template>
 
 <script>
-import UserRole from './user-role.vue'
+import UserConventionRole from './user-convention-role.vue'
 import ComboBox from '../components/combo_box'
 import modelMixin from '../store/model.mixin';
 
 export default {
-  name: "ChangeUserRoles",
+  name: "ChangeUserConventionRoles",
   components: {
-    UserRole,
+    UserConventionRole,
     ComboBox
   },
   data () {

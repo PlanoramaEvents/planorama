@@ -18,9 +18,4 @@ class Survey::SubmissionSerializer
                 "#{params[:domain]}/submission/#{object.id}/responses"
               }
             }
-  # TODO: would we need to do this anymore?
-  # it was a way to deal with XLS ?
-  # do |object|
-  #             object.responses.collect{|r| {r.question.question => r.response_as_text}}
-  #           end
 end
