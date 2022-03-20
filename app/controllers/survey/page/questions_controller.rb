@@ -46,7 +46,7 @@ class Survey::Page::QuestionsController < ResourceController
   end
 
   def after_save
-    @object.update(sort_order_position: _permitted_params(object_name)['sort_order_position']) if _permitted_params(object_name)['sort_order_position'].present?
+    @object.update(sort_order_position: _permitted_params(model: object_name)['sort_order_position']) if _permitted_params(model: object_name)['sort_order_position'].present?
   end
 
   def object_destroy_method

@@ -606,9 +606,9 @@ module ResourceMethods
     end
   end
 
-  def strip_params(_permitted_params)
-    return unless _permitted_params
+  def strip_params(_params)
+    return unless _params
 
-    _permitted_params.each{|k,v| _permitted_params[k] = v&.strip if v.respond_to?(:strip)}
+    _params.each{|k,v| _params[k] = v&.strip if v.respond_to?(:strip)}
   end
 end
