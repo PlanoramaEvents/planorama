@@ -72,9 +72,18 @@ module AccessControlService
 
   # Return whether the person is allowed access to any sensitive attributes
   def self.allowed_sensitive_access?(person:)
+    return false unless person
+
     # TODO: add rbac check with DB, based on the role
     # Rails.logger.debug("******** ALLOWED FOR #{person}")
-    true
+
+    # Get the role for the person
+    # if that role allow access to sensitive info then true else false
+
+    # NOTE: this is the hard-wired mechanism to limit sensitive information to
+    # admins for now
+    person.convention_roles.collect(&:role).include?('admin')
+    # true
   end
 
   # Return a list of attributes that are not allowed for the person from this instance
@@ -83,7 +92,7 @@ module AccessControlService
       return [] if instance.id == person.id
     end
 
-    # TODO: add rbac check with DB, based on the role
+    return [] if allowed_sensitive_access?(person: person)
 
     sensitive_attributes(model: model)
   end

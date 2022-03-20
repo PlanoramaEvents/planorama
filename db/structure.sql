@@ -36,17 +36,6 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 
 
 --
--- Name: action_scope_enum; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.action_scope_enum AS ENUM (
-    'none',
-    'owner',
-    'role'
-);
-
-
---
 -- Name: agreement_target; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -221,7 +210,7 @@ CREATE TABLE public.action_permissions (
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    action_scope public.action_scope_enum DEFAULT 'none'::public.action_scope_enum
+    action_scope character varying
 );
 
 
@@ -692,10 +681,9 @@ CREATE TABLE public.person_role_assocs (
 
 CREATE TABLE public.person_roles (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    role public.person_role
+    can_access_sensitive_data boolean DEFAULT false
 );
 
 
@@ -1567,20 +1555,6 @@ ALTER TABLE ONLY public.versions
 
 
 --
--- Name: act_perm_mdl_allowed_scope_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX act_perm_mdl_allowed_scope_idx ON public.action_permissions USING btree (mdl_name, action, action_scope, allowed);
-
-
---
--- Name: act_perm_mdl_scope_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX act_perm_mdl_scope_idx ON public.action_permissions USING btree (mdl_name, action, action_scope);
-
-
---
 -- Name: by_active_status; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1774,20 +1748,6 @@ CREATE INDEX index_person_mailing_assignments_on_person_id ON public.person_mail
 --
 
 CREATE UNIQUE INDEX index_person_role_assocs_on_person_id_and_person_role_id ON public.person_role_assocs USING btree (person_id, person_role_id);
-
-
---
--- Name: index_person_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_person_roles_on_person_id ON public.person_roles USING btree (person_id);
-
-
---
--- Name: index_person_roles_on_role; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_person_roles_on_role ON public.person_roles USING btree (role);
 
 
 --
@@ -2041,14 +2001,6 @@ ALTER TABLE ONLY public.survey_responses
 
 
 --
--- Name: person_roles fk_rails_8139558243; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_roles
-    ADD CONSTRAINT fk_rails_8139558243 FOREIGN KEY (person_id) REFERENCES public.people(id);
-
-
---
 -- Name: survey_pages fk_rails_c9027d3929; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2142,6 +2094,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220303175135'),
 ('20220309183902'),
 ('20220312172347'),
-('20220316150515');
+('20220316150515'),
+('20220317222958');
 
 

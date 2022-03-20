@@ -24,6 +24,7 @@ module MailService
     )
 
     self.post_mail_transition(person: person, mailing: mailing) unless tester
+    self.post_mail_assign_survey(person: person, survey: survey) unless tester
   end
 
   def self.preview_email_content(person:, mailing:)
@@ -148,6 +149,13 @@ module MailService
     # UrlService.url_for path: "login/#{ml.token}"
 
     UrlService.url_for path: "/#/surveys/#{survey.id}"
+  end
+
+  # if there is a survey then assign it to the person
+  def self.post_mail_assign_survey(person:, survey:)
+    return unless survey
+
+    survey.assigned_people << person
   end
 
   def self.post_mail_transition(person: , mailing: nil)
