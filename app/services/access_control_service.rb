@@ -62,6 +62,8 @@ module AccessControlService
 
   # Return a list of sensitive attributes for the given model
   def self.sensitive_attributes(model:)
+    return [] unless attribute_meta_data[model.to_sym]
+
     attribute_meta_data[model.to_sym].filter{|k,v| v[:sensitive]}.keys
   end
 
@@ -88,7 +90,7 @@ module AccessControlService
 
   # Return a list of attributes that are not allowed for the person from this instance
   def self.banned_attributes(model:, instance: nil, person:)
-    if instance.is_a?(Person)
+    if instance && instance.is_a?(Person)
       return [] if instance.id == person.id
     end
 
