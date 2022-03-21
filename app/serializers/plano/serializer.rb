@@ -4,14 +4,14 @@ module Plano
 
     class_methods do
       def protected_attribute(*attributes_list, &block)
-        proc = Proc.new { |record, params|
-          # logic to test if the person has access
-          AccessControlService.allowed_attribute_access?(
-            instance: record,
-            attributes: attributes_list,
-            person: params[:current_person]
-          )
-        }
+        # proc = Proc.new { |record, params|
+        #   # logic to test if the person has access
+        #   AccessControlService.allowed_attribute_access?(
+        #     instance: record,
+        #     attributes: attributes_list,
+        #     person: params[:current_person]
+        #   )
+        # }
         # if proc is at the end remove it and add the new one
         # new_list = attributes_list #+ [{if: proc}]
 
@@ -25,7 +25,6 @@ module Plano
             if (block)
               block.call(record, params)
             else
-              "HELP"
               record.send attributes_list.first
             end
           else

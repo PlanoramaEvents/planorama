@@ -67,7 +67,8 @@ class PeopleController < ResourceController
             name: name,
             name_sort_by: name,
             pseudonym: pseudonym,
-            pseudonym_sort_by: pseudonym
+            pseudonym_sort_by: pseudonym,
+            con_state: Person.con_states[:applied]
           );
           email = EmailAddress.create(
             person: person,
@@ -300,8 +301,7 @@ class PeopleController < ResourceController
       gender
       ethnicity
       opted_in
-      invite_status
-      acceptance_status
+      con_state
       registered
       registration_type
       can_share

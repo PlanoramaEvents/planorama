@@ -4,6 +4,32 @@ class SessionsController < ResourceController
   POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
+  def express_interest
+    # create a session assignment if there is not already one
+    model_class.transaction do
+      authorize @object, policy_class: policy_class
+
+      # Find or create the session assignment
+      assignment = @object.session_assignments.for_person(current_person.id).first
+      if assignment
+        assignment.interested = true
+        assignment.save!
+      else
+        assignment = SessionAssignment.create(
+          person: current_person,
+          session: @object,
+          interested: true
+        )
+      end
+
+      render_object(
+        assignment,
+        serializer: SessionAssignmentSerializer,
+        jsonapi_included: []
+      )
+    end
+  end
+
   # Import sessions from a sheet
   def import
     authorize current_person, policy_class: policy_class

@@ -80,6 +80,13 @@ export const people_columns = [
     sortable: false
   },
   {
+    key: 'con_state',
+    label: 'Status',
+    // type: "radio",
+    // choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+    sortable: false
+  },
+  {
     key: 'comments',
     label: 'Comments',
     type: "text",

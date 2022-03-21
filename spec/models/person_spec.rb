@@ -4,8 +4,7 @@ RSpec.describe Person, '#factories' do
     context 'person' do
         it 'creates a basic person' do
             person = create(:person)
-            expect(person.invite_status).to eq "not_set"
-            expect(person.acceptance_status).to eq "unknown"
+            expect(person.con_state).to eq "not_set"
             expect(person.email).to_not be_nil
             expect(person.opted_in).to be false
             expect(person.registered).to be false

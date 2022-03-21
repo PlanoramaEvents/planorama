@@ -151,6 +151,23 @@ CREATE TYPE public.person_role AS ENUM (
 
 
 --
+-- Name: person_status_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.person_status_enum AS ENUM (
+    'not_set',
+    'applied',
+    'vetted',
+    'invite_pending',
+    'invited',
+    'probable',
+    'accepted',
+    'declined',
+    'rejected'
+);
+
+
+--
 -- Name: phone_type_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -498,9 +515,9 @@ CREATE TABLE public.mailings (
     content text,
     survey_id uuid,
     date_sent timestamp without time zone,
-    transiton_invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
     description text,
-    sent_by_id uuid
+    sent_by_id uuid,
+    transiton_person_status public.person_status_enum
 );
 
 
@@ -533,8 +550,6 @@ CREATE TABLE public.people (
     gender character varying(100),
     ethnicity character varying(100),
     opted_in boolean DEFAULT false NOT NULL,
-    invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
-    acceptance_status public.acceptance_status_enum DEFAULT 'unknown'::public.acceptance_status_enum,
     registered boolean DEFAULT false NOT NULL,
     registration_type character varying,
     can_share boolean DEFAULT false NOT NULL,
@@ -602,7 +617,8 @@ END) STORED,
     can_record_exceptions character varying(10000) DEFAULT NULL::character varying,
     can_photo_exceptions character varying(10000) DEFAULT NULL::character varying,
     is_local boolean DEFAULT false,
-    languages_fluent_in character varying(10000) DEFAULT NULL::character varying
+    languages_fluent_in character varying(10000) DEFAULT NULL::character varying,
+    con_state public.person_status_enum DEFAULT 'not_set'::public.person_status_enum
 );
 
 
@@ -1051,8 +1067,6 @@ CREATE TABLE public.surveys (
     submit_string character varying DEFAULT 'Save'::character varying,
     use_captcha boolean DEFAULT false,
     public boolean,
-    transition_accept_status public.acceptance_status_enum,
-    transition_decline_status public.acceptance_status_enum,
     declined_msg text,
     authenticate_msg text,
     anonymous boolean DEFAULT false,
@@ -1064,7 +1078,9 @@ CREATE TABLE public.surveys (
     mandatory_star boolean DEFAULT true,
     numbered_questions boolean DEFAULT false,
     branded boolean DEFAULT true,
-    allow_submission_edits boolean DEFAULT true
+    allow_submission_edits boolean DEFAULT true,
+    transition_accept_status public.person_status_enum,
+    transition_decline_status public.person_status_enum
 );
 
 
@@ -2097,6 +2113,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220316150515'),
 ('20220317222958'),
 ('20220320194817'),
-('20220320225237');
+('20220320225237'),
+('20220321144540');
 
 

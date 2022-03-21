@@ -20,12 +20,14 @@ export const sessionAssignmentMixin = {
       if (!person) {
         person = this.currentUser;
       }
+      // change
       return this.toastPromise(
         this.newSessionAssignment({session: session, person_id: person.id }), success_text, error_text
       );
     },
     removeInterest(assignment, success_text = SESSION_INTEREST_REMOVE_SUCCESS, error_text = SESSION_INTEREST_REMOVE_ERROR) {
       return this.toastPromise(
+        // change
         this.$store.dispatch(
           DELETE, {model: this.model, itemOrId: assignment}
         ),

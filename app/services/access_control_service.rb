@@ -17,8 +17,7 @@ module AccessControlService
         opted_in: { sensitive: true, linkable: false, type: :boolean},
         comments: { sensitive: true, linkable: false, type: :text},
         can_share: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
-        invite_status: { sensitive: true, linkable: false, type: :enum},
-        acceptance_status: { sensitive: true, linkable: false, type: :enum},
+        con_state: { sensitive: true, linkable: false, type: :enum},
         registered: { sensitive: true, linkable: false, type: :boolean},
         registration_type: { sensitive: true, linkable: false, type: :string},
         registration_number: { sensitive: true, linkable: false, type: :string},
@@ -39,7 +38,6 @@ module AccessControlService
         can_photo: { sensitive: true, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
         age_at_convention: { sensitive: true, linkable: true, type: :string},
         romantic_sexual_orientation: { sensitive: true, linkable: true, type: :string},
-        # awards: { sensitive: true, linkable: true, type: :text},
         needs_accommodations: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
         accommodations: { sensitive: true, linkable: true, type: :text},
         willing_to_moderate: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
@@ -62,6 +60,8 @@ module AccessControlService
 
   # Return a list of sensitive attributes for the given model
   def self.sensitive_attributes(model:)
+    return [] unless attribute_meta_data[model.to_sym]
+
     attribute_meta_data[model.to_sym].filter{|k,v| v[:sensitive]}.keys
   end
 
@@ -88,7 +88,7 @@ module AccessControlService
 
   # Return a list of attributes that are not allowed for the person from this instance
   def self.banned_attributes(model:, instance: nil, person:)
-    if instance.is_a?(Person)
+    if instance && instance.is_a?(Person)
       return [] if instance.id == person.id
     end
 

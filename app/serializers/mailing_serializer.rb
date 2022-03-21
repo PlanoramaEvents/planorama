@@ -8,7 +8,7 @@ class MailingSerializer
              :date_sent, :subject, :content,
              :display_name,
              :description,
-             :transiton_invite_status,
+             :transiton_person_status,
              :survey_id
 
   belongs_to :sent_by, serializer: PersonSerializer,

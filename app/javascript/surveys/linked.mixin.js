@@ -1,3 +1,4 @@
+import { LINKED_FIELD_LABELS } from "@/constants/strings";
 import settingsMixin from "@/store/settings.mixin";
 
 export const linkedMixin = {
@@ -75,12 +76,12 @@ export const linkedMixin = {
             (attr) => {
               if (this.currentSettings.attributes[mdl][attr].linkable) {
                 let place = res.find(el => el.value == this.currentSettings.attributes[mdl][attr].type)
-
+                console.debug("model", mdl, "attr", attr)
+                console.debug(LINKED_FIELD_LABELS[mdl][attr])
                 place.options.push(
                   {
                     disabled: this.currentSettings.attributes[mdl][attr].type != allowed_type,
-                    // TODO: think about putting the display string in the setting rather than a munge here
-                    text: attr.replace(/_/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase()))),
+                    text: LINKED_FIELD_LABELS[mdl][attr] || attr.replace(/_/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase()))), 
                     value: `${mdl}.${attr}` // "model.attr"
                   }
                 )

@@ -59,20 +59,32 @@ class Person < ApplicationRecord
   #   pass vetting and later change their mind. So we do not want to
   #   or need to re-vet...
   #
-  enum acceptance_status: {
-    unknown: 'unknown',
-    probable: 'probable',
-    accepted: 'accepted',
-    declined: 'declined'
-  }
-
-  enum invite_status: {
+  # change these
+  # enum acceptance_status: {
+  #   unknown: 'unknown',
+  #   probable: 'probable',
+  #   accepted: 'accepted',
+  #   declined: 'declined'
+  # }
+  #
+  # enum invite_status: {
+  #   not_set: 'not_set',
+  #   do_not_invite: 'do_not_invite',
+  #   potential_invite: 'potential_invite',
+  #   invite_pending: 'invite_pending',
+  #   invited: 'invited',
+  #   volunteered: 'volunteered'
+  # }
+  enum con_state: {
     not_set: 'not_set',
-    do_not_invite: 'do_not_invite',
-    potential_invite: 'potential_invite',
+    applied: 'applied',
+    vetted: 'vetted',
     invite_pending: 'invite_pending',
     invited: 'invited',
-    volunteered: 'volunteered'
+    probable: 'probable',
+    accepted: 'accepted',
+    declined: 'declined',
+    rejected: 'rejected'
   }
 
   nilify_blanks only: [

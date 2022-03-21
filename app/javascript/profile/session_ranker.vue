@@ -23,10 +23,10 @@
          <div v-if="item.session.format">
            Format: <span class="badge badge-pill badge-info mr-1">{{item.session.format.name}}</span><br />
          </div>
-         <div v-if="item.session.area_list.length > 0">
+         <div v-if="item.session.area_list && item.session.area_list.length">
            <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list">{{area}}</span>
          </div>
-         <div v-if="item.session.tag_list.length > 0">
+         <div v-if="item.session.tag_list && item.session.tag_list.length">
            <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list">{{tag}}</span>
          </div>
          <br />

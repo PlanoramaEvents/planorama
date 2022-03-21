@@ -3,6 +3,26 @@ class SessionAssignmentsController < ResourceController
   POLICY_CLASS = 'SessionAssignmentPolicy'.freeze
   POLICY_SCOPE_CLASS = 'SessionAssignmentPolicy::Scope'.freeze
 
+  def unexpress_interest
+    model_class.transaction do
+      authorize @object, policy_class: policy_class
+      # if there is a session assignment set interested to false
+      @object.update(
+        interested: false,
+        interest_ranking: nil,
+        interest_notes: nil,
+        interest_role: nil
+      )
+      @object.save!
+
+      render_object(@object)
+    end
+  end
+
+  def update_actions
+    [:update, :unexpress_interest]
+  end
+
   def serializer_includes
     [
       :session,
