@@ -26,7 +26,6 @@ class Survey::SubmissionsController < ResourceController
 
   # After save and if state changes to submitted we may need
   # to transistion the person's state?
-  # based on survey.transition_accept_status
   def after_save
     post_submission_transition if @object.submission_state == Survey::Submission.submission_states[:submitted]
   end
@@ -40,7 +39,7 @@ class Survey::SubmissionsController < ResourceController
     return unless acceptance_status
     return unless @object.person_id || (@object.person_id != current_person.id)
 
-    current_person.acceptance_status = acceptance_status
+    current_person.con_state = acceptance_status
     current_person.save!
   end
 

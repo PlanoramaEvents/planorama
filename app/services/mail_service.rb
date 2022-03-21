@@ -162,10 +162,10 @@ module MailService
     return unless mailing
     return if mailing.testrun
 
-    to_invite_status = mailing.transiton_invite_status
+    to_invite_status = mailing.transiton_person_status
     return unless to_invite_status
 
-    person.invite_status = to_invite_status
+    person.con_state = to_invite_status
     person.save!
   end
 

@@ -300,8 +300,7 @@ class PeopleController < ResourceController
       gender
       ethnicity
       opted_in
-      invite_status
-      acceptance_status
+      con_state
       registered
       registration_type
       can_share

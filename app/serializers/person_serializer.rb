@@ -37,7 +37,7 @@ class PersonSerializer #< ActiveModel::Serializer
               :languages_fluent_in
 
   # status and comments hidden except for staff
-  protected_attributes :invite_status, :acceptance_status, :comments
+  protected_attributes :con_state, :comments
 
   protected_attributes :contact_email do |person|
     person.contact_email
