@@ -134,6 +134,10 @@ router.beforeEach((to, from, next) => {
           query: { redirect: to.fullPath }
         })
       } else {
+        if(to.meta.is_admin) {
+          alert("testing to.meta.is_admin");
+          alert("admin? "+JSON.stringify(session));
+        }
         router.app.$refs.planorama.check_signatures()
         next()
       }
