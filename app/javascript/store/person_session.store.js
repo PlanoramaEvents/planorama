@@ -6,7 +6,7 @@ export const SET_ROLE_BASED_ACCESS_CONTROL = "SET ROLE BASED ACCESS CONTROL";
 export const personSessionStore = {
   state: {
     user: {},
-    rbac: {},
+    rbac: null,
   },
   mutations: {
     [SET_SESSION_USER] (state, user) {
@@ -49,17 +49,22 @@ export const personSessionStore = {
         }
       })
     },
-    async [GET_ROLE_BASED_ACCESS_CONTROL] ({commit, dispatch}) {
-      let rbacJson = {};
-        const rbacResponse = await fetch('/rbac');
-        rbacJson = await rbacResponse.json();
-        if (rbacResponse.ok) {
-          await commit(SET_ROLE_BASED_ACCESS_CONTROL, rbacJson);
+    // Change so we do not make lots of calls (20) to server for the rbac
+    [GET_ROLE_BASED_ACCESS_CONTROL] ({commit, dispatch, state}) {
+      // console.debug("GET RBAC....")
+      return new Promise((res, rej) => {
+        if(!state.rbac) {
+          fetch('/rbac').then((response) => {
+            // console.debug('******* response', response)
+            commit(SET_ROLE_BASED_ACCESS_CONTROL, response);
+          }).catch((error) => {
+            // console.debug('******* error', error)
+            res({});
+          })
         } else {
-          // If we can't get the rbac list then deny permissions to everything
-          await commit(SET_ROLE_BASED_ACCESS_CONTROL, rbacJson)
+          res(state.rbac);
         }
-      return rbacJson
-    },
+      })
+    }
   }
 }
