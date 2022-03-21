@@ -53,6 +53,7 @@ import VueRouter from 'vue-router';
 import { GET_SESSION_USER } from './store/person_session.store';
 Vue.use(VueRouter);
 // var ua='', signed_agreements={}, doing_agreements=false;
+var roles=[], isAdmin=false, hasPowers=false;
 
 export const router = new VueRouter({
   routes: [
@@ -77,7 +78,7 @@ export const router = new VueRouter({
       component: AdminComponent,
       meta: {
         requiresAuth: true,
-        is_admin : true
+        requiresAdmin : true
       }
     },
     {
@@ -134,12 +135,32 @@ router.beforeEach((to, from, next) => {
           query: { redirect: to.fullPath }
         })
       } else {
-        if(to.meta.is_admin) {
-          alert("testing to.meta.is_admin");
-          alert("admin? "+JSON.stringify(session));
+        if(roles.length==0) {
+          for (const [key, value] of Object.entries(session.convention_roles)) {
+            console.debug("role: ",value.role);
+            roles.push(value.role);
+            if(value.role==="admin")
+              isAdmin=hasPowers=true;
+            if(value.role==="staff")
+              hasPowers=true;
+          }
         }
-        router.app.$refs.planorama.check_signatures()
-        next()
+        if(to.meta.requiresAdmin && !isAdmin) {
+          console.debug("not admin, sending to /profile");
+          next({
+            path: '/profile',
+            query: { redirect: to.fullPath }
+          })
+        } else if(to.meta.requiresPowers && !hasPowers) {
+          console.debug("no powers, sending to /profile");
+          next({
+            path: '/profile',
+            query: { redirect: to.fullPath }
+          })
+        } else {
+          router.app.$refs.planorama.check_signatures()
+          next()
+        }
       }
     }).catch((error) => {
       console.error(error)
