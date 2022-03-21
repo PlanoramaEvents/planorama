@@ -34,7 +34,7 @@
         <div v-html="question.question" class="py-3"></div>
       </div>
       <div v-if="question.linked_field" class="text-right col-6">
-        Linked field: {{question.linked_field}}
+        Linked field: {{displayLinkedField}}
       </div>
     </div>
     <div class="row">
@@ -134,6 +134,7 @@ import {
   pageMixin,
   questionMixin
 } from '@mixins';
+import { LINKED_FIELD_LABELS } from '@/constants/strings';
 
 
 export default {
@@ -166,6 +167,11 @@ export default {
         {value: "website", text: "Website"},
       ]
     },
+    displayLinkedField() {
+      const tokens = this.question.linked_field.split(".")
+      console.debug("tokens", tokens)
+      return LINKED_FIELD_LABELS[tokens[0]]?.[tokens[1]] || tokens[1];
+    }
   },
   methods: {
     formId(string) {
