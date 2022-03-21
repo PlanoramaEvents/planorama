@@ -1,7 +1,9 @@
 class SessionAssignmentPolicy < PlannerPolicy
-  # def import?
-  #   @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
-  # end
+  def unexpress_interest?
+    return true if @record.person_id == @person.id
+
+    false
+  end
 
   # create/update should be limited to admin or the person that the assignment is for
   def create?

@@ -84,8 +84,14 @@ Rails.application.routes.draw do
     get 'session_assignments', to: 'session_assignments#index'
     get 'areas', to: 'areas#index'
   end
+  patch 'session/:id/express_interest', to: 'sessions#express_interest'
+  put 'session/:id/express_interest', to: 'sessions#express_interest'
   resources :published_sessions, path: 'published_session'
+
   resources :session_assignments, path: 'session_assignment'
+  patch 'session_assignment/:id/unexpress_interest', to: 'session_assignments#unexpress_interest'
+  put 'session_assignment/:id/unexpress_interest', to: 'session_assignments#unexpress_interest'
+
   resources :rooms, path: 'room'
   resources :venues, path: 'venue'
   resources :tag_contexts, path: 'tag_context'

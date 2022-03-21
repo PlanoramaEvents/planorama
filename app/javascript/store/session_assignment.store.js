@@ -12,6 +12,7 @@ export const sessionAssignmentEndpoints = {
 export const sessionAssignmentStore = {
   actions: {
     [NEW_SESSION_ASSIGNMENT] ({dispatch}, {session, person_id}) {
+      // TODO: change
       let newAssignment = {
         person_id: person_id,
         session_id: session.id,
@@ -19,6 +20,7 @@ export const sessionAssignmentStore = {
       }
       return dispatch(NEW, {model: sessionAssignmentModel, selected: false, ...newAssignment});
     },
+    // TODO: add a not interested action etc
   },
   selected: {
     [sessionAssignmentModel]: undefined

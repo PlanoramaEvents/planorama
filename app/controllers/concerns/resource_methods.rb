@@ -292,7 +292,6 @@ module ResourceMethods
   def get_table(column:)
     col_table = Arel::Table.new(model_class.table_name)
     col_table_name, col = column.split('.') if column.include? '.'
-    Rails.logger.error "** GET TABLE: #{column}"
 
     if col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasAndBelongsToManyReflection
       # key = "#{model_class.reflections[col_table_name].join_table}.#{col}"
@@ -304,7 +303,6 @@ module ResourceMethods
       col_table = ActsAsTaggableOn::Tag.arel_table #Arel::Table.new("#{ActsAsTaggableOn::Tag}")
     end
 
-    Rails.logger.error "** GOT TABLE: #{col_table.name}"
     return col_table
   end
 
@@ -343,7 +341,6 @@ module ResourceMethods
   # begins with
   # ends with
   def translate_operator(operation:)
-    Rails.logger.debug "*** Translate op #{operation}"
     case operation.downcase
     when 'does not contain'
       :'does_not_match' # "%val%"
