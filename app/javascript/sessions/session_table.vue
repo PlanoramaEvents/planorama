@@ -8,17 +8,17 @@
     >
       <template #cell(title)="{ item }">
         <tooltip-overflow v-if="item.title" :title="item.title">
-          <div v-html="item.title"></div>
+          <span v-html="item.title"></span>
         </tooltip-overflow>
       </template>
       <template #cell(description)="{ item }">
         <tooltip-overflow v-if="item.description" :title="item.description">
-          <div v-html="item.description"></div>
+          <span v-html="item.description"></span>
         </tooltip-overflow>
       </template>
       <template #cell(instructions_for_interest)="{ item }">
         <tooltip-overflow v-if="item.instructions_for_interest" :title="item.instructions_for_interest">
-          <div v-html="item.instructions_for_interest"></div>
+          <span v-html="item.instructions_for_interest"></span>
         </tooltip-overflow>
       </template>
     </table-vue>

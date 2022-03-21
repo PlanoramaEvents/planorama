@@ -579,10 +579,14 @@ module ResourceMethods
     true
   end
 
-  def _permitted_params(model:, instance: nil)
+  def permitted_params()
+    _permitted_params(model: nil)
+  end
+
+  def _permitted_params(model: , instance: nil)
     # NOTE: if params[:data] to determine if this is JSON-API packet
     # that is received, if so we need to deserialize it
-    _allowed_params = if !allowed_params.blank?
+    _allowed_params = if model && !allowed_params.blank?
                         # need to subtract the params that are not allowed because of permissions
                         allowed_params - AccessControlService.banned_attributes(model: model.capitalize, instance: instance, person: current_person)
                       end
