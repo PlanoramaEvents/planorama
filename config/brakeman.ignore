@@ -1,55 +1,15 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Unscoped Find",
-      "warning_code": 82,
-      "fingerprint": "4746b9529e35b8ffa5684e95d9f1b3e2f282703a6456abf7ad06c98d6a6e714b",
-      "check_name": "UnscopedFind",
-      "message": "Unscoped call to `Survey#find`",
-      "file": "app/controllers/surveys_controller.rb",
-      "line": 12,
-      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
-      "code": "Survey.find(params[:survey_id])",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "SurveysController",
-        "method": "assign_people"
-      },
-      "user_input": "params[:survey_id]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Unscoped Find",
-      "warning_code": 82,
-      "fingerprint": "dc8005b6ba8b0b63b65ddb44fe7de9a594358e8fcb047803dd4b512405570d1c",
-      "check_name": "UnscopedFind",
-      "message": "Unscoped call to `Survey#find`",
-      "file": "app/controllers/surveys_controller.rb",
-      "line": 26,
-      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
-      "code": "Survey.find(params[:survey_id])",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "SurveysController",
-        "method": "unassign_people"
-      },
-      "user_input": "params[:survey_id]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
       "warning_type": "Mass Assignment",
       "warning_code": 70,
-      "fingerprint": "dceee6979de4f3a76de6318fd0ce8090c897265600d8b387b51e0c90bff01997",
+      "fingerprint": "5aab4faf0ef95479f4e9850c880bb2fabf7d45f27763ad2e99fd28fe22d72a31",
       "check_name": "MassAssignment",
       "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
       "file": "app/controllers/concerns/resource_methods.rb",
-      "line": 554,
+      "line": 602,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
-      "code": "params.require(_object_name).permit!",
+      "code": "params.require(model).permit!",
       "render_path": null,
       "location": {
         "type": "method",
@@ -61,6 +21,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-01-18 13:30:37 -0500",
-  "brakeman_version": "5.2.0"
+  "updated": "2022-03-22 17:06:40 -0400",
+  "brakeman_version": "5.2.1"
 }
