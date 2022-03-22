@@ -11,7 +11,7 @@
     "axios-jwt": "^1.7.1",
     "axios-observable": "^1.2.1",
     "bootstrap-vue": "^2.21.2",
-    "ckeditor4": "^4.17.1",
+    "ckeditor4": "^4.18.0",
     "ckeditor4-vue": "^1.2.0",
     "follow-redirects": "^1.14.0",
     "jquery": "^3.6.0",
@@ -22,7 +22,7 @@
     "popper.js": "^1.16.1",
     "rxjs": "^7.3.0",
     "tar": "^6.1.9",
-    "url-parse": "^1.5.2",
+    "url-parse": "^1.5.9",
     "uuid": "^8.3.2",
     "validator": "^13.7.0",
     "vee-validate": "~3.2.0",
@@ -68,7 +68,7 @@
     "vue-loader": "^15.9.6",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.46.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.11.3"
   },
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",

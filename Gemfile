@@ -46,6 +46,7 @@ gem "sidekiq"
 gem "sidekiq-scheduler"
 gem 'io-wait'
 gem 'fast_excel'
+gem 'ransack'
 gem 'jsonapi-serializer'
 gem 'jsonapi.rb'
 
