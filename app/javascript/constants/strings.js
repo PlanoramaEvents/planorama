@@ -136,7 +136,7 @@ module.exports = {
             moderation_experience: "Moderation experience",
             othered: "Othered?",
             indigenous: "Indigenous?",
-            black_diaspora: "Black Diaspora?",
+            black_diaspora: "Black diaspora?",
             non_us_centric_perspectives: "Not US-centric?",
             demographic_categories: "Further demographic categories",
             do_not_assign_with: "Do not assign with",
