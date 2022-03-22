@@ -35,6 +35,9 @@
 <script>
 import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
+import searchStateMixin from '../store/search_state.mixin'
+
+const SAVED_SEARCH_STATE = "SESSION SELECT STATE";
 
 export default {
   name: 'SessionSearch',
@@ -42,6 +45,9 @@ export default {
     ModelSelect,
     ModelTags
   },
+  mixins: [
+    searchStateMixin
+  ],
   props: {
     columns: Array
   },
@@ -83,8 +89,30 @@ export default {
       return queries
     },
     onSearch: function (event) {
+      this.setSearchState({
+        key: SAVED_SEARCH_STATE,
+        setting: {
+          title_desc: this.title_desc,
+          area_id: this.area_id,
+          tags: this.tags,
+          match: this.match
+        }
+      })
       this.$emit('change', this.fields_to_query())
+    },
+    init() {
+      let saved = this.currentSearchSettings[SAVED_SEARCH_STATE]
+      if (saved) {
+        this.title_desc = saved.title_desc
+        this.area_id = saved.area_id
+        this.tags = saved.tags
+        this.match = saved.match
+        this.$emit('change', this.fields_to_query())
+      }
     }
+  },
+  mounted() {
+    this.init();
   }
 }
 </script>

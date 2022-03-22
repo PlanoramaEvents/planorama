@@ -26,13 +26,13 @@ export const settingsStore = {
         if(!state.settings.model) {
           // console.debug('******* get the settings')
           http.get("/settings").then((settings) => {
-           console.debug('******* settings', settings)
+           // console.debug('******* settings', settings)
            commit(SET_SETTINGS, settings.data)
             res(settings);
           }).catch((error) => {
             // console.debug('******* error', error)
             // If we can not get the settings, then leave them empty
-            console.debug("****** WE DO NOT HAVE ANY SETTINGS! ....")
+            // console.debug("****** WE DO NOT HAVE ANY SETTINGS! ....")
             // commit(SET_SETTINGS, {})
             res({});
           })

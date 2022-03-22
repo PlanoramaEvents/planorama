@@ -33,6 +33,8 @@ import { mailingStore, mailingEndpoints } from './mailing.store';
 // settings
 import { settingsStore } from "@/store/settings.store";
 
+import { searchStateStore } from "@/store/search_state.store";
+
 // session add-ons
 import { personSessionStore } from './person_session.store';
 
@@ -101,6 +103,7 @@ export const store = new Vuex.Store({
     ...personSessionStore.state,
     ...settingsStore.state,
     ...surveyStore.state,
+    ...searchStateStore.state
     // ...mailingStore.state
   },
   getters: {
@@ -147,6 +150,7 @@ export const store = new Vuex.Store({
     ...personSessionStore.mutations,
     ...settingsStore.mutations,
     ...surveyStore.mutations,
+    ...searchStateStore.mutations
   },
   actions: {
     /**
@@ -280,6 +284,7 @@ export const store = new Vuex.Store({
     ...agreementStore.actions,
     ...mailingStore.actions,
     ...settingsStore.actions,
+    ...searchStateStore.actions,
     ...areaStore.actions,
     ...tagStore.actions,
     ...sessionAssignmentStore.actions,
