@@ -24,6 +24,7 @@ module MailService
     )
 
     self.post_mail_transition(person: person, mailing: mailing) unless tester
+    self.post_mail_assign_survey(person: person, survey: survey) unless tester
   end
 
   def self.preview_email_content(person:, mailing:)
@@ -139,23 +140,32 @@ module MailService
   def self.generate_survey_url(survey:, person:)
     return nil unless survey && person
 
-    ml = MagicLinkService.generate(
-      person_id: person.id,
-      redirect_url: "/#/surveys/#{survey.id}",
-      valid_for: 1.week
-    )
+    # ml = MagicLinkService.generate(
+    #   person_id: person.id,
+    #   redirect_url: "/#/surveys/#{survey.id}",
+    #   valid_for: 1.week
+    # )
+    #
+    # UrlService.url_for path: "login/#{ml.token}"
 
-    UrlService.url_for path: "login/#{ml.token}"
+    UrlService.url_for path: "/#/surveys/#{survey.id}"
+  end
+
+  # if there is a survey then assign it to the person
+  def self.post_mail_assign_survey(person:, survey:)
+    return unless survey
+
+    survey.assigned_people << person
   end
 
   def self.post_mail_transition(person: , mailing: nil)
     return unless mailing
     return if mailing.testrun
 
-    to_invite_status = mailing.transiton_invite_status
+    to_invite_status = mailing.transiton_person_status
     return unless to_invite_status
 
-    person.invite_status = to_invite_status
+    person.con_state = to_invite_status
     person.save!
   end
 

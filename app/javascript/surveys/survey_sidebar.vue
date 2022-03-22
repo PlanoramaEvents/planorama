@@ -1,4 +1,3 @@
-<!-- CONVERTED? -->
 <template>
   <div>
     <sidebar-vue v-if="survey" model="survey">
@@ -67,12 +66,12 @@ import {
   SURVEY_RESULTS_CLEAR_CONFIRM,
   SURVEY_SAVE_SUCCESS_DELETE,
   SURVEY_RESULTS_CLEAR_SUCCESS,
+  SURVEY_RESULTS_CLEAR_ERROR,
   SURVEY_RESULTS_FREEZE_SUCCESS,
   SURVEY_RESULTS_UNFREEZE_SUCCESS,
   SURVEY_CONFIRM_DELETE,
 } from '../constants/strings';
 import { DUPLICATE_SURVEY } from '@/store/survey';
-import { getOrderedRelationships } from '../utils/jsonapi_utils';
 import { CLEAR_SURVEY_SUBMISSIONS } from '../store/survey/survey.actions';
 
 export default {
@@ -82,15 +81,26 @@ export default {
     SurveyQuestion,
     SurveySettingsTab,
   },
-  mixins: [surveyMixin],
+  mixins: [
+    surveyMixin
+  ],
   data: () => ({
     SURVEY_RESULTS_CLEAR_CONFIRM,
     SURVEY_CONFIRM_DELETE
   }),
   computed: {
     questions() {
-      return this.getSurveyPages(this.survey).map(p => getOrderedRelationships('questions', p)).reduce((p, c) => [...p, ...c], []);
-      //return Object.values(this.survey.survey_pages).map(p => p.survey_questions).reduce((p, c) => [...p, ...Object.values(c)],[])
+      if (this.selected) {
+        return this.getSurveyPages(this.survey).map(
+          (p) => {return this.getCachedQuestions()(p.id)}
+        ).reduce((p, c) => {
+          if (c) {
+            return [...p, ...c]
+          } else {
+            return []
+          }
+        });
+      }
     },
     editLink() {
       return `/surveys/edit/${this.survey.id}`;
@@ -111,7 +121,7 @@ export default {
       this.deleteSurvey()
     },
     clearResponses() {
-      this.toastPromise(this.$store.dispatch(CLEAR_SURVEY_SUBMISSIONS, {item: this.survey}), SURVEY_RESULTS_CLEAR_SUCCESS)
+      this.toastPromise(this.$store.dispatch(CLEAR_SURVEY_SUBMISSIONS, {itemOrId: this.survey}), SURVEY_RESULTS_CLEAR_SUCCESS, SURVEY_RESULTS_CLEAR_ERROR)
     },
     toggleSubmissionEdits(val) {
       this.survey.allow_submission_edits = val

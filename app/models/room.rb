@@ -6,11 +6,15 @@ class Room < ApplicationRecord
 
   belongs_to :venue
 
-  has_many :programme_items
-  has_many :published_programme_items
+  has_many :sessions
+  has_many :published_sessions
+
+  # TODO: need to add start and end availbilty time
+  # could do this at the convention level for now for days
+  # TODO: need room setups maybe with capacities
 
   def check_for_use
-    in_use = (programme_items.any? || published_programme_items.any?)
+    in_use = (sessions.any? || published_sessions.any?)
 
     if in_use
       raise I18n.t('planner.core.locations.cannot-delete-in-use').html_safe

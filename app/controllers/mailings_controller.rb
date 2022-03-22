@@ -60,7 +60,7 @@ class MailingsController < ResourceController
              end
 
     # get the id od people with those emails
-    email_addresses = EmailAddress.where("email in (?)", emails)
+    email_addresses = EmailAddress.where("LOWER(email) in (?)", emails.map(&:downcase))
     people = Person.find email_addresses.collect{|a| a.person_id }
 
     # remove any that are not in the list but in the mailing

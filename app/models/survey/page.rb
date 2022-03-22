@@ -4,7 +4,9 @@ class Survey::Page < ApplicationRecord
 
   default_scope { order(['survey_pages.sort_order asc'])}
 
+  # scope the questions so we do not include those that were deleted
   has_many :questions,
+           -> { where(deleted_at: nil) },
            class_name: 'Survey::Question',
            foreign_key: 'page_id',
            inverse_of: :page,

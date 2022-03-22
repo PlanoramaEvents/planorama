@@ -25,10 +25,16 @@
           <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes" @change="patchSelectedQuestion({question_type: $event})"></b-form-select>
         </b-form-group>
       </div>
+      <div class="offset-6 col-6">
+        <linked-field :question="question" @change="patchSelectedQuestion({linked_field: $event})"></linked-field>
+      </div>
     </div>
-    <div class="row" v-if="!formatting && !isSelected"> 
-      <div class="col-12">
-        <div v-html="question.question"></div>
+    <div class="row" v-if="!formatting && !isSelected">
+      <div :class="{'col-12': !question.linked_field, 'col-6': question.linked_field}">
+        <div v-html="question.question" class="py-3"></div>
+      </div>
+      <div v-if="question.linked_field" class="text-right col-6">
+        Linked field: {{displayLinkedField}}
       </div>
     </div>
     <div class="row">
@@ -48,67 +54,6 @@
       <template v-if="hr">
         <div class="col-12">
           <hr />
-        </div>
-      </template>
-      <template v-if="address && !isSelected">
-        <div class="col-12 col-sm-6">
-          <b-form-group
-            :id="formGroupId('address-1')"
-            :label-for="formId('address-1')"
-            label="Address 1"
-          >
-            <b-form-input disabled :id="formId('address-1')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12 col-sm-6">
-          <b-form-group
-            :id="formGroupId('address-2')"
-            :label-for="formId('address-2')"
-            label="Address 2"
-          >
-            <b-form-input disabled :id="formId('address-2')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12 col-sm-6">
-          <b-form-group
-            :id="formGroupId('city')"
-            :label-for="formId('city')"
-            label="City"
-          >
-            <b-form-input disabled :id="formId('city')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12 col-sm-3">
-          <b-form-group
-            :id="formGroupId('state')"
-            :label-for="formId('state')"
-            label="State"
-          >
-            <b-form-input disabled :id="formId('state')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12 col-sm-3">
-          <b-form-group
-            :id="formGroupId('zip')"
-            :label-for="formId('zip')"
-            label="ZIP Code"
-          >
-            <b-form-input disabled :id="formId('zip')"></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-12">
-          <b-form-group
-            :id="formGroupId('country')"
-            :label-for="formId('country')"
-            label="Country"
-          >
-            <b-form-input disabled :id="formId('country')"></b-form-input>
-          </b-form-group>
-        </div>
-      </template>
-      <template v-if="address && isSelected">
-        <div class="col-12">
-          <small>Address fields</small>
         </div>
       </template>
       <template v-if="email">
@@ -168,6 +113,7 @@
     <div class="row" v-if="isSelected">
       <div class="col-6">
         <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Required</b-form-checkbox>
+        <b-form-checkbox inline v-if="!formatting" v-model="question.private" @change="patchSelectedQuestion({private: $event})">Sensitive</b-form-checkbox>
         <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="patchSelectedQuestion({branching: $event})">Branching</b-form-checkbox>
       </div>
       <div class="col-6 d-flex justify-content-end">
@@ -182,12 +128,13 @@
 import draggable from 'vuedraggable';
 import OptionsQuestion from './options-question.vue';
 import PlanoEditor from '@/components/plano_editor';
+import LinkedField from './linked-field';
 import {
   surveyMixin,
   pageMixin,
   questionMixin
 } from '@mixins';
-import Plano_editor from '@/components/plano_editor.vue';
+import { LINKED_FIELD_LABELS } from '@/constants/strings';
 
 
 export default {
@@ -196,20 +143,8 @@ export default {
     draggable,
     OptionsQuestion,
     PlanoEditor,
-    Plano_editor
+    LinkedField,
   },
-  data: () => ({
-    questionTypes: [
-      { value: 'textfield', text: 'Short Answer'},
-      { value: 'textbox', text: 'Long Answer'},
-      { value: 'singlechoice', text: 'Multiple Choice' },
-      { value: 'multiplechoice', text: 'Checkboxes' },
-      { value: 'dropdown', text: 'Dropdown' },
-      { value: 'address', text: 'Address' },
-      { value: 'email', text: 'Email' },
-      { value: 'socialmedia', text: 'Social Media' }
-    ],
-  }),
   props: {
     question: {
       type: Object,
@@ -232,6 +167,11 @@ export default {
         {value: "website", text: "Website"},
       ]
     },
+    displayLinkedField() {
+      const tokens = this.question.linked_field.split(".")
+      console.debug("tokens", tokens)
+      return LINKED_FIELD_LABELS[tokens[0]]?.[tokens[1]] || tokens[1];
+    }
   },
   methods: {
     formId(string) {

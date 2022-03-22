@@ -1,15 +1,5 @@
 <template>
   <div class="survey scrollable">
-    <b-button variant="link" @click="back">Back</b-button>
-    <b-form-group
-      class="mx-3"
-      v-if="survey"
-      id="survey-name-group"
-      label="Survey Name"
-      label-for="survey-name"
-    >
-      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()"></b-form-input>
-    </b-form-group>
     <b-form-group
       class="mx-3"
       v-if="survey"
@@ -19,22 +9,12 @@
     >
       <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey()"></b-form-textarea>
     </b-form-group>
-    <b-tabs>
-      <b-tab title="Questions" :active="!responses">
-        <edit-survey-controls></edit-survey-controls>
-        <edit-survey-page
-          v-for="(p, i) in selectedSurveyPages"
-          :key="p.id" :page="p" :i="i"
-          :n="selectedSurveyPages.length">
-        </edit-survey-page>
-      </b-tab>
-      <b-tab title="Responses" :active="!!responses">
-        <view-responses></view-responses>
-      </b-tab>
-      <survey-settings-tab></survey-settings-tab>
-      <b-tab title="Audit Log" disabled>
-      </b-tab>
-    </b-tabs>
+    <edit-survey-controls></edit-survey-controls>
+    <edit-survey-page
+      v-for="(p, i) in selectedSurveyPages"
+      :key="p.id" :page="p" :i="i"
+      :n="selectedSurveyPageNbr">
+    </edit-survey-page>
   </div>
 </template>
 
@@ -43,35 +23,50 @@ import EditSurveyPage from './edit-survey-page'
 import EditSurveyControls from './edit-survey-controls'
 import {
   surveyMixin,
+  pageMixin,
+  questionMixin,
   surveyIdPropMixinId
 }from '@mixins'
-import SurveySettingsTab from './survey-settings-tab.vue';
-import NotImplemented from '../shared/not-implemented.vue';
-import ViewResponses from './view-responses';
 
 export default {
   name: "EditSurvey",
-  props: ['responses'],
+  props: {
+    surveyId: {
+      type: String,
+      default: null
+    }
+  },
   mixins: [
     surveyMixin,
     surveyIdPropMixinId,
+    pageMixin,
+    questionMixin
   ],
   components: {
     EditSurveyPage,
-    EditSurveyControls,
-    SurveySettingsTab,
-    NotImplemented,
-    ViewResponses
+    EditSurveyControls
   },
   computed: {
   },
   methods: {
-    back() {
-      // TODO only unselect if not coming from view page
-      this.unselectSurvey();
-      this.$router.push('/surveys');
+    init() {
+      console.debug('EDIT SURVEY INIT')
+      this.unselectPage();
+      this.unselectQuestion();
+
+      if (!this.survey || !this.survey.pages) {
+        this.selectSurvey(this.surveyId)
+        this.fetchSelectedSurvey().then(() => {
+          // Clear all the selected survey elements
+        });
+      } else {
+        // Clear all the selected survey elements
+      }
     }
   },
+  mounted() {
+    this.init()
+  }
 }
 </script>
 

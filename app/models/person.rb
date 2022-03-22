@@ -1,45 +1,4 @@
-## schema
-# CREATE TABLE public.people (
-#     id integer NOT NULL,
-#     language character varying(5) DEFAULT ''::character varying,
-#     created_at timestamp without time zone NOT NULL,
-#     updated_at timestamp without time zone NOT NULL,
-#     lock_version integer DEFAULT 0,
-#     comments text,
-#     organization character varying,
-#     job_title character varying,
-#     pronouns character varying(100),
-#     year_of_birth integer,
-#     gender character varying(100),
-#     ethnicity character varying(100),
-#     opted_in boolean DEFAULT false NOT NULL,
-#     invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
-#     acceptance_status public.acceptance_status_enum DEFAULT 'unknown'::public.acceptance_status_enum,
-#     registered boolean DEFAULT false NOT NULL,
-#     registration_type character varying,
-#     can_share boolean DEFAULT false NOT NULL,
-#     registration_number character varying,
-#     can_photo boolean DEFAULT false NOT NULL,
-#     can_record boolean DEFAULT false,
-#     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-#     reset_password_token character varying,
-#     reset_password_sent_at timestamp without time zone,
-#     remember_created_at timestamp without time zone
-#     sign_in_count integer DEFAULT 0 NOT NULL,
-#     current_sign_in_at timestamp without time zone,
-#     last_sign_in_at timestamp without time zone,
-#     current_sign_in_ip inet,
-#     last_sign_in_ip inet,
-#     confirmation_token character varying,
-#     confirmed_at timestamp without time zone,
-#     confirmation_sent_at timestamp without time zone,
-#     unconfirmed_email character varying,
-#     failed_attempts integer DEFAULT 0 NOT NULL,
-#     unlock_token character varying,
-#     locked_at timestamp without time zone,
-#     name character
-# );
-
+#
 class Person < ApplicationRecord
   # Include default devise modules. Others available are:
   devise :database_authenticatable,
@@ -49,31 +8,21 @@ class Person < ApplicationRecord
          :recoverable,
          :validatable, :lockable, :trackable
 
-  # TODO: add a deleted_at mechanism
+  # TODO: add a deleted_at mechanism for soft deletes
 
-  # TODO: on save ensure that there is an email address !!!
-  # perhaps in the controller ?
-
-  #   so when i save it, it should be email_address_attributes
-  # ugh which means i probably need to change allowed params
-  # can you take care of that too?
-
-
-  acts_as_taggable
+  # acts_as_taggable
+  acts_as_taggable_on :tags
 
   has_paper_trail
 
-  has_one :bio, dependent: :destroy
-  accepts_nested_attributes_for :bio, allow_destroy: true
-
   before_destroy :check_if_assigned
 
-  has_many  :programme_assignments, dependent: :destroy
-  has_many  :programme_items, through: :programme_assignments
+  has_many  :session_assignments, dependent: :destroy
+  has_many  :sessions, through: :session_assignments
 
   # We let the publish mechanism do the destroy so that the update service knows what is happening
-  has_many  :published_programme_assignments
-  has_many  :published_programme_items, through: :published_programme_assignments
+  # has_many  :published_session_assignments
+  # has_many  :published_sessions, through: :published_session_assignments
 
   has_many  :person_mailing_assignments
   has_many  :mailings, through: :person_mailing_assignments
@@ -91,70 +40,112 @@ class Person < ApplicationRecord
   has_and_belongs_to_many :assigned_surveys, class_name: 'Survey'
 
   # TODO: get a list of surveys assigned AND those with submissions that are not assigned
+  # ?????
 
-  has_many :person_roles, dependent: :destroy
-  accepts_nested_attributes_for :person_roles, allow_destroy: true
+  # This is what has also been referred to as "class" of person
+  has_many :convention_roles, dependent: :destroy
+  accepts_nested_attributes_for :convention_roles, allow_destroy: true
+
+  # Person roles etc
+  has_many :person_role_assocs
+  has_many :person_roles, through: :person_role_assocs
 
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements
 
-  enum acceptance_status: {
-    unknown: 'unknown',
-    probable: 'probable',
-    accepted: 'accepted',
-    declined: 'declined'
-  }
-
-  enum invite_status: {
+  # TODO:
+  # - there is talk about having a workflow, including whether a person
+  #   is vetted as a session participant. They could be have declined but
+  #   pass vetting and later change their mind. So we do not want to
+  #   or need to re-vet...
+  #
+  # change these
+  # enum acceptance_status: {
+  #   unknown: 'unknown',
+  #   probable: 'probable',
+  #   accepted: 'accepted',
+  #   declined: 'declined'
+  # }
+  #
+  # enum invite_status: {
+  #   not_set: 'not_set',
+  #   do_not_invite: 'do_not_invite',
+  #   potential_invite: 'potential_invite',
+  #   invite_pending: 'invite_pending',
+  #   invited: 'invited',
+  #   volunteered: 'volunteered'
+  # }
+  enum con_state: {
     not_set: 'not_set',
-    do_not_invite: 'do_not_invite',
-    potential_invite: 'potential_invite',
+    applied: 'applied',
+    vetted: 'vetted',
     invite_pending: 'invite_pending',
     invited: 'invited',
-    volunteered: 'volunteered'
+    probable: 'probable',
+    accepted: 'accepted',
+    declined: 'declined',
+    rejected: 'rejected'
   }
 
   nilify_blanks only: [
     :bio,
     :pseudonym,
+    :website,
+    :twitter,
+    :othersocialmedia,
+    :facebook,
+    :linkedin,
+    :twitch,
+    :youtube,
+    :instagram,
+    :flickr,
+    :reddit,
+    :tiktok
   ]
+
+  enum can_stream: { yes: 'yes', no: 'no', maybe: 'maybe'}, _prefix: true
+  enum can_record: { yes: 'yes', no: 'no', maybe: 'maybe'}, _prefix: true
+  enum can_photo: { yes: 'yes', no: 'no', maybe: 'maybe'}, _prefix: true
 
   validates :name, presence: true
 
-  # Needed for JWT revocation strategy
-  # def jwt_payload
-  #   super.merge('foo' => 'bar')
-  # end
-
-  # TODO:
-  # - there is talk about having a workflow, including whether a person
-  #   is vetted as a programme participant. They could be have declined but
-  #   pass vetting and later change their mind. So we do not want to
-  #   or need to re-vet...
-  #
   def email
-    email_addresses.first&.email
+    contact_email || primary_email || email_addresses.first&.email
+  end
+
+  # TODO: we need to add contact flag to email address
+  def contact_email
+    # return the email used for contact (usually the primary?)
+    EmailAddress.where(iscontact: true).first
+  end
+
+  def contact_email=(email)
+    # If the email is the same as the primary or any others then
+    # we ensure it is flagged as the contact email
+    cemail = email_addresses.find_by(email: email)
+    if cemail
+      cemail.iscontact = true
+      cemail.save!
+    else
+      # Otherwise we add it
+      email_addresses.create(email: email, iscontact: true)
+    end
   end
 
   def admin?
-    person_roles.inject(false) { |res, role| res || role.admin? }
+    convention_roles.inject(false) { |res, role| res || role.admin? }
   end
 
   def staff?
-    person_roles.inject(false) { |res, role| res || role.staff? }
+    convention_roles.inject(false) { |res, role| res || role.staff? }
   end
 
-  #
-  def planner?
-    person_roles.inject(false) { |res, role| res || role.planner? }
+  def participant?
+    convention_roles.inject(false) { |res, role| res || role.participant? }
   end
 
-  def member?
-    person_roles.inject(false) { |res, role| res || role.member? }
-  end
-
-  def no_role?
-    person_roles.size == 0
+  def no_group?
+    convention_roles.size == 0
   end
 
   #
@@ -169,21 +160,12 @@ class Person < ApplicationRecord
   end
 
   def saved_change_to_email?
+    # TODO: check
     email_addresses.first&.saved_change_to_email?
   end
 
-  # def primary_email
-  #   # TODO: change to find the primary email
-  #   email_addresses.first&.email
-  #   # emails.primary || (emails.first if new_record?)
-  # end
-
-  # def self.find_for_database_authentication warden_condition
-  #   Rails.logger.error "******** WARDEN AUTH #{warden_condition.to_json}"
-  # end
-
-# https://dispatch.moonfarmer.com/separate-email-address-table-with-devise-in-rails-62208a47d3b9
-# mapping.to.find_for_database_authentication(authentication_hash)
+  # https://dispatch.moonfarmer.com/separate-email-address-table-with-devise-in-rails-62208a47d3b9
+  # mapping.to.find_for_database_authentication(authentication_hash)
   def self.find_first_by_auth_conditions(warden_conditions, opts={})
     conditions = warden_conditions.dup
 
@@ -192,27 +174,29 @@ class Person < ApplicationRecord
     if (email = conditions.delete(:email))
       # Search through users by condition and also by
       # users who have associations to the provided email
+      # change to use primary
       where(conditions.to_h)
         .includes(:email_addresses)
         .where(email_addresses: { email: email })
         .first
     else
-      # super(warden_conditions)
       # If "email" is not an attribute in the conditions,
       # just search for users by the conditions as normal
-      where(conditions.to_h)
-        .first
+      where(conditions.to_h).first
     end
   end
 
   # check that the person has not been assigned to program items, if they have then return an error and do not delete
   def check_if_assigned
-    if (ProgrammeAssignment.where(person_id: id).count > 0) ||
-       (PublishedProgrammeAssignment.where(person_id: id).count > 0)
+    if (SessionAssignment.where(person_id: id).count > 0) ||
+       (PublishedSessionAssignment.where(person_id: id).count > 0)
       raise 'Cannot delete an assigned person'
     end
   end
 
+  # These are here so we can edit and update a person without having
+  # to worry about setting their password. Password validation
+  # will be done elsewhere
   def valid_password?(password)
     return true if password.blank?
 

@@ -28,7 +28,10 @@ module ResourceMethods
         options = {
           meta: meta,
           include: filtered_serializer_includes(fields: fields), # need to adjust based omn field
-          params: {domain: "#{request.base_url}"}
+          params: {
+            domain: "#{request.base_url}",
+            current_person: current_person
+          }
         }
         options[:fields] = fields
         # Example for sparse field set
@@ -54,7 +57,7 @@ module ResourceMethods
   # Frontend could use this as a template
   # endpoint like /person/new
   def new
-    authorize model_class, policy_class: policy_class
+    authorize @object, policy_class: policy_class
     # give the new object a UUID ...
     @object.id = SecureRandom.uuid
     render_object(@object, includes: false)
@@ -62,7 +65,7 @@ module ResourceMethods
 
   def create
     model_class.transaction do
-      authorize model_class, policy_class: policy_class
+      authorize @object, policy_class: policy_class
       before_save
       @object.save!
       after_save
@@ -82,7 +85,7 @@ module ResourceMethods
       else
         authorize @object, policy_class: policy_class
         before_update
-        @object.update!(strip_params(_permitted_params(object_name)))
+        @object.update!(strip_params(_permitted_params(model: object_name, instance: @object)))
         @object.reload
         after_update
       end
@@ -116,7 +119,10 @@ module ResourceMethods
                    fields: fields,
                    serialized_includes: jsonapi_included
                  ),
-        params: {domain: "#{request.base_url}"}
+        params: {
+          domain: "#{request.base_url}",
+          current_person: current_person
+        }
       }
       options[:fields] = fields
 
@@ -192,7 +198,7 @@ module ResourceMethods
   end
 
   def collection
-    base = if belong_to_class
+    base = if belong_to_class && belongs_to_param_id
              parent = belong_to_class.find belongs_to_param_id
              parent.send(belongs_to_relationship)
            else
@@ -219,9 +225,17 @@ module ResourceMethods
 
   def query(filters = nil)
     # Go through the filter and construct the where clause
-    return nil unless filters.present?
+    return exclude_deleted_clause unless filters.present?
 
     query_part(filter: filters)
+  end
+
+  # if the element has a deleted_at we want the non deleted ones
+  def exclude_deleted_clause
+    return nil unless model_class.new.attributes.keys.include?('deleted_at')
+    table = Arel::Table.new(model_class.table_name)
+
+    table[:deleted_at].eq(nil)
   end
 
   def query_part(filter:)
@@ -233,20 +247,43 @@ module ResourceMethods
       else
         key, operation, value = query
 
-        col_table = get_table(column: key)
+        col_table = if (key.include?('responses.'))
+          Arel::Table.new('survey_responses')
+        else
+          get_table(column: key)
+        end
+
         if key == 'all'
+          # change to include responses
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)
             query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
             part = part ? part.or(query_part) : query_part
           end
+          # This for survey submissions ....
+          if model_class == Survey::Submission
+            Survey::Response.columns.each do |col|
+              next unless [:text, :string].include?(col.type)
+              query_part = get_query_part(table: Arel::Table.new('survey_responses'), column: col.name, operation: 'like', value: value)
+              part = part ? part.or(query_part) : query_part
+            end
+          end
         else
-          col = get_column(column: key)
+          col = if (key.include?('responses.'))
+            'response_as_text'
+          else
+            get_column(column: key)
+          end
           part = get_query_part(table: col_table, column: col, operation: operation, value: value)
+
+          if (key.include?('responses.'))
+            key.slice! "responses."
+            part = part.and(col_table['question_id'].eq(key))
+          end
         end
       end
 
-      q = q ? q.send(global_op, part) : part
+      q = q ? q.send(global_op, part) : part if part
     end
 
     q
@@ -261,7 +298,9 @@ module ResourceMethods
       col_table = Arel::Table.new("#{model_class.reflections[col_table_name].join_table}")
     elsif col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasManyReflection
       # need to join with the people table
-      col_table = Arel::Table.new("#{col_table_name}")
+      col_table = model_class.reflections[col_table_name].klass.arel_table #Arel::Table.new("#{col_table_name}")
+    elsif col_table_name && col_table_name == 'tags'
+      col_table = ActsAsTaggableOn::Tag.arel_table #Arel::Table.new("#{ActsAsTaggableOn::Tag}")
     end
 
     return col_table
@@ -280,8 +319,9 @@ module ResourceMethods
   end
 
   def get_query_part(table:, column:, operation:, value:)
-    Rails.logger.debug "** QUERY PART #{table} #{column} #{operation} #{value}"
     op = translate_operator(operation: operation)
+
+    return nil if value.kind_of?(String) && value.blank?
 
     val = value
     val = "%#{value}%" if op == :matches
@@ -301,7 +341,6 @@ module ResourceMethods
   # begins with
   # ends with
   def translate_operator(operation:)
-    Rails.logger.debug "*** Translate op #{operation}"
     case operation.downcase
     when 'does not contain'
       :'does_not_match' # "%val%"
@@ -309,6 +348,8 @@ module ResourceMethods
       :'matches' # "%val%"
     when 'like'
       :'matches' # "%val%"
+    when 'in'
+      :in
     when 'equals'
       :eq
     when '='
@@ -358,9 +399,12 @@ module ResourceMethods
 
   def generate_xls(serializer = nil, opts = {})
     opts[:each_serializer] = serializer ? serializer : xls_serializer_class
+    opts[:serializer] = {} unless opts[:serializer]
+    opts[:serializer][:current_person] = current_person
     cookies[:fileDownload] = true
     fname = self.class::XLS_SERIALIZER_FILENAME if defined? self.class::XLS_SERIALIZER_FILENAME
     fname ||= controller_name.downcase
+    # How do we pass the current person to the serializer?
     send_data ActiveModel::XlsArraySerializer.new(
       @collection,
       opts
@@ -452,9 +496,9 @@ module ResourceMethods
   def build_resource
     if belongs_to_param_id && belong_to_class
       parent = belong_to_class.find belongs_to_param_id
-      parent.send(belongs_to_relationship).new(strip_params(_permitted_params(object_name)))
+      parent.send(belongs_to_relationship).new(strip_params(_permitted_params(model: object_name)))
     else
-      model_class.new(strip_params(_permitted_params(object_name)))
+      model_class.new(strip_params(_permitted_params(model: object_name)))
     end
   end
 
@@ -532,13 +576,17 @@ module ResourceMethods
     true
   end
 
-  def permitted_params
-    _permitted_params(object_name)
+  def permitted_params()
+    _permitted_params(model: nil)
   end
 
-  def _permitted_params(_object_name)
+  def _permitted_params(model: , instance: nil)
     # NOTE: if params[:data] to determine if this is JSON-API packet
     # that is received, if so we need to deserialize it
+    _allowed_params = if model && !allowed_params.blank?
+                        # need to subtract the params that are not allowed because of permissions
+                        allowed_params - AccessControlService.banned_attributes(model: model.capitalize, instance: instance, person: current_person)
+                      end
     if params[:data]
       # NOTE: JSPON API does not save nested data structures ....
       jsonapi_deserialize(
@@ -546,22 +594,22 @@ module ResourceMethods
         {
           except: except_params,
           # NOTE: allowed params need to include relationship name if there needed for save
-          only: allowed_params
+          only: _allowed_params
         }
       )
     else
       # We treat this as a regular rails request
-      return params.require(_object_name).permit! unless allowed_params || params[:action] == 'new'
+      return params.require(model).permit! unless _allowed_params || params[:action] == 'new'
 
       params.permit(
-        allowed_params
+        _allowed_params
       )
     end
   end
 
-  def strip_params(_permitted_params)
-    return unless _permitted_params
+  def strip_params(_params)
+    return unless _params
 
-    _permitted_params.each{|k,v| _permitted_params[k] = v&.strip if v.respond_to?(:strip)}
+    _params.each{|k,v| _params[k] = v&.strip if v.respond_to?(:strip)}
   end
 end

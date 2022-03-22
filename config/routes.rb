@@ -12,27 +12,30 @@ Rails.application.routes.draw do
              }, defaults: { format: :json }
 
   root to: 'home#index'
+  # get '/home', to: 'home#index'
 
   # TODO: retest with SPA, should be ok
   get '/login/:magic_link', to: 'login#magic_link'
 
   post '/validator/email', to: 'validator/email#validate' #, controller: 'validator/email'
 
+  get '/settings', to: 'settings#index'
+
   # REST based resources
-  get 'session/me', to: 'people#me'
+  get 'person/session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
   get 'people/me', to: 'people#me'
   post 'person/import', to: 'people#import'
   resources :people, path: 'person' do
-    get 'person_roles', to: 'person_roles#index'
+    get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
-    get 'programme_items', to: 'programme_items#index'
-    get 'published_programme_items', to: 'published_programme_items#index'
+    get 'sessions', to: 'sessions#index'
+    get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
   end
 
-  resources :person_roles, path: 'person_role', except: [:index]
+  resources :convention_roles, path: 'convention_role', except: [:index]
   resources :email_addresses, path: 'email_address', except: [:index]
 
   get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
@@ -53,6 +56,7 @@ Rails.application.routes.draw do
     resources :pages, controller: 'survey/pages', only: [:index]
     delete 'submission', to: 'survey/submissions#delete_all'
     get 'submissions', to: 'survey/submissions#index'
+    get 'submissions/flat', to: 'survey/submissions#flat'
   end
 
   resources :pages, path: 'page', controller: 'survey/pages', except: [:index] do
@@ -71,10 +75,21 @@ Rails.application.routes.draw do
 
   get 'rbac', to: 'rbac#index'
 
-  resources :bios, path: 'bio'
-  resources :programme_items, path: 'programme_item'
-  resources :published_programme_items, path: 'published_programme_item'
-  resources :programme_assignments, path: 'programme_assignment'
+  resources :formats, path: 'format'
+  resources :areas, path: 'area'
+  resources :tags, path: 'tag'
+  get 'session/tags', to: 'sessions#tags'
+  post 'session/import', to: 'sessions#import'
+  resources :sessions, path: 'session' do
+    get 'session_assignments', to: 'session_assignments#index'
+    get 'areas', to: 'areas#index'
+  end
+  get 'session/:id/express_interest', to: 'sessions#express_interest'
+  resources :published_sessions, path: 'published_session'
+
+  resources :session_assignments, path: 'session_assignment'
+  get 'session_assignment/:id/unexpress_interest', to: 'session_assignments#unexpress_interest'
+
   resources :rooms, path: 'room'
   resources :venues, path: 'venue'
   resources :tag_contexts, path: 'tag_context'
@@ -97,5 +112,5 @@ Rails.application.routes.draw do
   # force everything back to the SPA home page
   # This has to be at the end otherwise we do not match the resource endpoints
   # as this is a catch all
-  match '*path' => redirect('/'), via: :get
+  # match '*path' => redirect('/'), via: :get
 end

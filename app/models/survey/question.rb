@@ -2,6 +2,10 @@ class Survey::Question < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: :page_id
 
+  # Scopes to deal with the soft deletes
+  scope :not_deleted, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where('survey_questions.deleted_at is not null') }
+
   has_paper_trail
 
   default_scope {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
@@ -25,10 +29,22 @@ class Survey::Question < ApplicationRecord
   validates_inclusion_of :question_type, in:
     [
       :textfield, :textbox, :singlechoice, :multiplechoice, :hr,
-      :dropdown, :address, :email, :socialmedia, :textonly
+      :dropdown, :email, :socialmedia, :textonly,
+      :boolean, # true or false
+      :yesnomaybe # 'yes', 'no', 'maybe'
+      # :address
     ]
 
   before_destroy :check_for_use, prepend: true #, :check_if_published
+
+  def soft_delete
+    if responses.any?
+      self.deleted_at = Time.now
+      self.save!
+    else
+      self.destroy
+    end
+  end
 
   def question_type
     read_attribute(:question_type).to_sym
@@ -60,9 +76,10 @@ class Survey::Question < ApplicationRecord
     end
   end
 
-private
   def check_for_use
     # Check if the question has responses
+    # TODO: do soft delete ...
+    # Survey::Page::QuestionsController#destroy
     if responses.any?
       raise 'can not delete a question for a survey that has responses in the system'
     end

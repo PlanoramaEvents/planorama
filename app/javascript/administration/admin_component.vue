@@ -9,10 +9,31 @@
         <sheet-importer-vue
           title="Import People"
           import-url="/person/import"
-        ></sheet-importer-vue>
+          example-url="/examples/people_import.xlsx"
+        >
+          <template v-slot:import-details="result">
+            Imported: {{result.importMessage.imported}} Skipped {{result.importMessage.skipped}}<br />
+            Malformed email: {{result.importMessage.bad_email}}<br />
+            Duplicate email: {{result.importMessage.duplicate_email}}<br />
+            No name: {{result.importMessage.noname}}
+          </template>
+        </sheet-importer-vue>
       </admin-accordion>
-      <admin-accordion id="edit-roles-accordion" title="Edit Roles" @show="showPeopleRoles">
-        <change-user-roles model="person" ref="role-manager"></change-user-roles>
+      <admin-accordion id="edit-roles-accordion" title="Assign Convention Class" @show="showPeopleRoles">
+        <change-user-convention-roles model="person" ref="role-manager"></change-user-convention-roles>
+      </admin-accordion>
+      <admin-accordion id="import-sessions-accordion" title="Import Sessions">
+        <sheet-importer-vue
+          title="Import Sessions"
+          import-url="/session/import"
+          example-url="/examples/session_import.xlsx"
+        >
+          <template v-slot:import-details="result">
+            Imported: {{result.importMessage.imported}} Skipped {{result.importMessage.skipped}}<br />
+            No Title: {{result.importMessage.no_title}}<br />
+            Duplicate Session: {{result.importMessage.duplicate_session}}<br />
+          </template>
+        </sheet-importer-vue>
       </admin-accordion>
       <admin-accordion id="mailings-accordion" title="Mailings" @show="showMailings">
         <mailings-manager
@@ -20,30 +41,17 @@
           ref="mailing-manager"
         ></mailings-manager>
       </admin-accordion>
-      <admin-accordion id="event-settings-accordion" title="Event Settings" :dirty="event_settings_dirty">
-        <b-form-group
-          label="Event Email"
-          label-for="support-email"
-        >
-          <b-form-input id="support-email" type="text" zz-model="configuration.event_email.parameter_value"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label="Event Phone Number"
-          label-for="support-phone"
-        >
-          <b-form-input id="support-phone" type="text" zz-model="configuration.event_phone.parameter_value"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label="Event Ethics Agreement"
-          label-for="event-ethics"
-          description="If you save a new event agreement, you will clear the flag and everyone has to recheck the box."
-        >
-          <b-form-textarea id="event-ethics" type="text" zz-model="information_ethics.terms"></b-form-textarea>
-        </b-form-group>
-        <div class="d-flex justify-content-end">
-          <b-button variant="link" @click="cancel">Revert all fields</b-button>
-          <b-button variant="primary" @click="save">Save</b-button>
-        </div>
+      <admin-accordion id="event-settings-accordion" title="Event Settings" @show="showConfigs">
+        <configurations-manager
+          model="parameter_name"
+          ref="configurations-manager"
+        ></configurations-manager>
+      </admin-accordion>
+      <admin-accordion id="agreements-accordion" title="Agreements" @show="showAgreements">
+        <agreement-manager
+          model="agreement"
+          ref="agreements-manager"
+        ></agreement-manager>
       </admin-accordion>
     </div>
   </div>
@@ -51,29 +59,25 @@
 
 <script>
 import AdminAccordion from './admin_accordion.vue'
-import { mapActions, mapState } from 'vuex';
-import { SAVE, UPDATED } from '../store/model.store';
-// import { Configuration } from './configurations';
 import PersonAdd from '../people/person_add.vue';
-import ChangeUserRoles from './change-user-roles';
-import toastMixin from '../shared/toast-mixin';
-// import { InformationEthicsAgreement } from './agreement';
-// import { FETCH_IEA, SAVE_IEA } from './agreement.store';
+import ChangeUserConventionRoles from './change-user-con-roles';
 import MailingsManager from '../mailings/mailings_manager';
-
+import ConfigurationsManager from '../configurations/configurations_manager';
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
-
-const ADMIN_CONFIGS = (x) => ['event_email', 'event_phone'].includes(x)
+//import AgreementAdd from '../agreements/agreement_editor';
+//import AgreementTable from "@/agreements/agreement_table";
+import AgreementManager from "@/agreements/agreement_manager";
 
 export default {
   components: {
+    AgreementManager,
     AdminAccordion,
     PersonAdd,
-    ChangeUserRoles,
+    ChangeUserConventionRoles,
     SheetImporterVue,
-    MailingsManager
+    MailingsManager,
+    ConfigurationsManager,
   },
-  mixins: [toastMixin],
   name: 'AdminComponent',
   data: () => ({
     customization: {
@@ -82,39 +86,19 @@ export default {
       ethics: null
     }
   }),
-  computed: {
-    // ...mapState('admin/configuration', {
-    //   configuration: state =>  state.collection
-    // }),
-    // ...mapState('admin/agreements', ['information_ethics']),
-    event_settings_dirty() {
-      // return this.configuration.changed(ADMIN_CONFIGS)
-      return false
-    }
-  },
   methods: {
-    // ...mapActions('admin/agreements', {
-    //   fetchIea: FETCH_IEA,
-    //   saveIea: SAVE_IEA
-    // }),
     showMailings() {
       this.$refs['mailing-manager'].init()
     },
     showPeopleRoles() {
       this.$refs['role-manager'].init()
     },
-    cancel() {
-      // this.configuration.reset(ADMIN_CONFIGS);
-      // this.information_ethics.reset();
+    showConfigs() {
+      this.$refs['configurations-manager'].init()
     },
-    save() {
-      // this.configuration.save(ADMIN_CONFIGS);
-      // this.saveIea(this.toastSuccessFailure('information ethics saved'))
+    showAgreements() {
+      this.$refs['agreements-manager'].init()
     }
-  },
-  mounted() {
-    // this.configuration.fetch();
-    // this.fetchIea();
   }
 }
 </script>

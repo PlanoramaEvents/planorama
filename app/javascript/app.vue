@@ -1,5 +1,6 @@
 <template>
   <div class="container-fluid">
+    <sign-agreements ref="agreement-signer"></sign-agreements>
     <div class="row">
       <top-navbar></top-navbar>
       <side-navbar v-if="loggedIn"></side-navbar>
@@ -16,18 +17,41 @@
 import TopNavbar from "./navbar/top-navbar.vue";
 import SideNavbar from "./navbar/side-navbar.vue";
 import BottomNavbar from "./navbar/bottom-navbar.vue";
-import sessionMixin from "./session/session.mixin";
+import personSessionMixin from "./auth/person_session.mixin";
+import SignAgreements from "./agreements/sign_agreements.vue";
+import settingsMixin from "@/store/settings.mixin";
+import { ValidationProvider, extend } from 'vee-validate';
+import { required, email, numeric } from 'vee-validate/dist/rules';
+
+extend('email', email);
+extend('numeric', numeric);
+
+// Override the default message.
+extend('required', {
+  ...required,
+  message: 'This field is required'
+});
 
 export default  {
   name: "PlanoramaApp",
   components: {
+    ValidationProvider,
     TopNavbar,
     SideNavbar,
     BottomNavbar,
+    SignAgreements
   },
-  mixins: [sessionMixin],
+  mixins: [personSessionMixin, settingsMixin],
+  methods: {
+    check_signatures() {
+      // TODO: @RALPH - this passes along the check signatures to the agreement signer ...
+      this.$refs['agreement-signer'].check_signatures()
+    }
+  }
 }
 </script>
+
+<!-- this.$refs['agreement-checker'].savePerson() -->
 
 <style lang="scss" scoped>
 

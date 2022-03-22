@@ -5,21 +5,21 @@ class SurveysPolicy < PlannerPolicy
   end
 
   def assign_people?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def unassign_people?
-    @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
-  # class Scope < Scope
-  #   def resolve
-  #     if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
-  #       Rails.logger.debug "**** ALL #{@person.id}"
-  #       scope.all
-  #     else
-  #       scope.where(id: @person.id)
-  #     end
-  #   end
-  # end
+  class Scope < Scope
+    def resolve
+      if @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+        # Rails.logger.debug "**** ALL #{@person.id}"
+        scope.all
+      else
+        scope.where(public: true)
+      end
+    end
+  end
 end

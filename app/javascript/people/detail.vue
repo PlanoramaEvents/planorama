@@ -98,7 +98,12 @@
         </b-form-group>
 
         <h2>Bio</h2>
-        <bio :bio="selected.bio"></bio>
+        <plano-editor
+          v-model="selected.bio"
+          type='classic'
+          :disabled="!editable"
+        ></plano-editor>
+
         <h2>Email Addresses</h2>
         <ul>
           <li v-for="email of selected.email_addresses" :key="email.id">
@@ -114,12 +119,12 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
-import Bio from './bio';
+import PlanoEditor from '@/components/plano_editor';
 
 export default {
   name: "Detail",
   components: {
-    Bio
+    PlanoEditor
   },
   mixins: [
     modelMixin

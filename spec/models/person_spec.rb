@@ -4,14 +4,13 @@ RSpec.describe Person, '#factories' do
     context 'person' do
         it 'creates a basic person' do
             person = create(:person)
-            expect(person.invite_status).to eq "not_set"
-            expect(person.acceptance_status).to eq "unknown"
+            expect(person.con_state).to eq "not_set"
             expect(person.email).to_not be_nil
             expect(person.opted_in).to be false
             expect(person.registered).to be false
             expect(person.can_share).to be false
-            expect(person.can_photo).to be false
-            expect(person.can_record).to be false
+            expect(person.can_photo).to eq "no"
+            expect(person.can_record).to eq "no"
         end
         it 'should not create a person with a name' do         #name should be a required field and non-blank
             expect { person = create(:person, name: '') }.to raise_error(ActiveRecord::RecordInvalid)

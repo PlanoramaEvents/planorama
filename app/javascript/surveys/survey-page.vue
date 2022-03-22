@@ -1,29 +1,48 @@
 <!-- CONVERTED -->
 <template>
-  <div class="scrollable">
-    <div class="survey-page" v-if="selectedPage">
-      <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
-      <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
-      <survey-question
-        v-for="q in selectedPageQuestions"
-        :key="q.id"
-        :question="q"
-        answerable
-        @nextPage="setNextPageId"
-      ></survey-question>
-      <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
-      <div class="d-flex justify-content-end mt-2">
-        <b-button variant="link" class="mr-1" v-if="!firstPage" @click="prev">Previous Page</b-button>
-        <div v-b-tooltip="{disabled: !submit_disabled}" :title="submit_disabled_tooltip">
-          <b-button
-            variant="primary"
-            v-if="(nextPageId === -1 || !nextPageId && lastPage) && !submitted"
-            @click="submit"
-            :disabled="submit_disabled"
-          >{{survey.submit_string || 'Submit'}}</b-button>
-        </div>
-        <b-button variant="primary" v-if="nextPageId !== -1 && !lastPage" @click="next" tabindex="1">Next Page</b-button>
+  <div>
+    <div class="scrollable" v-if="is_assigned">
+      <div class="survey-page" v-if="selectedPage">
+        <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
+        <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
+        <ValidationObserver v-slot="{ handleSubmit }">
+          <form @submit.prevent="handleSubmit(submit)">
+            <survey-question
+                v-for="q in selectedPageQuestions"
+                :key="q.id"
+                :question="q"
+                answerable
+                @nextPage="setNextPageId"
+
+            ></survey-question>
+            <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
+            <div class="d-flex justify-content-end mt-2">
+              <b-button variant="link" class="mr-1" v-if="!firstPage" @click="prev">Previous Page</b-button>
+              <div v-b-tooltip="{disabled: !submit_disabled}" :title="submit_disabled_tooltip">
+                <b-button
+                    variant="primary"
+                    type="submit"
+                    :disabled="submit_disabled"
+                    v-if="(nextPageId === -1 || !nextPageId && lastPage) && !submitted"
+                >{{survey.submit_string || 'Submit'}}</b-button>
+              </div>
+              <!-- NOTE: both next page and submit buttons use submit action
+                   so we can plugin validation. What happens (submit or next)
+                   is handled in the action
+              -->
+              <b-button
+                  variant="primary"
+                  v-if="nextPageId !== -1 && !lastPage"
+                  type="submit"
+                  tabindex="1"
+              >Next Page</b-button>
+            </div>
+          </form>
+        </ValidationObserver>
       </div>
+    </div>
+    <div v-else>
+      <h1>{{ SURVEY_NOT_ASSIGNED }}</h1>
     </div>
   </div>
 </template>
@@ -38,24 +57,33 @@ import {
   submissionMixin
 } from '@mixins';
 import { SET_PREVIEW_MODE } from '@/store/survey';
+import { ValidationObserver } from 'vee-validate';
+import personSessionMixin from '../auth/person_session.mixin';
+import {SURVEY_NOT_ASSIGNED} from "@/constants/strings";
 
 export default {
   name: "SurveyPage",
   props: ['id', 'preview'],
   data: () =>  ({
     submitted: false,
-    nextPageId: null
+    nextPageId: null,
+    SURVEY_NOT_ASSIGNED: SURVEY_NOT_ASSIGNED
   }),
   components: {
     SurveyQuestion,
+    ValidationObserver
   },
   mixins: [
     surveyMixin,
     pageMixin,
     surveyIdPropMixinSurveyId,
-    submissionMixin
+    submissionMixin,
+    personSessionMixin
   ],
   computed: {
+    is_assigned() {
+      return this.preview || this.currentUser.assigned_surveys[this.surveyId]!=undefined;
+    },
     next_page() {
       return `/surveys/${this.surveyId}/page/${this.nextPageId}${this.preview ? '/preview' : ''}`
     },
@@ -64,8 +92,8 @@ export default {
     },
     submit_disabled_tooltip() {
       return this.preview
-        ? "This is a preview of the survey. You cannot submit it."
-        : "You cannot submit an unpublished survey. Publish the survey to enable."
+          ? "This is a preview of the survey. You cannot submit it."
+          : "You cannot submit an unpublished survey. Publish the survey to enable."
     }
   },
   methods: {
@@ -73,12 +101,17 @@ export default {
       setPreviewMode: SET_PREVIEW_MODE
     }),
     submit() {
-      console.log("attempting to submit", this.selectedSubmission);
-      if(!this.submit_disabled) {
-        this.submitSelectedSubmission().then(() => {
-          this.submitted = true;
-          this.$router.push(`/surveys/${this.survey.id}/thankyou`);
-        })
+      if (this.nextPageId !== -1 && !this.lastPage) {
+        // this.$router.push(this.next_page);
+        this.next();
+      } else {
+        console.log("attempting to submit", this.selectedSubmission);
+        if(!this.submit_disabled) {
+          this.submitSelectedSubmission().then(() => {
+            this.submitted = true;
+            this.$router.push(`/surveys/${this.survey.id}/thankyou`);
+          })
+        }
       }
     },
     next() {
@@ -88,11 +121,11 @@ export default {
       this.$router.go(-1);
     },
     setNextPageId(id) {
-      console.debug('setting next page id to', id)
+      // console.debug('setting next page id to', id)
       if(!id) {
-        console.debug('attempting to get actual next page id')
+        // console.debug('attempting to get actual next page id')
         id = this.getNextPage(this.selectedPage.id)?.id;
-        console.debug('actual next page id:', id)
+        // console.debug('actual next page id:', id)
       }
       this.nextPageId = id;
     }
@@ -103,15 +136,15 @@ export default {
     next()
   },
   mounted() {
-    console.debug('mounting page...')
+    // console.debug('mounting page...')
     this.surveyLoadedPromise.then((surveyLoaded) => {
-      console.debug("i get here! and should have a survey", this.survey)
-      this.setPreviewMode(!!this.preview);
+      // console.debug("i get here! and should have a survey", this.survey)
+      // this.setPreviewMode(!!this.preview);
       if (surveyLoaded && !this.preview) {
         this.newSubmission({surveyId: this.surveyId});
       }
       if((!this.selectedPage && this.id) || (this.id && this.selectedPage.id != this.id)) {
-        console.debug("i am on the wrong page!")
+        // console.debug("i am on the wrong page!")
         this.selectPage(this.id);
       }
       this.setNextPageId(this.selectedPage.next_page_id);

@@ -4,7 +4,6 @@
 // that code so it'll be compiled.
 
 require("@rails/ujs").start()
-// require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
 // TODO do we need this twice?
@@ -19,6 +18,8 @@ import 'bootstrap/dist/js/bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+import 'vue-select/dist/vue-select.css';
 
 import '../stylesheets/custom.scss'
 import '../stylesheets/style.scss'

@@ -38,8 +38,8 @@ class SurveysController < ResourceController
     [
       :pages,
       :'pages.questions',
-      :'pages.questions.answers',
-      :submissions
+      :'pages.questions.answers'
+      # :submissions
       # :created_by,
       # :updated_by,
       # :published_by
@@ -53,17 +53,18 @@ class SurveysController < ResourceController
           questions: :answers
         }
       },
-      :submissions,
-      :created_by,
-      :updated_by,
-      :published_by,
+      # :submissions,
+      # :created_by,
+      # :updated_by,
+      # :published_by,
       :assigned_people
     ]
   end
 
   def references
     [
-      :assigned_people
+      :assigned_people,
+      :submissions
     ]
   end
 
@@ -95,7 +96,7 @@ class SurveysController < ResourceController
   def check_for_publish
     # check if going to be published
     # If we are going to publish then public is set to true
-    return unless permitted_params[:public]
+    return unless permitted_params['public']
     # If it was not already published the old value would be false
     return if @object.public
 

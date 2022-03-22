@@ -22,16 +22,16 @@ export const responseMixin = {
       let existingResponses = this.$store.getters['jv/get']({_jv: {
         type: model,
       }}, `$[?(@.question.id=='${relationships.question.data.id}' && @.submission.id=='${relationships.submission.data.id}')]`)
-      console.log('existing responses', existingResponses)
+      // console.log('existing responses', existingResponses)
       return Object.values(existingResponses)[0]
     },
     getResponse(question, selectedSubmission) {
-      console.debug('getting response...')
+      // console.debug('getting response...')
       if (!question || !selectedSubmission) {
-        console.debug('missing one of question or selectedSubmission', this.question, this.selectedSubmission)
+        // console.debug('missing one of question or selectedSubmission', this.question, this.selectedSubmission)
         return undefined;
       }
-      console.debug("now i have both", this.question, this.selectedSubmission)
+      // console.debug("now i have both", this.question, this.selectedSubmission)
       let relationships = {
         question: {
           data: {
@@ -51,7 +51,7 @@ export const responseMixin = {
         return utils.deepCopy(existingResponse)
       }
       // if there's not one, create a new one
-      console.debug("getting a new response")
+      // console.debug("getting a new response")
       this.newResponse({relationships});
       return utils.deepCopy(this.getExistingResponse(relationships))
     },

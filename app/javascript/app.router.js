@@ -17,17 +17,23 @@ import AdminComponent from './administration/admin_component.vue';
 // people
 import PeopleScreen from './people/people-screen.vue';
 
+// profile
+import ProfileScreen from './profile/profile-screen.vue';
+
+//
+import ScheduleScreen from './sessions/schedule-screen.vue';
+
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
 import SurveyList from './surveys/survey-list.vue';
-import EditSurvey from './surveys/edit-survey.vue';
+import ManageSurvey from './surveys/manage-survey.vue';
 import TakeSurvey from './surveys/take-survey.vue';
 import SurveyPage from './surveys/survey-page.vue';
 import SurveyThankYou from './surveys/survey-thank-you.vue';
 
 const surveyRoutes = [
-  { path: 'edit/:id/:responses', component: EditSurvey, props: true},
-  { path: 'edit/:id', component: EditSurvey, props: true },
+  { path: 'edit/:id/:responses', component: ManageSurvey, props: true},
+  { path: 'edit/:id', component: ManageSurvey, props: true },
   { path: ':surveyId/page/:id/:preview', component: SurveyPage, props: true},
   { path: ':surveyId/page/:id', component: SurveyPage, props: true},
   { path: ':id/thankyou', component: SurveyThankYou, props: true},
@@ -44,7 +50,10 @@ import Dashboard from './dashboard/dashboard.vue';
 // main
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import { GET_SESSION_USER } from './store/person_session.store';
 Vue.use(VueRouter);
+// var ua='', signed_agreements={}, doing_agreements=false;
+var roles=[], isAdmin=false, hasPowers=false;
 
 export const router = new VueRouter({
   routes: [
@@ -57,17 +66,38 @@ export const router = new VueRouter({
       },
       props: route => ({ redirect: route.query.redirect })
     },
+    // {
+    //   path: '/agreements',
+    //   component: Agreements,
+    //   meta: {
+    //     // requiresAuth: true
+    //   }
+    // },
     {
       path: '/admin',
       component: AdminComponent,
       meta: {
         requiresAuth: true,
-        is_admin : true
+        requiresAdmin : true
       }
     },
     {
       path: '/people',
       component: PeopleScreen,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/profile',
+      component: ProfileScreen,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/schedule',
+      component: ScheduleScreen,
       meta: {
         requiresAuth: true
       }
@@ -96,52 +126,47 @@ export const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // check if logged in
-    // if not, redirect to login page.
-    // Get the session from the store and use that to check
-    let session = router.app.$store.getters.currentSession
-    console.debug('**** Session: ', session )
-    if (!session.id) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
-    } else {
-      next()
-    }
+    // GET SESSION USER only fetches if we don't have one :)
+    // TODO this might mess up auto-logout we'll see
+    router.app.$store.dispatch(GET_SESSION_USER).then((session) => {
+      if (!session.id) {
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        })
+      } else {
+        if(roles.length==0) {
+          // todo clean up side effect assignments
+          roles = Object.values(session.convention_roles).map(v => {
+            isAdmin = v.role === "admin";
+            hasPowers = isAdmin || v.role === "staff";
+            return v.role;
+          })
+        }
+        if(to.meta.requiresAdmin && !isAdmin) {
+          console.debug("not admin, sending to /profile");
+          next({
+            path: '/profile',
+            query: { redirect: to.fullPath }
+          })
+        } else if(to.meta.requiresPowers && !hasPowers) {
+          console.debug("no powers, sending to /profile");
+          next({
+            path: '/profile',
+            query: { redirect: to.fullPath }
+          })
+        } else {
+          router.app.$refs.planorama.check_signatures()
+          next()
+        }
+      }
+    }).catch((error) => {
+      console.error(error)
+      next();
+    })
+
+
   } else {
     next() // make sure to always call next()!
   }
 })
-
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     if (localStorage.getItem('jwt') == null) {
-//       next({
-//         path: '/login',
-//         params: { nextUrl: to.fullPath }
-//       })
-//     } else {
-//       let user = JSON.parse(localStorage.getItem('user'))
-//       if (to.matched.some(record => record.meta.is_admin)) {
-//         if (user.is_admin == 1) {
-//           next()
-//         } else {
-//           next({ name: 'userboard' })
-//         }
-//       } else {
-//         next()
-//       }
-//     }
-//   } else if (to.matched.some(record => record.meta.guest)) {
-//     if (localStorage.getItem('jwt') == null) {
-//       next()
-//     } else {
-//       next({ name: 'userboard' })
-//     }
-//   } else {
-//     next()
-//   }
-// })
-
-// export router

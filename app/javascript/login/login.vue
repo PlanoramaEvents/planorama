@@ -23,7 +23,7 @@
         <b-button type="submit" variant="primary" class="px-5">Log In</b-button>
       </div>
     </b-form>
-    <iea-modal @cancel="onIeaCancel" @ok="onIeaAgree"></iea-modal>
+    <!--iea-modal @cancel="onIeaCancel" @ok="onIeaAgree"></iea-modal-->
   </div>
 </template>
 
@@ -35,7 +35,7 @@ import IeaModal from './iea-modal';
 import axios from 'axios';
 import {
   authMixin,
-  sessionMixin
+  personSessionMixin
 } from '@mixins';
 
 import { validateFields } from "@/utils";
@@ -86,7 +86,7 @@ export default {
     PrivacyPolicyLink,
     IeaModal,
   },
-  mixins: [authMixin, sessionMixin],
+  mixins: [authMixin, personSessionMixin],
   mounted: function () {
     if (this.$route.query.alert) {
       switch (this.$route.query.alert) {

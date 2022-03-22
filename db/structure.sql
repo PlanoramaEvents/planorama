@@ -40,6 +40,8 @@ CREATE TYPE public.acceptance_status_enum AS ENUM (
 --
 
 CREATE TYPE public.agreement_target AS ENUM (
+    'none',
+    'participant',
     'member',
     'staff',
     'all'
@@ -53,6 +55,28 @@ CREATE TYPE public.agreement_target AS ENUM (
 CREATE TYPE public.assignment_role_enum AS ENUM (
     'participant',
     'staff'
+);
+
+
+--
+-- Name: convention_role_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.convention_role_enum AS ENUM (
+    'admin',
+    'staff',
+    'participant'
+);
+
+
+--
+-- Name: interest_role_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.interest_role_enum AS ENUM (
+    'no_preference',
+    'can_moderate',
+    'not_moderate'
 );
 
 
@@ -127,6 +151,23 @@ CREATE TYPE public.person_role AS ENUM (
 
 
 --
+-- Name: person_status_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.person_status_enum AS ENUM (
+    'not_set',
+    'applied',
+    'vetted',
+    'invite_pending',
+    'invited',
+    'probable',
+    'accepted',
+    'declined',
+    'rejected'
+);
+
+
+--
 -- Name: phone_type_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -159,9 +200,37 @@ CREATE TYPE public.visibility_enum AS ENUM (
 );
 
 
+--
+-- Name: yesnomaybe_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.yesnomaybe_enum AS ENUM (
+    'yes',
+    'no',
+    'maybe'
+);
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: action_permissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.action_permissions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    mdl_name character varying,
+    action character varying,
+    allowed boolean DEFAULT false,
+    person_role_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    action_scope character varying
+);
+
 
 --
 -- Name: agreements; Type: TABLE; Schema: public; Owner: -
@@ -177,7 +246,8 @@ CREATE TABLE public.agreements (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    target public.agreement_target
+    target public.agreement_target,
+    description character varying(10000) DEFAULT NULL::character varying
 );
 
 
@@ -190,6 +260,20 @@ CREATE TABLE public.ar_internal_metadata (
     value character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.areas (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    sort_order integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -304,6 +388,20 @@ CREATE TABLE public.conflict_exceptions (
 
 
 --
+-- Name: convention_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.convention_roles (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    role public.convention_role_enum
+);
+
+
+--
 -- Name: email_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -316,7 +414,8 @@ CREATE TABLE public.email_addresses (
     lock_version integer DEFAULT 0,
     label character varying,
     person_id uuid,
-    is_valid boolean DEFAULT true NOT NULL
+    is_valid boolean DEFAULT true NOT NULL,
+    iscontact boolean DEFAULT false
 );
 
 
@@ -416,9 +515,9 @@ CREATE TABLE public.mailings (
     content text,
     survey_id uuid,
     date_sent timestamp without time zone,
-    transiton_invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
     description text,
-    sent_by_id uuid
+    sent_by_id uuid,
+    transiton_person_status public.person_status_enum
 );
 
 
@@ -428,7 +527,8 @@ CREATE TABLE public.mailings (
 
 CREATE TABLE public.parameter_names (
     parameter_name character varying(45) NOT NULL,
-    parameter_description character varying(170) NOT NULL
+    parameter_description character varying(170) NOT NULL,
+    parameter_type character varying DEFAULT 'String'::character varying
 );
 
 
@@ -450,14 +550,10 @@ CREATE TABLE public.people (
     gender character varying(100),
     ethnicity character varying(100),
     opted_in boolean DEFAULT false NOT NULL,
-    invite_status public.invite_status_enum DEFAULT 'not_set'::public.invite_status_enum,
-    acceptance_status public.acceptance_status_enum DEFAULT 'unknown'::public.acceptance_status_enum,
     registered boolean DEFAULT false NOT NULL,
     registration_type character varying,
     can_share boolean DEFAULT false NOT NULL,
     registration_number character varying,
-    can_photo boolean DEFAULT false NOT NULL,
-    can_record boolean DEFAULT false,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
@@ -489,7 +585,40 @@ END) STORED,
 CASE
     WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
     ELSE name_sort_by
-END) STORED
+END) STORED,
+    bio text,
+    website character varying,
+    twitter character varying,
+    othersocialmedia character varying,
+    facebook character varying,
+    linkedin character varying,
+    twitch character varying,
+    youtube character varying,
+    instagram character varying,
+    flickr character varying,
+    reddit character varying,
+    tiktok character varying,
+    can_stream public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    can_record public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    can_photo public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    age_at_convention character varying,
+    romantic_sexual_orientation character varying,
+    needs_accommodations boolean DEFAULT false,
+    accommodations character varying(10000) DEFAULT NULL::character varying,
+    willing_to_moderate boolean DEFAULT false,
+    moderation_experience character varying(10000) DEFAULT NULL::character varying,
+    othered character varying(10000) DEFAULT NULL::character varying,
+    indigenous character varying(10000) DEFAULT NULL::character varying,
+    black_diaspora character varying(10000) DEFAULT NULL::character varying,
+    non_us_centric_perspectives character varying(10000) DEFAULT NULL::character varying,
+    demographic_categories character varying,
+    do_not_assign_with character varying(10000) DEFAULT NULL::character varying,
+    can_stream_exceptions character varying(10000) DEFAULT NULL::character varying,
+    can_record_exceptions character varying(10000) DEFAULT NULL::character varying,
+    can_photo_exceptions character varying(10000) DEFAULT NULL::character varying,
+    is_local boolean DEFAULT false,
+    languages_fluent_in character varying(10000) DEFAULT NULL::character varying,
+    con_state public.person_status_enum DEFAULT 'not_set'::public.person_status_enum
 );
 
 
@@ -549,75 +678,28 @@ CREATE TABLE public.person_mailing_assignments (
 
 
 --
+-- Name: person_role_assocs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_role_assocs (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    person_role_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: person_roles; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.person_roles (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    role public.person_role
-);
-
-
---
--- Name: programme_assignment_role_type; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.programme_assignment_role_type (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    lock_version integer DEFAULT 0,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    name character varying(100) NOT NULL,
-    role_type public.assignment_role_enum,
-    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
-);
-
-
---
--- Name: programme_assignments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.programme_assignments (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    programme_assignment_role_type_id uuid NOT NULL,
-    programme_item_id uuid NOT NULL,
-    sort_order integer,
-    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
-);
-
-
---
--- Name: programme_items; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.programme_items (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    duration integer,
-    minimum_people integer,
-    maximum_people integer,
-    item_notes text,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    lock_version integer DEFAULT 0,
-    format_id uuid,
-    pub_reference_number integer,
-    mobile_card_size integer DEFAULT 1 NOT NULL,
-    audience_size integer,
-    participant_notes text,
-    is_break boolean DEFAULT false,
-    description text,
-    title character varying(256),
-    start_time timestamp without time zone,
-    room_id uuid,
-    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
-    publish boolean DEFAULT false NOT NULL
+    can_access_sensitive_data boolean DEFAULT false
 );
 
 
@@ -651,16 +733,16 @@ CREATE TABLE public.publication_statuses (
 
 
 --
--- Name: published_programme_assignments; Type: TABLE; Schema: public; Owner: -
+-- Name: published_session_assignments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.published_programme_assignments (
-    programme_assignment_id uuid NOT NULL,
-    programme_item_id uuid NOT NULL,
+CREATE TABLE public.published_session_assignments (
+    session_assignment_id uuid NOT NULL,
+    published_session_id uuid NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    programme_assignment_role_type_id uuid NOT NULL,
+    session_assignment_role_type_id uuid NOT NULL,
     person_id uuid NOT NULL,
     sort_order integer,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
@@ -668,11 +750,11 @@ CREATE TABLE public.published_programme_assignments (
 
 
 --
--- Name: published_programme_items; Type: TABLE; Schema: public; Owner: -
+-- Name: published_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.published_programme_items (
-    programme_item_id uuid NOT NULL,
+CREATE TABLE public.published_sessions (
+    session_id uuid NOT NULL,
     title character varying,
     duration integer,
     created_at timestamp without time zone NOT NULL,
@@ -686,7 +768,9 @@ CREATE TABLE public.published_programme_items (
     description text,
     start_time timestamp without time zone,
     room_id uuid,
-    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
+    require_signup boolean DEFAULT false,
+    waiting_list_size integer DEFAULT 0
 );
 
 
@@ -718,6 +802,90 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: session_areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_areas (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    session_id uuid,
+    area_id uuid,
+    "primary" boolean,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_assignment_role_type (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    lock_version integer DEFAULT 0,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    name character varying(100) NOT NULL,
+    role_type public.assignment_role_enum,
+    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
+);
+
+
+--
+-- Name: session_assignments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_assignments (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    lock_version integer DEFAULT 0,
+    session_assignment_role_type_id uuid,
+    session_id uuid NOT NULL,
+    sort_order integer,
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
+    interested boolean DEFAULT false,
+    interest_ranking integer,
+    interest_notes text,
+    state character varying,
+    planner_notes text,
+    interest_role public.interest_role_enum DEFAULT 'no_preference'::public.interest_role_enum
+);
+
+
+--
+-- Name: sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sessions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    duration integer,
+    minimum_people integer,
+    maximum_people integer,
+    item_notes text,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    lock_version integer DEFAULT 0,
+    format_id uuid,
+    pub_reference_number integer,
+    audience_size integer,
+    participant_notes text,
+    is_break boolean DEFAULT false,
+    description text,
+    title character varying(256),
+    start_time timestamp without time zone,
+    room_id uuid,
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
+    publish boolean DEFAULT false NOT NULL,
+    require_signup boolean DEFAULT false,
+    waiting_list_size integer DEFAULT 0,
+    open_for_interest boolean DEFAULT false,
+    instructions_for_interest text
+);
+
+
+--
 -- Name: survey_answers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -732,7 +900,8 @@ CREATE TABLE public.survey_answers (
     sort_order integer,
     next_page_id uuid,
     other boolean DEFAULT false,
-    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum
+    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum,
+    value character varying
 );
 
 
@@ -845,7 +1014,9 @@ CREATE TABLE public.survey_questions (
     regex character varying,
     page_id uuid,
     randomize boolean DEFAULT false,
-    branching boolean DEFAULT false
+    branching boolean DEFAULT false,
+    linked_field text,
+    deleted_at timestamp without time zone
 );
 
 
@@ -896,8 +1067,6 @@ CREATE TABLE public.surveys (
     submit_string character varying DEFAULT 'Save'::character varying,
     use_captcha boolean DEFAULT false,
     public boolean,
-    transition_accept_status public.acceptance_status_enum,
-    transition_decline_status public.acceptance_status_enum,
     declined_msg text,
     authenticate_msg text,
     anonymous boolean DEFAULT false,
@@ -909,7 +1078,9 @@ CREATE TABLE public.surveys (
     mandatory_star boolean DEFAULT true,
     numbered_questions boolean DEFAULT false,
     branded boolean DEFAULT true,
-    allow_submission_edits boolean DEFAULT true
+    allow_submission_edits boolean DEFAULT true,
+    transition_accept_status public.person_status_enum,
+    transition_decline_status public.person_status_enum
 );
 
 
@@ -932,10 +1103,10 @@ CREATE TABLE public.tag_contexts (
 --
 
 CREATE TABLE public.taggings (
-    id integer NOT NULL,
-    tag_id integer,
-    taggable_id integer,
-    tagger_id integer,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    tag_id uuid,
+    taggable_id uuid,
+    tagger_id uuid,
     tagger_type character varying(191),
     taggable_type character varying(191),
     context character varying(191),
@@ -944,54 +1115,14 @@ CREATE TABLE public.taggings (
 
 
 --
--- Name: taggings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.taggings_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: taggings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.taggings_id_seq OWNED BY public.taggings.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.tags (
-    id integer NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying(191),
     taggings_count integer DEFAULT 0
 );
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.tags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
@@ -1057,24 +1188,18 @@ ALTER TABLE ONLY public.survey_formats ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
--- Name: taggings id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.taggings ALTER COLUMN id SET DEFAULT nextval('public.taggings_id_seq'::regclass);
-
-
---
--- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
-
-
---
 -- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
+
+
+--
+-- Name: action_permissions action_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.action_permissions
+    ADD CONSTRAINT action_permissions_pkey PRIMARY KEY (id);
 
 
 --
@@ -1091,6 +1216,14 @@ ALTER TABLE ONLY public.agreements
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: areas areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.areas
+    ADD CONSTRAINT areas_pkey PRIMARY KEY (id);
 
 
 --
@@ -1131,6 +1264,14 @@ ALTER TABLE ONLY public.configurations
 
 ALTER TABLE ONLY public.conflict_exceptions
     ADD CONSTRAINT conflict_exceptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: convention_roles convention_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.convention_roles
+    ADD CONSTRAINT convention_roles_pkey PRIMARY KEY (id);
 
 
 --
@@ -1222,6 +1363,14 @@ ALTER TABLE ONLY public.person_mailing_assignments
 
 
 --
+-- Name: person_role_assocs person_role_assocs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_role_assocs
+    ADD CONSTRAINT person_role_assocs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: person_roles person_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1230,26 +1379,26 @@ ALTER TABLE ONLY public.person_roles
 
 
 --
--- Name: programme_assignment_role_type programme_assignment_role_type_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: session_assignment_role_type programme_assignment_role_type_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.programme_assignment_role_type
+ALTER TABLE ONLY public.session_assignment_role_type
     ADD CONSTRAINT programme_assignment_role_type_pkey PRIMARY KEY (id);
 
 
 --
--- Name: programme_assignments programme_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: session_assignments programme_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.programme_assignments
+ALTER TABLE ONLY public.session_assignments
     ADD CONSTRAINT programme_assignments_pkey PRIMARY KEY (id);
 
 
 --
--- Name: programme_items programme_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: sessions programme_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.programme_items
+ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT programme_items_pkey PRIMARY KEY (id);
 
 
@@ -1270,19 +1419,19 @@ ALTER TABLE ONLY public.publication_statuses
 
 
 --
--- Name: published_programme_assignments published_programme_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: published_session_assignments published_programme_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.published_programme_assignments
-    ADD CONSTRAINT published_programme_assignments_pkey PRIMARY KEY (programme_assignment_id);
+ALTER TABLE ONLY public.published_session_assignments
+    ADD CONSTRAINT published_programme_assignments_pkey PRIMARY KEY (session_assignment_id);
 
 
 --
--- Name: published_programme_items published_programme_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: published_sessions published_programme_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.published_programme_items
-    ADD CONSTRAINT published_programme_items_pkey PRIMARY KEY (programme_item_id);
+ALTER TABLE ONLY public.published_sessions
+    ADD CONSTRAINT published_programme_items_pkey PRIMARY KEY (session_id);
 
 
 --
@@ -1299,6 +1448,14 @@ ALTER TABLE ONLY public.rooms
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: session_areas session_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session_areas
+    ADD CONSTRAINT session_areas_pkey PRIMARY KEY (id);
 
 
 --
@@ -1470,6 +1627,13 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
+-- Name: index_action_permissions_on_mdl_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_action_permissions_on_mdl_name ON public.action_permissions USING btree (mdl_name);
+
+
+--
 -- Name: index_agreements_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1488,6 +1652,20 @@ CREATE INDEX index_agreements_on_target ON public.agreements USING btree (target
 --
 
 CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree (updated_by_id);
+
+
+--
+-- Name: index_areas_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_areas_on_name ON public.areas USING btree (name);
+
+
+--
+-- Name: index_convention_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_convention_roles_on_person_id ON public.convention_roles USING btree (person_id);
 
 
 --
@@ -1582,31 +1760,38 @@ CREATE INDEX index_person_mailing_assignments_on_person_id ON public.person_mail
 
 
 --
--- Name: index_person_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_person_role_assocs_on_person_id_and_person_role_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_person_roles_on_person_id ON public.person_roles USING btree (person_id);
-
-
---
--- Name: index_person_roles_on_role; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_person_roles_on_role ON public.person_roles USING btree (role);
+CREATE UNIQUE INDEX index_person_role_assocs_on_person_id_and_person_role_id ON public.person_role_assocs USING btree (person_id, person_role_id);
 
 
 --
 -- Name: index_published_programme_item_assignments_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_published_programme_item_assignments_on_person_id ON public.published_programme_assignments USING btree (person_id);
+CREATE INDEX index_published_programme_item_assignments_on_person_id ON public.published_session_assignments USING btree (person_id);
 
 
 --
--- Name: index_published_programme_items_on_format_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_published_sessions_on_format_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_published_programme_items_on_format_id ON public.published_programme_items USING btree (format_id);
+CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions USING btree (format_id);
+
+
+--
+-- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_session_areas_on_session_id_and_area_id ON public.session_areas USING btree (session_id, area_id);
+
+
+--
+-- Name: index_session_assignments_on_interest_role; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_session_assignments_on_interest_role ON public.session_assignments USING btree (interest_role);
 
 
 --
@@ -1736,38 +1921,31 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 
 --
--- Name: parameter_description_UNIQUE; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX "parameter_description_UNIQUE" ON public.parameter_names USING btree (parameter_description);
-
-
---
 -- Name: pia_person_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX pia_person_index ON public.programme_assignments USING btree (person_id);
+CREATE INDEX pia_person_index ON public.session_assignments USING btree (person_id);
 
 
 --
 -- Name: pis_prog_item_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX pis_prog_item_id_index ON public.programme_assignments USING btree (programme_item_id);
+CREATE INDEX pis_prog_item_id_index ON public.session_assignments USING btree (session_id);
 
 
 --
 -- Name: pub_progitem_assignment_item_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX pub_progitem_assignment_item_index ON public.published_programme_assignments USING btree (programme_item_id);
+CREATE INDEX pub_progitem_assignment_item_index ON public.published_session_assignments USING btree (published_session_id);
 
 
 --
 -- Name: pub_progitem_assignment_person_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX pub_progitem_assignment_person_index ON public.published_programme_assignments USING btree (person_id);
+CREATE INDEX pub_progitem_assignment_person_index ON public.published_session_assignments USING btree (person_id);
 
 
 --
@@ -1839,14 +2017,6 @@ ALTER TABLE ONLY public.survey_responses
 
 
 --
--- Name: person_roles fk_rails_8139558243; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_roles
-    ADD CONSTRAINT fk_rails_8139558243 FOREIGN KEY (person_id) REFERENCES public.people(id);
-
-
---
 -- Name: survey_pages fk_rails_c9027d3929; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1891,9 +2061,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210620175724'),
 ('20210620180746'),
 ('20210626162611'),
-('20210627143358'),
 ('20210627225348'),
-('20210628120942'),
 ('20210628221900'),
 ('20210629220733'),
 ('20210702202436'),
@@ -1909,7 +2077,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210712134642'),
 ('20210716142413'),
 ('20210717191036'),
-('20210811135617'),
 ('20210819204542'),
 ('20210925131929'),
 ('20211101160001'),
@@ -1921,6 +2088,32 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211207192534'),
 ('20211207192624'),
 ('20211213180751'),
-('20220109171844');
+('20220109171844'),
+('20220119205413'),
+('20220120202502'),
+('20220123161611'),
+('20220123162740'),
+('20220124181524'),
+('20220127213449'),
+('20220131184003'),
+('20220201191402'),
+('20220202144414'),
+('20220208222821'),
+('20220209153904'),
+('20220213221552'),
+('20220217233651'),
+('20220301184226'),
+('20220301221956'),
+('20220303154559'),
+('20220303175111'),
+('20220303175113'),
+('20220303175135'),
+('20220309183902'),
+('20220312172347'),
+('20220316150515'),
+('20220317222958'),
+('20220320194817'),
+('20220320225237'),
+('20220321144540');
 
 

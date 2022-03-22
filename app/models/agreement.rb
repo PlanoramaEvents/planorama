@@ -1,5 +1,5 @@
 class Agreement < ApplicationRecord
-  enum target: { member: 'member', staff: 'staff', all: 'all' }, _suffix: true
+  enum target: { none: 'none', participant: 'participant', staff: 'staff', all: 'all' }, _suffix: true
 
   has_many  :person_agreements
   has_many  :people, through: :person_agreements
@@ -8,17 +8,17 @@ class Agreement < ApplicationRecord
   def self.unsigned(person:)
     raise 'Person needed to list agreements' unless person
 
-    scoping = Agreement.targets[:staff] if person.staff?
-    scoping = Agreement.targets[:member] if person.member? || person.no_role?
+    scoping = Agreement.targets[:staff] if person.staff? || person.admin?
+    scoping = Agreement.targets[:participant] if person.participant? || person.no_group?
 
     where(
       [
-        "agreements.id not in (select agreement_id from person_agreements where person_id = ?)",
+        "agreements.id not in (select agreement_id from person_agreements where person_id = ? and signed = true)",
         person.id
       ]
     )
     .where(
-      ['target in (?)', [scoping, Agreement.targets[:all]]]
+      ['target in (?)', [scoping, Agreement.targets[:all]].compact]
     )
   end
 
@@ -28,7 +28,7 @@ class Agreement < ApplicationRecord
 
     left_outer_joins(:person_agreements)
       .where(
-        ['person_agreements.person_id = ?', person.id]
+        ['person_agreements.person_id = ? and signed = true', person.id]
       )
   end
 
@@ -38,7 +38,8 @@ class Agreement < ApplicationRecord
     agreements = Agreement.arel_table
 
     window = Arel::Nodes::Window.new.partition(
-              agreements[:target]
+              agreements[:target],
+              agreements[:agreement_type]
             ).order(agreements[:created_at].desc)
 
     row_number = Arel::Nodes::NamedFunction.new('row_number', [])

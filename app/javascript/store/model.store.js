@@ -24,19 +24,51 @@ export const PATCH_FIELDS = 'PATCH FIELDS';
 // people add-ons
 import { personStore, personEndpoints } from './person.store';
 
+// agreement add-ons
+import { agreementStore, agreementEndpoints } from './agreement.store';
+
 // mailings
 import { mailingStore, mailingEndpoints } from './mailing.store';
 
+// settings
+import { settingsStore } from "@/store/settings.store";
+
+import { searchStateStore } from "@/store/search_state.store";
+
 // session add-ons
-import { sessionStore } from './session.store';
+import { personSessionStore } from './person_session.store';
 
 // survey add-ons
+import { surveyModel } from './survey/survey.model';
 import { surveyStore, surveyEndpoints } from './survey/survey.store';
+
+// session add-ons
+import { sessionStore, sessionEndpoints } from './session.store';
+
+// area add-ons
+import { areaStore, areaEndpoints } from './area.store';
+
+// tag add-ons
+import { tagStore, tagEndpoints } from './tag.store';
+
+// Parameters and Configs
+import { parameterNameStore, parameterNameEndpoints } from './parameter_name.store';
+import { configurationStore, configurationEndpoints } from './configuration.store';
+
+// session add-ons
+import { sessionAssignmentStore, sessionAssignmentEndpoints } from './session_assignment.store';
 
 const endpoints = {
   ...personEndpoints,
+  ...agreementEndpoints,
   ...surveyEndpoints,
-  ...mailingEndpoints
+  ...mailingEndpoints,
+  ...sessionEndpoints,
+  ...areaEndpoints,
+  ...tagEndpoints,
+  ...sessionAssignmentEndpoints,
+  ...parameterNameEndpoints,
+  ...configurationEndpoints
 }
 
 // NOTE: this is really the store
@@ -58,25 +90,54 @@ export const store = new Vuex.Store({
   state: {
     selected: {
       ...personStore.selected,
+      ...agreementStore.selected,
       ...surveyStore.selected,
-      ...mailingStore.selected
+      ...mailingStore.selected,
+      ...sessionStore.selected,
+      ...areaStore.selected,
+      ...tagStore.selected,
+      ...sessionAssignmentStore.selected,
+      ...parameterNameStore.selected,
+      ...configurationStore.selected
     },
-    ...sessionStore.state,
+    ...personSessionStore.state,
+    ...settingsStore.state,
     ...surveyStore.state,
+    ...searchStateStore.state
     // ...mailingStore.state
   },
   getters: {
     [SELECTED] (state, getters) {
       return ({model}) => {
         if (!state.selected[model]) return undefined;
-        return utils.deepCopy(getters['jv/get']({_jv: {id: state.selected[model], type: model}}))
+
+        let res = getters['jv/get']({_jv: {id: state.selected[model], type: model}})
+        if (model === surveyModel) {
+          // Deepcopy is a problem for surveys ... so we only do on the select of individual component ...
+          // need to also deep copy selected survey when we edit it's attributes.... how????
+          return res
+        } else {
+          // console.debug('**** DEEP COPY ....', model)
+          return utils.deepCopy(res)
+        }
       }
     },
     ...personStore.getters,
+    ...agreementStore.getters,
     ...surveyStore.getters,
+    ...personSessionStore.getters,
+    ...mailingStore.getters,
     ...sessionStore.getters,
-    ...mailingStore.getters
+    ...areaStore.getters,
+    ...tagStore.getters,
+    ...sessionAssignmentStore.getters,
+    ...parameterNameStore.getters,
+    ...configurationStore.getters,
+    ...searchStateStore.getters
   },
+  plugins: [
+    ...surveyStore.plugins
+  ],
   mutations: {
     [SELECT] (state, {model, itemOrId}) {
       state.selected[model] = getId(itemOrId);
@@ -84,8 +145,13 @@ export const store = new Vuex.Store({
     [UNSELECT] (state, {model}) {
       state.selected[model] = undefined;
     },
-    ...sessionStore.mutations,
+    [CLEAR] (state, {model}) {
+      this.commit('jv/clearRecords', { _jv: { type: model } })
+    },
+    ...personSessionStore.mutations,
+    ...settingsStore.mutations,
     ...surveyStore.mutations,
+    ...searchStateStore.mutations
   },
   actions: {
     /**
@@ -93,7 +159,7 @@ export const store = new Vuex.Store({
      * right now it only works on one to many
      */
     [PATCH_RELATED] ({dispatch}, {item, parentRelName, childIdName}) {
-      let relId = item?.id
+      let relId = item?._jv?.id
       let rels = item?._jv?.relationships?.[parentRelName]?.data
       if(!rels || !rels.length) {
         // no relationships found, what to do here? returning true for now
@@ -133,7 +199,7 @@ export const store = new Vuex.Store({
     [SAVE] ({commit, dispatch}, {model, selected = true, item, params}) {
       if(item._jv) {
         if(!item._jv.type) {
-          type = model
+          _jv.type = model
         }
       }
       else {
@@ -164,12 +230,17 @@ export const store = new Vuex.Store({
     [SEARCH] ({dispatch}, {model, params}) {
       return dispatch('jv/search', [endpoints[model], {params}])
     },
-    [FETCH] ({dispatch}, {model, params}) {
-      return dispatch('jv/get', [endpoints[model], {params}])
+    // need a way to override the default URL
+    [FETCH] ({dispatch}, {model, url = null, params}) {
+      if (url) {
+        return dispatch('jv/get', [url, {params}])
+      } else {
+        return dispatch('jv/get', [endpoints[model], {params}])
+      }
     },
-    [CLEAR] ({dispatch}, {model}) {
-      this.commit('jv/clearRecords', { _jv: { type: model } })
-    },
+    // [CLEAR] ({dispatch}, {model}) {
+    //   this.commit('jv/clearRecords', { _jv: { type: model } })
+    // },
     [FETCH_BY_RELATIONSHIPS] ({dispatch}, {model, relationships, params}) {
       return dispatch('jv/get', [{_jv: {
         type: model,
@@ -207,9 +278,18 @@ export const store = new Vuex.Store({
         }).catch(rej);
       });
     },
+    ...personSessionStore.actions,
     ...sessionStore.actions,
     ...surveyStore.actions,
     ...personStore.actions,
-    ...mailingStore.actions
+    ...agreementStore.actions,
+    ...mailingStore.actions,
+    ...settingsStore.actions,
+    ...searchStateStore.actions,
+    ...areaStore.actions,
+    ...tagStore.actions,
+    ...sessionAssignmentStore.actions,
+// actions not defined    ...parameterNameStore.actions,
+    ...configurationStore.actions
   }
 })

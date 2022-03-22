@@ -24,7 +24,8 @@ class SurveySerializer
            }
 
   has_many :submissions,
-           serializer: Survey::SubmissionSerializer,
+           # serializer: Survey::SubmissionSerializer,
+           lazy_load_data: true,
            links: {
              self: -> (object, params) {
                "#{params[:domain]}/survey/#{object.id}"
