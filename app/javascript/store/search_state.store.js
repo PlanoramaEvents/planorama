@@ -13,9 +13,8 @@ export const searchStateStore = {
   },
   getters: {
     // Get the search state
-    // For some reason this is not seen as a getter
     [GET_SEARCH_STATE]: (state) => (key) => {
-      console.debug("** GET ", key)
+      // console.debug("** GET ", key)
       return state.currentSearchSettings[key]
     }
   },

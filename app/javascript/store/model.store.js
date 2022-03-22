@@ -132,7 +132,8 @@ export const store = new Vuex.Store({
     ...tagStore.getters,
     ...sessionAssignmentStore.getters,
     ...parameterNameStore.getters,
-    ...configurationStore.getters
+    ...configurationStore.getters,
+    ...searchStateStore.getters
   },
   plugins: [
     ...surveyStore.plugins

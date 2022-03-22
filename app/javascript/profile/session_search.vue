@@ -101,7 +101,8 @@ export default {
       this.$emit('change', this.fields_to_query())
     },
     init() {
-      let saved = this.currentSearchSettings[SAVED_SEARCH_STATE]
+      let saved = this.getSearchState()(SAVED_SEARCH_STATE)
+      // console.debug("**** INIT ", saved)
       if (saved) {
         this.title_desc = saved.title_desc
         this.area_id = saved.area_id
