@@ -136,14 +136,12 @@ router.beforeEach((to, from, next) => {
         })
       } else {
         if(roles.length==0) {
-          for (const [key, value] of Object.entries(session.convention_roles)) {
-            console.debug("role: ",value.role);
-            roles.push(value.role);
-            if(value.role==="admin")
-              isAdmin=hasPowers=true;
-            if(value.role==="staff")
-              hasPowers=true;
-          }
+          // todo clean up side effect assignments
+          roles = Object.values(session.convention_roles).map(v => {
+            isAdmin = v.role === "admin";
+            hasPowers = isAdmin || v.role === "staff";
+            return v.role;
+          })
         }
         if(to.meta.requiresAdmin && !isAdmin) {
           console.debug("not admin, sending to /profile");
