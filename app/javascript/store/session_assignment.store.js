@@ -25,22 +25,24 @@ export const sessionAssignmentStore = {
       return dispatch(NEW, {model: sessionAssignmentModel, selected: false, ...newAssignment});
     },
     [SESSION_EXPRESS_INTEREST] ({dispatch}, {session}) {
+      let url = `/session/${session.id}/express_interest`
+      let data = { _jv: { type: 'session_assignment' } }
+
       return new Promise((res, rej) => {
-        http.put(`/session/${session.id}/express_interest`).then((assignment) => {
+        dispatch('jv/get', [data, {url: url}]).then((assignment) => {
           res(assignment);
-        }).catch((error) => {
-          res({});
-        })
-      })
+        }).catch(rej)
+      });
     },
     [SESSION_UNEXPRESS_INTEREST] ({dispatch}, {assignment}) {
+      let url = `/session_assignment/${assignment.id}/unexpress_interest`
+      let data = { _jv: { type: 'session_assignment' } }
+
       return new Promise((res, rej) => {
-        http.put(`/session_assignment/${assignment.id}/unexpress_interest`).then((assignment) => {
+        dispatch('jv/get', [data, {url: url}]).then((assignment) => {
           res(assignment);
-        }).catch((error) => {
-          res({});
-        })
-      })
+        }).catch(rej)
+      });
     }
   },
   selected: {
