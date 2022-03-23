@@ -23,6 +23,9 @@ import settingsMixin from "@/store/settings.mixin";
 import { ValidationProvider, extend } from 'vee-validate';
 import { required, email, numeric } from 'vee-validate/dist/rules';
 
+import VueCal from 'vue-cal'
+import 'vue-cal/dist/vuecal.css'
+
 extend('email', email);
 extend('numeric', numeric);
 
@@ -35,6 +38,7 @@ extend('required', {
 export default  {
   name: "PlanoramaApp",
   components: {
+    VueCal,
     ValidationProvider,
     TopNavbar,
     SideNavbar,
