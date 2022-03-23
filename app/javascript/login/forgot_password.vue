@@ -1,10 +1,10 @@
 <template>
   <div class="forgot-password">
-    <h3>Reset Password</h3>
+    <h3>Set/Reset Password</h3>
     <p>Don't worry, this happens to the best of us.</p>
     <p>
       If an account with this address exists, you will recieve an email with a
-      link to complete the password reset process.
+      link to complete the password process.
     </p>
     <b-alert :show="alert.visible" :variant="alert.variant">{{
       alert.text
