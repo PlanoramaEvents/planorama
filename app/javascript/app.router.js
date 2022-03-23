@@ -53,7 +53,7 @@ import VueRouter from 'vue-router';
 import { GET_SESSION_USER } from './store/person_session.store';
 Vue.use(VueRouter);
 // var ua='', signed_agreements={}, doing_agreements=false;
-var roles=[], isAdmin=false, hasPowers=false;
+var con_roles=[], isAdmin=false, hasPowers=false;
 
 export const router = new VueRouter({
   routes: [
@@ -135,10 +135,10 @@ router.beforeEach((to, from, next) => {
           query: { redirect: to.fullPath }
         })
       } else {
-        if(roles.length==0) {
+        if(con_roles.length==0) {
           // todo clean up side effect assignments
-          roles = Object.values(session.convention_roles).map(v => {
-            isAdmin = v.role === "admin";
+          con_roles = Object.values(session.convention_roles).map(v => {
+            isAdmin = isAdmin || v.role === "admin";
             hasPowers = isAdmin || v.role === "staff";
             return v.role;
           })
