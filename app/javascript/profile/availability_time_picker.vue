@@ -77,6 +77,17 @@ export default {
   visibility: hidden;
 }
 
+/* vuecal__flex vuecal__body */
+.plano-col .vuecal__bg::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.plano-col .vuecal__bg {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 .plano-first .vuecal__time-column,
 .plano-first .vuecal__time-cell {
   width: 0px
