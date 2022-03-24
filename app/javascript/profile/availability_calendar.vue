@@ -1,20 +1,10 @@
 <template>
   <div class="row">
     <availability-time-picker
-      day="2022-09-01"
-      firstDay
-    />
-    <availability-time-picker
-      day="2022-09-02"
-    />
-    <availability-time-picker
-      day="2022-09-03"
-    />
-    <availability-time-picker
-      day="2022-09-04"
-    />
-    <availability-time-picker
-      day="2022-09-05"
+      v-for="day in days" :key="day"
+      :day="day"
+      :firstDay="day === days[0]"
+      :ref="'day-'+day"
     />
   </div>
 </template>
@@ -24,29 +14,38 @@ import AvailabilityTimePicker from './availability_time_picker'
 
 export default {
   name: "AvailabilityCalendar",
-  data: () => ({
-    // minDate: "2022-09-01",
-    // maxDate: "2022-09-05"
-  }),
+  props: {
+    days: {
+      type: Array,
+      required: true
+    }
+  },
   components: {
     AvailabilityTimePicker
   },
   methods: {
-    // onEventClick (event, e) {
-    //   // Prevent navigating to narrower view (default vue-cal behavior).
-    //   e.stopPropagation()
-    // },
-    // onReady: function(arg) {
-    //   let el = this.$refs['day2'].$el.getElementsByClassName('vuecal__bg')
-    //   this.day2 = this.$refs['day2'].$el.getElementsByClassName('vuecal__bg')[0]
-    //   // console.debug("**** READY ", el[0])
-    //   el[0].addEventListener("scroll", this.syncScroll) //function() { console.debug('**** FCK')}) //.onscroll = this.syncScroll
-    //   this.day1 = this.$refs['day1'].$el.getElementsByClassName('vuecal__bg')[0]
-    // },
-    // syncScroll: function(arg) {
-    //   console.debug("**** SYNC", arg)
-    //   this.day1.scrollTop = this.day2.scrollTop
-    // }
+    init: function(arg) {
+      for (const day of this.days) {
+        let component = this.$refs[`day-${day}`][0].scrollBarElement()
+        let targets = this.days.filter(d => d != day)
+
+        component.addEventListener("scroll",
+          this.syncScroll.bind(event,component,targets),
+          false
+        )
+      }
+    },
+    // TODO: this iniates lots of extra events ...
+    // can we set scroll top without setting off an event?
+    syncScroll: function(day, targets, event) {
+      for (const target of targets) {
+        let el = this.$refs[`day-${target}`][0].scrollBarElement()
+        el.scrollTop = day.scrollTop
+      }
+    }
+  },
+  mounted() {
+    this.init()
   }
 }
 </script>

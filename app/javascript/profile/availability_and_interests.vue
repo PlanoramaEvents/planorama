@@ -3,19 +3,22 @@
     <div class="mb-3">
       Availbility and Interests
     </div>
-    <availability-calendar></availability-calendar>
+    <availability-calendar
+      :days="days"
+    ></availability-calendar>
   </div>
 </template>
 
 <script>
 import AvailabilityCalendar from './availability_calendar.vue';
-// import PeopleSidebar from './people_sidebar.vue';
 // import { personModel as model } from '../store/person.store';
 
 export default {
   name: "AvailabilityAndInterests",
   data: () => ({
-    // model
+    days: [
+      '2022-09-01', '2022-09-02', '2022-09-03', '2022-09-04', '2022-09-05'
+    ]
   }),
   components: {
     AvailabilityCalendar
