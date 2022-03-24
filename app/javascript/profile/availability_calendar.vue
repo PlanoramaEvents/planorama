@@ -5,6 +5,7 @@
       :day="day"
       :firstDay="day === days[0]"
       :ref="'day-'+day"
+      :showScrollBar="day === days[days.length -1]"
     />
   </div>
 </template>

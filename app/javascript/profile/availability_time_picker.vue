@@ -46,6 +46,10 @@ export default {
     firstDay: {
       type: Boolean,
       default: false
+    },
+    showScrollBar: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -53,10 +57,11 @@ export default {
   },
   computed: {
     dayColClass() {
+      let showScroll = this.showScrollBar ? '' : 'plano-col-no-bar'
       if (this.firstDay) {
-        return "col-2 pr-0 plano-col"
+        return `col-2 pr-0 plano-col ${showScroll}`
       } else {
-        return "col-2 pr-0 pl-0 plano-col plano-first"
+        return `col-2 pr-0 pl-0 plano-col plano-first ${showScroll}`
       }
     }
   },
@@ -69,7 +74,24 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import '../stylesheets/style.scss';
+
+.vuecal__title-bar {
+  color: $color-primary-4;
+  background-color: $color-primary-1;
+}
+
+.vuecal__event {
+  color: $color-secondary-2-4;
+  background-color: $color-secondary-2-1; //$color-secondary-1-1;
+}
+
+.vuecal__time-cell-label {
+  color: $color-primary-4;
+  // background-color: $color-primary-1;
+}
+
 .plano-col .vuecal__arrow--prev {
   visibility: hidden;
 }
@@ -77,13 +99,13 @@ export default {
   visibility: hidden;
 }
 
-/* vuecal__flex vuecal__body */
-.plano-col .vuecal__bg::-webkit-scrollbar {
+/* Hide the scrollbar(s) */
+.plano-col-no-bar .vuecal__bg::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-.plano-col .vuecal__bg {
+.plano-col-no-bar .vuecal__bg {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
