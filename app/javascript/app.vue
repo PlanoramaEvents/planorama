@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import 'vue-cal/dist/drag-and-drop.js'
 
 import TopNavbar from "./navbar/top-navbar.vue";
 import SideNavbar from "./navbar/side-navbar.vue";

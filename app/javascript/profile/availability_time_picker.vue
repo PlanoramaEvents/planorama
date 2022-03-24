@@ -67,7 +67,6 @@ export default {
   },
   methods: {
     scrollBarElement: function() {
-      console.debug("*** GET ELEMENT")
       return this.$refs['dayColumn'].$el.getElementsByClassName('vuecal__bg')[0]
     }
   }
@@ -76,6 +75,10 @@ export default {
 
 <style lang="scss">
 @import '../stylesheets/style.scss';
+
+.vuecal__no-event {
+  display: none;
+}
 
 .vuecal__title-bar {
   color: $color-primary-4;
