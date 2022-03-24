@@ -3,6 +3,7 @@
     <vue-cal
       hide-view-selector
       xsmall
+      disable-date-prototypes
       active-view="day"
       style="height: 30em;"
       :editable-events="{ title: false, drag: true, resize: true, delete: true, create: true }"
@@ -16,9 +17,9 @@
       :selected-date="day"
       ref="dayColumn"
     >
-      <!-- TODO: Need a shorter title ... -->
       <template v-slot:title="{ title, view }">
-        {{title}}
+        {{ $luxon(view.selectedDate.toISOString(), "cccc") }}<br />
+        {{ $luxon(view.selectedDate.toISOString(), "d MMM") }}
       </template>
     </vue-cal>
   </div>

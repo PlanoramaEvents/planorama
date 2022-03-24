@@ -37,6 +37,7 @@ import { CustomIconsPlugin } from '../icons';
 import AsyncComputed from 'vue-async-computed';
 import CKEditor from 'ckeditor4-vue';
 import VuePluralize from 'vue-pluralize';
+import VueLuxon from "vue-luxon";
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
@@ -44,6 +45,7 @@ Vue.use(CustomIconsPlugin);
 Vue.use(AsyncComputed);
 Vue.use(CKEditor);
 Vue.use(VuePluralize);
+Vue.use(VueLuxon);
 
 import PlanoramaApp from '../app.vue';
 import { router } from '../app.router';
