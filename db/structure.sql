@@ -278,6 +278,21 @@ CREATE TABLE public.areas (
 
 
 --
+-- Name: availabilities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.availabilities (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    start_time timestamp without time zone,
+    end_time timestamp without time zone,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: bios; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1227,6 +1242,14 @@ ALTER TABLE ONLY public.areas
 
 
 --
+-- Name: availabilities availabilities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.availabilities
+    ADD CONSTRAINT availabilities_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: bios bios_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2114,6 +2137,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220317222958'),
 ('20220320194817'),
 ('20220320225237'),
-('20220321144540');
+('20220321144540'),
+('20220326140959');
 
 

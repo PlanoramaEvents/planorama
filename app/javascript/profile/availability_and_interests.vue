@@ -16,8 +16,9 @@ import AvailabilityCalendar from './availability_calendar.vue';
 export default {
   name: "AvailabilityAndInterests",
   data: () => ({
+    // TODO: if there are more than 5 days in the con we need to change display
     days: [
-      '2022-09-01', '2022-09-02', '2022-09-03', '2022-09-04', '2022-09-05'
+      '2022-09-01', '2022-09-02', '2022-09-03', '2022-09-04', '2022-09-05' //, '2022-09-06', '2022-09-07'
     ]
   }),
   components: {

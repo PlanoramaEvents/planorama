@@ -17,6 +17,8 @@ class Person < ApplicationRecord
 
   before_destroy :check_if_assigned
 
+  has_many  :availabilities
+
   has_many  :session_assignments, dependent: :destroy
   has_many  :sessions, through: :session_assignments
 

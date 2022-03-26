@@ -33,7 +33,9 @@ Rails.application.routes.draw do
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
+    resources :availabilities, path: 'availability', only: [:index]
   end
+  resources :availabilities, path: 'availability', except: [:index]
 
   resources :convention_roles, path: 'convention_role', except: [:index]
   resources :email_addresses, path: 'email_address', except: [:index]
