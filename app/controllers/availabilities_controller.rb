@@ -1,7 +1,7 @@
 class AvailabilitiesController < ResourceController
   SERIALIZER_CLASS = 'AvailabilitySerializer'.freeze
   POLICY_CLASS = 'AvailabilitiesPolicy'.freeze
-  # POLICY_SCOPE_CLASS = 'AvailabilitiesPolicy::Scope'.freeze
+  POLICY_SCOPE_CLASS = 'AvailabilitiesPolicy::Scope'.freeze
 
   #
   def belongs_to_param_id

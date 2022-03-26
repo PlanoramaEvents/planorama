@@ -25,6 +25,8 @@ class Survey < ApplicationRecord
     :description
   ]
 
+  validates :name, presence: true
+
   # transition_accept_status
   # transition_decline_status
 

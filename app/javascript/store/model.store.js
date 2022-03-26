@@ -48,6 +48,8 @@ import { sessionStore, sessionEndpoints } from './session.store';
 // area add-ons
 import { areaStore, areaEndpoints } from './area.store';
 
+import { availabilityStore, availabilityEndpoints } from './availability.store';
+
 // tag add-ons
 import { tagStore, tagEndpoints } from './tag.store';
 
@@ -103,7 +105,8 @@ export const store = new Vuex.Store({
     ...personSessionStore.state,
     ...settingsStore.state,
     ...surveyStore.state,
-    ...searchStateStore.state
+    ...searchStateStore.state,
+    ...availabilityStore.state
     // ...mailingStore.state
   },
   getters: {
@@ -133,7 +136,8 @@ export const store = new Vuex.Store({
     ...sessionAssignmentStore.getters,
     ...parameterNameStore.getters,
     ...configurationStore.getters,
-    ...searchStateStore.getters
+    ...searchStateStore.getters,
+    ...availabilityStore.getters
   },
   plugins: [
     ...surveyStore.plugins
@@ -290,6 +294,7 @@ export const store = new Vuex.Store({
     ...tagStore.actions,
     ...sessionAssignmentStore.actions,
 // actions not defined    ...parameterNameStore.actions,
-    ...configurationStore.actions
+    ...configurationStore.actions,
+    ...availabilityStore.actions
   }
 })
