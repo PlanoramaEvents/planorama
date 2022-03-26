@@ -106,6 +106,8 @@ class PersonSerializer #< ActiveModel::Serializer
               }
             }
 
+  #
+  # TODO: availabilities
 
   # sessions
   # has_many :sessions, serializer: SessionSerializer,

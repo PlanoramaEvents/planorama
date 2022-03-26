@@ -1,12 +1,32 @@
 <template>
   <div class="row">
-    <availability-time-picker
-      v-for="day in days" :key="day"
-      :day="day"
-      :firstDay="day === days[0]"
-      :ref="'day-'+day"
-      :showScrollBar="day === days[days.length -1]"
-    />
+    <div class="col-6">
+      <div class="row">
+        <availability-time-picker
+          v-for="day in days" :key="day"
+          :day="day"
+          :firstDay="day === days[0]"
+          :ref="'day-'+day"
+          :showScrollBar="day === days[days.length -1]"
+          :twelveHour="true"
+          :dayEvents="dayEvents"
+          @change="onChange"
+        />
+        <!-- timezone='America/Los_Angeles' -->
+        <!-- <div class="col-1">
+          results
+        </div> -->
+      </div>
+      <!--
+      :startTime (minutes)
+      :timezone (UTC offset)
+      :initialEvents
+      -->
+
+    </div>
+    <div class="col-6">
+      {{ eventArr }}
+    </div>
   </div>
 </template>
 
@@ -21,8 +41,19 @@ export default {
       required: true
     }
   },
+  data: () =>  ({
+    // TODO: change to a computed value based on initial events
+    // i.e. we do not want their TZ info in there
+    dayEvents: new Map()
+  }),
   components: {
     AvailabilityTimePicker
+  },
+  computed: {
+    eventArr() {
+      // TODO: sort then return array
+      return [...this.dayEvents.entries()];
+    }
   },
   methods: {
     init: function(arg) {
@@ -35,6 +66,16 @@ export default {
           false
         )
       }
+    },
+    onChange(arg) {
+      // console.debug("*** CHANGE: ", arg)
+      // this.dayEvents[arg.day] = arg.slots
+      // THis works, but is kind of crappy
+      this.dayEvents = new Map(this.dayEvents.set(arg.day, arg.slots));
+      // this.dayEvents.push(arg.slots)
+      // This is not triggering a change (or watch) because it is a hash ....
+      // console.debug("*** CHANGE: ", this.dayEvents)
+      // this.$emit('onchange', this.dayEvents);
     },
     // TODO: this iniates lots of extra events ...
     // can we set scroll top without setting off an event?

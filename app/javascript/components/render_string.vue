@@ -11,7 +11,7 @@ export default {
     },
   },
   render: function (h) {
-    console.log(this);
+    // console.log(this);
     return h(
       { template: `<div>${this.string}</div>`, props: Object.keys(this.data) },
       { props: this.data }

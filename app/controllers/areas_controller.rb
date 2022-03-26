@@ -15,4 +15,8 @@ class AreasController < ResourceController
     'areas'
   end
 
+  def paginate
+    false
+  end
+
 end
