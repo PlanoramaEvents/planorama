@@ -38,6 +38,11 @@ import AsyncComputed from 'vue-async-computed';
 import CKEditor from 'ckeditor4-vue';
 import VuePluralize from 'vue-pluralize';
 import VueLuxon from "vue-luxon";
+Vue.config.errorHandler = (err, vm, info) => {
+  console.error(err);
+  window.alert("Whoops! We messed up! Click ok to reload the page.")
+  window.location.reload();
+} 
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
@@ -58,7 +63,7 @@ const app = new Vue({
   mounted() {
     // console.debug('*** APP X MOUNTED')
     // console.debug('****** ST ', store)
-  }
+  },
 })
 
 document.addEventListener('DOMContentLoaded', () => {
