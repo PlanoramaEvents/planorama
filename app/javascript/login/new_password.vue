@@ -61,12 +61,16 @@ import {
 } from "@/constants/strings";
 import LoginPasswordField from "./login_password_field";
 import { validateFields } from "@/utils";
+import settingsMixin from "@/store/settings.mixin";
 
 export default {
   name: "NewPassword",
   components: {
     LoginPasswordField,
   },
+  mixins: [
+    settingsMixin
+  ],
   data: () => ({
     person: {
       password: "",
@@ -87,9 +91,7 @@ export default {
         validate: null,
       },
     },
-    helpEmail: "configurable@email.com",
-    // TODO: this will need to change
-    resetPasswordLink: `<a href="/auth/sign_in#/forgot">Reset Password</a>`,
+    resetPasswordLink: `<a href="/#/login/forgot">Reset Password</a>`,
   }),
   mounted: function () {
     this.person.reset_password_token = this.$route.query.reset_password_token;
@@ -117,7 +119,7 @@ export default {
             if (data.status === 204) {
               this.$router.push("/?alert=password_changed");
             } else {
-              this.error.text = SOMETHING_WENT_WRONG(this.helpEmail);
+              this.error.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
               this.error.visible = true;
             }
           })
@@ -126,7 +128,7 @@ export default {
             if (errors && errors.reset_password_token[0] === "is invalid") {
               this.error.text = LOGIN_TOKEN_EXPIRED(this.resetPasswordLink);
             } else {
-              this.error.text = SOMETHING_WENT_WRONG(this.helpEmail);
+              this.error.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
             }
             this.error.visible = true;
           });
