@@ -272,7 +272,7 @@ class PeopleController < ResourceController
     [
       :email_addresses,
       :convention_roles,
-      :availabilites
+      :availabilities
     ]
   end
 
