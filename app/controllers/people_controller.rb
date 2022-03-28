@@ -271,7 +271,8 @@ class PeopleController < ResourceController
   def includes
     [
       :email_addresses,
-      :convention_roles
+      :convention_roles,
+      :availabilites
     ]
   end
 

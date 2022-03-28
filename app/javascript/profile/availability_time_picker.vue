@@ -18,20 +18,14 @@
       ref="dayColumn"
       :twelveHour="twelveHour"
       @event-drag-create="onCreate($event)"
-      @event-delete="logEvents('event-delete', $event)"
-      @event-duration-change="logEvents('event-duration-change', $event)"
-      @event-drop="logEvents('event-drop', $event)"
+      @event-delete="onDelete($event)"
+      @event-duration-change="onUpdate($event)"
+      @event-drop="onUpdate($event)"
     >
-      <!-- :events="dayEvents" -->
       <template v-slot:title="{ title, view }">
-        {{ $luxon(view.selectedDate.toISOString(), "cccc") }}<br />
-        {{ $luxon(view.selectedDate.toISOString(), "d MMM") }}
+        {{ formatDate(view.selectedDate.toISOString(), "cccc") }}<br />
+        {{ formatDate(view.selectedDate.toISOString(), "d MMM") }}
       </template>
-      <!-- @event-drop="logEvents('event-drop', $event)"
-      @event-create="logEvents('event-create', $event)"
-      @event-content-change="logEvents('event-content-change', $event)" -->
-
-      <!-- :onEventCreate="onEventCreate" -->
     </vue-cal>
   </div>
 </template>
@@ -48,12 +42,6 @@ export default {
     VueCal
   },
   props: {
-    // value: {
-    //   type: Object,
-    //   default: () => {
-    //     test: 'test'
-    //   }
-    // },
     startTime: {
       type: Number,
       default: 360
@@ -84,8 +72,7 @@ export default {
     }
   },
   data: () =>  ({
-    // TODO: change to a computed value based on initial events
-    // i.e. we do not want their TZ info in there
+    // We do not want their TZ info in there
     dayEvents: {}
   }),
   computed: {
@@ -102,17 +89,30 @@ export default {
     }
   },
   methods: {
-    logEvents(ty, ev) {
-      // events have an _eid that makes them unique
-      console.debug("*** EV ",ty, ev)
+    formatDate(date, config) {
+      return DateTime.fromISO(date).toFormat(config)
     },
+    // logEvents(ty, ev) {
+    //   // events have an _eid that makes them unique
+    //   console.debug("*** EV ",ty, ev)
+    // },
     scrollBarElement: function() {
       return this.$refs['dayColumn'].$el.getElementsByClassName('vuecal__bg')[0]
     },
     onCreate(ev) {
       let slot = this.createAvailibilitySlot(ev._eid, ev.start, ev.end)
       this.dayEvents[slot.cid] = slot
-      this.$emit('change', { day: this.day, slots: this.dayEvents })
+      this.$emit('change', slot )
+    },
+    onUpdate(ev) {
+      let slot = this.createAvailibilitySlot(ev.event._eid, ev.event.start, ev.event.end)
+      this.dayEvents[slot.cid] = slot
+      this.$emit('update', slot )
+    },
+    onDelete(ev) {
+      let cid = ev._eid
+      this.dayEvents[cid] = null
+      this.$emit('delete', cid )
     },
     createAvailibilitySlot(id, fromDate, toDate) {
       const startDate =this.uiDateToTZDate(fromDate)
@@ -133,26 +133,21 @@ export default {
         minute: date.getMinutes()},
         { zone: this.timezone }
       )
-    }
-    // TODO
-    // store the list of events without their timezone info?
-    // onCreate - create an entry, emit change to parent
-    // event-drag-create
-    // onDelete - delete an entry, emit change to parent
-    // event-delete
-    // onChangeDuration - change an entry, emit change to parent
-    // event-duration-change - change end time
-    // event-drop - change start time
+    },
+    init(initialEvents) {
+      let startingVals = []
+      for (const ev of initialEvents) {
+        let new_event = this.$refs['dayColumn'].createEvent(
+          ev.start.toFormat('yyyy-MM-dd HH:mm'),
+          ev.end.diff(ev.start, 'minutes').as('minutes')
+        )
+        let slot = this.createAvailibilitySlot(new_event._eid, new_event.start, new_event.end)
+        this.dayEvents[slot.cid] = slot
+        startingVals.push(slot)
+      }
 
-    // onEventCreate (ev, deleteEventFunction) {
-    //   console.debug("We create an event", ev, this.dayEvents)
-    //   // You can modify event here and return it.
-    //   // You can also return false to reject the event creation.
-    //   return ev
-    // },
-    // onChange(arg) {
-    //   console.debug("Change", arg)
-    // }
+      return startingVals
+    }
   }
 }
 </script>

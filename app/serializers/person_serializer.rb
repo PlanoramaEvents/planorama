@@ -107,7 +107,16 @@ class PersonSerializer #< ActiveModel::Serializer
             }
 
   #
-  # TODO: availabilities
+  # Availabilities
+  has_many :availabilities, serializer: AvailabilitySerializer,
+           links: {
+             self: -> (object, params) {
+               "#{params[:domain]}/person/#{object.id}"
+             },
+             related: -> (object, params) {
+               "#{params[:domain]}/person/#{object.id}/availability"
+             }
+           }
 
   # sessions
   # has_many :sessions, serializer: SessionSerializer,
