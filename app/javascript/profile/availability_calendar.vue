@@ -1,7 +1,7 @@
 <template>
-  <div class="row">
-    <div class="col-6">
-      <div class="row">
+  <div class="d-flex flex-row">
+    <div class="">
+      <div class="d-flex flex-row">
         <availability-time-picker
           v-for="day in days" :key="day"
           :day="day"
@@ -17,12 +17,11 @@
         />
       </div>
     </div>
-    <div class="col-6">
+    <div class="p-2 selected-availabilities">
       <div v-for="avail in sortedAvailabilities">
-        {{ formatDate(avail.start, 'cccc') }}
+        {{ formatLocaleDate(avail.start, { weekday: 'long' }) }}
         {{ formatLocaleDate(avail.start, DateTime.TIME_SIMPLE) }} -
-        {{ formatLocaleDate(avail.end, DateTime.TIME_SIMPLE) }}
-        {{ formatDate(avail.end, 'ZZZZ') }}
+        {{ formatLocaleDate(avail.end, {hour: 'numeric', minute: '2-digit', timeZoneName: 'short'} ) }}
       </div>
     </div>
   </div>
@@ -61,6 +60,12 @@ export default {
       return col
     }
   },
+  watch: {
+    timezone: function (nv, ov) {
+      this.dayEvents = []
+      this.init()
+    }
+  },
   methods: {
     formatDate(date, config) {
       return DateTime.fromISO(date).setZone(this.timezone).toFormat(config)
@@ -81,7 +86,7 @@ export default {
               false
             )
 
-            let init_events = this.$refs[`day-${day}`][0].init(iniialVals.filter((a) => a.start.toFormat("yyyy-MM-dd") == day))
+            let init_events = this.$refs[`day-${day}`][0].init(iniialVals.filter((a) => a.start.setZone(this.timezone).toFormat("yyyy-MM-dd") == day))
 
             this.dayEvents = this.dayEvents.concat(init_events)
           }
@@ -126,4 +131,7 @@ export default {
 </script>
 
 <style>
+.selected-availabilities {
+  font-size: 10pt;
+}
 </style>

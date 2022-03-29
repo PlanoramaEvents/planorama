@@ -5,13 +5,13 @@
       xsmall
       disable-date-prototypes
       active-view="day"
-      style="height: 30em;"
+      style="height: 34em;"
       :editable-events="{ title: false, drag: true, resize: true, delete: true, create: true }"
       :disable-views="['years', 'year', 'month', 'week']"
       :time-cell-height="18"
       :time-from="startTime"
       :time-step="timeStep"
-      :snap-to-time="timeStep"
+      :snap-to-time="snapToTime"
       :min-date="day"
       :max-date="day"
       :selected-date="day"
@@ -24,8 +24,14 @@
       @event-drop="onUpdate($event)"
     >
       <template v-slot:title="{ title, view }">
-        {{ formatDate(view.selectedDate.toISOString(), "cccc") }}<br />
-        {{ formatDate(view.selectedDate.toISOString(), "d MMM") }}
+        {{ formatDate(view.selectedDate.toISOString(), { weekday: 'long' }) }}<br />
+        {{ formatDate(view.selectedDate.toISOString(), { day: 'numeric', month: 'short' }) }}
+      </template>
+      <template v-slot:event="{ event, view }">
+        <small class="vuecal__event-time">
+          <span>{{ formatLocaleDate(event.start) }} - </span><br/>
+          <span>{{ formatLocaleDate(event.end) }}</span>
+        </small>
       </template>
     </vue-cal>
   </div>
@@ -45,9 +51,13 @@ export default {
   props: {
     startTime: {
       type: Number,
-      default: 360
+      default: 0 //360
     },
     timeStep: {
+      type: Number,
+      default: 60
+    },
+    snapToTime: {
       type: Number,
       default: 30
     },
@@ -73,25 +83,27 @@ export default {
     }
   },
   data: () =>  ({
-    // We do not want their TZ info in there
     dayEvents: {}
   }),
   computed: {
-    initialEvents() {
-      return []
-    },
     dayColClass() {
       let showScroll = this.showScrollBar ? '' : 'plano-col-no-bar'
       if (this.firstDay) {
-        return `col-3 pr-0 plano-col ${showScroll}`
+        return `pr-0 plano-first ${showScroll}`
       } else {
-        return `col-2 pr-0 pl-0 plano-col plano-first ${showScroll}`
+        return `pr-0 pl-0 plano-col ${showScroll}`
       }
     }
   },
   methods: {
+    formatLocaleDate(date) {
+      let res = DateTime.fromJSDate(date).toLocaleString(DateTime.TIME_SIMPLE)
+      console.debug("**** D", date, DateTime.TIME_SIMPLE, res)
+      return res //date.toLocaleString(DateTime.TIME_SIMPLE)
+    },
     formatDate(date, config) {
-      return DateTime.fromISO(date).toFormat(config)
+      // return DateTime.fromISO(date).toFormat(config)
+      return DateTime.fromISO(date).setZone(this.timezone).toLocaleString(config)
     },
     // logEvents(ty, ev) {
     //   // events have an _eid that makes them unique
@@ -135,7 +147,13 @@ export default {
         { zone: this.timezone }
       )
     },
+    clearAllEvents() {
+      this.dayEvents = {}
+      this.$refs['dayColumn'].mutableEvents = []
+      this.$refs['dayColumn'].view.events = []
+    },
     init(initialEvents) {
+      this.clearAllEvents()
       let startingVals = []
       for (const ev of initialEvents) {
         let new_event = this.$refs['dayColumn'].createEvent(
@@ -174,9 +192,12 @@ export default {
   color: $color-primary-4;
 }
 
+.plano-first .vuecal__arrow--prev,
 .plano-col .vuecal__arrow--prev {
   display: none;
 }
+
+.plano-first .vuecal__arrow--next,
 .plano-col .vuecal__arrow--next {
   display: none;
 }
@@ -192,12 +213,21 @@ export default {
   scrollbar-width: none;  /* Firefox */
 }
 
-.plano-first .vuecal__time-column,
-.plano-first .vuecal__time-cell {
+.plano-first {
+  min-width: 130px;
+}
+
+.plano-col {
+  min-width: 100px;
+}
+
+.plano-col .vuecal__time-column,
+.plano-col .vuecal__time-cell {
   width: 0px
 }
 
-.plano-first .vuecal__time-cell-label {
+.plano-col .time-display,
+.plano-col .vuecal__time-cell-label {
   display: none;
 }
 </style>

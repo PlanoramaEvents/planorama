@@ -3,7 +3,10 @@
     <profile-manage></profile-manage>
     <b-tabs content-class="mt-3">
       <b-tab title="General" active lazy>
-        <availability-and-interests></availability-and-interests>
+        <availability-and-interests
+          :start_time="start_time"
+          :end_time="end_time"
+        ></availability-and-interests>
       </b-tab>
       <b-tab title="Session Selection" lazy>
         <session-selector
@@ -35,6 +38,8 @@ import { sessionModel } from '@/store/session.store'
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import personSessionMixin from '../auth/person_session.mixin';
 
+const { DateTime } = require("luxon");
+
 export default {
   name: "ProfileScreen",
   components: {
@@ -48,7 +53,9 @@ export default {
   ],
   data: () => ({
     sessionModel,
-    sessionAssignmentModel
+    sessionAssignmentModel,
+    start_time: DateTime.fromISO("2022-09-01T00:00:00"),
+    end_time: DateTime.fromISO("2022-09-05T11:30:00")
   }),
   computed: {
     rankedFilter() {
