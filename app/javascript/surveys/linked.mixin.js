@@ -76,8 +76,6 @@ export const linkedMixin = {
             (attr) => {
               if (this.currentSettings.attributes[mdl][attr].linkable) {
                 let place = res.find(el => el.value == this.currentSettings.attributes[mdl][attr].type)
-                console.debug("model", mdl, "attr", attr)
-                console.debug(LINKED_FIELD_LABELS[mdl][attr])
                 place.options.push(
                   {
                     disabled: this.currentSettings.attributes[mdl][attr].type != allowed_type,

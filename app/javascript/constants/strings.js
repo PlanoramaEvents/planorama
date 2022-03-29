@@ -1,6 +1,7 @@
 const twoLines = (line1, line2) => (h) =>  h('p', {}, [line1, h('br'), line2]);
 const errorMessage = (message) => (errorCode) => twoLines(message, `Error code: ${errorCode}`);
 const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`;
+const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []))
 
 module.exports = {
     // login page
@@ -151,4 +152,9 @@ module.exports = {
             contact_email: "Contact email"
         },
     },
+    nLines,
+
+    ERROR_GENERIC_RECOVERABLE: "Anna needs to write copy for this generic error that is potentially recoverable.",
+    ERROR_GENERIC_UNRECOVERABLE: "Anna needs to write copy for this generic error that is non-recoverable."
+
 }
