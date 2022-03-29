@@ -7,6 +7,7 @@
       :days="days"
       model="availability"
     ></availability-calendar>
+    <!-- timezone="Europe/Paris" -->
   </div>
 </template>
 

@@ -14,7 +14,9 @@ export const availabilityMixin = {
     }),
     update_availability({person, params}) {
       this.clear()
-      return this.update_availability_in_store({person: person, params: params})
+      // Send all datetimes to backend as UTC
+      let utc_params = params.map((slot) => { return {end: slot.end.toUTC(), start: slot.start.toUTC()} })
+      return this.update_availability_in_store({person: person, params: utc_params})
     }
   }
 }

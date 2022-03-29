@@ -17,6 +17,7 @@
       :selected-date="day"
       ref="dayColumn"
       :twelveHour="twelveHour"
+      :timezone="timezone"
       @event-drag-create="onCreate($event)"
       @event-delete="onDelete($event)"
       @event-duration-change="onUpdate($event)"
@@ -115,7 +116,7 @@ export default {
       this.$emit('delete', cid )
     },
     createAvailibilitySlot(id, fromDate, toDate) {
-      const startDate =this.uiDateToTZDate(fromDate)
+      const startDate = this.uiDateToTZDate(fromDate)
       const endDate = this.uiDateToTZDate(toDate)
 
       return {
@@ -138,7 +139,7 @@ export default {
       let startingVals = []
       for (const ev of initialEvents) {
         let new_event = this.$refs['dayColumn'].createEvent(
-          ev.start.toFormat('yyyy-MM-dd HH:mm'),
+          ev.start.setZone(this.timezone).toFormat('yyyy-MM-dd HH:mm'),
           ev.end.diff(ev.start, 'minutes').as('minutes')
         )
         let slot = this.createAvailibilitySlot(new_event._eid, new_event.start, new_event.end)

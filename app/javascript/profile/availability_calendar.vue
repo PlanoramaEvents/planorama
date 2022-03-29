@@ -63,12 +63,10 @@ export default {
   },
   methods: {
     formatDate(date, config) {
-      // TODO: TZ
-      return DateTime.fromISO(date).toFormat(config)
+      return DateTime.fromISO(date).setZone(this.timezone).toFormat(config)
     },
     formatLocaleDate(date, config) {
-      // TODO: TZ
-      return DateTime.fromISO(date).toLocaleString(config)
+      return DateTime.fromISO(date).setZone(this.timezone).toLocaleString(config)
     },
     init: function(arg) {
       this.get_availability().then(
