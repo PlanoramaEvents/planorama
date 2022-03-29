@@ -80,7 +80,7 @@ class PeopleController < ResourceController
           # By default we add the person as a member of the convention
           ConventionRole.create(
             person: person,
-            group: ConventionRole.roles[:participant]
+            role: ConventionRole.roles[:participant]
           )
 
           count += 1
@@ -271,7 +271,8 @@ class PeopleController < ResourceController
   def includes
     [
       :email_addresses,
-      :convention_roles
+      :convention_roles,
+      :availabilities
     ]
   end
 

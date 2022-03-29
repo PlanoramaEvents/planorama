@@ -36,9 +36,11 @@ import {
   LOGIN_INVALID_FIELDS,
   SOMETHING_WENT_WRONG,
 } from "../constants/strings";
+import settingsMixin from "@/store/settings.mixin";
 
 export default {
   name: "ForgotPassword",
+  mixins: [settingsMixin],
   data: () => ({
     person: {
       email: "",
@@ -54,8 +56,7 @@ export default {
         valid: null,
         validate: null,
       },
-    },
-    helpEmail: "configurable@email.com",
+    }
   }),
   components: {
     EmailField,
@@ -80,16 +81,16 @@ export default {
             if (this.successfullySent) {
               this.$router.push("/?alert=reset_sent");
             } else {
-              this.alert.text = SOMETHING_WENT_WRONG(this.helpEmail);
+              this.alert.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
               this.alert.visible = true;
             }
           })
           .catch((error) => {
-            this.alert.text = SOMETHING_WENT_WRONG(this.helpEmail);
+            this.alert.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
             this.alert.visible = true;
           });
       }
     },
-  },
+  }
 };
 </script>

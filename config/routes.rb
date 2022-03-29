@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
     resources :availabilities, path: 'availability', only: [:index]
+    patch 'availability', to: 'availabilities#replace'
   end
   resources :availabilities, path: 'availability', except: [:index]
 

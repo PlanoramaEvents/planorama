@@ -5,6 +5,7 @@
     </div>
     <availability-calendar
       :days="days"
+      model="availability"
     ></availability-calendar>
   </div>
 </template>
