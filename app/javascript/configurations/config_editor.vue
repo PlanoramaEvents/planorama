@@ -5,7 +5,8 @@
     v-slot="{ valid, errors }"
   >
     <b-form-group :label="parameter.parameter_name">
-    <!-- TODO: We need more meaningful names -->
+      <!-- TODO: We need more meaningful names, ^^^ change the label -->
+      <!-- TODO: we need to change the editor type depending on the parameter -->
       <b-form-input
         v-model="configuration.parameter_value"
         :state="calcValid(errors,valid)"
@@ -74,6 +75,7 @@ export default {
           this.createConfiguration(newconfig).then(
             (data) => {
               this.configuration = data
+              // TODO: should we force a reload of the settings on config change?
             }
           )
         } else {
@@ -81,6 +83,7 @@ export default {
           this.save(this.configuration).then(
             (data) => {
               this.configuration = data
+              // TODO: should we force a reload of the settings on config change?
             }
           )
         }

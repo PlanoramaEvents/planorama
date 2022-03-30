@@ -435,6 +435,19 @@ CREATE TABLE public.email_addresses (
 
 
 --
+-- Name: exclusions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exclusions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    title character varying(800) NOT NULL,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: formats; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -675,6 +688,20 @@ CREATE TABLE public.person_constraints (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: person_exclusions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_exclusions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    exclusion_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1306,6 +1333,14 @@ ALTER TABLE ONLY public.email_addresses
 
 
 --
+-- Name: exclusions exclusions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exclusions
+    ADD CONSTRAINT exclusions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: formats formats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1375,6 +1410,14 @@ ALTER TABLE ONLY public.person_agreements
 
 ALTER TABLE ONLY public.person_constraints
     ADD CONSTRAINT person_constraints_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: person_exclusions person_exclusions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_exclusions
+    ADD CONSTRAINT person_exclusions_pkey PRIMARY KEY (id);
 
 
 --
@@ -1769,6 +1812,20 @@ CREATE UNIQUE INDEX index_person_agreements_on_person_id_and_agreement_id ON pub
 
 
 --
+-- Name: index_person_exclusions_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_person_exclusions_on_person_id ON public.person_exclusions USING btree (person_id);
+
+
+--
+-- Name: index_person_exclusions_on_person_id_and_exclusion_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_person_exclusions_on_person_id_and_exclusion_id ON public.person_exclusions USING btree (person_id, exclusion_id);
+
+
+--
 -- Name: index_person_mailing_assignments_on_mailing_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2084,9 +2141,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210620175724'),
 ('20210620180746'),
 ('20210626162611'),
-('20210627143358'),
 ('20210627225348'),
-('20210628120942'),
 ('20210628221900'),
 ('20210629220733'),
 ('20210702202436'),
@@ -2102,7 +2157,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210712134642'),
 ('20210716142413'),
 ('20210717191036'),
-('20210811135617'),
 ('20210819204542'),
 ('20210925131929'),
 ('20211101160001'),
@@ -2141,6 +2195,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220320194817'),
 ('20220320225237'),
 ('20220321144540'),
-('20220326140959');
+('20220326140959'),
+('20220330150651'),
+('20220330150751');
 
 

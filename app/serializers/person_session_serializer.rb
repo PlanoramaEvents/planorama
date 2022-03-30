@@ -4,4 +4,6 @@ class PersonSessionSerializer < PersonSerializer
     Agreement.latest.unsigned(person: person)
   end
 
+  # TODO: test
+  has_many :person_exclusions, serializer: PersonExclusionSerializer
 end

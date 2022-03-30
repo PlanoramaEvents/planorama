@@ -2,7 +2,9 @@
   <div class="scrollable">
     <profile-manage></profile-manage>
     <b-tabs content-class="mt-3">
-      <b-tab title="General" active lazy>
+      <b-tab title="General"  lazy>
+      </b-tab>
+      <b-tab title="Availbility & Interests" active lazy>
         <availability-and-interests
           :start_time="start_time"
           :end_time="end_time"

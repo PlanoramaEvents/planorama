@@ -27,7 +27,8 @@ class SettingsController < ApplicationController
         'Privacy Agrement'
       ],
       # 4. list of configs
-      configs: ::Configuration.all
+      configs: ::Configuration.all,
+      exclusions: ::Exclusion.all # TODO: we may want a sort order on these ????
     }
 
     render json: settings,

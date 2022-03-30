@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-row">
     <div class="">
+      Availability
       <div class="d-flex flex-row">
         <availability-time-picker
           v-for="day in days" :key="day"
@@ -16,14 +17,15 @@
           :timezone="timezone"
         />
       </div>
+      * times shown in {{display_timezone}}
     </div>
-    <div class="p-2 selected-availabilities">
+    <!-- <div class="p-2 selected-availabilities">
       <div v-for="avail in sortedAvailabilities">
         {{ formatLocaleDate(avail.start, { weekday: 'long' }) }}
         {{ formatLocaleDate(avail.start, DateTime.TIME_SIMPLE) }} -
         {{ formatLocaleDate(avail.end, {hour: 'numeric', minute: '2-digit', timeZoneName: 'short'} ) }}
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -58,6 +60,9 @@ export default {
     sortedAvailabilities() {
       let col = this.dayEvents.sort((a, b) => a.start > b.start)
       return col
+    },
+    display_timezone() {
+      return 'UTC' + DateTime.fromISO(this.days[0]).setZone(this.timezone).toFormat('Z (ZZZZZ)')
     }
   },
   watch: {

@@ -5,7 +5,7 @@
       xsmall
       disable-date-prototypes
       active-view="day"
-      style="height: 34em;"
+      style="height: 30em;"
       :editable-events="{ title: false, drag: true, resize: true, delete: true, create: true }"
       :disable-views="['years', 'year', 'month', 'week']"
       :time-cell-height="18"
@@ -98,7 +98,7 @@ export default {
   methods: {
     formatLocaleDate(date) {
       let res = DateTime.fromJSDate(date).toLocaleString(DateTime.TIME_SIMPLE)
-      console.debug("**** D", date, DateTime.TIME_SIMPLE, res)
+      // console.debug("**** D", date, DateTime.TIME_SIMPLE, res)
       return res //date.toLocaleString(DateTime.TIME_SIMPLE)
     },
     formatDate(date, config) {
