@@ -64,8 +64,8 @@
       </div>
     </div>
     <div class="d-flex flex-row">
-      <!-- model="person_exclusion" -->
       <exclusions-picker
+        model="person_exclusion"
       ></exclusions-picker>
     </div>
   </div>

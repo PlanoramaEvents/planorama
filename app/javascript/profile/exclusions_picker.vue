@@ -4,7 +4,7 @@
     <div class="d-flex flex-row align-content-around flex-wrap" >
       <div v-for="exclusion in currentSettings.exclusions" class="w-25">
         <b-form-checkbox
-          v-model="selected"
+          v-model="selectedExclusions"
           :value="exclusion.id"
         >
           {{ exclusion.title }}
@@ -16,10 +16,8 @@
 
 <script>
 import settingsMixin from "@/store/settings.mixin";
-// import { sessionModel } from '@/store/sessionP.store'
-// TODO: need to get the person's exclusions ....
+import personExclusionMixin from '../store/person_exclusion.mixin'
 import personSessionMixin from '../auth/person_session.mixin';
-// personExclusionMixin
 
 export default {
   name: "ExclusionsPicker",
@@ -27,26 +25,30 @@ export default {
   },
   mixins: [
     settingsMixin,
-    personSessionMixin
+    personSessionMixin,
+    personExclusionMixin
   ],
   props: {
   },
   data: () =>  ({
-    selected: []
+    selectedExclusions: []
   }),
   watch: {
-    selected(newVal, oldVal) {
-      console.debug("**** ", newVal)
-      // ??? do we save on selected
-      // if (newVal) {
-      //   this.init()
-      // }
+    selectedExclusions(newVal, oldVal) {
+      this.update_exclusions({person: this.currentUser, params: newVal})
     }
   },
-  computed: {
-  },
   methods: {
-    // TODO: when selected changes we need to save ....
+    init: function(arg) {
+      this.get_exclusions().then(
+        () => {
+          this.selectedExclusions = this.collection.map((a) => { return a.exclusion_id })
+        }
+      )
+    }
+  },
+  mounted() {
+    this.init()
   }
 }
 </script>

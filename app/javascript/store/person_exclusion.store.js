@@ -12,30 +12,30 @@ export const personExclusionEndpoints = {
 export const personExclusionStore = {
   actions: {
     [UPDATE_PERSON_EXCLUSIONS] ({dispatch}, {person, params}) {
-      // const mdl = {
-      //   availabilities_attributes: params,
-      //   _jv: {
-      //     type: personModel,
-      //     id: person.id
-      //   }
-      // }
-      // return new Promise((res, rej) => {
-      //   dispatch('jv/patch', [mdl, {url: `/person/${person.id}/availability`}]).then(
-      //     (data) => {
-      //       res(data)
-      //   }).catch(rej)
-      // })
-    },
-    [GET_PERSON_EXCLUSIONS] ({commit, dispatch, state}) {
-      // Return a promise with the exclusions
+      const mdl = {
+        person_exclusions_attributes: params,
+        _jv: {
+          type: personModel,
+          id: person.id
+        }
+      }
       return new Promise((res, rej) => {
-        // if(state.user.id) {
-        //   dispatch('jv/get',`/person/${state.user.id}/availability`).then((availabilities) => {
-        //     res(availabilities);
-        //   })
-        // } else {
-        //   res({});
-        // }
+        dispatch('jv/patch', [mdl, {url: `/person/${person.id}/person_exclusion`}]).then(
+          (data) => {
+            res(data)
+        }).catch(rej)
+      })
+    },
+    // Return a promise with the exclusions
+    [GET_PERSON_EXCLUSIONS] ({commit, dispatch, state}) {
+      return new Promise((res, rej) => {
+        if(state.user.id) {
+          dispatch('jv/get',`/person/${state.user.id}/person_exclusion`).then((exclusions) => {
+            res(exclusions);
+          })
+        } else {
+          res({});
+        }
       })
     }
   },

@@ -1,4 +1,4 @@
-class PersonExclusionsController < ApplicationController
+class PersonExclusionsController < ResourceController
   SERIALIZER_CLASS = 'PersonExclusionSerializer'.freeze
   POLICY_CLASS = 'PersonExclusionsPolicy'.freeze
   POLICY_SCOPE_CLASS = 'PersonExclusionsPolicy::Scope'.freeze
@@ -11,7 +11,7 @@ class PersonExclusionsController < ApplicationController
       p.person_exclusions.delete_all # clear out the existing availabilites
       exclusions.each do |exclusion|
         p.person_exclusions.create({
-            exclusion_id: exclusion[:exclusion_id]
+            exclusion_id: exclusion
           })
       end
 
