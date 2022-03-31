@@ -62,11 +62,11 @@ module.exports = {
     ADMIN_ADD_USER_ERROR: (name) => errorMessage(`${name} failed to be added to Planorama.`),
     IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",
     MODEL_SAVE_SUCCESS: (model) => `${titleCase(model)} sucessfully saved.`,
-    MODEL_SAVE_ERROR: (model) => errorMessage(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be saved.`),
-    MODEL_ADD_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully added.`,
-    MODEL_ADD_ERROR: (model) => errorMessage(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be added.`),
-    MODEL_DELETE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully deleted.`,
-    MODEL_DELETE_ERROR: (model) => errorMessage(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be deleted.`),
+    MODEL_SAVE_ERROR: (model) => errorMessage(`${titleCase(model)} failed to be saved.`),
+    MODEL_ADD_SUCCESS: (model) => `${titleCase(model)} sucessfully added.`,
+    MODEL_ADD_ERROR: (model) => errorMessage(`${$titleCase(model)} failed to be added.`),
+    MODEL_DELETE_SUCCESS: (model) => `${titleCase(model)} sucessfully deleted.`,
+    MODEL_DELETE_ERROR: (model) => errorMessage(`${titleCase(model)} failed to be deleted.`),
 
     // Mailing messages
     MAILING_SCHEDULED: (title) => `The mailing ${title} has been scheduled.`,
