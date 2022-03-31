@@ -28,7 +28,20 @@ class SettingsController < ApplicationController
       ],
       # 4. list of configs
       configs: ::Configuration.all,
-      exclusions: ::Exclusion.all # TODO: we may want a sort order on these ????
+      exclusions: ::Exclusion.all, # TODO: we may want a sort order on these ????
+      yesnomaybe: [{
+        value: 'yes',
+        label: 'this says yes'
+      }, {
+        value: 'no', 
+        label: 'this says no'
+      },
+      {
+        value: 'maybe',
+        label: 'this says kumquat'
+      }
+    ],
+
     }
 
     render json: settings,

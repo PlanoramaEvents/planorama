@@ -55,6 +55,9 @@ module.exports = {
     //survey restrictions
     SURVEY_NOT_ASSIGNED: "This survey hasn't been assigned to you",
 
+    //survey questions
+    SURVEY_YESNOMAYBE_PLACEHOLDER: "Please elaborate here.",
+
     //generic app wide
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_AGREEMENT_SUCCESS: (title) => `${title} successfully added to Planorama.`,

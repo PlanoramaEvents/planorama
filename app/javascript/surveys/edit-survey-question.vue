@@ -109,6 +109,22 @@
           <p v-if="!isSelected">{{question.question}}</p>
         </div>
       </template>
+      <template v-if="yesnomaybe">
+        <div class="col-12">
+          <b-form-radio-group stacked>
+            <b-form-radio disabled :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="noLabel.value">{{noLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+          <div class="ml-4 mt-1 mb-3">
+            <b-form-textarea 
+              :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
+              disabled
+            >
+            </b-form-textarea>
+          </div>
+        </div>
+      </template>
     </div>
     <div class="row" v-if="isSelected">
       <div class="col-6">
@@ -134,7 +150,7 @@ import {
   pageMixin,
   questionMixin
 } from '@mixins';
-import { LINKED_FIELD_LABELS } from '@/constants/strings';
+import { LINKED_FIELD_LABELS, SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
 
 
 export default {
@@ -145,6 +161,9 @@ export default {
     PlanoEditor,
     LinkedField,
   },
+  data: () => ({
+    SURVEY_YESNOMAYBE_PLACEHOLDER
+  }),
   props: {
     question: {
       type: Object,
