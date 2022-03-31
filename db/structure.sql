@@ -897,6 +897,21 @@ CREATE TABLE public.session_assignments (
 
 
 --
+-- Name: session_limits; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_limits (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    day date,
+    max_sessions integer,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: sessions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1525,6 +1540,14 @@ ALTER TABLE ONLY public.session_areas
 
 
 --
+-- Name: session_limits session_limits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session_limits
+    ADD CONSTRAINT session_limits_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: survey_answers survey_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1875,6 +1898,20 @@ CREATE INDEX index_session_assignments_on_interest_role ON public.session_assign
 
 
 --
+-- Name: index_session_limits_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_session_limits_on_person_id ON public.session_limits USING btree (person_id);
+
+
+--
+-- Name: index_session_limits_on_person_id_and_day; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_session_limits_on_person_id_and_day ON public.session_limits USING btree (person_id, day);
+
+
+--
 -- Name: index_survey_answers_on_next_page_action; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2197,6 +2234,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220321144540'),
 ('20220326140959'),
 ('20220330150651'),
-('20220330150751');
+('20220330150751'),
+('20220331160250');
 
 
