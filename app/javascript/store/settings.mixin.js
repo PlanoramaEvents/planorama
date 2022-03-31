@@ -22,10 +22,6 @@ export const settingsMixin = {
       }
     }
   },
-  mounted() {
-    // fetch the current settings on mount !!!
-    this.fetchSettings();
-  }
 }
 
 export default settingsMixin;

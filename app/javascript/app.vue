@@ -52,6 +52,10 @@ export default  {
       // TODO: @RALPH - this passes along the check signatures to the agreement signer ...
       this.$refs['agreement-signer'].check_signatures()
     }
+  },
+  mounted() {
+    // fetch the current settings on mount !!!
+    this.fetchSettings();
   }
 }
 </script>

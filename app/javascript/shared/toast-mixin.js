@@ -1,4 +1,5 @@
 import { SUCCESS_TOAST_TITLE, ERROR_TOAST_TITLE, nLines, ERROR_GENERIC_RECOVERABLE, ERROR_GENERIC_UNRECOVERABLE } from "@/constants/strings"
+import { errorEmail } from "@/constants/config";
 
 export const toastMixin = {
   methods: {
@@ -47,12 +48,12 @@ export const toastMixin = {
           }
         })
         .catch((error) => {
-          console.error(error)
+          console.error(error, error.response)
           this.error_toast(getErrorText(error.response, error_text))
           rej(error);
         })
       });
-    }
+    },
   }
 }
 
@@ -62,12 +63,12 @@ function getErrorText(errorResp, errorText) {
     try {
       let errors = errorResp.data.errors.map(e => e.title).filter(e => e.match("Validation"));
       if(!errors.length) {
-        return ERROR_GENERIC_RECOVERABLE;
+        return ERROR_GENERIC_RECOVERABLE(errorEmail);
       }
       return nLines(errors);
     } catch {
       // generic 422 we need to do more research about why the 422 here
-      return ERROR_GENERIC_RECOVERABLE;
+      return ERROR_GENERIC_RECOVERABLE(errorEmail);
     }
   }
   // try using the provided error text

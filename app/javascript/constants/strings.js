@@ -154,7 +154,9 @@ module.exports = {
     },
     nLines,
 
-    ERROR_GENERIC_RECOVERABLE: "Anna needs to write copy for this generic error that is potentially recoverable.",
-    ERROR_GENERIC_UNRECOVERABLE: "Anna needs to write copy for this generic error that is non-recoverable."
+    ERROR_GENERIC_RECOVERABLE: (email) => twoLines("The server has encountered an internal error and was unable to complete your request.",
+    `Please contact the server administrator at ${email} and let them know the time and date the error occured.`),
+    ERROR_GENERIC_UNRECOVERABLE: (email) => twoLines("The server has encountered an internal error and was unable to complete your request.",
+    `Please contact the server administrator at ${email} and let them know the time and date the error occured.`),
 
 }
