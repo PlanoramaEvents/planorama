@@ -2,6 +2,7 @@
   <div class="d-flex flex-row">
     <div class="">
       Availability
+      <!-- <b-form-select v-model="timezone" :options="options"></b-form-select> -->
       <div class="d-flex flex-row">
         <availability-time-picker
           v-for="day in days" :key="day"

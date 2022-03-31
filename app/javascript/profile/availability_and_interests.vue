@@ -1,24 +1,21 @@
 <template>
   <div>
-  <div class="d-flex flex-row pb-3">
-    <div>
-      Convention maximum number of program items willing to participate in:<br />
-      <b-col sm="4">
-        <b-form-input></b-form-input>
-      </b-col>
+    <div class="d-flex flex-row pb-3">
+      <div>
+        <!-- TODO: backend for limits -->
+        Convention maximum number of program items willing to participate in:<br />
+        <b-col sm="4">
+          <b-form-input></b-form-input>
+        </b-col>
+      </div>
     </div>
-    <!-- <b-form-select v-model="timezone" :options="options"></b-form-select> -->
-  </div>
-  <div class="d-flex flex-row">
-    <!-- <div class="mb-3">
-      Availbility and Interests
-    </div> -->
+    <div class="d-flex flex-row">
       <availability-calendar
         :days="days"
         model="availability"
         :timezone="timezone"
       ></availability-calendar>
-      <div class="pl-2" style="max-width: 20%;">
+      <div class="pl-2" style="max-width: 25%;">
         <b-row class="my-1">
           <b-col sm="12">
             Daily panel maximum willing to participate in (regardless of convention maximum)
@@ -65,86 +62,36 @@
           </b-col>
         </b-row>
       </div>
-    <div class="pl-2">
-      Do not schedule me against these specific  events:<br />
-      <!-- value="accepted"
-      unchecked-value="not_accepted" -->
-      <b-form-checkbox name="checkbox-1">
-      Hugo Award Ceremony
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Hugo Award Ceremony rehearsal
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Masquerade
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Masquerade rehearsal
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Opening Ceremony
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Opening Ceremony rehearsal
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Closing Ceremony
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Closing Ceremony rehearsal
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      WSFS Business Meeting
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Mark Protection Committee meetings
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Joe Siclari and Edie Stern GoH highlight session
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Floyd Norman highlight session
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Charles deLint highlight session
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Earle Korshak highlight session
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Eve L. Ewing highlight session
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Gene Ha highlight session
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Eric Wilkerson highlight session
-      </b-form-checkbox>
-      <b-form-checkbox name="checkbox-1">
-      Answer to Chicago question
-      </b-form-checkbox>
     </div>
-  </div>
+    <div class="d-flex flex-row">
+      <!-- model="person_exclusion" -->
+      <exclusions-picker
+      ></exclusions-picker>
+    </div>
   </div>
 </template>
 
 <script>
 import AvailabilityCalendar from './availability_calendar.vue';
-// import { personModel as model } from '../store/person.store';
+import ExclusionsPicker from './exclusions_picker.vue'
 
 const { DateTime } = require("luxon");
 
 export default {
   name: "AvailabilityAndInterests",
+  components: {
+    AvailabilityCalendar,
+    ExclusionsPicker
+  },
   props: {
     start_time: {
       type: DateTime,
-      default: null
-      // required: true
+      // default: null
+      required: true
     },
     end_time: {
       type: DateTime,
-      default: null
+      required: true
     }
   },
   data: () => ({
@@ -171,9 +118,6 @@ export default {
       }
       return res
     }
-  },
-  components: {
-    AvailabilityCalendar
   }
 }
 </script>

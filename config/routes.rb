@@ -14,10 +14,9 @@ Rails.application.routes.draw do
   root to: 'home#index'
   # get '/home', to: 'home#index'
 
-  # TODO: retest with SPA, should be ok
   get '/login/:magic_link', to: 'login#magic_link'
 
-  post '/validator/email', to: 'validator/email#validate' #, controller: 'validator/email'
+  post '/validator/email', to: 'validator/email#validate'
 
   get '/settings', to: 'settings#index'
 
@@ -35,8 +34,11 @@ Rails.application.routes.draw do
     get 'submissions', to: 'people#submissions'
     resources :availabilities, path: 'availability', only: [:index]
     patch 'availability', to: 'availabilities#replace'
+    resources :person_exclusions, path: 'person_exclusion', only: [:index]
+    patch 'person_exclusion', to: 'person_exclusions#replace'
   end
   resources :availabilities, path: 'availability', except: [:index]
+  resources :person_exclusions, path: 'person_exclusion', except: [:index]
 
   resources :convention_roles, path: 'convention_role', except: [:index]
   resources :email_addresses, path: 'email_address', except: [:index]

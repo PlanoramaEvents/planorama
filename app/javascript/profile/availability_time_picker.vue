@@ -5,7 +5,7 @@
       xsmall
       disable-date-prototypes
       active-view="day"
-      style="height: 30em;"
+      style="height: 300px;"
       :editable-events="{ title: false, drag: true, resize: true, delete: true, create: true }"
       :disable-views="['years', 'year', 'month', 'week']"
       :time-cell-height="18"
@@ -23,6 +23,7 @@
       @event-duration-change="onUpdate($event)"
       @event-drop="onUpdate($event)"
     >
+    <!-- :special-hours="conventionHours" -->
       <template v-slot:title="{ title, view }">
         {{ formatDate(view.selectedDate.toISOString(), { weekday: 'long' }) }}<br />
         {{ formatDate(view.selectedDate.toISOString(), { day: 'numeric', month: 'short' }) }}
@@ -83,7 +84,17 @@ export default {
     }
   },
   data: () =>  ({
-    dayEvents: {}
+    dayEvents: {},
+    // TODO: we need to pass this in based on TZ
+    // conventionHours: {
+    //   1: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   2: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   3: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   4: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   5: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   6: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   7: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    // }
   }),
   computed: {
     dayColClass() {
@@ -173,6 +184,12 @@ export default {
 
 <style lang="scss">
 @import '../stylesheets/style.scss';
+
+// .convention-hours {
+//   background-color: white;
+// }
+//
+// .vuecal__cell-content {background-color: rgba(127, 127, 127, 0.2);}
 
 .vuecal__no-event {
   display: none;
