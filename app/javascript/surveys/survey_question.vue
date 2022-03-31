@@ -1,7 +1,7 @@
 <template>
   <div class="survey-question mt-3 pl-1" v-if="!!localResponse">
     <b-form-group
-      v-if="!formatting && !address && !socialmedia"
+      v-if="!formatting && !socialmedia"
     >
       <template #label>
         <span v-html="questionText"></span><mandatory-star :mandatory="question.mandatory"></mandatory-star>
@@ -29,6 +29,27 @@
             :state="calcValid(errors,valid)"
             @blur="saveResponse(localResponse, selectedSubmission)"
           ></b-form-input>
+          <b-form-radio-group
+            :class="{'w-50': answerable}"
+            stacked
+            v-if="yesnomaybe"
+            v-model="radioButtonResponse"
+            :aria-describedBy="ariaDescribedBy"
+            :required="question.mandatory"
+            @change="saveResponse(localResponse, selectedSubmission)"
+          >
+            <b-form-radio :disabled="!answerable" :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="noLabel.value">{{noLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
+            <div class="ml-4 mt-1 mb-3">
+              <b-form-textarea 
+                :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
+                :v-model="localResponse.response.text"
+                :disabled="!answerable || radioButtonResponse !== maybeLabel.value"
+              >
+              </b-form-textarea>
+            </div>
+          </b-form-radio-group>
           <b-form-radio-group
             :class="{'w-50': answerable}"
             stacked
@@ -138,96 +159,6 @@
     </b-form-group>
     <p v-if="textonly">{{question.question}}</p>
     <hr v-if="hr" />
-    <div class="row" v-if="address">
-      <div class="col-12 h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></div>
-    </div>
-    <div :class="['form-address', 'form-row', { 'w-50': answerable}]" v-if="address">
-      <div class="col-12 col-sm-6 pt-2">
-        <b-form-group
-          :id="formGroupId('address-1')"
-          :label-for="formId('address-1')"
-          label="Address 1"
-          :required="question.mandatory"
-        >
-          <b-form-input
-            :disabled="!answerable"
-            :id="formId('address-1')"
-            v-model="localResponse.response.address.street"
-            @blur="saveResponse(localResponse, selectedSubmission)"
-          ></b-form-input>
-        </b-form-group>
-      </div>
-      <div class="col-12 col-sm-6 pt-sm-2">
-        <b-form-group
-          :id="formGroupId('address-2')"
-          :label-for="formId('address-2')"
-          label="Address 2"
-        >
-          <b-form-input
-            :disabled="!answerable"
-            :id="formId('address-2')"
-            v-model="localResponse.response.address.street2"
-            @blur="saveResponse(localResponse, selectedSubmission)"
-          ></b-form-input>
-        </b-form-group>
-      </div>
-      <div class="col-12 col-sm-6">
-        <b-form-group
-          :id="formGroupId('city')"
-          :label-for="formId('city')"
-          label="City"
-        >
-          <b-form-input
-            :disabled="!answerable"
-            :id="formId('city')"
-            v-model="localResponse.response.address.city"
-            @blur="saveResponse(localResponse, selectedSubmission)"
-          ></b-form-input>
-        </b-form-group>
-      </div>
-      <div class="col-12 col-sm-3">
-        <b-form-group
-          :id="formGroupId('state')"
-          :label-for="formId('state')"
-          label="State"
-        >
-          <b-form-input
-          :disabled="!answerable"
-          :id="formId('state')"
-          v-model="localResponse.response.address.state"
-          @blur="saveResponse(localResponse, selectedSubmission)"
-        ></b-form-input>
-        </b-form-group>
-      </div>
-      <div class="col-12 col-sm-3">
-        <b-form-group
-          :id="formGroupId('zip')"
-          :label-for="formId('zip')"
-          label="Postal Code"
-        >
-          <b-form-input
-            :disabled="!answerable"
-            :id="formId('zip')"
-            v-model="localResponse.response.address.zip"
-            @blur="saveResponse(localResponse, selectedSubmission)"
-          ></b-form-input>
-        </b-form-group>
-      </div>
-      <div class="col-12">
-        <b-form-group
-          :id="formGroupId('country')"
-          :label-for="formId('country')"
-          label="Country"
-        >
-          <b-form-input
-            :disabled="!answerable"
-            :id="formId('country')"
-            v-model="localResponse.response.address.country"
-            @blur="saveResponse(localResponse, selectedSubmission)"
-          ></b-form-input>
-        </b-form-group>
-      </div>
-    </div>
     <div v-if="socialmedia">
       <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
       <div :class="['row', 'ml-0', {'w-50': answerable}]">
@@ -339,6 +270,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { submissionModel } from '@/store/survey';
 import { mapState } from 'vuex';
 import { ValidationProvider } from 'vee-validate';
+import { SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
 
 export default {
   name: "SurveyQuestion",
@@ -368,7 +300,8 @@ export default {
   data: () => ({
     otherChecked: false,
     localResponse: null,
-    is_valid: true
+    is_valid: true,
+    SURVEY_YESNOMAYBE_PLACEHOLDER,
   }),
   computed: {
     ...mapState(['previewMode']),

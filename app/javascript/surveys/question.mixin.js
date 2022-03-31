@@ -12,12 +12,14 @@ import {
   QUESTION_DUPLICATE_SUCCESS,
   QUESTION_SAVE_SUCCESS
 } from '../constants/strings'
+import settingsMixin from '@/store/settings.mixin';
 
 // CONVERTED
 export const questionMixin = {
   mixins: [
     pageMixin,
-    surveyMixin
+    surveyMixin,
+    settingsMixin
   ],
   data: () => ({
     // if we ever change this, we need to change linked-fields.js too
@@ -84,6 +86,15 @@ export const questionMixin = {
     },
     selectedQuestionIndex() {
       return this.getQuestionIndex(this.selectedQuestion)
+    },
+    yesLabel() {
+      return this.currentSettings.yesnomaybe?.find(ynm => ynm.value === "yes") || "Yes";
+    },
+    noLabel() {
+      return this.currentSettings.yesnomaybe?.find(ynm => ynm.value === "no") || "No";
+    },
+    maybeLabel() {
+      return this.currentSettings.yesnomaybe?.find(ynm => ynm.value === "maybe") || "Maybe";
     }
   },
   methods: {
