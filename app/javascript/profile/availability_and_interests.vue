@@ -5,7 +5,12 @@
         <!-- TODO: backend for limits -->
         Convention maximum number of program items willing to participate in:<br />
         <b-col sm="4">
-          <b-form-input></b-form-input>
+          <session-limit-editor
+            :timezone="timezone"
+            model="session_limit"
+          >
+          </session-limit-editor>
+          <!-- <b-form-input></b-form-input> -->
         </b-col>
       </div>
     </div>
@@ -24,7 +29,6 @@
         <session-limits
           :days="days"
           :timezone="timezone"
-          model="session_limit"
         >
         </session-limits>
       </div>
@@ -41,12 +45,14 @@
 import AvailabilityCalendar from './availability_calendar.vue';
 import ExclusionsPicker from './exclusions_picker.vue'
 import SessionLimits from './session_limits.vue'
+import SessionLimitEditor from './session_limit_editor.vue'
 
 const { DateTime } = require("luxon");
 
 export default {
   name: "AvailabilityAndInterests",
   components: {
+    SessionLimitEditor,
     AvailabilityCalendar,
     ExclusionsPicker,
     SessionLimits
