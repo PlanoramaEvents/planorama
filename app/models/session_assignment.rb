@@ -41,7 +41,7 @@ class SessionAssignment < ApplicationRecord
     is_private: 'private'
   }
 
-  validates_inclusion_of :state, in: [ :proposed, :accepted, :rejected ]
+  validates_inclusion_of :state, in: %w( proposed accepted rejected )
 
   # We use the state machine to manage the "workflow" for the assignment
   include AASM
