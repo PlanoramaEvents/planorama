@@ -100,7 +100,9 @@ class Person < ApplicationRecord
   validates :name, presence: true
 
   def email
-    contact_email || primary_email || email_addresses.first&.email
+    addr = contact_email || primary_email || email_addresses.first
+
+    addr&.email
   end
 
   # TODO: we need to add contact flag to email address
