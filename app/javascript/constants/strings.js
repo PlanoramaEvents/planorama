@@ -111,6 +111,9 @@ module.exports = {
     CONFIGURATION_SAVED_SUCCESS: "Configuration has been save",
     CONFIGURATION_SAVED_ERROR: errorMessage("Error on config save"),
 
+    CREATE_SESSION_LIMIT_SUCCESS: "Session limit has been save",
+    CREATE_SESSION_LIMIT_ERROR: errorMessage("Error on Session limit save"),
+
     //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
     PAGE_DELETE_ERROR: errorMessage("Page failed to be deleted."),

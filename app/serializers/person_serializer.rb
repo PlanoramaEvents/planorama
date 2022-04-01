@@ -127,6 +127,17 @@ class PersonSerializer #< ActiveModel::Serializer
               "#{params[:domain]}/person/#{object.id}/person_exclusion"
             }
           }
+
+  has_many :session_limits, serializer:SessionLimitSerializer
+  #         links: {
+  #           self: -> (object, params) {
+  #             "#{params[:domain]}/person/#{object.id}"
+  #           },
+  #           related: -> (object, params) {
+  #             "#{params[:domain]}/person/#{object.id}/session_limit"
+  #           }
+  #         }
+
   # sessions
   # has_many :sessions, serializer: SessionSerializer,
   #            if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },

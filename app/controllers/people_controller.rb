@@ -15,7 +15,8 @@ class PeopleController < ResourceController
       jsonapi_included: [
         :email_addresses,
         :convention_roles,
-        :unsigned_agreements
+        :unsigned_agreements,
+        :session_limits
       ]
     )
   end
@@ -272,7 +273,8 @@ class PeopleController < ResourceController
     [
       :email_addresses,
       :convention_roles,
-      :availabilities
+      :availabilities,
+      :session_limits
     ]
   end
 

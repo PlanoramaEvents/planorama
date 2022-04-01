@@ -21,46 +21,12 @@
             Daily panel maximum willing to participate in (regardless of convention maximum)
           </b-col>
         </b-row>
-        <b-row class="my-1">
-          <b-col sm="4">
-            <b-form-input></b-form-input>
-          </b-col>
-          <b-col sm="8">
-            <label for="input-none">Thursday</label>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="4">
-            <b-form-input></b-form-input>
-          </b-col>
-          <b-col sm="8">
-            <label for="input-none">Friday</label>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="4">
-            <b-form-input></b-form-input>
-          </b-col>
-          <b-col sm="8">
-            <label for="input-none">Saturday</label>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="4">
-            <b-form-input></b-form-input>
-          </b-col>
-          <b-col sm="8">
-            <label for="input-none">Sunday</label>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="4">
-            <b-form-input></b-form-input>
-          </b-col>
-          <b-col sm="8">
-            <label for="input-none">Monday</label>
-          </b-col>
-        </b-row>
+        <session-limits
+          :days="days"
+          :timezone="timezone"
+          model="session_limit"
+        >
+        </session-limits>
       </div>
     </div>
     <div class="d-flex flex-row">
@@ -74,6 +40,7 @@
 <script>
 import AvailabilityCalendar from './availability_calendar.vue';
 import ExclusionsPicker from './exclusions_picker.vue'
+import SessionLimits from './session_limits.vue'
 
 const { DateTime } = require("luxon");
 
@@ -81,7 +48,8 @@ export default {
   name: "AvailabilityAndInterests",
   components: {
     AvailabilityCalendar,
-    ExclusionsPicker
+    ExclusionsPicker,
+    SessionLimits
   },
   props: {
     start_time: {

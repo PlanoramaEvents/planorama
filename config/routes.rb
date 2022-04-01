@@ -36,9 +36,12 @@ Rails.application.routes.draw do
     patch 'availability', to: 'availabilities#replace'
     resources :person_exclusions, path: 'person_exclusion', only: [:index]
     patch 'person_exclusion', to: 'person_exclusions#replace'
+    resources :session_limits, path: 'session_limit', only: [:index]
+    # patch 'session_limit', to: 'session_limits#replace'
   end
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
+  resources :session_limits, path: 'session_limit', except: [:index]
 
   resources :convention_roles, path: 'convention_role', except: [:index]
   resources :email_addresses, path: 'email_address', except: [:index]

@@ -52,6 +52,8 @@ import { availabilityStore } from './availability.store';
 
 import { personExclusionStore } from './person_exclusion.store';
 
+import { sessionLimitStore } from './session_limit.store'
+
 // tag add-ons
 import { tagStore, tagEndpoints } from './tag.store';
 
@@ -302,6 +304,7 @@ export const store = new Vuex.Store({
 // actions not defined    ...parameterNameStore.actions,
     ...configurationStore.actions,
     ...availabilityStore.actions,
-    ...personExclusionStore.actions
+    ...personExclusionStore.actions,
+    ...sessionLimitStore.actions
   }
 })
