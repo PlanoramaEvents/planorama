@@ -4,6 +4,11 @@ import {NEW_AVAILABILITY, UPDATE_AVAILABILITY, GET_AVAILABILITY} from '@/store/a
 
 import modelMixin from "./model.mixin";
 
+import {
+  UPDATE_AVAILABILITY_SUCCESS,
+  UPDATE_AVAILABILITY_ERROR
+} from '../constants/strings'
+
 export const availabilityMixin = {
   mixins: [modelMixin],
   methods: {
@@ -12,11 +17,17 @@ export const availabilityMixin = {
       update_availability_in_store: UPDATE_AVAILABILITY,
       get_availability: GET_AVAILABILITY
     }),
-    update_availability({person, params}) {
+    update_availability({person, params}, success_text = UPDATE_AVAILABILITY_SUCCESS, error_text = UPDATE_AVAILABILITY_ERROR) {
       this.clear()
       // Send all datetimes to backend as UTC
       let utc_params = params.map((slot) => { return {end: slot.end.toUTC(), start: slot.start.toUTC()} })
-      return this.update_availability_in_store({person: person, params: utc_params})
+
+      return this.toastPromise(
+        this.update_availability_in_store({person: person, params: utc_params}),
+        success_text,
+        error_text
+      );
+
     }
   }
 }

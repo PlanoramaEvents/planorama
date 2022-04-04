@@ -786,7 +786,10 @@ END) STORED,
     can_photo_exceptions character varying(10000) DEFAULT NULL::character varying,
     is_local boolean DEFAULT false,
     languages_fluent_in character varying(10000) DEFAULT NULL::character varying,
-    con_state public.person_status_enum DEFAULT 'not_set'::public.person_status_enum
+    con_state public.person_status_enum DEFAULT 'not_set'::public.person_status_enum,
+    attendance_type character varying(200) DEFAULT NULL::character varying,
+    twelve_hour boolean DEFAULT true,
+    timezone character varying(500) DEFAULT NULL::character varying
 );
 
 
@@ -2472,6 +2475,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220404140458'),
 ('20220404142002'),
 ('20220404142017'),
-('20220404143150');
+('20220404143150'),
+('20220404162324');
 
 

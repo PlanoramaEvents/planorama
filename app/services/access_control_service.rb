@@ -18,9 +18,10 @@ module AccessControlService
         comments: { sensitive: true, linkable: false, type: :text},
         can_share: { sensitive: true, linkable: true, type: :boolean, values: [true, false]}, # PROB???
         con_state: { sensitive: true, linkable: false, type: :enum},
-        registered: { sensitive: true, linkable: false, type: :boolean},
+        registered: { sensitive: false, linkable: false, type: :boolean},
         registration_type: { sensitive: true, linkable: false, type: :string},
         registration_number: { sensitive: true, linkable: false, type: :string},
+        attendance_type: { sensitive: false, linkable: true, type: :string, values: ['in person', 'virtual', 'hybrid']},
         bio: { sensitive: true, linkable: true, type: :text},
         website: { sensitive: false, linkable: true, type: :string},
         twitter: { sensitive: false, linkable: true, type: :string},

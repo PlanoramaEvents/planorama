@@ -117,6 +117,9 @@ module.exports = {
     UPDATE_PERSON_EXCLUSION_SUCCESS: "Exclusion information has been updated.",
     UPDATE_PERSON_EXCLUSION_ERROR: errorMessage("Error on updating Exclusion information."),
 
+    UPDATE_AVAILABILITY_SUCCESS: "Availability has been updated.",
+    UPDATE_AVAILABILITY_ERROR: errorMessage("Error on updating Availability."),
+
     //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
     PAGE_DELETE_ERROR: errorMessage("Page failed to be deleted."),

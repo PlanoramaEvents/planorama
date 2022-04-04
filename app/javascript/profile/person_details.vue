@@ -12,7 +12,6 @@
     <!-- registration details ?? -->
     <!-- Do we want can stream etc -->
     <timezone-selector v-model="selectedTimezone"></timezone-selector>
-    {{ selectedTimezone }}
   </div>
 </template>
 
