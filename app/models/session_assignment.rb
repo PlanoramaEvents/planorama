@@ -20,6 +20,8 @@ class SessionAssignment < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: [:session_id]
 
+  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
+
   belongs_to  :person
   belongs_to  :session
   belongs_to  :session_assignment_role_type, required: false

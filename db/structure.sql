@@ -278,6 +278,146 @@ CREATE TABLE public.areas (
 
 
 --
+-- Name: audit_people_versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.audit_people_versions (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id bigint NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    created_at timestamp without time zone,
+    object_changes json
+);
+
+
+--
+-- Name: audit_people_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.audit_people_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: audit_people_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.audit_people_versions_id_seq OWNED BY public.audit_people_versions.id;
+
+
+--
+-- Name: audit_published_session_versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.audit_published_session_versions (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id bigint NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    created_at timestamp without time zone,
+    object_changes json
+);
+
+
+--
+-- Name: audit_published_session_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.audit_published_session_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: audit_published_session_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.audit_published_session_versions_id_seq OWNED BY public.audit_published_session_versions.id;
+
+
+--
+-- Name: audit_session_versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.audit_session_versions (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id bigint NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    created_at timestamp without time zone,
+    object_changes json
+);
+
+
+--
+-- Name: audit_session_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.audit_session_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: audit_session_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.audit_session_versions_id_seq OWNED BY public.audit_session_versions.id;
+
+
+--
+-- Name: audit_survey_versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.audit_survey_versions (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id bigint NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    created_at timestamp without time zone,
+    object_changes json
+);
+
+
+--
+-- Name: audit_survey_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.audit_survey_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: audit_survey_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.audit_survey_versions_id_seq OWNED BY public.audit_survey_versions.id;
+
+
+--
 -- Name: availabilities; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1206,9 +1346,10 @@ CREATE TABLE public.versions (
     item_id uuid NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
-    object text,
+    object_old text,
     created_at timestamp without time zone,
-    object_changes text
+    object_changes json,
+    object json
 );
 
 
@@ -1229,6 +1370,34 @@ CREATE SEQUENCE public.versions_id_seq
 --
 
 ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
+
+
+--
+-- Name: audit_people_versions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.audit_people_versions ALTER COLUMN id SET DEFAULT nextval('public.audit_people_versions_id_seq'::regclass);
+
+
+--
+-- Name: audit_published_session_versions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.audit_published_session_versions ALTER COLUMN id SET DEFAULT nextval('public.audit_published_session_versions_id_seq'::regclass);
+
+
+--
+-- Name: audit_session_versions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.audit_session_versions ALTER COLUMN id SET DEFAULT nextval('public.audit_session_versions_id_seq'::regclass);
+
+
+--
+-- Name: audit_survey_versions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.audit_survey_versions ALTER COLUMN id SET DEFAULT nextval('public.audit_survey_versions_id_seq'::regclass);
 
 
 --
@@ -1282,6 +1451,38 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.areas
     ADD CONSTRAINT areas_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: audit_people_versions audit_people_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.audit_people_versions
+    ADD CONSTRAINT audit_people_versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: audit_published_session_versions audit_published_session_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.audit_published_session_versions
+    ADD CONSTRAINT audit_published_session_versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: audit_session_versions audit_session_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.audit_session_versions
+    ADD CONSTRAINT audit_session_versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: audit_survey_versions audit_survey_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.audit_survey_versions
+    ADD CONSTRAINT audit_survey_versions_pkey PRIMARY KEY (id);
 
 
 --
@@ -1749,6 +1950,34 @@ CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree 
 --
 
 CREATE UNIQUE INDEX index_areas_on_name ON public.areas USING btree (name);
+
+
+--
+-- Name: index_audit_people_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_audit_people_versions_on_item_type_and_item_id ON public.audit_people_versions USING btree (item_type, item_id);
+
+
+--
+-- Name: index_audit_published_session_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_audit_published_session_versions_on_item_type_and_item_id ON public.audit_published_session_versions USING btree (item_type, item_id);
+
+
+--
+-- Name: index_audit_session_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_audit_session_versions_on_item_type_and_item_id ON public.audit_session_versions USING btree (item_type, item_id);
+
+
+--
+-- Name: index_audit_survey_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_audit_survey_versions_on_item_type_and_item_id ON public.audit_survey_versions USING btree (item_type, item_id);
 
 
 --
@@ -2238,6 +2467,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220330150751'),
 ('20220331160250'),
 ('20220403175009'),
-('20220403175609');
+('20220403175609'),
+('20220404140435'),
+('20220404140458'),
+('20220404142002'),
+('20220404142017'),
+('20220404143150');
 
 
