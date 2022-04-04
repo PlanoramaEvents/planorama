@@ -6,6 +6,7 @@
         <b-form-checkbox
           v-model="selectedExclusions"
           :value="exclusion.id"
+          @change="updateExclusions"
         >
           {{ exclusion.title }}
         </b-form-checkbox>
@@ -33,12 +34,10 @@ export default {
   data: () =>  ({
     selectedExclusions: []
   }),
-  watch: {
-    selectedExclusions(newVal, oldVal) {
-      this.update_exclusions({person: this.currentUser, params: newVal})
-    }
-  },
   methods: {
+    updateExclusions: function(vals) {
+       this.update_exclusions({person: this.currentUser, params: vals})
+    },
     init: function(arg) {
       this.get_exclusions().then(
         () => {

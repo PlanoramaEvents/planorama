@@ -108,11 +108,14 @@ module.exports = {
 
     SESSION_RANKING_ERROR: (total, allowed) => `You have assigned ${total} exceeds the allowed ${allowed}.`,
 
-    CONFIGURATION_SAVED_SUCCESS: "Configuration has been save",
+    CONFIGURATION_SAVED_SUCCESS: "Configuration has been saved",
     CONFIGURATION_SAVED_ERROR: errorMessage("Error on config save"),
 
-    CREATE_SESSION_LIMIT_SUCCESS: "Session limit has been save",
+    CREATE_SESSION_LIMIT_SUCCESS: "Session limit has been saved",
     CREATE_SESSION_LIMIT_ERROR: errorMessage("Error on Session limit save"),
+
+    UPDATE_PERSON_EXCLUSION_SUCCESS: "Exclusion information has been updated.",
+    UPDATE_PERSON_EXCLUSION_ERROR: errorMessage("Error on updating Exclusion information."),
 
     //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
