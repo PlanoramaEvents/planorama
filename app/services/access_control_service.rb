@@ -16,7 +16,7 @@ module AccessControlService
         ethnicity: { sensitive: true, linkable: true, type: :string},
         opted_in: { sensitive: true, linkable: false, type: :boolean},
         comments: { sensitive: true, linkable: false, type: :text},
-        can_share: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
+        can_share: { sensitive: true, linkable: true, type: :boolean, values: [true, false]}, # PROB???
         con_state: { sensitive: true, linkable: false, type: :enum},
         registered: { sensitive: true, linkable: false, type: :boolean},
         registration_type: { sensitive: true, linkable: false, type: :string},
@@ -38,9 +38,9 @@ module AccessControlService
         can_photo: { sensitive: true, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
         age_at_convention: { sensitive: true, linkable: true, type: :string},
         romantic_sexual_orientation: { sensitive: true, linkable: true, type: :string},
-        needs_accommodations: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
+        needs_accommodations: { sensitive: true, linkable: true, type: :boolean, values: [true, false]}, # PROB???
         accommodations: { sensitive: true, linkable: true, type: :text},
-        willing_to_moderate: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
+        willing_to_moderate: { sensitive: true, linkable: true, type: :boolean, values: [true, false]}, # PROB???
         moderation_experience: { sensitive: true, linkable: true, type: :text},
         othered: { sensitive: true, linkable: true, type: :text},
         indigenous: { sensitive: true, linkable: true, type: :text},
@@ -51,7 +51,7 @@ module AccessControlService
         can_stream_exceptions: { sensitive: true, linkable: true, type: :text},
         can_record_exceptions: { sensitive: true, linkable: true, type: :text},
         can_photo_exceptions: { sensitive: true, linkable: true, type: :text},
-        is_local: { sensitive: true, linkable: true, type: :boolean, values: [true, false]},
+        is_local: { sensitive: true, linkable: true, type: :boolean, values: [true, false]}, # PROB???
         languages_fluent_in: { sensitive: true, linkable: true, type: :string},
         socialmedia: { sensitive: false, linkable: true, type: :socialmedia}
       }

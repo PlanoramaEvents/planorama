@@ -2,9 +2,10 @@
   <div class="scrollable">
     <profile-manage></profile-manage>
     <b-tabs content-class="mt-3">
-      <b-tab title="General"  lazy>
+      <b-tab title="General" active lazy>
+        <person-details></person-details>
       </b-tab>
-      <b-tab title="Availbility & Interests" active lazy>
+      <b-tab title="Availbility & Interests" lazy>
         <availability-and-interests
           :start_time="start_time"
           :end_time="end_time"
@@ -35,6 +36,7 @@ import SessionSelector from './session_selector.vue';
 import SessionRanker from './session_ranker.vue';
 import ProfileManage from './profile_manage.vue';
 import AvailabilityAndInterests from './availability_and_interests.vue';
+import PersonDetails from './person_details.vue'
 
 import { sessionModel } from '@/store/session.store'
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
@@ -49,6 +51,7 @@ export default {
     SessionRanker,
     ProfileManage,
     AvailabilityAndInterests,
+    PersonDetails
   },
   mixins: [
     personSessionMixin

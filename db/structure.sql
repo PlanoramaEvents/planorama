@@ -1203,11 +1203,12 @@ CREATE TABLE public.venues (
 CREATE TABLE public.versions (
     id bigint NOT NULL,
     item_type character varying NOT NULL,
-    item_id bigint NOT NULL,
+    item_id uuid NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
     object text,
-    created_at timestamp without time zone
+    created_at timestamp without time zone,
+    object_changes text
 );
 
 
@@ -2235,6 +2236,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220326140959'),
 ('20220330150651'),
 ('20220330150751'),
-('20220331160250');
+('20220331160250'),
+('20220403175009'),
+('20220403175609');
 
 

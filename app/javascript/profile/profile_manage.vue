@@ -1,6 +1,7 @@
 <template>
   <div class="mb-3">
     Manage Profile here
+    <!-- Ability to edit the names -->
   </div>
 </template>
 
