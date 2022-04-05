@@ -1,12 +1,12 @@
 <template>
-  <div class="scrollable">
+  <div class="scrollable" v-if="person">
     <person-summary
-      :person="currentUser"
+      v-model="person"
     ></person-summary>
     <b-tabs content-class="mt-3">
       <b-tab title="General" active lazy>
         <person-details
-          :person="currentUser"
+          v-model="person"
         ></person-details>
       </b-tab>
       <b-tab title="Availbility & Interests" lazy>
@@ -66,7 +66,8 @@ export default {
   ],
   data: () => ({
     sessionModel,
-    sessionAssignmentModel
+    sessionAssignmentModel,
+    person: null
   }),
   computed: {
     start_time() {
@@ -99,6 +100,9 @@ export default {
         return null
       }
     }
+  },
+  mounted() {
+    this.person = this.currentUser
   }
 }
 </script>

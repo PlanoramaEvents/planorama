@@ -37,6 +37,10 @@ export default {
     emailAddressMixin,
     personSessionMixin
   ],
+  model: {
+    prop: 'person',
+    // event: 'blur'
+  },
   props: {
     person: null,
     loading: {
@@ -88,6 +92,7 @@ export default {
       ).then(data => {
         this.emails = Object.values(data.email_addresses)
         this.additional = this.emails.filter(em => !em.isdefault)
+        this.$emit('input', data)
       })
     },
     onNew() {

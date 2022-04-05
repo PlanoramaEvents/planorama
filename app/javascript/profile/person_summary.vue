@@ -17,6 +17,10 @@ const { DateTime } = require("luxon");
 
 export default {
   name: "PersonSummary",
+  model: {
+    prop: 'person',
+    // event: 'blur'
+  },
   props: {
     person: {
       type: Object,

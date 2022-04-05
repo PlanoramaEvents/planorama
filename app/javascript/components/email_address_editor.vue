@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-row">
+  <div class="d-flex flex-row w-100">
     <validation-observer slim ref="emailObserver">
       <ValidationProvider
         mode="aggressive"
@@ -7,7 +7,7 @@
         name="Email"
         :skipIfEmpty="true"
         v-slot="{ valid, errors }"
-        class="w-25 mt-2 mr-2"
+        class="w-75 mt-2 mr-3"
       >
         <b-form-input
           :disabled='disabled'
@@ -24,7 +24,7 @@
       value="true"
       @change="onCheck"
       :checked="isdefault"
-      class="mt-2 pt-1"
+      class="mt-2 pt-1 w-25"
     >
     </b-form-radio>
   </div>
