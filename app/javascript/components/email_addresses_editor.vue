@@ -9,10 +9,10 @@
     </div>
     <div>
       Additional Emails
-      <div v-for="themail in emails">
+      <div v-for="email in additional">
         <email-address-editor
-          v-bind:value="themail"
-          @input="onInput(themail)"
+          v-bind:value="email"
+          @input="onInput(email)"
         ></email-address-editor>
       </div>
     </div>
@@ -46,14 +46,15 @@ export default {
   },
   data() {
     return {
-      emails: []
+      emails: [],
+      additional: []
     }
   },
   computed: {
     primary: {
       get: function() {
         if (this.person.email_addresses) {
-          let p = Object.values(this.person.email_addresses).find(em => em.isdefault);
+          let p = Object.values(this.emails).find(em => em.isdefault);
           return p
         } else {
           return null
@@ -69,33 +70,36 @@ export default {
       if (arg.id) {
         this.saveEmail(arg).then(
           () => {
-            this.getEmailsForPerson(this.person).then(
-              (data) => {
-                this.emails = Object.values(this.person.email_addresses).filter(em => !em.isdefault)
-              }
-            )
+            this.setLists()
           }
         )
       } else {
         this.addEmail(arg).then(
           () => {
-            this.fetchSession({force: true}).then(
-              () => {
-                this.emails = Object.values(this.person.email_addresses).filter(em => !em.isdefault)
-              }
-            )
+            this.setLists()
           }
         )
       }
     },
+    setLists() {
+      this.fetch_model_by_id(
+        'person',
+        this.person.id
+      ).then(data => {
+        this.emails = Object.values(data.email_addresses)
+        this.additional = this.emails.filter(em => !em.isdefault)
+      })
+    },
     onNew() {
-      this.emails.push({email: '', isdefault: false, person_id: this.currentUser.id})
+      this.additional.push({email: '', isdefault: false, person_id: this.currentUser.id})
     }
   },
   mounted() {
-    this.emails = Object.values(this.person.email_addresses).filter(em => !em.isdefault)
+    this.emails = Object.values(this.person.email_addresses)
     if (!this.emails) {
       this.emails = []
+    } else {
+      this.additional = this.emails.filter(em => !em.isdefault)
     }
   }
 }

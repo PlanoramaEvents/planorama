@@ -12,7 +12,7 @@ export const personStore = {
   actions: {
     [NEW_PERSON] ({dispatch}, attributes) {
       return dispatch(NEW, {model: personModel, selected: false, ...attributes})
-    },
+    }
   },
   selected: {
     [personModel]: undefined

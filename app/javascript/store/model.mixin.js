@@ -39,6 +39,9 @@ export const modelMixin = {
     fetch_by_id(id) {
       return this.$store.dispatch(FETCH_BY_ID, {model: this.model, id: id});
     },
+    fetch_model_by_id(model, id) {
+      return this.$store.dispatch(FETCH_BY_ID, {model: model, id: id});
+    },
     // TODO: model needs to be passed in
     search(params) {
       return this.$store.dispatch(SEARCH, {model: this.model, params});
