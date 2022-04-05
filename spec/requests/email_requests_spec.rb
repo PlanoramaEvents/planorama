@@ -18,7 +18,6 @@ RSpec.describe 'EmailAddresses', type: :request do
       get "/person/#{p.id}/email_addresses"
 
       expect(json).not_to be_empty
-      expect(json['meta']['total']).to be > 0
       expect(response).to have_http_status(200)
     end
 
