@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     formatDate(date, config) {
-      return DateTime.fromISO(date).setZone(this.timezone).toLocaleString(config)
+      return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
     }
   }
 }

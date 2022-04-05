@@ -1,14 +1,19 @@
 <template>
   <div class="scrollable">
-    <profile-manage></profile-manage>
+    <person-summary
+      :person="currentUser"
+    ></person-summary>
     <b-tabs content-class="mt-3">
       <b-tab title="General" active lazy>
-        <person-details></person-details>
+        <person-details
+          :person="currentUser"
+        ></person-details>
       </b-tab>
       <b-tab title="Availbility & Interests" lazy>
         <availability-and-interests
           :start_time="start_time"
           :end_time="end_time"
+          :timezone="timezone"
         ></availability-and-interests>
       </b-tab>
       <b-tab title="Session Selection" lazy>
@@ -34,13 +39,15 @@
 <script>
 import SessionSelector from './session_selector.vue';
 import SessionRanker from './session_ranker.vue';
-import ProfileManage from './profile_manage.vue';
+import PersonSummary from './person_summary.vue';
 import AvailabilityAndInterests from './availability_and_interests.vue';
 import PersonDetails from './person_details.vue'
 
 import { sessionModel } from '@/store/session.store'
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import personSessionMixin from '../auth/person_session.mixin';
+
+import settingsMixin from "@/store/settings.mixin";
 
 const { DateTime } = require("luxon");
 
@@ -49,22 +56,48 @@ export default {
   components: {
     SessionSelector,
     SessionRanker,
-    ProfileManage,
+    PersonSummary,
     AvailabilityAndInterests,
     PersonDetails
   },
   mixins: [
-    personSessionMixin
+    personSessionMixin,
+    settingsMixin
   ],
   data: () => ({
     sessionModel,
-    sessionAssignmentModel,
-    start_time: DateTime.fromISO("2022-09-01T00:00:00"),
-    end_time: DateTime.fromISO("2022-09-05T11:30:00")
+    sessionAssignmentModel
   }),
   computed: {
+    start_time() {
+      if (this.currentSettings && this.currentSettings.configs) {
+        return DateTime.fromISO("2022-09-01T00:00:00", {zone: this.timezone})
+      } else {
+        return null
+      }
+    },
+    end_time() {
+      if (this.currentSettings && this.currentSettings.configs) {
+        return DateTime.fromISO("2022-09-05T11:30:00", {zone: this.timezone})
+      } else {
+        return null
+      }
+    },
     rankedFilter() {
       return `{"op":"all","queries":[["person_id", "=", "${this.currentUser.id}"],["interested", "=", true]]}`
+    },
+    timezone() {
+      if (this.currentSettings && this.currentSettings.configs) {
+        let tz = this.currentSettings.configs.find(el => el.parameter == 'convention_timezone')
+
+        if (tz) {
+          return tz.parameter_value
+        } else {
+          return null
+        }
+      } else {
+        return null
+      }
     }
   }
 }

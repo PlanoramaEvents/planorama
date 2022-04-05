@@ -2,7 +2,6 @@
   <div>
     <div class="d-flex flex-row pb-3">
       <div>
-        <!-- TODO: backend for limits -->
         Convention maximum number of program items willing to participate in:<br />
         <b-col sm="4">
           <session-limit-editor
@@ -10,7 +9,6 @@
             model="session_limit"
           >
           </session-limit-editor>
-          <!-- <b-form-input></b-form-input> -->
         </b-col>
       </div>
     </div>
@@ -66,11 +64,14 @@ export default {
     end_time: {
       type: DateTime,
       required: true
+    },
+    timezone: {
+      type: String,
+      default: null
     }
   },
   data: () => ({
     // NOTE: if there are more than 5 days in the con we need to change display
-    timezone: null,
     options: [
           { value: null, text: 'Please select an option' },
           { value: 'Europe/Paris', text: 'Europe/Paris' },
@@ -80,7 +81,6 @@ export default {
   }),
   computed: {
     days() {
-      // base on TZ as well
       let start_day = this.start_time.setZone(this.timezone).startOf('day')
       let end_day = this.end_time.setZone(this.timezone).endOf('day')
       let nbr_days = Math.round(end_day.diff(start_day, 'days').as('days'))

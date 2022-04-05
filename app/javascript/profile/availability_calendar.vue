@@ -2,7 +2,6 @@
   <div class="d-flex flex-row">
     <div class="">
       Availability
-      <!-- <b-form-select v-model="timezone" :options="options"></b-form-select> -->
       <div class="d-flex flex-row">
         <availability-time-picker
           v-for="day in days" :key="day"
@@ -74,10 +73,12 @@ export default {
   },
   methods: {
     formatDate(date, config) {
-      return DateTime.fromISO(date).setZone(this.timezone).toFormat(config)
+      // return DateTime.fromISO(date).setZone(this.timezone).toFormat(config)
+      return DateTime.fromISO(date, {zone: this.timezone}).toFormat(config)
     },
     formatLocaleDate(date, config) {
-      return DateTime.fromISO(date).setZone(this.timezone).toLocaleString(config)
+      // return DateTime.fromISO(date).setZone(this.timezone).toLocaleString(config)
+      return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
     },
     init: function(arg) {
       this.get_availability().then(

@@ -34,7 +34,10 @@ class PersonSerializer #< ActiveModel::Serializer
               :can_record_exceptions,
               :can_photo_exceptions,
               :is_local,
-              :languages_fluent_in
+              :languages_fluent_in,
+              :timezone,
+              :twelve_hour,
+              :attendance_type
 
   # status and comments hidden except for staff
   protected_attributes :con_state, :comments

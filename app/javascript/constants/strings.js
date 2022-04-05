@@ -120,6 +120,9 @@ module.exports = {
     UPDATE_AVAILABILITY_SUCCESS: "Availability has been updated.",
     UPDATE_AVAILABILITY_ERROR: errorMessage("Error on updating Availability."),
 
+    ADD_EMAIL_SUCCESS: "Email has been added.",
+    ADD_EMAIL_ERROR: errorMessage("Error on add Email."),
+
     //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
     PAGE_DELETE_ERROR: errorMessage("Page failed to be deleted."),

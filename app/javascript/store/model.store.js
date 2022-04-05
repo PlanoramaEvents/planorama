@@ -52,6 +52,8 @@ import { availabilityStore } from './availability.store';
 
 import { personExclusionStore } from './person_exclusion.store';
 
+import { emailAddressStore } from './email_address.store';
+
 import { sessionLimitStore } from './session_limit.store'
 
 // tag add-ons
@@ -113,7 +115,8 @@ export const store = new Vuex.Store({
     ...surveyStore.state,
     ...searchStateStore.state,
     ...availabilityStore.state,
-    ...personExclusionStore.state
+    ...personExclusionStore.state,
+    ...emailAddressStore.state
     // ...mailingStore.state
   },
   getters: {
@@ -145,7 +148,8 @@ export const store = new Vuex.Store({
     ...configurationStore.getters,
     ...searchStateStore.getters,
     ...availabilityStore.getters,
-    ...personExclusionStore.getters
+    ...personExclusionStore.getters,
+    ...emailAddressStore.getters
   },
   plugins: [
     ...surveyStore.plugins
@@ -305,6 +309,7 @@ export const store = new Vuex.Store({
     ...configurationStore.actions,
     ...availabilityStore.actions,
     ...personExclusionStore.actions,
-    ...sessionLimitStore.actions
+    ...sessionLimitStore.actions,
+    ...emailAddressStore.actions
   }
 })

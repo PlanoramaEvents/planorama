@@ -25,8 +25,8 @@
     >
     <!-- :special-hours="conventionHours" -->
       <template v-slot:title="{ title, view }">
-        {{ formatDate(view.selectedDate.toISOString(), { weekday: 'long' }) }}<br />
-        {{ formatDate(view.selectedDate.toISOString(), { day: 'numeric', month: 'short' }) }}
+        {{ formatDate(view.selectedDate, { weekday: 'long' }) }}<br />
+        {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
       </template>
       <template v-slot:event="{ event, view }">
         <small class="vuecal__event-time">
@@ -114,7 +114,10 @@ export default {
     },
     formatDate(date, config) {
       // return DateTime.fromISO(date).toFormat(config)
-      return DateTime.fromISO(date).setZone(this.timezone).toLocaleString(config)
+      // console.debug("**** D", date, config)
+      // return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
+      // TODO: use the users locale or browsers locale here
+      return date.toLocaleString('en-US',config)
     },
     // logEvents(ty, ev) {
     //   // events have an _eid that makes them unique
