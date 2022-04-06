@@ -16,6 +16,7 @@
         @blur="onBlur"
         :value="value"
         :disabled="disabled"
+        :state="state"
       ></b-form-input>
     </b-input-group>
   </b-form-group>
@@ -25,6 +26,10 @@
 export default {
   name: "SimpleSocial",
   props: {
+    state: {
+      type: Boolean,
+      default: true
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -53,6 +58,7 @@ export default {
   methods: {
     onBlur(e) {
       this.$emit('input', e.target.value)
+      this.$emit('blur', e.target.value)
     }
   }
 }

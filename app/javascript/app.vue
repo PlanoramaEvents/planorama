@@ -22,13 +22,17 @@ import personSessionMixin from "./auth/person_session.mixin";
 import SignAgreements from "./agreements/sign_agreements.vue";
 import settingsMixin from "@/store/settings.mixin";
 import { ValidationProvider, extend } from 'vee-validate';
-import { required, email, numeric } from 'vee-validate/dist/rules';
+//
+// v-validate="{url: {require_protocol: true }}
+import { required, email, numeric, digits, regex } from 'vee-validate/dist/rules';
 
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 
 extend('email', email);
 extend('numeric', numeric);
+extend('digits', digits);
+extend('regex', regex);
 
 // Override the default message.
 extend('required', {

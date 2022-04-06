@@ -33,74 +33,73 @@
           v-model="editable_person.bio"
           type='classic'
           @blur="onInput"
+          :disabled="disabled"
         ></plano-editor>
       </b-form-group>
-      <simple-social
+      <validated-social
+        :rules="{ regex: /^[a-z0-9_]{1,15}$/i }"
         label="Twitter"
         prepend="@"
         v-model="editable_person.twitter"
         @input="onInput"
-      >
-      <!-- preg_match('/^[A-Za-z0-9_]+$/', $username); -->
-      </simple-social>
-      <simple-social
+        :disabled="disabled"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /^[a-z\d.]{5,}$/i }"
         label="Facebook"
+        prepend="facebook.com/"
         v-model="editable_person.facebook"
         @input="onInput"
-      >
-      <!-- preg_match('/^[a-z\d.]{5,}$/i', $username); -->
-        <template #prepend>
-          <b-input-group-text>facebook.com&sol;</b-input-group-text>
-        </template>
-      </simple-social>
-      <simple-social
+        :disabled="disabled"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
         label="Website"
         prepend="url"
         v-model="editable_person.website"
         @input="onInput"
-      ></simple-social>
-      <simple-social
+        :disabled="disabled"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /^[a-zA-Z0-9._]+$/ }"
         label="Instagram"
+        prepend="instagram.com/"
         v-model="editable_person.instagram"
         @input="onInput"
-      >
-        <template #prepend>
-          <b-input-group-text>instagram.com&sol;</b-input-group-text>
-        </template>
-      </simple-social>
-      <simple-social
+        :disabled="disabled"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /^(#)?[a-zA-Z0-9][\w]{2,24}$/ }"
         label="Twitch"
+        prepend="twitch.tv/"
         v-model="editable_person.twitch"
         @input="onInput"
-      >
-        <template #prepend>
-          <b-input-group-text>twitch.tv&sol;</b-input-group-text>
-        </template>
-      </simple-social>
-      <simple-social
+        :disabled="disabled"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /UC([-_a-z0-9]{22})/i }"
         label="YouTube"
+        prepend="youtube.com/channel/"
         v-model="editable_person.youtube"
         @input="onInput"
-      >
-        <template #prepend>
-          <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
-        </template>
-      </simple-social>
-      <simple-social
+        :disabled="disabled"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex:/^([a-zA-Z0-9._-])+$/ }"
         label="TikTok"
         prepend="@"
         v-model="editable_person.tiktok"
         @input="onInput"
-      ></simple-social>
-      <simple-social
+        :disabled="disabled"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex:/^([a-zA-Z0-9.\/_-])+$/ }"
         label="LinkedIn"
+        prepend="linkedin.com/in/"
         v-model="editable_person.linkedin"
         @input="onInput"
-      >
-        <template #prepend>
-          <b-input-group-text>linkedin.com&sol;in&sol;</b-input-group-text>
-        </template>
-      </simple-social>
+        :disabled="disabled"
+      ></validated-social>
       <simple-social
         label="Other"
         v-model="editable_person.othersocialmedia"
@@ -125,8 +124,8 @@
 import TimezoneSelector from "../components/timezone_selector.vue"
 import EmailAddressesEditor from "../components/email_addresses_editor.vue"
 import PlanoEditor from '../components/plano_editor'
+import ValidatedSocial from '../components/validated_social.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
-
 import modelMixin from '../store/model.mixin';
 
 export default {
@@ -135,6 +134,7 @@ export default {
     TimezoneSelector,
     EmailAddressesEditor,
     PlanoEditor,
+    ValidatedSocial,
     SimpleSocial
   },
   mixins: [
@@ -150,12 +150,11 @@ export default {
     }
   },
   data: () =>  ({
-    editable_person: null
+    editable_person: null,
+    disabled: false
   }),
   methods: {
-    // Ensure that the data is passed back up (see v-model docs)
     onInput(arg) {
-      console.debug("SAVING", arg)
       this.save(this.editable_person).then(
         (obj) => {
           this.editable_person = obj
