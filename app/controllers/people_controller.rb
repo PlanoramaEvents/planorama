@@ -331,6 +331,9 @@ class PeopleController < ResourceController
       flickr
       reddit
       tiktok
+      timezone
+      twelve_hour
+      attendance_type
     ] << [
       email_addresses_attributes: %i[
         id

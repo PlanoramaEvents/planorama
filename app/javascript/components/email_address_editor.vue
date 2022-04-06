@@ -19,14 +19,21 @@
       </ValidationProvider>
     </validation-observer>
     <!-- {{ value.isdefault }} -->
-    <b-form-radio
-      switch size="lg"
-      value="true"
-      @change="onCheck"
-      :checked="isdefault"
-      class="mt-2 pt-1 w-25"
-    >
-    </b-form-radio>
+    <div class="w-25">
+      <div class="d-flex flex-row w-100">
+        <b-form-radio
+          switch size="lg"
+          value="true"
+          @change="onCheck"
+          :checked="isdefault"
+          class="mt-2 pt-1"
+        >
+        </b-form-radio>
+        <b-button v-if="canDelete" @click="onDelete" size="sm" variant="" title="Delete" class="mt-2">
+          <b-icon-trash></b-icon-trash>
+        </b-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -41,6 +48,10 @@ export default {
   },
   props: {
     value: null,
+    canDelete: {
+      type: Boolean,
+      default: true
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -68,6 +79,9 @@ export default {
     onCheck(arg) {
       this.value.isdefault = arg == 'true'
       this.emitChange()
+    },
+    onDelete(arg) {
+      this.$emit('delete', this.value)
     },
     calcValid(errors, valid) {
       if (this.rules == '') {

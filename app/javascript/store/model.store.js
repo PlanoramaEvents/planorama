@@ -52,7 +52,7 @@ import { availabilityStore } from './availability.store';
 
 import { personExclusionStore } from './person_exclusion.store';
 
-import { emailAddressStore } from './email_address.store';
+import { emailAddressStore, emailAddressEndpoints } from './email_address.store';
 
 import { sessionLimitStore } from './session_limit.store'
 
@@ -76,7 +76,8 @@ const endpoints = {
   ...tagEndpoints,
   ...sessionAssignmentEndpoints,
   ...parameterNameEndpoints,
-  ...configurationEndpoints
+  ...configurationEndpoints,
+  ...emailAddressEndpoints
   // ...availabilityEndpoints,
   // ...personExclusionEndpoints
 }

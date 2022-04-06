@@ -8,7 +8,7 @@ export const emailAddressModel = 'email_address';
 
 import { personModel } from '@/store/person.store'
 
-export const pemailAddressEndpoints = {
+export const emailAddressEndpoints = {
   [emailAddressModel]: 'email_address'
 }
 
