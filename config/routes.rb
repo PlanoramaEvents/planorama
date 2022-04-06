@@ -14,10 +14,9 @@ Rails.application.routes.draw do
   root to: 'home#index'
   # get '/home', to: 'home#index'
 
-  # TODO: retest with SPA, should be ok
   get '/login/:magic_link', to: 'login#magic_link'
 
-  post '/validator/email', to: 'validator/email#validate' #, controller: 'validator/email'
+  post '/validator/email', to: 'validator/email#validate'
 
   get '/settings', to: 'settings#index'
 
@@ -34,15 +33,22 @@ Rails.application.routes.draw do
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
     resources :availabilities, path: 'availability', only: [:index]
+    patch 'availability', to: 'availabilities#replace'
+    resources :person_exclusions, path: 'person_exclusion', only: [:index]
+    patch 'person_exclusion', to: 'person_exclusions#replace'
+    resources :session_limits, path: 'session_limit', only: [:index]
+    # patch 'session_limit', to: 'session_limits#replace'
   end
-  resources :availabilities, path: 'availability', except: [:index]
-
-  resources :convention_roles, path: 'convention_role', except: [:index]
-  resources :email_addresses, path: 'email_address', except: [:index]
-
   get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
   get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
   get 'person/:person_id/assigned_surveys', to: 'people#assigned_surveys'
+
+  resources :availabilities, path: 'availability', except: [:index]
+  resources :person_exclusions, path: 'person_exclusion', except: [:index]
+  resources :session_limits, path: 'session_limit', except: [:index]
+
+  resources :convention_roles, path: 'convention_role', except: [:index]
+  resources :email_addresses, path: 'email_address', except: [:index]
 
   get 'agreement/signed', to: 'agreements#signed'
   get 'agreement/unsigned', to: 'agreements#unsigned'

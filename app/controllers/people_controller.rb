@@ -15,7 +15,8 @@ class PeopleController < ResourceController
       jsonapi_included: [
         :email_addresses,
         :convention_roles,
-        :unsigned_agreements
+        :unsigned_agreements,
+        :session_limits
       ]
     )
   end
@@ -271,7 +272,9 @@ class PeopleController < ResourceController
   def includes
     [
       :email_addresses,
-      :convention_roles
+      :convention_roles,
+      :availabilities,
+      :session_limits
     ]
   end
 
@@ -328,6 +331,9 @@ class PeopleController < ResourceController
       flickr
       reddit
       tiktok
+      timezone
+      twelve_hour
+      attendance_type
     ] << [
       email_addresses_attributes: %i[
         id

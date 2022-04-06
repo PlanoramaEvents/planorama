@@ -57,7 +57,7 @@ export const responseMixin = {
     },
     saveResponse(response){
       // saving the response only
-      if (!this.prevewMode) {
+      if (!this.previewMode) {
         // only save if not in preview mode and if the response was already saved!
         return this.mergeRecords(response);
       }

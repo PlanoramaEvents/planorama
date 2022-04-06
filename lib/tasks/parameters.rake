@@ -32,6 +32,24 @@ namespace :parameters do
       )
     end
 
+    unless ParameterName.find_by(parameter_name: 'convention_start_time')
+      ParameterName.create!(
+        {
+          parameter_name: 'convention_start_time',
+          parameter_description: 'Start date and time for the convention.',
+          parameter_type: 'DateTime'        }
+      )
+    end
+
+    unless ParameterName.find_by(parameter_name: 'convention_end_time')
+      ParameterName.create!(
+        {
+          parameter_name: 'convention_end_time',
+          parameter_description: 'End date and time for the convention.',
+          parameter_type: 'DateTime'        }
+      )
+    end
+
     unless ParameterName.find_by(parameter_name: 'max_interest_rank1')
       ParameterName.create!(
         {

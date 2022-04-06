@@ -14,6 +14,16 @@ class SettingsController < ApplicationController
       end
     end
 
+    # TODO: what do we want here?
+    # value to store in db, and name to display (with UTC offset)
+    # convert_zones = lambda { |list| list.map { |z| [ z.to_s, z.name ] } }
+    zones = {}
+    ActiveSupport::TimeZone.all.each do |zone|
+      # zones[zone.name] = zone.tzinfo.canonical_zone.name
+      zones[zone.tzinfo.canonical_zone.name] = zone.to_s.sub('GMT','UTC')
+    end
+
+
     settings = {
       # 1. model information
       enums: enums,
@@ -27,7 +37,23 @@ class SettingsController < ApplicationController
         'Privacy Agrement'
       ],
       # 4. list of configs
-      configs: ::Configuration.all
+      configs: ::Configuration.all,
+      exclusions: ::Exclusion.all, # TODO: we may want a sort order on these ????
+      yesnomaybe: [
+        {
+          value: 'yes',
+          label: 'this says yes'
+        }, {
+          value: 'no',
+          label: 'this says no'
+        },
+        {
+          value: 'maybe',
+          label: 'this says kumquat'
+        },
+      ],
+      # TODO: this needs to change
+      timezones: zones #ActiveSupport::TimeZone::MAPPING
     }
 
     render json: settings,

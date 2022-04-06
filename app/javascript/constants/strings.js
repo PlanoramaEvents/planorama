@@ -1,6 +1,7 @@
 const twoLines = (line1, line2) => (h) =>  h('p', {}, [line1, h('br'), line2]);
 const errorMessage = (message) => (errorCode) => twoLines(message, `Error code: ${errorCode}`);
 const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`;
+const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []))
 
 module.exports = {
     // login page
@@ -54,6 +55,9 @@ module.exports = {
     //survey restrictions
     SURVEY_NOT_ASSIGNED: "This survey hasn't been assigned to you",
 
+    //survey questions
+    SURVEY_YESNOMAYBE_PLACEHOLDER: "Please elaborate here.",
+
     //generic app wide
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_AGREEMENT_SUCCESS: (title) => `${title} successfully added to Planorama.`,
@@ -61,11 +65,11 @@ module.exports = {
     ADMIN_ADD_USER_ERROR: (name) => errorMessage(`${name} failed to be added to Planorama.`),
     IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",
     MODEL_SAVE_SUCCESS: (model) => `${titleCase(model)} sucessfully saved.`,
-    MODEL_SAVE_ERROR: (model) => errorMessage(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be saved.`),
-    MODEL_ADD_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully added.`,
-    MODEL_ADD_ERROR: (model) => errorMessage(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be added.`),
-    MODEL_DELETE_SUCCESS: (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)} sucessfully deleted.`,
-    MODEL_DELETE_ERROR: (model) => errorMessage(`${model.substring(0, 1).toUpperCase()}${model.substring(1)} failed to be deleted.`),
+    MODEL_SAVE_ERROR: (model) => errorMessage(`${titleCase(model)} failed to be saved.`),
+    MODEL_ADD_SUCCESS: (model) => `${titleCase(model)} sucessfully added.`,
+    MODEL_ADD_ERROR: (model) => errorMessage(`${$titleCase(model)} failed to be added.`),
+    MODEL_DELETE_SUCCESS: (model) => `${titleCase(model)} sucessfully deleted.`,
+    MODEL_DELETE_ERROR: (model) => errorMessage(`${titleCase(model)} failed to be deleted.`),
 
     // Mailing messages
     MAILING_SCHEDULED: (title) => `The mailing ${title} has been scheduled.`,
@@ -104,8 +108,20 @@ module.exports = {
 
     SESSION_RANKING_ERROR: (total, allowed) => `You have assigned ${total} exceeds the allowed ${allowed}.`,
 
-    CONFIGURATION_SAVED_SUCCESS: "Configuration has been save",
+    CONFIGURATION_SAVED_SUCCESS: "Configuration has been saved",
     CONFIGURATION_SAVED_ERROR: errorMessage("Error on config save"),
+
+    CREATE_SESSION_LIMIT_SUCCESS: "Session limit has been saved",
+    CREATE_SESSION_LIMIT_ERROR: errorMessage("Error on Session limit save"),
+
+    UPDATE_PERSON_EXCLUSION_SUCCESS: "Exclusion information has been updated.",
+    UPDATE_PERSON_EXCLUSION_ERROR: errorMessage("Error on updating Exclusion information."),
+
+    UPDATE_AVAILABILITY_SUCCESS: "Availability has been updated.",
+    UPDATE_AVAILABILITY_ERROR: errorMessage("Error on updating Availability."),
+
+    ADD_EMAIL_SUCCESS: "Email has been added.",
+    ADD_EMAIL_ERROR: errorMessage("Error on add Email."),
 
     //page actions
     PAGE_DELETE_SUCCESS: "Page successfully deleted",
@@ -151,4 +167,11 @@ module.exports = {
             contact_email: "Contact email"
         },
     },
+    nLines,
+
+    ERROR_GENERIC_RECOVERABLE: (email) => twoLines("The server has encountered an internal error and was unable to complete your request.",
+    `Please contact the server administrator at ${email} and let them know the time and date the error occured.`),
+    ERROR_GENERIC_UNRECOVERABLE: (email) => twoLines("The server has encountered an internal error and was unable to complete your request.",
+    `Please contact the server administrator at ${email} and let them know the time and date the error occured.`),
+
 }

@@ -13,4 +13,8 @@ class EmailAddressesController < ResourceController
   def belongs_to_relationship
     'email_addresses'
   end
+
+  def paginate
+    false
+  end
 end

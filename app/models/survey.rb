@@ -6,6 +6,8 @@ class Survey < ApplicationRecord
            dependent: :destroy
   accepts_nested_attributes_for :pages, allow_destroy: true
 
+  has_paper_trail versions: { class_name: 'Audit::SurveyVersion' }, ignore: [:updated_at, :created_at]
+
   has_many :questions, through: :pages, class_name: 'Survey::Question'
 
   has_many :submissions, class_name: 'Survey::Submission'

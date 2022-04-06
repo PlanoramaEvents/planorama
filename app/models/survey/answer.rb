@@ -2,7 +2,7 @@ class Survey::Answer < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: :question_id
 
-  has_paper_trail
+  has_paper_trail versions: { class_name: 'Audit::SurveyVersion' }, ignore: [:updated_at, :created_at]
 
   enum next_page_action: { next_page: 'next_page', submit: 'submit' }
 

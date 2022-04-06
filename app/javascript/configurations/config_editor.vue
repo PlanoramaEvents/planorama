@@ -2,16 +2,26 @@
   <ValidationProvider
     :name="parameter.parameter_name"
     :rules="rules"
+    :skipIfEmpty="true"
     v-slot="{ valid, errors }"
   >
     <b-form-group :label="parameter.parameter_name">
-    <!-- TODO: We need more meaningful names -->
-      <b-form-input
-        v-model="configuration.parameter_value"
-        :state="calcValid(errors,valid)"
-        @change="onChange"
-      ></b-form-input>
-      <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+      <!-- TODO: We need more meaningful names, ^^^ change the label -->
+      <!-- TODO: we need to change the editor type depending on the parameter.type -->
+      <div v-if="parameter.parameter_type == 'Timezone'">
+        <timezone-selector
+          v-model="configuration.parameter_value"
+          @input="onChange"
+        ></timezone-selector>
+      </div>
+      <div v-else>
+        <b-form-input
+          v-model="configuration.parameter_value"
+          :state="calcValid(errors,valid)"
+          @change="onChange"
+        ></b-form-input>
+        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+      </div>
     </b-form-group>
   </ValidationProvider>
 </template>
@@ -20,11 +30,13 @@
 import modelMixin from '../store/model.mixin';
 import configurationMixin from './configuration.mixin';
 import { ValidationProvider } from 'vee-validate';
+import TimezoneSelector from "../components/timezone_selector.vue"
 
 export default {
   name: "ConfigEditor",
   components: {
-    ValidationProvider
+    ValidationProvider,
+    TimezoneSelector
   },
   props: {
     parameter: {
@@ -60,6 +72,10 @@ export default {
   ],
   methods: {
     calcValid(errors, valid) {
+      if (this.rules == '') {
+        return null
+      }
+
       let v = errors[0] ? false : (valid ? true : null);
       this.is_valid = v
       return v;
@@ -74,6 +90,7 @@ export default {
           this.createConfiguration(newconfig).then(
             (data) => {
               this.configuration = data
+              // TODO: should we force a reload of the settings on config change?
             }
           )
         } else {
@@ -81,6 +98,7 @@ export default {
           this.save(this.configuration).then(
             (data) => {
               this.configuration = data
+              // TODO: should we force a reload of the settings on config change?
             }
           )
         }

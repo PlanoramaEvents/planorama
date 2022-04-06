@@ -30,10 +30,10 @@
           {{item.comments}}
         </tooltip-overflow>
       </template>
-      <template #cell(last_sign_in_at)="{ item }">
+      <template #cell(current_sign_in_at)="{ item }">
         <span v-if="item.public">
-          <tooltip-overflow :title="item.last_sign_in_at">
-            {{new Date(item.last_sign_in_at).toLocaleDateString()}}
+          <tooltip-overflow :title="item.current_sign_in_at">
+            {{new Date(item.current_sign_in_at).toLocaleDateString()}}
           </tooltip-overflow>
         </span>
       </template>
