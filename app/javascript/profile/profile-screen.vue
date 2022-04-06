@@ -7,6 +7,7 @@
       <b-tab title="General" active lazy>
         <person-details
           v-model="person"
+          :model="personModel"
         ></person-details>
       </b-tab>
       <b-tab title="Availbility & Interests" lazy>
@@ -43,10 +44,12 @@ import PersonSummary from './person_summary.vue';
 import AvailabilityAndInterests from './availability_and_interests.vue';
 import PersonDetails from './person_details.vue'
 
+import { personModel } from '@/store/person.store'
 import { sessionModel } from '@/store/session.store'
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import personSessionMixin from '../auth/person_session.mixin';
 
+import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
 
 const { DateTime } = require("luxon");
@@ -61,10 +64,12 @@ export default {
     PersonDetails
   },
   mixins: [
+    modelUtilsMixin,
     personSessionMixin,
     settingsMixin
   ],
   data: () => ({
+    personModel,
     sessionModel,
     sessionAssignmentModel,
     person: null
@@ -102,7 +107,11 @@ export default {
     }
   },
   mounted() {
-    this.person = this.currentUser
+    this.fetch_model_by_id(personModel, this.currentUser.id).then(
+      (obj) => {
+        this.person = obj
+      }
+    )
   }
 }
 </script>

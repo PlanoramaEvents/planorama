@@ -10,6 +10,7 @@ module AccessControlService
         primary_email: { sensitive: true, linkable: false, type: :email},
         contact_email: { sensitive: true, linkable: true, type: :email},
         last_sign_in_at: { sensitive: true, linkable: false, type: :datetime},
+        current_sign_in_at: { sensitive: true, linkable: false, type: :datetime},
         pronouns: { sensitive: true, linkable: true, type: :string},
         year_of_birth: { sensitive: true, linkable: false, type: :integer},
         gender: { sensitive: true, linkable: true, type: :string},

@@ -13,7 +13,7 @@
       </template>
       <b-form-input
         type="text"
-        @input="$emit('input', $event)"
+        @blur="onBlur"
         :value="value"
         :disabled="disabled"
       ></b-form-input>
@@ -48,6 +48,11 @@ export default {
   computed: {
     groupId() {
       return `${this.id}-group`;
+    }
+  },
+  methods: {
+    onBlur(e) {
+      this.$emit('input', e.target.value)
     }
   }
 }

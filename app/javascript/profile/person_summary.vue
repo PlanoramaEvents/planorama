@@ -6,7 +6,7 @@
         {{person.primary_email.email}}
       </div>
       <div>
-        <b>Last Login:</b> {{formatLocaleDate(person.last_sign_in_at)}}
+        <b>Last Login:</b> {{formatLocaleDate(person.current_sign_in_at)}}
       </div>
     </div>
   </div>

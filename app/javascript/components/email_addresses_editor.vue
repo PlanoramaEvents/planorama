@@ -27,6 +27,7 @@
 import EmailAddressEditor from './email_address_editor.vue'
 import emailAddressMixin from '../store/email_address.mixin'
 import {personSessionMixin} from '@/mixins';
+import modelUtilsMixin from "@/store/model_utils.mixin";
 
 export default {
   name: 'EmailAddressesEditor',
@@ -34,6 +35,7 @@ export default {
     EmailAddressEditor
   },
   mixins: [
+    modelUtilsMixin,
     emailAddressMixin,
     personSessionMixin
   ],

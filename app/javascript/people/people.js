@@ -93,8 +93,8 @@ export const people_columns = [
     sortable: false
   },
   {
-    key: 'last_sign_in_at',
-    label: 'Last Signed In',
+    key: 'current_sign_in_at',
+    label: 'Signed In At',
     sortable: false
   }
 ];

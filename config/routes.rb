@@ -39,16 +39,16 @@ Rails.application.routes.draw do
     resources :session_limits, path: 'session_limit', only: [:index]
     # patch 'session_limit', to: 'session_limits#replace'
   end
+  get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
+  get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
+  get 'person/:person_id/assigned_surveys', to: 'people#assigned_surveys'
+
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
   resources :session_limits, path: 'session_limit', except: [:index]
 
   resources :convention_roles, path: 'convention_role', except: [:index]
   resources :email_addresses, path: 'email_address', except: [:index]
-
-  get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
-  get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
-  get 'person/:person_id/assigned_surveys', to: 'people#assigned_surveys'
 
   get 'agreement/signed', to: 'agreements#signed'
   get 'agreement/unsigned', to: 'agreements#unsigned'
