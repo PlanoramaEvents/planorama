@@ -53,6 +53,31 @@
           <b-form-radio-group
             :class="{'w-50': answerable}"
             stacked
+            v-if="boolean"
+            v-model="radioButtonResponse"
+            :aria-describedBy="ariaDescribedBy"
+            :required="question.mandatory"
+            @change="saveResponse(localResponse, selectedSubmission)"
+          >
+            <b-form-radio :disabled="!answerable" :value="bYesLabel.value">{{bYesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="bNoLabel.value">{{bNoLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+          <b-form-radio-group
+            :class="{'w-50': answerable}"
+            stacked
+            v-if="attendance_type"
+            v-model="radioButtonResponse"
+            :aria-describedBy="ariaDescribedBy"
+            :required="question.mandatory"
+            @change="saveResponse(localResponse, selectedSubmission)"
+          >
+            <b-form-radio :disabled="!answerable" :value="inPersonLabel.value">{{inPersonLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="virtualLabel.value">{{virtualLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="hybridLabel.value">{{hybridLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+          <b-form-radio-group
+            :class="{'w-50': answerable}"
+            stacked
             v-if="singlechoice"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"

@@ -31,8 +31,9 @@ export const questionMixin = {
       { value: 'dropdown', text: 'Dropdown' },
       { value: 'email', text: 'Email' },
       { value: 'socialmedia', text: 'Social Media' },
-      { value: 'yesnomaybe', text: 'Yes/No/Maybe' },
-      { value: 'boolean', text: 'Boolean (Yes/No)' }
+      { value: 'yesnomaybe', text: 'Three Options Question' },
+      { value: 'boolean', text: 'Yes/No' },
+      { value: 'attendance_type', text: 'Attendance Type'},
     ],
   }),
   computed: {
@@ -95,6 +96,21 @@ export const questionMixin = {
     },
     maybeLabel() {
       return this.currentSettings.yesnomaybe?.find(ynm => ynm.value === "maybe") || "Maybe";
+    },
+    bYesLabel() {
+      return this.currentSettings.boolean?.find(b => b.value === true) || "Yes";
+    },
+    bNoLabel() {
+      return this.currentSttings.boolean?.find(b => b.value === false) || "No";
+    },
+    inPersonLabel() {
+      return this.currentSettings.attendance_type?.find(at => at.value === "in_person") || "In Person";
+    },
+    virtualLabel() {
+      return this.currentSettings.attendance_type?.find(at => at.value === "virtual") || "Virtual";
+    },
+    hybridLabel() {
+      return this.currentSettings.attendance_type?.find(at => at.value === "hybrid") || "Hybrid";
     }
   },
   methods: {
