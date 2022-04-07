@@ -76,6 +76,9 @@ export const questionMixin = {
     boolean() {
       return this.question.question_type === "boolean";
     },
+    attendance_type() {
+      return this.question.question_type === "attendance_type";
+    },
     otherFromQuestion() {
       return this.getQuestionAnswers(this.question)?.find(a => a.other);
     },

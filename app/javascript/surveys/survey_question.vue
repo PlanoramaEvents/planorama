@@ -4,13 +4,15 @@
       v-if="!formatting && !socialmedia"
     >
       <template #label>
-        <span v-html="questionText"></span><mandatory-star :mandatory="question.mandatory"></mandatory-star>
+        <span v-html="questionText"></span>
+        <mandatory-star :mandatory="question.mandatory"></mandatory-star>
+        <linked-field-icon :linked_field="question.linked_field"></linked-field-icon>
       </template>
       <template #default="{ ariaDescribedBy }">
         <validation-provider
           mode="eager"
           :rules="rules"
-          v-slot="{ valid, errors, validate }"
+          v-slot="{ valid, errors }"
         >
           <b-form-textarea
             :class="{'w-50': answerable}"
@@ -20,6 +22,7 @@
             :disabled="!answerable"
             @blur="saveResponse(localResponse, selectedSubmission)"
           >{{localResponse.response.text}}</b-form-textarea>
+
           <b-form-input
             :class="{'w-50': answerable}"
             v-if="textfield"
@@ -185,7 +188,8 @@
     <p v-if="textonly">{{question.question}}</p>
     <hr v-if="hr" />
     <div v-if="socialmedia">
-      <span class="h5">{{questionText}}<mandatory-star :mandatory="question.mandatory"></mandatory-star></span>
+      <span v-html="questionText"></span><mandatory-star :mandatory="question.mandatory"></mandatory-star>
+      <linked-field-icon :linked_field="question.linked_field"></linked-field-icon>
       <div :class="['row', 'ml-0', {'w-50': answerable}]">
         <div class="col-12 px-0">
           <simple-social
@@ -296,6 +300,7 @@ import { submissionModel } from '@/store/survey';
 import { mapState } from 'vuex';
 import { ValidationProvider } from 'vee-validate';
 import { SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
+import LinkedFieldIcon from './linked-field-icon.vue';
 
 export default {
   name: "SurveyQuestion",
@@ -303,8 +308,9 @@ export default {
     MandatoryStar,
     SimpleSocial,
     EmailField,
-    ValidationProvider
-  },
+    ValidationProvider,
+    LinkedFieldIcon
+},
   mixins: [
     questionMixin,
     surveyMixin,

@@ -57,7 +57,7 @@ export const responseMixin = {
       // first check for a linked field
       if (question.linked_field) {
         // get the relevant linked data and use that instead
-        const fieldName = linked_field.split["."][1] // assuming only one dot. is this bad?
+        const fieldName = question.linked_field.split(".")[1] // assuming only one dot. is this bad?
         if (['singlechoice', 'yesnomaybe', 'boolean', 'attendance_type', 'dropdown'].includes(question.question_type)) {
           answers = [this.currentUser[fieldName]]
         } else if (question.question_type === 'multiplechoice') {
@@ -76,7 +76,7 @@ export const responseMixin = {
           text = this.currentUser[fieldName]
         }
         // bonus case for can_ x things
-        if (fieldName.startswith('can_')) {
+        if (fieldName.startsWith('can_')) {
           text = this.currentUser[`${fieldName}_exceptions`]
         }
 
