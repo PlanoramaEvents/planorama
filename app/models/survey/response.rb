@@ -48,7 +48,7 @@ class Survey::Response < ApplicationRecord
             submission.person.youtube = val['youtube']
             submission.person.instagram = val['instagram']
             submission.person.tiktok = val['tiktok']
-            submission.person.other = val['other']
+            submission.person.othersocialmedia = val['other']
             submission.person.website = val['website']
           else
             submission.person.send("#{details[1]}=", val)

@@ -70,8 +70,10 @@ export default {
         }
       },
       set: function(val) {
-        // console.debug("****** SET", val)
-        // this.value.isdefault
+        // Vue complains if there is no set
+        // but we are not setting the isDefault here anyway
+        // it is an artifact of using radio buttons in a "fake" group
+        // and relying on server side sync to set things
       }
     }
   },

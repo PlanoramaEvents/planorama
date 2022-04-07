@@ -21,6 +21,29 @@ class PeopleController < ResourceController
     )
   end
 
+  # Mass update for the people (given ids and params)
+  def update_all
+    authorize current_person, policy_class: policy_class
+    ids = params[:ids]
+    attrs = params.permit(attrs: {})[:attrs].to_h #permit(:attrs)
+
+    Person.transaction do
+      # Get all the people with given set of ids and update them
+      people = Person.where(id: ids).update(attrs)
+
+      # return the updated people back to the caller
+      options = {
+        params: {
+          domain: "#{request.base_url}",
+          current_person: current_person
+        }
+      }
+
+      render json: serializer_class.new(people,options).serializable_hash(),
+             content_type: 'application/json'
+    end
+  end
+
   # email, name, pseudonym,
   def import
     authorize current_person, policy_class: policy_class
@@ -334,6 +357,8 @@ class PeopleController < ResourceController
       timezone
       twelve_hour
       attendance_type
+      ids
+      attrs
     ] << [
       email_addresses_attributes: %i[
         id

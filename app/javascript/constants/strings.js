@@ -70,6 +70,8 @@ module.exports = {
     MODEL_ADD_ERROR: (model) => errorMessage(`${$titleCase(model)} failed to be added.`),
     MODEL_DELETE_SUCCESS: (model) => `${titleCase(model)} sucessfully deleted.`,
     MODEL_DELETE_ERROR: (model) => errorMessage(`${titleCase(model)} failed to be deleted.`),
+    MODEL_MASS_UPDATE_SUCCESS: (model) => `All ${titleCase(model)} sucessfully updated.`,
+    MODEL_MASS_UPDATE_ERROR: (model) => errorMessage(`All ${titleCase(model)} failed to be updated.`),
 
     // Mailing messages
     MAILING_SCHEDULED: (title) => `The mailing ${title} has been scheduled.`,

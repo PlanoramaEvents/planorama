@@ -1,6 +1,23 @@
 <template>
   <div>
     <modal-form
+      title="Mass Edit State"
+      ref="mass-edit-state"
+      @save="onSaveMassEdit"
+    >
+      <b-form>
+        <person-con-state-selector
+          v-model="selectedConState"
+        ></person-con-state-selector>
+      </b-form>
+      <template #footer="{ ok, cancel }">
+        <b-button variant="link" @click="cancel()">Cancel</b-button>
+        <b-button variant="primary" @click="ok()">Save</b-button>
+      </template>
+    </modal-form>
+
+
+    <modal-form
       title="Add Person"
       ref="add-person-modal"
       @save="onSave"
@@ -19,7 +36,18 @@
       defaultSortBy='name'
       :model="model"
       :columns="columns"
+      selectMode='multi'
     >
+      <template v-slot:left-controls="{ selectedIds }">
+        <div>
+          <b-button
+            variant="primary"
+            @click="onEditStates(selectedIds)"
+            :disabled="selectedIds.length == 0"
+          >Edit State(s)
+          </b-button>
+        </div>
+      </template>
       <template #cell(primary_email)="{ item }">
         <tooltip-overflow v-if="item.primary_email" :title="item.primary_email.email">
           {{item.primary_email.email}}
@@ -48,6 +76,8 @@ import TooltipOverflow from '../shared/tooltip-overflow';
 import PersonAdd from '../people/person_add.vue';
 import { people_columns as columns } from './people';
 import { personModel as model } from '@/store/person.store'
+import modelUtilsMixin from "@/store/model_utils.mixin";
+import PersonConStateSelector from '../components/person_con_state_selector'
 
 export default {
   name: 'PeopleTable',
@@ -55,13 +85,29 @@ export default {
     TableVue,
     TooltipOverflow,
     ModalForm,
-    PersonAdd
+    PersonAdd,
+    PersonConStateSelector
   },
+  mixins: [
+    modelUtilsMixin
+  ],
   data: () => ({
     columns,
-    model
+    model,
+    selectedIds: [],
+    selectedConState: null
   }),
   methods: {
+    onSaveMassEdit() {
+      // console.debug("*****  SAVE ME", this.selectedConState)
+      if (this.selectedIds.length > 0 && this.selectedConState) {
+        this.update_all('person', this.selectedIds, {con_state: this.selectedConState})
+      }
+    },
+    onEditStates(ids) {
+      this.selectedIds = ids
+      this.$refs['mass-edit-state'].showModal()
+    },
     onNew() {
       this.$refs['add-person-modal'].showModal()
     },

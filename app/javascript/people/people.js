@@ -35,6 +35,13 @@ export const people_columns = [
     sortable: false
   },
   {
+    key: 'con_state',
+    label: 'Status',
+    // type: "radio",
+    // choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+    sortable: false
+  },
+  {
     key: 'organization',
     label: 'Organization',
     type: "text",
@@ -77,13 +84,6 @@ export const people_columns = [
     label: 'Opted In',
     type: "radio",
     choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
-  },
-  {
-    key: 'con_state',
-    label: 'Status',
-    // type: "radio",
-    // choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
     sortable: false
   },
   {

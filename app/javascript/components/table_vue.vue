@@ -14,12 +14,6 @@
       </div>
 
       <div class="d-flex justify-content-end">
-        <!-- TODO: uploads are done in admin, UI shows this as a download which does not exist yet -->
-        <!-- <div class="d-inline" title="Upload">
-          <b-button disabled >
-            <b-icon-upload></b-icon-upload>
-          </b-button>
-        </div> -->
         <div class="d-inline mx-1" title="clone" v-if="showClone">
           <b-button @click="$emit('clone')" variant="primary" title="clone">
             <b-icon-files scale="2"></b-icon-files>
@@ -48,16 +42,22 @@
       </div>
     </div>
 
-    <b-pagination class="d-flex justify-content-end"
-      v-model="currentPage"
-      :total-rows="totalRows"
-      :per-page="perPage"
-      first-text="First"
-      last-text="Last"
-      prev-text="Prev"
-      next-text="Next"
-    ></b-pagination>
-
+    <div class="d-flex">
+      <!--
+      TODO: when multi put in  checkboxes and select all
+      TODO: need a what to get a list of the selected ids from the component (slot?)
+      -->
+      <slot name="left-controls" v-bind:selectedIds="selectedIds"></slot>
+      <b-pagination class="ml-auto"
+        v-model="currentPage"
+        :total-rows="totalRows"
+        :per-page="perPage"
+        first-text="First"
+        last-text="Last"
+        prev-text="Prev"
+        next-text="Next"
+      ></b-pagination>
+    </div>
     <b-table
       hover bordered responsive selectable small striped
       :select-mode="selectMode"
@@ -108,6 +108,10 @@ export default {
   ],
   props: {
     columns : { type: Array },
+    selectMode: {
+      type: String,
+      default: 'single'
+    },
     showControls: {
       type: Boolean,
       default: true
@@ -137,9 +141,18 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
-      selectMode: 'single',
+      selected_items: []
+    }
+  },
+  computed: {
+    selectedIds() {
+      if (this.selected_items.length > 0) {
+        return Object.values(this.selected_items).map(obj => obj.id)
+      } else {
+        return []
+      }
     }
   },
   methods: {
@@ -147,8 +160,11 @@ export default {
       this.$refs.table.refresh()
     },
     onRowSelected(items) {
-      if (items[0]) {
+      this.selected_items = items
+      if (items[0] && (items.length == 1)) {
         this.select(items[0]);
+      } else {
+        this.select(null);
       }
     },
     onSortChanged(ctx) {
@@ -161,7 +177,7 @@ export default {
   },
   watch: {
     selected(val) {
-      if (!val) {
+      if (!val && this.selected_items.length == 1) {
         this.$refs.table.clearSelected()
       }
     }
