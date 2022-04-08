@@ -5,6 +5,7 @@
       ref="mass-edit-state"
       @save="onSaveMassEdit"
     >
+      <!-- {{ selectedIds }} -->
       <b-form>
         <person-con-state-selector
           v-model="selectedConState"

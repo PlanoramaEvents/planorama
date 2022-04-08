@@ -43,10 +43,6 @@
     </div>
 
     <div class="d-flex">
-      <!--
-      TODO: when multi put in  checkboxes and select all
-      TODO: need a what to get a list of the selected ids from the component (slot?)
-      -->
       <slot name="left-controls" v-bind:selectedIds="selectedIds"></slot>
       <b-pagination class="ml-auto"
         v-model="currentPage"
@@ -61,7 +57,7 @@
     <b-table
       hover bordered responsive selectable small striped
       :select-mode="selectMode"
-      :fields="columns"
+      :fields="tableColumns"
       selected-variant="primary"
 
       :items="sortedCollection"
@@ -75,6 +71,26 @@
       @row-selected="onRowSelected"
       @sort-changed="onSortChanged"
     >
+      <template #head(selected)="selected">
+        <b-form-checkbox
+          name="select-all-checkbox"
+          value="select_all"
+          unchecked-value="select_none"
+          @change="onSelectAll"
+          >
+        </b-form-checkbox>
+      </template>
+      <template #cell(selected)="{ rowSelected }">
+        <template v-if="rowSelected">
+          <span aria-hidden="true">&check;</span>
+          <span class="sr-only">Selected</span>
+        </template>
+        <template v-else>
+          <span aria-hidden="true">&nbsp;</span>
+          <span class="sr-only">Not selected</span>
+        </template>
+      </template>
+
       <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
       <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
         <slot :name="name" v-bind="slotData" />
@@ -107,6 +123,7 @@ export default {
     tableMixin, // covers pagination and sorting
   ],
   props: {
+    // TODO:
     columns : { type: Array },
     selectMode: {
       type: String,
@@ -147,6 +164,20 @@ export default {
     }
   },
   computed: {
+    tableColumns() {
+      if (this.selectMode != 'single') {
+        let cols = [
+          {
+            key: 'selected',
+            label: '',
+          }
+        ]
+
+        return cols.concat(this.columns)
+      } else {
+        return this.columns
+      }
+    },
     selectedIds() {
       if (this.selected_items.length > 0) {
         return Object.values(this.selected_items).map(obj => obj.id)
@@ -156,7 +187,17 @@ export default {
     }
   },
   methods: {
+    onSelectAll(arg) {
+      console.debug("***** SELECT ALL ", arg)
+      if (arg == 'select_all') {
+        this.$refs.table.selectAllRows()
+      } else {
+        this.$refs.table.clearSelected()
+      }
+    },
     onRefresh() {
+      // reset selected_items on page change as well ...
+      this.selected_items = []
       this.$refs.table.refresh()
     },
     onRowSelected(items) {
@@ -179,6 +220,12 @@ export default {
     selected(val) {
       if (!val && this.selected_items.length == 1) {
         this.$refs.table.clearSelected()
+      }
+    },
+    currentPage(ov,nv) {
+      if (ov != nv) {
+        // page was changed so we clear our selected
+        this.selected_items = []
       }
     }
   },
