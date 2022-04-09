@@ -9,6 +9,17 @@
         :columns="columns"
         v-if="showSearch"
       >
+        <template v-slot:alternate-search-tab>
+          <b-tab v-if="$slots['alternate-search']">
+            <template #title>
+              <slot name="alternate-search-title">
+                Alternate Search
+              </slot>
+            </template>
+
+            <slot name="alternate-search"></slot>
+          </b-tab>
+        </template>
       </search-vue>
       <div class="w-75" v-if="!showSearch">
       </div>
@@ -214,6 +225,9 @@ export default {
     },
     onSearchChanged(arg) {
       this.filter = arg
+    },
+    setFilter(newFilter) {
+      this.filter = newFilter
     }
   },
   watch: {

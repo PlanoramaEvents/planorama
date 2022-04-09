@@ -38,7 +38,23 @@
       :model="model"
       :columns="columns"
       selectMode='multi'
+      ref="people-table"
     >
+      <template v-slot:alternate-search-title>Seach by Email(s)</template>
+      <template v-slot:alternate-search>
+        <div class="d-flex">
+          <b-form-group label="Email(s)" class="w-100">
+            <b-form-input
+              type="text"
+              v-model="searchEmails"
+            ></b-form-input>
+          </b-form-group>
+        </div>
+        <div class="d-flex">
+          <b-button variant="primary" @click="onEmailSearch" class="">Search</b-button>
+        </div>
+      </template>
+
       <template v-slot:left-controls="{ selectedIds }">
         <div>
           <b-button
@@ -96,9 +112,27 @@ export default {
     columns,
     model,
     selectedIds: [],
-    selectedConState: null
+    selectedConState: null,
+    searchEmails: null,
   }),
   methods: {
+    onEmailSearch() {
+      // console.debug("FIND PEOPLE", this.searchEmails)
+      let queries = {
+        "op": 'any',
+        "queries": []
+      }
+      if (this.searchEmails && this.searchEmails.length > 0) {
+        let emails = this.searchEmails.split(',').map((a) => a.trim())
+        queries["queries"].push(
+          ["email_addresses.email","in",emails]
+        )
+      } else {
+        queries = null
+      }
+
+      this.$refs['people-table'].setFilter(queries)
+    },
     onSaveMassEdit() {
       // console.debug("*****  SAVE ME", this.selectedConState)
       if (this.selectedIds.length > 0 && this.selectedConState) {
