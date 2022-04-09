@@ -57,6 +57,7 @@ module.exports = {
 
     //survey questions
     SURVEY_YESNOMAYBE_PLACEHOLDER: "Please elaborate here.",
+    SURVEY_LINKED_FIELD: "This answer is linked directly to a profile field. Any information in that field will be mirrored here, and editing this information will edit your profile. Linked fields have a special icon: ",
 
     //generic app wide
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",

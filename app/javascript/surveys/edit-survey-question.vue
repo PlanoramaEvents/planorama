@@ -125,6 +125,23 @@
           </div>
         </div>
       </template>
+      <template v-if="boolean">
+        <div class="col-12">
+          <b-form-radio-group stacked>
+            <b-form-radio disabled :value="bYesLabel.value">{{bYesLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="bNoLabel.value">{{bNoLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+        </div>
+      </template>
+      <template v-if="attendance_type">
+        <div class="col-12">
+          <b-form-radio-group stacked>
+            <b-form-radio disabled :value="inPersonLabel.value">{{inPersonLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="virtualLabel.value">{{virtualLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="hybridLabel.value">{{hybridLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+        </div>
+      </template>
     </div>
     <div class="row" v-if="isSelected">
       <div class="col-6">
