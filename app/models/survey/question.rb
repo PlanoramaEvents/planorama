@@ -31,7 +31,8 @@ class Survey::Question < ApplicationRecord
       :textfield, :textbox, :singlechoice, :multiplechoice, :hr,
       :dropdown, :email, :socialmedia, :textonly,
       :boolean, # true or false
-      :yesnomaybe # 'yes', 'no', 'maybe'
+      :yesnomaybe, # 'yes', 'no', 'maybe'
+      :attendance_type
       # :address
     ]
 
