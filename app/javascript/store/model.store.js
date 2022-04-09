@@ -18,6 +18,8 @@ export const DELETE = 'DELETE';
 export const SEARCH = 'SEARCH';
 export const CLEAR = 'CLEAR';
 
+export const UPDATE_ALL = 'UPDATE ALL';
+
 export const PATCH_RELATED = 'PATCH RELATED';
 export const PATCH_FIELDS = 'PATCH FIELDS';
 
@@ -65,6 +67,8 @@ import { configurationStore, configurationEndpoints } from './configuration.stor
 
 // session add-ons
 import { sessionAssignmentStore, sessionAssignmentEndpoints } from './session_assignment.store';
+
+import merge from 'lodash.merge'
 
 const endpoints = {
   ...personEndpoints,
@@ -171,6 +175,32 @@ export const store = new Vuex.Store({
     ...searchStateStore.mutations
   },
   actions: {
+    /**
+     *
+     */
+    [UPDATE_ALL] (context, {model, ids, attrs}) {
+      const config = []
+      const path = `/${model}/update_all`
+      const apiConf = { method: 'post', url: path }
+      config['data'] = {ids: ids, attrs: attrs}
+      merge(apiConf, config)
+
+      // Variation of what the jsonapi-vuex does
+      return http(
+        apiConf
+      ).then(
+        (results) => {
+          let resData = utils.jsonapiToNorm(results.data.data)
+          // PROBLEM ????
+          context.commit('jv/addRecords', resData)
+          utils.processIncludedRecords(context, results)
+          resData = utils.checkAndFollowRelationships(context.state, context.getters, resData)
+          resData = utils.preserveJSON(resData, results.data)
+          return resData
+        }
+      )
+    },
+
     /**
      * this method isn't in our version of jsonapi-vuex, so we're writing our own
      * right now it only works on one to many

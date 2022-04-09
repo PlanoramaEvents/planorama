@@ -76,7 +76,7 @@ function getErrorText(errorResp, errorText) {
     return errorText(errorResp.status);
   } catch {
     // generic error message here
-    return ERROR_GENERIC_UNRECOVERABLE;
+    return ERROR_GENERIC_UNRECOVERABLE(errorEmail);
   }
   
 }

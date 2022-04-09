@@ -20,13 +20,7 @@ namespace :chicon do
             title: 'Opening Ceremony'
           },
           {
-            title: 'Opening Ceremony rehearsal'
-          },
-          {
             title: 'Closing Ceremony'
-          },
-          {
-            title: 'Closing Ceremony rehearsal'
           },
           {
             title: 'WSFS Business Meeting'

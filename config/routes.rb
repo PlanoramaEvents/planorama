@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   get 'person/me', to: 'people#me'
   get 'people/me', to: 'people#me'
   post 'person/import', to: 'people#import'
+  post 'person/update_all', to: 'people#update_all'
   resources :people, path: 'person' do
     get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
