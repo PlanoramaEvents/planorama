@@ -69,7 +69,7 @@ namespace :submission do
         end
       end
 
-      person.con_state = Person.con_states[:applied] unless p.con_state
+      person.con_state = Person.con_states[:applied] unless person.con_state
       person.save!
     end
   end
