@@ -17,4 +17,14 @@ class EmailAddressesController < ResourceController
   def paginate
     false
   end
+
+  def allowed_params
+    %i[
+      id
+      lock_version
+      email
+      isdefault
+      person_id
+    ]
+  end
 end
