@@ -6,7 +6,7 @@
       v-model="question.linked_field"
       @change="linkField"
       :select-size="4"
-      :options="fieldOptions"
+      :options="linkedFieldsFor"
     >
     </b-form-select>
   </div>
@@ -43,9 +43,9 @@ export default {
     canLink() {
       return this.canLinkField(this.question.question_type)
     },
-    fieldOptions() {
-      return this.linkedFieldsFor(this.question.question_type)
-    }
+    // fieldOptions() {
+    //   return this.linkedFieldsFor(this.question.question_type)
+    // }
   },
   mounted() {
     this.enabled = this.question.linked_field != null

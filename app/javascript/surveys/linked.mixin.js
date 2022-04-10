@@ -13,9 +13,14 @@ export const linkedMixin = {
         question_type == 'attendance_type' ||
         question_type == 'boolean' ||
         question_type == 'socialmedia';
-    },
+    }
+  },
+  computed: {
     // Return the valid fields for this question that can be linked
-    linkedFieldsFor(question_type) {
+    linkedFieldsFor() {
+      // this.question is not from a mixin....
+      // TODO: that needs to be solved
+      let question_type = this.question.question_type
       // Go through current settings and build a list based on type
       // value corresponds to the type that the backend provides
       let res = [
@@ -79,24 +84,26 @@ export const linkedMixin = {
         allowed_type = 'attendance_type'
       }
 
-      Object.keys(this.currentSettings.attributes).forEach(
-        (mdl) => {
-          Object.keys(this.currentSettings.attributes[mdl]).forEach(
-            (attr) => {
-              if (this.currentSettings.attributes[mdl][attr].linkable) {
-                let place = res.find(el => el.value == this.currentSettings.attributes[mdl][attr].type)
-                place.options.push(
-                  {
-                    disabled: this.currentSettings.attributes[mdl][attr].type != allowed_type,
-                    text: LINKED_FIELD_LABELS[mdl][attr] || attr.replace(/_/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase()))),
-                    value: `${mdl}.${attr}` // "model.attr"
-                  }
-                )
+      if (this.currentSettings && this.currentSettings.attributes) {
+        Object.keys(this.currentSettings.attributes).forEach(
+          (mdl) => {
+            Object.keys(this.currentSettings.attributes[mdl]).forEach(
+              (attr) => {
+                if (this.currentSettings.attributes[mdl][attr].linkable) {
+                  let place = res.find(el => el.value == this.currentSettings.attributes[mdl][attr].type)
+                  place.options.push(
+                    {
+                      disabled: this.currentSettings.attributes[mdl][attr].type != allowed_type,
+                      text: LINKED_FIELD_LABELS[mdl][attr] || attr.replace(/_/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase()))),
+                      value: `${mdl}.${attr}` // "model.attr"
+                    }
+                  )
+                }
               }
-            }
-          )
-        }
-      )
+            )
+          }
+        )
+      }
 
       // console.debug("***** OPTIONS CAN BE", res)
       return res
