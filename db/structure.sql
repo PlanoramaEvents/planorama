@@ -713,10 +713,10 @@ CREATE TABLE public.people (
     comments text,
     organization character varying,
     job_title character varying,
-    pronouns character varying(100),
+    pronouns character varying(400),
     year_of_birth integer,
-    gender character varying(100),
-    ethnicity character varying(100),
+    gender character varying(400),
+    ethnicity character varying(400),
     opted_in boolean DEFAULT false NOT NULL,
     registered boolean DEFAULT false NOT NULL,
     registration_type character varying,
@@ -2476,6 +2476,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220404142002'),
 ('20220404142017'),
 ('20220404143150'),
-('20220404162324');
+('20220404162324'),
+('20220410221341');
 
 

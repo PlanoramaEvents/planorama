@@ -127,7 +127,7 @@
 
         var first_sheet_name = workbook.SheetNames[0];
         var worksheet = workbook.Sheets[first_sheet_name];
-        this.sheetData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+        this.sheetData = XLSX.utils.sheet_to_json(worksheet, {header: 1, defval: ''});
         this.errorMessage = null;
         this.importMessage = null;
       },
