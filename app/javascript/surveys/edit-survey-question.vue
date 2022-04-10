@@ -9,7 +9,7 @@
          :label-for="formId('question-text')"
         >
 
-          <plano-editor
+          <plano-editor style="border: solid 2px; border-radius: 5px;"
             :id="formId('question-text')"
             v-model="question.question"
             @blur="patchSelectedQuestion({question: $event.editor._.data})"
