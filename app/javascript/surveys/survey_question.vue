@@ -47,8 +47,10 @@
             <div class="ml-4 mt-1 mb-3">
               <b-form-textarea 
                 :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
-                :v-model="localResponse.response.text"
+                v-model="localResponse.response.text"
                 :disabled="!answerable || radioButtonResponse !== maybeLabel.value"
+                :required="radioButtonResponse === maybeLabel.value"
+                @blur="saveResponse(localResponse, selectedSubmission)"
               >
               </b-form-textarea>
             </div>
