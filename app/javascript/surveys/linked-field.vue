@@ -1,12 +1,12 @@
 <template>
   <div>
-    <b-form-checkbox v-model="enabled" :disabled="!canLink" @change="unlinkIfLinked">Linked</b-form-checkbox>
+    <b-form-checkbox v-model="enabled" :disabled="!canLinkField" @change="unlinkIfLinked">Linked</b-form-checkbox>
     <b-form-select
       :disabled="!enabled"
       v-model="question.linked_field"
       @change="linkField"
       :select-size="4"
-      :options="linkedFieldsFor"
+      :options="linkedFieldsOptions"
     >
     </b-form-select>
   </div>
@@ -39,16 +39,8 @@ export default {
       this.$emit('change', arg)
     }
   },
-  computed: {
-    canLink() {
-      return this.canLinkField(this.question.question_type)
-    },
-    // fieldOptions() {
-    //   return this.linkedFieldsFor(this.question.question_type)
-    // }
-  },
   mounted() {
-    this.enabled = this.question.linked_field != null
+    this.enabled = !!this.question.linked_field 
   }
 }
 </script>
