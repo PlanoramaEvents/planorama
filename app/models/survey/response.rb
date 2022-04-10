@@ -32,8 +32,11 @@ class Survey::Response < ApplicationRecord
                 response['socialmedia']
               when :boolean
                 response['boolean'].to_s.downcase == "true"
+              # Yes not maybe and attendance should only have one answer
               when :yesnomaybe
-                response['yesnomaybe']
+                response['answers'].first
+              when :attendance_type
+                response['answers'].first
               else
                 nil
               end

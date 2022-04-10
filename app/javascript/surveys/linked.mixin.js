@@ -47,6 +47,11 @@ export const linkedMixin = {
           label: 'Yes/No/Maybe',
           value: 'yesnomaybe',
           options: []
+        },
+        {
+          label: 'Attendance Type',
+          value: 'attendance_type',
+          options: []
         }
       ]
       let allowed_type = 'nothing'
@@ -69,6 +74,9 @@ export const linkedMixin = {
       if (question_type == 'socialmedia') {
         allowed_type = 'socialmedia'
       }
+      if (question_type == 'attendance_type') {
+        allowed_type = 'attendance_type'
+      }
 
       Object.keys(this.currentSettings.attributes).forEach(
         (mdl) => {
@@ -79,7 +87,7 @@ export const linkedMixin = {
                 place.options.push(
                   {
                     disabled: this.currentSettings.attributes[mdl][attr].type != allowed_type,
-                    text: LINKED_FIELD_LABELS[mdl][attr] || attr.replace(/_/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase()))), 
+                    text: LINKED_FIELD_LABELS[mdl][attr] || attr.replace(/_/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase()))),
                     value: `${mdl}.${attr}` // "model.attr"
                   }
                 )
