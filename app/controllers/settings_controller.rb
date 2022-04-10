@@ -42,16 +42,29 @@ class SettingsController < ApplicationController
       yesnomaybe: [
         {
           value: 'yes',
-          label: 'this says yes'
+          label: 'Yes'
         }, {
           value: 'no',
-          label: 'this says no'
+          label: 'No'
         },
         {
           value: 'maybe',
-          label: 'this says kumquat'
+          label: 'Yes, except for items focused on the topics listed below.'
         },
       ],
+      attendance_type: [
+        {
+          value: 'in person',
+          label: '**In-person only:** I am planning to attend Chicon 8 in-person'
+        }, {
+          value: 'virtual',
+          label: '**Virtual only:** I am not planning to attend Chicon 8 in-person, and would like to be a virtual participant on virtual-based items only (via Zoom or similar technology).'
+        },
+        {
+          value: 'hybrid',
+          label: '**In-person and virtual:** I am planning to attend Chicon 8 in-person, but would also like to be considered for virtual panels.'
+        },
+      ]
       # TODO: this needs to change
       timezones: zones #ActiveSupport::TimeZone::MAPPING
     }
