@@ -92,28 +92,51 @@ export const questionMixin = {
       return this.getQuestionIndex(this.selectedQuestion)
     },
     yesLabel() {
-      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "yes") || "Yes";
+      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "yes") || {
+        label: "Yes",
+        value: "yes"
+      }
     },
     noLabel() {
-      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "no") || "No";
+      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "no") || {
+        label: "No",
+        value: "no"
+      }
     },
     maybeLabel() {
-      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "maybe") || "Maybe";
+      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "maybe") || {
+        label: "Yes, except for items focused on the topics listed below.",
+        value: "maybe"};
     },
     bYesLabel() {
-      return this.currentSettings?.boolean?.find(b => b.value === true) || "Yes";
+      return this.currentSettings?.boolean?.find(b => b.value === true) || {
+        label: "Yes",
+        value: true
+      };
     },
     bNoLabel() {
-      return this.currentSttings?.boolean?.find(b => b.value === false) || "No";
+      return this.currentSttings?.boolean?.find(b => b.value === false) || {
+        label: "No",
+        value: false
+      };
     },
     inPersonLabel() {
-      return this.currentSettings?.attendance_type?.find(at => at.value === "in_person") || "In Person";
+      return this.currentSettings?.attendance_type?.find(at => at.value === "in_person") || {
+        label: "**In-person only:** I am planning to attend Chicon 8 in-person",
+        value: "in_person"
+      }
     },
     virtualLabel() {
-      return this.currentSettings?.attendance_type?.find(at => at.value === "virtual") || "Virtual";
+      return this.currentSettings?.attendance_type?.find(at => at.value === "virtual") || {
+        label: "**Virtual only:** I am not planning to attend Chicon 8 in-person, and would like to be a virtual participant on virtual-based items only (via Zoom or similar technology).",
+        value: "virtual",
+      };
     },
     hybridLabel() {
-      return this.currentSettings?.attendance_type?.find(at => at.value === "hybrid") || "Hybrid";
+      return this.currentSettings?.attendance_type?.find(at => at.value === "hybrid") || {
+        label: "**In-person and virtual:** I am planning to attend Chicon 8 in-person, but would also like to be considered for virtual panels.",
+        value: "hybrid"
+      }
     }
   },
   methods: {

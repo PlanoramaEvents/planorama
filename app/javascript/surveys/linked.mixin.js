@@ -40,12 +40,12 @@ export const linkedMixin = {
           options: []
         },
         {
-          label: 'Boolean',
+          label: 'Yes/No',
           value: 'boolean',
           options: []
         },
         {
-          label: 'Yes/No/Maybe',
+          label: 'Three Options Question',
           value: 'yesnomaybe',
           options: []
         },
