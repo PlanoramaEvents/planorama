@@ -108,7 +108,7 @@ export const surveyStore = {
         // Build a ordered cache of Survey elements upon select
         if ((mutation.type === SELECT) && (mutation.payload.model === 'survey')) {
           let instance = mutation.payload.itemOrId;
-          if (typeof instance == 'string') {
+          if (typeof instance == 'string' || !instance) {
             return
           }
 
