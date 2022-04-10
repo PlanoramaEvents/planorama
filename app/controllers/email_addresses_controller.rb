@@ -24,6 +24,7 @@ class EmailAddressesController < ResourceController
       lock_version
       email
       isdefault
+      is_valid
       person_id
     ]
   end

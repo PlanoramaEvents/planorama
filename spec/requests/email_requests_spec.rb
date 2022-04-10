@@ -26,12 +26,10 @@ RSpec.describe 'EmailAddresses', type: :request do
       new_email = 'email+test@test.com'
       post "/email_address",
             params: {
-              email_address: {
-                isdefault: false,
-                email: new_email,
-                is_valid: true,
-                person_id: p.id
-              }
+              isdefault: false,
+              email: new_email,
+              is_valid: true,
+              person_id: p.id
             }
 
       expect(response).to have_http_status(200)

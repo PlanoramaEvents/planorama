@@ -92,28 +92,28 @@ export const questionMixin = {
       return this.getQuestionIndex(this.selectedQuestion)
     },
     yesLabel() {
-      return this.currentSettings.yesnomaybe?.find(ynm => ynm.value === "yes") || "Yes";
+      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "yes") || "Yes";
     },
     noLabel() {
-      return this.currentSettings.yesnomaybe?.find(ynm => ynm.value === "no") || "No";
+      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "no") || "No";
     },
     maybeLabel() {
-      return this.currentSettings.yesnomaybe?.find(ynm => ynm.value === "maybe") || "Maybe";
+      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "maybe") || "Maybe";
     },
     bYesLabel() {
-      return this.currentSettings.boolean?.find(b => b.value === true) || "Yes";
+      return this.currentSettings?.boolean?.find(b => b.value === true) || "Yes";
     },
     bNoLabel() {
-      return this.currentSttings.boolean?.find(b => b.value === false) || "No";
+      return this.currentSttings?.boolean?.find(b => b.value === false) || "No";
     },
     inPersonLabel() {
-      return this.currentSettings.attendance_type?.find(at => at.value === "in_person") || "In Person";
+      return this.currentSettings?.attendance_type?.find(at => at.value === "in_person") || "In Person";
     },
     virtualLabel() {
-      return this.currentSettings.attendance_type?.find(at => at.value === "virtual") || "Virtual";
+      return this.currentSettings?.attendance_type?.find(at => at.value === "virtual") || "Virtual";
     },
     hybridLabel() {
-      return this.currentSettings.attendance_type?.find(at => at.value === "hybrid") || "Hybrid";
+      return this.currentSettings?.attendance_type?.find(at => at.value === "hybrid") || "Hybrid";
     }
   },
   methods: {

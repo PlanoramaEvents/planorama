@@ -364,6 +364,7 @@ class PeopleController < ResourceController
         id
         lock_version
         email
+        is_valid
         isdefault
       ],
       convention_roles_attributes: %i[

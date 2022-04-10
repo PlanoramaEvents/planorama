@@ -10,6 +10,7 @@ export const linkedMixin = {
         question_type == 'textbox' ||
         question_type == 'email' ||
         question_type == 'yesnomaybe' ||
+        question_type == 'attendance_type' ||
         question_type == 'boolean' ||
         question_type == 'socialmedia';
     },
