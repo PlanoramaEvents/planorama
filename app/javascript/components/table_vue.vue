@@ -27,17 +27,17 @@
       <div class="d-flex justify-content-end">
         <div class="d-inline mx-1" title="clone" v-if="showClone">
           <b-button @click="$emit('clone')" variant="primary" title="clone">
-            <b-icon-files scale="2"></b-icon-files>
+            <b-icon-files></b-icon-files>
           </b-button>
         </div>
         <div class="d-inline mx-1" title="refresh" v-if="showRefresh">
           <b-button @click="onRefresh" variant="primary" title="refresh">
-            <b-icon-arrow-repeat scale="2"></b-icon-arrow-repeat>
+            <b-icon-arrow-repeat></b-icon-arrow-repeat>
           </b-button>
         </div>
         <div class="d-inline mx-1" title="newval" v-if="showAdd">
           <b-button @click="$emit('new')" variant="primary" title="New">
-            <b-icon-plus scale="2"></b-icon-plus>
+            <b-icon-plus></b-icon-plus>
           </b-button>
         </div>
         <div class="d-inline mx-1" title="show" v-if="showView">

@@ -19,7 +19,7 @@ export const mailing_columns = [
     key: 'date_sent',
     label: 'Date Sent',
     sortable: true,
-    formatter: (d) => (d ? new Date(d).toLocaleDateString() : 'n/a')
+    formatter: (d) => (d ? new Date(d).toLocaleString() : 'n/a')
   },
   {
     key: 'sent_by.name',
