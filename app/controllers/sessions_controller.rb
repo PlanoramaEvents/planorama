@@ -42,35 +42,38 @@ class SessionsController < ResourceController
     current_row_nbr = -1
     no_title = 0
     duplicate_session = 0
-    Session.transaction do
-      sheet.each do |row|
-        current_row_nbr += 1
-        if ignore_first_line && count == 0
-          count += 1
+    sheet.each do |row|
+      current_row_nbr += 1
+      if ignore_first_line && count == 0
+        count += 1
+        next
+      end
+
+      areas = row[0].split(",")
+      title = row[1]
+      description = row[2]
+      # format = row[3]
+      goh_notes = row[4]
+      interest_open = row[5]
+      interest_instructions = row[6]
+      tags = row[7]
+      notes = row[8]
+
+      # Rails.logger.debug("***** ROW #{row}")
+      Rails.logger.debug("***** ROW #{row[4]} - #{row[5]}")
+
+      format = Format.find_or_create_by(name: row[3])
+
+      if title && (title.length > 0)
+        # Rails.logger.error "***** #{title}"
+        # Rails.logger.error "***** #{notes} \n #{goh_notes}"
+        if Session.find_by title: title
+          errored_rows << current_row_nbr
+          duplicate_session += 1
           next
         end
 
-        areas = row[0].split(",")
-        title = row[1]
-        description = row[2]
-        # format = row[3]
-        goh_notes = row[4]
-        interest_open = row[5]
-        interest_instructions = row[6]
-        tags = row[7]
-        notes = row[8]
-
-        format = Format.find_or_create_by(name: row[3])
-
-        if title && (title.length > 0)
-          # Rails.logger.error "***** #{title}"
-          # Rails.logger.error "***** #{notes} \n #{goh_notes}"
-          if Session.find_by title: title
-            errored_rows << current_row_nbr
-            duplicate_session += 1
-            next
-          end
-
+        Session.transaction do
           session = Session.create!(
             title: title,
             description: description,
@@ -93,12 +96,12 @@ class SessionsController < ResourceController
             )
             primary = false
           end
-
-          count += 1
-        else
-          errored_rows << current_row_nbr
-          no_title += 1
         end
+
+        count += 1
+      else
+        errored_rows << current_row_nbr
+        no_title += 1
       end
     end
 

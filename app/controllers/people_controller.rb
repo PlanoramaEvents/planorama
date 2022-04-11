@@ -57,42 +57,42 @@ class PeopleController < ResourceController
     noname = 0
     errored_rows = []
     current_row_nbr = -1
-    Person.transaction do
-      sheet.each do |row|
-        current_row_nbr += 1
-        if ignore_first_line && count == 0
-          count += 1
-          next
-        end
+    # TODO - we need to do a lock here .... (same for session)
+    sheet.each do |row|
+      current_row_nbr += 1
+      if ignore_first_line && count == 0
+        count += 1
+        next
+      end
 
-        email = row[0]
-        name = row[1]
-        pseudonym = row[2]
+      email = row[0]
+      name = row[1]
+      pseudonym = row[2]
 
-        if email && (email.length > 0)
-          # validate that the email is a valid email
-          email_validation = Truemail.validate(email, with: :regex)
-          bad_email += 1 unless email_validation.result.success
-          errored_rows << current_row_nbr unless email_validation.result.success
-          next unless email_validation.result.success
+      if email && (email.length > 0)
+        # validate that the email is a valid email
+        email_validation = Truemail.validate(email, with: :regex)
+        bad_email += 1 unless email_validation.result.success
+        errored_rows << current_row_nbr unless email_validation.result.success
+        next unless email_validation.result.success
 
-          # if we have a person with that email address as primary then skip the import
-          found_email = EmailAddress.find_by(email: email, isdefault: true)
+        # if we have a person with that email address as primary then skip the import
+        found_email = EmailAddress.find_by(email: email, isdefault: true)
 
-          errored_rows << current_row_nbr if found_email
-          duplicate_email += 1 if found_email
-          next if found_email
+        errored_rows << current_row_nbr if found_email
+        duplicate_email += 1 if found_email
+        next if found_email
 
-          noname += 1 if name && name.length == 0
-          errored_rows << current_row_nbr if name && name.length == 0
-          next if name && name.length == 0
+        noname += 1 if name && name.length == 0
+        errored_rows << current_row_nbr if name && name.length == 0
+        next if name && name.length == 0
 
+        Person.transaction do
           person = Person.create(
             name: name,
             name_sort_by: name,
             pseudonym: pseudonym,
-            pseudonym_sort_by: pseudonym,
-            con_state: Person.con_states[:applied]
+            pseudonym_sort_by: pseudonym
           );
           email = EmailAddress.create(
             person: person,
@@ -106,9 +106,9 @@ class PeopleController < ResourceController
             person: person,
             role: ConventionRole.roles[:participant]
           )
-
-          count += 1
         end
+
+        count += 1
       end
     end
 
