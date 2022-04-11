@@ -86,17 +86,19 @@ class Survey::Response < ApplicationRecord
          when :socialmedia
            json_val[:socialmedia] = value
          when :boolean
-           json_val[:boolean] = value
+           json_val[:answers] = value
          when :yesnomaybe
-           json_val[:yesnomaybe] = value
+           json_val[:answers] = value[:value]
+           json_val[:text] = value[:text]
          when :email
-           json_val[:email] = value
+           json_val[:answers] = value
          # when :textonly, :hr are not actual questions
          else
            json_val = nil
          end
 
     if json_val
+      # p "****** SET RES #{json_val}"
       Survey::Response.create!(
         question: question,
         submission: submission,
@@ -145,10 +147,7 @@ class Survey::Response < ApplicationRecord
       answers: [],
       socialmedia: {
         twitter: nil, facebook: nil, linkedin: nil, twitch: nil, youtube: nil, instagram: nil, tiktok: nil, other: nil, website: nil
-      },
-      boolean: nil,
-      yesnomaybe: nil,
-      email: nil
+      }
     }
   end
 end
