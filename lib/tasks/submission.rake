@@ -108,11 +108,10 @@ namespace :submission do
            when :boolean
              [value.downcase == 'yes']
            when :yesnomaybe
-             # ?'yes, except for items focused on the topics listed below.'
-             # TODO: check and fix
              # Need special consideration for the elaborate section of the question
+             # there are 2 questions from google that this should deal with
              if value
-               val = if value.include? 'yes, except'
+               val = if value.include? 'except for items'
                        'maybe'
                      elsif value.downcase == 'yes'
                        'yes'
@@ -139,9 +138,30 @@ namespace :submission do
            end
 
     if val && submission
-      # p "create a response for #{value}"
       response = Survey::Response.create_response(
           question: question,
+          submission: submission,
+          value: val
+        )
+      if question.id == '00000000-0000-0000-0000-000000000052'
+        fix_yesnomaybe(question_id: '00000000-0000-0000-0000-000000000051', submission_id: submission.id, val: val)
+      end
+      if question.id == '00000000-0000-0000-0000-000000000055'
+        fix_yesnomaybe(question_id: '00000000-0000-0000-0000-000000000054', submission_id: submission.id, val: val)
+      end
+    end
+  end
+
+  def fix_yesnomaybe(question_id: , submission_id:, val:)
+    existing_response = Survey::Response.find_or_create_by(question_id: question_id, submission_id: submission_id)
+    if existing_response
+      new_val = existing_response.response || Survey::Response.empty_json
+      new_val[:text] = val
+      existing_response.response = new_val
+      existing_response.save!
+    else
+      response = Survey::Response.create_response(
+          question_id: question_id,
           submission: submission,
           value: val
         )

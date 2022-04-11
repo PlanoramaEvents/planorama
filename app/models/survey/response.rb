@@ -15,7 +15,7 @@ class Survey::Response < ApplicationRecord
   # Deal with linked_field from question
   #
   def update_linked
-    if question.linked_field && submission.person
+    if question.linked_field && submission.person && response
       # we can set the linked field on the person
       details = question.linked_field.split('.',2)
 
@@ -112,13 +112,15 @@ class Survey::Response < ApplicationRecord
   # version that can be used for searchin the responses in a "report"
   #
   def set_response_text
-    flattened_response = flatten_response(response)
+    if response
+      flattened_response = flatten_response(response)
 
-    strip_uuid = [:singlechoice, :multiplechoice].include?(question.question_type)
-    if strip_uuid
-      self.response_as_text = flattened_response.values.flatten.collect{|v| v[37..-1]}.reject { |e| e.to_s.empty? }.join('; ').strip
-    else
-      self.response_as_text = flattened_response.values.join(' ').strip
+      strip_uuid = [:singlechoice, :multiplechoice].include?(question.question_type)
+      if strip_uuid
+        self.response_as_text = flattened_response.values.flatten.collect{|v| v[37..-1]}.reject { |e| e.to_s.empty? }.join('; ').strip
+      else
+        self.response_as_text = flattened_response.values.join(' ').strip
+      end
     end
   end
 
