@@ -18,6 +18,16 @@ class SessionAssignmentPolicy < PlannerPolicy
     @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
+  def index?
+    return true
+  end
+
+  def show?
+    return true if @record.person_id == @person.id
+
+    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+  end
+
   class Scope < Scope
     def resolve
       # Rails.logger.debug "**** ALL #{@person.name}"
