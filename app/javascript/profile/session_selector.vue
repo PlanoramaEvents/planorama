@@ -47,7 +47,7 @@
       <template #cell(id)="{ item }">
         <interest-indicator
           :session="item"
-          :person_id="currentUser.id"
+          :person_id="person.id"
           :model="sessionAssignmentModel"
         ></interest-indicator>
       </template>
@@ -84,6 +84,15 @@ export default {
     modelMixin,
     tableMixin // covers pagination and sorting
   ],
+  model: {
+    prop: 'person'
+  },
+  props: {
+    person: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       sessionAssignmentModel,

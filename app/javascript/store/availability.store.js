@@ -34,11 +34,11 @@ export const availabilityStore = {
         }).catch(rej)
       })
     },
-    [GET_AVAILABILITY] ({commit, dispatch, state}) {
+    [GET_AVAILABILITY] ({dispatch}, {person}) {
       // Return a promise with the availabilities
       return new Promise((res, rej) => {
-        if(state.user.id) {
-          dispatch('jv/get',`/person/${state.user.id}/availability`).then((availabilities) => {
+        if(person.id) {
+          dispatch('jv/get',`/person/${person.id}/availability`).then((availabilities) => {
             res(availabilities);
           })
         } else {

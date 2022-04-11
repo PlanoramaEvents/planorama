@@ -35,7 +35,14 @@ export default {
     personSessionMixin,
     sessionLimitMixin
   ],
+  model: {
+    prop: 'person'
+  },
   props: {
+    person: {
+      type: Object,
+      required: true
+    },
     day: {
       type: String,
       default: null
@@ -78,7 +85,7 @@ export default {
           )
         } else {
           let candidate = {
-            person_id: this.currentUser.id,
+            person_id: this.person.id,
             day: this.day,
             max_sessions: num
           }
@@ -92,7 +99,7 @@ export default {
     }
   },
   mounted() {
-    let my_limits =  Object.values(this.currentUser.session_limits)
+    let my_limits =  Object.values(this.person.session_limits)
     let candidate_idx =  my_limits.findIndex((el) => el.day == this.day)
     if (candidate_idx >= 0) {
       this.my_limit = my_limits[candidate_idx]
