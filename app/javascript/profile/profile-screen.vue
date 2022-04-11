@@ -10,7 +10,7 @@
           :model="personModel"
         ></person-details>
       </b-tab>
-      <b-tab title="Availbility & Interests" lazy>
+      <b-tab title="Availability & Interests" lazy>
         <availability-and-interests
           :start_time="start_time"
           :end_time="end_time"

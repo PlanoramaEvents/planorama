@@ -1,4 +1,4 @@
-class TagPolicy < PlannerPolicy
+class AreasPolicy < PlannerPolicy
   def index?
     true
   end

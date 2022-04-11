@@ -6,7 +6,7 @@
       disable-date-prototypes
       active-view="day"
       style="height: 300px;"
-      :editable-events="{ title: false, drag: true, resize: true, delete: true, create: true }"
+      :editable-events="{ title: false, drag: true, resize: true, delete: false, create: true }"
       :disable-views="['years', 'year', 'month', 'week']"
       :time-cell-height="18"
       :time-from="startTime"
@@ -22,6 +22,7 @@
       @event-delete="onDelete($event)"
       @event-duration-change="onUpdate($event)"
       @event-drop="onUpdate($event)"
+      class="vuecal--full-height-delete"
     >
     <!-- :special-hours="conventionHours" -->
       <template v-slot:title="{ title, view }">
@@ -29,10 +30,13 @@
         {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
       </template>
       <template v-slot:event="{ event, view }">
-        <small class="vuecal__event-time">
-          <span>{{ formatLocaleDate(event.start) }} - </span><br/>
-          <span>{{ formatLocaleDate(event.end) }}</span>
-        </small>
+        <div class="d-flex flex-row">
+          <small class="vuecal__event-time">
+            <span>{{ formatLocaleDate(event.start) }} - </span><br/>
+            <span>{{ formatLocaleDate(event.end) }}</span>
+          </small>
+          <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
+        </div>
       </template>
     </vue-cal>
   </div>
@@ -138,7 +142,14 @@ export default {
     },
     onDelete(ev) {
       let cid = ev._eid
+      // remove element with _eid == cid from the arrays
       this.dayEvents[cid] = null
+      this.$refs['dayColumn'].mutableEvents = this.$refs['dayColumn'].mutableEvents.filter(
+        (e) => e._eid != cid
+      )
+      this.$refs['dayColumn'].view.events = this.$refs['dayColumn'].view.events.filter(
+        (e) => e._eid != cid
+      )
       this.$emit('delete', cid )
     },
     createAvailibilitySlot(id, fromDate, toDate) {
