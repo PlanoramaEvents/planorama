@@ -39,7 +39,8 @@ class PersonSerializer #< ActiveModel::Serializer
               :languages_fluent_in,
               :timezone,
               :twelve_hour,
-              :attendance_type
+              :attendance_type,
+              :availability_notes
 
   # status and comments hidden except for staff
   protected_attributes :con_state, :comments

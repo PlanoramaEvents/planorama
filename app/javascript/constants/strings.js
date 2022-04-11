@@ -117,6 +117,9 @@ module.exports = {
     CREATE_SESSION_LIMIT_SUCCESS: "Session limit has been saved",
     CREATE_SESSION_LIMIT_ERROR: errorMessage("Error on Session limit save"),
 
+    SAVE_AVAILABILITY_NOTES: "Other scheduling considerations saved successfully.",
+    AVAILABILITY_NOTES_LABEL: "Other Scheduling Considerations",
+
     UPDATE_PERSON_EXCLUSION_SUCCESS: "Exclusion information has been updated.",
     UPDATE_PERSON_EXCLUSION_ERROR: errorMessage("Error on updating Exclusion information."),
 
