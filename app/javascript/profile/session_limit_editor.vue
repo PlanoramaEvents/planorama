@@ -46,7 +46,9 @@ export default {
     }
   },
   data: () =>  ({
-    my_limit: null
+    my_limit: {
+      max_sessions: null
+    }
   }),
   computed: {
     limit: {
@@ -67,7 +69,7 @@ export default {
       // Do not do anything if the value is not a positive number
       const num = Number(newVal);
       if (Number.isInteger(num) && num > 0) {
-        if (this.my_limit) {
+        if (this.my_limit.id) {
           this.my_limit.max_sessions = num
           this.save(this.my_limit).then(
             (data) => {
@@ -94,6 +96,12 @@ export default {
     let candidate_idx =  my_limits.findIndex((el) => el.day == this.day)
     if (candidate_idx >= 0) {
       this.my_limit = my_limits[candidate_idx]
+    } else {
+      this.my_limit = {
+        person_id: this.currentUser.id,
+        day: this.day,
+        max_sessions: null
+      }
     }
   }
 }
