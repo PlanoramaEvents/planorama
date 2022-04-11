@@ -117,6 +117,7 @@ module.exports = {
     CREATE_SESSION_LIMIT_SUCCESS: "Session limit has been saved",
     CREATE_SESSION_LIMIT_ERROR: errorMessage("Error on Session limit save"),
 
+    AVAILABILITY_DESCRIPTION: "Please highlight the times you are available in the calendar view below.",
     SAVE_AVAILABILITY_NOTES: "Other scheduling considerations saved successfully.",
     AVAILABILITY_NOTES_LABEL: "Other Scheduling Considerations",
 
