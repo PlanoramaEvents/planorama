@@ -357,6 +357,7 @@ class PeopleController < ResourceController
       timezone
       twelve_hour
       attendance_type
+      availability_notes
       ids
       attrs
     ] << [

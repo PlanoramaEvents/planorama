@@ -36,6 +36,7 @@
         model="person_exclusion"
       ></exclusions-picker>
     </div>
+    <availability-notes-field></availability-notes-field>
   </div>
 </template>
 
@@ -44,6 +45,7 @@ import AvailabilityCalendar from './availability_calendar.vue';
 import ExclusionsPicker from './exclusions_picker.vue'
 import SessionLimits from './session_limits.vue'
 import SessionLimitEditor from './session_limit_editor.vue'
+import AvailabilityNotesField from './availability_notes_field';
 
 const { DateTime } = require("luxon");
 
@@ -53,7 +55,8 @@ export default {
     SessionLimitEditor,
     AvailabilityCalendar,
     ExclusionsPicker,
-    SessionLimits
+    SessionLimits,
+    AvailabilityNotesField
   },
   props: {
     start_time: {
