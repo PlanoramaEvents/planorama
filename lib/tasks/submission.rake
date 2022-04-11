@@ -23,7 +23,7 @@ namespace :submission do
         begin
           create_submission(header, row, survey)
         rescue => msg
-          p "****** ERROR row: #{count} - #{msg}"
+          p "****** ERROR row: #{count+1} - #{msg}"
         end
       end
     end
@@ -35,7 +35,7 @@ namespace :submission do
       email = row[1]
       person = nil
 
-      # get ehe person from their email
+      # get the person from their email
       addr = EmailAddress.find_by email: email
 
       if addr == nil
@@ -51,19 +51,26 @@ namespace :submission do
         person = addr.person
       end
 
+      # Ok to change the person's name as long as the email is the same
       submission = Survey::Submission.create!(
                      person: person,
                      survey_id: survey.id,
                      created_at: timestamp,
                      updated_at: timestamp
                    )
+
+      # change the state of the person to applied on import
+      # Also need better error reporting for which questions are a problem etc.
       (2..(row.count-1)).each do |n|
         if header[n]
           create_response(question: header[n], submission: submission, value: row[n])
         else
-          p "ERROR: no question for column #{n}"
+          p "person (#{email}) - ERROR: no question for column #{n}"
         end
       end
+
+      person.con_state = Person.con_states[:applied] unless person.con_state
+      person.save!
     end
   end
 
@@ -91,23 +98,70 @@ namespace :submission do
              fix_answer_uuids question, [value]
            when :multiplechoice
              # array, multiple values - seperated by ;
-             fix_answer_uuids question, value.split(";")
+             if value
+               fix_answer_uuids question, value.split(";")
+             end
            when :dropdown
              fix_answer_uuids question, [value]
-           # Address and Socialmedia do not map from google
-           # socialmedia: {
-           #   twitter: nil, facebook: nil, linkedin: nil, twitch: nil, youtube: nil, instagram: nil, tiktok: nil, other: nil, website: nil
-           # }
-           # when :socialmedia
-           #   empty_json[:socialmedia] = value
+           when :email
+             [value]
+           when :boolean
+             [value.downcase == 'yes']
+           when :yesnomaybe
+             # Need special consideration for the elaborate section of the question
+             # there are 2 questions from google that this should deal with
+             if value
+               val = if value.include? 'except for items'
+                       'maybe'
+                     elsif value.downcase == 'yes'
+                       'yes'
+                     elsif value.downcase == 'no'
+                       'no'
+                     end
+               if val
+                 {
+                   text: '',
+                   value: [val.downcase]
+                 }
+               end
+             end
+           when :attendance_type
+             if value.include?('**In-person and virtual:**')
+               ['hybrid']
+             elsif value.include?('**In-person only:**')
+               ['in person']
+             elsif value.include?('**Virtual only:**')
+               ['virtual']
+             end
            else
              nil
            end
 
     if val && submission
-      # p "create a response for #{value}"
       response = Survey::Response.create_response(
           question: question,
+          submission: submission,
+          value: val
+        )
+      if question.id == '00000000-0000-0000-0000-000000000052'
+        fix_yesnomaybe(question_id: '00000000-0000-0000-0000-000000000051', submission_id: submission.id, val: val)
+      end
+      if question.id == '00000000-0000-0000-0000-000000000055'
+        fix_yesnomaybe(question_id: '00000000-0000-0000-0000-000000000054', submission_id: submission.id, val: val)
+      end
+    end
+  end
+
+  def fix_yesnomaybe(question_id: , submission_id:, val:)
+    existing_response = Survey::Response.find_or_create_by(question_id: question_id, submission_id: submission_id)
+    if existing_response
+      new_val = existing_response.response || Survey::Response.empty_json
+      new_val[:text] = val
+      existing_response.response = new_val
+      existing_response.save!
+    else
+      response = Survey::Response.create_response(
+          question_id: question_id,
           submission: submission,
           value: val
         )
@@ -119,10 +173,14 @@ namespace :submission do
     res = []
 
     values.each do |val|
-      answer = question.answers.where("REPLACE(answer, ' ', '') = ?", val.gsub(/\s+/, "")).first
-      raise "could not find answer for question #{question.question} => #{val}" unless answer
+      if val == 'I am interested in receiving information about presenting on our Academic program (You can find out more about our Academic program here <<link to Academic blurb that will be on Chicon website>>).'
+        res.push "00000000-0000-0000-0000-000000000142-I am interested in receiving information about presenting on our Academic program (You can find out more about our Academic program at https://chicon.org/academic-program/ )."
+      else
+        answer = question.answers.where("REPLACE(answer, ' ', '') = ?", val.gsub(/\s+/, "")).first
+        raise "could not find answer for question #{question.question} => #{val}" unless answer
 
-      res.push "#{answer.id}-#{answer.answer}"
+        res.push "#{answer.id}-#{answer.answer}"
+      end
     end
 
     res

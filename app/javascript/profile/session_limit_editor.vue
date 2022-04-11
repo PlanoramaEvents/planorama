@@ -3,6 +3,7 @@
     v-model="limit"
     type='number'
     @change="onChange"
+    min="0"
   ></b-form-input>
 </template>
 

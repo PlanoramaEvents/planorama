@@ -27,6 +27,7 @@
           @change="onCheck"
           :checked="isdefault"
           class="mt-2 pt-1"
+          :disabled='disabled'
         >
         </b-form-radio>
         <b-button v-if="canDelete" @click="onDelete" size="sm" variant="" title="Delete" class="mt-2">

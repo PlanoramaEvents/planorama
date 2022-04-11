@@ -1,7 +1,8 @@
 <template>
   <div class="d-flex flex-row">
     <div class="">
-      Availability
+      Availability<br/>
+      <small class="text-muted">{{AVAILABILITY_DESCRIPTION}}</small>
       <div class="d-flex flex-row">
         <availability-time-picker
           v-for="day in days" :key="day"
@@ -17,10 +18,10 @@
           :timezone="timezone"
         />
       </div>
-      * times shown in {{display_timezone}}
+      <small class="text-muted">* times shown in {{display_timezone}}</small>
     </div>
     <div class="p-2 selected-availabilities">
-      <div v-for="avail in sortedAvailabilities">
+      <div v-for="avail in sortedAvailabilities" :key="avail.id">
         {{ formatLocaleDate(avail.start, { weekday: 'long' }) }}
         {{ formatLocaleDate(avail.start, DateTime.TIME_SIMPLE) }} -
         {{ formatLocaleDate(avail.end, {hour: 'numeric', minute: '2-digit', timeZoneName: 'short'} ) }}
@@ -33,6 +34,9 @@
 import AvailabilityTimePicker from './availability_time_picker'
 import availabilityMixin from '../store/availability.mixin'
 import personSessionMixin from '../auth/person_session.mixin';
+import {
+  AVAILABILITY_DESCRIPTION
+} from '@/constants/strings';
 
 const { DateTime } = require("luxon");
 
@@ -54,7 +58,8 @@ export default {
   },
   data: () =>  ({
     dayEvents: new Array(),
-    DateTime: DateTime
+    DateTime: DateTime,
+    AVAILABILITY_DESCRIPTION
   }),
   computed: {
     sortedAvailabilities() {

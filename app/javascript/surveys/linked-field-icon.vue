@@ -1,5 +1,5 @@
 <template>
-  <b-icon-link45deg variant="info" v-if="linked_field"></b-icon-link45deg>
+  <b-icon-link45deg variant="info" v-if="!!linked_field"></b-icon-link45deg>
 </template>
 
 <script>
@@ -12,7 +12,6 @@ export default {
   }),
   props: {
     linked_field: {
-      type: Boolean,
       default: false
     }
   }

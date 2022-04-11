@@ -15,7 +15,7 @@ class Survey::Response < ApplicationRecord
   # Deal with linked_field from question
   #
   def update_linked
-    if question.linked_field && submission.person
+    if question.linked_field && submission.person && response
       # we can set the linked field on the person
       details = question.linked_field.split('.',2)
 
@@ -32,8 +32,11 @@ class Survey::Response < ApplicationRecord
                 response['socialmedia']
               when :boolean
                 response['boolean'].to_s.downcase == "true"
+              # Yes not maybe and attendance should only have one answer
               when :yesnomaybe
-                response['yesnomaybe']
+                response['answers'].first
+              when :attendance_type
+                response['answers'].first
               else
                 nil
               end
@@ -83,17 +86,19 @@ class Survey::Response < ApplicationRecord
          when :socialmedia
            json_val[:socialmedia] = value
          when :boolean
-           json_val[:boolean] = value
+           json_val[:answers] = value
          when :yesnomaybe
-           json_val[:yesnomaybe] = value
+           json_val[:answers] = value[:value]
+           json_val[:text] = value[:text]
          when :email
-           json_val[:email] = value
+           json_val[:answers] = value
          # when :textonly, :hr are not actual questions
          else
            json_val = nil
          end
 
     if json_val
+      # p "****** SET RES #{json_val}"
       Survey::Response.create!(
         question: question,
         submission: submission,
@@ -107,13 +112,15 @@ class Survey::Response < ApplicationRecord
   # version that can be used for searchin the responses in a "report"
   #
   def set_response_text
-    flattened_response = flatten_response(response)
+    if response
+      flattened_response = flatten_response(response)
 
-    strip_uuid = [:singlechoice, :multiplechoice].include?(question.question_type)
-    if strip_uuid
-      self.response_as_text = flattened_response.values.flatten.collect{|v| v[37..-1]}.reject { |e| e.to_s.empty? }.join('; ').strip
-    else
-      self.response_as_text = flattened_response.values.join(' ').strip
+      strip_uuid = [:singlechoice, :multiplechoice].include?(question.question_type)
+      if strip_uuid
+        self.response_as_text = flattened_response.values.flatten.collect{|v| v[37..-1]}.reject { |e| e.to_s.empty? }.join('; ').strip
+      else
+        self.response_as_text = flattened_response.values.join(' ').strip
+      end
     end
   end
 
@@ -142,10 +149,7 @@ class Survey::Response < ApplicationRecord
       answers: [],
       socialmedia: {
         twitter: nil, facebook: nil, linkedin: nil, twitch: nil, youtube: nil, instagram: nil, tiktok: nil, other: nil, website: nil
-      },
-      boolean: nil,
-      yesnomaybe: nil,
-      email: nil
+      }
     }
   end
 end

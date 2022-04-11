@@ -7,13 +7,13 @@ class SessionPolicy < PlannerPolicy
     @person.convention_roles.inject(false) { |res, grp| res || (grp.admin? || grp.staff? || grp.participant?) }
   end
 
-  # class Scope < Scope
-  #   def resolve
-  #     if @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
-  #       scope.all
-  #     else
-  #       scope.where(id: @person.id)
-  #     end
-  #   end
-  # end
+  def index?
+    @person.convention_roles.inject(false) { |res, grp| res || (grp.admin? || grp.staff? || grp.participant?) }
+  end
+
+  class Scope < Scope
+    def resolve
+      scope.all
+    end
+  end
 end

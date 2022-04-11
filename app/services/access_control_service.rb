@@ -7,6 +7,8 @@ module AccessControlService
       # also size restrictions for short and long answers, need list
       # also social
       Person: {
+        name: { sensitive: false, linkable: true, type: :string},
+        pseudonym: { sensitive: false, linkable: true, type: :string},
         primary_email: { sensitive: true, linkable: false, type: :email},
         contact_email: { sensitive: true, linkable: true, type: :email},
         last_sign_in_at: { sensitive: true, linkable: false, type: :datetime},
@@ -22,7 +24,7 @@ module AccessControlService
         registered: { sensitive: false, linkable: false, type: :boolean},
         registration_type: { sensitive: true, linkable: false, type: :string},
         registration_number: { sensitive: true, linkable: false, type: :string},
-        attendance_type: { sensitive: false, linkable: true, type: :string, values: ['in person', 'virtual', 'hybrid']},
+        attendance_type: { sensitive: false, linkable: true, type: :attendance_type, values: ['in person', 'virtual', 'hybrid']},
         bio: { sensitive: true, linkable: true, type: :text},
         website: { sensitive: false, linkable: true, type: :string},
         twitter: { sensitive: false, linkable: true, type: :string},

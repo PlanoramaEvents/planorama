@@ -14,6 +14,7 @@
         v-bind:value="primary"
         :can-delete="false"
         @input="onInput"
+        :disabled="disabled"
       ></email-address-editor>
     </div>
     <div class="mt-3">
@@ -23,6 +24,7 @@
           v-bind:value="email"
           @delete="onDelete(email)"
           @input="onInput(email)"
+          :disabled="disabled"
         ></email-address-editor>
       </div>
     </div>
@@ -58,7 +60,8 @@ export default {
     loading: {
       type: Boolean,
       default: false
-    }
+    },
+    disabled: false
   },
   data() {
     return {

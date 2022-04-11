@@ -7,25 +7,25 @@ class SessionLimitsPolicy < PlannerPolicy
   end
 
   def create?
-    return true if @record.class != Symbol && @record.id == @person.id
+    return true if @record.class != Symbol && @record.person_id == @person.id
 
     @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def update?
-    return true if @record.class != Symbol && @record.id == @person.id
+    return true if @record.class != Symbol && @record.person_id == @person.id
 
     @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def show?
-    return true if @record.class != Symbol && @record.id == @person.id
+    return true if @record.class != Symbol && @record.person_id == @person.id
 
     @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
   def destroy?
-    return true if @record.class != Symbol && @record.id == @person.id
+    return true if @record.class != Symbol && @record.person_id == @person.id
 
     @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
