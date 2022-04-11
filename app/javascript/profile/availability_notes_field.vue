@@ -1,6 +1,6 @@
 <template>
   <b-form-group
-    class="mt-3"
+    class="mt-4"
     :label="AVAILABILITY_NOTES_LABEL"
     label-for="availability-notes-input"
   > 

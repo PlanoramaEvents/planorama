@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-2">
+  <div class="mt-3">
     Do not schedule me against these specific  events:<br />
     <div class="d-flex flex-row align-content-around flex-wrap" >
       <div v-for="exclusion in currentSettings.exclusions" class="w-25">
@@ -8,7 +8,7 @@
           :value="exclusion.id"
           @change="updateExclusions"
         >
-          {{ exclusion.title }}
+          <small>{{ exclusion.title }}</small>
         </b-form-checkbox>
       </div>
     </div>

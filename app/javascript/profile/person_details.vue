@@ -28,7 +28,7 @@
       <b-form-checkbox v-model="editable_person.twelve_hour" @input="onInput">
         12 Hour Display
       </b-form-checkbox>
-      <b-form-group label="Bio">
+      <b-form-group label="Bio" class="mt-5">
         <plano-editor
           v-model="editable_person.bio"
           type='classic'
@@ -36,6 +36,7 @@
           :disabled="disabled"
         ></plano-editor>
       </b-form-group>
+      <b class="mt-3">Social Media</b>
       <validated-social
         :rules="{ regex: /^[a-z0-9_]{1,15}$/i }"
         label="Twitter"

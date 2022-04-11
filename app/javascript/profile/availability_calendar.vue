@@ -21,6 +21,7 @@
       <small class="text-muted">* times shown in {{display_timezone}}</small>
     </div>
     <div class="p-2 selected-availabilities">
+      <p>Selected Times</p>
       <div v-for="avail in sortedAvailabilities" :key="avail.id">
         {{ formatLocaleDate(avail.start, { weekday: 'long' }) }}
         {{ formatLocaleDate(avail.start, DateTime.TIME_SIMPLE) }} -
@@ -144,6 +145,6 @@ export default {
 
 <style>
 .selected-availabilities {
-  font-size: 10pt;
+  width: 35%;
 }
 </style>

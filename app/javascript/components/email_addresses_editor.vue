@@ -4,12 +4,12 @@
       <div class="w-75 mt-2 mr-3">
         <b>Email</b>
       </div>
-      <div class="mt-2 pt-1 w-25">
-        <small>Make Primary</small>
+      <div class="mt-2 pt-1 w-25 ooch-left">
+        Make Primary
       </div>
     </div>
     <div v-if="primary" class="mt-3">
-      <b>Primary email (login)</b>
+      Primary email (login)
       <email-address-editor
         v-bind:value="primary"
         :can-delete="false"
@@ -18,8 +18,8 @@
       ></email-address-editor>
     </div>
     <div class="mt-3">
-      <b>Additional Emails</b>
-      <div v-for="email in additional">
+      Additional Emails
+      <div v-for="email in additional" :key="email">
         <email-address-editor
           v-bind:value="email"
           @delete="onDelete(email)"
@@ -28,8 +28,8 @@
         ></email-address-editor>
       </div>
     </div>
-    <b-button @click="onNew" variant="primary" title="New" class="mt-2">
-      <b-icon-plus scale="2"></b-icon-plus>
+    <b-button @click="onNew" variant="primary" title="New" class="mt-2" size="sm">
+      <b-icon-plus></b-icon-plus>
     </b-button>
   </div>
 </template>
@@ -133,3 +133,8 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+.ooch-left {
+  margin-left: -3rem;
+}
+</style>
