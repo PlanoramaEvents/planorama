@@ -19,7 +19,7 @@
     </div>
     <div class="mt-3">
       Additional Emails
-      <div v-for="email in additional" :key="email">
+      <div v-for="email in additional">
         <email-address-editor
           v-bind:value="email"
           @delete="onDelete(email)"
