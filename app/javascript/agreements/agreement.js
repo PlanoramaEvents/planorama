@@ -29,6 +29,6 @@ export const agreement_columns = [
     key: 'created_at',
     label: 'Published On',
     sortable: true,
-    formatter: (d) => new Date(d).toLocaleDateString()
+    formatter: (d) => new Date(d).toLocaleString()
   }
 ];
