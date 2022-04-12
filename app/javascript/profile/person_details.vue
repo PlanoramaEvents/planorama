@@ -15,8 +15,9 @@
     </div>
     <div class="flex-col w-50 p-2">
       <!-- TODO: as per discussion with Anna TZ and hour display move to a settings dialog -->
-      <!-- <b-form-group label="At the time of the convention i will be at UTC Offset">
+      <b-form-group label="At the time of the convention i will be at UTC Offset">
         <timezone-selector v-model="editable_person.timezone" @input="onInput"></timezone-selector>
+        <!-- TZ selector - show "yout time now is here" -->
         <small>
           If you are not sure what your UTC offset will be, or want to verify,
           please go to
@@ -26,7 +27,7 @@
           and check by specifying the date of September 1 2022 and your location as well as UTC/GMT
         </small>
       </b-form-group>
-      <b-form-checkbox v-model="editable_person.twelve_hour" @input="onInput">
+      <!-- <b-form-checkbox v-model="editable_person.twelve_hour" @input="onInput">
         12 Hour Display
       </b-form-checkbox> -->
       <b-form-group label="Bio">

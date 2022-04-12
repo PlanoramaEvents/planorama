@@ -78,18 +78,18 @@ export default {
     person: null
   }),
   computed: {
-    // TODO: check that the start and end times are being used correctly
-    // we need to get this from the db
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
-        return DateTime.fromISO("2022-09-01T00:00:00") //, {zone: this.timezone})
+        let st = this.currentSettings.configs.find(el => el.parameter == 'convention_start_time')
+        return DateTime.fromISO(st.parameter_value)
       } else {
         return null
       }
     },
     end_time() {
       if (this.currentSettings && this.currentSettings.configs) {
-        return DateTime.fromISO("2022-09-05T11:30:00") //, {zone: this.timezone})
+        let et = this.currentSettings.configs.find(el => el.parameter == 'convention_end_time')
+        return DateTime.fromISO(et.parameter_value)
       } else {
         return null
       }
