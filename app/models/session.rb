@@ -28,6 +28,8 @@ class Session < ApplicationRecord
   validates_numericality_of :minimum_people, allow_nil: true
   validates_numericality_of :maximum_people, allow_nil: true
 
+  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
+
   belongs_to :format, required: false
   has_one :published_session, dependent: :destroy
 

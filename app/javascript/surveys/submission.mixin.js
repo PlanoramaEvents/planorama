@@ -32,14 +32,14 @@ export const submissionMixin = {
       }}, `$[?(@.submission.id=='${submission.id}')]`));
     },
     submitSelectedSubmission() {
-      return new Promise((res, rej) => {
+      return this.toastPromise(new Promise((res, rej) => {
         this.patch({model, item: {...this.selectedSubmission, submission_state: SubmissionStatus.SUBMITTED}, fields: ['submission_state']}).then((data) => {
           Promise.all(this.getStoreResponses(this.selectedSubmission).map(r => this.jvPost(r))).then(() => {
             this.unselect({model})
             res(data)
           }).catch(rej)
         }).catch(rej)
-      });
+      }));
     },
     getSubmissionsForSurvey(survey) {
       // TODO un hard code me

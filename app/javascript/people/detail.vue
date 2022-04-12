@@ -71,10 +71,13 @@
         <b-form-checkbox v-model="selected.can_share" :disabled="!editable">
           Can Share
         </b-form-checkbox>
-        <b-form-checkbox v-model="selected.can_photo" :disabled="!editable">
+        <b-form-checkbox v-model="selected.can_photo" :disabled="!editable" value="yes" unchecked-value="no">
           Can Photo
         </b-form-checkbox>
-        <b-form-checkbox v-model="selected.can_record" :disabled="!editable">
+        <b-form-checkbox v-model="selected.can_stream" :disabled="!editable" value="yes" unchecked-value="no">
+          Can Stream
+        </b-form-checkbox>
+        <b-form-checkbox v-model="selected.can_record" :disabled="!editable" value="yes" unchecked-value="no">
           Can Record
         </b-form-checkbox>
 
@@ -105,13 +108,19 @@
         ></plano-editor>
 
         <h2>Email Addresses</h2>
-        <ul>
+        <!-- {{selected}} -->
+        <email-addresses-editor
+          v-model="selected"
+          model='email_address'
+          :disabled="!editable"
+        ></email-addresses-editor>
+
+        <!-- <ul>
           <li v-for="email of selected.email_addresses" :key="email.id">
-            <!-- TODO use css for this -->
             <strong v-if="email.isdefault">{{email.email}}</strong>
             <span v-if="!email.isdefault">{{email.email}}</span>
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
   </div>
@@ -120,11 +129,13 @@
 <script>
 import modelMixin from '../store/model.mixin';
 import PlanoEditor from '@/components/plano_editor';
+import EmailAddressesEditor from "../components/email_addresses_editor.vue"
 
 export default {
   name: "Detail",
   components: {
-    PlanoEditor
+    PlanoEditor,
+    EmailAddressesEditor
   },
   mixins: [
     modelMixin

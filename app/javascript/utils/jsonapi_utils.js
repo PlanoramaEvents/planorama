@@ -20,7 +20,7 @@ export const getOrderedRelationships = (relationship_name, target) => {
 
 export const getId = (itemOrId) => {
   try {
-    return itemOrId.id || id;
+    return itemOrId.id || itemOrId;
   } catch {
     return itemOrId;
   }

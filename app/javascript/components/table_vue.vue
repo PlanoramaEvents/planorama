@@ -9,30 +9,35 @@
         :columns="columns"
         v-if="showSearch"
       >
+        <template v-slot:alternate-search-tab>
+          <b-tab v-if="$slots['alternate-search']">
+            <template #title>
+              <slot name="alternate-search-title">
+                Alternate Search
+              </slot>
+            </template>
+
+            <slot name="alternate-search"></slot>
+          </b-tab>
+        </template>
       </search-vue>
       <div class="w-75" v-if="!showSearch">
       </div>
 
       <div class="d-flex justify-content-end">
-        <!-- TODO: uploads are done in admin, UI shows this as a download which does not exist yet -->
-        <!-- <div class="d-inline" title="Upload">
-          <b-button disabled >
-            <b-icon-upload></b-icon-upload>
-          </b-button>
-        </div> -->
         <div class="d-inline mx-1" title="clone" v-if="showClone">
           <b-button @click="$emit('clone')" variant="primary" title="clone">
-            <b-icon-files scale="2"></b-icon-files>
+            <b-icon-files></b-icon-files>
           </b-button>
         </div>
         <div class="d-inline mx-1" title="refresh" v-if="showRefresh">
           <b-button @click="onRefresh" variant="primary" title="refresh">
-            <b-icon-arrow-repeat scale="2"></b-icon-arrow-repeat>
+            <b-icon-arrow-repeat></b-icon-arrow-repeat>
           </b-button>
         </div>
         <div class="d-inline mx-1" title="newval" v-if="showAdd">
           <b-button @click="$emit('new')" variant="primary" title="New">
-            <b-icon-plus scale="2"></b-icon-plus>
+            <b-icon-plus></b-icon-plus>
           </b-button>
         </div>
         <div class="d-inline mx-1" title="show" v-if="showView">
@@ -48,20 +53,22 @@
       </div>
     </div>
 
-    <b-pagination class="d-flex justify-content-end"
-      v-model="currentPage"
-      :total-rows="totalRows"
-      :per-page="perPage"
-      first-text="First"
-      last-text="Last"
-      prev-text="Prev"
-      next-text="Next"
-    ></b-pagination>
-
+    <div class="d-flex">
+      <slot name="left-controls" v-bind:selectedIds="selectedIds"></slot>
+      <b-pagination class="ml-auto"
+        v-model="currentPage"
+        :total-rows="totalRows"
+        :per-page="perPage"
+        first-text="First"
+        last-text="Last"
+        prev-text="Prev"
+        next-text="Next"
+      ></b-pagination>
+    </div>
     <b-table
       hover bordered responsive selectable small striped
       :select-mode="selectMode"
-      :fields="columns"
+      :fields="tableColumns"
       selected-variant="primary"
 
       :items="sortedCollection"
@@ -75,6 +82,26 @@
       @row-selected="onRowSelected"
       @sort-changed="onSortChanged"
     >
+      <template #head(selected)="selected">
+        <b-form-checkbox
+          name="select-all-checkbox"
+          value="select_all"
+          unchecked-value="select_none"
+          @change="onSelectAll"
+          >
+        </b-form-checkbox>
+      </template>
+      <template #cell(selected)="{ rowSelected }">
+        <template v-if="rowSelected">
+          <span aria-hidden="true">&check;</span>
+          <span class="sr-only">Selected</span>
+        </template>
+        <template v-else>
+          <span aria-hidden="true">&nbsp;</span>
+          <span class="sr-only">Not selected</span>
+        </template>
+      </template>
+
       <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
       <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
         <slot :name="name" v-bind="slotData" />
@@ -107,7 +134,12 @@ export default {
     tableMixin, // covers pagination and sorting
   ],
   props: {
+    // TODO:
     columns : { type: Array },
+    selectMode: {
+      type: String,
+      default: 'single'
+    },
     showControls: {
       type: Boolean,
       default: true
@@ -137,18 +169,54 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
-      selectMode: 'single',
+      selected_items: []
+    }
+  },
+  computed: {
+    tableColumns() {
+      if (this.selectMode != 'single') {
+        let cols = [
+          {
+            key: 'selected',
+            label: '',
+          }
+        ]
+
+        return cols.concat(this.columns)
+      } else {
+        return this.columns
+      }
+    },
+    selectedIds() {
+      if (this.selected_items.length > 0) {
+        return Object.values(this.selected_items).map(obj => obj.id)
+      } else {
+        return []
+      }
     }
   },
   methods: {
+    onSelectAll(arg) {
+      console.debug("***** SELECT ALL ", arg)
+      if (arg == 'select_all') {
+        this.$refs.table.selectAllRows()
+      } else {
+        this.$refs.table.clearSelected()
+      }
+    },
     onRefresh() {
+      // reset selected_items on page change as well ...
+      this.selected_items = []
       this.$refs.table.refresh()
     },
     onRowSelected(items) {
-      if (items[0]) {
+      this.selected_items = items
+      if (items[0] && (items.length == 1)) {
         this.select(items[0]);
+      } else {
+        this.select(null);
       }
     },
     onSortChanged(ctx) {
@@ -157,12 +225,21 @@ export default {
     },
     onSearchChanged(arg) {
       this.filter = arg
+    },
+    setFilter(newFilter) {
+      this.filter = newFilter
     }
   },
   watch: {
     selected(val) {
-      if (!val) {
+      if (!val && this.selected_items.length == 1) {
         this.$refs.table.clearSelected()
+      }
+    },
+    currentPage(ov,nv) {
+      if (ov != nv) {
+        // page was changed so we clear our selected
+        this.selected_items = []
       }
     }
   },

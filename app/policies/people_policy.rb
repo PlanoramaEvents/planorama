@@ -3,6 +3,10 @@ class PeoplePolicy < PlannerPolicy
     true
   end
 
+  def update_all?
+    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+  end
+
   def import?
     @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end

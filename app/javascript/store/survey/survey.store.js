@@ -82,18 +82,15 @@ export const surveyStore = {
       // console.debug("previewMode", previewMode)
       state.previewMode = previewMode
     },
-    [NEW_RESPONSE] (state, {relationships = {}}) {
+    [NEW_RESPONSE] (state, {relationships = {}, text = '', answers = [], socialmedia = {
+        twitter: null, facebook: null, linkedin: null,
+        twitch: null, youtube: null, instagram: null,
+        tiktok: null, other: null, website: null
+    }}) {
       let id = uuidv4();
       let item = {
         id,
-        response: {text: '', answers: [], address:{
-          street: null, street2: null, city: null,
-          state: null, zip: null, country: null
-        }, socialmedia: {
-          twitter: null, facebook: null, linkedin: null,
-          twitch: null, youtube: null, instagram: null,
-          tiktok: null, other: null, website: null
-        }},
+        response: {text, answers, socialmedia},
         _jv: {
           id,
           relationships,
@@ -111,7 +108,7 @@ export const surveyStore = {
         // Build a ordered cache of Survey elements upon select
         if ((mutation.type === SELECT) && (mutation.payload.model === 'survey')) {
           let instance = mutation.payload.itemOrId;
-          if (typeof instance == 'string') {
+          if (typeof instance == 'string' || !instance) {
             return
           }
 

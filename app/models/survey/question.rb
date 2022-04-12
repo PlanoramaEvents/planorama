@@ -6,7 +6,7 @@ class Survey::Question < ApplicationRecord
   scope :not_deleted, -> { where(deleted_at: nil) }
   scope :deleted, -> { where('survey_questions.deleted_at is not null') }
 
-  has_paper_trail
+  has_paper_trail versions: { class_name: 'Audit::SurveyVersion' }, ignore: [:updated_at, :created_at]
 
   default_scope {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
 
@@ -31,7 +31,8 @@ class Survey::Question < ApplicationRecord
       :textfield, :textbox, :singlechoice, :multiplechoice, :hr,
       :dropdown, :email, :socialmedia, :textonly,
       :boolean, # true or false
-      :yesnomaybe # 'yes', 'no', 'maybe'
+      :yesnomaybe, # 'yes', 'no', 'maybe'
+      :attendance_type
       # :address
     ]
 

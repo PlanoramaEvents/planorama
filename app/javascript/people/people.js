@@ -15,13 +15,6 @@ export const people_columns = [
     // stickyColumn: true
   },
   {
-    key: 'pseudonym',
-    label: 'Pseudonym',
-    type: "text",
-    // sortKey: 'pseudonym_sort_by',
-    sortable: true
-  },
-  {
     key: 'pronouns',
     label: 'Pronouns',
     type: "text",
@@ -32,6 +25,13 @@ export const people_columns = [
     search_key: 'email_addresses.email',
     label: 'Email',
     type: "text",
+    sortable: false
+  },
+  {
+    key: 'con_state',
+    label: 'Status',
+    // type: "radio",
+    // choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
     sortable: false
   },
   {
@@ -46,26 +46,26 @@ export const people_columns = [
     type: "text",
     sortable: false
   },
-  {
-    key: 'registered',
-    label: 'Registered',
-    type: "radio",
-    // TODO: how do we add dynamic choices???
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: true
-  },
-  {
-    key: 'registration_type',
-    label: 'Registration Type',
-    type: "text",
-    sortable: true
-  },
-  {
-    key: 'registration_number',
-    label: 'Registration Number',
-    type: "text",
-    sortable: true
-  },
+  // {
+  //   key: 'registered',
+  //   label: 'Registered',
+  //   type: "radio",
+  //   // TODO: how do we add dynamic choices???
+  //   choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+  //   sortable: true
+  // },
+  // {
+  //   key: 'registration_type',
+  //   label: 'Registration Type',
+  //   type: "text",
+  //   sortable: true
+  // },
+  // {
+  //   key: 'registration_number',
+  //   label: 'Registration Number',
+  //   type: "text",
+  //   sortable: true
+  // },
   {
     key: 'gender',
     label: 'Gender',
@@ -80,21 +80,14 @@ export const people_columns = [
     sortable: false
   },
   {
-    key: 'con_state',
-    label: 'Status',
-    // type: "radio",
-    // choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
-  },
-  {
     key: 'comments',
     label: 'Comments',
     type: "text",
     sortable: false
   },
   {
-    key: 'last_sign_in_at',
-    label: 'Last Signed In',
+    key: 'current_sign_in_at',
+    label: 'Signed In At',
     sortable: false
   }
 ];

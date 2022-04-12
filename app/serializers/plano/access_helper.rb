@@ -4,7 +4,6 @@ module Plano
 
     class_methods do
       def can_access_response?(response, person)
-        return false
         # if it is my response then I can have access
         return true if response.submission&.person_id == person.id
 

@@ -4,6 +4,8 @@ class EmailAddress < ApplicationRecord
   before_save :strip_spaces
   after_save  :check_default, :check_contact
 
+  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at]
+
   def strip_spaces
     email.strip!
   end

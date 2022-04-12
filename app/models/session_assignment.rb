@@ -20,6 +20,8 @@ class SessionAssignment < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: [:session_id]
 
+  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
+
   belongs_to  :person
   belongs_to  :session
   belongs_to  :session_assignment_role_type, required: false
@@ -40,6 +42,8 @@ class SessionAssignment < ApplicationRecord
     is_public: 'public',
     is_private: 'private'
   }
+
+  validates_inclusion_of :state, in: %w( proposed accepted rejected )
 
   # We use the state machine to manage the "workflow" for the assignment
   include AASM

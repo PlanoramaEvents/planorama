@@ -13,7 +13,7 @@
     </select>
     <label>Role:</label>
     <select v-model="agreementData.target">
-      <option v-for="role in currentSettings.enums.Agreement.target" :selected="role === selected_target">{{role}}</option>
+      <option v-for="role in agreement_enums" :selected="role === selected_target">{{role}}</option>
     </select>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
@@ -62,6 +62,17 @@ export default {
       },
       selected_agreement_type: 'Terms and Conditions',
       selected_target: 'none'
+    }
+  },
+  computed: {
+    agreement_enums: {
+      get: function() {
+        if (this.currentSettings && this.currentSettings.enums) {
+          return this.currentSettings.enums.Agreement.target
+        } else {
+          return []
+        }
+      }
     }
   },
   methods: {

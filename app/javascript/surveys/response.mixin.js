@@ -3,8 +3,10 @@ import { submissionModel, questionModel, responseModel as model } from "@/store/
 import { PATCH_FIELDS} from "@/store/model.store"
 import { mapActions, mapState, mapMutations } from "vuex"
 import { NEW_RESPONSE } from "@/store/survey";
+import { personSessionMixin } from "@/mixins";
 
 export const responseMixin = {
+  mixins: [personSessionMixin],
   data: () => ({
   }),
   computed: {
@@ -31,7 +33,6 @@ export const responseMixin = {
         // console.debug('missing one of question or selectedSubmission', this.question, this.selectedSubmission)
         return undefined;
       }
-      // console.debug("now i have both", this.question, this.selectedSubmission)
       let relationships = {
         question: {
           data: {
@@ -46,18 +47,54 @@ export const responseMixin = {
           }
         }
       }
-      let existingResponse = this.getExistingResponse(relationships)
-      if (existingResponse?.id) {
-        return utils.deepCopy(existingResponse)
+      let text = '';
+      let answers = []
+      const socialmedia = {
+        twitter: null, facebook: null, linkedin: null,
+        twitch: null, youtube: null, instagram: null,
+        tiktok: null, other: null, website: null
+      }
+      // first check for a linked field
+      if (question.linked_field) {
+        // get the relevant linked data and use that instead
+        const fieldName = question.linked_field.split(".")[1] // assuming only one dot. is this bad?
+        if (['singlechoice', 'yesnomaybe', 'boolean', 'attendance_type', 'dropdown'].includes(question.question_type)) {
+          answers = [this.currentUser[fieldName]]
+        } else if (question.question_type === 'multiplechoice') {
+          answers = this.currentUser[fieldName]
+        } else if (question.question_type === 'socialmedia') {
+          socialmedia.twitter = this.currentUser.twitter
+          socialmedia.facebook = this.currentUser.facebook
+          socialmedia.linkedin = this.currentUser.linkedin
+          socialmedia.twitch = this.currentUser.twitch
+          socialmedia.youtube = this.currentUser.youtube
+          socialmedia.instagram = this.currentUser.instagram
+          socialmedia.tiktok = this.currentUser.tiktok
+          socialmedia.other = this.currentUser.othersocialmedia
+          socialmedia.website = this.currentUser.website
+        } else { // text answer
+          text = this.currentUser[fieldName]
+        }
+        // bonus case for can_ x things
+        if (fieldName.startsWith('can_')) {
+          text = this.currentUser[`${fieldName}_exceptions`]
+        }
+
+      } else {
+      // console.debug("now i have both", this.question, this.selectedSubmission)
+        let existingResponse = this.getExistingResponse(relationships)
+        if (existingResponse?.id) {
+          return utils.deepCopy(existingResponse)
+        }
       }
       // if there's not one, create a new one
       // console.debug("getting a new response")
-      this.newResponse({relationships});
+      this.newResponse({relationships, answers, text, socialmedia});
       return utils.deepCopy(this.getExistingResponse(relationships))
     },
     saveResponse(response){
       // saving the response only
-      if (!this.prevewMode) {
+      if (!this.previewMode) {
         // only save if not in preview mode and if the response was already saved!
         return this.mergeRecords(response);
       }

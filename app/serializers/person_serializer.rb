@@ -7,7 +7,9 @@ class PersonSerializer #< ActiveModel::Serializer
               :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
               :published_name, :published_name_sort_by,
               :job_title, :organization,
-              :last_sign_in_at, :primary_email,
+              :current_sign_in_at, :current_sign_in_ip,
+              :last_sign_in_at, :last_sign_in_ip,
+              :primary_email,
               :pronouns, :year_of_birth, :gender, :ethnicity,
               :opted_in,
               :can_share,
@@ -34,7 +36,11 @@ class PersonSerializer #< ActiveModel::Serializer
               :can_record_exceptions,
               :can_photo_exceptions,
               :is_local,
-              :languages_fluent_in
+              :languages_fluent_in,
+              :timezone,
+              :twelve_hour,
+              :attendance_type,
+              :availability_notes
 
   # status and comments hidden except for staff
   protected_attributes :con_state, :comments
@@ -107,7 +113,36 @@ class PersonSerializer #< ActiveModel::Serializer
             }
 
   #
-  # TODO: availabilities
+  # Availabilities
+  has_many :availabilities, serializer: AvailabilitySerializer,
+           links: {
+             self: -> (object, params) {
+               "#{params[:domain]}/person/#{object.id}"
+             },
+             related: -> (object, params) {
+               "#{params[:domain]}/person/#{object.id}/availability"
+             }
+           }
+
+  has_many :person_exclusions, serializer:PersonExclusionSerializer,
+          links: {
+            self: -> (object, params) {
+              "#{params[:domain]}/person/#{object.id}"
+            },
+            related: -> (object, params) {
+              "#{params[:domain]}/person/#{object.id}/person_exclusion"
+            }
+          }
+
+  has_many :session_limits, serializer:SessionLimitSerializer
+  #         links: {
+  #           self: -> (object, params) {
+  #             "#{params[:domain]}/person/#{object.id}"
+  #           },
+  #           related: -> (object, params) {
+  #             "#{params[:domain]}/person/#{object.id}/session_limit"
+  #           }
+  #         }
 
   # sessions
   # has_many :sessions, serializer: SessionSerializer,

@@ -13,4 +13,19 @@ class EmailAddressesController < ResourceController
   def belongs_to_relationship
     'email_addresses'
   end
+
+  def paginate
+    false
+  end
+
+  def allowed_params
+    %i[
+      id
+      lock_version
+      email
+      isdefault
+      is_valid
+      person_id
+    ]
+  end
 end

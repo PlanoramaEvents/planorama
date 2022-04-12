@@ -86,7 +86,7 @@
           </b-input-group></b-form-group>
           <b-form-group label="YouTube" label-cols="3"><b-input-group>
             <template #prepend>
-              <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
+              <b-input-group-text>youtube.com&sol;</b-input-group-text>
             </template>
             <b-form-input type="text" disabled></b-form-input>
           </b-input-group></b-form-group>
@@ -107,6 +107,39 @@
         <div class="col-12">
           <b-form-textarea v-if="isSelected" v-model="question.question" @blur="patchSelectedQuestion({question: $event.target.value})"></b-form-textarea>
           <p v-if="!isSelected">{{question.question}}</p>
+        </div>
+      </template>
+      <template v-if="yesnomaybe">
+        <div class="col-12">
+          <b-form-radio-group stacked>
+            <b-form-radio disabled :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="noLabel.value">{{noLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+          <div class="ml-4 mt-1 mb-3">
+            <b-form-textarea
+              :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
+              disabled
+            >
+            </b-form-textarea>
+          </div>
+        </div>
+      </template>
+      <template v-if="boolean">
+        <div class="col-12">
+          <b-form-radio-group stacked>
+            <b-form-radio disabled :value="bYesLabel.value">{{bYesLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="bNoLabel.value">{{bNoLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+        </div>
+      </template>
+      <template v-if="attendance_type">
+        <div class="col-12">
+          <b-form-radio-group stacked>
+            <b-form-radio disabled :value="inPersonLabel.value">{{inPersonLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="virtualLabel.value">{{virtualLabel.label}}</b-form-radio>
+            <b-form-radio disabled :value="hybridLabel.value">{{hybridLabel.label}}</b-form-radio>
+          </b-form-radio-group>
         </div>
       </template>
     </div>
@@ -134,7 +167,7 @@ import {
   pageMixin,
   questionMixin
 } from '@mixins';
-import { LINKED_FIELD_LABELS } from '@/constants/strings';
+import { LINKED_FIELD_LABELS, SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
 
 
 export default {
@@ -145,6 +178,9 @@ export default {
     PlanoEditor,
     LinkedField,
   },
+  data: () => ({
+    SURVEY_YESNOMAYBE_PLACEHOLDER
+  }),
   props: {
     question: {
       type: Object,

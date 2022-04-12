@@ -13,9 +13,10 @@
       </template>
       <b-form-input
         type="text"
-        @input="$emit('input', $event)"
+        @blur="onBlur"
         :value="value"
         :disabled="disabled"
+        :state="state"
       ></b-form-input>
     </b-input-group>
   </b-form-group>
@@ -25,6 +26,10 @@
 export default {
   name: "SimpleSocial",
   props: {
+    state: {
+      type: Boolean,
+      default: null
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -42,12 +47,18 @@ export default {
     },
     id: {
       type: String,
-      required: true
+      required: false
     }
   },
   computed: {
     groupId() {
       return `${this.id}-group`;
+    }
+  },
+  methods: {
+    onBlur(e) {
+      this.$emit('input', e.target.value)
+      this.$emit('blur', e.target.value)
     }
   }
 }

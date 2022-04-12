@@ -14,6 +14,16 @@ class SettingsController < ApplicationController
       end
     end
 
+    # TODO: what do we want here?
+    # value to store in db, and name to display (with UTC offset)
+    # convert_zones = lambda { |list| list.map { |z| [ z.to_s, z.name ] } }
+    zones = {}
+    ActiveSupport::TimeZone.all.each do |zone|
+      # zones[zone.name] = zone.tzinfo.canonical_zone.name
+      zones[zone.tzinfo.canonical_zone.name] = zone.to_s.sub('GMT','UTC')
+    end
+
+
     settings = {
       # 1. model information
       enums: enums,
@@ -27,7 +37,36 @@ class SettingsController < ApplicationController
         'Privacy Agrement'
       ],
       # 4. list of configs
-      configs: ::Configuration.all
+      configs: ::Configuration.all,
+      exclusions: ::Exclusion.all, # TODO: we may want a sort order on these ????
+      yesnomaybe: [
+        {
+          value: 'yes',
+          label: 'Yes'
+        }, {
+          value: 'no',
+          label: 'No'
+        },
+        {
+          value: 'maybe',
+          label: 'Yes, except for items focused on the topics listed below.'
+        },
+      ],
+      attendance_type: [
+        {
+          value: 'in person',
+          label: '**In-person only:** I am planning to attend Chicon 8 in-person'
+        }, {
+          value: 'virtual',
+          label: '**Virtual only:** I am not planning to attend Chicon 8 in-person, and would like to be a virtual participant on virtual-based items only (via Zoom or similar technology).'
+        },
+        {
+          value: 'hybrid',
+          label: '**In-person and virtual:** I am planning to attend Chicon 8 in-person, but would also like to be considered for virtual panels.'
+        },
+      ],
+      # TODO: this needs to change
+      timezones: zones #ActiveSupport::TimeZone::MAPPING
     }
 
     render json: settings,

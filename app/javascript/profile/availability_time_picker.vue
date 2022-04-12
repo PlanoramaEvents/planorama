@@ -5,33 +5,39 @@
       xsmall
       disable-date-prototypes
       active-view="day"
-      style="height: 30em;"
-      :editable-events="{ title: false, drag: true, resize: true, delete: true, create: true }"
+      style="height: 300px;"
+      :editable-events="{ title: false, drag: true, resize: true, delete: false, create: true }"
       :disable-views="['years', 'year', 'month', 'week']"
       :time-cell-height="18"
       :time-from="startTime"
       :time-step="timeStep"
-      :snap-to-time="timeStep"
+      :snap-to-time="snapToTime"
       :min-date="day"
       :max-date="day"
       :selected-date="day"
       ref="dayColumn"
       :twelveHour="twelveHour"
+      :timezone="timezone"
       @event-drag-create="onCreate($event)"
-      @event-delete="logEvents('event-delete', $event)"
-      @event-duration-change="logEvents('event-duration-change', $event)"
-      @event-drop="logEvents('event-drop', $event)"
+      @event-delete="onDelete($event)"
+      @event-duration-change="onUpdate($event)"
+      @event-drop="onUpdate($event)"
+      class="vuecal--full-height-delete"
     >
-      <!-- :events="dayEvents" -->
+    <!-- :special-hours="conventionHours" -->
       <template v-slot:title="{ title, view }">
-        {{ $luxon(view.selectedDate.toISOString(), "cccc") }}<br />
-        {{ $luxon(view.selectedDate.toISOString(), "d MMM") }}
+        {{ formatDate(view.selectedDate, { weekday: 'long' }) }}<br />
+        {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
       </template>
-      <!-- @event-drop="logEvents('event-drop', $event)"
-      @event-create="logEvents('event-create', $event)"
-      @event-content-change="logEvents('event-content-change', $event)" -->
-
-      <!-- :onEventCreate="onEventCreate" -->
+      <template v-slot:event="{ event, view }">
+        <div class="d-flex flex-row">
+          <small class="vuecal__event-time">
+            <span>{{ formatLocaleDate(event.start) }} - </span><br/>
+            <span>{{ formatLocaleDate(event.end) }}</span>
+          </small>
+          <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
+        </div>
+      </template>
     </vue-cal>
   </div>
 </template>
@@ -48,17 +54,15 @@ export default {
     VueCal
   },
   props: {
-    // value: {
-    //   type: Object,
-    //   default: () => {
-    //     test: 'test'
-    //   }
-    // },
     startTime: {
       type: Number,
-      default: 360
+      default: 0 //360
     },
     timeStep: {
+      type: Number,
+      default: 60
+    },
+    snapToTime: {
       type: Number,
       default: 30
     },
@@ -84,38 +88,72 @@ export default {
     }
   },
   data: () =>  ({
-    // TODO: change to a computed value based on initial events
-    // i.e. we do not want their TZ info in there
-    dayEvents: {}
+    dayEvents: {},
+    // TODO: we need to pass this in based on TZ
+    // conventionHours: {
+    //   1: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   2: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   3: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   4: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   5: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   6: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    //   7: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
+    // }
   }),
   computed: {
-    initialEvents() {
-      return []
-    },
     dayColClass() {
       let showScroll = this.showScrollBar ? '' : 'plano-col-no-bar'
       if (this.firstDay) {
-        return `col-3 pr-0 plano-col ${showScroll}`
+        return `pr-0 plano-first ${showScroll}`
       } else {
-        return `col-2 pr-0 pl-0 plano-col plano-first ${showScroll}`
+        return `pr-0 pl-0 plano-col ${showScroll}`
       }
     }
   },
   methods: {
-    logEvents(ty, ev) {
-      // events have an _eid that makes them unique
-      console.debug("*** EV ",ty, ev)
+    formatLocaleDate(date) {
+      let res = DateTime.fromJSDate(date).toLocaleString(DateTime.TIME_SIMPLE)
+      // console.debug("**** D", date, DateTime.TIME_SIMPLE, res)
+      return res //date.toLocaleString(DateTime.TIME_SIMPLE)
     },
+    formatDate(date, config) {
+      // return DateTime.fromISO(date).toFormat(config)
+      // console.debug("**** D", date, config)
+      // return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
+      // TODO: use the users locale or browsers locale here
+      return date.toLocaleString('en-US',config)
+    },
+    // logEvents(ty, ev) {
+    //   // events have an _eid that makes them unique
+    //   console.debug("*** EV ",ty, ev)
+    // },
     scrollBarElement: function() {
       return this.$refs['dayColumn'].$el.getElementsByClassName('vuecal__bg')[0]
     },
     onCreate(ev) {
       let slot = this.createAvailibilitySlot(ev._eid, ev.start, ev.end)
       this.dayEvents[slot.cid] = slot
-      this.$emit('change', { day: this.day, slots: this.dayEvents })
+      this.$emit('change', slot )
+    },
+    onUpdate(ev) {
+      let slot = this.createAvailibilitySlot(ev.event._eid, ev.event.start, ev.event.end)
+      this.dayEvents[slot.cid] = slot
+      this.$emit('update', slot )
+    },
+    onDelete(ev) {
+      let cid = ev._eid
+      // remove element with _eid == cid from the arrays
+      this.dayEvents[cid] = null
+      this.$refs['dayColumn'].mutableEvents = this.$refs['dayColumn'].mutableEvents.filter(
+        (e) => e._eid != cid
+      )
+      this.$refs['dayColumn'].view.events = this.$refs['dayColumn'].view.events.filter(
+        (e) => e._eid != cid
+      )
+      this.$emit('delete', cid )
     },
     createAvailibilitySlot(id, fromDate, toDate) {
-      const startDate =this.uiDateToTZDate(fromDate)
+      const startDate = this.uiDateToTZDate(fromDate)
       const endDate = this.uiDateToTZDate(toDate)
 
       return {
@@ -133,32 +171,39 @@ export default {
         minute: date.getMinutes()},
         { zone: this.timezone }
       )
-    }
-    // TODO
-    // store the list of events without their timezone info?
-    // onCreate - create an entry, emit change to parent
-    // event-drag-create
-    // onDelete - delete an entry, emit change to parent
-    // event-delete
-    // onChangeDuration - change an entry, emit change to parent
-    // event-duration-change - change end time
-    // event-drop - change start time
+    },
+    clearAllEvents() {
+      this.dayEvents = {}
+      this.$refs['dayColumn'].mutableEvents = []
+      this.$refs['dayColumn'].view.events = []
+    },
+    init(initialEvents) {
+      this.clearAllEvents()
+      let startingVals = []
+      for (const ev of initialEvents) {
+        let new_event = this.$refs['dayColumn'].createEvent(
+          ev.start.setZone(this.timezone).toFormat('yyyy-MM-dd HH:mm'),
+          ev.end.diff(ev.start, 'minutes').as('minutes')
+        )
+        let slot = this.createAvailibilitySlot(new_event._eid, new_event.start, new_event.end)
+        this.dayEvents[slot.cid] = slot
+        startingVals.push(slot)
+      }
 
-    // onEventCreate (ev, deleteEventFunction) {
-    //   console.debug("We create an event", ev, this.dayEvents)
-    //   // You can modify event here and return it.
-    //   // You can also return false to reject the event creation.
-    //   return ev
-    // },
-    // onChange(arg) {
-    //   console.debug("Change", arg)
-    // }
+      return startingVals
+    }
   }
 }
 </script>
 
 <style lang="scss">
 @import '../stylesheets/style.scss';
+
+// .convention-hours {
+//   background-color: white;
+// }
+//
+// .vuecal__cell-content {background-color: rgba(127, 127, 127, 0.2);}
 
 .vuecal__no-event {
   display: none;
@@ -178,9 +223,12 @@ export default {
   color: $color-primary-4;
 }
 
+.plano-first .vuecal__arrow--prev,
 .plano-col .vuecal__arrow--prev {
   display: none;
 }
+
+.plano-first .vuecal__arrow--next,
 .plano-col .vuecal__arrow--next {
   display: none;
 }
@@ -196,12 +244,21 @@ export default {
   scrollbar-width: none;  /* Firefox */
 }
 
-.plano-first .vuecal__time-column,
-.plano-first .vuecal__time-cell {
+.plano-first {
+  min-width: 130px;
+}
+
+.plano-col {
+  min-width: 100px;
+}
+
+.plano-col .vuecal__time-column,
+.plano-col .vuecal__time-cell {
   width: 0px
 }
 
-.plano-first .vuecal__time-cell-label {
+.plano-col .time-display,
+.plano-col .vuecal__time-cell-label {
   display: none;
 }
 </style>

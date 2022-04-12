@@ -13,7 +13,7 @@ class Person < ApplicationRecord
   # acts_as_taggable
   acts_as_taggable_on :tags
 
-  has_paper_trail
+  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at]
 
   before_destroy :check_if_assigned
 
@@ -21,6 +21,11 @@ class Person < ApplicationRecord
 
   has_many  :session_assignments, dependent: :destroy
   has_many  :sessions, through: :session_assignments
+
+  has_many  :person_exclusions, dependent: :destroy
+  has_many  :exclusions, through: :person_exclusions
+
+  has_many  :session_limits
 
   # We let the publish mechanism do the destroy so that the update service knows what is happening
   # has_many  :published_session_assignments
@@ -61,22 +66,6 @@ class Person < ApplicationRecord
   #   pass vetting and later change their mind. So we do not want to
   #   or need to re-vet...
   #
-  # change these
-  # enum acceptance_status: {
-  #   unknown: 'unknown',
-  #   probable: 'probable',
-  #   accepted: 'accepted',
-  #   declined: 'declined'
-  # }
-  #
-  # enum invite_status: {
-  #   not_set: 'not_set',
-  #   do_not_invite: 'do_not_invite',
-  #   potential_invite: 'potential_invite',
-  #   invite_pending: 'invite_pending',
-  #   invited: 'invited',
-  #   volunteered: 'volunteered'
-  # }
   enum con_state: {
     not_set: 'not_set',
     applied: 'applied',
@@ -105,6 +94,7 @@ class Person < ApplicationRecord
     :tiktok
   ]
 
+  # TODO: these will changle
   enum can_stream: { yes: 'yes', no: 'no', maybe: 'maybe'}, _prefix: true
   enum can_record: { yes: 'yes', no: 'no', maybe: 'maybe'}, _prefix: true
   enum can_photo: { yes: 'yes', no: 'no', maybe: 'maybe'}, _prefix: true
@@ -163,8 +153,8 @@ class Person < ApplicationRecord
     false
   end
 
+  # TODO: check
   def saved_change_to_email?
-    # TODO: check
     email_addresses.first&.saved_change_to_email?
   end
 
@@ -178,10 +168,10 @@ class Person < ApplicationRecord
     if (email = conditions.delete(:email))
       # Search through users by condition and also by
       # users who have associations to the provided email
-      # change to use primary
+      # change to use primary/default email (we do not check the others)
       where(conditions.to_h)
         .includes(:email_addresses)
-        .where(email_addresses: { email: email })
+        .where(email_addresses: { email: email, isdefault: true })
         .first
     else
       # If "email" is not an attribute in the conditions,

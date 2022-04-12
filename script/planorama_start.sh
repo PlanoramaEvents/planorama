@@ -26,6 +26,8 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
 
   # bin/rails db:structure:load
   bin/rake db:migrate
+  bin/rake parameters:seed_names
+  bin/rake chicon:seed_exclusions
 
   # Run migrations and start the server, anything that comes in on 3000 is accepted
   # bin/rails db:create
@@ -35,6 +37,7 @@ elif [[ $RAILS_ENV = "staging" ]]; then
 
   bin/rake db:migrate
   bin/rake parameters:seed_names
+  bin/rake chicon:seed_exclusions
 
   bin/rails db:seed
 else
@@ -47,6 +50,7 @@ else
 
   bin/rake db:migrate
   bin/rake parameters:seed_names
+  bin/rake chicon:seed_exclusions
 fi
 
 bin/rails server -b 0.0.0.0

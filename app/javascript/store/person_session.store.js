@@ -27,11 +27,15 @@ export const personSessionStore = {
     },
   },
   actions: {
-    [GET_SESSION_USER] ({commit, dispatch, state}) {
+    [GET_SESSION_USER] ({commit, dispatch, state}, attrs = null) {
+      let force = false
+      if (attrs && attrs.force) {
+        force = attrs.force
+      }
       // only fetch session if we don't have one
       // return a promise with the session user either way
       return new Promise((res, rej) => {
-        if(!state.user.id) {
+        if(!state.user.id || force) {
           // console.debug('******* get the session user')
           dispatch('jv/get','/person/session/me').then((user) => {
             // console.debug('******* session user', user)
@@ -40,7 +44,6 @@ export const personSessionStore = {
           }).catch((error) => {
             // console.debug('******* error', error)
             // If we can not get the session then set no no user
-            console.debug("****** WE DO NOT HAVE A VALID SESSION ....")
             commit(SET_SESSION_USER, {})
             res({});
           })

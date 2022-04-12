@@ -4,7 +4,7 @@
     <div class="row">
       <top-navbar></top-navbar>
       <side-navbar v-if="loggedIn"></side-navbar>
-      <div :class="['col-12 pr-0', { 'col-sm-9': loggedIn, 'col-xl-10': loggedIn}]">
+      <div :class="['col-12 pr-0', { 'col-sm-10': loggedIn, 'col-xl-10': loggedIn}]">
         <router-view></router-view>
       </div>
       <bottom-navbar></bottom-navbar>
@@ -22,13 +22,17 @@ import personSessionMixin from "./auth/person_session.mixin";
 import SignAgreements from "./agreements/sign_agreements.vue";
 import settingsMixin from "@/store/settings.mixin";
 import { ValidationProvider, extend } from 'vee-validate';
-import { required, email, numeric } from 'vee-validate/dist/rules';
+//
+// v-validate="{url: {require_protocol: true }}
+import { required, email, numeric, digits, regex } from 'vee-validate/dist/rules';
 
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 
 extend('email', email);
 extend('numeric', numeric);
+extend('digits', digits);
+extend('regex', regex);
 
 // Override the default message.
 extend('required', {
@@ -52,6 +56,10 @@ export default  {
       // TODO: @RALPH - this passes along the check signatures to the agreement signer ...
       this.$refs['agreement-signer'].check_signatures()
     }
+  },
+  mounted() {
+    // fetch the current settings on mount !!!
+    this.fetchSettings();
   }
 }
 </script>

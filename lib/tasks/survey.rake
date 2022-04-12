@@ -135,7 +135,8 @@ namespace :survey do
       private: attrs['private'],
       regex: attrs['regex'],
       page_id: attrs['page_id'],
-      branching: attrs['branching']
+      branching: attrs['branching'],
+      linked_field: attrs['linked_field']
     )
   end
 
@@ -148,7 +149,8 @@ namespace :survey do
       sort_order: attrs['sort_order'],
       other: attrs['other'],
       next_page_action: attrs['next_page_action'],
-      next_page_id: attrs['next_page_id']
+      next_page_id: attrs['next_page_id'],
+      value: attrs['value']
     )
   end
 end

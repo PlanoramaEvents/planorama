@@ -2,7 +2,7 @@ class Survey::Answer < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: :question_id
 
-  has_paper_trail
+  has_paper_trail versions: { class_name: 'Audit::SurveyVersion' }, ignore: [:updated_at, :created_at]
 
   enum next_page_action: { next_page: 'next_page', submit: 'submit' }
 
@@ -21,7 +21,8 @@ class Survey::Answer < ApplicationRecord
 
 
   # TODO: on save need to remove next_page refs that do not exist
-  before_save :validate_answer, prepend: true
+  # TODO: put validate back in once Gail has fixed the new question types
+  # before_save :validate_answer, prepend: true
   before_save :ensure_next_page_consistency
 
   private
@@ -34,6 +35,9 @@ class Survey::Answer < ApplicationRecord
     end
     if question.question_type == :yesnomaybe
       raise 'invalid answers for YewNoMaybe question type' unless ['yes', 'no', 'maybe'].include? value
+    end
+    if question.question_type == :attendance_type
+      raise 'invalid answers for Attendance question type' unless ['in person', 'virtual', 'hybrid'].include? value
     end
   end
 
