@@ -86,7 +86,7 @@
           </b-input-group></b-form-group>
           <b-form-group label="YouTube" label-cols="3"><b-input-group>
             <template #prepend>
-              <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
+              <b-input-group-text>youtube.com&sol;</b-input-group-text>
             </template>
             <b-form-input type="text" disabled></b-form-input>
           </b-input-group></b-form-group>
@@ -117,7 +117,7 @@
             <b-form-radio disabled :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
           </b-form-radio-group>
           <div class="ml-4 mt-1 mb-3">
-            <b-form-textarea 
+            <b-form-textarea
               :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
               disabled
             >
