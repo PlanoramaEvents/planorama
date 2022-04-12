@@ -54,7 +54,7 @@
         :disabled="disabled"
       ></validated-social>
       <validated-social
-        :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
+        :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
         label="Website"
         prepend="url"
         v-model="editable_person.website"
@@ -78,7 +78,7 @@
         :disabled="disabled"
       ></validated-social>
       <validated-social
-        :rules="{ regex: /UC([-_a-z0-9]{22})/i }"
+        :rules="{ regex: /UC([-_a-zA-Z0-9]{22})/i }"
         label="YouTube"
         prepend="youtube.com/channel/"
         v-model="editable_person.youtube"
