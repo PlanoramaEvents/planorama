@@ -71,10 +71,13 @@
         <b-form-checkbox v-model="selected.can_share" :disabled="!editable">
           Can Share
         </b-form-checkbox>
-        <b-form-checkbox v-model="selected.can_photo" :disabled="!editable">
+        <b-form-checkbox v-model="selected.can_photo" :disabled="!editable" value="yes" unchecked-value="no">
           Can Photo
         </b-form-checkbox>
-        <b-form-checkbox v-model="selected.can_record" :disabled="!editable">
+        <b-form-checkbox v-model="selected.can_stream" :disabled="!editable" value="yes" unchecked-value="no">
+          Can Stream
+        </b-form-checkbox>
+        <b-form-checkbox v-model="selected.can_record" :disabled="!editable" value="yes" unchecked-value="no">
           Can Record
         </b-form-checkbox>
 
