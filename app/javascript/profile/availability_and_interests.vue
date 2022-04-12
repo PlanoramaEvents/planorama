@@ -98,6 +98,7 @@ export default {
   }),
   computed: {
     days() {
+      // TODO: we need to check this
       let start_day = this.start_time.setZone(this.timezone).startOf('day')
       let end_day = this.end_time.setZone(this.timezone).endOf('day')
       let nbr_days = Math.round(end_day.diff(start_day, 'days').as('days'))

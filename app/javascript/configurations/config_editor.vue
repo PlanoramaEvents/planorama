@@ -76,8 +76,8 @@ export default {
         return null
       }
 
-      let v = errors[0] ? false : (valid ? true : null);
-      this.is_valid = v
+      let v = errors[0] ? false : null //(valid ? true : null);
+      this.is_valid = errors[0] ? false : true
       return v;
     },
     onChange(arg) {

@@ -57,7 +57,7 @@ export default {
         return null
       }
 
-      return errors[0] ? false : (valid ? true : null)
+      return errors[0] ? false : null //(valid ? true : null)
     },
     onChange(arg) {
       // if (this.value == '') return;

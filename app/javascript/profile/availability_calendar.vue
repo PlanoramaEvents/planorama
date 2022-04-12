@@ -19,6 +19,7 @@
         />
       </div>
       <small class="text-muted">* times shown in {{display_timezone}}</small>
+      <!-- TODO: add in a selector for timezone of the con/your TZ during the con -->
     </div>
     <div class="p-2 selected-availabilities">
       <p>Selected Times</p>

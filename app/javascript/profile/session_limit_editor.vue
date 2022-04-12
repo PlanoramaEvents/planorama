@@ -1,7 +1,7 @@
 <template>
   <div v-if="my_limit">
     <validation-provider
-      rules="numeric"
+      :rules="rules"
       name="Limit"
       :skipIfEmpty="true"
       v-slot="{ valid, errors }"
@@ -12,6 +12,7 @@
         type='text'
         maxlength="4" size="4"
         @blur="onChange(my_limit.max_sessions)"
+        :state="calcValid(errors,valid)"
       ></input>
       <div class="invalid-message">{{ errors[0] }}</div>
     </validation-provider>
@@ -55,7 +56,8 @@ export default {
   data: () =>  ({
     my_limit: {
       max_sessions: null
-    }
+    },
+    rules: "numeric"
   }),
   computed: {
     limit: {
@@ -72,6 +74,13 @@ export default {
     }
   },
   methods: {
+    calcValid(errors, valid) {
+      if (this.rules == '') {
+        return null
+      }
+
+      return errors[0] ? false : null //(valid ? true : null)
+    },
     onChange(newVal) {
       // Do not do anything if the value is not a positive number
       const num = Number(newVal);

@@ -45,7 +45,7 @@
             <b-form-radio :disabled="!answerable" :value="noLabel.value">{{noLabel.label}}</b-form-radio>
             <b-form-radio :disabled="!answerable" :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
             <div class="ml-4 mt-1 mb-3">
-              <b-form-textarea 
+              <b-form-textarea
                 :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
                 v-model="localResponse.response.text"
                 :disabled="!answerable || radioButtonResponse !== maybeLabel.value"
@@ -368,8 +368,8 @@ export default {
         return null
       }
 
-      let v = errors[0] ? false : (valid ? true : null);
-      this.is_valid = v
+      let v = errors[0] ? false : null //(valid ? true : null);
+      this.is_valid = errors[0] ? false : true
       return v;
     },
     formId(string) {

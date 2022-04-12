@@ -90,7 +90,7 @@ export default {
       if (this.rules == '') {
         return null
       }
-      let v = errors[0] ? false : (valid ? true : null);
+      let v = errors[0] ? false : null //(valid ? true : null);
       this.is_valid = v
       return v;
     },
