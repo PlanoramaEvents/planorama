@@ -14,6 +14,12 @@
           @input="onChange"
         ></timezone-selector>
       </div>
+      <div v-else-if="parameter.parameter_type == 'DateTime'">
+        <b-form-datepicker
+          v-model="dateval"
+          @input="onChange"
+        ></b-form-datepicker>
+      </div>
       <div v-else>
         <b-form-input
           v-model="configuration.parameter_value"
@@ -31,6 +37,9 @@ import modelMixin from '../store/model.mixin';
 import configurationMixin from './configuration.mixin';
 import { ValidationProvider } from 'vee-validate';
 import TimezoneSelector from "../components/timezone_selector.vue"
+import settingsMixin from "@/store/settings.mixin";
+
+const { DateTime } = require("luxon");
 
 export default {
   name: "ConfigEditor",
@@ -48,6 +57,7 @@ export default {
     configuration: {
       parameter_value: null
     },
+    dateval: null,
     is_valid: true
   }),
   computed: {
@@ -59,16 +69,27 @@ export default {
         case 'Integer' :
           return 'numeric'
           break;
-        case 'Timezone' :
-          return 'timezone'
-          break;
       }
       return '';
     },
+    timezone() {
+      if (this.currentSettings && this.currentSettings.configs) {
+        let tz = this.currentSettings.configs.find(el => el.parameter == 'convention_timezone')
+
+        if (tz) {
+          return tz.parameter_value
+        } else {
+          return null
+        }
+      } else {
+        return null
+      }
+    }
   },
   mixins: [
     modelMixin,
-    configurationMixin
+    configurationMixin,
+    settingsMixin
   ],
   methods: {
     calcValid(errors, valid) {
@@ -81,27 +102,41 @@ export default {
       return v;
     },
     onChange(arg) {
+      let new_val = arg
       if (this.is_valid) {
+
+        if (this.parameter.parameter_type == 'DateTime') {
+          if (arg.length == 0) return
+          if (this.parameter.parameter_name == "convention_end_time") {
+            new_val = DateTime.fromISO(arg, {zone: this.timezone}).endOf('day').toString()
+          } else {
+            new_val = DateTime.fromISO(arg, {zone: this.timezone}).startOf('day').toString()
+          }
+        }
+
         if (typeof this.parameter.configuration.id === 'undefined') {
           let newconfig = {
-            parameter_value: arg,
+            parameter_value: new_val,
             parameter: this.parameter.parameter_name
           }
           this.createConfiguration(newconfig).then(
             (data) => {
               this.configuration = data
-              // TODO: should we force a reload of the settings on config change?
             }
           )
         } else {
-          this.configuration.parameter_value = arg
+          this.configuration.parameter_value = new_val
           this.save(this.configuration).then(
             (data) => {
               this.configuration = data
-              // TODO: should we force a reload of the settings on config change?
             }
           )
         }
+      }
+    },
+    init() {
+      if (this.parameter.parameter_type == 'DateTime') {
+        this.dateval = DateTime.fromISO(this.configuration.parameter_value).setZone(this.timezone).toISODate()
       }
     }
   },
@@ -113,6 +148,7 @@ export default {
         parameter_value: null
       }
     }
+    this.init()
   }
 }
 </script>

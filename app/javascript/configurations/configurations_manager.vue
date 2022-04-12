@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="currentSettings">
     <div v-for="parameter in parameters">
       <config-editor
         model="configuration"
@@ -13,6 +13,7 @@
 <script>
 import modelMixin from '../store/model.mixin';
 import ConfigEditor from './config_editor';
+import settingsMixin from "@/store/settings.mixin";
 
 export default {
   name: "ConfigurationsManager",
@@ -26,7 +27,8 @@ export default {
     }
   },
   mixins: [
-    modelMixin
+    modelMixin,
+    settingsMixin
   ],
   methods: {
     load_parameters() {
@@ -41,6 +43,9 @@ export default {
     init() {
       this.load_parameters()
     }
+  // },
+  // mounted() {
+  //   this.fetchSettings()
   }
 }
 </script>

@@ -51,6 +51,13 @@ namespace :submission do
         person = addr.person
       end
 
+      # Check if submission exists, if so do not import again
+      submission = Survey::Submission.where(
+                     person_id: person.id,
+                     survey_id: survey.id,
+                   )
+      return if submission.count > 0
+
       # Ok to change the person's name as long as the email is the same
       submission = Survey::Submission.create!(
                      person: person,
