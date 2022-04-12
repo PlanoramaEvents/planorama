@@ -15,13 +15,6 @@ export const people_columns = [
     // stickyColumn: true
   },
   {
-    key: 'pseudonym',
-    label: 'Pseudonym',
-    type: "text",
-    // sortKey: 'pseudonym_sort_by',
-    sortable: true
-  },
-  {
     key: 'pronouns',
     label: 'Pronouns',
     type: "text",
@@ -53,26 +46,26 @@ export const people_columns = [
     type: "text",
     sortable: false
   },
-  {
-    key: 'registered',
-    label: 'Registered',
-    type: "radio",
-    // TODO: how do we add dynamic choices???
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: true
-  },
-  {
-    key: 'registration_type',
-    label: 'Registration Type',
-    type: "text",
-    sortable: true
-  },
-  {
-    key: 'registration_number',
-    label: 'Registration Number',
-    type: "text",
-    sortable: true
-  },
+  // {
+  //   key: 'registered',
+  //   label: 'Registered',
+  //   type: "radio",
+  //   // TODO: how do we add dynamic choices???
+  //   choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+  //   sortable: true
+  // },
+  // {
+  //   key: 'registration_type',
+  //   label: 'Registration Type',
+  //   type: "text",
+  //   sortable: true
+  // },
+  // {
+  //   key: 'registration_number',
+  //   label: 'Registration Number',
+  //   type: "text",
+  //   sortable: true
+  // },
   {
     key: 'gender',
     label: 'Gender',
