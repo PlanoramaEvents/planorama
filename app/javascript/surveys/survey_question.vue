@@ -251,7 +251,7 @@
             @blur="saveResponse(localResponse, selectedSubmission)"
           >
             <template #prepend>
-              <b-input-group-text>youtube.com&sol;channel&sol;</b-input-group-text>
+              <b-input-group-text>youtube.com&sol;</b-input-group-text>
             </template>
           </simple-social>
           <simple-social
