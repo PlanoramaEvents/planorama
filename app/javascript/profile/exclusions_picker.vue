@@ -29,14 +29,21 @@ export default {
     personSessionMixin,
     personExclusionMixin
   ],
+  model: {
+    prop: 'person'
+  },
   props: {
+    person: {
+      type: Object,
+      required: true
+    },
   },
   data: () =>  ({
     selectedExclusions: []
   }),
   methods: {
     updateExclusions: function(vals) {
-       this.update_exclusions({person: this.currentUser, params: vals})
+       this.update_exclusions({person: this.person, params: vals})
     },
     init: function(arg) {
       this.get_exclusions().then(

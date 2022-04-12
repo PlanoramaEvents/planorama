@@ -3,18 +3,19 @@
     class="mt-4"
     :label="AVAILABILITY_NOTES_LABEL"
     label-for="availability-notes-input"
-  > 
-    <b-form-textarea id="availability-notes-input" v-model="mutableCurrentUser.availability_notes" @blur="patchCurrentUserAvailabilityNotes()"></b-form-textarea>
+    v-if="editable_person"
+  >
+    <b-form-textarea
+      id="availability-notes-input"
+      v-model="editable_person.availability_notes"
+      @blur="patchCurrentUserAvailabilityNotes()"
+    ></b-form-textarea>
   </b-form-group>
-    
 </template>
 
 <script>
-import { personSessionMixin, toastMixin } from "@/mixins";
-import { mapActions } from 'vuex';
-import { PATCH_FIELDS } from '@/store/model.store';
+import { modelMixin, toastMixin } from "@/mixins";
 import { personModel as model } from "@/store/person.store";
-import { utils } from 'jsonapi-vuex';
 import {
   SAVE_AVAILABILITY_NOTES,
   AVAILABILITY_NOTES_LABEL
@@ -22,25 +23,35 @@ import {
 
 export default {
   name: "AvailabilityNotesField",
+  model: {
+    prop: 'person'
+  },
+  props: {
+    person: {
+      type: Object,
+      required: true
+    }
+  },
   mixins: [
-    personSessionMixin,
+    modelMixin,
     toastMixin
   ],
   data: () => ({
-    AVAILABILITY_NOTES_LABEL
+    AVAILABILITY_NOTES_LABEL,
+    editable_person: null
   }),
-  computed: {
-    mutableCurrentUser() {
-      return utils.deepCopy(this.currentUser);
+  methods: {
+    patchCurrentUserAvailabilityNotes() {
+      this.save(this.editable_person).then(
+        (obj) => {
+          this.editable_person = obj
+          this.$emit('input',this.editable_person)
+        }
+      )
     }
   },
-  methods: {
-    ...mapActions({
-      patchFields: PATCH_FIELDS
-    }),
-    patchCurrentUserAvailabilityNotes() {
-      return this.toastPromise(this.patchFields({model, item: this.mutableCurrentUser, fields: ['availability_notes'], selected: false }), SAVE_AVAILABILITY_NOTES)
-    }
+  mounted() {
+    this.editable_person = this.person
   }
 }
 </script>

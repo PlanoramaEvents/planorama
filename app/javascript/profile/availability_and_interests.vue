@@ -5,6 +5,7 @@
         Convention maximum number of program items willing to participate in:<br />
         <b-col sm="4">
           <session-limit-editor
+            v-model="person"
             :timezone="timezone"
             model="session_limit"
           >
@@ -14,6 +15,7 @@
     </div>
     <div class="d-flex flex-row">
       <availability-calendar
+        v-model="person"
         :days="days"
         model="availability"
         :timezone="timezone"
@@ -25,6 +27,7 @@
           </b-col>
         </b-row>
         <session-limits
+          v-model="person"
           :days="days"
           :timezone="timezone"
         >
@@ -33,10 +36,14 @@
     </div>
     <div class="d-flex flex-row">
       <exclusions-picker
+        v-model="person"
         model="person_exclusion"
       ></exclusions-picker>
     </div>
-    <availability-notes-field></availability-notes-field>
+    <availability-notes-field
+      v-model="person"
+      model="person"
+    ></availability-notes-field>
   </div>
 </template>
 
@@ -58,7 +65,14 @@ export default {
     SessionLimits,
     AvailabilityNotesField
   },
+  model: {
+    prop: 'person'
+  },
   props: {
+    person: {
+      type: Object,
+      required: true
+    },
     start_time: {
       type: DateTime,
       // default: null
@@ -84,6 +98,7 @@ export default {
   }),
   computed: {
     days() {
+      // TODO: we need to check this
       let start_day = this.start_time.setZone(this.timezone).startOf('day')
       let end_day = this.end_time.setZone(this.timezone).endOf('day')
       let nbr_days = Math.round(end_day.diff(start_day, 'days').as('days'))

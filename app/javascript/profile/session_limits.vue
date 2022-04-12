@@ -4,6 +4,7 @@
       <b-row class="my-1">
         <b-col sm="4">
           <session-limit-editor
+            v-model="person"
             :day="day"
             :timezone="timezone"
             model="session_limit"
@@ -28,7 +29,14 @@ export default {
   components: {
     SessionLimitEditor
   },
+  model: {
+    prop: 'person'
+  },
   props: {
+    person: {
+      type: Object,
+      required: true
+    },
     days: {
       type: Array,
       required: true

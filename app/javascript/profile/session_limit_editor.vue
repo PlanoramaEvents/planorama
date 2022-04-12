@@ -1,7 +1,7 @@
 <template>
   <div v-if="my_limit">
     <validation-provider
-      rules="numeric"
+      :rules="rules"
       name="Limit"
       :skipIfEmpty="true"
       v-slot="{ valid, errors }"
@@ -12,6 +12,7 @@
         type='text'
         maxlength="4" size="4"
         @blur="onChange(my_limit.max_sessions)"
+        :state="calcValid(errors,valid)"
       ></input>
       <div class="invalid-message">{{ errors[0] }}</div>
     </validation-provider>
@@ -35,7 +36,14 @@ export default {
     personSessionMixin,
     sessionLimitMixin
   ],
+  model: {
+    prop: 'person'
+  },
   props: {
+    person: {
+      type: Object,
+      required: true
+    },
     day: {
       type: String,
       default: null
@@ -48,7 +56,8 @@ export default {
   data: () =>  ({
     my_limit: {
       max_sessions: null
-    }
+    },
+    rules: "numeric"
   }),
   computed: {
     limit: {
@@ -65,6 +74,13 @@ export default {
     }
   },
   methods: {
+    calcValid(errors, valid) {
+      if (this.rules == '') {
+        return null
+      }
+
+      return errors[0] ? false : null //(valid ? true : null)
+    },
     onChange(newVal) {
       // Do not do anything if the value is not a positive number
       const num = Number(newVal);
@@ -78,7 +94,7 @@ export default {
           )
         } else {
           let candidate = {
-            person_id: this.currentUser.id,
+            person_id: this.person.id,
             day: this.day,
             max_sessions: num
           }
@@ -92,7 +108,7 @@ export default {
     }
   },
   mounted() {
-    let my_limits =  Object.values(this.currentUser.session_limits)
+    let my_limits =  Object.values(this.person.session_limits)
     let candidate_idx =  my_limits.findIndex((el) => el.day == this.day)
     if (candidate_idx >= 0) {
       this.my_limit = my_limits[candidate_idx]

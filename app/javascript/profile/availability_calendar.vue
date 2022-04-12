@@ -19,6 +19,7 @@
         />
       </div>
       <small class="text-muted">* times shown in {{display_timezone}}</small>
+      <!-- TODO: add in a selector for timezone of the con/your TZ during the con -->
     </div>
     <div class="p-2 selected-availabilities">
       <p>Selected Times</p>
@@ -47,7 +48,14 @@ export default {
   components: {
     AvailabilityTimePicker
   },
+  model: {
+    prop: 'person'
+  },
   props: {
+    person: {
+      type: Object,
+      required: true
+    },
     days: {
       type: Array,
       required: true
@@ -87,7 +95,7 @@ export default {
       return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
     },
     init: function(arg) {
-      this.get_availability().then(
+      this.get_availability({person: this.person}).then(
         () => {
           let iniialVals = this.collection.map((a) => { return {start: DateTime.fromISO(a.start_time) , end: DateTime.fromISO(a.end_time)} })
           for (const day of this.days) {
@@ -126,7 +134,7 @@ export default {
       this.updateAvailabilities()
     },
     updateAvailabilities() {
-      this.update_availability({person: this.currentUser, params: this.dayEvents})
+      this.update_availability({person: this.person, params: this.dayEvents})
     },
     // TODO: this initiates lots of extra events ...
     // can we set scroll top without setting off an event?

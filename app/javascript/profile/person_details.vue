@@ -14,7 +14,8 @@
       ></email-addresses-editor>
     </div>
     <div class="flex-col w-50 p-2">
-      <b-form-group label="At the time of the convention i will be at UTC Offset">
+      <!-- TODO: as per discussion with Anna TZ and hour display move to a settings dialog -->
+      <!-- <b-form-group label="At the time of the convention i will be at UTC Offset">
         <timezone-selector v-model="editable_person.timezone" @input="onInput"></timezone-selector>
         <small>
           If you are not sure what your UTC offset will be, or want to verify,
@@ -27,8 +28,8 @@
       </b-form-group>
       <b-form-checkbox v-model="editable_person.twelve_hour" @input="onInput">
         12 Hour Display
-      </b-form-checkbox>
-      <b-form-group label="Bio" class="mt-5">
+      </b-form-checkbox> -->
+      <b-form-group label="Bio">
         <plano-editor
           v-model="editable_person.bio"
           type='classic'
@@ -54,7 +55,7 @@
         :disabled="disabled"
       ></validated-social>
       <validated-social
-        :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
+        :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
         label="Website"
         prepend="url"
         v-model="editable_person.website"
@@ -78,7 +79,7 @@
         :disabled="disabled"
       ></validated-social>
       <validated-social
-        :rules="{ regex: /UC([-_a-z0-9]{22})/i }"
+        :rules="{ regex: /UC([-_a-zA-Z0-9]{22})/i }"
         label="YouTube"
         prepend="youtube.com/channel/"
         v-model="editable_person.youtube"

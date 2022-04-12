@@ -12,6 +12,7 @@
       </b-tab>
       <b-tab title="Availability & Interests" lazy>
         <availability-and-interests
+          v-model="person"
           :start_time="start_time"
           :end_time="end_time"
           :timezone="timezone"
@@ -19,12 +20,14 @@
       </b-tab>
       <b-tab title="Session Selection" lazy>
         <session-selector
+          v-model="person"
           defaultSortBy='title'
           :model="sessionModel"
           defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
         ></session-selector>
       </b-tab>
       <b-tab title="Session Rankings" lazy>
+        <!-- v-model="person" -->
         <session-ranker
           defaultSortBy='interest_ranking,created_at'
           :defaultSortDesc="true"
@@ -75,16 +78,18 @@ export default {
     person: null
   }),
   computed: {
+    // TODO: check that the start and end times are being used correctly
+    // we need to get this from the db
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
-        return DateTime.fromISO("2022-09-01T00:00:00", {zone: this.timezone})
+        return DateTime.fromISO("2022-09-01T00:00:00") //, {zone: this.timezone})
       } else {
         return null
       }
     },
     end_time() {
       if (this.currentSettings && this.currentSettings.configs) {
-        return DateTime.fromISO("2022-09-05T11:30:00", {zone: this.timezone})
+        return DateTime.fromISO("2022-09-05T11:30:00") //, {zone: this.timezone})
       } else {
         return null
       }
