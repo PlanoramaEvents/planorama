@@ -87,7 +87,6 @@ module AccessControlService
     # NOTE: this is the hard-wired mechanism to limit sensitive information to
     # admins for now
     person.convention_roles.collect(&:role).include?('admin')
-    # false
   end
 
   # Return a list of attributes that are not allowed for the person from this instance
@@ -116,8 +115,6 @@ module AccessControlService
     return true unless sensitive_attributes(model: fields[0]).include? fields[1].to_sym
 
     allowed_sensitive_access?(person: person)
-
-    false
   end
 
   # Return true if the person is allowed access to the
