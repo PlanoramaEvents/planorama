@@ -170,8 +170,8 @@ class Person < ApplicationRecord
       # users who have associations to the provided email
       # change to use primary/default email (we do not check the others)
       where(conditions.to_h)
-        .includes(:email_addresses)
-        .where(email_addresses: { email: email, isdefault: true })
+        .joins(:email_addresses)
+        .where("email_addresses.isdefault = true AND email_addresses.email ILIKE ?", email.strip)
         .first
     else
       # If "email" is not an attribute in the conditions,

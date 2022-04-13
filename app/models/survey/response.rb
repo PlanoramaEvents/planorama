@@ -19,6 +19,7 @@ class Survey::Response < ApplicationRecord
       # we can set the linked field on the person
       details = question.linked_field.split('.',2)
 
+      # TODO: if yesnomaybe we need to set the exception attr as well ...
       if details[0] == 'Person'
         val = case question.question_type
               when :textfield

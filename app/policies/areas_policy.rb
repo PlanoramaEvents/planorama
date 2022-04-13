@@ -7,7 +7,7 @@ class AreasPolicy < PlannerPolicy
     true
   end
 
-  class Scope < Scope
+  class Scope < PlannerPolicy::Scope
     def resolve
       scope.all
     end

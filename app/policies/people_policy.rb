@@ -3,8 +3,13 @@ class PeoplePolicy < PlannerPolicy
     true
   end
 
+  def index?
+    # @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    true
+  end
+
   def update_all?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
   def import?
@@ -14,36 +19,36 @@ class PeoplePolicy < PlannerPolicy
   def assigned_surveys?
     return true if @record.class != Symbol && @record.id == @person.id
 
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
   def submissions?
     return true if @record.class != Symbol && @record.id == @person.id
 
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
   def update?
     return true if @record.class != Symbol && @record.id == @person.id
 
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
   def show?
     return true if @record.class != Symbol && @record.id == @person.id
 
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
   def mailed_surveys?
     return true if @record.class != Symbol && @record.id == @person.id
 
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
-  class Scope < Scope
+  class Scope < PlannerPolicy::Scope
     def resolve
-      if @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+      if is_admin_or_staff
         scope.all
       else
         scope.where(id: @person.id)

@@ -15,9 +15,11 @@
     </div>
     <div class="flex-col w-50 p-2">
       <!-- TODO: as per discussion with Anna TZ and hour display move to a settings dialog -->
-      <b-form-group label="At the time of the convention i will be at UTC Offset">
-        <timezone-selector v-model="editable_person.timezone" @input="onInput"></timezone-selector>
-        <!-- TZ selector - show "yout time now is here" -->
+      <b-form-group label="At the time of the convention I will be at UTC Offset">
+        <timezone-selector v-model="editable_person.timezone" @input="onInput" class="mb-2"></timezone-selector>
+        <p>
+          Your time now in the selected timezone is <b>{{youTimeNow}}</b>
+        </p>
         <small>
           If you are not sure what your UTC offset will be, or want to verify,
           please go to
@@ -131,6 +133,8 @@ import ValidatedSocial from '../components/validated_social.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
 import modelMixin from '../store/model.mixin';
 
+const { DateTime } = require("luxon");
+
 export default {
   name: "PersonDetails",
   components: {
@@ -156,6 +160,14 @@ export default {
     editable_person: null,
     disabled: false
   }),
+  computed: {
+    youTimeNow() {
+      if (this.editable_person.timezone) {
+        return DateTime.now().setZone(this.editable_person.timezone).toLocaleString(DateTime.TIME_SIMPLE)
+      }
+      return 'Not Set'
+    }
+  },
   methods: {
     onInput(arg) {
       this.save(this.editable_person).then(
