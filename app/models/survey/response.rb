@@ -42,6 +42,7 @@ class Survey::Response < ApplicationRecord
                 nil
               end
 
+        submission.person.reload
         if question.question_type == :yesnomaybe
           # Yes not maybe and attendance should only have one answer
           exception_val = response['text']
