@@ -16,6 +16,7 @@
           :start_time="start_time"
           :end_time="end_time"
           :timezone="timezone"
+          class="mb-5"
         ></availability-and-interests>
       </b-tab>
       <b-tab title="Session Selection" lazy>
