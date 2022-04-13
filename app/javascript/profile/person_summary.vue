@@ -3,6 +3,12 @@
     <div class="d-flex flex-column">
       <h3>{{person.published_name}}</h3>
       <div>
+        {{person.pronouns}}
+      </div>
+      <div>
+        Willing to moderate sessions: {{willing_to_moderate}}
+      </div>
+      <div>
         {{person.primary_email.email}}
       </div>
       <div>
@@ -25,6 +31,11 @@ export default {
     person: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    willing_to_moderate() {
+      return this.person.willing_to_moderate ? 'Yes' : 'No'
     }
   },
   methods: {

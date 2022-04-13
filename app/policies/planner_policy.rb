@@ -1,27 +1,36 @@
 class PlannerPolicy < ApplicationPolicy
+  # TODO: test staff role, better still move to the Sec Service
+  def is_admin_or_staff
+    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? || grp.staff?}
+  end
+
   def update?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
   def create?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
   def index?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
   def show?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
   def destroy?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    is_admin_or_staff
   end
 
-  class Scope < Scope
+  class Scope < PlannerPolicy::Scope
+    def is_admin_or_staff
+      @person.convention_roles.inject(false) { |res, grp| res || grp.admin? || grp.staff?}
+    end
+
     def resolve
-      if @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+      if is_admin_or_staff
         scope.all
       else
         if scope == Person

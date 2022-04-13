@@ -6,7 +6,7 @@
     v-slot="{ valid, errors }"
   >
     <b-form-group :label="parameter.parameter_name">
-      <!-- TODO: We need more meaningful names, ^^^ change the label -->
+      <!-- TODO: We need more meaningful names, ^^^ change the label  -->
       <!-- TODO: we need to change the editor type depending on the parameter.type -->
       <div v-if="parameter.parameter_type == 'Timezone'">
         <timezone-selector
@@ -73,17 +73,7 @@ export default {
       return '';
     },
     timezone() {
-      if (this.currentSettings && this.currentSettings.configs) {
-        let tz = this.currentSettings.configs.find(el => el.parameter == 'convention_timezone')
-
-        if (tz) {
-          return tz.parameter_value
-        } else {
-          return null
-        }
-      } else {
-        return null
-      }
+      return this.configByName('convention_timezone')
     }
   },
   mixins: [
@@ -108,9 +98,9 @@ export default {
         if (this.parameter.parameter_type == 'DateTime') {
           if (arg.length == 0) return
           if (this.parameter.parameter_name == "convention_end_time") {
-            new_val = DateTime.fromISO(arg, {zone: this.timezone}).endOf('day').toString()
+            new_val = DateTime.fromISO(arg, {zone: this.timezone}).endOf('day').minus({ hours: 8 }).toString()
           } else {
-            new_val = DateTime.fromISO(arg, {zone: this.timezone}).startOf('day').toString()
+            new_val = DateTime.fromISO(arg, {zone: this.timezone}).startOf('day').plus({ hours: 6 }).toString()
           }
         }
 

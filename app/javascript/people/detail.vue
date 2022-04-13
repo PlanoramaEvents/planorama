@@ -108,19 +108,11 @@
         ></plano-editor>
 
         <h2>Email Addresses</h2>
-        <!-- {{selected}} -->
         <email-addresses-editor
           v-model="selected"
           model='email_address'
           :disabled="!editable"
         ></email-addresses-editor>
-
-        <!-- <ul>
-          <li v-for="email of selected.email_addresses" :key="email.id">
-            <strong v-if="email.isdefault">{{email.email}}</strong>
-            <span v-if="!email.isdefault">{{email.email}}</span>
-          </li>
-        </ul> -->
       </div>
     </div>
   </div>
