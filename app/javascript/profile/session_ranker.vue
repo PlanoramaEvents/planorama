@@ -1,6 +1,6 @@
 <template>
-  <div class="mb-3">
-    <div class='row mb-4 sticky-top bg-white border-bottom border-light'>
+  <div class="mb-4 mr-3">
+    <div class='row mb-4 pr-1 sticky-top bg-white border-bottom border-dark'>
       <div class="col-8">
         <p>
           Once you have selected sessions you are interested in,
