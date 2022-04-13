@@ -137,6 +137,12 @@
         <b-button variant="info" @click="deleteSelectedQuestion"><b-icon-trash></b-icon-trash></b-button>
       </div>
     </div>
+    <b-modal id='unlink-question-modal' size="lg"
+             hide-header-close no-close-on-backdrop no-close-on-esc
+             title="Really??" @cancel="unlinkQuestion" @ok="restoreOldValues"
+             cancel-title="Yes, unlink" ok-title="Leave question type as it was">
+      <div>{{QUESTION_MODAL_MESSAGE}}</div>
+    </b-modal>
   </div>
 </template>
 
@@ -150,7 +156,7 @@ import {
   pageMixin,
   questionMixin
 } from '@mixins';
-import { LINKED_FIELD_LABELS, SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
+import { LINKED_FIELD_LABELS, SURVEY_YESNOMAYBE_PLACEHOLDER, QUESTION_MODAL_MESSAGE } from '@/constants/strings';
 
 
 export default {
@@ -162,7 +168,8 @@ export default {
     LinkedField,
   },
   data: () => ({
-    SURVEY_YESNOMAYBE_PLACEHOLDER
+    SURVEY_YESNOMAYBE_PLACEHOLDER,
+    QUESTION_MODAL_MESSAGE
   }),
   props: {
     question: {
