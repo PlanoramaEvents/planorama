@@ -8,6 +8,7 @@
             v-model="person"
             :timezone="calTimeZone"
             model="session_limit"
+            v-if="calTimeZone"
           >
           </session-limit-editor>
         </b-col>
@@ -27,6 +28,7 @@
           :days="days"
           model="availability"
           :timezone="calTimeZone"
+          v-if="calTimeZone"
         ></availability-calendar>
         <!-- NOTE: The timezone selection for availability affects calendat AND limit display -->
         <div class="mt-1 w-50">
@@ -46,6 +48,7 @@
           v-model="person"
           :days="days"
           :timezone="calTimeZone"
+          v-if="calTimeZone"
         >
         </session-limits>
       </div>
