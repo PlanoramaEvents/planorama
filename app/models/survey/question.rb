@@ -37,6 +37,7 @@ class Survey::Question < ApplicationRecord
     ]
 
   before_destroy :check_for_use, prepend: true #, :check_if_published
+  before_update :check_linked_update
 
   def soft_delete
     if responses.any?
@@ -74,6 +75,13 @@ class Survey::Question < ApplicationRecord
     # now create the new ones
     newAnswers.each do |answer|
       answers << SurveyAnswer.new(answer)
+    end
+  end
+
+  # Check link changes
+  def check_linked_update
+    if responses.any? && linked_field_changed?
+      raise 'can not change linked field for a question that has responses in the system'
     end
   end
 
