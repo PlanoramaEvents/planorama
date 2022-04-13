@@ -12,16 +12,20 @@ export const settingsMixin = {
       fetchSettings: GET_SETTINGS
     }),
     configByName(name) {
-      let configs = this.currentSettings.configs
-      let config = configs.filter( c => c.parameter == name)
+      if (this.currentSettings.configs) {
+        let configs = this.currentSettings.configs
+        let config = configs.find( c => c.parameter == name)
 
-      if (config) {
-        return config[0].parameter_value
+        if (config) {
+          return config.parameter_value
+        } else {
+          return null
+        }
       } else {
         return null
       }
     }
-  },
+  }
 }
 
 export default settingsMixin;

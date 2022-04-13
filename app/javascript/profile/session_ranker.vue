@@ -1,10 +1,23 @@
 <template>
-  <div class="mb-3">
-    <div class='row mb-4 sticky-top bg-white border-bottom border-light'>
+  <div class="mb-4 mr-3">
+    <div class='row mb-4 pr-1 sticky-top bg-white border-bottom border-dark'>
       <div class="col-8">
         <p>
-          Text here explaining that you must rank sessions form 1 to 3, that you can only have 5 1s and 5 2s but unlimited 3s or unranked.
-          also 1 means 'i really want to be on this panel' 2 means 'i have meaningful contributions to this panel' and 3 means 'i am willing to be on this panel'
+          Once you have selected sessions you are interested in,
+          use this page to tell us your level of interest and what you would contribute to the topic.
+        </p>
+        <p>
+          Rank each session from one to three using the following scale:
+          <ol>
+            <li>I really want to be on this panel <b>(limit of 5)</b></li>
+            <li>I have meaningful contributions to this panel (<b>limit of 5)</b></li>
+            <li>I am willing to be on this panel <b>(unlimited)</b></li>
+          </ol>
+        </p>
+        <p>
+          Use the text box to tell us why you are a good choice for this panel and what you would contribute.
+          We will have hundreds of program participants, do not assume that we will just
+          "know" what your strengths are - tell us about them!
         </p>
       </div>
       <div class="col">

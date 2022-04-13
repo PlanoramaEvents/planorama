@@ -16,6 +16,7 @@
           :start_time="start_time"
           :end_time="end_time"
           :timezone="timezone"
+          class="mb-5"
         ></availability-and-interests>
       </b-tab>
       <b-tab title="Session Selection" lazy>
@@ -39,6 +40,8 @@
     </b-tabs>
   </div>
 </template>
+
+<!-- TODO: add in texts from doc  -->
 
 <script>
 import SessionSelector from './session_selector.vue';
@@ -80,16 +83,16 @@ export default {
   computed: {
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
-        let st = this.currentSettings.configs.find(el => el.parameter == 'convention_start_time')
-        return DateTime.fromISO(st.parameter_value)
+        let st = this.configByName('convention_start_time')
+        return DateTime.fromISO(st)
       } else {
         return null
       }
     },
     end_time() {
       if (this.currentSettings && this.currentSettings.configs) {
-        let et = this.currentSettings.configs.find(el => el.parameter == 'convention_end_time')
-        return DateTime.fromISO(et.parameter_value)
+        let et = this.configByName('convention_end_time')
+        return DateTime.fromISO(et)
       } else {
         return null
       }
@@ -98,17 +101,8 @@ export default {
       return `{"op":"all","queries":[["person_id", "=", "${this.currentUser.id}"],["interested", "=", true]]}`
     },
     timezone() {
-      if (this.currentSettings && this.currentSettings.configs) {
-        let tz = this.currentSettings.configs.find(el => el.parameter == 'convention_timezone')
-
-        if (tz) {
-          return tz.parameter_value
-        } else {
-          return null
-        }
-      } else {
-        return null
-      }
+      let tz = this.configByName('convention_timezone')
+      return tz
     }
   },
   mounted() {

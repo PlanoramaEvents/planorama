@@ -32,11 +32,11 @@ namespace :submission do
   def create_submission(header, row, survey)
     Survey::Submission.transaction do
       timestamp = Time.parse row[0]
-      email = row[1]
+      email = row[1].strip
       person = nil
 
       # get the person from their email
-      addr = EmailAddress.find_by email: email
+      addr = EmailAddress.where("email ILIKE ?",email).first
 
       if addr == nil
         raise "Can not find person #{email}"
@@ -52,11 +52,11 @@ namespace :submission do
       end
 
       # Check if submission exists, if so do not import again
-      submission = Survey::Submission.where(
+      submissions = Survey::Submission.where(
                      person_id: person.id,
                      survey_id: survey.id,
                    )
-      return if submission.count > 0
+      return if submissions.count > 0
 
       # Ok to change the person's name as long as the email is the same
       submission = Survey::Submission.create!(

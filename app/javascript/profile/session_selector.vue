@@ -1,7 +1,9 @@
 <template>
   <div class="mb-3">
     <p>
-      Put in instructions here ...
+      Filter by area or do a word search (or both!) to refine the sessions displayed.
+      Select sessions you are interested in being on by using the slider to the right of the description.
+      Your selections will appear on the Sessions Ranking tab.
     </p>
 
     <div class="my-3">

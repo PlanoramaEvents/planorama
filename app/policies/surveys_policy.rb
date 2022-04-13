@@ -12,9 +12,9 @@ class SurveysPolicy < PlannerPolicy
     @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   end
 
-  class Scope < Scope
+  class Scope < PlannerPolicy::Scope
     def resolve
-      if @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+      if is_admin_or_staff
         # Rails.logger.debug "**** ALL #{@person.id}"
         scope.all
       else

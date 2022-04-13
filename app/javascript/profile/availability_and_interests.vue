@@ -2,34 +2,53 @@
   <div>
     <div class="d-flex flex-row pb-3">
       <div>
-        Convention maximum number of program items willing to participate in:<br />
+        What is the maximum number of program items you are willing to participate in across the entire duration of the convention?<br />
         <b-col sm="4">
           <session-limit-editor
             v-model="person"
-            :timezone="timezone"
+            :timezone="calTimeZone"
             model="session_limit"
+            v-if="calTimeZone"
           >
           </session-limit-editor>
         </b-col>
       </div>
     </div>
     <div class="d-flex flex-row">
-      <availability-calendar
-        v-model="person"
-        :days="days"
-        model="availability"
-        :timezone="timezone"
-      ></availability-calendar>
+      <div class="flex-col">
+        <p>
+          Highlight the times of day that you are available for programming in the calendar view below.
+          You can create multiple blocks of time per day.
+          The in-person convention time is currently displayed, and is Central Daylight Time (UTC-5).
+          If you will be attending virtually,
+          and want to enter your availability in that time zone, select that option from below the calendar.
+        </p>
+        <availability-calendar
+          v-model="person"
+          :days="days"
+          model="availability"
+          :timezone="calTimeZone"
+          v-if="calTimeZone"
+        ></availability-calendar>
+        <!-- NOTE: The timezone selection for availability affects calendat AND limit display -->
+        <div class="mt-1 w-50">
+          Select TimeZone to work in:
+          <b-form-select v-model="calTimeZone" :options="timeZoneOptions"></b-form-select>
+        </div>
+      </div>
+
       <div class="pl-2" style="max-width: 25%;">
         <b-row class="my-1">
           <b-col sm="12">
-            Daily panel maximum willing to participate in (regardless of convention maximum)
+            What is the maximum number of program items you are willing to participate in on each day?
+            (These can add up to more than your convention maximum.)
           </b-col>
         </b-row>
         <session-limits
           v-model="person"
           :days="days"
-          :timezone="timezone"
+          :timezone="calTimeZone"
+          v-if="calTimeZone"
         >
         </session-limits>
       </div>
@@ -53,6 +72,7 @@ import ExclusionsPicker from './exclusions_picker.vue'
 import SessionLimits from './session_limits.vue'
 import SessionLimitEditor from './session_limit_editor.vue'
 import AvailabilityNotesField from './availability_notes_field';
+import TimezoneSelector from "../components/timezone_selector.vue"
 
 const { DateTime } = require("luxon");
 
@@ -63,7 +83,8 @@ export default {
     AvailabilityCalendar,
     ExclusionsPicker,
     SessionLimits,
-    AvailabilityNotesField
+    AvailabilityNotesField,
+    TimezoneSelector
   },
   model: {
     prop: 'person'
@@ -88,6 +109,7 @@ export default {
     }
   },
   data: () => ({
+    calTimeZone: null,
     // NOTE: if there are more than 5 days in the con we need to change display
     options: [
           { value: null, text: 'Please select an option' },
@@ -97,10 +119,31 @@ export default {
         ],
   }),
   computed: {
+    timeZoneOptions() {
+      let your_zone = this.person.timezone
+      let enable_your_zone = your_zone && your_zone.length > 0
+
+      let your_zone_text = `Your Timezone during con -- ${your_zone}`
+
+      if (!enable_your_zone) {
+        your_zone_text = "Your Timezone during con -- no value set"
+      }
+
+      return [
+        {
+          text: `Timezone of Convention -- ${this.timezone}`,
+          value: this.timezone
+        },
+        {
+          text: your_zone_text,
+          value: this.person.timezone,
+          disabled: !enable_your_zone
+        }
+      ]
+    },
     days() {
-      // TODO: we need to check this
-      let start_day = this.start_time.setZone(this.timezone).startOf('day')
-      let end_day = this.end_time.setZone(this.timezone).endOf('day')
+      let start_day = this.start_time.setZone(this.calTimeZone).startOf('day')
+      let end_day = this.end_time.setZone(this.calTimeZone).endOf('day')
       let nbr_days = Math.round(end_day.diff(start_day, 'days').as('days'))
       let res = []
       for (let i = 0; i < nbr_days; i++ ) {
@@ -110,6 +153,9 @@ export default {
       }
       return res
     }
+  },
+  mounted() {
+    this.calTimeZone = this.timezone
   }
 }
 </script>

@@ -53,7 +53,6 @@ export default {
   ],
   model: {
     prop: 'person',
-    // event: 'blur'
   },
   props: {
     person: null,
@@ -120,7 +119,7 @@ export default {
       })
     },
     onNew() {
-      this.additional.push({email: '', isdefault: false, person_id: this.currentUser.id})
+      this.additional.push({email: '', isdefault: false, person_id: this.person.id})
     }
   },
   mounted() {

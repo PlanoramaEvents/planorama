@@ -11,7 +11,7 @@ class SessionPolicy < PlannerPolicy
     @person.convention_roles.inject(false) { |res, grp| res || (grp.admin? || grp.staff? || grp.participant?) }
   end
 
-  class Scope < Scope
+  class Scope < PlannerPolicy::Scope
     def resolve
       scope.all
     end
