@@ -21,6 +21,7 @@ class Survey::Response < ApplicationRecord
 
       # TODO: if yesnomaybe we need to set the exception attr as well ...
       if details[0] == 'Person'
+        exception_val = nil
         val = case question.question_type
               when :textfield
                 response['text']
@@ -33,7 +34,6 @@ class Survey::Response < ApplicationRecord
                 response['socialmedia']
               when :boolean
                 response['boolean'].to_s.downcase == "true"
-              # Yes not maybe and attendance should only have one answer
               when :yesnomaybe
                 response['answers'].first
               when :attendance_type
@@ -41,6 +41,15 @@ class Survey::Response < ApplicationRecord
               else
                 nil
               end
+
+        if question.question_type == :yesnomaybe
+          # Yes not maybe and attendance should only have one answer
+          exception_val = response['text']
+
+          if exception_val
+            submission.person.send("#{details[1]}_exceptions=", exception_val)
+          end
+        end
 
         # Rails.logger.debug "***** GOING TO SET person linked field #{details[1]} with #{val}"
         if val
