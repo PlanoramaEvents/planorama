@@ -36,7 +36,7 @@ namespace :submission do
       person = nil
 
       # get the person from their email
-      addr = EmailAddress.where("email ILIKE ?",email).first
+      addr = EmailAddress.where("email ILIKE ? and isdefault = true",email).first
 
       if addr == nil
         raise "Can not find person #{email}"
