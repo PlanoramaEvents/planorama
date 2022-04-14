@@ -3,7 +3,6 @@
     <div class="d-flex flex-row pb-3">
       <div>
         What is the maximum number of program items you are willing to participate in across the entire duration of the convention?<br />
-        <b-col sm="4">
           <session-limit-editor
             v-model="person"
             :timezone="calTimeZone"
@@ -11,18 +10,17 @@
             v-if="calTimeZone"
           >
           </session-limit-editor>
-        </b-col>
-      </div>
-    </div>
-    <div class="d-flex flex-row">
-      <div class="flex-col">
         <p>
-          Highlight the times of day that you are available for programming in the calendar view below.
+          Highlight (click and drag) the times of day that you are available for programming in the calendar view below.
           You can create multiple blocks of time per day.
           The in-person convention time is currently displayed, and is Central Daylight Time (UTC-5).
           If you will be attending virtually,
           and want to enter your availability in that time zone, select that option from below the calendar.
         </p>
+      </div>
+    </div>
+    <div class="d-flex flex-row">
+      <div class="flex-col">
         <availability-calendar
           v-model="person"
           :days="days"
@@ -30,18 +28,18 @@
           :timezone="calTimeZone"
           v-if="calTimeZone"
         ></availability-calendar>
-        <!-- NOTE: The timezone selection for availability affects calendat AND limit display -->
+        <!-- NOTE: The timezone selection for availability affects calendar AND limit display -->
         <div class="mt-1 w-50">
-          Select TimeZone to work in:
+          Select time zone to work in:
           <b-form-select v-model="calTimeZone" :options="timeZoneOptions"></b-form-select>
         </div>
       </div>
 
-      <div class="pl-2" style="max-width: 25%;">
+      <div class="pl-2" style="flex: 1">
         <b-row class="my-1">
           <b-col sm="12">
-            What is the maximum number of program items you are willing to participate in on each day?
-            (These can add up to more than your convention maximum.)
+            What is the maximum number of program items you are willing to participate in on each day?<br />
+            <small class="text-muted">(These can add up to more than your convention maximum.)</small>
           </b-col>
         </b-row>
         <session-limits
@@ -73,11 +71,15 @@ import SessionLimits from './session_limits.vue'
 import SessionLimitEditor from './session_limit_editor.vue'
 import AvailabilityNotesField from './availability_notes_field';
 import TimezoneSelector from "../components/timezone_selector.vue"
+import searchStateMixin from "@/store/search_state.mixin"
 
 const { DateTime } = require("luxon");
 
 export default {
   name: "AvailabilityAndInterests",
+  mixins: [
+    searchStateMixin
+  ],
   components: {
     SessionLimitEditor,
     AvailabilityCalendar,
@@ -109,7 +111,6 @@ export default {
     }
   },
   data: () => ({
-    calTimeZone: null,
     // NOTE: if there are more than 5 days in the con we need to change display
     options: [
           { value: null, text: 'Please select an option' },
@@ -155,7 +156,7 @@ export default {
     }
   },
   mounted() {
-    this.calTimeZone = this.timezone
+    this.calTimeZone ||= this.timezone
   }
 }
 </script>

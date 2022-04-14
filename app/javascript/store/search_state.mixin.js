@@ -1,11 +1,17 @@
-import {mapGetters, mapActions, mapState } from 'vuex';
-import { GET_SEARCH_STATE, SET_SEARCH_STATE }  from "@/store/search_state.store";
+import {mapGetters, mapActions, mapState, mapMutations } from 'vuex';
+import { GET_SEARCH_STATE, SET_SEARCH_STATE, SET_TIME_ZONE }  from "@/store/search_state.store";
 
 export const searchStateMixin = {
   computed: {
-    ...mapState({
-      currentSearchSettings: 'currentSearchSettings'
-    })
+    ...mapState(['currentSearchSettings', 'availabilityTimeZone']),
+    calTimeZone: {
+      get() {
+        return this.availabilityTimeZone;
+      },
+      set(value) {
+        this.setAvailabilityTimeZone(value);
+      }
+    }
   },
   methods: {
     ...mapGetters({
@@ -13,6 +19,9 @@ export const searchStateMixin = {
     }),
     ...mapActions({
       setSearchState: SET_SEARCH_STATE
+    }),
+    ...mapMutations({
+      setAvailabilityTimeZone: SET_TIME_ZONE
     })
   }
 }

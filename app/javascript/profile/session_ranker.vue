@@ -2,6 +2,7 @@
   <div class="mb-4 mr-3">
     <div class='row mb-4 pr-1 sticky-top bg-white border-bottom border-dark'>
       <div class="col-8">
+        <small>
         <p>
           Once you have selected sessions you are interested in,
           use this page to tell us your level of interest and what you would contribute to the topic.
@@ -9,9 +10,9 @@
         <p>
           Rank each session from one to three using the following scale:
           <ol>
-            <li>I really want to be on this panel <b>(limit of 5)</b></li>
-            <li>I have meaningful contributions to this panel (<b>limit of 5)</b></li>
-            <li>I am willing to be on this panel <b>(unlimited)</b></li>
+            <li>I really want to be on this panel (<b>limit of 5</b>)</li>
+            <li>I have meaningful contributions to this panel (<b>limit of 5</b>)</li>
+            <li>I am willing to be on this panel (<b>unlimited</b>)</li>
           </ol>
         </p>
         <p>
@@ -19,6 +20,7 @@
           We will have hundreds of program participants, do not assume that we will just
           "know" what your strengths are - tell us about them!
         </p>
+        </small>
       </div>
       <div class="col">
         <h6>
@@ -29,7 +31,7 @@
         Rank 3 and Unranked: <b>{{other_total}}</b><br />
       </div>
     </div>
-     <div class='row mb-4' v-for="item in sortedCollection">
+     <div class='row mb-4' v-for="item in sortedCollection" :key="item.session.id">
        <div class="col-8">
          <h4>{{item.session.title}}</h4>
          <p v-html="item.session.description"></p>
@@ -37,17 +39,17 @@
            Format: <span class="badge badge-pill badge-info mr-1">{{item.session.format.name}}</span><br />
          </div>
          <div v-if="item.session.area_list && item.session.area_list.length">
-           <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list">{{area}}</span>
+           <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list" :key="area">{{area}}</span>
          </div>
          <div v-if="item.session.tag_list && item.session.tag_list.length">
-           <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list">{{tag}}</span>
+           <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list" :key="tag">{{tag}}</span>
          </div>
          <br />
          <p v-html="item.session.instructions_for_interest">
          </p>
          <b-textarea
            v-model="item.interest_notes"
-           debounce="500"
+           @blur="changeAssignment(item)"
          ></b-textarea>
        </div>
        <div class="col pt-4">
