@@ -46,8 +46,8 @@
            <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list" :key="tag">{{tag}}</span>
          </div>
          <br />
-         <p v-html="item.session.instructions_for_interest">
-         </p>
+         <div class="mt-3" v-if="item.session.instructions_for_interest">Instructions for potential panelists:</div>
+         <div class="panelist-instructions" v-html="item.session.instructions_for_interest"></div>
          <b-textarea
            v-model="item.interest_notes"
            @blur="changeAssignment(item)"
@@ -187,4 +187,7 @@ export default {
 </script>
 
 <style>
+.panelist-instructions {
+  font-style: italic;
+}
 </style>
