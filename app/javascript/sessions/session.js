@@ -1,12 +1,14 @@
 export const session_columns = [
   {
     key: 'title',
+    sortKey: 'sessions.title',
     label: 'Title',
     type: "text",
     sortable: true
   },
   {
     key: 'description',
+    sortKey: 'sessions.description',
     label: 'Description',
     type: "text",
     sortable: true
@@ -19,6 +21,7 @@ export const session_columns = [
   },
   {
     key: 'start_time',
+    sortKey: 'sessions.start_time',
     label: 'Start Time',
     sortable: true
   },

@@ -48,7 +48,7 @@
         >
           <model-tags
             :taggable="true"
-            v-model="selected.tag_list"
+            v-model="session_tags"
             model="tag"
             field="name"
             fieldOnly=true
@@ -97,6 +97,14 @@ export default {
     editable: false,
   }),
   computed: {
+    session_tags: {
+      get() {
+        return this.selected.tag_list
+      },
+      set(val) {
+        this.selected.tag_list = val
+      }
+    },
     session_areas: {
       get() {
         let res = Object.values(this.selected.session_areas).filter(

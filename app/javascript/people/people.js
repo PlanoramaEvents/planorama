@@ -29,9 +29,21 @@ export const people_columns = [
   },
   {
     key: 'con_state',
+    search_key: 'con_state',
     label: 'Status',
-    // type: "radio",
-    // choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+    type: "select",
+    // TODO: needs to be driven by settings enums
+    choices: [
+      {label: "not_set", value: "not_set"},
+      {label: "applied", value: "applied"},
+      {label: "vetted", value: "vetted"},
+      {label: "invite_pending", value: "invite_pending"},
+      {label: "invited", value: "invited"},
+      {label: "probable", value: "probable"},
+      {label: "accepted", value: "accepted"},
+      {label: "declined", value: "declined"},
+      {label: "rejected", value: "rejected"}
+    ],
     sortable: false
   },
   {

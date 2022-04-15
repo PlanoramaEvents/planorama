@@ -2,7 +2,6 @@
   <b-overlay :show="loading" rounded="sm">
     <v-select
       v-model="selectedValue"
-      @change="onChange"
       v-bind:options="options"
       :disabled='disabled'
       :taggable="taggable"
@@ -82,9 +81,6 @@ export default {
     }
   },
   methods: {
-    onChange(arg) {
-      this.$emit('change', arg)
-    },
     initialize() {
       this.loading = true
       let fields = `fields[${this.model}]`

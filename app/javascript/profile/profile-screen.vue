@@ -22,7 +22,7 @@
       <b-tab title="Session Selection" lazy>
         <session-selector
           v-model="person"
-          defaultSortBy='title'
+          defaultSortBy='sessions.title'
           :model="sessionModel"
           defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
         ></session-selector>

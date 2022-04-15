@@ -2,7 +2,7 @@
   <div>
     <table-vue
       @new="onNew"
-      defaultSortBy='title'
+      defaultSortBy='sessions.title'
       :model="model"
       :columns="columns"
     >
