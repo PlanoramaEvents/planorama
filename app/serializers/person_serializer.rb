@@ -134,7 +134,16 @@ class PersonSerializer #< ActiveModel::Serializer
             }
           }
 
-  has_many :session_limits, serializer:SessionLimitSerializer
+  has_many :session_limits, serializer:SessionLimitSerializer,
+            links: {
+              self: -> (object, params) {
+                "#{params[:domain]}/person/#{object.id}"
+              },
+              related: -> (object, params) {
+                "#{params[:domain]}/person/#{object.id}/session_limit"
+              }
+            }
+
   #         links: {
   #           self: -> (object, params) {
   #             "#{params[:domain]}/person/#{object.id}"
