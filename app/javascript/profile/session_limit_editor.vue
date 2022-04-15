@@ -82,8 +82,8 @@ export default {
       return errors[0] ? false : null //(valid ? true : null)
     },
     onChange($event) {
-      console.log('event', $event)
-      console.log('my limit', this.my_limit)
+      // console.log('event', $event)
+      // console.log('my limit', this.my_limit)
       if (!this.my_limit.max_sessions && this.my_limit.id) {
         this.my_limit.max_sessions = null;
         this.save(this.my_limit).then((data) => {
@@ -91,36 +91,43 @@ export default {
           return;
         })
       } else {
-      const num = Number(this.my_limit.max_sessions);
-      if (Number.isInteger(num) && num >= 0) {
-        if (this.my_limit.id) {
-          this.my_limit.max_sessions = num
-          this.save(this.my_limit).then(
-            (data) => {
-              this.my_limit = data
+        const num = Number(this.my_limit.max_sessions);
+        if (Number.isInteger(num) && num >= 0) {
+          if (this.my_limit.id) {
+            this.my_limit.max_sessions = num
+            this.save(this.my_limit).then(
+              (data) => {
+                this.my_limit = data
+              }
+            )
+          } else {
+            let candidate = {
+              person_id: this.person.id,
+              day: this.day,
+              max_sessions: num
             }
-          )
-        } else {
-          let candidate = {
-            person_id: this.person.id,
-            day: this.day,
-            max_sessions: num
+            this.create_session_limit(candidate).then(
+              (data) => {
+                // console.log('data coming back from create', data)
+                this.my_limit = data
+              }
+            )
           }
-          this.create_session_limit(candidate).then(
-            (data) => {
-              console.log('data coming back from create', data)
-              this.my_limit = data
-            }
-          )
         }
-      }
       }
     }
   },
   mounted() {
-    let existingLimit = Object.values(this.$store.getters['jv/get']({_jv: {
-        type: 'session_limit',
-      }}, `$[?(@.person_id=='${this.person.id}' && @.day=='${this.day}')]`))[0];
+    let existingLimit = null;
+    if (!this.day) {
+      existingLimit = Object.values(this.$store.getters['jv/get']({_jv: {
+          type: 'session_limit',
+        }}, `$[?(@.person_id=='${this.person.id}' && !@.day)]`))[0];
+    } else {
+      existingLimit = Object.values(this.$store.getters['jv/get']({_jv: {
+          type: 'session_limit',
+        }}, `$[?(@.person_id=='${this.person.id}' && @.day=='${this.day}')]`))[0];
+    }
     if (existingLimit) {
       this.my_limit = existingLimit;
     } else {

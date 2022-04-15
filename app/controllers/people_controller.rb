@@ -288,7 +288,8 @@ class PeopleController < ResourceController
   def serializer_includes
     [
       :email_addresses,
-      :convention_roles
+      :convention_roles,
+      :session_limits
     ]
   end
 
