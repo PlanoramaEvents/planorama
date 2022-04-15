@@ -64,6 +64,7 @@
         v-model="editable_person.website"
         @input="onInput"
         :disabled="disabled"
+        message="Hoping for a URL there"
       ></validated-social>
       <validated-social
         :rules="{ regex: /^[a-zA-Z0-9._]+$/ }"
