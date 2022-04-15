@@ -166,37 +166,41 @@ class SessionsController < ResourceController
   def join_tables
     sessions = Arel::Table.new(Session.table_name)
     session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
-    tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
-    taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
-    [
+    joins = [
       sessions.create_join(
         session_areas,
         sessions.create_on(
           sessions[:id].eq(session_areas[:session_id])
         ),
         Arel::Nodes::OuterJoin
-      ),
-      sessions.create_join(
-        taggings,
-        sessions.create_on(
-          sessions[:id].eq(taggings[:taggable_id]).and(
-            taggings[:taggable_type].eq('Person')
-          )
-        ),
-        Arel::Nodes::OuterJoin
-      ),
-      taggings.create_join(
-        tags,
-        taggings.create_on(
-          taggings[:tag_id].eq(tags[:id])
-        ),
-        Arel::Nodes::OuterJoin
       )
     ]
-    # [
-    #   :base_tags,
-    #   :session_areas
-    # ]
+
+    if @filters
+      tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
+      taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
+
+      joins += [
+        sessions.create_join(
+          taggings,
+          sessions.create_on(
+            sessions[:id].eq(taggings[:taggable_id]).and(
+              taggings[:taggable_type].eq('Session')
+            )
+          ),
+          Arel::Nodes::OuterJoin
+        ),
+        taggings.create_join(
+          tags,
+          taggings.create_on(
+            taggings[:tag_id].eq(tags[:id])
+          ),
+          Arel::Nodes::OuterJoin
+        )
+      ]
+    end
+
+    joins
   end
 
   def allowed_params
