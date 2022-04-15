@@ -1,6 +1,8 @@
 class EmailAddressesController < ResourceController
   MODEL_CLASS = 'EmailAddress'.freeze
   SERIALIZER_CLASS = 'EmailAddressSerializer'.freeze
+  POLICY_CLASS = 'EmailAddressesPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'EmailAddressesPolicy::Scope'.freeze
 
   def belongs_to_param_id
     params[:person_id]
