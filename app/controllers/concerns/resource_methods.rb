@@ -214,6 +214,8 @@ module ResourceMethods
       .where(query(@filters))
       # .joins(query_join_tables(@filters))
 
+    q = q.distinct if join_tables && !join_tables.empty?
+
     q = q.order(order_string)
 
     if paginate

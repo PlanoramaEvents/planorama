@@ -9,23 +9,27 @@ export const survey_columns = [
   },
   {
     key: 'description',
+    sortKey: 'surveys.description',
     label: 'Description',
     type: "text",
     sortable: true,
   },
   {
     key: 'public',
+    sortKey: 'surveys.public',
     label: 'Status',
     formatter: (p) => p ? 'Published' : 'Closed',
     sortable: true,
   },
   {
     key: 'published_on',
+    sortKey: 'surveys.published_on',
     label: 'Published On',
     sortable: true,
   },
   {
     key: 'updated_at',
+    sortKey: 'surveys.updated_at',
     label: 'Last Modified On',
     sortable: true,
     formatter: (d) => new Date(d).toLocaleDateString()
@@ -33,7 +37,7 @@ export const survey_columns = [
   {
     key: 'updated_by.name',
     label: 'Last Modified By',
-    sortable: true
+    sortable: false
   },
   'preview',
   'surveyLink',

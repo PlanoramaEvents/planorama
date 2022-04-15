@@ -82,7 +82,7 @@ export default {
           // Filter for question types that are questions
           // :textfield, :textbox, :singlechoice, :multiplechoice, :hr,
           // :dropdown, :address, :email, :socialmedia, :textonly
-          qs => ["textbox", "textfield", "singlechoice", "multiplechoice", "dropdown", "email", "socialmedia"].includes(qs.question_type)
+          qs => ["textbox", "textfield", "singlechoice", "multiplechoice", "dropdown", "email", "socialmedia", "boolean", "yesnomaybe", "attendance_type"].includes(qs.question_type)
         ).map(
           q => (
             {

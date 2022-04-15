@@ -52,6 +52,7 @@ class Survey::SubmissionsController < ResourceController
     meta[:current_page] = @current_page if @current_page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
 
+    # This is only loading responses that matc, shoudl be all response in the submission
     options = {
       meta: meta,
       params: {
@@ -86,7 +87,7 @@ class Survey::SubmissionsController < ResourceController
     ]
   end
 
-  def references
+  def join_tables
     [
       :responses
     ]
