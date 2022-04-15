@@ -76,7 +76,8 @@ namespace :submission do
         end
       end
 
-      person.con_state = Person.con_states[:applied] unless person.con_state
+      # Set to applied if the state has not been moved at all from the deafult of not_set
+      person.con_state = Person.con_states[:applied] if person.con_state == Person.con_states[:not_set]
       person.save!
     end
   end

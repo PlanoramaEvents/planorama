@@ -18,7 +18,7 @@
       <b-tab title="Responses" :active="!!responses" lazy>
         <view-responses :survey-id="id"></view-responses>
       </b-tab>
-      <survey-settings-tab></survey-settings-tab lazy>
+      <survey-settings-tab lazy></survey-settings-tab>
       <b-tab title="Audit Log" disabled lazy>
       </b-tab>
     </b-tabs>

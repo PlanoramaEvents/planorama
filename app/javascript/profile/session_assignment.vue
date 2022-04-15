@@ -11,9 +11,6 @@ export default {
     modelMixin,
   ],
   watch: {
-    "assignment.interest_notes" : function(val, oldVal) {
-      this.changeAssignment()
-    },
     "assignment.interest_ranking" : function(val, oldVal) {
       this.changeAssignment()
     },

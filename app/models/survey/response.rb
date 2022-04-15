@@ -30,10 +30,9 @@ class Survey::Response < ApplicationRecord
               when :email
                 response['email']
               when :socialmedia
-                # TODO: need to process etc
                 response['socialmedia']
               when :boolean
-                response['boolean'].to_s.downcase == "true"
+                response['answers'].first.to_s.downcase == "true"
               when :yesnomaybe
                 response['answers'].first
               when :attendance_type
