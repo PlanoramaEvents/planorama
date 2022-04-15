@@ -35,7 +35,7 @@ namespace :chicon do
             title: 'Floyd Norman highlight session'
           },
           {
-            title: 'Earle Korshak highlight session'
+            title: 'Erle Korshak highlight session'
           },
           {
             title: 'Eve L. Ewing highlight session'

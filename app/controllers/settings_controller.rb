@@ -14,13 +14,16 @@ class SettingsController < ApplicationController
       end
     end
 
-    # TODO: what do we want here?
-    # value to store in db, and name to display (with UTC offset)
-    # convert_zones = lambda { |list| list.map { |z| [ z.to_s, z.name ] } }
     zones = {}
+    start_at = ::Configuration.find_by(parameter: "convention_start_time")
+    if start_at
+      con_time = start_at.parameter_value.to_datetime
+    end
+    con_time ||= Time.now
     ActiveSupport::TimeZone.all.each do |zone|
       # zones[zone.name] = zone.tzinfo.canonical_zone.name
-      zones[zone.tzinfo.canonical_zone.name] = zone.to_s.sub('GMT','UTC')
+      # use date of con to get the offset for canonical_zone
+      zones[zone.tzinfo.canonical_zone.name] = "(UTC#{zone.at(con_time).formatted_offset}) #{zone.name}"
     end
 
 
