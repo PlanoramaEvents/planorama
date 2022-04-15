@@ -3,6 +3,7 @@
     <div class="col-12">
       Hello {{currentUser.name}}!
     </div>
+    <!--
     <template v-if="currentUserIsAdmin">
       <div class="col-3">
         <button @click="makeError">Make a javascript error</button>
@@ -17,6 +18,7 @@
         <button @click="makeGenericError">Make a server error</button>
       </div>
     </template>
+    -->
   </div>
 </template>
 

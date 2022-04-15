@@ -28,7 +28,8 @@
         </h6>
         Rank 1: <b>{{rank1_total}}</b><br />
         Rank 2: <b>{{rank2_total}}</b><br />
-        Rank 3 and Unranked: <b>{{other_total}}</b><br />
+        Rank 3: <b>{{rank3_total}}</b><br />
+        Unranked: <b>{{other_total}}</b><br />
       </div>
     </div>
      <div class='row mb-4' v-for="item in sortedCollection" :key="item.session.id">
@@ -65,7 +66,7 @@
              :options="rankOptions">
            </b-form-select>
          </b-form-group>
-         <b-form-group label="Override default moderating preferences?">
+         <b-form-group label="Override default moderating preferences for this session only?">
            <b-form-select
              v-model="item.interest_role"
              :options="moderatorOptions">
@@ -98,7 +99,7 @@ export default {
   data() {
     return {
       moderatorOptions: [
-        { text: 'Do not override', value: 'no_preference' },
+        { text: 'Use default', value: 'no_preference' },
         { text: 'I would like to moderate this', value: 'can_moderate' },
         { text: 'I would NOT like to moderate this', value: 'not_moderate' }
       ],
@@ -133,8 +134,11 @@ export default {
       let count = this.sortedCollection.filter(obj => obj.interest_ranking === 2).length
       return count
     },
+    rank3_total() {
+      return this.sortedCollection.filter(obj => obj.interest_ranking === 3).length
+    },
     other_total() {
-      let count = this.sortedCollection.filter(obj => obj.interest_ranking === 3 || obj.interest_ranking == null).length
+      let count = this.sortedCollection.filter(obj => obj.interest_ranking == null).length
       return count
     }
   },
