@@ -49,6 +49,7 @@
         v-model="editable_person.twitter"
         @input="onInput"
         :disabled="disabled"
+        :message="TWITTER_ID_INVALID_MSG"
       ></validated-social>
       <validated-social
         :rules="{ regex: /^[a-z\d.]{5,}$/i }"
@@ -57,6 +58,7 @@
         v-model="editable_person.facebook"
         @input="onInput"
         :disabled="disabled"
+        :message="FACEBOOK_ID_INVALID_MSG"
       ></validated-social>
       <validated-social
         :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
@@ -65,7 +67,7 @@
         v-model="editable_person.website"
         @input="onInput"
         :disabled="disabled"
-        message="Hoping for a URL there"
+        :message="WEBSITE_INVALID_MSG"
       ></validated-social>
       <validated-social
         :rules="{ regex: /^[a-zA-Z0-9._]+$/ }"
@@ -74,6 +76,7 @@
         v-model="editable_person.instagram"
         @input="onInput"
         :disabled="disabled"
+        :message="INSTAGRAM_ID_INVALID_MSG"
       ></validated-social>
       <validated-social
         :rules="{ regex: /^(#)?[a-zA-Z0-9][\w]{2,24}$/ }"
@@ -82,6 +85,7 @@
         v-model="editable_person.twitch"
         @input="onInput"
         :disabled="disabled"
+        :message="TWITCH_ID_INVALID_MSG"
       ></validated-social>
       <validated-social
         :rules="{ regex: /^[a-zA-Z0-9\/_]+([\-\.]{1}[a-zA-Z0-9\/_]+)*$/ }"
@@ -90,6 +94,7 @@
         v-model="editable_person.youtube"
         @input="onInput"
         :disabled="disabled"
+        :message="YOUTUBE_ID_INVALID_MSG"
       ></validated-social>
       <validated-social
         :rules="{ regex:/^([a-zA-Z0-9._-])+$/ }"
@@ -98,6 +103,7 @@
         v-model="editable_person.tiktok"
         @input="onInput"
         :disabled="disabled"
+        :message="TIKTOK_ID_INVALID_MSG"
       ></validated-social>
       <validated-social
         :rules="{ regex:/^([a-zA-Z0-9.\/_-])+$/ }"
@@ -106,6 +112,7 @@
         v-model="editable_person.linkedin"
         @input="onInput"
         :disabled="disabled"
+        :message="LINKEDIN_ID_INVALID_MSG"
       ></validated-social>
       <simple-social
         label="Other"
@@ -135,6 +142,17 @@ import ValidatedSocial from '../components/validated_social.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
 import modelMixin from '../store/model.mixin';
 
+import {
+  TWITTER_ID_INVALID_MSG,
+  FACEBOOK_ID_INVALID_MSG,
+  WEBSITE_INVALID_MSG,
+  INSTAGRAM_ID_INVALID_MSG,
+  TWITCH_ID_INVALID_MSG,
+  YOUTUBE_ID_INVALID_MSG,
+  TIKTOK_ID_INVALID_MSG,
+  LINKEDIN_ID_INVALID_MSG
+} from '../constants/strings';
+
 const { DateTime } = require("luxon");
 
 export default {
@@ -160,7 +178,15 @@ export default {
   },
   data: () =>  ({
     editable_person: null,
-    disabled: false
+    disabled: false,
+    TWITTER_ID_INVALID_MSG,
+    FACEBOOK_ID_INVALID_MSG,
+    WEBSITE_INVALID_MSG,
+    INSTAGRAM_ID_INVALID_MSG,
+    TWITCH_ID_INVALID_MSG,
+    YOUTUBE_ID_INVALID_MSG,
+    TIKTOK_ID_INVALID_MSG,
+    LINKEDIN_ID_INVALID_MSG
   }),
   computed: {
     youTimeNow() {

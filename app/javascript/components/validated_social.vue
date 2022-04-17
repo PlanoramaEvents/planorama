@@ -16,8 +16,7 @@
         :disabled="disabled"
       >
       </simple-social>
-      <div class="invalid-message" v-if="errors[0] && message">{{ message }}</div>
-      <div class="invalid-message" v-if="errors[0] && !message">{{ errors[0] }}</div>
+      <div class="invalid-message" v-if="errors[0]">{{ message ? message : errors[0] }}</div>
     </validation-provider>
   </validation-observer>
 </template>
