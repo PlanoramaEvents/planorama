@@ -60,25 +60,24 @@ class SessionsController < ResourceController
       notes = row[8]
 
       # Rails.logger.debug("***** ROW #{row}")
-      Rails.logger.debug("***** ROW #{row[4]} - #{row[5]}")
-
-      format = Format.find_or_create_by(name: row[3])
-
+      # Rails.logger.debug("***** ROW #{row[4]} - #{row[5]}")
       if title && (title.length > 0)
         # Rails.logger.error "***** #{title}"
         # Rails.logger.error "***** #{notes} \n #{goh_notes}"
-        if Session.find_by title: title
+        if Session.find_by title: title.strip
           errored_rows << current_row_nbr
           duplicate_session += 1
           next
         end
 
+        format = Format.find_or_create_by(name: row[3].strip)
+
         Session.transaction do
           session = Session.create!(
-            title: title,
-            description: description,
+            title: title.strip,
+            description: description.strip,
             open_for_interest: interest_open && interest_open == 'Yes',
-            instructions_for_interest: interest_instructions,
+            instructions_for_interest: interest_instructions.strip,
             item_notes: [notes, goh_notes].join("\n").strip,
             format: format
           )
@@ -88,7 +87,7 @@ class SessionsController < ResourceController
 
           primary = true
           areas.each do |area_name|
-            area = Area.find_or_create_by(name: area_name)
+            area = Area.find_or_create_by(name: area_name.strip)
             SessionArea.create!(
               session: session,
               area: area,
@@ -161,9 +160,47 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      :base_tags,
-      :session_areas
     ]
+  end
+
+  def join_tables
+    sessions = Arel::Table.new(Session.table_name)
+    session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
+    joins = [
+      sessions.create_join(
+        session_areas,
+        sessions.create_on(
+          sessions[:id].eq(session_areas[:session_id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    if @filters
+      tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
+      taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
+
+      joins += [
+        sessions.create_join(
+          taggings,
+          sessions.create_on(
+            sessions[:id].eq(taggings[:taggable_id]).and(
+              taggings[:taggable_type].eq('Session')
+            )
+          ),
+          Arel::Nodes::OuterJoin
+        ),
+        taggings.create_join(
+          tags,
+          taggings.create_on(
+            taggings[:tag_id].eq(tags[:id])
+          ),
+          Arel::Nodes::OuterJoin
+        )
+      ]
+    end
+
+    joins
   end
 
   def allowed_params

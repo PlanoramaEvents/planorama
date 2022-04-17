@@ -34,7 +34,7 @@
     </modal-form>
     <table-vue
       @new="onNew"
-      defaultSortBy='name'
+      defaultSortBy='people.name'
       :model="model"
       :columns="columns"
       selectMode='multi'

@@ -65,9 +65,9 @@ class PeopleController < ResourceController
         next
       end
 
-      email = row[0]
-      name = row[1]
-      pseudonym = row[2]
+      email = row[0].strip
+      name = row[1].strip
+      pseudonym = row[2].strip
 
       if email && (email.length > 0)
         # validate that the email is a valid email
@@ -288,7 +288,8 @@ class PeopleController < ResourceController
   def serializer_includes
     [
       :email_addresses,
-      :convention_roles
+      :convention_roles,
+      :session_limits
     ]
   end
 

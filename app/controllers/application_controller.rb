@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_for_paper_trail
-    current_person ? current_person.published_name : 'Anon user'
+    current_person ? current_person.name : 'Anon user'
   end
 
   def application_time_zone(&block)

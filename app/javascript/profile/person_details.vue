@@ -15,6 +15,7 @@
     </div>
     <div class="flex-col w-50 p-2">
       <!-- TODO: as per discussion with Anna TZ and hour display move to a settings dialog -->
+      <p><b>If you are not planning on attending in person:</b></p>
       <b-form-group label="At the time of the convention I will be at UTC Offset">
         <timezone-selector v-model="editable_person.timezone" @input="onInput" class="mb-2"></timezone-selector>
         <p>

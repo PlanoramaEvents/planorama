@@ -36,7 +36,7 @@ namespace :submission do
       person = nil
 
       # get the person from their email
-      addr = EmailAddress.where("email ILIKE ?",email).first
+      addr = EmailAddress.where("email ILIKE ? and isdefault = true",email).first
 
       if addr == nil
         raise "Can not find person #{email}"
@@ -76,7 +76,8 @@ namespace :submission do
         end
       end
 
-      person.con_state = Person.con_states[:applied] unless person.con_state
+      # Set to applied if the state has not been moved at all from the deafult of not_set
+      person.con_state = Person.con_states[:applied] if person.con_state == Person.con_states[:not_set]
       person.save!
     end
   end

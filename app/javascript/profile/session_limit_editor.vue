@@ -11,9 +11,9 @@
         v-model="my_limit.max_sessions"
         type='text'
         maxlength="4" size="4"
-        @blur="onChange(my_limit.max_sessions)"
+        @blur="onChange"
         :state="calcValid(errors,valid)"
-      ></input>
+      />
       <div class="invalid-message">{{ errors[0] }}</div>
     </validation-provider>
   </div>
@@ -81,37 +81,55 @@ export default {
 
       return errors[0] ? false : null //(valid ? true : null)
     },
-    onChange(newVal) {
-      // Do not do anything if the value is not a positive number
-      const num = Number(newVal);
-      if (Number.isInteger(num) && num > 0) {
-        if (this.my_limit.id) {
-          this.my_limit.max_sessions = num
-          this.save(this.my_limit).then(
-            (data) => {
-              this.my_limit = data
+    onChange($event) {
+      // console.log('event', $event)
+      // console.log('my limit', this.my_limit)
+      if (!this.my_limit.max_sessions && this.my_limit.id) {
+        this.my_limit.max_sessions = null;
+        this.save(this.my_limit).then((data) => {
+          this.my_limit = data
+          return;
+        })
+      } else {
+        const num = Number(this.my_limit.max_sessions);
+        if (Number.isInteger(num) && num >= 0) {
+          if (this.my_limit.id) {
+            this.my_limit.max_sessions = num
+            this.save(this.my_limit).then(
+              (data) => {
+                this.my_limit = data
+              }
+            )
+          } else {
+            let candidate = {
+              person_id: this.person.id,
+              day: this.day,
+              max_sessions: num
             }
-          )
-        } else {
-          let candidate = {
-            person_id: this.person.id,
-            day: this.day,
-            max_sessions: num
+            this.create_session_limit(candidate).then(
+              (data) => {
+                // console.log('data coming back from create', data)
+                this.my_limit = data
+              }
+            )
           }
-          this.create_session_limit(candidate).then(
-            (data) => {
-              this.my_limit = data
-            }
-          )
         }
       }
     }
   },
   mounted() {
-    let my_limits =  Object.values(this.person.session_limits)
-    let candidate_idx =  my_limits.findIndex((el) => el.day == this.day)
-    if (candidate_idx >= 0) {
-      this.my_limit = my_limits[candidate_idx]
+    let existingLimit = null;
+    if (!this.day) {
+      existingLimit = Object.values(this.$store.getters['jv/get']({_jv: {
+          type: 'session_limit',
+        }}, `$[?(@.person_id=='${this.person.id}' && !@.day)]`))[0];
+    } else {
+      existingLimit = Object.values(this.$store.getters['jv/get']({_jv: {
+          type: 'session_limit',
+        }}, `$[?(@.person_id=='${this.person.id}' && @.day=='${this.day}')]`))[0];
+    }
+    if (existingLimit) {
+      this.my_limit = existingLimit;
     } else {
       this.my_limit = {
         person_id: this.currentUser.id,

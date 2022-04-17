@@ -1,7 +1,7 @@
 <template>
   <div class="mb-3">
     <p>
-      Filter by area or do a word search (or both!) to refine the sessions displayed.
+      To refine the sessions displayed, filter by area or do a word search (or both!) by clicking on the search button.<br />
       Select sessions you are interested in being on by using the slider to the right of the description.
       Your selections will appear on the Sessions Ranking tab.
     </p>
@@ -38,12 +38,13 @@
           Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
         </div>
         <div v-if="item.area_list.length > 0">
-          <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list">{{area}}</span>
+          <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list" :key="area">{{area}}</span>
         </div>
         <div v-if="item.tag_list.length > 0">
-          <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list">{{tag}}</span>
+          <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list" :key="tag">{{tag}}</span>
         </div>
-        <div v-html="item.instructions_for_interest">
+        <div class="mt-3" v-if="item.instructions_for_interest">Instructions for potential panelists:</div>
+        <div class="panelist-instructions" v-html="item.instructions_for_interest">
         </div>
       </template>
       <template #cell(id)="{ item }">
@@ -125,6 +126,10 @@ export default {
 
 .interest-column {
   width: 7em;
+}
+
+.panelist-instructions {
+  font-style: italic;
 }
 
 </style>
