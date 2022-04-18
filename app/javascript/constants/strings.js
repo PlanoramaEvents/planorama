@@ -109,6 +109,11 @@ module.exports = {
     SESSION_INTEREST_UPDATE_SUCCESS: "Session Interest updated",
     SESSION_INTEREST_UPDATE_ERROR: errorMessage("Session Interest failed to be updated"),
 
+    SESSION_SAVE_SUCCESS_DELETE: "Session successfully deleted.",
+    SESSION_SAVE_ERROR_DELETE: errorMessage("Session failed to be deleted."),
+    SESSION_SAVE_SUCCESS: "Session successfully saved.",
+    SESSION_SAVE_ERROR: errorMessage("Session failed to be saved."),
+
     SESSION_RANKING_ERROR: (total, allowed) => `You have assigned ${total} exceeds the allowed ${allowed}.`,
 
     CONFIGURATION_SAVED_SUCCESS: "Configuration has been saved",

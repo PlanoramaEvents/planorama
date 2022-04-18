@@ -68,10 +68,6 @@
             :disabled="!editable"
           ></model-select>
         </b-form-group>
-
-        <!--
-          Format - selector
-        -->
       </div>
     </div>
   </div>

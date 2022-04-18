@@ -1,6 +1,7 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # Change origins to lisr our front end URLs
+    # Change origins to list our front end URLs
+    # TODO
     origins '*'
 
     resource '*',

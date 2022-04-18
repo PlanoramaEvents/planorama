@@ -21,7 +21,9 @@ import PeopleScreen from './people/people-screen.vue';
 import ProfileScreen from './profile/profile-screen.vue';
 
 //
-import ScheduleScreen from './sessions/schedule-screen.vue';
+import SessionsScreen from './sessions/sessions-screen.vue';
+import SessionManage from './sessions/session_manage.vue';
+import SessionList from './sessions/sessions-list.vue';
 
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
@@ -40,6 +42,11 @@ const surveyRoutes = [
   { path: ':id/:preview', component: TakeSurvey, props: true },
   { path: ':id', component: TakeSurvey, props: true},
   { path: '', component: SurveyList },
+]
+
+const sessionRoutes = [
+  { path: 'edit/:id', component: SessionManage, props: true},
+  { path: '', component: SessionList },
 ]
 
 //import SurveyScreen from './surveys2/survey-screen.vue';
@@ -96,8 +103,9 @@ export const router = new VueRouter({
       }
     },
     {
-      path: '/schedule',
-      component: ScheduleScreen,
+      path: '/sessions',
+      component: SessionsScreen,
+      children: sessionRoutes,
       meta: {
         requiresAuth: true
       }
