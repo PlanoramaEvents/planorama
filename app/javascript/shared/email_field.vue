@@ -79,8 +79,8 @@ export default {
   },
   methods: {
     validate: function (event) {
-      if (!this.value.match(/.+@.+\..+/)) {
-        if (!this.value?.length && !this.required) {
+      if (!this.value.trim().match(/.+@.+\..+/)) {
+        if (!this.value?.trim().length && !this.required) {
           this.valid = null;
         }
         else {

@@ -16,7 +16,7 @@
         :disabled="disabled"
       >
       </simple-social>
-      <div class="invalid-message">{{ errors[0] }}</div>
+      <div class="invalid-message" v-if="errors[0]">{{ message ? message : errors[0] }}</div>
     </validation-provider>
   </validation-observer>
 </template>
@@ -36,6 +36,10 @@ export default {
     label: {
       type: String,
       required: true
+    },
+    message: {
+      type: String,
+      required: false
     },
     prepend: {
       type: String,
