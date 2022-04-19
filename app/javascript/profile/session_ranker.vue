@@ -54,11 +54,11 @@
          ></b-textarea>
        </div>
        <div class="col pt-4">
-         <session-assignment
+         <session-assignment-monitor
            :assignment="item"
            model="session_assignment"
            @change="changeAssignment"
-         ></session-assignment>
+         ></session-assignment-monitor>
          <b-form-group label="Rank">
            <b-form-select
              v-model="item.interest_ranking"
@@ -82,14 +82,14 @@ import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import personSessionMixin from '../auth/person_session.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
-import SessionAssignment from './session_assignment.vue'
+import SessionAssignmentMonitor from './session_assignment_monitor.vue'
 
 import { SESSION_RANKING_ERROR } from '../constants/strings';
 
 export default {
   name: "SessionRanker",
   components: {
-    SessionAssignment
+    SessionAssignmentMonitor
   },
   mixins: [
     personSessionMixin,
