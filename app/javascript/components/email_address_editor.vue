@@ -12,7 +12,7 @@
         <b-form-input
           :disabled='disabled'
           :state="calcValid(errors,valid)"
-          v-model="value.email"
+          v-model.trim="value.email"
           @change="onChange"
         ></b-form-input>
         <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
