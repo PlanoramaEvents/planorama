@@ -181,4 +181,13 @@ module.exports = {
     ERROR_GENERIC_UNRECOVERABLE: (email) => twoLines("The server has encountered an internal error and was unable to complete your request.",
     `Please contact the server administrator at ${email} and let them know the time and date the error occured.`),
 
+    // Social Links Errors
+    TWITTER_ID_INVALID_MSG: "Twitter id is not in a valid format",
+    FACEBOOK_ID_INVALID_MSG: "Facebook id is not in a valid format",
+    WEBSITE_INVALID_MSG: "Website is not in a valid format",
+    INSTAGRAM_ID_INVALID_MSG: "Instagram id is not in a valid format",
+    TWITCH_ID_INVALID_MSG: "Twitch id is not in a valid format",
+    YOUTUBE_ID_INVALID_MSG: "Youtube is not in a valid format",
+    TIKTOK_ID_INVALID_MSG: "TikTok id is not in a valid format",
+    LINKEDIN_ID_INVALID_MSG: "LinkedIn id is not in a valid format"
 }
