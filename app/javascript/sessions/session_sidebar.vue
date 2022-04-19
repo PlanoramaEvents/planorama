@@ -19,7 +19,7 @@
         <b-tabs content-class="mt-3" nav-class="border-0" nav-wrapper-class="border-bottom">
           <!-- TODO: more details etc -->
           <b-tab title="General" active>
-            <b-form-checkbox v-model="selected.open_for_interest" :disabled="!editable">
+            <b-form-checkbox v-model="selected.open_for_interest">
               Open for Interest
             </b-form-checkbox>
           </b-tab>

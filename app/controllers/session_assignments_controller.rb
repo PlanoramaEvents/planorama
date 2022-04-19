@@ -25,6 +25,7 @@ class SessionAssignmentsController < ResourceController
 
   def serializer_includes
     [
+      :person,
       :session,
       :'session.format'
     ]

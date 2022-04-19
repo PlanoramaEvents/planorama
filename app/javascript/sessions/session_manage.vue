@@ -54,8 +54,15 @@
     </div>
 
     <b-tabs>
+      <!-- Each of these tabs may need to reload the session on mount??? -->
       <b-tab title="Participant Assignment" lazy>
-        TODO - Assignments
+        <assign-participants
+          v-model="session"
+          defaultSortBy='session_assignments.interest_ranking'
+          :perPage="200"
+          :model="sessionAssignmentModel"
+          :defaultFilter="assignmentFilter"
+        ></assign-participants>
       </b-tab>
       <b-tab title="Schedule" lazy>
         TODO - schedule this one session !!!
@@ -69,29 +76,38 @@
 
 <script>
 import { sessionModel as model } from '../store/session.store';
+import { sessionAssignmentModel } from '@/store/session_assignment.store'
+
 import sessionMixin from './session.mixin';
 import PlanoEditor from '../components/plano_editor';
+
+import AssignParticipants from './assign_participants'
 
 export default {
   name: "SessionManage",
   props: ['id'],
   data: () => ({
-    model
+    model,
+    sessionAssignmentModel
   }),
   components: {
-    PlanoEditor
+    PlanoEditor,
+    AssignParticipants
   },
   mixins: [
     sessionMixin
   ],
+  computed: {
+    assignmentFilter() {
+      return `{"op":"all","queries":[["session_id", "=", "${this.id}"]]}`
+    }
+  },
   methods: {
     init() {
       let s = this.selectSession(this.id)
       console.debug('MANGE SESSION INIT', this.id, s)
       this.fetchSelectedSession().then(() => {
-        // Clear all the selected survey elements
       });
-
     },
     // saveSession() {
     //   console.debug("SAVE SESSIOn")
