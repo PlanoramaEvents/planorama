@@ -10,7 +10,8 @@
           :model="personModel"
         ></person-details>
       </b-tab>
-      <b-tab title="Availability &amp; Interests" :active="tab === 'availability'" lazy>
+      <!-- Can not make this lazy otherwise we have lock issues with the notes -->
+      <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
         <availability-and-interests
           v-model="person"
           @input="onPersonUpdate"

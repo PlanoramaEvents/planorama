@@ -19,16 +19,15 @@
         </p>
       </div>
     </div>
-    <div class="d-flex flex-row">
+    <div class="d-flex flex-row" v-if="calTimeZone && start_time && end_time">
       <div class="flex-col">
         <availability-calendar
           v-model="person"
           :days="days"
           model="availability"
           :timezone="calTimeZone"
-          v-if="calTimeZone && start_time && end_time"
         ></availability-calendar>
-        <!-- NOTE: The timezone selection for availability affects calendar AND limit display -->
+        <!-- NOTE: The timezone selection for availability affects calendar AND limit display. -->
         <div class="mt-1 w-50">
           Select time zone to work in:
           <b-form-select v-model="calTimeZone" :options="timeZoneOptions"></b-form-select>
