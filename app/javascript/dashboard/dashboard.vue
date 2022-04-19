@@ -4,7 +4,7 @@
       Hello {{currentUser.name}}!
     </div> -->
     <div class="col-12">
-      <p>Welcome to Planorama!</p>
+      <p>Welcome to Planorama, {{currentUser.published_name}}!</p>
       <p>
         You'll be using this site between now and the convention to view and manage your profile, interests and schedule.
       </p>
