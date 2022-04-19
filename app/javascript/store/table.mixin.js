@@ -38,7 +38,11 @@ export const tableMixin = {
       // if we modify a single member of the collection, we no longer necessarily return the right order
       // therefore, use the order we captured at ingestion to restore the right order
       // without having to re-sort on the frontend
-      return this.collection.sort((a, b) => this.correctOrder.indexOf(a?.id) - this.correctOrder.indexOf(b?.id));
+      return this.collection.filter(
+        el => this.correctOrder.includes(el.id)
+      ).sort(
+        (a, b) => this.correctOrder.indexOf(a?.id) - this.correctOrder.indexOf(b?.id)
+      );
     }
   },
   methods: {
@@ -51,7 +55,7 @@ export const tableMixin = {
         ]
       }
     },
-    fetchPaged() {
+    fetchPaged(clear=true) {
       let _filter = JSON.stringify(this.filter)
 
       if (!this.filter && this.defaultFilter) {
@@ -65,7 +69,7 @@ export const tableMixin = {
       }
 
       return new Promise((res, rej) => {
-        this.clear() // NOTE: clear is a sync call
+        if (clear) this.clear() // NOTE: clear is a sync call
         this.correctOrder = [] // we need to clear otherwise the order in the computed sorted gets weird
         // What URL does this use
         this.fetch(

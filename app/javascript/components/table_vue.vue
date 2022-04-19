@@ -199,7 +199,6 @@ export default {
   },
   methods: {
     onSelectAll(arg) {
-      console.debug("***** SELECT ALL ", arg)
       if (arg == 'select_all') {
         this.$refs.table.selectAllRows()
       } else {
