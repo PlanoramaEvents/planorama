@@ -1,39 +1,45 @@
 <template>
-  <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
-    <b-tab title="General" :active="!tab" lazy>
-      <person-details
-        v-model="person"
-        :model="personModel"
-      ></person-details>
-    </b-tab>
-    <b-tab title="Availability &amp; Interests" :active="tab === 'availability'" lazy>
-      <availability-and-interests
-        v-model="person"
-        :start_time="start_time"
-        :end_time="end_time"
-        :timezone="timezone"
-        class="mb-5"
-      ></availability-and-interests>
-    </b-tab>
-    <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
-      <session-selector
-        v-model="person"
-        defaultSortBy='sessions.title'
-        :model="sessionModel"
-        defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
-      ></session-selector>
-    </b-tab>
-    <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
-      <!-- v-model="person" -->
-      <session-ranker
-        defaultSortBy='interest_ranking,created_at'
-        :defaultSortDesc="true"
-        :perPage="null"
-        :model="sessionAssignmentModel"
-        :defaultFilter="rankedFilter"
-      ></session-ranker>
-    </b-tab>
-  </b-tabs>
+  <div>
+    <person-summary v-if="person"
+      v-model="person"
+    ></person-summary>
+    <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
+      <b-tab title="General" :active="!tab" lazy>
+        <person-details
+          v-model="person"
+          :model="personModel"
+        ></person-details>
+      </b-tab>
+      <b-tab title="Availability &amp; Interests" :active="tab === 'availability'" lazy>
+        <availability-and-interests
+          v-model="person"
+          @input="onPersonUpdate"
+          :start_time="start_time"
+          :end_time="end_time"
+          :timezone="timezone"
+          class="mb-5"
+        ></availability-and-interests>
+      </b-tab>
+      <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
+        <session-selector
+          v-model="person"
+          defaultSortBy='sessions.title'
+          :model="sessionModel"
+          defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
+        ></session-selector>
+      </b-tab>
+      <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
+        <!-- v-model="person" -->
+        <session-ranker
+          defaultSortBy='interest_ranking,created_at'
+          :defaultSortDesc="true"
+          :perPage="null"
+          :model="sessionAssignmentModel"
+          :defaultFilter="rankedFilter"
+        ></session-ranker>
+      </b-tab>
+    </b-tabs>
+  </div>
 </template>
 
 <script>
@@ -41,6 +47,7 @@ import SessionSelector from './session_selector.vue';
 import SessionRanker from './session_ranker.vue';
 import AvailabilityAndInterests from './availability_and_interests.vue';
 import PersonDetails from './person_details.vue'
+import PersonSummary from './person_summary.vue';
 
 import { personModel } from '@/store/person.store'
 import { sessionModel } from '@/store/session.store'
@@ -58,6 +65,7 @@ export default {
   name: "ProfileTabs",
   props: ['tab'],
   components: {
+    PersonSummary,
     SessionSelector,
     SessionRanker,
     AvailabilityAndInterests,
@@ -100,6 +108,9 @@ export default {
     }
   },
   methods: {
+    onPersonUpdate(arg) {
+      this.person = arg
+    },
     handleTabActivation(newTab, oldTab, bvEvent) {
       let path = '';
       switch(newTab) {
@@ -117,7 +128,7 @@ export default {
       // so that reloads work right
       this.$router.push(`/profile/${path}`).catch(error => {
         if(!isNavigationFailure(error, NavigationFailureType.duplicated)) {
-          // ignore the duplicates, otherwise - 
+          // ignore the duplicates, otherwise -
           throw error;
         }
       })
