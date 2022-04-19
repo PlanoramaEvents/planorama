@@ -19,16 +19,15 @@
         </p>
       </div>
     </div>
-    <div class="d-flex flex-row">
+    <div class="d-flex flex-row" v-if="calTimeZone && start_time && end_time">
       <div class="flex-col">
         <availability-calendar
           v-model="person"
           :days="days"
           model="availability"
           :timezone="calTimeZone"
-          v-if="calTimeZone"
         ></availability-calendar>
-        <!-- NOTE: The timezone selection for availability affects calendar AND limit display -->
+        <!-- NOTE: The timezone selection for availability affects calendar AND limit display. -->
         <div class="mt-1 w-50">
           Select time zone to work in:
           <b-form-select v-model="calTimeZone" :options="timeZoneOptions"></b-form-select>
@@ -46,7 +45,7 @@
           v-model="person"
           :days="days"
           :timezone="calTimeZone"
-          v-if="calTimeZone"
+          v-if="calTimeZone && days"
         >
         </session-limits>
       </div>
@@ -57,9 +56,12 @@
         model="person_exclusion"
       ></exclusions-picker>
     </div>
+    <!-- {{ person.lock_version }} -->
     <availability-notes-field
-      v-model="person"
+      v-if="editable_person"
+      v-model="editable_person"
       model="person"
+      @input="onNotePatched"
     ></availability-notes-field>
   </div>
 </template>
@@ -111,6 +113,7 @@ export default {
     }
   },
   data: () => ({
+    editable_person: null,
     // NOTE: if there are more than 5 days in the con we need to change display
     options: [
           { value: null, text: 'Please select an option' },
@@ -143,6 +146,8 @@ export default {
       ]
     },
     days() {
+      if (!this.start_time || !this.end_time) return []
+
       let start_day = this.start_time.setZone(this.calTimeZone).startOf('day')
       let end_day = this.end_time.setZone(this.calTimeZone).endOf('day')
       let nbr_days = Math.round(end_day.diff(start_day, 'days').as('days'))
@@ -155,8 +160,14 @@ export default {
       return res
     }
   },
+  methods: {
+    onNotePatched(arg) {
+      this.$emit('input',this.editable_person)
+    }
+  },
   mounted() {
     this.calTimeZone ||= this.timezone
+    this.editable_person = this.person
   }
 }
 </script>

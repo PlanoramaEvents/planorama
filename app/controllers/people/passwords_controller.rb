@@ -17,12 +17,6 @@ class People::PasswordsController < Devise::PasswordsController
     redirect_to "/#/login/password-reset?reset_password_token=#{params[:reset_password_token]}"
   end
 
-  # If we do not match the person then we do a create, which is wrong
-  def create
-    # redirect_to "/"
-    render status: 400, json: { message: 'Unable to reset/create password/person.' }
-  end
-
   # PUT /resource/password
   # def update
   #   super
