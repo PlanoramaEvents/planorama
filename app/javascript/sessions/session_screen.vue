@@ -1,12 +1,13 @@
 <template>
-  <div class="mb-3">
+  <div class="scrollable">
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+
 export default {
-  name: "SessionsScreen"
+  name: "SessionScreen"
 }
 </script>
 

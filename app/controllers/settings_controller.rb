@@ -30,6 +30,8 @@ class SettingsController < ApplicationController
     settings = {
       # 1. model information
       enums: enums,
+      # 2. con wide role types for assignments
+      assignment_role_types: SessionAssignmentRoleType.all,
       # 2. sensitive fields etc
       attributes: AccessControlService.attribute_meta_data,
       # 3. Agreement Types

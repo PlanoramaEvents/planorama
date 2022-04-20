@@ -29,9 +29,10 @@ const profileRoutes = [
 ]
 
 //
-import SessionsScreen from './sessions/sessions-screen.vue';
-import SessionManage from './sessions/session_manage.vue';
+import SessionsScreen from './sessions/session_screen.vue';
 import SessionList from './sessions/sessions-list.vue';
+import SessionTabs from  './sessions/session_tabs.vue';
+import SessionScreen from './sessions/session_screen.vue';
 
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
@@ -53,11 +54,12 @@ const surveyRoutes = [
 ]
 
 const sessionRoutes = [
-  { path: 'edit/:id', component: SessionManage, props: true},
+  { path: 'edit/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-edit'}) },
+  { path: 'assignment/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-assignment'}) },
+  { path: 'schedule/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-schedule'}) },
+  { path: 'notes/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-notes'}) },
   { path: '', component: SessionList },
 ]
-
-//import SurveyScreen from './surveys2/survey-screen.vue';
 
 // dashboard
 import Dashboard from './dashboard/dashboard.vue';
@@ -113,7 +115,7 @@ export const router = new VueRouter({
     },
     {
       path: '/sessions',
-      component: SessionsScreen,
+      component: SessionScreen,
       children: sessionRoutes,
       meta: {
         requiresAuth: true

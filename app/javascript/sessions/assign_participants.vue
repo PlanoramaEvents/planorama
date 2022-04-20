@@ -3,11 +3,10 @@
     <!--
     TODO:
 
-      list of who was interested - sorted by rank
+      list of who was interested - sorted by rank DONE
       search for people (excluding those interested already)
       sidebar with the profile stuff (read only) -- use in the person sidebar eventually ...
     -->
-    <!-- TODO: this does not need to be a table ... -->
     <div class='row mb-4'>
       <div class="col-2">
         Assignment State
@@ -16,8 +15,29 @@
         Potential Participants
       </div>
     </div>
-    <div class='row mb-4' v-for="item in sortedCollection" :key="item.session.id">
+    <div class='row mb-4' v-for="item in sortedCollection" :key="item.id">
+      <!-- TOOD: move into component -->
       <div class="col-2">
+        <!-- TODO: drop down and save
+          derived field for the drop down ...
+
+          enum visibility: {
+            is_public: 'public',
+            is_private: 'private'
+          }
+
+          state, in: %w( proposed accepted rejected )
+
+          session_assignment_role_type
+          SessionAssignmentRoleType - need to seed
+            participant (visible, accepted)
+            invisible participant (invisible, accepted)
+            Moderator (visible, accepted)
+            Reserve (invisible, proposed)
+
+            Unassigned ==> no role i.e. null
+            Not on this panel ==> rejected state (needs a comment?)
+        -->
         ACTION
       </div>
       <div class="col-10">
@@ -99,7 +119,7 @@ export default {
   mounted() {
     // If there is no pager we need to get the initial collection somehow
     // Order should be by created_at date and ranking ...
-    this.fetchPaged(false);
+    this.fetchPaged(false); // false to not clear store of existing models
   }
 }
 </script>
