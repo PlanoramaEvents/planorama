@@ -332,6 +332,8 @@ module ResourceMethods
     val = "#{value}%" if operation == 'begins with'
     val = "''" if operation == 'is empty'
     val = "''" if operation == 'is not empty'
+    val = nil if operation == 'is null'
+    val = nil if operation == 'is not null'
 
     part = table[column.to_sym].send(op, val)
   end
@@ -376,6 +378,10 @@ module ResourceMethods
       :'matches'
     when 'ends with'
       :'matches'
+    when 'is null'
+      :eq
+    when 'is not null'
+      :not_eq
     else
       :eq
     end

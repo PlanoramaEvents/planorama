@@ -72,7 +72,22 @@ export default {
   }),
   computed: {
     assignmentFilter() {
-      return `{"op":"all","queries":[["session_id", "=", "${this.id}"]]}`
+      let filter = {
+        "op": "all",
+        "queries":[
+          ["session_id", "=", this.id],
+          {
+            "op": "any",
+            "queries": [
+              ["interested","=","true"],
+              ["state","!=","proposed"],
+              ["session_assignment_role_type_id","is not null"]
+            ]
+          },
+        ]
+      }
+
+      return filter
     }
   },
   methods: {

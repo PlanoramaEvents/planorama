@@ -16,29 +16,8 @@
       </div>
     </div>
     <div class='row mb-4' v-for="item in sortedCollection" :key="item.id">
-      <!-- TOOD: move into component -->
       <div class="col-2">
-        <!-- TODO: drop down and save
-          derived field for the drop down ...
-
-          enum visibility: {
-            is_public: 'public',
-            is_private: 'private'
-          }
-
-          state, in: %w( proposed accepted rejected )
-
-          session_assignment_role_type
-          SessionAssignmentRoleType - need to seed
-            participant (visible, accepted)
-            invisible participant (invisible, accepted)
-            Moderator (visible, accepted)
-            Reserve (invisible, proposed)
-
-            Unassigned ==> no role i.e. null
-            Not on this panel ==> rejected state (needs a comment?)
-        -->
-        ACTION
+        <assignment-state :session-assignment="item"></assignment-state>
       </div>
       <div class="col-10">
         <div class="d-flex flex-row justify-content-between">
@@ -77,9 +56,13 @@
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
+import AssignmentState from './assignment_state'
 
 export default {
   name: "AssignParticipants",
+  components: {
+    AssignmentState
+  },
   mixins: [
     modelMixin,
     tableMixin // covers pagination and sorting

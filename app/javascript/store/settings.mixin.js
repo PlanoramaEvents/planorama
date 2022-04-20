@@ -24,6 +24,20 @@ export const settingsMixin = {
       } else {
         return null
       }
+    },
+    sessionRoleByName(name) {
+      if (this.currentSettings.assignment_role_types) {
+        let role_types = this.currentSettings.assignment_role_types
+        let rt = role_types.find( c => c.name == name)
+
+        if (rt) {
+          return rt
+        } else {
+          return null
+        }
+      } else {
+        return null
+      }
     }
   }
 }
