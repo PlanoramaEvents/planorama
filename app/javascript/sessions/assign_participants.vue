@@ -17,7 +17,10 @@
     </div>
     <div class='row mb-4' v-for="item in sortedCollection" :key="item.id">
       <div class="col-2">
-        <assignment-state :session-assignment="item"></assignment-state>
+        <assignment-state
+          :session-assignment="item"
+          @input="saveAssignment"
+        ></assignment-state>
       </div>
       <div class="col-10">
         <div class="d-flex flex-row justify-content-between">
@@ -95,6 +98,10 @@ export default {
     }
   },
   methods: {
+    saveAssignment(assignment) {
+      console.debug("***** Save the Assignment", assignment)
+      this.save(assignment)
+    },
     showPersonDetails(person) {
       console.debug("***** SHOW PERSON DETAIL", person)
     }

@@ -24,12 +24,12 @@
 <template>
   <div>
     <b-form-select
-      v-model="stateState"
+      v-model="assignmentState"
       :options="options"
     ></b-form-select>
-    {{ sessionAssignment.state }}<br />
+    <!-- {{ sessionAssignment.state }}<br />
     {{ sessionAssignment.visibility }}<br />
-    {{ sessionAssignment.session_assignment_role_type_id }}<br />
+    {{ sessionAssignment.session_assignment_role_type_id }}<br /> -->
   </div>
 </template>
 
@@ -61,16 +61,7 @@ export default {
     }
   },
   computed: {
-    /*
-    participant (visible, accepted)
-    invisible participant (invisible, accepted)
-    Moderator (visible, accepted)
-    Reserve (invisible, proposed)
-
-     ==> no role i.e. null
-    Not on this panel ==> rejected state (needs a comment?)
-    */
-    stateState: {
+    assignmentState: {
       get() {
         if (this.sessionAssignment.state === 'proposed') return null
         if (this.sessionAssignment.state === 'rejected') return 'rejected'
@@ -83,10 +74,9 @@ export default {
         return null
       },
       set(val) {
-        // console.debug("**** RT ", this.sessionRoleByType('participant'))
         switch(val) {
           case null:
-            // if this was not an assignment that was marked for interest we will delete it
+            // TODO: if this was not an assignment that was marked for interest we will delete it
             this.sessionAssignment.state = 'proposed'
             this.sessionAssignment.visibility = 'is_private'
             this.sessionAssignment.session_assignment_role_type_id = null
@@ -117,6 +107,8 @@ export default {
             this.sessionAssignment.session_assignment_role_type_id = null
             break;
         }
+        // emit a change
+        this.$emit('input',this.sessionAssignment)
       }
     }
   }
