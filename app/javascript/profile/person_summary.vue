@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-3 pt-3">
+  <div class="pb-3 pt-3" v-if="person">
     <div class="d-flex flex-column">
       <h3>{{person.published_name}}</h3>
       <div>

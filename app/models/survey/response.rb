@@ -103,6 +103,8 @@ class Survey::Response < ApplicationRecord
          when :email
            json_val[:answers] = value
          # when :textonly, :hr are not actual questions
+         when :attendance_type
+           json_val[:answers] = value
          else
            json_val = nil
          end
