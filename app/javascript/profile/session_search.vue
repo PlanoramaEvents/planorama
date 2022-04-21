@@ -68,8 +68,13 @@ export default {
 
       if (this.title_desc) {
         queries["queries"].push(
-          ["title","contains",this.title_desc],
-          ["description","contains",this.title_desc]
+          {
+            "op": "any",
+            "queries": [
+              ["title","contains",this.title_desc],
+              ["description","contains",this.title_desc]
+            ]
+          }
         )
       }
 
