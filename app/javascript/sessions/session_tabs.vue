@@ -13,9 +13,12 @@
         <assign-participants
           v-model="session"
           defaultSortBy='session_assignments.interest_ranking'
+          :defaultSortDesc="false"
+          defaultO
           :perPage="200"
           :model="sessionAssignmentModel"
           :defaultFilter="assignmentFilter"
+          nullsFirst="false"
         ></assign-participants>
       </b-tab>
       <b-tab title="Schedule" :active="tab === 'session-schedule'" disabled lazy>

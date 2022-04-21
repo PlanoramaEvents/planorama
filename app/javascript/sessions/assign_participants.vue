@@ -28,6 +28,7 @@
       :session="session"
       :model="personModel"
       @change="refreshAssignments"
+      class="border-top border-dark pt-3"
     ></participant-search>
   </div>
 </template>

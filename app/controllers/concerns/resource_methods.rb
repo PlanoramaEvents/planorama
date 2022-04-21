@@ -186,11 +186,19 @@ module ResourceMethods
       direction ||= 'asc'
 
       order_str = "#{order} #{direction}"
+      # Get null first or last from query
+      nulls_first = params[:nullsFirst]
       # For PSQL NULLS FIRST is the default for DESC order, and NULLS LAST otherwise.
-      if direction == 'asc'
+      if nulls_first == 'true'
         order_str += ' NULLS FIRST'
-      else
+      elsif nulls_first == 'false'
         order_str += ' NULLS LAST'
+      else
+        if direction == 'asc'
+          order_str += ' NULLS FIRST'
+        else
+          order_str += ' NULLS LAST'
+        end
       end
     end
 

@@ -22,6 +22,10 @@ export const tableMixin = {
     defaultUrl: {
       type: String,
       default: null
+    },
+    nullsFirst: {
+      type: String,
+      default: null
     }
   },
   data: () => ({
@@ -84,6 +88,7 @@ export const tableMixin = {
             sortBy: this.sortBy,
             filter: _filter,
             current_page: this.currentPage,
+            nullsFirst: this.nullsFirst
           },
           this.url
         ).then(data => {
