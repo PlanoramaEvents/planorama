@@ -309,11 +309,44 @@ class PeopleController < ResourceController
     ]
   end
 
-  # TODO: on create must have at least one email_addresses_attributes
+  def subquery(operation:, value:)
+    if operation == 'unassigned'
+      people = Arel::Table.new(Person.table_name)
+      assignments = Arel::Table.new(SessionAssignment.table_name)
 
-  # def references
-  #   [
-  #   ]
+      # planner_reg_tickets = Arel::Table.new(::PlannerReg::Ticket.table_name)
+      # people.project(people[:id]).where(
+        people[:id].not_in(
+          assignments.project(assignments[:person_id]).where(
+            assignments[:session_id].eq(value)
+          )
+        )
+      # ).distinct
+    else
+      nil
+    end
+  end
+
+  # TODO: on create must have at least one email_addresses_attributes
+  # def join_tables
+  #   joins = nil
+  #
+  #   # TODO: check if the filter references to session_assignments.person_id
+  #   if @filters
+  #     people = Arel::Table.new(Person.table_name)
+  #     assignments = Arel::Table.new(SessionAssignment.table_name)
+  #     joins = [
+  #       people.create_join(
+  #         assignments,
+  #         people.create_on(
+  #           people[:id].eq(assignments[:person_id])
+  #         ),
+  #         Arel::Nodes::OuterJoin
+  #       )
+  #     ]
+  #   end
+  #
+  #   joins
   # end
 
   def allowed_params

@@ -47,7 +47,6 @@
 <script>
 import { sessionModel } from '@/store/session.store'
 import modelUtilsMixin from '@/store/model_utils.mixin';
-// import modelMixin from '../store/model.mixin';
 import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
 import PlanoEditor from '@/components/plano_editor';
@@ -93,7 +92,7 @@ export default {
           )
         )
 
-        return res // '3cda1cfd-2876-4957-bc9f-f4fcbba578c2' //Object.values(res)
+        return res
       },
       set(val) {
         let existingAreas = Object.values(this.session.session_areas)
@@ -133,8 +132,6 @@ export default {
           this.$emit('input',obj)
         }
       )
-      // this.editable = false
-      // this.saveSelected();
     }
   }
 }

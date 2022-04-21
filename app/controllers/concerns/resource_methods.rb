@@ -256,7 +256,7 @@ module ResourceMethods
         end
 
         if key == 'all'
-          # change to include responses
+          # change to allowd limiting to named cols?, pass in list of cols to include based in what is displayed ...
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)
             query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
@@ -271,16 +271,21 @@ module ResourceMethods
             end
           end
         else
-          col = if (key.include?('responses.'))
-            'response_as_text'
+          # Have a special key to allow for extra queries ...
+          if (key.include?('subquery'))
+            part = subquery(operation: operation, value: value)
           else
-            get_column(column: key)
-          end
-          part = get_query_part(table: col_table, column: col, operation: operation, value: value)
+            col = if (key.include?('responses.'))
+              'response_as_text'
+            else
+              get_column(column: key)
+            end
+            part = get_query_part(table: col_table, column: col, operation: operation, value: value)
 
-          if (key.include?('responses.'))
-            key.slice! "responses."
-            part = part.and(col_table['question_id'].eq(key))
+            if (key.include?('responses.'))
+              key.slice! "responses."
+              part = part.and(col_table['question_id'].eq(key))
+            end
           end
         end
       end
@@ -387,6 +392,10 @@ module ResourceMethods
     end
     # does_not_match, #does_not_match_all, #does_not_match_any, #does_not_match_regexp,
     # in, not_in etc
+  end
+
+  def subquery(operation:, value: nil)
+    nil
   end
 
   def model_name

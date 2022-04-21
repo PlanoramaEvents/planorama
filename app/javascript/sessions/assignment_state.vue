@@ -27,9 +27,11 @@
       v-model="assignmentState"
       :options="options"
     ></b-form-select>
-    <!-- {{ sessionAssignment.state }}<br />
+    <!--
+    {{ sessionAssignment.state }}<br />
     {{ sessionAssignment.visibility }}<br />
-    {{ sessionAssignment.session_assignment_role_type_id }}<br /> -->
+    {{ sessionAssignment.session_assignment_role_type_id }}<br />
+    -->
   </div>
 </template>
 

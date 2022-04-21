@@ -20,7 +20,7 @@ export const sessionAssignmentStore = {
       let newAssignment = {
         person_id: person_id,
         session_id: session.id,
-        interested: true
+        state: 'accepted'
       }
       return dispatch(NEW, {model: sessionAssignmentModel, selected: false, ...newAssignment});
     },

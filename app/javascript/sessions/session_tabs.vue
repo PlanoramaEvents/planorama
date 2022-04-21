@@ -7,10 +7,7 @@
     ></session-summary>
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="session">
       <b-tab title="General" :active="tab === 'session-edit'">
-        Edit
-        <session-edit
-          v-model="session"
-        ></session-edit>
+        <session-edit v-model="session"></session-edit>
       </b-tab>
       <b-tab title="Participant Assignment" :active="tab === 'session-assignment'" lazy>
         <assign-participants
@@ -28,13 +25,6 @@
         Notes
       </b-tab>
     </b-tabs>
-
-    <!-- Summary -->
-    <!-- Tabs -->
-    <!-- THis is the session tab page <br />
-    ID: {{id}} <br />
-    TAB: {{tab}} <br />
-    Params: {{ $route.params }} -->
   </div>
 </template>
 

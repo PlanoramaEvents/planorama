@@ -31,7 +31,8 @@ export const tableMixin = {
     currentPage: 1,
     totalRows: 0,
     correctOrder: [],
-    url: null
+    url: null,
+    shall_clear: true
   }),
   computed: {
     sortedCollection() {
@@ -46,6 +47,9 @@ export const tableMixin = {
     }
   },
   methods: {
+    removeFromCollection(id) {
+      this.correctOrder = this.correctOrder.filter( el => el != id)
+    },
     mergeFilters(filter1, filter2) {
       return {
         op: 'all',
@@ -56,6 +60,7 @@ export const tableMixin = {
       }
     },
     fetchPaged(clear=true) {
+      this.shall_clear = clear
       let _filter = JSON.stringify(this.filter)
 
       if (!this.filter && this.defaultFilter) {
@@ -108,22 +113,22 @@ export const tableMixin = {
       if(newVal != oldVal) {
         // at this point, this.currentPage reflects newVal so we don't
         // have to pass anything in here, it should just work
-        this.fetchPaged();
+        this.fetchPaged(this.shall_clear);
       }
     },
     filter(newVal, oldVal) {
       // console.debug("filter changed:", newVal, oldVal)
       if(newVal != oldVal) {
-        this.fetchPaged();
+        this.fetchPaged(this.shall_clear);
       }
     },
     sortDesc(newVal, oldVal) {
       // console.debug("sortdesc changed:", newVal, oldVal)
-      if (newVal != oldVal) this.fetchPaged();
+      if (newVal != oldVal) this.fetchPaged(this.shall_clear);
     },
     sortBy(newVal, oldVal) {
       // console.debug("sortby changed:", newVal, oldVal)
-      if (newVal != oldVal) this.fetchPaged();
+      if (newVal != oldVal) this.fetchPaged(this.shall_clear);
     }
   }
 }

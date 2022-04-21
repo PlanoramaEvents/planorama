@@ -2,9 +2,7 @@
   <div>
     <!--
     TODO:
-
-      list of who was interested - sorted by rank DONE
-      search for people (excluding those interested already)
+      list of who was interested - sorted by rank (nulls comming first....)
       sidebar with the profile stuff (read only) -- use in the person sidebar eventually ...
     -->
     <div class='row mb-4'>
@@ -22,36 +20,15 @@
           @input="saveAssignment"
         ></assignment-state>
       </div>
-      <div class="col-10">
-        <div class="d-flex flex-row justify-content-between">
-          <b-link @click="showPersonDetails(item.person)">{{item.person.name}}</b-link>
-          <div>
-            Rank: {{item.interest_ranking}}
-          </div>
-          <div>
-            Session moderation preference: {{item.person.willing_to_moderate}}
-          </div>
-          <div>
-            Attendance Type: {{item.person.attendance_type}}
-          </div>
-          <div>
-            Accessibility Concerns: {{item.person.needs_accommodations}}
-          </div>
-        </div>
-        <div class="mt-2">
-          Session Comments
-          <div class="ml-5">
-            {{item.interest_notes}}
-          </div>
-        </div>
-        <div class="mt-2">
-          Other Demographic concerns
-          <div class="ml-5">
-            {{item.person.demographic_categories}}
-          </div>
-        </div>
-      </div>
+      <assignee :assignment="item"></assignee>
     </div>
+
+    <participant-search
+      :defaultFilter="peopleFilter"
+      :session="session"
+      :model="personModel"
+      @change="refreshAssignments"
+    ></participant-search>
   </div>
 </template>
 
@@ -59,12 +36,17 @@
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
+import { personModel } from '@/store/person.store'
 import AssignmentState from './assignment_state'
+import ParticipantSearch from './participant_search'
+import Assignee from './assignee'
 
 export default {
   name: "AssignParticipants",
   components: {
-    AssignmentState
+    AssignmentState,
+    ParticipantSearch,
+    Assignee
   },
   mixins: [
     modelMixin,
@@ -82,28 +64,27 @@ export default {
   data() {
     return {
       sessionAssignmentModel,
-      columns : [
-        {
-          key: 'id',
-          label: '',
-          sortable: false,
-          thClass: 'action-column'
-        },
-        {
-          key: 'title',
-          label: ' ',
-          sortable: false
-        }
-      ]
+      personModel
+    }
+  },
+  computed: {
+    peopleFilter() {
+      let filter = {
+        "op": "all",
+        "queries":[
+          ["subquery", "unassigned", this.session.id]
+        ]
+      }
+
+      return filter
     }
   },
   methods: {
     saveAssignment(assignment) {
-      console.debug("***** Save the Assignment", assignment)
       this.save(assignment)
     },
-    showPersonDetails(person) {
-      console.debug("***** SHOW PERSON DETAIL", person)
+    refreshAssignments(arg) {
+      this.fetchPaged(false);
     }
   },
   mounted() {
