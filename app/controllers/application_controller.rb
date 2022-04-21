@@ -29,6 +29,12 @@ class ApplicationController < ActionController::Base
     Time.use_zone(app_time_zone, &block)
   end
 
+  def prevent_cache
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+
   protected
 
   def configure_permitted_parameters
