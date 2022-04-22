@@ -4,6 +4,7 @@
     <session-summary
       :session="session"
       @input="onSessionUpdate"
+      v-if="session"
     ></session-summary>
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="session">
       <b-tab title="General" :active="tab === 'session-edit'">
@@ -80,7 +81,7 @@ export default {
         ]
       }
 
-      return filter
+      return JSON.stringify(filter)
     }
   },
   methods: {

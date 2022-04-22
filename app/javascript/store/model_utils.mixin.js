@@ -4,7 +4,7 @@
 **/
 import { toastMixin } from "@/mixins";
 
-import { FETCH_BY_ID, DELETE, UPDATE_ALL, SAVE } from "./model.store";
+import { FETCH_BY_ID, DELETE, UPDATE_ALL, SAVE, SELECT, SELECTED } from "./model.store";
 import {
   MODEL_SAVE_ERROR, MODEL_SAVE_SUCCESS, MODEL_DELETE_SUCCESS, MODEL_DELETE_ERROR,
   MODEL_MASS_UPDATE_SUCCESS, MODEL_MASS_UPDATE_ERROR
@@ -15,6 +15,12 @@ export const modelUtilsMixin = {
     toastMixin
   ],
   methods: {
+    select_model(model, itemOrId) {
+      return this.$store.commit(SELECT, {model: model, itemOrId});
+    },
+    selected_model(model) {
+      return this.$store.getters[SELECTED]({model: model})
+    },
     save_model(model, instance) {
       return this.toastPromise(this.$store.dispatch(SAVE, {model: model, selected: false, item: instance}), MODEL_SAVE_SUCCESS(model), MODEL_SAVE_ERROR(model));
     },

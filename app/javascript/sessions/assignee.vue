@@ -1,21 +1,21 @@
 <template>
   <div class="col-10">
     <div class="d-flex flex-row justify-content-between">
-      <b-link @click="showPersonDetails(assignee)">{{assignee.name}}</b-link>
-      <div v-if="assignment">
-        Rank: {{assignment.interest_ranking}}
+      <b-link @click="showPersonDetails(assignee)" class="mr-2">{{assignee.published_name}}</b-link>
+      <div class="mr-2">
+        Rank: {{rank}}
       </div>
-      <div v-else>
-        Rank: Unranked
+      <div class="mr-2">
+        Default moderation preference: {{defaultModPreference}}
       </div>
-      <div>
-        Session moderation preference: {{assignee.willing_to_moderate}}
+      <div class="mr-2">
+        Session moderation preference: {{sessionModPreference}}
       </div>
-      <div>
+      <div class="mr-2">
         Attendance Type: {{assignee.attendance_type}}
       </div>
-      <div>
-        Accessibility Concerns: {{assignee.needs_accommodations}}
+      <div class="mr-2">
+        Accessibility Concerns: {{assignee.needs_accommodations ? 'Y' : 'N'}}
       </div>
     </div>
     <div class="mt-2">
@@ -34,10 +34,12 @@
 </template>
 
 <script>
+import modelUtilsMixin from "@/store/model_utils.mixin";
 
 // Seacrh for people to add as participants
 export default {
   name: "Assignee",
+  mixins: [modelUtilsMixin],
   props: {
     assignment: {
       type: Object,
@@ -49,6 +51,29 @@ export default {
     }
   },
   computed: {
+    rank() {
+      if (this.assignment) {
+        if (this.assignment.interest_ranking) {
+          return this.assignment.interest_ranking
+        }
+      }
+      return 'Unranked'
+    },
+    defaultModPreference() {
+      if (this.assignee.willing_to_moderate) return 'Y'
+      return 'N'
+    },
+    sessionModPreference() {
+      if (this.assignment) {
+        if (this.assignment.interest_role == 'can_moderate') {
+          return "Y"
+        } else if (this.assignment.interest_role == 'not_moderate') {
+          return "N"
+        }
+      }
+      // {{assignment.interest_role}}
+      return "default"
+    },
     assignee() {
       let p = this.person
 
@@ -61,8 +86,10 @@ export default {
   },
   methods: {
     showPersonDetails(person) {
-      console.debug("***** SHOW PERSON DETAIL", person)
-      // create the assignment
+      // We need the assignment AND the person selected
+      this.select_model('session_assignment', null)
+      if (this.assignment) this.select_model('session_assignment', this.assignment);
+      this.select_model('person', person);
     }
   }
 }
