@@ -11,10 +11,9 @@
           >
           </session-limit-editor>
         <p>
-          Highlight (click and drag) the times of day that you are available for programming in the calendar view below.
-          You can create multiple blocks of time per day.
-          The in-person convention time is currently displayed, and is Central Daylight Time (UTC-5).
-          If you will be attending virtually,
+          Under each day, highlight (click and drag) the times of day that you are available for programming in the calendar view below.
+          You can create multiple blocks of time per day. The in-person convention time is currently displayed,
+          and is Central Daylight Time (UTC-5). If you will be attending virtually,
           and want to enter your availability in that time zone, select that option from below the calendar.
         </p>
       </div>
