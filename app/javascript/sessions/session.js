@@ -43,7 +43,9 @@ export const session_columns = [
   {
     key: 'open_for_interest',
     label: 'Open for Interest',
-    type: "boolean"
+    type: "radio",
+    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+    sortable: false
   },
   {
     key: 'instructions_for_interest',
@@ -61,7 +63,9 @@ export const session_columns = [
   {
     key: 'require_signup',
     label: 'Requires Signup',
-    type: "boolean"
+    type: "radio",
+    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+    sortable: false
   },
   {
     key: 'waiting_list_size',
@@ -74,12 +78,16 @@ export const session_columns = [
   {
     key: 'is_break',
     label: 'Is Break',
-    type: "boolean"
+    type: "radio",
+    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+    sortable: false
   },
   {
     key: 'publish',
     label: 'Publish',
-    type: "boolean"
+    type: "radio",
+    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+    sortable: false
   },
   {
     key: 'visibility',
