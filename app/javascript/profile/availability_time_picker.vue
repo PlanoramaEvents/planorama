@@ -219,8 +219,12 @@ export default {
   background-color: $color-secondary-2-1; //$color-secondary-1-1;
 }
 
-.vuecal__time-cell-label {
-  color: $color-primary-4;
+.plano-first .vuecal__time-column {
+  border-right: 1px solid black;
+}
+
+.plano-first .vuecal__title {
+  padding-left: 50px;
 }
 
 .plano-first .vuecal__arrow--prev,
@@ -245,7 +249,7 @@ export default {
 }
 
 .plano-first {
-  min-width: 130px;
+  min-width: 150px;
 }
 
 .plano-col {
