@@ -31,6 +31,9 @@ const profileRoutes = [
 //
 import ScheduleScreen from './sessions/schedule-screen.vue';
 
+//
+import ReportsScreen from './reports/reports_screen.vue'
+
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
 import SurveyList from './surveys/survey-list.vue';
@@ -115,6 +118,13 @@ export const router = new VueRouter({
       path: '/surveys',
       component: SurveyScreen,
       children: surveyRoutes,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/reports',
+      component: ReportsScreen,
       meta: {
         requiresAuth: true
       }
