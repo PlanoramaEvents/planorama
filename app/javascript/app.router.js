@@ -34,6 +34,9 @@ import SessionList from './sessions/sessions-list.vue';
 import SessionTabs from  './sessions/session_tabs.vue';
 import SessionScreen from './sessions/session_screen.vue';
 
+//
+import ReportsScreen from './reports/reports_screen.vue'
+
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
 import SurveyList from './surveys/survey-list.vue';
@@ -125,6 +128,13 @@ export const router = new VueRouter({
       path: '/surveys',
       component: SurveyScreen,
       children: surveyRoutes,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/reports',
+      component: ReportsScreen,
       meta: {
         requiresAuth: true
       }

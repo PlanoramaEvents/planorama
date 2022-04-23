@@ -44,6 +44,9 @@ Rails.application.routes.draw do
   get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
   get 'person/:person_id/assigned_surveys', to: 'people#assigned_surveys'
 
+  get 'report/participant_selections', to: 'reports#participant_selections'
+  get 'report/session_selections', to: 'reports#session_selections'
+
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
   resources :session_limits, path: 'session_limit', except: [:index]
