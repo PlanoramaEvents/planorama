@@ -4,83 +4,85 @@
       <!-- TODO: we need to pass in the session assignment -->
       <div class="d-flex">
         <h3 class="mr-auto">{{selected.published_name}}</h3>
-        <div class="ml-3">
-          Rank: {{rank}}
-        </div>
-        <div class="ml-3">
-          Session moderation preference: {{sessionModPreference}}
-        </div>
+        <span class="ml-3">
+          <label>Rank:</label>
+          {{rank}}
+        </span>
+        <span class="ml-3">
+          <label>Session moderation preference:</label>
+          {{sessionModPreference}}
+        </span>
       </div>
     </template>
     <template #content v-if="selected">
       <div>
         <div class="mt-2">
-          <b>Session Comments</b>
+          <label>Session Comments</label>
           <div class="ml-5" v-if="assignment">
             {{assignment.interest_notes}}
           </div>
         </div>
         <div class="mt-2">
-          <b>Bio</b>
+          <label>Bio</label>
           <div class="ml-5" v-if="assignment">
             <span v-html="selected.bio"></span>
           </div>
         </div>
         <div class="d-flex flex-row mt-3">
           <div class="w-50 mr-2">
-            <b>Demographics</b>
+            <h6>Demographics</h6>
             <ul class="list-unstyled">
-              <li class="mb-2">Ethnicity: {{selected.ethnicity}}</li>
-              <li class="mb-2">Gender: {{selected.gender}}</li>
-              <li class="mb-2">Age at time of Event: {{selected.age_at_convention}}</li>
-              <li class="mb-2">Romantic and/or sexual orientation: {{selected.romantic_sexual_orientation}}</li>
+              <li class="mb-2"><label>Ethnicity:</label> {{selected.ethnicity}}</li>
+              <li class="mb-2"><label>Gender:</label> {{selected.gender}}</li>
+              <li class="mb-2"><label>Age at time of Event:</label> {{selected.age_at_convention}}</li>
+              <li class="mb-2"><label>Romantic and/or sexual orientation:</label> {{selected.romantic_sexual_orientation}}</li>
             </ul>
           </div>
           <div class="w-50">
-            <b>Community Memberships</b>
+            <h6>Community Memberships</h6>
             <ul class="list-unstyled">
-              <li class="mb-2">Experience with being “othered”: {{selected.othered}}</li>
-              <li class="mb-2">Member of an Indigenous community: {{selected.indigenous}}</li>
-              <li class="mb-2">Member of the global Black diaspora: {{selected.black_diaspora}}</li>
-              <li class="mb-2">Represent something other than a purely US-centric perspective: {{selected.non_us_centric_perspectives}}</li>
+              <li class="mb-2"><label>Experience with being “othered”:</label> {{selected.othered}}</li>
+              <li class="mb-2"><label>Member of an Indigenous community:</label> {{selected.indigenous}}</li>
+              <li class="mb-2"><label>Member of the global Black diaspora:</label> {{selected.black_diaspora}}</li>
+              <li class="mb-2"><label>Represent something other than a purely US-centric perspective:</label> {{selected.non_us_centric_perspectives}}</li>
             </ul>
           </div>
         </div>
         <div class="mb-2">
-          <div>Anyone that should not be assigned to be on a panel with participant</div>
+          <label>Anyone that should not be assigned to be on a panel with participant</label>
           <div class="ml-5">
             {{selected.do_not_assign_with ? selected.do_not_assign_with : 'N/A'}}
           </div>
         </div>
         <div class="mb-2">
-          <div>Permission to be included in live streamed program: {{selected.can_stream}}</div>
+          <span<label>Permission to be included in live streamed program:</label> {{selected.can_stream}}</span>
         </div>
         <div class="mb-2">
-          <div>Topics participant does not want to be streamed while talking about are (this can be updated later):</div>
+          <label>Topics participant does not want to be streamed while talking about are:</label>
           <div class="ml-5">
             {{selected.can_stream_exceptions ? selected.can_stream_exceptions : 'N/A'}}
           </div>
         </div>
         <div class="mb-2">
-          <div>Permission to be included in recorded program: {{selected.can_record}}</div>
+          <div><label>Permission to be included in recorded program:</label> {{selected.can_record}}</div>
         </div>
         <div class="mb-2">
-          <div>Topics participant does not want to be recorded talking about</div>
+          <label>Topics participant does not want to be recorded talking about</label>
           <div class="ml-5">
             {{selected.can_record_exceptions ? selected.can_record_exceptions : 'N/A'}}
           </div>
         </div>
         <div class="mb-2">
-          <div>Local to the Event: {{selected.is_local ? 'Yes' : 'No'}}</div>
+          <span><label>Local to the Event:</label> {{selected.is_local ? 'Yes' : 'No'}}</span>
         </div>
         <div class="mb-2">
-          <div>Moderating experience</div>
+          <label>Moderating experience</label>
           <div class="ml-5">
             {{selected.moderation_experience ? selected.moderation_experience : 'N/A'}}
           </div>
         </div>
         <div class="mb-2">
-          <div>Languages spoken: {{selected.languages_fluent_in }}</div>
+          <span><label>Languages spoken:</label> {{selected.languages_fluent_in }}</span>
         </div>
       </div>
     </template>
