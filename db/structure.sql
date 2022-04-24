@@ -1082,7 +1082,10 @@ CREATE TABLE public.sessions (
     require_signup boolean DEFAULT false,
     waiting_list_size integer DEFAULT 0,
     open_for_interest boolean DEFAULT false,
-    instructions_for_interest text
+    instructions_for_interest text,
+    updated_by character varying,
+    interest_opened_by character varying,
+    interest_opened_at timestamp without time zone
 );
 
 
@@ -2479,6 +2482,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220404143150'),
 ('20220404162324'),
 ('20220410221341'),
-('20220411031007');
+('20220411031007'),
+('20220424152922');
 
 

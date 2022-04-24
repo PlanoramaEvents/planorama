@@ -8,7 +8,8 @@ class SessionSerializer
              :participant_notes, :is_break, :start_time,
              :visibility, :publish,
              :open_for_interest, :instructions_for_interest,
-             :require_signup, :waiting_list_size
+             :require_signup, :waiting_list_size,
+             :updated_by, :interest_opened_by, :interest_opened_at
 
   # tag_list
   attribute :tag_list do |session|

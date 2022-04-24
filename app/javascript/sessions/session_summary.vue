@@ -36,6 +36,10 @@
             @change="saveSession()"
           >
             Open for Interest
+            <span v-if="session.open_for_interest">
+              on {{ session.interest_opened_at ? new Date(session.interest_opened_at).toLocaleString() : 'n/a'}}
+              by {{ session.interest_opened_by ? session.interest_opened_by.toLocaleString() : 'n/a'}}
+            </span>
           </b-form-checkbox>
           <!--
             TODO: we need the date when the session was opened for interest .... ????
@@ -44,17 +48,13 @@
         </b-form-group>
       </div>
       <div class='ml-auto' v-if="session">
-        <!-- TODO: update details here -->
         <small class="text-muted d-block">
           Last updated:
+          <em><strong>{{session.updated_by}}</strong></em>
         </small>
-        <!-- <small class="text-muted d-block"> by <em><strong>{{selected.updated_by && selected.updated_by.name}}</strong></em></small> -->
         <small class="text-muted d-block">
           Last edited on:
-          <em><strong>
-
-            {{new Date(session.updated_at).toLocaleString()}}
-          </strong></em>
+          <em><strong>{{new Date(session.updated_at).toLocaleString()}}</strong></em>
         </small>
       </div>
     </div>
