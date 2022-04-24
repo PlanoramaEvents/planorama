@@ -89,10 +89,25 @@ export default {
   },
   methods: {
     saveAssignment(assignment) {
-      this.save(assignment)
+      this.save(assignment).then(
+        () => {
+          this.refreshSession()
+        }
+      )
     },
     refreshAssignments(arg) {
-      this.fetchPaged(false);
+      this.fetchPaged(false).then(
+        () => {
+          this.refreshSession()
+        }
+      )
+    },
+    refreshSession() {
+      this.fetch_model_by_id('session',this.session.id).then(
+        (obj) => {
+          this.$emit('input',obj)
+        }
+      )
     }
   },
   mounted() {

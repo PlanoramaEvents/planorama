@@ -20,6 +20,7 @@
           :model="sessionAssignmentModel"
           :defaultFilter="assignmentFilter"
           nullsFirst="false"
+          @input="onSessionUpdate"
         ></assign-participants>
       </b-tab>
       <b-tab title="Schedule" :active="tab === 'session-schedule'" disabled lazy>

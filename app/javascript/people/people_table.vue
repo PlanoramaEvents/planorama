@@ -78,7 +78,7 @@
       <template #cell(current_sign_in_at)="{ item }">
         <span v-if="item.public">
           <tooltip-overflow :title="item.current_sign_in_at">
-            {{new Date(item.current_sign_in_at).toLocaleDateString()}}
+            {{new Date(item.current_sign_in_at).toLocaleString()}}
           </tooltip-overflow>
         </span>
       </template>

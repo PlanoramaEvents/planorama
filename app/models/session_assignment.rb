@@ -23,7 +23,7 @@ class SessionAssignment < ApplicationRecord
   has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
 
   belongs_to  :person
-  belongs_to  :session
+  belongs_to  :session, touch: true
   belongs_to  :session_assignment_role_type, required: false
   has_one     :published_session_assignment # TODO: cascade delete?
 

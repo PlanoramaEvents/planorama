@@ -5,7 +5,7 @@
         <h3>Survey Details</h3>
         <small class="text-muted d-block">Last updated:</small>
         <small class="text-muted d-block"> by <em><strong>{{survey.updated_by && survey.updated_by.name}}</strong></em></small>
-        <small class="text-muted d-block"> on <em><strong>{{new Date(survey.updated_at).toLocaleDateString()}}</strong></em></small>
+        <small class="text-muted d-block"> on <em><strong>{{new Date(survey.updated_at).toLocaleString()}}</strong></em></small>
       </template>
       <template #content v-if="survey">
         <b-row>

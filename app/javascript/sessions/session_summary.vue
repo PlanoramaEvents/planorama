@@ -52,7 +52,8 @@
         <small class="text-muted d-block">
           Last edited on:
           <em><strong>
-            {{new Date(session.updated_at).toLocaleDateString()}}
+
+            {{new Date(session.updated_at).toLocaleString()}}
           </strong></em>
         </small>
       </div>

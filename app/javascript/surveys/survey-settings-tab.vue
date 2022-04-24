@@ -6,7 +6,7 @@
         <b-col>
           <span class="mr-2">Closed</span>
           <b-form-checkbox inline v-model="publishVal" switch size="lg" v-b-modal.confirmPublish class="mr-0"></b-form-checkbox>
-          Published&nbsp;<span v-if="survey.public">on {{new Date(survey.published_on).toLocaleDateString()}}</span>
+          Published&nbsp;<span v-if="survey.public">on {{new Date(survey.published_on).toLocaleString()}}</span>
         </b-col>
       </b-row>
       <survey-setting disabled v-model="survey.anonymous" field="anonymous">

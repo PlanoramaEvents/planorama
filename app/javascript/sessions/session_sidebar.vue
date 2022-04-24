@@ -5,7 +5,7 @@
         <h3>{{selected.title}}</h3>
         <small class="text-muted d-block">Last updated:</small>
         <!-- <small class="text-muted d-block"> by <em><strong>{{selected.updated_by && selected.updated_by.name}}</strong></em></small> -->
-        <small class="text-muted d-block"> on <em><strong>{{new Date(selected.updated_at).toLocaleDateString()}}</strong></em></small>
+        <small class="text-muted d-block"> on <em><strong>{{new Date(selected.updated_at).toLocaleString()}}</strong></em></small>
       </template>
       <template #content v-if="selected">
         <b-row>

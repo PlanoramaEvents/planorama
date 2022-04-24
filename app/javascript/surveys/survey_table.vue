@@ -10,7 +10,7 @@
       <tooltip-overflow :title="item.description">{{item.description}}</tooltip-overflow>
     </template>
     <template #cell(publishedOn)="{ item }">
-      <span v-if="item.public" v-b-tooltip="{title: item.published_on}">{{new Date(item.published_on).toLocaleDateString()}}</span>
+      <span v-if="item.public" v-b-tooltip="{title: item.published_on}">{{new Date(item.published_on).toLocaleString()}}</span>
     </template>
     <template #cell(updated_by)="{ item }">
       <tooltip-overflow :title="item.updated_by ? item.updated_by.name : '?????'">{{item.updated_by ? item.updated_by.name : '?????'}}</tooltip-overflow>
