@@ -64,7 +64,7 @@ const { isNavigationFailure, NavigationFailureType } = VueRouter;
 
 export default {
   name: "ProfileTabs",
-  props: ['tab'],
+  props: ['tab', 'id'],
   components: {
     PersonSummary,
     SessionSelector,
@@ -101,7 +101,7 @@ export default {
       }
     },
     rankedFilter() {
-      return `{"op":"all","queries":[["person_id", "=", "${this.currentUser.id}"],["interested", "=", true]]}`
+      return `{"op":"all","queries":[["person_id", "=", "${this.person.id}"],["interested", "=", true]]}`
     },
     timezone() {
       let tz = this.configByName('convention_timezone')
@@ -115,14 +115,17 @@ export default {
     handleTabActivation(newTab, oldTab, bvEvent) {
       let path = '';
       switch(newTab) {
+        case 0:
+          path = `${this.person.id}`;
+        break;
         case 1:
-          path = 'availability';
+          path = `availability/${this.person.id}`;
           break;
         case 2:
-          path = 'session-selection';
+          path = `session-selection/${this.person.id}`;
           break;
         case 3:
-          path = 'session-ranking';
+          path = `session-ranking/${this.person.id}`;
           break;
       }
       // change the router path to match the current tab
@@ -136,7 +139,9 @@ export default {
     }
   },
   mounted() {
-    this.fetch_model_by_id(personModel, this.currentUser.id).then(
+    // get id from URL if present
+    let id = this.id ? this.id : this.currentUser.id
+    this.fetch_model_by_id(personModel, id).then(
       (obj) => {
         this.person = obj
       }

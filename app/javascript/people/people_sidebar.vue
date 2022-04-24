@@ -7,6 +7,9 @@
     </template>
 
     <template #content v-if="selected">
+      <div class="float-right d-flex justify-content-end">
+        <b-button title="Edit Person" variant="primary" :to="editLink"><b-icon-pencil variant="white"></b-icon-pencil></b-button>
+      </div>
       <b-tabs content-class="mt-3">
         <b-tab title="Details">
           <detail :model="model"></detail>
@@ -40,6 +43,11 @@ export default {
   mixins: [
     modelMixin,
     personSessionMixin
-  ]
+  ],
+  computed: {
+    editLink() {
+      return `/profile/${this.selected.id}`;
+    }
+  }
 }
 </script>

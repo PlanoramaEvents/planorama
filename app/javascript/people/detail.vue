@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-12">
 
-        <b-button @click="edit" :disabled="editable">Edit</b-button>
-        <b-button @click="save" :disabled="!editable">Save</b-button>
+        <!-- <b-button @click="edit" :disabled="editable">Edit</b-button>
+        <b-button @click="save" :disabled="!editable">Save</b-button> -->
         <h2>Basic Information</h2>
         <b-form-group
           label="Name"
@@ -136,13 +136,13 @@ export default {
     editable: false,
   }),
   methods: {
-    edit() {
-      this.editable = true
-    },
-    save() {
-      this.editable = false
-      this.saveSelected();
-    }
+    // edit() {
+    //   this.editable = true
+    // },
+    // save() {
+    //   this.editable = false
+    //   this.saveSelected();
+    // }
   }
 }
 </script>

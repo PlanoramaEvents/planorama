@@ -22,10 +22,10 @@ import ProfileScreen from './profile/profile-screen.vue';
 import ProfileTabs from './profile/profile-tabs.vue';
 
 const profileRoutes = [
-  { path: 'session-selection', component: ProfileTabs, props: {tab: 'session-selection'} },
-  { path: 'session-ranking', component: ProfileTabs, props: {tab: 'session-ranking'} },
-  { path: 'availability', component: ProfileTabs, props: {tab: 'availability'} },
-  { path: '', component: ProfileTabs, props: true }
+  { path: 'session-selection/:id?', component: ProfileTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
+  { path: 'session-ranking/:id?', component: ProfileTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
+  { path: 'availability/:id?', component: ProfileTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
+  { path: ':id?', component: ProfileTabs, props: true }
 ]
 
 //
