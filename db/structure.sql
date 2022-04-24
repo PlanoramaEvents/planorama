@@ -961,6 +961,39 @@ CREATE TABLE public.published_sessions (
 
 
 --
+-- Name: room_sets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.room_sets (
+    id bigint NOT NULL,
+    name character varying,
+    description character varying,
+    sort_order integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: room_sets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.room_sets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: room_sets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.room_sets_id_seq OWNED BY public.room_sets.id;
+
+
+--
 -- Name: rooms; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -974,7 +1007,12 @@ CREATE TABLE public.rooms (
     purpose character varying,
     comment text,
     sort_order integer,
-    capacity integer
+    capacity integer,
+    room_floor character varying,
+    is_scheduled boolean DEFAULT true,
+    is_online boolean DEFAULT false,
+    dimensions text,
+    area_of_space integer
 );
 
 
@@ -1339,7 +1377,8 @@ CREATE TABLE public.venues (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    sort_order integer
+    sort_order integer,
+    address character varying
 );
 
 
@@ -1412,6 +1451,13 @@ ALTER TABLE ONLY public.audit_survey_versions ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.categorizations ALTER COLUMN id SET DEFAULT nextval('public.categorizations_id_seq'::regclass);
+
+
+--
+-- Name: room_sets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_sets ALTER COLUMN id SET DEFAULT nextval('public.room_sets_id_seq'::regclass);
 
 
 --
@@ -1722,6 +1768,14 @@ ALTER TABLE ONLY public.published_session_assignments
 
 ALTER TABLE ONLY public.published_sessions
     ADD CONSTRAINT published_programme_items_pkey PRIMARY KEY (session_id);
+
+
+--
+-- Name: room_sets room_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_sets
+    ADD CONSTRAINT room_sets_pkey PRIMARY KEY (id);
 
 
 --
@@ -2483,6 +2537,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220404162324'),
 ('20220410221341'),
 ('20220411031007'),
-('20220424152922');
+('20220424152922'),
+('20220424174950'),
+('20220424180453'),
+('20220424181346');
 
 
