@@ -16,16 +16,26 @@ import AdminComponent from './administration/admin_component.vue';
 
 // people
 import PeopleScreen from './people/people-screen.vue';
+import PeopleList from './people/people_list.vue';
+import PersonTabs from './people/person_tabs.vue';
 
 // profile
 import ProfileScreen from './profile/profile-screen.vue';
 import ProfileTabs from './profile/profile-tabs.vue';
 
 const profileRoutes = [
-  { path: 'session-selection/:id?', component: ProfileTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
-  { path: 'session-ranking/:id?', component: ProfileTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
-  { path: 'availability/:id?', component: ProfileTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
-  { path: ':id?', component: ProfileTabs, props: true }
+  { path: 'session-selection', component: ProfileTabs, props: {tab: 'session-selection'} },
+  { path: 'session-ranking', component: ProfileTabs, props: {tab: 'session-ranking'} },
+  { path: 'availability', component: ProfileTabs, props: {tab: 'availability'} },
+  { path: '', component: ProfileTabs, props: true }
+]
+
+const personRoutes = [
+  { path: 'edit/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'person-edit'}) },
+  { path: 'session-selection/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
+  { path: 'session-ranking/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
+  { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
+  { path: '', component: PeopleList }
 ]
 
 //
@@ -104,6 +114,7 @@ export const router = new VueRouter({
     {
       path: '/people',
       component: PeopleScreen,
+      children: personRoutes,
       meta: {
         requiresAuth: true
       }

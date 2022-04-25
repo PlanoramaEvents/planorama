@@ -4,7 +4,7 @@
       <b-form-group label="Name">
         <b-form-input type="text" v-model="editable_person.name" @blur="onInput"></b-form-input>
       </b-form-group>
-      <b-form-group label="Publication Name">
+      <b-form-group label="Pseudonym">
         <b-form-input type="text" v-model="editable_person.pseudonym" @blur="onInput"></b-form-input>
       </b-form-group>
       <email-addresses-editor

@@ -39,6 +39,7 @@
       :columns="columns"
       selectMode='multi'
       ref="people-table"
+      stateName="people-table-search-state"
     >
       <template v-slot:alternate-search-title>Seach by Email(s)</template>
       <template v-slot:alternate-search>
@@ -96,6 +97,8 @@ import { personModel as model } from '@/store/person.store'
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import PersonConStateSelector from '../components/person_con_state_selector'
 
+import searchStateMixin from '../store/search_state.mixin'
+
 export default {
   name: 'PeopleTable',
   components: {
@@ -117,7 +120,6 @@ export default {
   }),
   methods: {
     onEmailSearch() {
-      // console.debug("FIND PEOPLE", this.searchEmails)
       let queries = {
         "op": 'any',
         "queries": []
@@ -134,7 +136,6 @@ export default {
       this.$refs['people-table'].setFilter(queries)
     },
     onSaveMassEdit() {
-      // console.debug("*****  SAVE ME", this.selectedConState)
       if (this.selectedIds.length > 0 && this.selectedConState) {
         this.update_all('person', this.selectedIds, {con_state: this.selectedConState})
       }

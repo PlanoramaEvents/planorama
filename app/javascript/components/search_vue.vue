@@ -41,6 +41,7 @@
 <script>
 import VueQueryBuilder from 'vue-query-builder';
 import { query_to_rules } from "../utils";
+import searchStateMixin from '../store/search_state.mixin'
 
 export default {
   name: 'SearchVue',
@@ -48,8 +49,13 @@ export default {
     VueQueryBuilder
   },
   props: {
-    columns: Array
+    columns: Array,
+    stateName: {
+      type: String,
+      default: null
+    }
   },
+  mixins: [searchStateMixin],
   data() {
     return {
       value: null,
@@ -91,15 +97,54 @@ export default {
       return query_to_rules(this.query)
     },
     onSearch: function (event) {
-      this.$emit('change', this.filter_by_value())
+      let filter = this.filter_by_value()
+
+      if (this.stateName) {
+        this.setSearchState({
+          key: this.stateName,
+          setting: {
+            filter: filter,
+            value: this.value
+          }
+        })
+      }
+
+      this.$emit('change', filter)
     },
     // onSearchClear: function (event) {
     //   this.value = null
     //   this.$emit('change', null)
     // },
     onQuerySearch: function() {
-      // console.debug('*** QUERY THIS ', JSON.stringify(this.filter_by_query) )
-      this.$emit('change', this.filter_by_query())
+      let filter = this.filter_by_query()
+
+      if (this.stateName) {
+        this.setSearchState({
+          key: this.stateName,
+          setting: {
+            filter: filter,
+            query: this.query
+          }
+        })
+      }
+
+      this.$emit('change', filter)
+    }
+  },
+  mounted() {
+    if (this.stateName) {
+      let saved = this.getSearchState()(this.stateName)
+      if (saved) {
+        if (saved.value) {
+          this.value = saved.value
+        }
+        if (saved.query) {
+          this.query = saved.query
+
+          this.$root.$emit('bv::toggle::collapse', 'advanced-search')
+        }
+        this.$emit('change', saved.filter)
+      }
     }
   }
 }
