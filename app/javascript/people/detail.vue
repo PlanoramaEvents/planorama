@@ -2,117 +2,90 @@
   <div class="detail">
     <div class="row">
       <div class="col-12">
-
-        <!-- <b-button @click="edit" :disabled="editable">Edit</b-button>
-        <b-button @click="save" :disabled="!editable">Save</b-button> -->
-        <h2>Basic Information</h2>
-        <b-form-group
-          label="Name"
-        >
-          <b-form-input v-model="selected.name" :disabled="!editable"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label="Name Sort By"
-        >
-        <b-form-input v-model="selected.name_sort_by" :disabled="!editable"></b-form-input>
-        </b-form-group>
-        <b-form-checkbox v-model="selected.name_sort_by_confirmed" :disabled="!editable">
-          Name Sort By Confirmed
-        </b-form-checkbox>
-
-        <b-form-group
-          label="Pseudonym"
-        >
-          <b-form-input v-model="selected.pseudonym" :disabled="!editable"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label="Pseudonym Sort By"
-        >
-        <b-form-input v-model="selected.pseudonym_sort_by" :disabled="!editable"></b-form-input>
-        </b-form-group>
-        <b-form-checkbox v-model="selected.pseudonym_sort_by_confirmed" :disabled="!editable">
-          Pseudonym Sort By Confirmed
-        </b-form-checkbox>
-
-        <b-form-group
-          label="Pronouns"
-        >
-          <b-form-input v-model="selected.pronouns" :disabled="!editable"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label="Job Title"
-        >
-          <b-form-input v-model="selected.job_title" :disabled="!editable"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label="Organization"
-        >
-          <b-form-input v-model="selected.organization" :disabled="!editable"></b-form-input>
-        </b-form-group>
-
-        <b-form-checkbox v-model="selected.registered" :disabled="!editable">
-          Registered
-        </b-form-checkbox>
-
-        <b-form-group
-          label="Registration Type"
-        >
-          <b-form-input v-model="selected.registration_type" :disabled="!editable"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label="Registration Number"
-        >
-          <b-form-input v-model="selected.registration_number" :disabled="!editable"></b-form-input>
-        </b-form-group>
-
-        <b-form-checkbox v-model="selected.opted_in" :disabled="!editable">
-          Opted In
-        </b-form-checkbox>
-        <b-form-checkbox v-model="selected.can_share" :disabled="!editable">
-          Can Share
-        </b-form-checkbox>
-        <b-form-checkbox v-model="selected.can_photo" :disabled="!editable" value="yes" unchecked-value="no">
-          Can Photo
-        </b-form-checkbox>
-        <b-form-checkbox v-model="selected.can_stream" :disabled="!editable" value="yes" unchecked-value="no">
-          Can Stream
-        </b-form-checkbox>
-        <b-form-checkbox v-model="selected.can_record" :disabled="!editable" value="yes" unchecked-value="no">
-          Can Record
-        </b-form-checkbox>
-
-        <b-form-group
-          label="Gender"
-        >
-          <b-form-input v-model="selected.gender" :disabled="!editable"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label="Ethnicity"
-        >
-          <b-form-input v-model="selected.ethnicity" :disabled="!editable"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label="Year of Birth"
-        >
-          <!-- TODO: year selector/number -->
-          <b-form-input
-            v-model="selected.year_of_birth"
-            :disabled="!editable"></b-form-input>
-        </b-form-group>
-
-        <h2>Bio</h2>
-        <plano-editor
-          v-model="selected.bio"
-          type='classic'
-          :disabled="!editable"
-        ></plano-editor>
-
-        <h2>Email Addresses</h2>
-        <email-addresses-editor
-          v-model="selected"
-          model='email_address'
-          :disabled="!editable"
-        ></email-addresses-editor>
+        <div>
+          <label>Name:</label>
+          {{ selected.name }}
+        </div>
+        <div>
+          <label>Name Sort By:</label>
+          {{ selected.name_sort_by }}
+        </div>
+        <div>
+          <label>Name Sort By Confirmed:</label>
+          {{ selected.name_sort_by_confirmed }}
+        </div>
+        <div>
+          <label>Pseudonym:</label>
+          {{ selected.pseudonym }}
+        </div>
+        <div>
+          <label>Pseudonym Sort By:</label>
+          {{ selected.pseudonym_sort_by }}
+        </div>
+        <div>
+          <label>Pseudonym Sort By Confirmed:</label>
+          {{ selected.pseudonym_sort_by_confirmed }}
+        </div>
+        <div>
+          <label>Bio:</label>
+          {{ selected.bio }}
+        </div>
+        <div>
+          <label>Pronouns:</label>
+          {{ selected.pronouns }}
+        </div>
+        <div>
+          <label>Job Title:</label>
+          {{ selected.job_title }}
+        </div>
+        <div>
+          <label>Organization:</label>
+          {{ selected.organization }}
+        </div>
+        <div>
+          <label>Registered:</label>
+          {{ selected.registered ? 'Y' : 'N' }}
+        </div>
+        <div>
+          <label>Registration Type:</label>
+          {{ selected.registration_type }}
+        </div>
+        <div>
+          <label>Registration Number:</label>
+          {{ selected.registration_number }}
+        </div>
+        <div>
+          <label>Opted In:</label>
+          {{ selected.opted_in }}
+        </div>
+        <div>
+          <label>Can Share:</label>
+          {{ selected.can_share ? 'Y' : 'N' }}
+        </div>
+        <div>
+          <label>Can Photo:</label>
+          {{ selected.can_photo ? 'Y' : 'N' }}
+        </div>
+        <div>
+          <label>Can Stream:</label>
+          {{ selected.can_stream ? 'Y' : 'N' }}
+        </div>
+        <div>
+          <label>Can Record:</label>
+          {{ selected.can_record ? 'Y' : 'N' }}
+        </div>
+        <div>
+          <label>Gender:</label>
+          {{ selected.gender }}
+        </div>
+        <div>
+          <label>Ethnicity:</label>
+          {{ selected.ethnicity }}
+        </div>
+        <div>
+          <label>Year of Birth:</label>
+          {{ selected.year_of_birth }}
+        </div>
       </div>
     </div>
   </div>
@@ -120,15 +93,9 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
-import PlanoEditor from '@/components/plano_editor';
-import EmailAddressesEditor from "../components/email_addresses_editor.vue"
 
 export default {
   name: "Detail",
-  components: {
-    PlanoEditor,
-    EmailAddressesEditor
-  },
   mixins: [
     modelMixin
   ],
@@ -136,13 +103,6 @@ export default {
     editable: false,
   }),
   methods: {
-    // edit() {
-    //   this.editable = true
-    // },
-    // save() {
-    //   this.editable = false
-    //   this.saveSelected();
-    // }
   }
 }
 </script>

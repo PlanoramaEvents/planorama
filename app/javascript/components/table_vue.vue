@@ -124,6 +124,9 @@
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import SearchVue from './search_vue'
+
+import searchStateMixin from '../store/search_state.mixin'
+
 export default {
   name: 'TableVue',
   components: {

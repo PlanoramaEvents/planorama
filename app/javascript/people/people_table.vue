@@ -96,6 +96,8 @@ import { personModel as model } from '@/store/person.store'
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import PersonConStateSelector from '../components/person_con_state_selector'
 
+import searchStateMixin from '../store/search_state.mixin'
+
 export default {
   name: 'PeopleTable',
   components: {

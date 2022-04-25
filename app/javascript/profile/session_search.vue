@@ -106,6 +106,7 @@ export default {
       this.$emit('change', this.fields_to_query())
     },
     init() {
+
       let saved = this.getSearchState()(SAVED_SEARCH_STATE)
       // console.debug("**** INIT ", saved)
       if (saved) {

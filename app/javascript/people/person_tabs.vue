@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- TODO BAK -->
+    <b-button variant="link" @click="back">Back</b-button>
     <person-summary v-if="person"
       v-model="person"
     ></person-summary>
@@ -40,16 +40,22 @@
           :defaultFilter="rankedFilter"
         ></session-ranker>
       </b-tab>
+      <b-tab title="Admin" disabled lazy>
+      </b-tab>
+      <b-tab title="Surveys" disabled lazy>
+      </b-tab>
+      <b-tab title="Emails" disabled lazy>
+      </b-tab>
     </b-tabs>
   </div>
 </template>
 
 <script>
-import SessionSelector from './session_selector.vue';
-import SessionRanker from './session_ranker.vue';
-import AvailabilityAndInterests from './availability_and_interests.vue';
-import PersonDetails from './person_details.vue'
-import PersonSummary from './person_summary.vue';
+import SessionSelector from '../profile/session_selector.vue';
+import SessionRanker from '../profile/session_ranker.vue';
+import AvailabilityAndInterests from '../profile/availability_and_interests.vue';
+import PersonDetails from '../profile/person_details.vue'
+import PersonSummary from '../profile/person_summary.vue';
 
 import { personModel } from '@/store/person.store'
 import { sessionModel } from '@/store/session.store'
@@ -64,7 +70,7 @@ import VueRouter from 'vue-router';
 const { isNavigationFailure, NavigationFailureType } = VueRouter;
 
 export default {
-  name: "ProfileTabs",
+  name: "PeopleTabs",
   props: ['tab', 'id'],
   components: {
     PersonSummary,
@@ -113,22 +119,28 @@ export default {
     onPersonUpdate(arg) {
       this.person = arg
     },
+    back() {
+      this.$router.push('/people');
+    },
     handleTabActivation(newTab, oldTab, bvEvent) {
       let path = '';
       switch(newTab) {
+        case 0:
+          path = `edit/${this.person.id}`;
+        break;
         case 1:
-          path = 'availability';
+          path = `availability/${this.person.id}`;
           break;
         case 2:
-          path = 'session-selection';
+          path = `session-selection/${this.person.id}`;
           break;
         case 3:
-          path = 'session-ranking';
+          path = `session-ranking/${this.person.id}`;
           break;
       }
       // change the router path to match the current tab
       // so that reloads work right
-      this.$router.push(`/profile/${path}`).catch(error => {
+      this.$router.push(`/people/${path}`).catch(error => {
         if(!isNavigationFailure(error, NavigationFailureType.duplicated)) {
           // ignore the duplicates, otherwise -
           throw error;
