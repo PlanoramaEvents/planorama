@@ -8,6 +8,7 @@
         @change="onSearchChanged"
         :columns="columns"
         v-if="showSearch"
+        :stateName="stateName"
       >
         <template v-slot:alternate-search-tab>
           <b-tab v-if="$slots['alternate-search']">
@@ -125,8 +126,6 @@ import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import SearchVue from './search_vue'
 
-import searchStateMixin from '../store/search_state.mixin'
-
 export default {
   name: 'TableVue',
   components: {
@@ -137,7 +136,6 @@ export default {
     tableMixin, // covers pagination and sorting
   ],
   props: {
-    // TODO:
     columns : { type: Array },
     selectMode: {
       type: String,
@@ -170,6 +168,10 @@ export default {
     showView: {
       type: Boolean,
       default: false
+    },
+    stateName: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -202,7 +204,6 @@ export default {
   },
   methods: {
     onSelectAll(arg) {
-      console.debug("***** SELECT ALL ", arg)
       if (arg == 'select_all') {
         this.$refs.table.selectAllRows()
       } else {

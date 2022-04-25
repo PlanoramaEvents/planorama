@@ -11,7 +11,7 @@
         <b-button title="Edit Person" variant="primary" :to="editLink"><b-icon-pencil variant="white"></b-icon-pencil></b-button>
       </div>
       <b-tabs content-class="mt-3" nav-class="border-0" nav-wrapper-class="border-bottom">
-        <b-tab title="Details">
+        <b-tab title="Summary">
           <detail :model="model"></detail>
         </b-tab>
         <!-- These need to be done and move to the people edit/tabs screen
