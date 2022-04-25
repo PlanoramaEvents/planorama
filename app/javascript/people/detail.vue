@@ -1,93 +1,57 @@
 <template>
   <div class="detail">
-    <div class="row">
-      <div class="col-12">
-        <div>
-          <label>Name:</label>
-          {{ selected.name }}
-        </div>
-        <div>
-          <label>Name Sort By:</label>
-          {{ selected.name_sort_by }}
-        </div>
-        <div>
-          <label>Name Sort By Confirmed:</label>
-          {{ selected.name_sort_by_confirmed }}
-        </div>
-        <div>
-          <label>Pseudonym:</label>
-          {{ selected.pseudonym }}
-        </div>
-        <div>
-          <label>Pseudonym Sort By:</label>
-          {{ selected.pseudonym_sort_by }}
-        </div>
-        <div>
-          <label>Pseudonym Sort By Confirmed:</label>
-          {{ selected.pseudonym_sort_by_confirmed }}
-        </div>
-        <div>
-          <label>Bio:</label>
-          {{ selected.bio }}
-        </div>
-        <div>
-          <label>Pronouns:</label>
-          {{ selected.pronouns }}
-        </div>
-        <div>
-          <label>Job Title:</label>
-          {{ selected.job_title }}
-        </div>
-        <div>
-          <label>Organization:</label>
-          {{ selected.organization }}
-        </div>
-        <div>
-          <label>Registered:</label>
-          {{ selected.registered ? 'Y' : 'N' }}
-        </div>
-        <div>
-          <label>Registration Type:</label>
-          {{ selected.registration_type }}
-        </div>
-        <div>
-          <label>Registration Number:</label>
-          {{ selected.registration_number }}
-        </div>
-        <div>
-          <label>Opted In:</label>
-          {{ selected.opted_in }}
-        </div>
-        <div>
-          <label>Can Share:</label>
-          {{ selected.can_share ? 'Y' : 'N' }}
-        </div>
-        <div>
-          <label>Can Photo:</label>
-          {{ selected.can_photo ? 'Y' : 'N' }}
-        </div>
-        <div>
-          <label>Can Stream:</label>
-          {{ selected.can_stream ? 'Y' : 'N' }}
-        </div>
-        <div>
-          <label>Can Record:</label>
-          {{ selected.can_record ? 'Y' : 'N' }}
-        </div>
-        <div>
-          <label>Gender:</label>
-          {{ selected.gender }}
-        </div>
-        <div>
-          <label>Ethnicity:</label>
-          {{ selected.ethnicity }}
-        </div>
-        <div>
-          <label>Year of Birth:</label>
-          {{ selected.year_of_birth }}
-        </div>
-      </div>
-    </div>
+    <dl>
+      <dt>Name:</dt>
+      <dd>{{ selected.name }}</dd>
+      <dt>Name Sort By:</dt>
+      <dd>{{ selected.name_sort_by }}</dd>
+      <dt>Name Sort By Confirmed:</dt>
+      <dd>{{ selected.name_sort_by_confirmed }}</dd>
+
+      <dt>Pseudonym:</dt>
+      <dd>{{ selected.pseudonym }}</dd>
+      <dt>Pseudonym Sort By:</dt>
+      <dd>{{ selected.pseudonym_sort_by }}</dd>
+      <dt>Pseudonym Sort By Confirmed:</dt>
+      <dd>{{ selected.pseudonym_sort_by_confirmed }}</dd>
+
+      <dt>Bio:</dt>
+      <dd>{{ selected.bio }}</dd>
+
+      <dt>Pronouns:</dt>
+      <dd>{{ selected.pronouns }}</dd>
+      <dt>Job Title:</dt>
+      <dd>{{ selected.job_title }}</dd>
+
+      <dt>Organization:</dt>
+      <dd>{{ selected.organization }}</dd>
+
+      <dt>Registered:</dt>
+      <dd>{{ selected.registered ? 'Y' : 'N' }}</dd>
+
+      <dt>Registration Type:</dt>
+      <dd>{{ selected.registration_type }}</dd>
+      <dt>Registration Number:</dt>
+      <dd>{{ selected.registration_number }}</dd>
+
+      <dt>Opted In:</dt>
+      <dd>{{ selected.opted_in }}</dd>
+      <dt>Can Share:</dt>
+      <dd>{{ selected.can_share ? 'Y' : 'N' }}</dd>
+      <dt>Can Photo:</dt>
+      <dd>{{ selected.can_photo ? 'Y' : 'N' }}</dd>
+      <dt>Can Stream:</dt>
+      <dd>{{ selected.can_stream ? 'Y' : 'N' }}</dd>
+      <dt>Can Record:</dt>
+      <dd>{{ selected.can_stream ? 'Y' : 'N' }}</dd>
+
+      <dt>Gender:</dt>
+      <dd>{{ selected.gender }}</dd>
+      <dt>Ethnicity:</dt>
+      <dd>{{ selected.ethnicity }}</dd>
+      <dt>Year of Birth:</dt>
+      <dd>{{ selected.year_of_birth }}</dd>
+    </dl>
   </div>
 </template>
 
