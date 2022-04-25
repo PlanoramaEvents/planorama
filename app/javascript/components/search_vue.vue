@@ -20,10 +20,9 @@
     </b-input-group>
 
     <b-button v-b-toggle.advanced-search variant="primary" class="mb-2 mt-2">Advanced Search</b-button>
-
     <b-collapse id="advanced-search" class="">
       <b-tabs content-class="mt-3" fill>
-        <b-tab title="Advanced" active>
+        <b-tab title="Advanced">
           <vue-query-builder
             v-model="query"
             :rules="rules"
@@ -100,13 +99,20 @@ export default {
       let filter = this.filter_by_value()
 
       if (this.stateName) {
-        this.setSearchState({
-          key: this.stateName,
-          setting: {
-            filter: filter,
-            value: this.value
-          }
-        })
+        if (this.value) {
+          this.setSearchState({
+            key: this.stateName,
+            setting: {
+              filter: filter,
+              value: this.value
+            }
+          })
+        } else {
+          this.setSearchState({
+            key: this.stateName,
+            setting: {}
+          })
+        }
       }
 
       this.$emit('change', filter)
@@ -119,13 +125,20 @@ export default {
       let filter = this.filter_by_query()
 
       if (this.stateName) {
-        this.setSearchState({
-          key: this.stateName,
-          setting: {
-            filter: filter,
-            query: this.query
-          }
-        })
+        if (this.query) {
+          this.setSearchState({
+            key: this.stateName,
+            setting: {
+              filter: filter,
+              query: this.query
+            }
+          })
+        } else {
+          this.setSearchState({
+            key: this.stateName,
+            setting: {}
+          })
+        }
       }
 
       this.$emit('change', filter)
@@ -141,7 +154,9 @@ export default {
         if (saved.query) {
           this.query = saved.query
 
-          this.$root.$emit('bv::toggle::collapse', 'advanced-search')
+          if (saved.filter.queries.length > 0) {
+            this.$root.$emit('bv::toggle::collapse', 'advanced-search')
+          }
         }
         this.$emit('change', saved.filter)
       }

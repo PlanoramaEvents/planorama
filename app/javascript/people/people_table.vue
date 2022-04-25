@@ -5,7 +5,6 @@
       ref="mass-edit-state"
       @save="onSaveMassEdit"
     >
-      <!-- {{ selectedIds }} -->
       <b-form>
         <person-con-state-selector
           v-model="selectedConState"
@@ -109,7 +108,8 @@ export default {
     PersonConStateSelector
   },
   mixins: [
-    modelUtilsMixin
+    modelUtilsMixin,
+    searchStateMixin
   ],
   data: () => ({
     columns,
@@ -119,21 +119,36 @@ export default {
     searchEmails: null,
   }),
   methods: {
-    onEmailSearch() {
+    queries(searchEmails) {
       let queries = {
         "op": 'any',
         "queries": []
       }
-      if (this.searchEmails && this.searchEmails.length > 0) {
-        let emails = this.searchEmails.split(',').map((a) => a.trim())
+      if (searchEmails && searchEmails.length > 0) {
+        let emails = searchEmails.split(',').map((a) => a.trim())
         queries["queries"].push(
           ["email_addresses.email","in",emails]
         )
       } else {
         queries = null
       }
-
-      this.$refs['people-table'].setFilter(queries)
+      return queries
+    },
+    onEmailSearch() {
+      if (this.searchEmails) {
+        this.setSearchState({
+          key: 'people-table-search-state',
+          setting: {
+            emails: this.searchEmails
+          }
+        })
+      } else {
+        this.setSearchState({
+          key: 'people-table-search-state',
+          setting: {}
+        })
+      }
+      this.$refs['people-table'].setFilter(this.queries(this.searchEmails))
     },
     onSaveMassEdit() {
       if (this.selectedIds.length > 0 && this.selectedConState) {
@@ -150,6 +165,23 @@ export default {
     onSave() {
       this.$refs['add-person-form'].savePerson()
     }
+  },
+  mounted() {
+    let saved = this.getSearchState()('people-table-search-state')
+    let peopleTable = this.$refs['people-table']
+    if (saved) {
+      if (saved.emails) {
+        this.searchEmails = saved.emails
+        this.$refs['people-table'].setFilter(this.queries(this.searchEmails))
+        this.$root.$emit('bv::toggle::collapse', 'advanced-search')
+      }
+    }
+
+    this.$root.$on('bv::collapse::state', (collapseId, isJustShown) => {
+      if (collapseId == 'advanced-search' && isJustShown && saved && saved.emails && peopleTable) {
+        peopleTable.showAlternateSearch()
+      }
+    })
   }
 }
 </script>
