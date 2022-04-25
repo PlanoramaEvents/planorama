@@ -9,9 +9,10 @@
         :columns="columns"
         v-if="showSearch"
         :stateName="stateName"
+        ref="table-search"
       >
         <template v-slot:alternate-search-tab>
-          <b-tab v-if="$slots['alternate-search']">
+          <b-tab v-if="$slots['alternate-search']" ref="alternate-search-tab">
             <template #title>
               <slot name="alternate-search-title">
                 Alternate Search
@@ -232,6 +233,11 @@ export default {
     },
     setFilter(newFilter) {
       this.filter = newFilter
+    },
+    showAlternateSearch() {
+      if (this.$refs['alternate-search-tab']) {
+        this.$refs['alternate-search-tab'].activate()
+      }
     }
   },
   watch: {
