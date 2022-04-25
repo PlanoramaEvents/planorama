@@ -55,12 +55,12 @@
         </div>
       </template>
 
-      <template v-slot:left-controls="{ selectedIds }">
+      <template v-slot:left-controls="{ editableIds }">
         <div>
           <b-button
             variant="primary"
-            @click="onEditStates(selectedIds)"
-            :disabled="selectedIds.length == 0"
+            @click="onEditStates(editableIds)"
+            :disabled="editableIds.length == 0"
           >Edit State(s)
           </b-button>
         </div>
@@ -114,7 +114,7 @@ export default {
   data: () => ({
     columns,
     model,
-    selectedIds: [],
+    editableIds: [],
     selectedConState: null,
     searchEmails: null,
   }),
@@ -151,12 +151,12 @@ export default {
       this.$refs['people-table'].setFilter(this.queries(this.searchEmails))
     },
     onSaveMassEdit() {
-      if (this.selectedIds.length > 0 && this.selectedConState) {
-        this.update_all('person', this.selectedIds, {con_state: this.selectedConState})
+      if (this.editableIds.length > 0 && this.selectedConState) {
+        this.update_all('person', this.editableIds, {con_state: this.selectedConState})
       }
     },
     onEditStates(ids) {
-      this.selectedIds = ids
+      this.editableIds = ids
       this.$refs['mass-edit-state'].showModal()
     },
     onNew() {
