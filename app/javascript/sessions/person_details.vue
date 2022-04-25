@@ -1,7 +1,6 @@
 <template>
-  <sidebar-vue model="person">
+  <sidebar-vue width="60%" model="person">
     <template #header v-if="selected">
-      <!-- TODO: we need to pass in the session assignment -->
       <div class="d-flex">
         <h3 class="mr-auto">{{selected.published_name}}</h3>
         <span class="ml-3">
@@ -17,73 +16,62 @@
     <template #content v-if="selected">
       <div>
         <div class="mt-2">
-          <label>Session Comments</label>
-          <div class="ml-5" v-if="assignment">
-            {{assignment.interest_notes}}
-          </div>
-        </div>
-        <div class="mt-2">
-          <label>Bio</label>
-          <div class="ml-5" v-if="assignment">
-            <span v-html="selected.bio"></span>
-          </div>
+          <dl>
+            <dt>Session Comments:</dt>
+            <dd>{{selected.interest_notes ? selected.interest_notes : 'N/A'}}</dd>
+            <dt>Bio:</dt>
+            <dd>
+              <span v-html="selected.bio"></span>
+            </dd>
+          </dl>
         </div>
         <div class="d-flex flex-row mt-3">
           <div class="w-50 mr-2">
             <h6>Demographics</h6>
-            <ul class="list-unstyled">
-              <li class="mb-2"><label>Ethnicity:</label> {{selected.ethnicity}}</li>
-              <li class="mb-2"><label>Gender:</label> {{selected.gender}}</li>
-              <li class="mb-2"><label>Age at time of Event:</label> {{selected.age_at_convention}}</li>
-              <li class="mb-2"><label>Romantic and/or sexual orientation:</label> {{selected.romantic_sexual_orientation}}</li>
-            </ul>
+            <dl>
+              <dt>Ethnicity:</dt>
+              <dd>{{selected.ethnicity}}</dd>
+              <dt>Gender:</dt>
+              <dd>{{selected.gender}}</dd>
+              <dt>Age at time of Event:</dt>
+              <dd>{{selected.age_at_convention}}</dd>
+              <dt>Romantic and/or sexual orientation:</dt>
+              <dd>{{selected.romantic_sexual_orientation}}</dd>
+            </dl>
           </div>
           <div class="w-50">
             <h6>Community Memberships</h6>
-            <ul class="list-unstyled">
-              <li class="mb-2"><label>Experience with being “othered”:</label> {{selected.othered}}</li>
-              <li class="mb-2"><label>Member of an Indigenous community:</label> {{selected.indigenous}}</li>
-              <li class="mb-2"><label>Member of the global Black diaspora:</label> {{selected.black_diaspora}}</li>
-              <li class="mb-2"><label>Represent something other than a purely US-centric perspective:</label> {{selected.non_us_centric_perspectives}}</li>
-            </ul>
+            <dl>
+              <dt>Experience with being “othered”:</dt>
+              <dd>{{selected.othered}}</dd>
+              <dt>Member of an Indigenous community:</dt>
+              <dd>{{selected.indigenous}}</dd>
+              <dt>Member of the global Black diaspora:</dt>
+              <dd>{{selected.black_diaspora}}</dd>
+              <dt>Represent something other than a purely US-centric perspective:</dt>
+              <dd>{{selected.non_us_centric_perspectives}}</dd>
+            </dl>
           </div>
         </div>
-        <div class="mb-2">
-          <label>Anyone that should not be assigned to be on a panel with participant</label>
-          <div class="ml-5">
-            {{selected.do_not_assign_with ? selected.do_not_assign_with : 'N/A'}}
-          </div>
-        </div>
-        <div class="mb-2">
-          <span<label>Permission to be included in live streamed program:</label> {{selected.can_stream}}</span>
-        </div>
-        <div class="mb-2">
-          <label>Topics participant does not want to be streamed while talking about are:</label>
-          <div class="ml-5">
-            {{selected.can_stream_exceptions ? selected.can_stream_exceptions : 'N/A'}}
-          </div>
-        </div>
-        <div class="mb-2">
-          <div><label>Permission to be included in recorded program:</label> {{selected.can_record}}</div>
-        </div>
-        <div class="mb-2">
-          <label>Topics participant does not want to be recorded talking about</label>
-          <div class="ml-5">
-            {{selected.can_record_exceptions ? selected.can_record_exceptions : 'N/A'}}
-          </div>
-        </div>
-        <div class="mb-2">
-          <span><label>Local to the Event:</label> {{selected.is_local ? 'Yes' : 'No'}}</span>
-        </div>
-        <div class="mb-2">
-          <label>Moderating experience</label>
-          <div class="ml-5">
-            {{selected.moderation_experience ? selected.moderation_experience : 'N/A'}}
-          </div>
-        </div>
-        <div class="mb-2">
-          <span><label>Languages spoken:</label> {{selected.languages_fluent_in }}</span>
-        </div>
+
+        <dl>
+          <dt>Anyone that should not be assigned to be on a panel with participant:</dt>
+          <dd>{{selected.do_not_assign_with ? selected.do_not_assign_with : 'N/A'}}</dd>
+          <dt>Permission to be included in live streamed program:</dt>
+          <dd>{{selected.can_stream}}</dd>
+          <dt>Topics participant does not want to be streamed while talking about are:</dt>
+          <dd>{{selected.can_stream_exceptions ? selected.can_stream_exceptions : 'N/A'}}</dd>
+          <dt>Permission to be included in recorded program:</dt>
+          <dd>{{selected.can_record}}</dd>
+          <dt>Topics participant does not want to be recorded talking about:</dt>
+          <dd>{{selected.can_record_exceptions ? selected.can_record_exceptions : 'N/A'}}</dd>
+          <dt>Local to the Event:</dt>
+          <dd>{{selected.is_local ? 'Yes' : 'No'}}</dd>
+          <dt>Permission to be included in live streamed program:</dt>
+          <dd>{{selected.moderation_experience ? selected.moderation_experience : 'N/A'}}</dd>
+          <dt>Languages spoken:</dt>
+          <dd>{{selected.languages_fluent_in}}</dd>
+        </dl>
       </div>
     </template>
   </sidebar-vue>
