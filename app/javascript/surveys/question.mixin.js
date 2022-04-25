@@ -13,6 +13,7 @@ import {
   QUESTION_SAVE_SUCCESS
 } from '../constants/strings'
 import settingsMixin from '@/store/settings.mixin';
+import {QUESTION_UNCHANGED} from "@/constants/strings";
 
 // CONVERTED
 export const questionMixin = {
@@ -35,6 +36,9 @@ export const questionMixin = {
       { value: 'boolean', text: 'Yes/No' },
       { value: 'attendance_type', text: 'Attendance Type'},
     ],
+    saved_question: null,
+    saved_question_data: null,
+    saved_question_message: null
   }),
   computed: {
     ...mapGetters({
@@ -207,13 +211,40 @@ export const questionMixin = {
       return this.fetchSurveyToastPromise( this.delete({model, itemOrId: this.selectedQuestion}), QUESTION_DELETE_SUCCESS, QUESTION_DELETE_ERROR);
     },
     patchQuestion(question, data, message = QUESTION_SAVE_SUCCESS) {
-      return this.toastPromise(this.$store.dispatch('jv/patch', { ...data, _jv: {
-        id: question.id,
-        type: model
-      }}), message)
+      if(data.question_type && question.linked_field) {
+        // alert("question="+JSON.stringify(question));
+        // alert("linked_field="+question.linked_field);
+        // alert("data=" + JSON.stringify(data));
+        this.saved_question=question;
+        this.saved_question_data=data;
+        this.saved_question_message=message;
+        this.$root.$emit('bv::show::modal', 'unlink-question-modal' )
+      } else {
+        return this.toastPromise(this.$store.dispatch('jv/patch', {
+          ...data, _jv: {
+            id: question.id,
+            type: model
+          }
+        }), message)
+      }
     },
     patchSelectedQuestion(data, message = QUESTION_SAVE_SUCCESS) {
       return this.patchQuestion(this.selectedQuestion, data, message)
+    },
+    unlinkQuestion() {
+      // alert("unlinking!!");
+      this.saved_question_data.linked_field=null;
+      delete(this.saved_question.linked_field);
+      return this.toastPromise(this.$store.dispatch('jv/patch', {
+        ...this.saved_question_data, _jv: {
+          id: this.saved_question.id,
+          type: model
+        }
+      }), this.saved_question_message)
+    },
+    restoreOldValues() {
+      //alert("throwing away the attempt to change the question type");
+      this.success_toast(QUESTION_UNCHANGED);
     }
   }
 }

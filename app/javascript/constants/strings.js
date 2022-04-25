@@ -90,6 +90,8 @@ module.exports = {
     QUESTION_DUPLICATE_ERROR: errorMessage("Question failed to be duplicated."),
     QUESTION_ADD_SAVE_SUCCESS: "Question successfully added",
     QUESTION_ADD_SAVE_ERROR: errorMessage("Question failed to be added."),
+    QUESTION_UNCHANGED: "Question change abandoned",
+    QUESTION_MODAL_MESSAGE: "You are changing the question type and there's a linked field associated with that specific question type. If you continue with changing the question type, we will remove the linked field. You can choose to leave the question type as it is and the linking will remain.",
 
     //answer actions
     ANSWER_ORDER_SAVE_SUCCESS: "Answer reorder sucessfully saved",
