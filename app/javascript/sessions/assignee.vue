@@ -19,13 +19,16 @@
       </div>
     </div>
     <div class="mt-2">
-      Session Comments
+      <p v-if="noInterestExpressed">
+        <em>Did not express interest</em>
+      </p>
+      <h6>Session Comments</h6>
       <div class="ml-5" v-if="assignment">
         {{assignment.interest_notes}}
       </div>
     </div>
     <div class="mt-2">
-      Other Demographic concerns
+      <h6>Other Demographic concerns</h6>
       <div class="ml-5">
         {{assignee.demographic_categories}}
       </div>
@@ -51,6 +54,13 @@ export default {
     }
   },
   computed: {
+    noInterestExpressed() {
+      if (this.assignment) {
+        return !this.assignment.interested
+      } else {
+        return true
+      }
+    },
     rank() {
       if (this.assignment) {
         if (this.assignment.interest_ranking) {
