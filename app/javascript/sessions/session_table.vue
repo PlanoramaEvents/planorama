@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scrollable">
     <table-vue
       @new="onNew"
       defaultSortBy='sessions.title'
@@ -34,7 +34,7 @@ import { session_columns as columns } from './session';
 import { sessionModel as model } from '@/store/session.store'
 
 export default {
-  name: 'PeopleTable',
+  name: 'SessionTable',
   components: {
     TableVue,
     TooltipOverflow,

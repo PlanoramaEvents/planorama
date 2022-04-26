@@ -1,5 +1,5 @@
 <template>
-  <div class="survey scrollable">
+  <div class="survey">
     <b-form-group
       class="mx-3"
       v-if="survey"
