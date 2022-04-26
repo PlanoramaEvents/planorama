@@ -24,7 +24,6 @@
       @event-drop="onUpdate($event)"
       class="vuecal--full-height-delete"
     >
-    <!-- :special-hours="conventionHours" -->
       <template v-slot:title="{ title, view }">
         {{ formatDate(view.selectedDate, { weekday: 'long' }) }}<br />
         {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
@@ -264,5 +263,10 @@ export default {
 .plano-col .time-display,
 .plano-col .vuecal__time-cell-label {
   display: none;
+}
+
+// .vuecal__event-time,
+.vuecal__time-cell-label {
+  font-size: smaller;
 }
 </style>
