@@ -1009,10 +1009,11 @@ CREATE TABLE public.rooms (
     sort_order integer,
     capacity integer,
     room_floor character varying,
-    is_scheduled boolean DEFAULT true,
-    is_online boolean DEFAULT false,
+    open_for_schedule boolean DEFAULT true,
+    is_virtual boolean DEFAULT false,
     dimensions text,
-    area_of_space integer
+    area_of_space numeric,
+    room_set_id bigint NOT NULL
 );
 
 
@@ -2175,6 +2176,13 @@ CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions 
 
 
 --
+-- Name: index_rooms_on_room_set_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rooms_on_room_set_id ON public.rooms USING btree (room_set_id);
+
+
+--
 -- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2441,6 +2449,14 @@ ALTER TABLE ONLY public.survey_submissions
 
 
 --
+-- Name: rooms fk_rails_d2498419d7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rooms
+    ADD CONSTRAINT fk_rails_d2498419d7 FOREIGN KEY (room_set_id) REFERENCES public.room_sets(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -2540,6 +2556,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220424152922'),
 ('20220424174950'),
 ('20220424180453'),
-('20220424181346');
+('20220424181346'),
+('20220426010537');
 
 
