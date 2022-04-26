@@ -1,56 +1,38 @@
 <template>
   <div class="detail">
-    <dl>
-      <dt>Name:</dt>
-      <dd>{{ selected.name }}</dd>
-      <dt>Name Sort By:</dt>
-      <dd>{{ selected.name_sort_by }}</dd>
-      <dt>Name Sort By Confirmed:</dt>
-      <dd>{{ selected.name_sort_by_confirmed }}</dd>
-
-      <dt>Pseudonym:</dt>
-      <dd>{{ selected.pseudonym }}</dd>
-      <dt>Pseudonym Sort By:</dt>
-      <dd>{{ selected.pseudonym_sort_by }}</dd>
-      <dt>Pseudonym Sort By Confirmed:</dt>
-      <dd>{{ selected.pseudonym_sort_by_confirmed }}</dd>
-
-      <dt>Bio:</dt>
-      <dd>{{ selected.bio }}</dd>
-
-      <dt>Pronouns:</dt>
-      <dd>{{ selected.pronouns }}</dd>
-      <dt>Job Title:</dt>
-      <dd>{{ selected.job_title }}</dd>
-
-      <dt>Organization:</dt>
-      <dd>{{ selected.organization }}</dd>
-
-      <dt>Registered:</dt>
-      <dd>{{ selected.registered ? 'Y' : 'N' }}</dd>
-
-      <dt>Registration Type:</dt>
-      <dd>{{ selected.registration_type }}</dd>
-      <dt>Registration Number:</dt>
-      <dd>{{ selected.registration_number }}</dd>
-
-      <dt>Opted In:</dt>
-      <dd>{{ selected.opted_in }}</dd>
-      <dt>Can Share:</dt>
-      <dd>{{ selected.can_share ? 'Y' : 'N' }}</dd>
-      <dt>Can Photo:</dt>
-      <dd>{{ selected.can_photo ? 'Y' : 'N' }}</dd>
-      <dt>Can Stream:</dt>
-      <dd>{{ selected.can_stream ? 'Y' : 'N' }}</dd>
-      <dt>Can Record:</dt>
-      <dd>{{ selected.can_stream ? 'Y' : 'N' }}</dd>
-
-      <dt>Gender:</dt>
-      <dd>{{ selected.gender }}</dd>
-      <dt>Ethnicity:</dt>
-      <dd>{{ selected.ethnicity }}</dd>
-      <dt>Year of Birth:</dt>
-      <dd>{{ selected.year_of_birth }}</dd>
+    <dl class="row">
+      <dt class="col-sm-4">Name:</dt>
+      <dd class="col-sm-8">{{ selected.name }}</dd>
+      <dt class="col-sm-4">Name Sort By:</dt>
+      <dd class="col-sm-8">{{ selected.name_sort_by }}</dd>
+      <dt class="col-sm-4">Name Sort By Confirmed:</dt>
+      <dd class="col-sm-8">{{ selected.name_sort_by_confirmed ? 'Y' : 'N' }}</dd>
+      <dt class="col-sm-4">Pseudonym:</dt>
+      <dd class="col-sm-8">{{ selected.pseudonym }}</dd>
+      <dt class="col-sm-4">Pseudonym Sort By:</dt>
+      <dd class="col-sm-8">{{ selected.pseudonym_sort_by }}</dd>
+      <dt class="col-sm-4">Pseudonym Sort By Confirmed:</dt>
+      <dd class="col-sm-8">{{ selected.pseudonym_sort_by_confirmed ? 'Y' : 'N' }}</dd>
+      <dt class="col-sm-12">Bio:</dt>
+      <dd class="col-sm-11 offset-sm-1">{{ selected.bio }}</dd>
+      <dt class="col-sm-4">Pronouns:</dt>
+      <dd class="col-sm-8">{{ selected.pronouns }}</dd>
+      <dt class="col-sm-4">Job Title:</dt>
+      <dd class="col-sm-8">{{ selected.job_title }}</dd>
+      <dt class="col-sm-4">Organization:</dt>
+      <dd class="col-sm-8">{{ selected.organization }}</dd>
+      <dt class="col-sm-4">Registered:</dt>
+      <dd class="col-sm-8">{{ selected.registered ? 'Y' : 'N' }}</dd>
+      <dt class="col-sm-4">Opted In:</dt>
+      <dd class="col-sm-8">{{ selected.opted_in }}</dd>
+      <dt class="col-sm-4">Can Share:</dt>
+      <dd class="col-sm-8">{{ selected.can_share ? 'Y' : 'N' }}</dd>
+      <dt class="col-sm-4">Can Photo:</dt>
+      <dd class="col-sm-8">{{ selected.can_photo ? 'Y' : 'N' }}</dd>
+      <dt class="col-sm-4">Can Stream:</dt>
+      <dd class="col-sm-8">{{ selected.can_stream ? 'Y' : 'N' }}</dd>
+      <dt class="col-sm-4">Can Record:</dt>
+      <dd class="col-sm-8">{{ selected.can_stream ? 'Y' : 'N' }}</dd>
     </dl>
   </div>
 </template>
