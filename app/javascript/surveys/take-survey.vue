@@ -1,5 +1,5 @@
 <template>
-  <div class="survey scrollable">
+  <div class="survey">
     Loading...
   </div>
 </template>

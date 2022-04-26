@@ -1,6 +1,5 @@
 <template>
-  <div class="scrollable">
-
+  <div>
     <div class="d-flex justify-content-between my-3" v-if="showControls">
       <search-vue
         class="w-75"

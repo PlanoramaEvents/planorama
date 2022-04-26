@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scrollable">
     <table-vue
       @new="onNew"
       defaultSortBy='sessions.title'
