@@ -13,6 +13,7 @@ module ResourceMethods
 
     meta = {}
     meta[:total] = @collection_total if paginate
+    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total if paginate
     meta[:current_page] = @current_page if @current_page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
     format = params[:format]
@@ -215,16 +216,24 @@ module ResourceMethods
     @per_page, @current_page, @filters = collection_params
 
     q = policy_scope(base, policy_scope_class: policy_scope_class)
-      .includes(includes)
-      .references(references)
-      .eager_load(eager_load)
-      .joins(join_tables)
-      .where(query(@filters))
-      # .joins(query_join_tables(@filters))
+         .includes(includes)
+         .references(references)
+         .eager_load(eager_load)
+         .joins(join_tables)
+         .where(query(@filters))
 
     q = q.distinct if join_tables && !join_tables.empty?
 
     q = q.order(order_string)
+
+    # TODO we need the size without the query
+    if paginate
+      @full_collection_total = policy_scope(base, policy_scope_class: policy_scope_class)
+                            .where(exclude_deleted_clause)
+                            .distinct
+                            .count
+      instance_variable_set("@#{controller_name}", @full_collection_total)
+    end
 
     if paginate
       q.page(@current_page).per(@per_page)
@@ -325,11 +334,6 @@ module ResourceMethods
 
     return col_table
   end
-
-  # def query_join_tables(filters = nil)
-  #   return [] unless filters
-  #   # TODO: create a join clause for relationships
-  # end
 
   def get_column(column:)
     col = column

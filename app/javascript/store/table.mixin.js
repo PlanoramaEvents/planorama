@@ -34,6 +34,7 @@ export const tableMixin = {
     filter: null,
     currentPage: 1,
     totalRows: 0,
+    fullTotalRows: 0,
     correctOrder: [],
     url: null,
     shall_clear: true
@@ -97,6 +98,7 @@ export const tableMixin = {
           if (typeof data._jv.json.meta !== 'undefined') {
             this.currentPage = data._jv.json.meta.current_page;
             this.totalRows = data._jv.json.meta.total;
+            this.fullTotalRows = data._jv.json.meta.full_total;
           }
           res(data);
         }).catch(rej); // TODO maybe actually handle it here??
