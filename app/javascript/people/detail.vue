@@ -27,7 +27,7 @@
       <dt>Registered:</dt>
       <dd class="ml-2">{{ selected.registered ? 'Y' : 'N' }}</dd>
       <dt>Opted In:</dt>
-      <dd class="ml-2">{{ selected.opted_in | na_if_empty}}</dd>
+      <dd class="ml-2">{{ selected.opted_in ? 'Y' : 'N'}}</dd>
       <dt>Can Share:</dt>
       <dd class="ml-2">{{ selected.can_share ? 'Y' : 'N' }}</dd>
       <dt>Can Photo:</dt>
