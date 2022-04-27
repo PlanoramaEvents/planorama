@@ -20,16 +20,16 @@ export const sessionAssignmentMixin = {
       sessionExpressInterest: SESSION_EXPRESS_INTEREST,
       sessionUnExpressInterest: SESSION_UNEXPRESS_INTEREST,
     }),
-    expressInterest(session, success_text = SESSION_INTEREST_SUCCESS, error_text = SESSION_INTEREST_ERROR) {
+    expressInterest(session, person_id = null, success_text = SESSION_INTEREST_SUCCESS, error_text = SESSION_INTEREST_ERROR) {
       return this.toastPromise(
-        this.sessionExpressInterest({session: session}),
+        this.sessionExpressInterest({session: session, person_id: person_id}),
         success_text,
         error_text
       );
     },
-    removeInterest(assignment, success_text = SESSION_INTEREST_REMOVE_SUCCESS, error_text = SESSION_INTEREST_REMOVE_ERROR) {
+    removeInterest(assignment,  person_id = null, success_text = SESSION_INTEREST_REMOVE_SUCCESS, error_text = SESSION_INTEREST_REMOVE_ERROR) {
       return this.toastPromise(
-        this.sessionUnExpressInterest({assignment: assignment}),
+        this.sessionUnExpressInterest({assignment: assignment, person_id: person_id}),
         success_text,
         error_text
       );

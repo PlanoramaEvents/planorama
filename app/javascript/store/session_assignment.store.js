@@ -24,8 +24,11 @@ export const sessionAssignmentStore = {
       }
       return dispatch(NEW, {model: sessionAssignmentModel, selected: false, ...newAssignment});
     },
-    [SESSION_EXPRESS_INTEREST] ({dispatch}, {session}) {
+    [SESSION_EXPRESS_INTEREST] ({dispatch}, {session, person_id}) {
       let url = `/session/${session.id}/express_interest`
+      if (person_id) {
+        url = `/session/${session.id}/express_interest/${person_id}`
+      }
       let data = { _jv: { type: 'session_assignment' } }
 
       return new Promise((res, rej) => {
@@ -34,8 +37,12 @@ export const sessionAssignmentStore = {
         }).catch(rej)
       });
     },
-    [SESSION_UNEXPRESS_INTEREST] ({dispatch}, {assignment}) {
+    [SESSION_UNEXPRESS_INTEREST] ({dispatch}, {assignment, person_id}) {
       let url = `/session_assignment/${assignment.id}/unexpress_interest`
+      if (person_id) {
+        url = `/session_assignment/${assignment.id}/unexpress_interest/${person_id}`
+      }
+
       let data = { _jv: { type: 'session_assignment' } }
 
       return new Promise((res, rej) => {

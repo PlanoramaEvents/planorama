@@ -92,15 +92,17 @@ Rails.application.routes.draw do
   resources :tags, path: 'tag'
   get 'session/tags', to: 'sessions#tags'
   post 'session/import', to: 'sessions#import'
+  # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id
   resources :sessions, path: 'session' do
     get 'session_assignments', to: 'session_assignments#index'
     get 'areas', to: 'areas#index'
   end
-  get 'session/:id/express_interest', to: 'sessions#express_interest'
+  # need id of person expressing interest
+  get 'session/:id/express_interest(/:person_id)', to: 'sessions#express_interest'
   resources :published_sessions, path: 'published_session'
 
   resources :session_assignments, path: 'session_assignment'
-  get 'session_assignment/:id/unexpress_interest', to: 'session_assignments#unexpress_interest'
+  get 'session_assignment/:id/unexpress_interest(/:person_id)', to: 'session_assignments#unexpress_interest'
 
   resources :rooms, path: 'room'
   resources :venues, path: 'venue'

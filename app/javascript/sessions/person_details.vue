@@ -18,7 +18,7 @@
         <div class="mt-2">
           <dl>
             <dt>Session Comments:</dt>
-            <dd>{{selected.interest_notes ? selected.interest_notes : 'N/A'}}</dd>
+            <dd>{{sessionComments}}</dd>
             <dt>Bio:</dt>
             <dd>
               <span v-html="selected.bio"></span>
@@ -93,6 +93,14 @@ export default {
     modelUtilsMixin
   ],
   computed: {
+    sessionComments() {
+      if (this.assignment) {
+        if (this.assignment.interest_notes) {
+          return this.assignment.interest_notes
+        }
+      }
+      return 'N/A'
+    },
     rank() {
       if (this.assignment) {
         if (this.assignment.interest_ranking) {

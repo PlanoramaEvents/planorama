@@ -41,10 +41,10 @@
            Format: <span class="badge badge-pill badge-info mr-1">{{item.session.format.name}}</span><br />
          </div>
          <div v-if="item.session.area_list && item.session.area_list.length">
-           <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list" :key="area">{{area}}</span>
+           Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list" :key="area">{{area}}</span>
          </div>
          <div v-if="item.session.tag_list && item.session.tag_list.length">
-           <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list" :key="tag">{{tag}}</span>
+           Tag(s): <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list" :key="tag">{{tag}}</span>
          </div>
          <br />
          <div class="mt-3" v-if="item.session.instructions_for_interest">Instructions for potential panelists:</div>

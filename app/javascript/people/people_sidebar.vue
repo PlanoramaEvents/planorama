@@ -14,10 +14,11 @@
         <b-tab title="Summary">
           <detail :model="model"></detail>
         </b-tab>
-        <!-- These need to be done and move to the people edit/tabs screen
-         <b-tab title="Admin" v-if="currentUserIsAdmin">
-          <people-admin-tab :model="model"></people-admin-tab>
+        <b-tab title="Admin" v-if="currentUserIsAdmin">
+         <people-admin-tab :model="model"></people-admin-tab>
         </b-tab>
+        <!-- Need notes and a state change drop down -->
+        <!-- These need to be done and move to the people edit/tabs screen
         <b-tab title="Surveys">
           <people-surveys-tab :model="model"></people-surveys-tab>
         </b-tab> -->

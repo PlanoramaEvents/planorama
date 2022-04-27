@@ -10,13 +10,17 @@ class SessionsController < ResourceController
       authorize @object, policy_class: policy_class
 
       # Find or create the session assignment
-      assignment = @object.session_assignments.for_person(current_person.id).first
+      # needs to change ....
+      person = Person.find params[:person_id] if params[:person_id]
+      person ||= current_person
+
+      assignment = @object.session_assignments.for_person(person.id).first
       if assignment
         assignment.interested = true
         assignment.save!
       else
         assignment = SessionAssignment.create(
-          person: current_person,
+          person: person,
           session: @object,
           interested: true
         )
@@ -139,8 +143,6 @@ class SessionsController < ResourceController
       :format,
       :room,
       :session_areas,
-      :session_assignments,
-      :my_interest,
       :'session_areas.area'
     ]
   end
@@ -151,17 +153,22 @@ class SessionsController < ResourceController
       :room,
       :areas,
       :base_tags,
-      :session_areas,
-      :session_assignments
+      :session_areas
     ]
   end
 
   def references
     [
       :format,
-      :room,
+      :room
     ]
   end
+
+  # def eager_load
+  #   [
+  #     # {session_assignments: :person}
+  #   ]
+  # end
 
   def join_tables
     sessions = Arel::Table.new(Session.table_name)

@@ -34,7 +34,8 @@ export default {
       type: Object,
       default: null
     },
-    person_id: null
+    person_id: null,
+    assignments: null
   },
   data: () => ({
     interested: false,
@@ -45,15 +46,16 @@ export default {
       this.interested = this.assignment && this.assignment.interested
     },
     okNotInterested() {
-      this.removeInterest(this.assignment).then(
+      this.removeInterest(this.assignment, this.person_id).then(
         (res) => {
           this.assignment = res
+          this.interested = this.assignment.interested
         }
       )
     },
     toggleSelectSession(arg) {
       if (arg) {
-        this.expressInterest(this.session).then(
+        this.expressInterest(this.session, this.person_id).then(
           (obj) => {
             this.assignment = obj
           }
@@ -64,8 +66,12 @@ export default {
     }
   },
   mounted() {
-    this.assignment = this.session.my_interest
-    this.interested = (typeof this.assignment.id !== 'undefined') && this.assignment.interested
+    if (this.session) {
+      this.assignment = this.assignments.find(a => a.session_id == this.session.id)
+      if (this.assignment) {
+        this.interested = this.assignment.interested
+      }
+    }
   }
 }
 </script>

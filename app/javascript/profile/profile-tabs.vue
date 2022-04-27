@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- TODO BAK -->
     <person-summary v-if="person"
       v-model="person"
     ></person-summary>
@@ -31,9 +30,8 @@
         ></session-selector>
       </b-tab>
       <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
-        <!-- v-model="person" -->
         <session-ranker
-          defaultSortBy='interest_ranking,created_at'
+          defaultSortBy='interest_ranking,session_assignments.updated_at'
           :defaultSortDesc="true"
           :perPage="null"
           :model="sessionAssignmentModel"
