@@ -2,7 +2,11 @@
   <sidebar-vue width="60%" model="person">
     <template #header v-if="selected">
       <div class="d-flex align-items-baseline">
-        <h3 class="mr-auto">{{selected.published_name}}</h3>
+        <b-link :to="'/people/edit/'.concat(selected.id)">
+          <h3 class="mr-auto">
+            {{selected.published_name}}
+          </h3>
+        </b-link>
         <div class="ml-3">Rank: {{rank}}</div>
         <div class="ml-3">Session moderation preference: <span class="first-capital">{{sessionModPreference}}</span></div>
       </div>
