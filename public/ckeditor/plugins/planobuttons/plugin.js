@@ -132,6 +132,11 @@ CKEDITOR.config.planobuttons = [
         title:'Person\'s Pub Name'
       },
       {
+        name:'email',
+        html:'<%= person.email %>',
+        title:'Person\'s Primary Email'
+      },
+      {
         name:'survey_name',
         html:'<%= survey.name %>',
         title:'Survey Name'
