@@ -61,41 +61,6 @@
           </div>
         </div>
       </div>
-      <!-- <b-table
-        hover responsive small striped
-        :fields="columns"
-        :items="sortedCollection"
-        :no-local-sorting="true"
-      >
-        <template #cell(title)="{ item }">
-          <div style="width: 100px;">
-            <h4>{{item.title}}</h4>
-            <div v-html="item.description"></div>
-            <div v-if="item.format">
-              Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
-            </div>
-            <div v-if="item.area_list.length > 0">
-              Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list" :key="area">{{area}}</span>
-            </div>
-            <div v-if="item.tag_list.length > 0">
-              Tag(s): <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list" :key="tag">{{tag}}</span>
-            </div>
-            <div class="mt-3" v-if="item.instructions_for_interest">Instructions for potential panelists:</div>
-            <div class="panelist-instructions" v-html="item.instructions_for_interest">
-            </div>
-          </div>
-        </template>
-        <template #cell(id)="{ item }">
-          <div v-if="assignments">
-            <interest-indicator
-              :session="item"
-              :person_id="person.id"
-              :model="sessionAssignmentModel"
-              :assignments="assignments"
-            ></interest-indicator>
-          </div>
-        </template>
-      </b-table> -->
     </b-overlay>
 
     <b-pagination class="d-flex justify-content-end"
