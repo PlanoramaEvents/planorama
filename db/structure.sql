@@ -1013,7 +1013,7 @@ CREATE TABLE public.rooms (
     is_virtual boolean DEFAULT false,
     dimensions text,
     area_of_space numeric,
-    room_set_id bigint NOT NULL
+    room_set_id bigint
 );
 
 
@@ -2557,6 +2557,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220424174950'),
 ('20220424180453'),
 ('20220424181346'),
-('20220426010537');
+('20220426010537'),
+('20220427170202');
 
 
