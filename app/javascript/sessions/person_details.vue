@@ -27,50 +27,50 @@
         </div>
         <div class="d-flex flex-row mt-3">
           <div class="w-50 mr-2">
-            <h6>Demographics</h6>
-            <dl>
-              <dt>Ethnicity:</dt>
-              <dd>{{selected.ethnicity}}</dd>
-              <dt>Gender:</dt>
-              <dd>{{selected.gender}}</dd>
-              <dt>Age at time of Event:</dt>
-              <dd>{{selected.age_at_convention}}</dd>
-              <dt>Romantic and/or sexual orientation:</dt>
-              <dd>{{selected.romantic_sexual_orientation}}</dd>
+            <h5>Demographics</h5>
+            <dl class="row">
+              <dt class="col-sm-12">Ethnicity:</dt>
+              <dd class="col-sm-11 offset-sm-1">{{selected.ethnicity}}</dd>
+              <dt class="col-sm-12">Gender:</dt>
+              <dd class="col-sm-11 offset-sm-1">{{selected.gender}}</dd>
+              <dt class="col-sm-12">Age at time of Event:</dt>
+              <dd class="col-sm-11 offset-sm-1">{{selected.age_at_convention}}</dd>
+              <dt class="col-sm-12">Romantic and/or sexual orientation:</dt>
+              <dd class="col-sm-11 offset-sm-1">{{selected.romantic_sexual_orientation}}</dd>
             </dl>
           </div>
           <div class="w-50">
-            <h6>Community Memberships</h6>
-            <dl>
-              <dt>Experience with being “othered”:</dt>
-              <dd>{{selected.othered}}</dd>
-              <dt>Member of an Indigenous community:</dt>
-              <dd>{{selected.indigenous}}</dd>
-              <dt>Member of the global Black diaspora:</dt>
-              <dd>{{selected.black_diaspora}}</dd>
-              <dt>Represent something other than a purely US-centric perspective:</dt>
-              <dd>{{selected.non_us_centric_perspectives}}</dd>
+            <h5>Community Memberships</h5>
+            <dl class="row">
+              <dt class="col-sm-12">Experience with being “othered”:</dt>
+              <dd class="col-sm-11 offset-sm-1">{{selected.othered}}</dd>
+              <dt class="col-sm-12">Member of an Indigenous community:</dt>
+              <dd class="col-sm-11 offset-sm-1">{{selected.indigenous}}</dd>
+              <dt class="col-sm-12">Member of the global Black diaspora:</dt>
+              <dd class="col-sm-11 offset-sm-1">{{selected.black_diaspora}}</dd>
+              <dt class="col-sm-12">Represent something other than a purely US-centric perspective:</dt>
+              <dd class="col-sm-11 offset-sm-1">{{selected.non_us_centric_perspectives}}</dd>
             </dl>
           </div>
         </div>
 
-        <dl>
-          <dt>Anyone that should not be assigned to be on a panel with participant:</dt>
-          <dd>{{selected.do_not_assign_with ? selected.do_not_assign_with : 'N/A'}}</dd>
-          <dt>Permission to be included in live streamed program:</dt>
-          <dd>{{selected.can_stream}}</dd>
-          <dt>Topics participant does not want to be streamed while talking about are:</dt>
-          <dd>{{selected.can_stream_exceptions ? selected.can_stream_exceptions : 'N/A'}}</dd>
-          <dt>Permission to be included in recorded program:</dt>
-          <dd>{{selected.can_record}}</dd>
-          <dt>Topics participant does not want to be recorded talking about:</dt>
-          <dd>{{selected.can_record_exceptions ? selected.can_record_exceptions : 'N/A'}}</dd>
-          <dt>Local to the Event:</dt>
-          <dd>{{selected.is_local ? 'Yes' : 'No'}}</dd>
-          <dt>Permission to be included in live streamed program:</dt>
-          <dd>{{selected.moderation_experience ? selected.moderation_experience : 'N/A'}}</dd>
-          <dt>Languages spoken:</dt>
-          <dd>{{selected.languages_fluent_in}}</dd>
+        <dl class="row">
+          <dt class="col-sm-12">Anyone that should not be assigned to be on a panel with participant:</dt>
+          <dd class="col-sm-11 offset-sm-1">{{selected.do_not_assign_with ? selected.do_not_assign_with : 'N/A'}}</dd>
+          <dt class="col-sm-12">Permission to be included in live streamed program:</dt>
+          <dd class="col-sm-11 offset-sm-1">{{selected.can_stream}}</dd>
+          <dt class="col-sm-12">Topics participant does not want to be streamed while talking about are:</dt>
+          <dd class="col-sm-11 offset-sm-1">{{selected.can_stream_exceptions ? selected.can_stream_exceptions : 'N/A'}}</dd>
+          <dt class="col-sm-12">Permission to be included in recorded program:</dt>
+          <dd class="col-sm-11 offset-sm-1">{{selected.can_record}}</dd>
+          <dt class="col-sm-12">Topics participant does not want to be recorded talking about:</dt>
+          <dd class="col-sm-11 offset-sm-1">{{selected.can_record_exceptions ? selected.can_record_exceptions : 'N/A'}}</dd>
+          <dt class="col-sm-12">Local to the Event:</dt>
+          <dd class="col-sm-11 offset-sm-1">{{selected.is_local ? 'Yes' : 'No'}}</dd>
+          <dt class="col-sm-12">Moderating experience:</dt>
+          <dd class="col-sm-11 offset-sm-1">{{selected.moderation_experience ? selected.moderation_experience : 'N/A'}}</dd>
+          <dt class="col-sm-12">Languages spoken:</dt>
+          <dd class="col-sm-11 offset-sm-1">{{selected.languages_fluent_in}}</dd>
         </dl>
       </div>
     </template>
