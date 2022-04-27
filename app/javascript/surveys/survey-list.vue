@@ -1,6 +1,5 @@
 <template>
   <div class="scrollable">
-    sssd
     <survey-table></survey-table>
     <survey-sidebar></survey-sidebar>
   </div>
