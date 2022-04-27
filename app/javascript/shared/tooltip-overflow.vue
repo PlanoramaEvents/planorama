@@ -1,5 +1,7 @@
 <template>
   <!-- Use v-b-tooltip.html to handle cases when the test is html -->
+  <!-- tooltip - problem with pre -->
+  <!-- overflow problem with html -->
   <span v-b-tooltip.html="{customClass: 'truncated-tooltip'}"
     :title="title"
     class="text-truncate truncated-span"

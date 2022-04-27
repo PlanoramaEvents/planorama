@@ -11,6 +11,11 @@
           <span v-html="item.title"></span>
         </tooltip-overflow>
       </template>
+      <template #cell(item_notes)="{ item }">
+        <tooltip-overflow v-if="item.item_notes" :title="item.item_notes">
+          <span v-html="item.item_notes"></span>
+        </tooltip-overflow>
+      </template>
       <template #cell(description)="{ item }">
         <tooltip-overflow v-if="item.description" :title="item.description">
           <span v-html="item.description"></span>
@@ -29,7 +34,6 @@
 import TableVue from '../components/table_vue';
 import ModalForm from '../components/modal_form';
 import TooltipOverflow from '../shared/tooltip-overflow';
-// import SessionAdd from '../session/session_add.vue';
 import { session_columns as columns } from './session';
 import { sessionModel as model } from '@/store/session.store'
 
@@ -38,8 +42,7 @@ export default {
   components: {
     TableVue,
     TooltipOverflow,
-    ModalForm,
-    // SessionAdd
+    ModalForm
   },
   data: () => ({
     columns,
@@ -47,10 +50,8 @@ export default {
   }),
   methods: {
     onNew() {
-      // this.$refs['add-person-modal'].showModal()
     },
     onSave() {
-      // this.$refs['add-person-form'].savePerson()
     }
   }
 }

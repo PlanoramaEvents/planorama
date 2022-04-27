@@ -4,15 +4,15 @@ export const people_columns = [
     label: 'Published Name',
     type: "text",
     sortable: true,
-    // sortKey: 'published_name_sort_by',
-    // stickyColumn: true,
+    class: 'col-name-field',
+    stickyColumn: true
   },
   {
     key: 'name',
     label: 'Name',
     type: "text",
     sortable: true,
-    // stickyColumn: true
+    class: 'col-name-field'
   },
   {
     key: 'pronouns',

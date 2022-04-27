@@ -3,13 +3,28 @@
     <modal-form
       title="Mass Edit State"
       ref="mass-edit-state"
-      @save="onSaveMassEdit"
+      @save="onConfirmMassEdit"
     >
       <b-form>
         <person-con-state-selector
           v-model="selectedConState"
         ></person-con-state-selector>
       </b-form>
+      <template #footer="{ ok, cancel }">
+        <b-button variant="link" @click="cancel()">Cancel</b-button>
+        <b-button variant="primary" @click="ok()">Save</b-button>
+      </template>
+    </modal-form>
+
+    <modal-form
+      title="Mass Edit State Confirmation"
+      ref="mass-edit-confirm"
+      @save="onSaveMassEdit"
+    >
+      <p>
+        Please confirm that you want to change the
+        status of {{editableIds.length}} {{editableIds.length == 1 ? 'person' : 'people'}}
+      </p>
       <template #footer="{ ok, cancel }">
         <b-button variant="link" @click="cancel()">Cancel</b-button>
         <b-button variant="primary" @click="ok()">Save</b-button>
@@ -64,6 +79,11 @@
           >Edit State(s)
           </b-button>
         </div>
+      </template>
+      <template #cell(pronouns)="{ item }">
+        <tooltip-overflow v-if="item.pronouns" :title="item.pronouns">
+          {{item.pronouns}}
+        </tooltip-overflow>
       </template>
       <template #cell(primary_email)="{ item }">
         <tooltip-overflow v-if="item.primary_email" :title="item.primary_email.email">
@@ -155,6 +175,9 @@ export default {
         this.update_all('person', this.editableIds, {con_state: this.selectedConState})
       }
     },
+    onConfirmMassEdit() {
+      this.$refs['mass-edit-confirm'].showModal()
+    },
     onEditStates(ids) {
       this.editableIds = ids
       this.$refs['mass-edit-state'].showModal()
@@ -185,3 +208,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.col-name-field div {
+  width: 8rem;
+}
+</style>
