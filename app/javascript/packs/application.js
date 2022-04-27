@@ -41,7 +41,7 @@ Vue.config.errorHandler = (err, vm, info) => {
   console.error(err);
   window.alert("Whoops! We messed up! Click ok to reload the page.")
   window.location.reload();
-} 
+}
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
@@ -49,6 +49,19 @@ Vue.use(CustomIconsPlugin);
 Vue.use(AsyncComputed);
 Vue.use(CKEditor);
 Vue.use(VuePluralize);
+
+Vue.filter('na_if_empty', function (value) {
+  if (!value) return 'N/A'
+  if (value.length == 0) return 'N/A'
+  return value
+})
+
+Vue.filter('capitalize', function (value) {
+  if (value && value.length > 0) {
+    return value.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))
+  }
+  return value
+})
 
 import PlanoramaApp from '../app.vue';
 import { router } from '../app.router';
