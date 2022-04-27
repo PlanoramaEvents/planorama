@@ -66,6 +66,10 @@
         next-text="Next"
       ></b-pagination>
     </div>
+    <div class="d-flex">
+      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
+      <span class="ml-auto">Showing {{perPage < totalRows ? perPage : totalRows}} of {{fullTotalRows}} records</span>
+    </div>
     <b-table
       hover bordered responsive selectable small striped
       :fields="tableColumns"
@@ -121,6 +125,10 @@
       prev-text="Prev"
       next-text="Next"
     ></b-pagination>
+    <div class="d-flex">
+      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
+      <span class="ml-auto">Showing {{perPage < totalRows ? perPage : totalRows}} of {{fullTotalRows}} records</span>
+    </div>
   </div>
 </template>
 
