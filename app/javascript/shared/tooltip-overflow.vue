@@ -1,7 +1,5 @@
 <template>
   <!-- Use v-b-tooltip.html to handle cases when the test is html -->
-  <!-- tooltip - problem with pre -->
-  <!-- overflow problem with html -->
   <span v-b-tooltip.html="{customClass: 'truncated-tooltip'}"
     :title="title"
     class="text-truncate truncated-span"
@@ -30,5 +28,9 @@ export default {
 .truncated-span {
   max-width: 15rem;
   display: inline-block;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 </style>
