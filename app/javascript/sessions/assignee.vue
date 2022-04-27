@@ -6,13 +6,13 @@
         Rank: {{rank}}
       </div>
       <div class="mr-2">
-        Default moderation preference: {{defaultModPreference}}
+        Default moderation preference: <span class="first-capital">{{defaultModPreference}}</span>
       </div>
       <div class="mr-2">
-        Session moderation preference: {{sessionModPreference}}
+        Session moderation preference: <span class="first-capital">{{sessionModPreference}}</span>
       </div>
       <div class="mr-2">
-        Attendance Type: {{assignee.attendance_type}}
+        Attendance Type: {{assignee.attendance_type | capitalize | na_if_empty}}
       </div>
       <div class="mr-2">
         Accessibility Concerns: {{assignee.needs_accommodations ? 'Y' : 'N'}}
@@ -23,16 +23,13 @@
         <em>Did not express interest</em>
       </p>
       <h6>Session Comments</h6>
-      <div class="ml-5" v-if="assignment">
-        <pre>
-          {{assignment.interest_notes}}
-        </pre>
-      </div>
+      <div class="ml-2 keep-format" v-if="assignment">{{assignment.interest_notes | na_if_empty}}</div>
+      <div class="ml-2" v-else>N/A</div>
     </div>
     <div class="mt-2">
       <h6>Other Demographic concerns</h6>
-      <div class="ml-5">
-        {{assignee.demographic_categories}}
+      <div class="ml-2">
+        {{assignee.demographic_categories | na_if_empty}}
       </div>
     </div>
   </div>

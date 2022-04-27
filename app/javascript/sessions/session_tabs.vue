@@ -13,7 +13,7 @@
       <b-tab title="Participant Assignment" :active="tab === 'session-assignment'" lazy>
         <assign-participants
           v-model="session"
-          defaultSortBy='session_assignments.interest_ranking'
+          defaultSortBy='session_assignments.interest_ranking, people.published_name'
           :defaultSortDesc="false"
           defaultO
           :perPage="200"
