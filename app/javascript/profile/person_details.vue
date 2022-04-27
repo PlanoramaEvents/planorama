@@ -17,7 +17,12 @@
       <!-- TODO: as per discussion with Anna TZ and hour display move to a settings dialog -->
       <p><b>If you are not planning on attending in person:</b></p>
       <b-form-group label="At the time of the convention I will be at UTC Offset">
-        <timezone-selector v-model="editable_person.timezone" @input="onInput" class="mb-2"></timezone-selector>
+        <timezone-selector
+          v-model="editable_person.timezone"
+          @input="onInput"
+          class="mb-2"
+          :disabled="disabled || editable_person.attendance_type != 'editable_person.virtual'"
+        ></timezone-selector>
         <p>
           Your time now in the selected timezone is <b>{{youTimeNow}}</b>
         </p>
