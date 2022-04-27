@@ -292,8 +292,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<!-- scoped does not work -->
+<style lang="scss">
 td {
   white-space: nowrap;
+}
+
+// Fix sticky col selection, not sure if this is quite the correct color etc
+.table-primary > td.b-table-sticky-column {
+  background-color: #d4d6f0 !important;
 }
 </style>
