@@ -55,7 +55,7 @@ class Session < ApplicationRecord
       where(['person_id = ?', person_id])
     end
 
-    def my_interest(person_id)
+    def interests_for(person_id)
       where(['person_id = ? and interested = true', person_id])
     end
   end

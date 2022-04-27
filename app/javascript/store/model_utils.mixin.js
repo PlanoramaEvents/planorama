@@ -4,7 +4,7 @@
 **/
 import { toastMixin } from "@/mixins";
 
-import { FETCH_BY_ID, DELETE, UPDATE_ALL, SAVE, SELECT, SELECTED } from "./model.store";
+import { FETCH_BY_ID, DELETE, UPDATE_ALL, SAVE, SELECT, SELECTED, FETCH} from "./model.store";
 import {
   MODEL_SAVE_ERROR, MODEL_SAVE_SUCCESS, MODEL_DELETE_SUCCESS, MODEL_DELETE_ERROR,
   MODEL_MASS_UPDATE_SUCCESS, MODEL_MASS_UPDATE_ERROR
@@ -26,6 +26,9 @@ export const modelUtilsMixin = {
     },
     fetch_model_by_id(model, id) {
       return this.$store.dispatch(FETCH_BY_ID, {model: model, id: id})
+    },
+    fetch_models(model, params, url = null) {
+      return this.$store.dispatch(FETCH, {model: model, url: url, params});
     },
     delete_model_by_id(model, id) {
       return this.toastPromise(this.$store.dispatch(DELETE, {model: model, itemOrId: id}), MODEL_DELETE_SUCCESS(model), MODEL_DELETE_ERROR(model));

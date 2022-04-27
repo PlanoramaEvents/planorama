@@ -21,53 +21,30 @@ class SessionSerializer
   end
 
   # session_areas
-  #
   attribute :session_areas_attributes do |session|
     session.session_areas
   end
 
-  # Return the assignments to this session for the person logged in (if any)
-  # has_one :my_assignments, serializer: SessionAssignmentSerializer do |session, params|
-  #   if params[:current_person]
-  #     session.session_assignments.for_person(params[:current_person].id)
-  #   end
-  # end
+  has_many :session_areas, serializer: SessionAreaSerializer,
+          links: {
+            self: -> (object, params) {
+              "#{params[:domain]}/session/#{object.id}"
+            },
+            related: -> (object, params) {
+              "#{params[:domain]}/session/#{object.id}/session_areas"
+            }
+          }
 
-  has_one :my_interest, serializer: SessionAssignmentSerializer do |session, params|
-    if params[:current_person]
-      session.session_assignments.my_interest(params[:current_person].id).first
-    end
-  end
-
-  # has_many :areas, serializer: AreaSerializer,
+  # Can I parameterize this??? session_assignments.interests_for(person)
+  # has_many :session_assignments, serializer: SessionAssignmentSerializer,
   #          links: {
   #            self: -> (object, params) {
   #              "#{params[:domain]}/session/#{object.id}"
   #            },
   #            related: -> (object, params) {
-  #              "#{params[:domain]}/session/#{object.id}/areas"
+  #              "#{params[:domain]}/session/#{object.id}/session_assignments"
   #            }
   #          }
-
-  has_many :session_areas, serializer: SessionAreaSerializer
-          # links: {
-          #   self: -> (object, params) {
-          #     "#{params[:domain]}/session/#{object.id}"
-          #   },
-          #   related: -> (object, params) {
-          #     "#{params[:domain]}/session/#{object.id}/session_areas"
-          #   }
-          # }
-
-  has_many :session_assignments, serializer: SessionAssignmentSerializer,
-           links: {
-             self: -> (object, params) {
-               "#{params[:domain]}/session/#{object.id}"
-             },
-             related: -> (object, params) {
-               "#{params[:domain]}/session/#{object.id}/session_assignments"
-             }
-           }
 
   has_one :format,
           if: Proc.new { |record| record.format },

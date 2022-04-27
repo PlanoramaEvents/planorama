@@ -117,7 +117,7 @@ module ResourceMethods
       options = {
         include: filtered_serializer_includes(
                    fields: fields,
-                   serialized_includes: jsonapi_included
+                   json_includes: jsonapi_included
                  ),
         params: {
           domain: "#{request.base_url}",
@@ -167,7 +167,6 @@ module ResourceMethods
     per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate && do_paginate
     per_page = nil unless paginate && do_paginate
     current_page = params[:current_page]&.to_i || 1 if paginate && do_paginate
-    # Rails.logger.debug("****** #{params[:filter]}")
     filters = JSON.parse(params[:filter]) if params[:filter].present?
 
     return per_page, current_page, filters
@@ -218,6 +217,7 @@ module ResourceMethods
     q = policy_scope(base, policy_scope_class: policy_scope_class)
       .includes(includes)
       .references(references)
+      .eager_load(eager_load)
       .joins(join_tables)
       .where(query(@filters))
       # .joins(query_join_tables(@filters))
@@ -235,9 +235,14 @@ module ResourceMethods
 
   def query(filters = nil)
     # Go through the filter and construct the where clause
-    return exclude_deleted_clause unless filters.present?
+    deleted_clause = exclude_deleted_clause
+    return deleted_clause unless filters.present?
 
-    query_part(filter: filters)
+    query = query_part(filter: filters)
+
+    return query unless deleted_clause
+
+    query ? query.and(deleted_clause) : deleted_clause
   end
 
   # if the element has a deleted_at we want the non deleted ones
@@ -561,12 +566,20 @@ module ResourceMethods
     _fields
   end
 
-  def filtered_serializer_includes(fields: , serialized_includes: nil)
-    serialized_includes ||= serializer_includes
-    return serialized_includes if fields.empty?
+  def add_to_serialized_includes(rels:)
+    serializer_includes = serializer_includes.concat(rels)
+  end
+
+  def filtered_serializer_includes(fields: , json_includes: nil)
+    includes = json_includes if json_includes
+    includes ||= serializer_includes
+    # p = params[:include].split(",")
+    includes.concat(params[:include].split(",")) if params[:include]
+    # Rails.logger.debug("******* INCLUDES #{includes} #{p}")
+    return includes if fields.empty?
 
     keys = fields.flatten(2)
-    serialized_includes.select{|v| keys.include?(v.to_s)}
+    includes.select{|v| keys.include?(v.to_s)}
   end
 
   def serializer_includes
@@ -582,6 +595,10 @@ module ResourceMethods
   end
 
   def join_tables
+    []
+  end
+
+  def eager_load
     []
   end
 

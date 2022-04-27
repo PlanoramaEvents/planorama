@@ -7,6 +7,11 @@ class SessionAssignmentsController < ResourceController
     model_class.transaction do
       authorize @object, policy_class: policy_class
       # if there is a session assignment set interested to false
+      person = Person.find params[:person_id] if params[:person_id]
+      person ||= current_person
+
+      raise "Person and assignment do not match for removing interest" if person.id != @object.person_id
+
       @object.update(
         interested: false,
         interest_ranking: nil,
@@ -33,6 +38,14 @@ class SessionAssignmentsController < ResourceController
 
   def includes
     [
+      :person,
+      :session
+    ]
+  end
+
+  def references
+    [
+      :person,
       :session
     ]
   end

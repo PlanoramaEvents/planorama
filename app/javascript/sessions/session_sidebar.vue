@@ -10,7 +10,14 @@
       <template #content v-if="selected">
         <b-row>
           <b-col>
-            <p><strong>Description:</strong> {{selected.description}}</p>
+            <dl>
+              <dt>
+                Description:
+              </dt>
+              <dd>
+                <div v-html="selected.description"></div>
+              </dd>
+            </dl>
           </b-col>
         </b-row>
         <div class="float-right d-flex justify-content-end">

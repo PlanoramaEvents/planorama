@@ -24,7 +24,9 @@
       </p>
       <h6>Session Comments</h6>
       <div class="ml-5" v-if="assignment">
-        {{assignment.interest_notes}}
+        <pre>
+          {{assignment.interest_notes}}
+        </pre>
       </div>
     </div>
     <div class="mt-2">
