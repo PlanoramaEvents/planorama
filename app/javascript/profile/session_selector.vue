@@ -26,15 +26,17 @@
     ></b-pagination>
 
     <b-overlay :show="loading" rounded="sm">
-      <b-table
-        hover responsive small striped
-        :fields="columns"
-        :items="sortedCollection"
-        :no-local-sorting="true"
-      >
-        <template #cell(title)="{ item }">
+      <div class='row mb-2'>
+        <div class="col-11">
+        </div>
+        <div class="col-1">
+          <b>Add to Interested</b>
+        </div>
+      </div>
+      <div class='row mb-5' v-for="item in sortedCollection">
+        <div class="col-11">
           <h4>{{item.title}}</h4>
-          <p v-html="item.description"></p>
+          <div v-html="item.description"></div>
           <div v-if="item.format">
             Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
           </div>
@@ -47,11 +49,8 @@
           <div class="mt-3" v-if="item.instructions_for_interest">Instructions for potential panelists:</div>
           <div class="panelist-instructions" v-html="item.instructions_for_interest">
           </div>
-        </template>
-        <template #cell(id)="{ item }">
-          <!-- TODO: add assignments in here
-            person, session, assignment (if it exists)
-          -->
+        </div>
+        <div class="col-1">
           <div v-if="assignments">
             <interest-indicator
               :session="item"
@@ -60,8 +59,8 @@
               :assignments="assignments"
             ></interest-indicator>
           </div>
-        </template>
-      </b-table>
+        </div>
+      </div>
     </b-overlay>
 
     <b-pagination class="d-flex justify-content-end"
