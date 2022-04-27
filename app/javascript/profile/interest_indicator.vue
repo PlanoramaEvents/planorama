@@ -61,7 +61,11 @@ export default {
           }
         )
       } else {
-        this.$refs['unexpress-interest-modal'].show()
+        if (this.assignment.interest_ranking || this.assignment.interest_notes || this.assignment.interest_role) {
+          this.$refs['unexpress-interest-modal'].show()
+        } else {
+          this.okNotInterested()
+        }
       }
     }
   },
