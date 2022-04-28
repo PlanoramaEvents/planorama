@@ -80,7 +80,9 @@ export default {
       let filter = {
         "op": "all",
         "queries":[
-          ["subquery", "unassigned", this.session.id]
+          ["subquery", "unassigned", this.session.id],
+          ["con_state", "!=", "declined"],
+          ["con_state", "!=", "rejected"]
         ]
       }
 
