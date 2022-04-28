@@ -93,7 +93,7 @@ export default {
   mounted() {
     // If there is no pager we need to get the initial collection somehow
     // Order should be by created_at date and ranking ...
-    this.fetchPaged(false); // false to not clear store of existing models
+    // this.fetchPaged(false); // false to not clear store of existing models
   }
 }
 </script>

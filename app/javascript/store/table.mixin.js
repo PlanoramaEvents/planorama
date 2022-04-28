@@ -130,10 +130,12 @@ export const tableMixin = {
       }
     },
     sortDesc(newVal, oldVal) {
+      if (!oldVal && (newVal == this.defaultSortDesc)) return
       // console.debug("sortdesc changed:", newVal, oldVal)
       if (newVal != oldVal) this.fetchPaged(this.shall_clear);
     },
     sortBy(newVal, oldVal) {
+      if (!oldVal && (newVal == this.defaultSortBy)) return
       // console.debug("sortby changed:", newVal, oldVal)
       if (newVal != oldVal) this.fetchPaged(this.shall_clear);
     }

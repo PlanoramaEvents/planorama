@@ -31,6 +31,9 @@ export default {
     init() {
       this.$refs['agreements-table'].fetchPaged()
     }
+  // },
+  // mounted() {
+  //   this.init()
   }
 }
 </script>

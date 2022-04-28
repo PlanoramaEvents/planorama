@@ -13,6 +13,7 @@
       :show-view="true"
       @view="$emit('view')"
       @clone="$emit('clone')"
+      ref="mailings-table"
     >
       <template #cell(content)="{ item }">
         <tooltip-overflow :title="item.content">
@@ -41,6 +42,9 @@ export default {
   data: () => ({
     columns,
     model
-  })
+  }),
+  mounted() {
+    this.$refs['mailings-table'].fetchPaged()
+  }
 }
 </script>

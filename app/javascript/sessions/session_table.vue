@@ -6,6 +6,7 @@
       :model="model"
       :columns="columns"
       stateName="session-table-search-state"
+      ref="sessions-table"
     >
       <template #cell(title)="{ item }">
         <tooltip-overflow v-if="item.title" :title="item.title">
@@ -54,6 +55,9 @@ export default {
     },
     onSave() {
     }
+  },
+  mounted() {
+    this.$refs['sessions-table'].fetchPaged()
   }
 }
 </script>

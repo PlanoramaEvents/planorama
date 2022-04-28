@@ -5,6 +5,7 @@
     model="survey"
     :defaultFilter="defaultFilter"
     :columns="columns"
+    ref="surveys-table"
   >
     <template #cell(description)="{ item }">
       <tooltip-overflow :title="item.description">{{item.description}}</tooltip-overflow>
@@ -66,6 +67,9 @@ export default {
         this.$router.push({path: `/surveys/edit/${survey.id}`})
       });
     }
+  },
+  mounted() {
+    this.$refs['surveys-table'].fetchPaged()
   }
 }
 </script>

@@ -205,6 +205,8 @@ export default {
         peopleTable.showAlternateSearch()
       }
     })
+
+    this.$refs['people-table'].fetchPaged()
   }
 }
 </script>
