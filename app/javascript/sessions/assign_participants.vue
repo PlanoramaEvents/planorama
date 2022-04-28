@@ -1,11 +1,11 @@
 <template>
   <div>
-    <!--
-    TODO:
-      list of who was interested - sorted by rank (nulls comming first....)
-      sidebar with the profile stuff (read only) -- use in the person sidebar eventually ...
-    -->
-    <div class='row mb-4'>
+    <div class='row mb-4' v-if="sortedCollection.length == 0">
+      <div class="col-12">
+        <h5>No participants have expressed interest in this session</h5>
+      </div>
+    </div>
+    <div class='row mb-4' v-if="sortedCollection.length > 0">
       <div class="col-2">
         Assignment State
       </div>
