@@ -3,19 +3,19 @@
     <div class="d-flex flex-row justify-content-between">
       <b-link @click="showPersonDetails(assignee)" class="mr-2">{{assignee.published_name}}</b-link>
       <div class="mr-2">
-        Rank: {{rank}}
+        Rank: <em>{{rank}}</em>
       </div>
       <div class="mr-2">
-        Default moderation preference: <span class="first-capital">{{defaultModPreference}}</span>
+        Default moderation preference: <span class="first-capital"><em>{{defaultModPreference}}</em></span>
       </div>
       <div class="mr-2">
-        Session moderation preference: <span class="first-capital">{{sessionModPreference}}</span>
+        Session moderation preference: <span class="first-capital"><em>{{sessionModPreference}}</em></span>
       </div>
       <div class="mr-2">
-        Attendance Type: {{assignee.attendance_type | capitalize | na_if_empty}}
+        Attendance Type: <em>{{assignee.attendance_type | capitalize | na_if_empty}}</em>
       </div>
       <div class="mr-2">
-        Accessibility Concerns: {{assignee.needs_accommodations ? 'Y' : 'N'}}
+        Accessibility Concerns: <em>{{assignee.needs_accommodations ? 'Y' : 'N'}}</em>
       </div>
     </div>
     <div class="mt-2">
