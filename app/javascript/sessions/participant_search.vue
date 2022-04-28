@@ -1,7 +1,8 @@
 <template>
   <div>
+    <h5>Additional Participants</h5>
     <search-vue
-      class="w-75"
+      class="w-75 mt-3"
       :value="filter"
       @change="onSearchChanged"
       :columns="columns"
