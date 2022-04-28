@@ -5,6 +5,7 @@
       defaultSortBy='sessions.title'
       :model="model"
       :columns="columns"
+      stateName="session-table-search-state"
     >
       <template #cell(title)="{ item }">
         <tooltip-overflow v-if="item.title" :title="item.title">
