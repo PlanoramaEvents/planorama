@@ -66,9 +66,9 @@
         next-text="Next"
       ></b-pagination>
     </div>
-    <div class="d-flex">
+    <div class="d-flex mb-1">
       <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
-      <span class="ml-auto">Showing {{perPage < totalRows ? perPage : totalRows}} of {{fullTotalRows}} records</span>
+      <span class="ml-auto">{{countCaption}}</span>
     </div>
     <b-table
       hover bordered responsive selectable small striped
@@ -116,6 +116,10 @@
       </template>
     </b-table>
 
+    <div class="d-flex mb-1">
+      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
+      <span class="ml-auto">{{countCaption}}</span>
+    </div>
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
       :total-rows="totalRows"
@@ -125,10 +129,6 @@
       prev-text="Prev"
       next-text="Next"
     ></b-pagination>
-    <div class="d-flex">
-      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
-      <span class="ml-auto">Showing {{perPage < totalRows ? perPage : totalRows}} of {{fullTotalRows}} records</span>
-    </div>
   </div>
 </template>
 
@@ -192,6 +192,15 @@ export default {
     }
   },
   computed: {
+    countCaption() {
+      let from = this.perPage * (this.currentPage - 1) + 1
+      let to = this.perPage * this.currentPage
+      if (to > this.totalRows) {
+        to = this.totalRows
+      }
+
+      return `Showing ${from} to ${to} of ${this.totalRows} (${this.fullTotalRows} total records)`
+    },
     useSelectMode() {
       if (this.selectMode == 'multi') {
         return 'range'
