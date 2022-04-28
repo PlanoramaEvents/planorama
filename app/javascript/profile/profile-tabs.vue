@@ -32,6 +32,7 @@
       <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
         <session-ranker
           defaultSortBy='interest_ranking,session_assignments.updated_at'
+          :person_id="person.id"
           :defaultSortDesc="true"
           :perPage="null"
           :model="sessionAssignmentModel"

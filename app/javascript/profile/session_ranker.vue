@@ -73,8 +73,20 @@
              :options="moderatorOptions">
            </b-form-select>
          </b-form-group>
+         <b-button variant="primary" @click="notInterested(item)"><b-icon-trash></b-icon-trash></b-button>
        </div>
      </div>
+
+     <b-modal
+       title="Confirm Not Interested"
+       ref="unexpress-interest-modal"
+       @hidden="stillInterested"
+       @ok="okNotInterested"
+     >
+       <p class="my-4">
+         Confirm that you are no longer interested in that session.
+       </p>
+     </b-modal>
   </div>
 </template>
 
@@ -82,6 +94,7 @@
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import personSessionMixin from '../auth/person_session.mixin';
+import sessionAssignmentMixin from '../sessions/session_assignment.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import SessionAssignmentMonitor from './session_assignment_monitor.vue'
 
@@ -95,8 +108,15 @@ export default {
   mixins: [
     personSessionMixin,
     modelMixin,
-    tableMixin // covers pagination and sorting
+    tableMixin, // covers pagination and sorting
+    sessionAssignmentMixin
   ],
+  props: {
+    person_id: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       moderatorOptions: [
@@ -154,6 +174,23 @@ export default {
       }
 
       return true
+    },
+    notInterested(arg) {
+      this.assignment = arg
+      this.$refs['unexpress-interest-modal'].show()
+    },
+    okNotInterested() {
+      if (this.assignment) {
+        this.removeInterest(this.assignment, this.person_id).then(
+          (res) => {
+            this.assignment = null
+            this.fetchPaged()
+          }
+        )
+      }
+    },
+    stillInterested() {
+      this.assignment = null
     },
     changeAssignment: function(arg) {
       if (arg.interest_ranking == 1 && this.rank1_total > 5) {

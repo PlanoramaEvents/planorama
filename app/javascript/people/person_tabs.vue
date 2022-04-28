@@ -37,6 +37,7 @@
           :perPage="null"
           :model="sessionAssignmentModel"
           :defaultFilter="rankedFilter"
+          :person_id="person.id"
         ></session-ranker>
       </b-tab>
       <b-tab title="Admin" disabled lazy>
