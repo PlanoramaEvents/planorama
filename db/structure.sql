@@ -965,32 +965,13 @@ CREATE TABLE public.published_sessions (
 --
 
 CREATE TABLE public.room_sets (
-    id bigint NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying,
     description character varying,
     sort_order integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
-
-
---
--- Name: room_sets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.room_sets_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: room_sets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.room_sets_id_seq OWNED BY public.room_sets.id;
 
 
 --
@@ -1013,7 +994,7 @@ CREATE TABLE public.rooms (
     is_virtual boolean DEFAULT false,
     dimensions text,
     area_of_space numeric,
-    room_set_id bigint
+    room_set_id uuid
 );
 
 
@@ -1452,13 +1433,6 @@ ALTER TABLE ONLY public.audit_survey_versions ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.categorizations ALTER COLUMN id SET DEFAULT nextval('public.categorizations_id_seq'::regclass);
-
-
---
--- Name: room_sets id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.room_sets ALTER COLUMN id SET DEFAULT nextval('public.room_sets_id_seq'::regclass);
 
 
 --
@@ -2558,6 +2532,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220424180453'),
 ('20220424181346'),
 ('20220426010537'),
-('20220427170202');
+('20220427170202'),
+('20220428205309');
 
 
