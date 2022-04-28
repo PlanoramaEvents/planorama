@@ -6,14 +6,12 @@
       Your selections will appear on the Sessions Ranking tab.
     </p>
 
-    <div class="my-3">
-      <session-search
-        :value="filter"
-        @change="onSearchChanged"
-        :columns="columns"
-      >
-      </session-search>
-    </div>
+    <session-search
+      :value="filter"
+      @change="onSearchChanged"
+      :columns="columns"
+    >
+    </session-search>
 
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"

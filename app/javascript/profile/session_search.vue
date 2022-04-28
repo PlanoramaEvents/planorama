@@ -1,35 +1,43 @@
 <template>
-  <div class="container">
-  <div class="row">
-    <b-form-group label="Area" class="col-2">
-      <model-select
-        v-model="area_id"
-        model="area"
-        field="name"
-        unselected-display="Any Area"
-      ></model-select>
-    </b-form-group>
-    <b-form-group label="Tag" class="col-2">
-      <model-tags
-        v-model="tags"
-        model="tag"
-        field="name"
-        filter='{"op":"all","queries":[["taggings.taggable_type", "=", "Session"]]}'
-      ></model-tags>
-    </b-form-group>
-    <b-form-group label="Title or Description" class="col-4">
-      <b-form-input
-        type="text"
-        v-model="title_desc"
-      ></b-form-input>
-    </b-form-group>
-    <b-form-group class="col-2 align-self-end">
-      <b-form-radio v-model="match" name="search-match" value="any">Match Any</b-form-radio>
-      <b-form-radio v-model="match" name="search-match" value="all">Match All</b-form-radio>
-    </b-form-group>
-    <b-button variant="primary" @click="onSearch" class="col-2 align-self-end search-button">Search</b-button>
-  </div>
-  </div>
+  <b-row align-v="center">
+    <b-col cols="2">
+      <b-form-group label="Area">
+        <model-select
+          v-model="area_id"
+          model="area"
+          field="name"
+          unselected-display="Any Area"
+        ></model-select>
+      </b-form-group>
+    </b-col>
+    <b-col cols="2">
+      <b-form-group label="Tag">
+        <model-tags
+          v-model="tags"
+          model="tag"
+          field="name"
+          filter='{"op":"all","queries":[["taggings.taggable_type", "=", "Session"]]}'
+        ></model-tags>
+      </b-form-group>
+    </b-col>
+    <b-col cols="4">
+      <b-form-group label="Title or Description">
+        <b-form-input
+          type="text"
+          v-model="title_desc"
+        ></b-form-input>
+      </b-form-group>
+    </b-col>
+    <b-col cols="2 align-self-end">
+      <b-form-group>
+        <b-form-radio v-model="match" name="search-match" value="any">Match Any</b-form-radio>
+        <b-form-radio v-model="match" name="search-match" value="all">Match All</b-form-radio>
+      </b-form-group>
+    </b-col>
+    <b-col cols="2 align-self-end">
+      <b-button variant="primary" @click="onSearch" class="search-button">Search</b-button>
+    </b-col>
+  </b-row>
 </template>
 
 <script>
