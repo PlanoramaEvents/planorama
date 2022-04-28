@@ -19,9 +19,8 @@
       </div>
     </div>
     <div class="mt-2">
-      <p v-if="noInterestExpressed">
-        <em>Did not express interest</em>
-      </p>
+      <div v-if="noInterestExpressed"><em>Did not express interest</em></div>
+      <div>Status: <em>{{assignee.con_state}}</em></div>
       <h6>Session Comments</h6>
       <div class="ml-2 keep-format" v-if="assignment">{{assignment.interest_notes | na_if_empty}}</div>
       <div class="ml-2" v-else>N/A</div>
