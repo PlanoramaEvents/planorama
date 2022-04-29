@@ -14,14 +14,22 @@
       ></email-addresses-editor>
     </div>
     <div class="flex-col w-50 p-2">
-      <!-- TODO: as per discussion with Anna TZ and hour display move to a settings dialog -->
-      <p><b>If you are not planning on attending in person:</b></p>
+      <div><b>I plan to attend the convention:</b></div>
+      <b-form-radio-group
+        v-model="editable_person.attendance_type"
+        stacked
+        @change="attendanceChanged"
+      >
+        <b-form-radio value="in person">In Person</b-form-radio>
+        <b-form-radio value="hybrid">In Person AND Virtually</b-form-radio>
+        <b-form-radio value="virtual">Virtual</b-form-radio>
+      </b-form-radio-group>
       <b-form-group label="At the time of the convention I will be at UTC Offset">
         <timezone-selector
           v-model="editable_person.timezone"
           @input="onInput"
           class="mb-2"
-          :disabled="disabled || editable_person.attendance_type != 'editable_person.virtual'"
+          :disabled="disabled || editable_person.attendance_type != 'virtual'"
         ></timezone-selector>
         <p>
           Your time now in the selected timezone is <b>{{youTimeNow}}</b>
@@ -202,6 +210,15 @@ export default {
     }
   },
   methods: {
+    attendanceChanged(arg) {
+      // console.debug("***** ATT CHNAGED", arg)
+      this.save(this.editable_person).then(
+        (obj) => {
+          this.editable_person = obj
+          this.$emit('input',this.editable_person)
+        }
+      )
+    },
     onInput(arg) {
       this.save(this.editable_person).then(
         (obj) => {

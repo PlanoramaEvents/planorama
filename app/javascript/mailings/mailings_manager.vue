@@ -32,6 +32,7 @@
             defaultFilter='{"op":"all","queries":[["mailing_state", "!=", "draft"]]}'
             @view="onReadOnlyView"
             @clone="onClone"
+            class="w-100"
           ></mailings-table>
         </div>
       </b-tab>
