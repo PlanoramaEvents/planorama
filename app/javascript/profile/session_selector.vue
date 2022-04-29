@@ -130,6 +130,7 @@ export default {
   },
   mounted() {
     // Ensure we have fetched our assignments
+    this.fetchPaged()
     this.fetch_models(
       sessionAssignmentModel,
       {
