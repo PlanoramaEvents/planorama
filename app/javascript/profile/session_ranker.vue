@@ -193,32 +193,35 @@ export default {
       this.assignment = null
     },
     changeAssignment: function(arg) {
-      if (arg.interest_ranking == 1 && this.rank1_total > 5) {
-        this.$bvToast.toast(
-          SESSION_RANKING_ERROR(this.rank1_total, 5),
-          {
-            variant: 'error',
-            title: "Ranking Error"
-          }
-        )
-        return
+      if (arg.interested) {
+        if (arg.interest_ranking == 1 && this.rank1_total > 5) {
+          this.$bvToast.toast(
+            SESSION_RANKING_ERROR(this.rank1_total, 5),
+            {
+              variant: 'error',
+              title: "Ranking Error"
+            }
+          )
+          return
+        }
+        if (arg.interest_ranking == 2 && this.rank2_total > 5) {
+          this.$bvToast.toast(
+            SESSION_RANKING_ERROR(this.rank2_total, 5),
+            {
+              variant: 'error',
+              title: "Ranking Error"
+            }
+          )
+          return
+        }
+        this.save(arg)
       }
-      if (arg.interest_ranking == 2 && this.rank2_total > 5) {
-        this.$bvToast.toast(
-          SESSION_RANKING_ERROR(this.rank2_total, 5),
-          {
-            variant: 'error',
-            title: "Ranking Error"
-          }
-        )
-        return
-      }
-      this.save(arg)
     }
   },
   mounted() {
     // If there is no pager we need to get the initial collection somehow
     // Order should be by created_at date and ranking ...
+    this.assignment = null
     this.fetchPaged();
   }
 }
