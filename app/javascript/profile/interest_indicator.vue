@@ -59,6 +59,10 @@ export default {
           (obj) => {
             this.assignment = obj
           }
+        ).catch(
+          () => {
+            this.interested = false
+          }
         )
       } else {
         if (this.assignment.interest_ranking || this.assignment.interest_notes || this.assignment.interest_role) {
