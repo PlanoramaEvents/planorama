@@ -7,7 +7,7 @@
       ></agreement-table>
     </div>
     <div style="border: solid">
-      <agreement-editor ref="agreementEditor"/>
+      <agreement-editor ref="agreementEditor" @saved="init"/>
     </div>
   </div>
 </template>

@@ -64,6 +64,7 @@ export default {
       selected_target: 'none'
     }
   },
+  emits: ["saved"],
   computed: {
     agreement_enums: {
       get: function() {
@@ -104,6 +105,7 @@ export default {
             }
           )
           this.clear()
+          this.$emit("saved");
         }
       ).catch(
         (err) => {
