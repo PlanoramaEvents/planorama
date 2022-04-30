@@ -27,9 +27,9 @@ class SessionAssignment < ApplicationRecord
   belongs_to  :session_assignment_role_type, required: false
   has_one     :published_session_assignment # TODO: cascade delete?
 
-  # TODO: we should check to see if this is a duplicate
-  # session_id, person_id and session_assignment_role_type
   validate :check_unique
+
+  before_save :check_person_state
 
   # interested in mod, not interested in mod, no preference
   enum interest_role: {
@@ -72,6 +72,17 @@ class SessionAssignment < ApplicationRecord
 
   private
 
+  # Ensure that we are not assigning a declined ot rejected person
+  def check_person_state
+    # Rails.logger.debug ("CHECK CON STATE", person)
+    p = Person.find self.person_id
+    if p.con_state == Person.con_states[:declined] || p.con_state == Person.con_states[:rejected]
+      raise "Person in state not allowed to be assigned" if person.con_state == Person.con_states[:declined]
+    end
+  end
+
+  # Check to see if this is a duplicate
+  # session_id, person_id and session_assignment_role_type
   def check_unique
     return unless new_record?
 

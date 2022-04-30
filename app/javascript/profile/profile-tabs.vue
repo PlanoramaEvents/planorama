@@ -11,7 +11,7 @@
         ></person-details>
       </b-tab>
       <!-- Can not make this lazy otherwise we have lock issues with the notes -->
-      <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
+      <b-tab title="Availability &amp; Interests" :active="tab === 'availability'" v-if="currentSettings.configs">
         <availability-and-interests
           v-model="person"
           @input="onPersonUpdate"

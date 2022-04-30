@@ -71,6 +71,8 @@ export default {
         "op": "all",
         "queries":[
           ["session_id", "=", this.id],
+          ["person.con_state", "!=", "declined"],
+          ["person.con_state", "!=", "rejected"],
           {
             "op": "any",
             "queries": [
