@@ -74,7 +74,8 @@ class SessionAssignment < ApplicationRecord
 
   # Ensure that we are not assigning a declined ot rejected person
   def check_person_state
-    # Rails.logger.debug ("CHECK CON STATE", person)
+    return if self.interested == false
+
     p = Person.find self.person_id
     if p.con_state == Person.con_states[:declined] || p.con_state == Person.con_states[:rejected]
       raise "Person in state not allowed to be assigned" if person.con_state == Person.con_states[:declined]
