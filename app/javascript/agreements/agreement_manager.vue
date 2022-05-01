@@ -7,7 +7,7 @@
       ></agreement-table>
     </div>
     <div style="border: solid">
-      <agreement-editor ref="agreementEditor"/>
+      <agreement-editor ref="agreementEditor" @saved="init"/>
     </div>
   </div>
 </template>
@@ -32,7 +32,8 @@ export default {
   },
   watch: {
     "selected" : function(val) {
-      this.$refs.agreementEditor.setAgreementData(val);
+      if(val)
+        this.$refs.agreementEditor.setAgreementData(val);
     }
   },
   methods: {
