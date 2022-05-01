@@ -543,6 +543,20 @@ CREATE TABLE public.conflict_exceptions (
 
 
 --
+-- Name: convention_role_role_accesses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.convention_role_role_accesses (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    convention_role_id uuid,
+    person_role_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: convention_roles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -885,7 +899,8 @@ CREATE TABLE public.person_roles (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    can_access_sensitive_data boolean DEFAULT false
+    can_access_sensitive_data boolean DEFAULT false,
+    name character varying NOT NULL
 );
 
 
@@ -1562,6 +1577,14 @@ ALTER TABLE ONLY public.conflict_exceptions
 
 
 --
+-- Name: convention_role_role_accesses convention_role_role_accesses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.convention_role_role_accesses
+    ADD CONSTRAINT convention_role_role_accesses_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: convention_roles convention_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2014,6 +2037,20 @@ CREATE INDEX index_audit_session_versions_on_item_type_and_item_id ON public.aud
 --
 
 CREATE INDEX index_audit_survey_versions_on_item_type_and_item_id ON public.audit_survey_versions USING btree (item_type, item_id);
+
+
+--
+-- Name: index_convention_role_role_accesses_on_convention_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_convention_role_role_accesses_on_convention_role_id ON public.convention_role_role_accesses USING btree (convention_role_id);
+
+
+--
+-- Name: index_convention_role_role_accesses_on_person_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_convention_role_role_accesses_on_person_role_id ON public.convention_role_role_accesses USING btree (person_role_id);
 
 
 --
@@ -2533,6 +2570,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220424181346'),
 ('20220426010537'),
 ('20220427170202'),
-('20220428205309');
+('20220428205309'),
+('20220501155733'),
+('20220501160504');
 
 

@@ -9,8 +9,12 @@
 #     updated_at timestamp(6) without time zone NOT NULL,
 #     action_scope string
 # );
+# TODO
 class ActionPermission < ApplicationRecord
   # enum action_scope: { none: 'none', owner: 'owner', role: 'role' }, _suffix: true
+
+  #  role -> action_permission
+  # model, action, allowed
 
   belongs_to :person_role
 end

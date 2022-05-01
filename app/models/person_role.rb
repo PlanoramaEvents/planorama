@@ -5,6 +5,9 @@
 # =>  can access sensitive data
 #     Add links to action permissions
 # );
+# TODO
 class PersonRole < ApplicationRecord
   has_many :action_permissions
+
+  validates :name, presence: true
 end
