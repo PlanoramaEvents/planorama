@@ -11,7 +11,7 @@
     <select v-model="agreementData.agreement_type" style="padding-right: 15px">
       <option v-for="type in currentSettings.agreement_types" :selected="type === selected_agreement_type">{{type}}</option>
     </select>
-    <label>Role:</label>
+    <label>Target:</label>
     <select v-model="agreementData.target">
       <option v-for="role in agreement_enums" :selected="role === selected_target">{{role}}</option>
     </select>
