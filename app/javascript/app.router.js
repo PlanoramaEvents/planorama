@@ -74,6 +74,9 @@ const sessionRoutes = [
   { path: '', component: SessionList },
 ]
 
+// rbac
+import RbacScreen from './rbac/rbac-screen.vue';
+
 // dashboard
 import Dashboard from './dashboard/dashboard.vue';
 
@@ -153,6 +156,13 @@ export const router = new VueRouter({
     {
       path: '/dashboard',
       component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/rbac',
+      component: RbacScreen,
       meta: {
         requiresAuth: true
       }

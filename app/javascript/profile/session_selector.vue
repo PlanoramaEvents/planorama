@@ -31,7 +31,7 @@
           <b>Add to Interested</b>
         </div>
       </div>
-      <div class='row mb-5' v-for="item in sortedCollection">
+      <div class='row mb-5' v-for="item in sortedCollection" :key="item.id">
         <div class="col-11">
           <h4>{{item.title}}</h4>
           <div v-html="item.description"></div>
