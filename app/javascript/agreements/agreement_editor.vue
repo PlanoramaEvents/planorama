@@ -64,6 +64,7 @@ export default {
       selected_target: 'none'
     }
   },
+  emits: ["saved"],
   computed: {
     agreement_enums: {
       get: function() {
@@ -87,10 +88,12 @@ export default {
     },
     setAgreementData(data) {
       //console.log("setAgreementData: ", data);
-      this.agreementData.title=data.title;
-      this.agreementData.terms = data.terms;
-      this.selected_agreement_type=this.agreementData.agreement_type = data.agreement_type;
-      this.selected_target=this.agreementData.target = data.target;
+      if(data && data.title && data.terms && data.agreement_type && data.target) {
+        this.agreementData.title = data.title;
+        this.agreementData.terms = data.terms;
+        this.selected_agreement_type = this.agreementData.agreement_type = data.agreement_type;
+        this.selected_target = this.agreementData.target = data.target;
+      }
     },
     saveAgreement() {
       let res = this.newAgreementAction(this.agreementData);
@@ -104,6 +107,7 @@ export default {
             }
           )
           this.clear()
+          this.$emit("saved");
         }
       ).catch(
         (err) => {
