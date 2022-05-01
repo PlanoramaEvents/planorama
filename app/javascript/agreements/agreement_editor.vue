@@ -88,10 +88,12 @@ export default {
     },
     setAgreementData(data) {
       //console.log("setAgreementData: ", data);
-      this.agreementData.title=data.title;
-      this.agreementData.terms = data.terms;
-      this.selected_agreement_type=this.agreementData.agreement_type = data.agreement_type;
-      this.selected_target=this.agreementData.target = data.target;
+      if(data && data.title && data.terms && data.agreement_type && data.target) {
+        this.agreementData.title = data.title;
+        this.agreementData.terms = data.terms;
+        this.selected_agreement_type = this.agreementData.agreement_type = data.agreement_type;
+        this.selected_target = this.agreementData.target = data.target;
+      }
     },
     saveAgreement() {
       let res = this.newAgreementAction(this.agreementData);

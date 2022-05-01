@@ -32,7 +32,8 @@ export default {
   },
   watch: {
     "selected" : function(val) {
-      this.$refs.agreementEditor.setAgreementData(val);
+      if(val)
+        this.$refs.agreementEditor.setAgreementData(val);
     }
   },
   methods: {
