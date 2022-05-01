@@ -1,5 +1,28 @@
 # We want to get a list of the policies for a user
 module PolicyService
+  def self.list_policies
+    Rails.application.eager_load! # ensure that the controller classes are loaded
+
+    classes = ResourceController.descendants.collect{|c| name_for_class(clazz: c)}
+
+    permissions = { }
+
+    classes.each do |clazz|
+      entity = clazz.to_s.singularize.snakecase.split('::').last
+      permissions[entity] = []
+      policy = Pundit.policy(nil, clazz.to_sym)
+      policy ||= Pundit.policy(nil, :Planner) # if nill use PlannerPolicy
+      build_policy_list(permissions: permissions[entity], policy: policy)
+
+      next unless policy.class != PlannerPolicy
+
+      super_policy = policy.class.superclass.new(nil, clazz)
+      build_policy_list(permissions: permissions[entity], policy: super_policy)
+    end
+
+    permissions
+  end
+
   def self.policies_for(person:)
     Rails.application.eager_load! # ensure that the controller classes are loaded
 
@@ -23,8 +46,22 @@ module PolicyService
     permissions
   end
 
+  def self.build_policy_list(permissions:, policy:)
+    policy.public_methods(false).sort.each do |m|
+      next unless m.end_with? "?"
+
+      # result = policy.send m
+      op = m.to_s.gsub(/\?$/, '')
+      permissions << op
+    end
+
+    permissions
+  end
+
   def self.build_policy_entries(permissions:, policy:)
     policy.public_methods(false).sort.each do |m|
+      next unless m.end_with? "?"
+
       result = policy.send m
       op = m.to_s.gsub(/\?$/, '')
       permissions[op] = result

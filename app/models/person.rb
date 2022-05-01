@@ -54,8 +54,8 @@ class Person < ApplicationRecord
   accepts_nested_attributes_for :convention_roles, allow_destroy: true
 
   # Person roles etc
-  has_many :person_role_assocs
-  has_many :person_roles, through: :person_role_assocs
+  has_many :application_role_assocs
+  has_many :application_roles, through: :application_role_assocs
 
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements

@@ -3,7 +3,7 @@
 #     mdl_name character varying,
 #     action character varying,
 #     allowed boolean DEFAULT false,
-#     person_role_id uuid,
+#     application_role_id uuid,
 #     lock_version integer,
 #     created_at timestamp(6) without time zone NOT NULL,
 #     updated_at timestamp(6) without time zone NOT NULL,
@@ -16,5 +16,5 @@ class ActionPermission < ApplicationRecord
   #  role -> action_permission
   # model, action, allowed
 
-  belongs_to :person_role
+  belongs_to :application_role
 end

@@ -26,7 +26,7 @@ class AgreementsPolicy < PlannerPolicy
 
   # class Scope < Scope
   #   def resolve
-  #     if @person.person_roles.inject(false) { |res, role| res || role.admin_role? }
+  #     if @person.application_role_assocs.inject(false) { |res, role| res || role.admin_role? }
   #       Rails.logger.debug "**** ALL #{@person.id}"
   #       scope.all
   #     else
