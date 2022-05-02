@@ -4,7 +4,6 @@ export const agreement_columns = [
     //sortKey: 'agreements.name',
     label: 'Title',
     type: "text",
-    stickyColumn: true,
     sortable: true
   },
   {
