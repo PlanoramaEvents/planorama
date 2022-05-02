@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "42e35806-0dc4-4c18-a692-a430ab1a531a",
+		"_postman_id": "3ae409eb-ec86-44fe-bdc1-cdc37d3ca2e6",
 		"name": "Planorama API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -56,6 +56,55 @@
 						"description": "Log the person into the system. It will return the JWT token in the header which is needed for subsequent requests."
 					},
 					"response": []
+				},
+				{
+					"name": "Login As Participant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// const newAccessToken = responseHeaders['Authorization'].replace('Bearer','');",
+									"// console.log('****', newAccessToken);",
+									"// postman.setEnvironmentVariable(\"jwt-token\", newAccessToken);",
+									"// Save the JWT in the collection variable for use by other requests",
+									"// pm.collectionVariables.set('jwt-token', newAccessToken);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"person\": {\n        \"email\": \"participant@test.com\",\n        \"password\": \"111111\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/sign_in",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"sign_in"
+							]
+						},
+						"description": "Log the person into the system. It will return the JWT token in the header which is needed for subsequent requests."
+					},
+					"response": []
 				}
 			],
 			"auth": {
@@ -87,6 +136,20 @@
 			"item": [
 				{
 					"name": "Me Session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"person-id\", jsonData['data'].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -327,7 +390,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/person?filter={\"op\":\"all\",\"queries\":[[\"name\", \"contains\", \"staff\"]]}",
+							"raw": "http://localhost:3000/person?filter[query]={\"op\":\"all\",\"queries\":[[\"name\", \"contains\", \"staff\"]]}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -338,7 +401,7 @@
 							],
 							"query": [
 								{
-									"key": "filter",
+									"key": "filter[query]",
 									"value": "{\"op\":\"all\",\"queries\":[[\"name\", \"contains\", \"staff\"]]}"
 								}
 							]
@@ -646,6 +709,57 @@
 					"response": []
 				},
 				{
+					"name": "Create a Survey Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": {\n        \"type\": \"survey\",\n        \"attributes\": {\n            \"name\": \"{{$randomFullName}}\",\n            \"pages_attributes\": [\n                {\n                    \"title\": \"{{$randomFullName}}\",\n                    \"questions_attributes\": [\n                        {\n                            \"question\":\"New Question\",\n                            \"question_type\": \"textfield\",\n                            \"answers_attributes\": [\n                                {\n                                    \"answer\": \"Option\"\n                                }\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/survey?sortBy=surveys.name",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "surveys.name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Page",
 					"event": [
 						{
@@ -816,6 +930,48 @@
 								{
 									"key": "filter",
 									"value": "{\"queries\":[[\"assigned_people.person_id\", \"=\", \"{{person-id}}\"]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Surveys For Person via Filter Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"survey-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/survey?filter={\"queries\":[[\"submissions.person_id\", \"=\", \"58841a73-84bb-4069-8fb6-1adcb61d389e\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"queries\":[[\"submissions.person_id\", \"=\", \"58841a73-84bb-4069-8fb6-1adcb61d389e\"]]}"
 								}
 							]
 						}
@@ -1140,6 +1296,31 @@
 								"survey",
 								"{{survey-id}}",
 								"submissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Submissions for Survey(Prog Survey)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/survey/00000000-0000-0000-0000-000000000014/submissions/flat",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"survey",
+								"00000000-0000-0000-0000-000000000014",
+								"submissions",
+								"flat"
 							]
 						}
 					},
@@ -1614,10 +1795,6 @@
 			]
 		},
 		{
-			"name": "Program Items",
-			"item": []
-		},
-		{
 			"name": "Venues",
 			"item": [
 				{
@@ -1709,6 +1886,22 @@
 				},
 				{
 					"name": "Get My Agreements UnSigned (only latest versions)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"if (jsonData['data'][0]) {",
+									"    pm.collectionVariables.set(\"agreement-id\", jsonData['data'][0].id);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -1738,9 +1931,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"//console.log('***', jsonData['data'][0].id);",
-									"pm.collectionVariables.set(\"agreement-id\", jsonData['data'][0].id);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -1826,7 +2017,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"title\": \"{{$randomLoremWords}}\",\n    \"terms\": \"{{$randomLoremParagraph}}\",\n    \"agreement_type\": \"stuff\",\n    \"target\": \"member\"\n    // created_by_id\n}\n",
+							"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"title\": \"{{$randomLoremWords}}\",\n    \"terms\": \"{{$randomLoremParagraph}}\",\n    \"agreement_type\": \"stuff\",\n    \"target\": \"participant\"\n    // created_by_id\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1853,6 +2044,81 @@
 		{
 			"name": "Sessions",
 			"item": [
+				{
+					"name": "Get Areas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"session-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/area",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"area"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create an Area",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"session-id\", jsonData['data'][0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"fan\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/area",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"area"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Get Sessions",
 					"event": [
@@ -1887,6 +2153,104 @@
 					"response": []
 				},
 				{
+					"name": "Get A Session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/session/{{session-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"session",
+								"{{session-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Session Tags",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/session/tags",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"session",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tags",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/tag?filter={\"op\":\"all\",\"queries\":[[\"taggings.taggable_type\", \"=\", \"Session\"]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tag"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"op\":\"all\",\"queries\":[[\"taggings.taggable_type\", \"=\", \"Session\"]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Session Assignments",
 					"request": {
 						"method": "GET",
@@ -1906,12 +2270,37 @@
 					"response": []
 				},
 				{
-					"name": "Delete Session Assignment",
+					"name": "Get My Session Assignments",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/session_assignment/2a016b1c-7bec-4eb1-8045-cef6a0377f35",
+							"raw": "http://localhost:3000/session_assignment?filter={\"op\":\"all\",\"queries\":[[\"person_id\", \"=\", \"{{person-id}}\"],[\"interested\", \"=\", true]]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"session_assignment"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "{\"op\":\"all\",\"queries\":[[\"person_id\", \"=\", \"{{person-id}}\"],[\"interested\", \"=\", true]]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unexpress Interest",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/session_assignment/41926785-d64c-405a-9987-2131ed7abc11/unexpress_interest",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1919,7 +2308,58 @@
 							"port": "3000",
 							"path": [
 								"session_assignment",
-								"2a016b1c-7bec-4eb1-8045-cef6a0377f35"
+								"41926785-d64c-405a-9987-2131ed7abc11",
+								"unexpress_interest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Express Interest",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/session/0a7902dd-7a74-4ea6-ae47-ff21b770dd18/express_interest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"session",
+								"0a7902dd-7a74-4ea6-ae47-ff21b770dd18",
+								"express_interest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Session Assignment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/session_assignment/41926785-d64c-405a-9987-2131ed7abc11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"session_assignment",
+								"41926785-d64c-405a-9987-2131ed7abc11"
 							]
 						}
 					},
@@ -1956,33 +2396,373 @@
 			]
 		},
 		{
-			"name": "RBAC",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt-token}}",
-							"type": "string"
+			"name": "Configs",
+			"item": [
+				{
+					"name": "Parameter Names",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/parameter_name",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"parameter_name"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:3000/rbac",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"rbac"
-					]
+				{
+					"name": "Configurations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/configuration",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"configuration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Settings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/settings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Settings Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/settings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"settings"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Availabilty",
+			"item": [
+				{
+					"name": "Get Availabilites",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person/{{person-id}}/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person",
+								"{{person-id}}",
+								"availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Availability",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"person_id\": \"{{person-id}}\",\n    \"start_time\": \"2022-09-01T10:10:00\",\n    \"end_time\": \"2022-09-01T17:10:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Availability",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"person_id\": \"{{person-id}}\",\n    \"start_time\": \"2022-09-01T10:10:00\",\n    \"end_time\": \"2022-09-01T17:10:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/availability/a0b1ac2c-5129-4b57-91c6-7a263164a478",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"availability",
+								"a0b1ac2c-5129-4b57-91c6-7a263164a478"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exclusions",
+			"item": [
+				{
+					"name": "Get Exclusions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person/{{person-id}}/person_exclusion",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person",
+								"{{person-id}}",
+								"person_exclusion"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Limits",
+			"item": [
+				{
+					"name": "Get Limits",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/person/{{person-id}}/session_limit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"person",
+								"{{person-id}}",
+								"session_limit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles and Permissions",
+			"item": [
+				{
+					"name": "RBAC",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/rbac",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"rbac"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Application Roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//console.log('***', jsonData['data'][0].id);",
+									"pm.collectionVariables.set(\"app-role-id\", jsonData['data'][0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/application_role",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"application_role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Application Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"MyRole111\",\n    \"permissions\": {\n        \"application_role\": {\n            \"create\": true,\n            \"destroy\": true,\n            \"index\": true,\n            \"show\": true,\n            \"update\": true\n        },\n        \"parameter_name\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"agreement\": {\n            \"index\": false,\n            \"latest\": false,\n            \"show\": false,\n            \"sign\": false,\n            \"signed\": false,\n            \"unsigned\": false,\n            \"create\": false,\n            \"destroy\": false,\n            \"update\": false\n        },\n        \"room\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"tag\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"person_exclusion\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"person\": {\n            \"assigned_surveys\": false,\n            \"import\": false,\n            \"index\": false,\n            \"mailed_surveys\": false,\n            \"me\": false,\n            \"show\": false,\n            \"submissions\": false,\n            \"update\": false,\n            \"update_all\": false,\n            \"create\": false,\n            \"destroy\": false\n        },\n        \"survey\": {\n            \"assign_people\": false,\n            \"show\": false,\n            \"unassign_people\": false,\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"update\": false\n        },\n        \"published_session\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"availability\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"venue\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"mail_history\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"email_address\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"mailed_surveys\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"session\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"format\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"tag_context\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"convention_role\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"area\": {\n            \"index\": false,\n            \"show\": false,\n            \"create\": false,\n            \"destroy\": false,\n            \"update\": false\n        },\n        \"session_limit\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"configuration\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"mailing\": {\n            \"assign_people\": false,\n            \"clone\": false,\n            \"preview\": false,\n            \"schedule\": false,\n            \"unassign_people\": false,\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"session_assignment\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"page\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"submission\": {\n            \"create\": false,\n            \"delete_all\": false,\n            \"flat\": false,\n            \"show\": false,\n            \"update\": false,\n            \"destroy\": false,\n            \"index\": false\n        },\n        \"response\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"question\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"answer\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        }\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/application_role",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"application_role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Application Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"MyRole111\",\n    \"sensitive_access\": true,\n    \"permissions\": {\n        \"application_role\": {\n            \"create\": true,\n            \"destroy\": false,\n            \"index\": true,\n            \"show\": true,\n            \"update\": true\n        },\n        \"parameter_name\": {\n            \"create\": true,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"agreement\": {\n            \"index\": true,\n            \"latest\": false,\n            \"show\": false,\n            \"sign\": false,\n            \"signed\": false,\n            \"unsigned\": false,\n            \"create\": false,\n            \"destroy\": false,\n            \"update\": false\n        },\n        \"room\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"tag\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"person_exclusion\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"person\": {\n            \"assigned_surveys\": false,\n            \"import\": false,\n            \"index\": false,\n            \"mailed_surveys\": false,\n            \"me\": false,\n            \"show\": false,\n            \"submissions\": false,\n            \"update\": false,\n            \"update_all\": false,\n            \"create\": false,\n            \"destroy\": false\n        },\n        \"survey\": {\n            \"assign_people\": false,\n            \"show\": false,\n            \"unassign_people\": false,\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"update\": false\n        },\n        \"published_session\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"availability\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"venue\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"mail_history\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"email_address\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"mailed_surveys\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"session\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"format\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"tag_context\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"convention_role\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"area\": {\n            \"index\": false,\n            \"show\": false,\n            \"create\": false,\n            \"destroy\": false,\n            \"update\": false\n        },\n        \"session_limit\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"configuration\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"mailing\": {\n            \"assign_people\": false,\n            \"clone\": false,\n            \"preview\": false,\n            \"schedule\": false,\n            \"unassign_people\": false,\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"session_assignment\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"page\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"submission\": {\n            \"create\": false,\n            \"delete_all\": false,\n            \"flat\": false,\n            \"show\": false,\n            \"update\": false,\n            \"destroy\": false,\n            \"index\": false\n        },\n        \"response\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"question\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        },\n        \"answer\": {\n            \"create\": false,\n            \"destroy\": false,\n            \"index\": false,\n            \"show\": false,\n            \"update\": false\n        }\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/application_role/{{app-role-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"application_role",
+								"{{app-role-id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -2074,6 +2854,10 @@
 		},
 		{
 			"key": "session-id",
+			"value": ""
+		},
+		{
+			"key": "app-role-id",
 			"value": ""
 		}
 	]
