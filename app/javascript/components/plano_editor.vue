@@ -92,6 +92,7 @@ export default {
     },
     // This is broken in latest version, so doing in the application.html.erb instead
     onNamespaceLoaded( CKEDITOR ) {
+      // console.debug("**** NA LOAD")
       // Add our own plugin to use with the editor
       // CKEDITOR.plugins.addExternal( 'planobuttons', '/ckeditor/plugins/planobuttons/', 'plugin.js' )
     }
