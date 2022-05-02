@@ -29,6 +29,9 @@ import { personStore, personEndpoints } from './person.store';
 // agreement add-ons
 import { agreementStore, agreementEndpoints } from './agreement.store';
 
+// venue add-ons
+import { roomStore, roomEndpoints } from './room.store';
+
 // mailings
 import { mailingStore, mailingEndpoints } from './mailing.store';
 
@@ -73,6 +76,7 @@ import merge from 'lodash.merge'
 const endpoints = {
   ...personEndpoints,
   ...agreementEndpoints,
+  ...roomEndpoints,
   ...surveyEndpoints,
   ...mailingEndpoints,
   ...sessionEndpoints,
@@ -106,6 +110,7 @@ export const store = new Vuex.Store({
     selected: {
       ...personStore.selected,
       ...agreementStore.selected,
+      ...roomStore.selected,
       ...surveyStore.selected,
       ...mailingStore.selected,
       ...sessionStore.selected,
@@ -142,6 +147,7 @@ export const store = new Vuex.Store({
     },
     ...personStore.getters,
     ...agreementStore.getters,
+    ...roomStore.getters,
     ...surveyStore.getters,
     ...personSessionStore.getters,
     ...mailingStore.getters,
@@ -330,6 +336,7 @@ export const store = new Vuex.Store({
     ...surveyStore.actions,
     ...personStore.actions,
     ...agreementStore.actions,
+    ...roomStore.actions,
     ...mailingStore.actions,
     ...settingsStore.actions,
     ...searchStateStore.actions,
