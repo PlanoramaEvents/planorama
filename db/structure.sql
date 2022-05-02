@@ -257,7 +257,8 @@ CREATE TABLE public.application_roles (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     can_access_sensitive_data boolean DEFAULT false,
-    name character varying NOT NULL
+    name character varying NOT NULL,
+    sensitive_access boolean DEFAULT false
 );
 
 

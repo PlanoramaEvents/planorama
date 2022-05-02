@@ -2,7 +2,9 @@ class RecreateActionPermissions < ActiveRecord::Migration[6.1]
   def change
     reversible do |dir|
       dir.up do
-        drop_table :action_permissions
+        if ActiveRecord::Base.connection.data_source_exists? 'action_permissions'
+          drop_table :action_permissions
+        end
       end
     end
 
