@@ -1,8 +1,8 @@
 class ApplicationRoleSerializer
   include JSONAPI::Serializer
 
-  attributes :id, :lock_version, :created_at, :updated_at,
-             :name
+  # :lock_version, 
+  attributes :id, :created_at, :updated_at, :name
 
-  has_many :action_permissions, serializer: ActionPermissionSerializer
+  has_many :model_permissions, serializer: ModelPermissionSerializer
 end

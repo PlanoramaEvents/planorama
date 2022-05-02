@@ -9,7 +9,7 @@ module PolicyService
 
     classes.each do |clazz|
       entity = clazz.to_s.singularize.snakecase.split('::').last
-      permissions[entity] = []
+      permissions[entity] = {}
       policy = Pundit.policy(nil, clazz.to_sym)
       policy ||= Pundit.policy(nil, :Planner) # if nill use PlannerPolicy
       build_policy_list(permissions: permissions[entity], policy: policy)
@@ -52,7 +52,7 @@ module PolicyService
 
       # result = policy.send m
       op = m.to_s.gsub(/\?$/, '')
-      permissions << op
+      permissions[op] = false
     end
 
     permissions

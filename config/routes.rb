@@ -86,7 +86,7 @@ Rails.application.routes.draw do
   resources :responses, path: 'response', controller: 'submission/responses', except: [:index]
 
   get 'rbac', to: 'rbac#index'
-  resources :application_roles, path: 'application_roles'
+  resources :application_roles, path: 'application_role'
   # TODO: need other endpoints ...
 
   resources :formats, path: 'format'

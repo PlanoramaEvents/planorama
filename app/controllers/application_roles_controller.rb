@@ -9,6 +9,10 @@ class ApplicationRolesController < ResourceController
   # Get the role by a specific Name
   # Save/update the role's permissions
 
+  # def collection
+  #
+  # end
+
   def paginate
     false
   end

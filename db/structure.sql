@@ -216,23 +216,6 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: action_permissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.action_permissions (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    mdl_name character varying,
-    action character varying,
-    allowed boolean DEFAULT false,
-    application_role_id uuid,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    action_scope character varying
-);
-
-
---
 -- Name: agreements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -727,6 +710,20 @@ CREATE TABLE public.mailings (
     description text,
     sent_by_id uuid,
     transiton_person_status public.person_status_enum
+);
+
+
+--
+-- Name: model_permissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.model_permissions (
+    model_name character varying NOT NULL,
+    application_role_id uuid NOT NULL,
+    actions jsonb,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1465,14 +1462,6 @@ ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.ver
 
 
 --
--- Name: action_permissions action_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.action_permissions
-    ADD CONSTRAINT action_permissions_pkey PRIMARY KEY (id);
-
-
---
 -- Name: agreements agreements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1646,6 +1635,14 @@ ALTER TABLE ONLY public.mail_histories
 
 ALTER TABLE ONLY public.mailings
     ADD CONSTRAINT mailings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: model_permissions model_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.model_permissions
+    ADD CONSTRAINT model_permissions_pkey PRIMARY KEY (model_name, application_role_id);
 
 
 --
@@ -1921,13 +1918,6 @@ ALTER TABLE ONLY public.versions
 
 
 --
--- Name: action_permissions_app_role_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX action_permissions_app_role_idx ON public.action_permissions USING btree (application_role_id);
-
-
---
 -- Name: application_role_assocs_app_role_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1995,13 +1985,6 @@ CREATE INDEX fk_configurations_parameters_idx ON public.configurations USING btr
 --
 
 CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USING btree (parameter);
-
-
---
--- Name: index_action_permissions_on_mdl_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_action_permissions_on_mdl_name ON public.action_permissions USING btree (mdl_name);
 
 
 --
@@ -2086,6 +2069,13 @@ CREATE INDEX index_magic_links_on_person_id ON public.magic_links USING btree (p
 --
 
 CREATE INDEX index_mailings_on_mailing_state ON public.mailings USING btree (mailing_state);
+
+
+--
+-- Name: index_model_permissions_on_application_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_model_permissions_on_application_role_id ON public.model_permissions USING btree (application_role_id);
 
 
 --
@@ -2580,6 +2570,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220428205309'),
 ('20220501155733'),
 ('20220501160504'),
-('20220501200956');
+('20220501200956'),
+('20220502132016');
 
 
