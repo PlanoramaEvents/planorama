@@ -10,11 +10,16 @@
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
 
+    <script src="//cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
+
     <%= javascript_pack_tag 'application' %>
     <%= stylesheet_pack_tag 'application' %>
 
     <title>Planorama</title>
     <%= csp_meta_tag %>
+    <script>
+      CKEDITOR.plugins.addExternal( 'planobuttons', '/ckeditor/plugins/planobuttons/', 'plugin.js' )
+    </script>
   </head>
   <body>
     <%# Just yield cause this is a layout file with globale includes. The ERB contains the actual SPA %>
