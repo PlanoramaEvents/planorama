@@ -8,8 +8,8 @@ class RecreateActionPermissions < ActiveRecord::Migration[6.1]
       end
     end
 
-    create_table :model_permissions, primary_key: [:model_name, :application_role_id] do |t|
-      t.string :model_name
+    create_table :model_permissions, primary_key: [:mdl_name, :application_role_id] do |t|
+      t.string :mdl_name
       t.belongs_to :application_role, type: :uuid
 
       t.jsonb :actions

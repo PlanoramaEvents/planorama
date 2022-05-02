@@ -258,7 +258,8 @@ CREATE TABLE public.application_roles (
     updated_at timestamp(6) without time zone NOT NULL,
     can_access_sensitive_data boolean DEFAULT false,
     name character varying NOT NULL,
-    sensitive_access boolean DEFAULT false
+    sensitive_access boolean DEFAULT false,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -719,7 +720,7 @@ CREATE TABLE public.mailings (
 --
 
 CREATE TABLE public.model_permissions (
-    model_name character varying NOT NULL,
+    mdl_name character varying NOT NULL,
     application_role_id uuid NOT NULL,
     actions jsonb,
     lock_version integer,
@@ -983,7 +984,8 @@ CREATE TABLE public.room_sets (
     description character varying,
     sort_order integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -1643,7 +1645,7 @@ ALTER TABLE ONLY public.mailings
 --
 
 ALTER TABLE ONLY public.model_permissions
-    ADD CONSTRAINT model_permissions_pkey PRIMARY KEY (model_name, application_role_id);
+    ADD CONSTRAINT model_permissions_pkey PRIMARY KEY (mdl_name, application_role_id);
 
 
 --
@@ -2572,6 +2574,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220501155733'),
 ('20220501160504'),
 ('20220501200956'),
-('20220502132016');
+('20220502132016'),
+('20220502152603');
 
 

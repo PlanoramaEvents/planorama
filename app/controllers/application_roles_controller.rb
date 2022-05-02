@@ -4,14 +4,15 @@ class ApplicationRolesController < ResourceController
   POLICY_CLASS = 'ApplicationRolePolicy'.freeze
   POLICY_SCOPE_CLASS = 'ApplicationRolePolicy::Scope'.freeze
 
-  # Get all roles
-  # Get roles for a specific Person
-  # Get the role by a specific Name
-  # Save/update the role's permissions
+  def after_save
+    p = params.permit![:permissions].to_h
+    @object.create_permissions(p) if p
+  end
 
-  # def collection
-  #
-  # end
+  def after_update
+    p = params.permit![:permissions].to_h
+    @object.update_permissions(p) if p
+  end
 
   def paginate
     false
