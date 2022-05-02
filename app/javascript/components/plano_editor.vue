@@ -18,6 +18,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'PlanoEditor',
   props: {
@@ -89,9 +90,10 @@ export default {
     onBlur(eventInfo, data) {
       this.$emit('change', eventInfo.editor.getData())
     },
+    // This is broken in latest version, so doing in the application.html.erb instead
     onNamespaceLoaded( CKEDITOR ) {
       // Add our own plugin to use with the editor
-      CKEDITOR.plugins.addExternal( 'planobuttons', '/ckeditor/plugins/planobuttons/', 'plugin.js' )
+      // CKEDITOR.plugins.addExternal( 'planobuttons', '/ckeditor/plugins/planobuttons/', 'plugin.js' )
     }
   }
 }
