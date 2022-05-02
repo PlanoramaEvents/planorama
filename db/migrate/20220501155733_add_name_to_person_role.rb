@@ -2,7 +2,10 @@ class AddNameToPersonRole < ActiveRecord::Migration[6.1]
   def change
     reversible do |dir|
       dir.up do
-        PersonRole.delete_all
+        # PersonRole.delete_all
+        execute <<-SQL
+          DELETE FROM person_roles; 
+        SQL
       end
     end
 
