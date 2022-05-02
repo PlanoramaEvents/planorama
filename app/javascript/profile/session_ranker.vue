@@ -33,7 +33,7 @@
       </div>
     </div>
     <!-- :key="item.session.id"  Causes **lots** of vue errors with dups ids-->
-     <div class='row mb-4' v-for="item in sortedCollection">
+     <div class='row mb-4' v-for="item in sortedCollection" :key="item.id">
        <div class="col-8">
          <h4>{{item.session.title}}</h4>
          <p v-html="item.session.description"></p>
