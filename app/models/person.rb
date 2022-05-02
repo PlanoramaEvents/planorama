@@ -60,7 +60,7 @@ class Person < ApplicationRecord
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements
 
-  after_update: :assigment_consistency
+  after_update :assigment_consistency
 
   # TODO:
   # - there is talk about having a workflow, including whether a person
