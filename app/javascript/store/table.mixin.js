@@ -65,7 +65,7 @@ export const tableMixin = {
       }
     },
     fetchPaged(clear=true) {
-      this.shall_clear = clear
+      // this.shall_clear = clear
       let _filter = JSON.stringify(this.filter)
 
       if (!this.filter && this.defaultFilter) {
