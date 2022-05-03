@@ -62,7 +62,7 @@ class ApplicationRolesController < ResourceController
 
   def after_save
     p = params.permit![:permissions].to_h
-    @object.create_permissions(p) if p
+    @object.update_permissions(p) if p
   end
 
   def after_update

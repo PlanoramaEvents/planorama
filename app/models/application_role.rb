@@ -26,21 +26,6 @@ class ApplicationRole < ApplicationRecord
     perms
   end
 
-  def create_permissions(new_permissions)
-    perms = []
-    new_permissions.each do |k, v|
-      perms << {
-        mdl_name: k,
-        actions: v,
-        application_role_id: self.id
-      }
-    end
-
-    self.update(
-      model_permissions_attributes: perms
-    )
-  end
-
   def update_permissions(new_permissions)
     perms = []
     new_permissions.each do |k, v|
@@ -65,31 +50,4 @@ class ApplicationRole < ApplicationRecord
       model_permissions_attributes: perms
     )
   end
-
-  # def permissions=(new_permissions)
-  #   perms = []
-  #   new_permissions.each do |k, v|
-  #     if self.new_record?
-  #       Rails.logger.debug("*************** NEW")
-  #       perms << {
-  #         mdl_name: k,
-  #         actions: v,
-  #         application_role_id: self.id
-  #       }
-  #     else
-  #       Rails.logger.debug("*************** #{self.id}")
-  #       # cpk = CompositePrimaryKeys::CompositeKeys[k, self.id]
-  #       # perms << {
-  #       #   id: cpk,
-  #       #   mdl_name: k,
-  #       #   actions: v,
-  #       #   application_role_id: self.id
-  #       # }
-  #     end
-  #   end
-  #
-  #   self.update(
-  #     model_permissions_attributes: perms
-  #   )
-  # end
 end
