@@ -16,7 +16,11 @@ class ApplicationRole < ApplicationRecord
     perms = PolicyService.list_policies
 
     model_permissions.each do |p|
-      perms[p.mdl_name] = perms[p.mdl_name].merge p.actions
+      if perms[p.mdl_name]
+        perms[p.mdl_name] = perms[p.mdl_name].merge p.actions
+      else
+        perms[p.mdl_name] = p.actions
+      end
     end
 
     perms
@@ -41,12 +45,20 @@ class ApplicationRole < ApplicationRecord
     perms = []
     new_permissions.each do |k, v|
       cpk = CompositePrimaryKeys::CompositeKeys[k, self.id]
-      perms << {
-        id: cpk,
-        mdl_name: k,
-        actions: v,
-        application_role_id: self.id
-      }
+      if ModelPermission.exists? cpk
+        perms << {
+          id: cpk,
+          mdl_name: k,
+          actions: v,
+          application_role_id: self.id
+        }
+      else
+        perms << {
+          mdl_name: k,
+          actions: v,
+          application_role_id: self.id
+        }
+      end
     end
 
     self.update(
