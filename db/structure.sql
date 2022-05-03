@@ -555,20 +555,6 @@ CREATE TABLE public.conflict_exceptions (
 
 
 --
--- Name: convention_role_role_accesses; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.convention_role_role_accesses (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    convention_role_id uuid,
-    application_role_id uuid,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
 -- Name: convention_roles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -579,6 +565,16 @@ CREATE TABLE public.convention_roles (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     role public.convention_role_enum
+);
+
+
+--
+-- Name: convention_roles_application_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.convention_roles_application_roles (
+    application_role_id uuid,
+    convention_role_id uuid
 );
 
 
@@ -831,6 +827,16 @@ END) STORED,
     twelve_hour boolean DEFAULT true,
     timezone character varying(500) DEFAULT NULL::character varying,
     availability_notes character varying
+);
+
+
+--
+-- Name: people_application_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.people_application_roles (
+    application_role_id uuid,
+    person_id uuid
 );
 
 
@@ -1569,14 +1575,6 @@ ALTER TABLE ONLY public.conflict_exceptions
 
 
 --
--- Name: convention_role_role_accesses convention_role_role_accesses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.convention_role_role_accesses
-    ADD CONSTRAINT convention_role_role_accesses_pkey PRIMARY KEY (id);
-
-
---
 -- Name: convention_roles convention_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1970,10 +1968,10 @@ CREATE INDEX by_reserved_status ON public.categories USING btree (reserved);
 
 
 --
--- Name: convention_role_role_accesses_app_role_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: car_approle_person_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX convention_role_role_accesses_app_role_idx ON public.convention_role_role_accesses USING btree (application_role_id);
+CREATE UNIQUE INDEX car_approle_person_idx ON public.convention_roles_application_roles USING btree (application_role_id, convention_role_id);
 
 
 --
@@ -2047,10 +2045,17 @@ CREATE INDEX index_audit_survey_versions_on_item_type_and_item_id ON public.audi
 
 
 --
--- Name: index_convention_role_role_accesses_on_convention_role_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_convention_roles_application_roles_on_application_role_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_convention_role_role_accesses_on_convention_role_id ON public.convention_role_role_accesses USING btree (convention_role_id);
+CREATE INDEX index_convention_roles_application_roles_on_application_role_id ON public.convention_roles_application_roles USING btree (application_role_id);
+
+
+--
+-- Name: index_convention_roles_application_roles_on_convention_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_convention_roles_application_roles_on_convention_role_id ON public.convention_roles_application_roles USING btree (convention_role_id);
 
 
 --
@@ -2079,6 +2084,20 @@ CREATE INDEX index_mailings_on_mailing_state ON public.mailings USING btree (mai
 --
 
 CREATE INDEX index_model_permissions_on_application_role_id ON public.model_permissions USING btree (application_role_id);
+
+
+--
+-- Name: index_people_application_roles_on_application_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_people_application_roles_on_application_role_id ON public.people_application_roles USING btree (application_role_id);
+
+
+--
+-- Name: index_people_application_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_people_application_roles_on_person_id ON public.people_application_roles USING btree (person_id);
 
 
 --
@@ -2348,6 +2367,13 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 
 --
+-- Name: par_approle_person_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX par_approle_person_idx ON public.people_application_roles USING btree (application_role_id, person_id);
+
+
+--
 -- Name: pia_person_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2575,6 +2601,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220501160504'),
 ('20220501200956'),
 ('20220502132016'),
-('20220502152603');
+('20220502152603'),
+('20220503121253');
 
 

@@ -19,6 +19,22 @@ class ApplicationRolePolicy < PlannerPolicy
     is_admin
   end
 
+  def assign_people?
+    is_admin
+  end
+
+  def unassign_people?
+    is_admin
+  end
+
+  def assign_convention_role?
+    is_admin
+  end
+
+  def unassign_convention_role?
+    is_admin
+  end
+
   class Scope < PlannerPolicy::Scope
     def resolve
       if @person.convention_roles.inject(false) { |res, grp| res || grp.admin?}

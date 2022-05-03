@@ -4,8 +4,8 @@ class ApplicationRole < ApplicationRecord
   has_many :model_permissions, dependent: :destroy
   accepts_nested_attributes_for :model_permissions
 
-  has_many :application_role_assocs
-  has_many :people, through: :application_role_assocs
+  has_and_belongs_to_many :people, class_name: 'Person'
+  has_and_belongs_to_many :convention_roles, class_name: 'ConventionRole'
 
   validates :name, presence: true
 
