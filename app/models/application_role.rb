@@ -1,6 +1,5 @@
 #
 class ApplicationRole < ApplicationRecord
-  # has_many :model_permissions, :foreign_key => "application_role_id", dependent: :destroy
   has_many :model_permissions, dependent: :destroy
   accepts_nested_attributes_for :model_permissions
 
@@ -29,21 +28,15 @@ class ApplicationRole < ApplicationRecord
   def update_permissions(new_permissions)
     perms = []
     new_permissions.each do |k, v|
+      entry = {
+        mdl_name: k,
+        actions: v,
+        application_role_id: self.id
+      }
       cpk = CompositePrimaryKeys::CompositeKeys[k, self.id]
-      if ModelPermission.exists? cpk
-        perms << {
-          id: cpk,
-          mdl_name: k,
-          actions: v,
-          application_role_id: self.id
-        }
-      else
-        perms << {
-          mdl_name: k,
-          actions: v,
-          application_role_id: self.id
-        }
-      end
+      entry[:id] = cpk if ModelPermission.exists? cpk
+
+      perms << entry
     end
 
     self.update(
