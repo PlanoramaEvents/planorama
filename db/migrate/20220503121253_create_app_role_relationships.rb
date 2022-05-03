@@ -8,20 +8,20 @@ class CreateAppRoleRelationships < ActiveRecord::Migration[6.1]
       end
     end
 
-    create_table :people_application_roles, id: false do |t|
+    create_table :application_roles_people, id: false do |t|
       t.uuid :application_role_id
       t.uuid :person_id
     end
-    add_index :people_application_roles, :application_role_id
-    add_index :people_application_roles, :person_id
-    add_index :people_application_roles, [:application_role_id, :person_id], unique: true, name: 'par_approle_person_idx'
+    add_index :application_roles_people, :application_role_id
+    add_index :application_roles_people, :person_id
+    add_index :application_roles_people, [:application_role_id, :person_id], unique: true, name: 'par_approle_person_idx'
 
-    create_table :convention_roles_application_roles, id: false do |t|
+    create_table :application_roles_convention_roles, id: false do |t|
       t.uuid :application_role_id
       t.uuid :convention_role_id
     end
-    add_index :convention_roles_application_roles, :application_role_id
-    add_index :convention_roles_application_roles, :convention_role_id
-    add_index :convention_roles_application_roles, [:application_role_id, :convention_role_id], unique: true, name: 'car_approle_person_idx'
+    add_index :application_roles_convention_roles, :application_role_id
+    add_index :application_roles_convention_roles, :convention_role_id
+    add_index :application_roles_convention_roles, [:application_role_id, :convention_role_id], unique: true, name: 'car_approle_person_idx'
   end
 end

@@ -264,6 +264,26 @@ CREATE TABLE public.application_roles (
 
 
 --
+-- Name: application_roles_convention_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.application_roles_convention_roles (
+    application_role_id uuid,
+    convention_role_id uuid
+);
+
+
+--
+-- Name: application_roles_people; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.application_roles_people (
+    application_role_id uuid,
+    person_id uuid
+);
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -569,16 +589,6 @@ CREATE TABLE public.convention_roles (
 
 
 --
--- Name: convention_roles_application_roles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.convention_roles_application_roles (
-    application_role_id uuid,
-    convention_role_id uuid
-);
-
-
---
 -- Name: email_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -827,16 +837,6 @@ END) STORED,
     twelve_hour boolean DEFAULT true,
     timezone character varying(500) DEFAULT NULL::character varying,
     availability_notes character varying
-);
-
-
---
--- Name: people_application_roles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.people_application_roles (
-    application_role_id uuid,
-    person_id uuid
 );
 
 
@@ -1971,7 +1971,7 @@ CREATE INDEX by_reserved_status ON public.categories USING btree (reserved);
 -- Name: car_approle_person_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX car_approle_person_idx ON public.convention_roles_application_roles USING btree (application_role_id, convention_role_id);
+CREATE UNIQUE INDEX car_approle_person_idx ON public.application_roles_convention_roles USING btree (application_role_id, convention_role_id);
 
 
 --
@@ -2010,6 +2010,34 @@ CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree 
 
 
 --
+-- Name: index_application_roles_convention_roles_on_application_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_application_roles_convention_roles_on_application_role_id ON public.application_roles_convention_roles USING btree (application_role_id);
+
+
+--
+-- Name: index_application_roles_convention_roles_on_convention_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_application_roles_convention_roles_on_convention_role_id ON public.application_roles_convention_roles USING btree (convention_role_id);
+
+
+--
+-- Name: index_application_roles_people_on_application_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_application_roles_people_on_application_role_id ON public.application_roles_people USING btree (application_role_id);
+
+
+--
+-- Name: index_application_roles_people_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_application_roles_people_on_person_id ON public.application_roles_people USING btree (person_id);
+
+
+--
 -- Name: index_areas_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2045,20 +2073,6 @@ CREATE INDEX index_audit_survey_versions_on_item_type_and_item_id ON public.audi
 
 
 --
--- Name: index_convention_roles_application_roles_on_application_role_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_convention_roles_application_roles_on_application_role_id ON public.convention_roles_application_roles USING btree (application_role_id);
-
-
---
--- Name: index_convention_roles_application_roles_on_convention_role_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_convention_roles_application_roles_on_convention_role_id ON public.convention_roles_application_roles USING btree (convention_role_id);
-
-
---
 -- Name: index_convention_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2084,20 +2098,6 @@ CREATE INDEX index_mailings_on_mailing_state ON public.mailings USING btree (mai
 --
 
 CREATE INDEX index_model_permissions_on_application_role_id ON public.model_permissions USING btree (application_role_id);
-
-
---
--- Name: index_people_application_roles_on_application_role_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_people_application_roles_on_application_role_id ON public.people_application_roles USING btree (application_role_id);
-
-
---
--- Name: index_people_application_roles_on_person_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_people_application_roles_on_person_id ON public.people_application_roles USING btree (person_id);
 
 
 --
@@ -2370,7 +2370,7 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 -- Name: par_approle_person_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX par_approle_person_idx ON public.people_application_roles USING btree (application_role_id, person_id);
+CREATE UNIQUE INDEX par_approle_person_idx ON public.application_roles_people USING btree (application_role_id, person_id);
 
 
 --
