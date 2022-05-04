@@ -1,28 +1,27 @@
 class MailingsPolicy < PlannerPolicy
   def assign_people?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    allowed?(action: :assign_people)
   end
 
   def unassign_people?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    allowed?(action: :unassign_people)
   end
 
   def schedule?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    allowed?(action: :schedule)
   end
 
   def preview?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    allowed?(action: :preview)
   end
 
   def clone?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    allowed?(action: :clone)
   end
 
   class Scope < PlannerPolicy::Scope
     def resolve
-      if @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
-        # Rails.logger.debug "**** ALL #{@person.id}"
+      if allowed?(action: :index)
         scope.all
       else
         scope.where(id: @person.id)

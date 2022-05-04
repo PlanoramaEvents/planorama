@@ -1,7 +1,7 @@
 class FormatsController < ResourceController
   SERIALIZER_CLASS = 'FormatSerializer'.freeze
-  POLICY_CLASS = 'FormatPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'FormatPolicy::Scope'.freeze
+  POLICY_CLASS = 'FormatsPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'FormatsPolicy::Scope'.freeze
 
   def belongs_to_param_id
     params[:session_id]

@@ -1,37 +1,28 @@
 class AgreementsPolicy < PlannerPolicy
   # Anyone can see ...
-  def index?
-    return true
-  end
+  # def index?
+  #   return true
+  # end
+  # def show?
+  #   return true
+  # end
 
   def latest?
-    return true
-  end
-
-  def show?
-    return true
+    allowed?(action: :latest)
   end
 
   def signed?
-    return true if @person
+    # return true if @person
+    allowed?(action: :signed)
   end
 
   def unsigned?
-    return true if @person
+    # return true if @person
+    allowed?(action: :unsigned)
   end
 
   def sign?
-    return true if @person
+    # return true if @person
+    allowed?(action: :sign)
   end
-
-  # class Scope < Scope
-  #   def resolve
-  #     if @person.application_role_assocs.inject(false) { |res, role| res || role.admin_role? }
-  #       Rails.logger.debug "**** ALL #{@person.id}"
-  #       scope.all
-  #     else
-  #       scope.where(id: @person.id)
-  #     end
-  #   end
-  # end
 end

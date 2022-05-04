@@ -1,7 +1,7 @@
 class TagsController < ResourceController
   SERIALIZER_CLASS = 'TagSerializer'.freeze
-  POLICY_CLASS = 'TagPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'TagPolicy::Scope'.freeze
+  POLICY_CLASS = 'TagsPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'TagsPolicy::Scope'.freeze
 
   MODEL_CLASS = 'ActsAsTaggableOn::Tag'.freeze
 

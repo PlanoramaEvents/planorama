@@ -1,20 +1,20 @@
 class SurveysPolicy < PlannerPolicy
   # Anyone can see a survey ...
-  def show?
-    return true
-  end
+  # def show?
+  #   return true
+  # end
 
   def assign_people?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    allowed?(action: :assign_people)
   end
 
   def unassign_people?
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+    allowed?(action: :unassign_people)
   end
 
   class Scope < PlannerPolicy::Scope
     def resolve
-      if is_admin_or_staff
+      if allowed?(action: :index)
         # Rails.logger.debug "**** ALL #{@person.id}"
         scope.all
       else

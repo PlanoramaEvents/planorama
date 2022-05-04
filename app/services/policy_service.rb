@@ -59,7 +59,7 @@ module PolicyService
 
   def self.build_policy_list(permissions:, policy:)
     policy.public_methods(false).sort.each do |m|
-      next unless m.end_with? "?"
+      next unless m.end_with?("?") && m != :'allowed?'
 
       # result = policy.send m
       op = m.to_s.gsub(/\?$/, '')

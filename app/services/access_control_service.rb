@@ -62,6 +62,18 @@ module AccessControlService
     }
   end
 
+  #
+  def self.can_execute?(model: , action: , person:)
+    # If the person is an admin then no need to check roles
+    return true if person.convention_roles.collect(&:role).include?('admin')
+
+    policies = PolicyService.policies_for(person: person)
+    model_policy = policies[model.to_sym]
+    action_perm = model_policy[action.to_sym] if model_policy
+
+    return action_perm ? action_perm : false
+  end
+
   # Return a list of sensitive attributes for the given model
   def self.sensitive_attributes(model:)
     return [] unless attribute_meta_data[model.to_sym]
@@ -78,15 +90,12 @@ module AccessControlService
   def self.allowed_sensitive_access?(person:)
     return false unless person
 
-    # TODO: add rbac check with DB, based on the role
-    # Rails.logger.debug("******** ALLOWED FOR #{person}")
+    # This is the hard-wired mechanism to limit sensitive information to admins for now
+    return true if person.convention_roles.collect(&:role).include?('admin')
 
-    # Get the role for the person
-    # if that role allow access to sensitive info then true else false
-
-    # NOTE: this is the hard-wired mechanism to limit sensitive information to
-    # admins for now
-    person.convention_roles.collect(&:role).include?('admin')
+    # Use rbac of the person is not an admin
+    policies = PolicyService.policies_for(person: person)
+    return policies[:sensitive_access]
   end
 
   # Return a list of attributes that are not allowed for the person from this instance
