@@ -123,7 +123,9 @@ export default {
     }
   },
   mounted() {
-    this.emails = Object.values(this.person.email_addresses)
+    if (this.person.email_addresses) {
+      this.emails = Object.values(this.person.email_addresses)
+    }
     if (!this.emails) {
       this.emails = []
     } else {

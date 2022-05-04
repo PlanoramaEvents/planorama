@@ -256,20 +256,10 @@ CREATE TABLE public.application_roles (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    can_access_sensitive_data boolean DEFAULT false,
     name character varying NOT NULL,
     sensitive_access boolean DEFAULT false,
-    lock_version integer DEFAULT 0
-);
-
-
---
--- Name: application_roles_convention_roles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.application_roles_convention_roles (
-    application_role_id uuid,
-    convention_role_id uuid
+    lock_version integer DEFAULT 0,
+    con_roles text[] DEFAULT '{}'::text[]
 );
 
 
@@ -1968,13 +1958,6 @@ CREATE INDEX by_reserved_status ON public.categories USING btree (reserved);
 
 
 --
--- Name: car_approle_person_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX car_approle_person_idx ON public.application_roles_convention_roles USING btree (application_role_id, convention_role_id);
-
-
---
 -- Name: fk_configurations_parameters_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2010,17 +1993,10 @@ CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree 
 
 
 --
--- Name: index_application_roles_convention_roles_on_application_role_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_application_roles_on_con_roles; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_application_roles_convention_roles_on_application_role_id ON public.application_roles_convention_roles USING btree (application_role_id);
-
-
---
--- Name: index_application_roles_convention_roles_on_convention_role_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_application_roles_convention_roles_on_convention_role_id ON public.application_roles_convention_roles USING btree (convention_role_id);
+CREATE INDEX index_application_roles_on_con_roles ON public.application_roles USING gin (con_roles);
 
 
 --
@@ -2602,6 +2578,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220501200956'),
 ('20220502132016'),
 ('20220502152603'),
-('20220503121253');
+('20220503121253'),
+('20220504140508');
 
 

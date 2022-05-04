@@ -24,6 +24,8 @@ module PolicyService
   end
 
   def self.policies_for(person:)
+    return RequestStore.store["#{person}_policies"] if RequestStore.store["#{person}_policies"]
+
     Rails.application.eager_load! # ensure that the controller classes are loaded
 
     classes = ResourceController.descendants.collect{|c| name_for_class(clazz: c)}
@@ -32,6 +34,7 @@ module PolicyService
     permissions[:sensitive_access] = false
 
     # TODO: we need to go through the roles as well ... to cover the ones not in pundit
+    # Why called many times ??
     person.convention_roles.each do |con_role|
       con_role.application_roles.each do |role|
         permissions[:sensitive_access] = permissions[:sensitive_access] || role.sensitive_access
@@ -44,7 +47,8 @@ module PolicyService
       merge_permissions(to: permissions, from: role.model_permissions)
     end
 
-    permissions
+    RequestStore.store["#{person}_policies"] ||= permissions
+    RequestStore.store["#{person}_policies"]
   end
 
   def self.merge_permissions(to:, from:)

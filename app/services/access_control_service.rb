@@ -68,8 +68,8 @@ module AccessControlService
     return true if person.convention_roles.collect(&:role).include?('admin')
 
     policies = PolicyService.policies_for(person: person)
-    model_policy = policies[model.to_sym]
-    action_perm = model_policy[action.to_sym] if model_policy
+    model_policy = policies[model.downcase]
+    action_perm = model_policy[action.to_s] if model_policy
 
     return action_perm ? action_perm : false
   end

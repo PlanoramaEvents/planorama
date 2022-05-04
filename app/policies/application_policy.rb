@@ -4,9 +4,16 @@ class ApplicationPolicy
   # Helper method to call Access Control to see if requested action is allowed
   def allowed?(action:)
     return true if (@record.class != Symbol) && (@record.class == ::Person) && (@record.id == @person.id)
-    return true if (@record.class != Symbol) && (@record.has_attribute?(:person_id)) && (@record.person_id == @person.id)
 
-    AccessControlService.can_execute?(model: self.class.name, action: action, person: @person)
+    if (@record.class != Symbol) && (!@record.is_a?(Class)) && (@record.has_attribute?(:person_id))
+      return true if @record.person_id == @person.id
+    end
+
+    cname = self.class.name.split("::").first
+    cname.slice! "Policy"
+    cname = cname.singularize.snakecase.downcase
+
+    AccessControlService.can_execute?(model: cname, action: action, person: @person)
   end
 
   def initialize(person, record)

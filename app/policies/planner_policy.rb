@@ -19,7 +19,15 @@ class PlannerPolicy < ApplicationPolicy
     allowed?(action: :destroy)
   end
 
-  class Scope < PlannerPolicy::Scope
+  class Scope < ApplicationPolicy::Scope
+    def allowed?(action:)
+      cname = self.class.name.split("::").first
+      cname.slice! "Policy"
+      cname = cname.singularize.snakecase
+
+      AccessControlService.can_execute?(model: cname, action: action, person: @person)
+    end
+
     def resolve
       if allowed?(action: :index)
         scope.all

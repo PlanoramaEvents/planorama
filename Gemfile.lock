@@ -362,7 +362,7 @@ GEM
       sprockets (>= 3.0.0)
     thor (1.2.1)
     tilt (2.0.10)
-    truemail (2.7.1)
+    truemail (2.7.2)
       simpleidn (~> 0.2.1)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
@@ -436,6 +436,7 @@ DEPENDENCIES
   rails (~> 6.1)
   ranked-model
   ransack
+  request_store
   roo (~> 2.8.0)
   rspec
   rspec-rails

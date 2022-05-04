@@ -4,9 +4,10 @@ class ApplicationRole < ApplicationRecord
   accepts_nested_attributes_for :model_permissions
 
   has_and_belongs_to_many :people, class_name: 'Person'
-  has_and_belongs_to_many :convention_roles, class_name: 'ConventionRole'
 
   validates :name, presence: true
+
+  # TODO: validate con_role
 
   def permissions
     # Get model_permissions and merge with PolicyService.list_policies

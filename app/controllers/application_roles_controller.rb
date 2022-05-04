@@ -34,30 +34,30 @@ class ApplicationRolesController < ResourceController
 
   def assign_convention_role
     authorize current_person, policy_class: policy_class
-    con_role_ids = params.permit(convention_roles: [:id])
-
-    ApplicationRole.transaction do
-      app_role = ApplicationRole.find params[:role_id]
-      con_roles = ConventionRole.find con_role_ids.to_h[:convention_roles].collect{|a| a[:id] }
-
-      app_role.convention_roles << con_roles
-
-      render_object(app_role, includes: false)
-    end
+    # con_role_ids = params.permit(convention_roles: [:id])
+    #
+    # ApplicationRole.transaction do
+    #   app_role = ApplicationRole.find params[:role_id]
+    #   con_roles = ConventionRole.find con_role_ids.to_h[:convention_roles].collect{|a| a[:id] }
+    #
+    #   app_role.convention_roles << con_roles
+    #
+    #   render_object(app_role, includes: false)
+    # end
   end
 
   def unassign_convention_role
     authorize current_person, policy_class: policy_class
-    con_role_ids = params.permit(convention_roles: [:id])
-
-    ApplicationRole.transaction do
-      app_role = ApplicationRole.find params[:role_id]
-      con_roles = ConventionRole.find con_role_ids.to_h[:convention_roles].collect{|a| a[:id] }
-
-      app_role.convention_roles.delete con_roles
-
-      render_object(app_role, includes: false)
-    end
+    # con_role_ids = params.permit(convention_roles: [:id])
+    #
+    # ApplicationRole.transaction do
+    #   app_role = ApplicationRole.find params[:role_id]
+    #   con_roles = ConventionRole.find con_role_ids.to_h[:convention_roles].collect{|a| a[:id] }
+    #
+    #   app_role.convention_roles.delete con_roles
+    #
+    #   render_object(app_role, includes: false)
+    # end
   end
 
   def after_save
