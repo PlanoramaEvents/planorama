@@ -1,5 +1,5 @@
 <template>
-  <div class="detail">
+  <div class="detail container">
     <div class="row">
       <div class="col-12">
         <h2>Basic Information</h2>
@@ -13,7 +13,10 @@
             @change="saveSession()"
           ></plano-editor>
         </b-form-group>
-
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
         <b-form-group
           label="Tags"
         >
