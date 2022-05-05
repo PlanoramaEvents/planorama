@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class='row mb-4' v-if="sortedCollection.length == 0">
       <div class="col-12">
         <h5>No participants have expressed interest in this session</h5>

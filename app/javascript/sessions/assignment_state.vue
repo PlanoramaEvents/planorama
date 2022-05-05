@@ -68,10 +68,10 @@ export default {
         if (this.sessionAssignment.state === 'proposed') return null
         if (this.sessionAssignment.state === 'rejected') return 'rejected'
 
-        if (this.sessionRoleByName('Participant').id == this.sessionAssignment.session_assignment_role_type_id) return 'participant'
-        if (this.sessionRoleByName('Invisible').id == this.sessionAssignment.session_assignment_role_type_id) return 'invisible'
-        if (this.sessionRoleByName('Moderator').id == this.sessionAssignment.session_assignment_role_type_id) return 'moderator'
-        if (this.sessionRoleByName('Reserve').id == this.sessionAssignment.session_assignment_role_type_id) return 'reserved'
+        if (this.sessionRoleByName('Participant')?.id === this.sessionAssignment.session_assignment_role_type_id) return 'participant'
+        if (this.sessionRoleByName('Invisible')?.id === this.sessionAssignment.session_assignment_role_type_id) return 'invisible'
+        if (this.sessionRoleByName('Moderator')?.id === this.sessionAssignment.session_assignment_role_type_id) return 'moderator'
+        if (this.sessionRoleByName('Reserve')?.id === this.sessionAssignment.session_assignment_role_type_id) return 'reserved'
 
         return null
       },

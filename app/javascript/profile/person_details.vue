@@ -22,7 +22,7 @@
       >
         <b-form-radio value="in person">In Person</b-form-radio>
         <b-form-radio value="hybrid">In Person AND Virtually</b-form-radio>
-        <b-form-radio value="virtual">Virtual</b-form-radio>
+        <b-form-radio value="virtual">Virtually</b-form-radio>
       </b-form-radio-group>
       <b-form-group label="At the time of the convention I will be at UTC Offset">
         <timezone-selector
