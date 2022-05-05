@@ -24,38 +24,40 @@
     ></b-pagination>
 
     <b-overlay :show="loading" rounded="sm">
-      <div class='row mb-2'>
-        <div class="col-11">
-        </div>
-        <div class="col-1">
-          <b>Add to Interested</b>
-        </div>
-      </div>
-      <div class='row mb-5' v-for="item in sortedCollection" :key="item.id">
-        <div class="col-11">
-          <h4>{{item.title}}</h4>
-          <div v-html="item.description"></div>
-          <div v-if="item.format">
-            Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
+      <div class="container">
+        <div class='row mb-2'>
+          <div class="col-11">
           </div>
-          <div v-if="item.area_list.length > 0">
-            Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list" :key="area">{{area}}</span>
-          </div>
-          <div v-if="item.tag_list.length > 0">
-            Tag(s): <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list" :key="tag">{{tag}}</span>
-          </div>
-          <div class="mt-3" v-if="item.instructions_for_interest">Instructions for potential panelists:</div>
-          <div class="panelist-instructions" v-html="item.instructions_for_interest">
+          <div class="col-1">
+            <b>Add to Interested</b>
           </div>
         </div>
-        <div class="col-1">
-          <div v-if="assignments">
-            <interest-indicator
-              :session="item"
-              :person_id="person.id"
-              :model="sessionAssignmentModel"
-              :assignments="assignments"
-            ></interest-indicator>
+        <div class='row mb-5' v-for="item in sortedCollection" :key="item.id">
+          <div class="col-11">
+            <h4>{{item.title}}</h4>
+            <div v-html="item.description"></div>
+            <div v-if="item.format">
+              Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
+            </div>
+            <div v-if="item.area_list.length > 0">
+              Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list" :key="area">{{area}}</span>
+            </div>
+            <div v-if="item.tag_list.length > 0">
+              Tag(s): <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list" :key="tag">{{tag}}</span>
+            </div>
+            <div class="mt-3" v-if="item.instructions_for_interest">Instructions for potential panelists:</div>
+            <div class="panelist-instructions" v-html="item.instructions_for_interest">
+            </div>
+          </div>
+          <div class="col-1">
+            <div v-if="assignments">
+              <interest-indicator
+                :session="item"
+                :person_id="person.id"
+                :model="sessionAssignmentModel"
+                :assignments="assignments"
+              ></interest-indicator>
+            </div>
           </div>
         </div>
       </div>
