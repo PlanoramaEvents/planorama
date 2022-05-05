@@ -3,14 +3,28 @@
     <modal-form
       title="Mass Edit State"
       ref="mass-edit-state"
-      @save="onSaveMassEdit"
+      @save="onConfirmMassEdit"
     >
-      <!-- {{ selectedIds }} -->
       <b-form>
         <person-con-state-selector
           v-model="selectedConState"
         ></person-con-state-selector>
       </b-form>
+      <template #footer="{ ok, cancel }">
+        <b-button variant="link" @click="cancel()">Cancel</b-button>
+        <b-button variant="primary" @click="ok()">Save</b-button>
+      </template>
+    </modal-form>
+
+    <modal-form
+      title="Mass Edit State Confirmation"
+      ref="mass-edit-confirm"
+      @save="onSaveMassEdit"
+    >
+      <p>
+        Please confirm that you want to change the
+        status of {{editableIds.length}} {{editableIds.length == 1 ? 'person' : 'people'}}
+      </p>
       <template #footer="{ ok, cancel }">
         <b-button variant="link" @click="cancel()">Cancel</b-button>
         <b-button variant="primary" @click="ok()">Save</b-button>
@@ -39,6 +53,7 @@
       :columns="columns"
       selectMode='multi'
       ref="people-table"
+      stateName="people-table-search-state"
     >
       <template v-slot:alternate-search-title>Seach by Email(s)</template>
       <template v-slot:alternate-search>
@@ -55,15 +70,20 @@
         </div>
       </template>
 
-      <template v-slot:left-controls="{ selectedIds }">
+      <template v-slot:left-controls="{ editableIds }">
         <div>
           <b-button
             variant="primary"
-            @click="onEditStates(selectedIds)"
-            :disabled="selectedIds.length == 0"
+            @click="onEditStates(editableIds)"
+            :disabled="editableIds.length == 0"
           >Edit State(s)
           </b-button>
         </div>
+      </template>
+      <template #cell(pronouns)="{ item }">
+        <tooltip-overflow v-if="item.pronouns" :title="item.pronouns">
+          {{item.pronouns}}
+        </tooltip-overflow>
       </template>
       <template #cell(primary_email)="{ item }">
         <tooltip-overflow v-if="item.primary_email" :title="item.primary_email.email">
@@ -78,7 +98,7 @@
       <template #cell(current_sign_in_at)="{ item }">
         <span v-if="item.public">
           <tooltip-overflow :title="item.current_sign_in_at">
-            {{new Date(item.current_sign_in_at).toLocaleDateString()}}
+            {{new Date(item.current_sign_in_at).toLocaleString()}}
           </tooltip-overflow>
         </span>
       </template>
@@ -96,6 +116,8 @@ import { personModel as model } from '@/store/person.store'
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import PersonConStateSelector from '../components/person_con_state_selector'
 
+import searchStateMixin from '../store/search_state.mixin'
+
 export default {
   name: 'PeopleTable',
   components: {
@@ -106,41 +128,58 @@ export default {
     PersonConStateSelector
   },
   mixins: [
-    modelUtilsMixin
+    modelUtilsMixin,
+    searchStateMixin
   ],
   data: () => ({
     columns,
     model,
-    selectedIds: [],
+    editableIds: [],
     selectedConState: null,
     searchEmails: null,
   }),
   methods: {
-    onEmailSearch() {
-      // console.debug("FIND PEOPLE", this.searchEmails)
+    queries(searchEmails) {
       let queries = {
         "op": 'any',
         "queries": []
       }
-      if (this.searchEmails && this.searchEmails.length > 0) {
-        let emails = this.searchEmails.split(',').map((a) => a.trim())
+      if (searchEmails && searchEmails.length > 0) {
+        let emails = searchEmails.split(',').map((a) => a.trim())
         queries["queries"].push(
           ["email_addresses.email","in",emails]
         )
       } else {
         queries = null
       }
-
-      this.$refs['people-table'].setFilter(queries)
+      return queries
+    },
+    onEmailSearch() {
+      if (this.searchEmails) {
+        this.setSearchState({
+          key: 'people-table-search-state',
+          setting: {
+            emails: this.searchEmails
+          }
+        })
+      } else {
+        this.setSearchState({
+          key: 'people-table-search-state',
+          setting: {}
+        })
+      }
+      this.$refs['people-table'].setFilter(this.queries(this.searchEmails))
     },
     onSaveMassEdit() {
-      // console.debug("*****  SAVE ME", this.selectedConState)
-      if (this.selectedIds.length > 0 && this.selectedConState) {
-        this.update_all('person', this.selectedIds, {con_state: this.selectedConState})
+      if (this.editableIds.length > 0 && this.selectedConState) {
+        this.update_all('person', this.editableIds, {con_state: this.selectedConState})
       }
     },
+    onConfirmMassEdit() {
+      this.$refs['mass-edit-confirm'].showModal()
+    },
     onEditStates(ids) {
-      this.selectedIds = ids
+      this.editableIds = ids
       this.$refs['mass-edit-state'].showModal()
     },
     onNew() {
@@ -149,6 +188,31 @@ export default {
     onSave() {
       this.$refs['add-person-form'].savePerson()
     }
+  },
+  mounted() {
+    let saved = this.getSearchState()('people-table-search-state')
+    let peopleTable = this.$refs['people-table']
+    if (saved) {
+      if (saved.emails) {
+        this.searchEmails = saved.emails
+        this.$refs['people-table'].setFilter(this.queries(this.searchEmails))
+        this.$root.$emit('bv::toggle::collapse', 'advanced-search')
+      }
+    }
+
+    this.$root.$on('bv::collapse::state', (collapseId, isJustShown) => {
+      if (collapseId == 'advanced-search' && isJustShown && saved && saved.emails && peopleTable) {
+        peopleTable.showAlternateSearch()
+      }
+    })
+
+    this.$refs['people-table'].fetchPaged()
   }
 }
 </script>
+
+<style>
+.col-name-field div {
+  width: 8rem;
+}
+</style>

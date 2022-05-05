@@ -13,6 +13,7 @@ module ResourceMethods
 
     meta = {}
     meta[:total] = @collection_total if paginate
+    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total if paginate
     meta[:current_page] = @current_page if @current_page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
     format = params[:format]
@@ -117,7 +118,7 @@ module ResourceMethods
       options = {
         include: filtered_serializer_includes(
                    fields: fields,
-                   serialized_includes: jsonapi_included
+                   json_includes: jsonapi_included
                  ),
         params: {
           domain: "#{request.base_url}",
@@ -167,7 +168,6 @@ module ResourceMethods
     per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate && do_paginate
     per_page = nil unless paginate && do_paginate
     current_page = params[:current_page]&.to_i || 1 if paginate && do_paginate
-    # Rails.logger.debug("****** #{params[:filter]}")
     filters = JSON.parse(params[:filter]) if params[:filter].present?
 
     return per_page, current_page, filters
@@ -186,11 +186,19 @@ module ResourceMethods
       direction ||= 'asc'
 
       order_str = "#{order} #{direction}"
+      # Get null first or last from query
+      nulls_first = params[:nullsFirst]
       # For PSQL NULLS FIRST is the default for DESC order, and NULLS LAST otherwise.
-      if direction == 'asc'
+      if nulls_first == 'true'
         order_str += ' NULLS FIRST'
-      else
+      elsif nulls_first == 'false'
         order_str += ' NULLS LAST'
+      else
+        if direction == 'asc'
+          order_str += ' NULLS FIRST'
+        else
+          order_str += ' NULLS LAST'
+        end
       end
     end
 
@@ -208,15 +216,24 @@ module ResourceMethods
     @per_page, @current_page, @filters = collection_params
 
     q = policy_scope(base, policy_scope_class: policy_scope_class)
-      .includes(includes)
-      .references(references)
-      .joins(join_tables)
-      .where(query(@filters))
-      # .joins(query_join_tables(@filters))
+         .includes(includes)
+         .references(references)
+         .eager_load(eager_load)
+         .joins(join_tables)
+         .where(query(@filters))
 
     q = q.distinct if join_tables && !join_tables.empty?
 
     q = q.order(order_string)
+
+    # TODO we need the size without the query
+    if paginate
+      @full_collection_total = policy_scope(base, policy_scope_class: policy_scope_class)
+                            .where(exclude_deleted_clause)
+                            .distinct
+                            .count
+      instance_variable_set("@#{controller_name}", @full_collection_total)
+    end
 
     if paginate
       q.page(@current_page).per(@per_page)
@@ -227,9 +244,14 @@ module ResourceMethods
 
   def query(filters = nil)
     # Go through the filter and construct the where clause
-    return exclude_deleted_clause unless filters.present?
+    deleted_clause = exclude_deleted_clause
+    return deleted_clause unless filters.present?
 
-    query_part(filter: filters)
+    query = query_part(filter: filters)
+
+    return query unless deleted_clause
+
+    query ? query.and(deleted_clause) : deleted_clause
   end
 
   # if the element has a deleted_at we want the non deleted ones
@@ -256,7 +278,7 @@ module ResourceMethods
         end
 
         if key == 'all'
-          # change to include responses
+          # change to allowd limiting to named cols?, pass in list of cols to include based in what is displayed ...
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)
             query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
@@ -271,16 +293,21 @@ module ResourceMethods
             end
           end
         else
-          col = if (key.include?('responses.'))
-            'response_as_text'
+          # Have a special key to allow for extra queries ...
+          if (key.include?('subquery'))
+            part = subquery(operation: operation, value: value)
           else
-            get_column(column: key)
-          end
-          part = get_query_part(table: col_table, column: col, operation: operation, value: value)
+            col = if (key.include?('responses.'))
+              'response_as_text'
+            else
+              get_column(column: key)
+            end
+            part = get_query_part(table: col_table, column: col, operation: operation, value: value)
 
-          if (key.include?('responses.'))
-            key.slice! "responses."
-            part = part.and(col_table['question_id'].eq(key))
+            if (key.include?('responses.'))
+              key.slice! "responses."
+              part = part.and(col_table['question_id'].eq(key))
+            end
           end
         end
       end
@@ -301,17 +328,15 @@ module ResourceMethods
     elsif col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::HasManyReflection
       # need to join with the people table
       col_table = model_class.reflections[col_table_name].klass.arel_table #Arel::Table.new("#{col_table_name}")
+    elsif col_table_name && model_class.reflections[col_table_name].class == ActiveRecord::Reflection::BelongsToReflection
+      # need to join with the people table
+      col_table = model_class.reflections[col_table_name].klass.arel_table #Arel::Table.new("#{col_table_name}")
     elsif col_table_name && col_table_name == 'tags'
       col_table = ActsAsTaggableOn::Tag.arel_table #Arel::Table.new("#{ActsAsTaggableOn::Tag}")
     end
 
     return col_table
   end
-
-  # def query_join_tables(filters = nil)
-  #   return [] unless filters
-  #   # TODO: create a join clause for relationships
-  # end
 
   def get_column(column:)
     col = column
@@ -332,6 +357,8 @@ module ResourceMethods
     val = "#{value}%" if operation == 'begins with'
     val = "''" if operation == 'is empty'
     val = "''" if operation == 'is not empty'
+    val = nil if operation == 'is null'
+    val = nil if operation == 'is not null'
 
     part = table[column.to_sym].send(op, val)
   end
@@ -376,11 +403,19 @@ module ResourceMethods
       :'matches'
     when 'ends with'
       :'matches'
+    when 'is null'
+      :eq
+    when 'is not null'
+      :not_eq
     else
       :eq
     end
     # does_not_match, #does_not_match_all, #does_not_match_any, #does_not_match_regexp,
     # in, not_in etc
+  end
+
+  def subquery(operation:, value: nil)
+    nil
   end
 
   def model_name
@@ -538,12 +573,20 @@ module ResourceMethods
     _fields
   end
 
-  def filtered_serializer_includes(fields: , serialized_includes: nil)
-    serialized_includes ||= serializer_includes
-    return serialized_includes if fields.empty?
+  def add_to_serialized_includes(rels:)
+    serializer_includes = serializer_includes.concat(rels)
+  end
+
+  def filtered_serializer_includes(fields: , json_includes: nil)
+    includes = json_includes if json_includes
+    includes ||= serializer_includes
+    # p = params[:include].split(",")
+    includes.concat(params[:include].split(",")) if params[:include]
+    # Rails.logger.debug("******* INCLUDES #{includes} #{p}")
+    return includes if fields.empty?
 
     keys = fields.flatten(2)
-    serialized_includes.select{|v| keys.include?(v.to_s)}
+    includes.select{|v| keys.include?(v.to_s)}
   end
 
   def serializer_includes
@@ -559,6 +602,10 @@ module ResourceMethods
   end
 
   def join_tables
+    []
+  end
+
+  def eager_load
     []
   end
 

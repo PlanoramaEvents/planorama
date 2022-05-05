@@ -35,6 +35,8 @@ class Session < ApplicationRecord
 
   belongs_to :room, required: false
 
+  before_save :keep_who_did_it, :keep_interest_trail
+
   has_many :session_assignments, dependent: :destroy do
     def role(role)
       # get the people with the given role
@@ -53,7 +55,7 @@ class Session < ApplicationRecord
       where(['person_id = ?', person_id])
     end
 
-    def my_interest(person_id)
+    def interests_for(person_id)
       where(['person_id = ? and interested = true', person_id])
     end
   end
@@ -77,6 +79,19 @@ class Session < ApplicationRecord
 
   def published?
     !published_session.nil?
+  end
+
+  def keep_who_did_it
+    self.updated_by = PaperTrail.request.whodunnit
+  end
+
+  def keep_interest_trail
+    if self.open_for_interest_changed?
+      if self.open_for_interest
+        self.interest_opened_by = PaperTrail.request.whodunnit
+        self.interest_opened_at = Time.now
+      end
+    end
   end
 
 # NOTE: This only matches  that have the exact set of specified tags. If a user has additional tags, they are not returned.

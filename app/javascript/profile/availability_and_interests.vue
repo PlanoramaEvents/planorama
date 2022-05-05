@@ -34,12 +34,14 @@
       </div>
 
       <div class="pl-2" style="flex: 1">
-        <b-row class="my-1">
-          <b-col sm="12">
-            What is the maximum number of program items you are willing to participate in on each day?<br />
-            <small class="text-muted">(These can add up to more than your convention maximum.)</small>
-          </b-col>
-        </b-row>
+        <div class="container">
+          <b-row class="my-1">
+            <b-col sm="12">
+              What is the maximum number of program items you are willing to participate in on each day?<br />
+              <small class="text-muted">(These can add up to more than your convention maximum.)</small>
+            </b-col>
+          </b-row>
+        </div>
         <session-limits
           v-model="person"
           :days="days"

@@ -37,6 +37,7 @@ elif [[ $RAILS_ENV = "staging" ]]; then
 
   bin/rake db:migrate
   bin/rake parameters:seed_names
+  bin/rake role_types:seed_role_types
   bin/rake chicon:seed_exclusions
 
   bin/rails db:seed
@@ -50,6 +51,7 @@ else
 
   bin/rake db:migrate
   bin/rake parameters:seed_names
+  bin/rake role_types:seed_role_types
   bin/rake chicon:seed_exclusions
 fi
 

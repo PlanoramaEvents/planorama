@@ -18,10 +18,10 @@
         </tooltip-overflow>
       </template>
       <template #cell(created_at)="{ item }">
-        {{new Date(item.created_at).toLocaleDateString()}}
+        {{new Date(item.created_at).toLocaleString()}}
       </template>
       <template #cell(updated_at)="{ item }">
-        {{new Date(item.updated_at).toLocaleDateString()}}
+        {{new Date(item.updated_at).toLocaleString()}}
       </template>
       <template #cell()="data">
         <tooltip-overflow :title="data.value">

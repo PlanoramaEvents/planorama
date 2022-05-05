@@ -1,6 +1,5 @@
 <template>
-  <div class="scrollable">
-
+  <div>
     <div class="d-flex justify-content-between my-3" v-if="showControls">
       <search-vue
         class="w-75"
@@ -8,9 +7,11 @@
         @change="onSearchChanged"
         :columns="columns"
         v-if="showSearch"
+        :stateName="stateName"
+        ref="table-search"
       >
         <template v-slot:alternate-search-tab>
-          <b-tab v-if="$slots['alternate-search']">
+          <b-tab v-if="$slots['alternate-search']" ref="alternate-search-tab">
             <template #title>
               <slot name="alternate-search-title">
                 Alternate Search
@@ -54,7 +55,7 @@
     </div>
 
     <div class="d-flex">
-      <slot name="left-controls" v-bind:selectedIds="selectedIds"></slot>
+      <slot name="left-controls" v-bind:editableIds="editableIds"></slot>
       <b-pagination class="ml-auto"
         v-model="currentPage"
         :total-rows="totalRows"
@@ -65,11 +66,15 @@
         next-text="Next"
       ></b-pagination>
     </div>
+    <div class="d-flex mb-1">
+      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
+      <span class="ml-auto">{{countCaption}}</span>
+    </div>
     <b-table
       hover bordered responsive selectable small striped
-      :select-mode="selectMode"
       :fields="tableColumns"
       selected-variant="primary"
+      :select-mode="useSelectMode"
 
       :items="sortedCollection"
 
@@ -87,19 +92,22 @@
           name="select-all-checkbox"
           value="select_all"
           unchecked-value="select_none"
+          :checked="isSelectAll"
           @change="onSelectAll"
           >
         </b-form-checkbox>
       </template>
-      <template #cell(selected)="{ rowSelected }">
-        <template v-if="rowSelected">
-          <span aria-hidden="true">&check;</span>
-          <span class="sr-only">Selected</span>
-        </template>
-        <template v-else>
-          <span aria-hidden="true">&nbsp;</span>
-          <span class="sr-only">Not selected</span>
-        </template>
+      <template #cell(selected)="row">
+        <!-- {{ editable_ids }} -->
+          <b-form-checkbox
+            v-if="row.item"
+            name="select-row-checkbox"
+            :value="'select:'+row.item.id"
+            :unchecked-value="'unselect:'+row.item.id"
+            :checked="isChecked(row.item.id)"
+            @change="onSelectRow"
+            >
+          </b-form-checkbox>
       </template>
 
       <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
@@ -108,6 +116,10 @@
       </template>
     </b-table>
 
+    <div class="d-flex mb-1">
+      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
+      <span class="ml-auto">{{countCaption}}</span>
+    </div>
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
       :total-rows="totalRows"
@@ -124,6 +136,7 @@
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import SearchVue from './search_vue'
+
 export default {
   name: 'TableVue',
   components: {
@@ -134,7 +147,6 @@ export default {
     tableMixin, // covers pagination and sorting
   ],
   props: {
-    // TODO:
     columns : { type: Array },
     selectMode: {
       type: String,
@@ -167,14 +179,35 @@ export default {
     showView: {
       type: Boolean,
       default: false
+    },
+    stateName: {
+      type: String,
+      default: null
     }
   },
   data () {
     return {
-      selected_items: []
+      selected_items: [],
+      editable_ids: []
     }
   },
   computed: {
+    countCaption() {
+      let from = this.perPage * (this.currentPage - 1) + 1
+      let to = this.perPage * this.currentPage
+      if (to > this.totalRows) {
+        to = this.totalRows
+      }
+
+      return `Showing ${from} to ${to} of ${this.totalRows} (${this.fullTotalRows} total records)`
+    },
+    useSelectMode() {
+      if (this.selectMode == 'multi') {
+        return 'range'
+      }
+
+      return 'single'
+    },
     tableColumns() {
       if (this.selectMode != 'single') {
         let cols = [
@@ -189,26 +222,45 @@ export default {
         return this.columns
       }
     },
-    selectedIds() {
-      if (this.selected_items.length > 0) {
-        return Object.values(this.selected_items).map(obj => obj.id)
-      } else {
-        return []
+    editableIds() {
+      return this.editable_ids
+    },
+    isSelectAll() {
+      if (this.editable_ids.length == this.sortedCollection.length) {
+        return "select_all"
       }
+      return "select_none"
     }
   },
   methods: {
-    onSelectAll(arg) {
-      console.debug("***** SELECT ALL ", arg)
-      if (arg == 'select_all') {
-        this.$refs.table.selectAllRows()
+    isChecked(v) {
+      if (this.editable_ids.includes(v)) {
+        return `select:${v}`
       } else {
-        this.$refs.table.clearSelected()
+        return `unselect:${v}`
+      }
+    },
+    onSelectRow(arg) {
+      const args = arg.split(":")
+      if (args[0] == 'select') {
+        this.editable_ids.push(args[1])
+      } else {
+        this.editable_ids = this.editable_ids.filter(
+          obj => (obj != args[1])
+        )
+      }
+    },
+    onSelectAll(arg) {
+      if (arg == 'select_all') {
+        this.editable_ids = this.sortedCollection.map(o => o.id)
+      } else {
+        this.editable_ids = []
       }
     },
     onRefresh() {
       // reset selected_items on page change as well ...
       this.selected_items = []
+      this.editable_ids = []
       this.$refs.table.refresh()
     },
     onRowSelected(items) {
@@ -228,6 +280,11 @@ export default {
     },
     setFilter(newFilter) {
       this.filter = newFilter
+    },
+    showAlternateSearch() {
+      if (this.$refs['alternate-search-tab']) {
+        this.$refs['alternate-search-tab'].activate()
+      }
     }
   },
   watch: {
@@ -240,18 +297,26 @@ export default {
       if (ov != nv) {
         // page was changed so we clear our selected
         this.selected_items = []
+        this.editable_ids = []
       }
     }
   },
   mounted() {
     // ensure that there is no model selected when the table is loaded
+    this.editable_ids = []
     this.unselect();
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<!-- scoped does not work -->
+<style lang="scss">
 td {
   white-space: nowrap;
+}
+
+// Fix sticky col selection, not sure if this is quite the correct color etc
+.table-primary > td.b-table-sticky-column {
+  background-color: #d4d6f0 !important;
 }
 </style>

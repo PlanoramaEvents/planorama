@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scrollable">
     <survey-table></survey-table>
     <survey-sidebar></survey-sidebar>
   </div>

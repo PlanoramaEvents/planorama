@@ -2,7 +2,7 @@ class SessionAssignmentPolicy < PlannerPolicy
   def unexpress_interest?
     return true if @record.person_id == @person.id
 
-    false
+    is_admin_or_staff
   end
 
   # create/update should be limited to admin or the person that the assignment is for

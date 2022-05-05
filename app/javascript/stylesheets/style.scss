@@ -5,6 +5,22 @@
 $sidebar-width: 35%;
 $sidebar-mobile-width: 60%;
 
+dt {
+  font-weight: normal !important;
+}
+
+.first-capital {
+  text-transform: capitalize;
+}
+
+// .capitalize {
+//   text-transform: uppercase;
+// }
+
+.keep-format {
+  white-space: pre-wrap;
+}
+
 .navbar.navbar-light {
   height: 100px;
   background: linear-gradient(to right, #ffffff, $color-primary-4 67%);

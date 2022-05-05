@@ -8,7 +8,7 @@
     @hidden="unselect"
     no-header
   >
-    <b-nav>
+    <b-nav fill>
       <b-navbar-nav class="px-3 py-2">
         <b-nav-text>
           <slot name="header"></slot>

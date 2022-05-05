@@ -6,14 +6,12 @@
       Your selections will appear on the Sessions Ranking tab.
     </p>
 
-    <div class="my-3">
-      <session-search
-        :value="filter"
-        @change="onSearchChanged"
-        :columns="columns"
-      >
-      </session-search>
-    </div>
+    <session-search
+      :value="filter"
+      @change="onSearchChanged"
+      :columns="columns"
+    >
+    </session-search>
 
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
@@ -25,36 +23,45 @@
       next-text="Next"
     ></b-pagination>
 
-    <b-table
-      hover responsive small striped
-      :fields="columns"
-      :items="sortedCollection"
-      :no-local-sorting="true"
-    >
-      <template #cell(title)="{ item }">
-        <h4>{{item.title}}</h4>
-        <p v-html="item.description"></p>
-        <div v-if="item.format">
-          Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
+    <b-overlay :show="loading" rounded="sm">
+      <div class="container">
+        <div class='row mb-2'>
+          <div class="col-11">
+          </div>
+          <div class="col-1">
+            <b>Add to Interested</b>
+          </div>
         </div>
-        <div v-if="item.area_list.length > 0">
-          <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list" :key="area">{{area}}</span>
+        <div class='row mb-5' v-for="item in sortedCollection" :key="item.id">
+          <div class="col-11">
+            <h4>{{item.title}}</h4>
+            <div v-html="item.description"></div>
+            <div v-if="item.format">
+              Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
+            </div>
+            <div v-if="item.area_list.length > 0">
+              Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list" :key="area">{{area}}</span>
+            </div>
+            <div v-if="item.tag_list.length > 0">
+              Tag(s): <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list" :key="tag">{{tag}}</span>
+            </div>
+            <div class="mt-3" v-if="item.instructions_for_interest">Instructions for potential panelists:</div>
+            <div class="panelist-instructions" v-html="item.instructions_for_interest">
+            </div>
+          </div>
+          <div class="col-1">
+            <div v-if="assignments">
+              <interest-indicator
+                :session="item"
+                :person_id="person.id"
+                :model="sessionAssignmentModel"
+                :assignments="assignments"
+              ></interest-indicator>
+            </div>
+          </div>
         </div>
-        <div v-if="item.tag_list.length > 0">
-          <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.tag_list" :key="tag">{{tag}}</span>
-        </div>
-        <div class="mt-3" v-if="item.instructions_for_interest">Instructions for potential panelists:</div>
-        <div class="panelist-instructions" v-html="item.instructions_for_interest">
-        </div>
-      </template>
-      <template #cell(id)="{ item }">
-        <interest-indicator
-          :session="item"
-          :person_id="person.id"
-          :model="sessionAssignmentModel"
-        ></interest-indicator>
-      </template>
-    </b-table>
+      </div>
+    </b-overlay>
 
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
@@ -70,6 +77,7 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
+import modelUtilsMixin from '../store/model_utils.mixin';
 import tableMixin from '../store/table.mixin';
 import personSessionMixin from '../auth/person_session.mixin';
 import InterestIndicator from './interest_indicator.vue'
@@ -85,6 +93,7 @@ export default {
   mixins: [
     personSessionMixin,
     modelMixin,
+    modelUtilsMixin,
     tableMixin // covers pagination and sorting
   ],
   model: {
@@ -111,13 +120,28 @@ export default {
           sortable: false,
           thClass: 'interest-column'
         }
-      ]
+      ],
+      assignments : null,
+      loading: true
     }
   },
   methods: {
     onSearchChanged(arg) {
       this.filter = arg
     }
+  },
+  mounted() {
+    // Ensure we have fetched our assignments
+    this.fetchPaged()
+    this.fetch_models(
+      sessionAssignmentModel,
+      {
+        filter: `{"op":"all","queries":[["person_id", "=", "${this.person.id}"]]}`
+      }
+    ).then(data => {
+      this.assignments = Object.values(data)
+      this.loading = false
+    })
   }
 }
 </script>

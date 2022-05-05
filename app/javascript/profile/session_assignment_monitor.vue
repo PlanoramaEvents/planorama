@@ -5,7 +5,7 @@
 import modelMixin from '../store/model.mixin'
 
 export default {
-  name: "SessionAssignment",
+  name: "SessionAssignmentMonitor",
   props: ["assignment"],
   mixins: [
     modelMixin,

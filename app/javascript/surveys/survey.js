@@ -32,7 +32,7 @@ export const survey_columns = [
     sortKey: 'surveys.updated_at',
     label: 'Last Modified On',
     sortable: true,
-    formatter: (d) => new Date(d).toLocaleDateString()
+    formatter: (d) => new Date(d).toLocaleString()
   },
   {
     key: 'updated_by.name',

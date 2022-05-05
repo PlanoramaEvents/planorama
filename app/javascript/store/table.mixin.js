@@ -22,6 +22,10 @@ export const tableMixin = {
     defaultUrl: {
       type: String,
       default: null
+    },
+    nullsFirst: {
+      type: String,
+      default: null
     }
   },
   data: () => ({
@@ -30,18 +34,27 @@ export const tableMixin = {
     filter: null,
     currentPage: 1,
     totalRows: 0,
+    fullTotalRows: 0,
     correctOrder: [],
-    url: null
+    url: null,
+    shall_clear: true
   }),
   computed: {
     sortedCollection() {
       // if we modify a single member of the collection, we no longer necessarily return the right order
       // therefore, use the order we captured at ingestion to restore the right order
       // without having to re-sort on the frontend
-      return this.collection.sort((a, b) => this.correctOrder.indexOf(a?.id) - this.correctOrder.indexOf(b?.id));
+      return this.collection.filter(
+        el => this.correctOrder.includes(el.id)
+      ).sort(
+        (a, b) => this.correctOrder.indexOf(a?.id) - this.correctOrder.indexOf(b?.id)
+      );
     }
   },
   methods: {
+    removeFromCollection(id) {
+      this.correctOrder = this.correctOrder.filter( el => el != id)
+    },
     mergeFilters(filter1, filter2) {
       return {
         op: 'all',
@@ -51,7 +64,8 @@ export const tableMixin = {
         ]
       }
     },
-    fetchPaged() {
+    fetchPaged(clear=true) {
+      // this.shall_clear = clear
       let _filter = JSON.stringify(this.filter)
 
       if (!this.filter && this.defaultFilter) {
@@ -65,7 +79,7 @@ export const tableMixin = {
       }
 
       return new Promise((res, rej) => {
-        this.clear() // NOTE: clear is a sync call
+        if (clear) this.clear() // NOTE: clear is a sync call
         this.correctOrder = [] // we need to clear otherwise the order in the computed sorted gets weird
         // What URL does this use
         this.fetch(
@@ -75,6 +89,7 @@ export const tableMixin = {
             sortBy: this.sortBy,
             filter: _filter,
             current_page: this.currentPage,
+            nullsFirst: this.nullsFirst
           },
           this.url
         ).then(data => {
@@ -83,6 +98,7 @@ export const tableMixin = {
           if (typeof data._jv.json.meta !== 'undefined') {
             this.currentPage = data._jv.json.meta.current_page;
             this.totalRows = data._jv.json.meta.total;
+            this.fullTotalRows = data._jv.json.meta.full_total;
           }
           res(data);
         }).catch(rej); // TODO maybe actually handle it here??
@@ -104,22 +120,24 @@ export const tableMixin = {
       if(newVal != oldVal) {
         // at this point, this.currentPage reflects newVal so we don't
         // have to pass anything in here, it should just work
-        this.fetchPaged();
+        this.fetchPaged(this.shall_clear);
       }
     },
     filter(newVal, oldVal) {
       // console.debug("filter changed:", newVal, oldVal)
       if(newVal != oldVal) {
-        this.fetchPaged();
+        this.fetchPaged(this.shall_clear);
       }
     },
     sortDesc(newVal, oldVal) {
+      if (!oldVal && (newVal == this.defaultSortDesc)) return
       // console.debug("sortdesc changed:", newVal, oldVal)
-      if (newVal != oldVal) this.fetchPaged();
+      if (newVal != oldVal) this.fetchPaged(this.shall_clear);
     },
     sortBy(newVal, oldVal) {
+      if (!oldVal && (newVal == this.defaultSortBy)) return
       // console.debug("sortby changed:", newVal, oldVal)
-      if (newVal != oldVal) this.fetchPaged();
+      if (newVal != oldVal) this.fetchPaged(this.shall_clear);
     }
   }
 }

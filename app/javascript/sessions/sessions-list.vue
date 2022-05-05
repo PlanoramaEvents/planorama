@@ -11,7 +11,7 @@ import SessionSidebar from './session_sidebar.vue';
 import { sessionModel as model } from '../store/session.store';
 
 export default {
-  name: "ScheduleScreen",
+  name: "SessionsList",
   data: () => ({
     model
   }),

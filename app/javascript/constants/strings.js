@@ -90,6 +90,8 @@ module.exports = {
     QUESTION_DUPLICATE_ERROR: errorMessage("Question failed to be duplicated."),
     QUESTION_ADD_SAVE_SUCCESS: "Question successfully added",
     QUESTION_ADD_SAVE_ERROR: errorMessage("Question failed to be added."),
+    QUESTION_UNCHANGED: "Question change abandoned",
+    QUESTION_MODAL_MESSAGE: "You are changing the question type and there's a linked field associated with that specific question type. If you continue with changing the question type, we will remove the linked field. You can choose to leave the question type as it is and the linking will remain.",
 
     //answer actions
     ANSWER_ORDER_SAVE_SUCCESS: "Answer reorder sucessfully saved",
@@ -108,6 +110,11 @@ module.exports = {
     SESSION_ASSIGNMENT_ERROR: errorMessage("Session Assignment failed to be saved"),
     SESSION_INTEREST_UPDATE_SUCCESS: "Session Interest updated",
     SESSION_INTEREST_UPDATE_ERROR: errorMessage("Session Interest failed to be updated"),
+
+    SESSION_SAVE_SUCCESS_DELETE: "Session successfully deleted.",
+    SESSION_SAVE_ERROR_DELETE: errorMessage("Session failed to be deleted."),
+    SESSION_SAVE_SUCCESS: "Session successfully saved.",
+    SESSION_SAVE_ERROR: errorMessage("Session failed to be saved."),
 
     SESSION_RANKING_ERROR: (total, allowed) => `You have assigned ${total} exceeds the allowed ${allowed}.`,
 

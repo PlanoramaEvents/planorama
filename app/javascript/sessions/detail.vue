@@ -4,7 +4,7 @@
      1. Make description HTML editor
      2. Add instructions for interest input
    -->
-  <div class="detail">
+  <div class="detail container">
     <div class="row">
       <div class="col-12">
 
@@ -68,10 +68,6 @@
             :disabled="!editable"
           ></model-select>
         </b-form-group>
-
-        <!--
-          Format - selector
-        -->
       </div>
     </div>
   </div>

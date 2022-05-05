@@ -50,15 +50,12 @@ export default {
   },
   methods: {
     init() {
-      console.debug('MANGE SURVEY INIT')
       this.selectSurvey(this.id)
     },
     back() {
       this.unselectSurvey();
       this.unselectPage();
       this.unselectQuestion();
-
-      // TODO: should this back to surveys ...
       this.$router.push('/surveys');
     }
   },

@@ -11,7 +11,7 @@
         ></person-details>
       </b-tab>
       <!-- Can not make this lazy otherwise we have lock issues with the notes -->
-      <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
+      <b-tab title="Availability &amp; Interests" :active="tab === 'availability'" v-if="currentSettings.configs">
         <availability-and-interests
           v-model="person"
           @input="onPersonUpdate"
@@ -30,9 +30,9 @@
         ></session-selector>
       </b-tab>
       <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
-        <!-- v-model="person" -->
         <session-ranker
-          defaultSortBy='interest_ranking,created_at'
+          defaultSortBy='interest_ranking,session_assignments.updated_at'
+          :person_id="person.id"
           :defaultSortDesc="true"
           :perPage="null"
           :model="sessionAssignmentModel"
@@ -64,7 +64,7 @@ const { isNavigationFailure, NavigationFailureType } = VueRouter;
 
 export default {
   name: "ProfileTabs",
-  props: ['tab'],
+  props: ['tab', 'id'],
   components: {
     PersonSummary,
     SessionSelector,
@@ -101,7 +101,7 @@ export default {
       }
     },
     rankedFilter() {
-      return `{"op":"all","queries":[["person_id", "=", "${this.currentUser.id}"],["interested", "=", true]]}`
+      return `{"op":"all","queries":[["person_id", "=", "${this.person.id}"],["interested", "=", true]]}`
     },
     timezone() {
       let tz = this.configByName('convention_timezone')
@@ -136,7 +136,9 @@ export default {
     }
   },
   mounted() {
-    this.fetch_model_by_id(personModel, this.currentUser.id).then(
+    // get id from URL if present
+    let id = this.id ? this.id : this.currentUser.id
+    this.fetch_model_by_id(personModel, id).then(
       (obj) => {
         this.person = obj
       }

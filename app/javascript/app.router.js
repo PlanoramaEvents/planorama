@@ -16,6 +16,8 @@ import AdminComponent from './administration/admin_component.vue';
 
 // people
 import PeopleScreen from './people/people-screen.vue';
+import PeopleList from './people/people_list.vue';
+import PersonTabs from './people/person_tabs.vue';
 
 // profile
 import ProfileScreen from './profile/profile-screen.vue';
@@ -28,8 +30,19 @@ const profileRoutes = [
   { path: '', component: ProfileTabs, props: true }
 ]
 
+const personRoutes = [
+  { path: 'edit/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'person-edit'}) },
+  { path: 'session-selection/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
+  { path: 'session-ranking/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
+  { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
+  { path: '', component: PeopleList }
+]
+
 //
-import ScheduleScreen from './sessions/schedule-screen.vue';
+import SessionsScreen from './sessions/session_screen.vue';
+import SessionList from './sessions/sessions-list.vue';
+import SessionTabs from  './sessions/session_tabs.vue';
+import SessionScreen from './sessions/session_screen.vue';
 
 //
 import ReportsScreen from './reports/reports_screen.vue'
@@ -53,7 +66,16 @@ const surveyRoutes = [
   { path: '', component: SurveyList },
 ]
 
-//import SurveyScreen from './surveys2/survey-screen.vue';
+const sessionRoutes = [
+  { path: 'edit/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-edit'}) },
+  { path: 'assignment/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-assignment'}) },
+  { path: 'schedule/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-schedule'}) },
+  { path: 'notes/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-notes'}) },
+  { path: '', component: SessionList },
+]
+
+// rbac
+import RbacScreen from './rbac/rbac-screen.vue';
 
 // dashboard
 import Dashboard from './dashboard/dashboard.vue';
@@ -95,6 +117,7 @@ export const router = new VueRouter({
     {
       path: '/people',
       component: PeopleScreen,
+      children: personRoutes,
       meta: {
         requiresAuth: true
       }
@@ -108,8 +131,9 @@ export const router = new VueRouter({
       }
     },
     {
-      path: '/schedule',
-      component: ScheduleScreen,
+      path: '/sessions',
+      component: SessionScreen,
+      children: sessionRoutes,
       meta: {
         requiresAuth: true
       }
@@ -132,6 +156,13 @@ export const router = new VueRouter({
     {
       path: '/dashboard',
       component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/rbac',
+      component: RbacScreen,
       meta: {
         requiresAuth: true
       }

@@ -28,5 +28,9 @@ export default {
 .truncated-span {
   max-width: 15rem;
   display: inline-block;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 </style>

@@ -961,6 +961,20 @@ CREATE TABLE public.published_sessions (
 
 
 --
+-- Name: room_sets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.room_sets (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    description character varying,
+    sort_order integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: rooms; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -974,7 +988,13 @@ CREATE TABLE public.rooms (
     purpose character varying,
     comment text,
     sort_order integer,
-    capacity integer
+    capacity integer,
+    room_floor character varying,
+    open_for_schedule boolean DEFAULT true,
+    is_virtual boolean DEFAULT false,
+    dimensions text,
+    area_of_space numeric,
+    room_set_id uuid
 );
 
 
@@ -1082,7 +1102,10 @@ CREATE TABLE public.sessions (
     require_signup boolean DEFAULT false,
     waiting_list_size integer DEFAULT 0,
     open_for_interest boolean DEFAULT false,
-    instructions_for_interest text
+    instructions_for_interest text,
+    updated_by character varying,
+    interest_opened_by character varying,
+    interest_opened_at timestamp without time zone
 );
 
 
@@ -1336,7 +1359,8 @@ CREATE TABLE public.venues (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    sort_order integer
+    sort_order integer,
+    address character varying
 );
 
 
@@ -1719,6 +1743,14 @@ ALTER TABLE ONLY public.published_session_assignments
 
 ALTER TABLE ONLY public.published_sessions
     ADD CONSTRAINT published_programme_items_pkey PRIMARY KEY (session_id);
+
+
+--
+-- Name: room_sets room_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_sets
+    ADD CONSTRAINT room_sets_pkey PRIMARY KEY (id);
 
 
 --
@@ -2118,6 +2150,13 @@ CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions 
 
 
 --
+-- Name: index_rooms_on_room_set_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rooms_on_room_set_id ON public.rooms USING btree (room_set_id);
+
+
+--
 -- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2384,6 +2423,14 @@ ALTER TABLE ONLY public.survey_submissions
 
 
 --
+-- Name: rooms fk_rails_d2498419d7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rooms
+    ADD CONSTRAINT fk_rails_d2498419d7 FOREIGN KEY (room_set_id) REFERENCES public.room_sets(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -2479,6 +2526,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220404143150'),
 ('20220404162324'),
 ('20220410221341'),
-('20220411031007');
+('20220411031007'),
+('20220424152922'),
+('20220424174950'),
+('20220424180453'),
+('20220424181346'),
+('20220426010537'),
+('20220427170202'),
+('20220428205309');
 
 

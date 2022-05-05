@@ -32,10 +32,14 @@
   </div>
 </template>
 
+GET
+	http://localhost:3000/person/d22c5c1f-407b-4538-a2ef-836a41b829cf/availability
+  http://localhost:3000/person/82d700c4-92c0-44e9-a1da-ab6b76db3f85/availability
+  http://localhost:3000/person/0b07c264-f71a-4540-a473-66772e559ab3/availability
 <script>
 import AvailabilityTimePicker from './availability_time_picker'
 import availabilityMixin from '../store/availability.mixin'
-import personSessionMixin from '../auth/person_session.mixin';
+// import personSessionMixin from '../auth/person_session.mixin';
 import {
   AVAILABILITY_DESCRIPTION
 } from '@/constants/strings';
@@ -44,7 +48,7 @@ const { DateTime } = require("luxon");
 
 export default {
   name: "AvailabilityCalendar",
-  mixins: [availabilityMixin, personSessionMixin],
+  mixins: [availabilityMixin],
   components: {
     AvailabilityTimePicker
   },
@@ -96,8 +100,9 @@ export default {
     },
     init: function(arg) {
       this.get_availability({person: this.person}).then(
-        () => {
-          let iniialVals = this.collection.map((a) => { return {start: DateTime.fromISO(a.start_time) , end: DateTime.fromISO(a.end_time)} })
+        (availabilities) => {
+          let coll = Object.values(availabilities)
+          let iniialVals = coll.map((a) => { return {start: DateTime.fromISO(a.start_time) , end: DateTime.fromISO(a.end_time)} })
           for (const day of this.days) {
             let component = this.$refs[`day-${day}`][0].scrollBarElement()
             let targets = this.days.filter(d => d != day)

@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="container">
     <div v-for="day in days" :key="day">
       <b-row class="my-1">
-        <b-col class="sm-4">
+        <b-col class="sm-2">
           <session-limit-editor
             v-model="person"
             :day="day"
@@ -11,7 +11,7 @@
           >
           </session-limit-editor>
         </b-col>
-        <b-col class="sm-8">
+        <b-col class="sm-10">
           <label for="input-none">{{ formatDate(day, { weekday: 'long' }) }}</label>
         </b-col>
       </b-row>

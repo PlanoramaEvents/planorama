@@ -4,7 +4,8 @@ export const session_columns = [
     sortKey: 'sessions.title',
     label: 'Title',
     type: "text",
-    sortable: true
+    sortable: true,
+    stickyColumn: true
   },
   {
     key: 'description',

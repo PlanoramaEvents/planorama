@@ -33,7 +33,7 @@
       </div>
     </div>
     <!-- :key="item.session.id"  Causes **lots** of vue errors with dups ids-->
-     <div class='row mb-4' v-for="item in sortedCollection">
+     <div class='row mb-4' v-for="item in sortedCollection" :key="item.id">
        <div class="col-8">
          <h4>{{item.session.title}}</h4>
          <p v-html="item.session.description"></p>
@@ -41,10 +41,10 @@
            Format: <span class="badge badge-pill badge-info mr-1">{{item.session.format.name}}</span><br />
          </div>
          <div v-if="item.session.area_list && item.session.area_list.length">
-           <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list" :key="area">{{area}}</span>
+           Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list" :key="area">{{area}}</span>
          </div>
          <div v-if="item.session.tag_list && item.session.tag_list.length">
-           <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list" :key="tag">{{tag}}</span>
+           Tag(s): <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list" :key="tag">{{tag}}</span>
          </div>
          <br />
          <div class="mt-3" v-if="item.session.instructions_for_interest">Instructions for potential panelists:</div>
@@ -55,11 +55,11 @@
          ></b-textarea>
        </div>
        <div class="col pt-4">
-         <session-assignment
+         <session-assignment-monitor
            :assignment="item"
            model="session_assignment"
            @change="changeAssignment"
-         ></session-assignment>
+         ></session-assignment-monitor>
          <b-form-group label="Rank">
            <b-form-select
              v-model="item.interest_ranking"
@@ -73,8 +73,20 @@
              :options="moderatorOptions">
            </b-form-select>
          </b-form-group>
+         <b-button variant="primary" @click="notInterested(item)"><b-icon-trash></b-icon-trash></b-button>
        </div>
      </div>
+
+     <b-modal
+       title="Confirm Not Interested"
+       ref="unexpress-interest-modal"
+       @hidden="stillInterested"
+       @ok="okNotInterested"
+     >
+       <p class="my-4">
+         Confirm that you are no longer interested in that session.
+       </p>
+     </b-modal>
   </div>
 </template>
 
@@ -82,21 +94,29 @@
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import personSessionMixin from '../auth/person_session.mixin';
+import sessionAssignmentMixin from '../sessions/session_assignment.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
-import SessionAssignment from './session_assignment.vue'
+import SessionAssignmentMonitor from './session_assignment_monitor.vue'
 
 import { SESSION_RANKING_ERROR } from '../constants/strings';
 
 export default {
   name: "SessionRanker",
   components: {
-    SessionAssignment
+    SessionAssignmentMonitor
   },
   mixins: [
     personSessionMixin,
     modelMixin,
-    tableMixin // covers pagination and sorting
+    tableMixin, // covers pagination and sorting
+    sessionAssignmentMixin
   ],
+  props: {
+    person_id: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       moderatorOptions: [
@@ -155,33 +175,53 @@ export default {
 
       return true
     },
+    notInterested(arg) {
+      this.assignment = arg
+      this.$refs['unexpress-interest-modal'].show()
+    },
+    okNotInterested() {
+      if (this.assignment) {
+        this.removeInterest(this.assignment, this.person_id).then(
+          (res) => {
+            this.assignment = null
+            this.fetchPaged()
+          }
+        )
+      }
+    },
+    stillInterested() {
+      this.assignment = null
+    },
     changeAssignment: function(arg) {
-      if (arg.interest_ranking == 1 && this.rank1_total > 5) {
-        this.$bvToast.toast(
-          SESSION_RANKING_ERROR(this.rank1_total, 5),
-          {
-            variant: 'error',
-            title: "Ranking Error"
-          }
-        )
-        return
+      if (arg.interested) {
+        if (arg.interest_ranking == 1 && this.rank1_total > 5) {
+          this.$bvToast.toast(
+            SESSION_RANKING_ERROR(this.rank1_total, 5),
+            {
+              variant: 'error',
+              title: "Ranking Error"
+            }
+          )
+          return
+        }
+        if (arg.interest_ranking == 2 && this.rank2_total > 5) {
+          this.$bvToast.toast(
+            SESSION_RANKING_ERROR(this.rank2_total, 5),
+            {
+              variant: 'error',
+              title: "Ranking Error"
+            }
+          )
+          return
+        }
+        this.save(arg)
       }
-      if (arg.interest_ranking == 2 && this.rank2_total > 5) {
-        this.$bvToast.toast(
-          SESSION_RANKING_ERROR(this.rank2_total, 5),
-          {
-            variant: 'error',
-            title: "Ranking Error"
-          }
-        )
-        return
-      }
-      this.save(arg)
     }
   },
   mounted() {
     // If there is no pager we need to get the initial collection somehow
     // Order should be by created_at date and ranking ...
+    this.assignment = null
     this.fetchPaged();
   }
 }
