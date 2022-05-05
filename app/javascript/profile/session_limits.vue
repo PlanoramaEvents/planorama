@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div v-for="day in days" :key="day">
       <b-row class="my-1">
         <b-col class="sm-2">
