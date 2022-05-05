@@ -49,12 +49,12 @@
       </div>
       <div class='ml-auto' v-if="session">
         <small class="text-muted d-block">
-          Last updated:
-          <em><strong>{{session.updated_by}}</strong></em>
+          Last edited by:
+          <em>{{session.updated_by}}</em>
         </small>
         <small class="text-muted d-block">
           Last edited on:
-          <em><strong>{{new Date(session.updated_at).toLocaleString()}}</strong></em>
+          <em>{{new Date(session.updated_at).toLocaleString()}}</em>
         </small>
       </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h5>Additional Participants</h5>
     <search-vue
       class="w-75 mt-3"
