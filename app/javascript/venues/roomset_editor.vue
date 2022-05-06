@@ -1,11 +1,10 @@
 <template>
-  <b-form ref='add-room-form'>
-    <model-field label="Name" v-model="roomData.name" type="text" stateless></model-field>
-    <model-field label="Name" v-model="roomData.floor" type="text" stateless></model-field>
-    <model-field label="Name" v-model="roomData.purpose" type="text" stateless></model-field>
+  <b-form ref='add-roomset-form'>
+    <model-field label="Name" v-model="roomsetData.name" type="text" stateless></model-field>
+    <model-field label="Description" v-model="roomsetData.description" type="text" stateless></model-field>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
-      <b-button variant="primary" @click="saveRoom">Save</b-button>
+      <b-button variant="primary" @click="saveRoomset">Save</b-button>
     </div>
   </b-form>
 </template>
@@ -13,18 +12,16 @@
 <script>
 import toastMixin from '../shared/toast-mixin';
 import settingsMixin from "@/store/settings.mixin";
-import { ADMIN_ADD_ROOM_SUCCESS } from '@/constants/strings';
+import { VENUES_ADD_ROOMSET_SUCCESS } from '@/constants/strings';
 import ModelField from '../shared/model-field';
-import PlanoEditor from '../components/plano_editor';
 
 import { mapActions } from 'vuex';
-import { NEW_ROOM } from '@/store/room.store';
+import { NEW_ROOMSET } from '@/store/roomset.store';
 
 export default {
-  name: "RoomEditor",
+  name: "RoomsetEditor",
   components: {
     ModelField,
-    PlanoEditor
   },
   mixins: [
     toastMixin,
@@ -42,10 +39,9 @@ export default {
   },
   data() {
     return {
-      roomData: {
+      roomsetData: {
         name: '',
-        floor: '',
-        purpose: '',
+        description: '',
       },
     }
   },
@@ -62,29 +58,27 @@ export default {
     // }
   },
   methods: {
-    ...mapActions({newRoomAction: NEW_ROOM}),
+    ...mapActions({newRoomsetAction: NEW_ROOMSET}),
     clear() {
-      this.roomData.name = '';
-      this.roomData.floor = '';
-      this.roomData.purpose = '';
+      this.roomsetData.name = '';
+      this.roomsetData.description = '';
     },
-    setRoomData(data) {
-      //console.log("setRoomData: ", data);
-      if(data && data.name && data['floor'] && data.purpose) {
-        this.roomData.name = data.name;
-        this.roomData.floor = data['floor'];
-        this.roomData.purpose = data.purpose;
+    setRoomsetData(data) {
+      //console.log("setRoomsetData: ", data);
+      if(data && data.name && data.description) {
+        this.roomsetData.name = data.name;
+        this.roomsetData.description = data.description;
       }
     },
-    saveRoom() {
-      let res = this.newRoomAction(this.roomData);
+    saveRoomset() {
+      let res = this.newRoomsetAction(this.roomsetData);
       res.then(
         (obj) => {
           this.$bvToast.toast(
-            ADMIN_ADD_ROOM_SUCCESS(obj.title),
+            VENUES_ADD_ROOMSET_SUCCESS(obj.title),
             {
               variant: 'success',
-              title: 'Room Created'
+              title: 'Roomset Created'
             }
           )
           this.clear()

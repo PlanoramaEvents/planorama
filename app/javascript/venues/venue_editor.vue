@@ -1,11 +1,10 @@
 <template>
   <b-form ref='add-room-form'>
-    <model-field label="Name" v-model="roomData.name" type="text" stateless></model-field>
-    <model-field label="Name" v-model="roomData.floor" type="text" stateless></model-field>
-    <model-field label="Name" v-model="roomData.purpose" type="text" stateless></model-field>
+    <model-field label="Name" v-model="venueData.name" type="text" stateless></model-field>
+    <model-field label="Address" v-model="venueData.address" type="text" stateless></model-field>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
-      <b-button variant="primary" @click="saveRoom">Save</b-button>
+      <b-button variant="primary" @click="saveVenue">Save</b-button>
     </div>
   </b-form>
 </template>
@@ -13,18 +12,16 @@
 <script>
 import toastMixin from '../shared/toast-mixin';
 import settingsMixin from "@/store/settings.mixin";
-import { ADMIN_ADD_ROOM_SUCCESS } from '@/constants/strings';
+import { VENUES_ADD_VENUE_SUCCESS } from '@/constants/strings';
 import ModelField from '../shared/model-field';
-import PlanoEditor from '../components/plano_editor';
 
 import { mapActions } from 'vuex';
-import { NEW_ROOM } from '@/store/room.store';
+import { NEW_VENUE } from '@/store/venue.store';
 
 export default {
-  name: "RoomEditor",
+  name: "VenueEditor",
   components: {
     ModelField,
-    PlanoEditor
   },
   mixins: [
     toastMixin,
@@ -42,19 +39,18 @@ export default {
   },
   data() {
     return {
-      roomData: {
+      venueData: {
         name: '',
-        floor: '',
-        purpose: '',
+        address: '',
       },
     }
   },
   emits: ["saved"],
   computed: {
-    // room_enums: {
+    // venue_enums: {
     //   get: function() {
     //     if (this.currentSettings && this.currentSettings.enums) {
-    //       return this.currentSettings.enums.Room.target
+    //       return this.currentSettings.enums.Venue.target
     //     } else {
     //       return []
     //     }
@@ -62,29 +58,27 @@ export default {
     // }
   },
   methods: {
-    ...mapActions({newRoomAction: NEW_ROOM}),
+    ...mapActions({newVenueAction: NEW_VENUE}),
     clear() {
-      this.roomData.name = '';
-      this.roomData.floor = '';
-      this.roomData.purpose = '';
+      this.venueData.name = '';
+      this.venueData.address = '';
     },
-    setRoomData(data) {
-      //console.log("setRoomData: ", data);
-      if(data && data.name && data['floor'] && data.purpose) {
-        this.roomData.name = data.name;
-        this.roomData.floor = data['floor'];
-        this.roomData.purpose = data.purpose;
+    setVenueData(data) {
+      //console.log("setVenueData: ", data);
+      if(data && data.name && data.address) {
+        this.venueData.name = data.name;
+        this.venueData.address = data.address;
       }
     },
-    saveRoom() {
-      let res = this.newRoomAction(this.roomData);
+    saveVenue() {
+      let res = this.newVenueAction(this.venueData);
       res.then(
         (obj) => {
           this.$bvToast.toast(
-            ADMIN_ADD_ROOM_SUCCESS(obj.title),
+            VENUES_ADD_VENUE_SUCCESS(obj.name),
             {
               variant: 'success',
-              title: 'Room Created'
+              title: 'Venue Created'
             }
           )
           this.clear()

@@ -3,11 +3,12 @@
     <div style="padding-bottom: 25px">
       <RoomsTable
           defaultFilter=''
+          ref="rooms-table"
       ></RoomsTable>
     </div>
     <div style="border: solid">
       Room Editor Here
-      <!--RoomEditor @saved="init"/-->
+      <RoomEditor @saved="init"/>
     </div>
   </div>
 </template>
@@ -39,7 +40,7 @@ export default {
   },
   methods: {
     init() {
-      this.$refs[RoomsTable].init();
+      this.$refs['rooms-table'].init();
     },
   }
 }

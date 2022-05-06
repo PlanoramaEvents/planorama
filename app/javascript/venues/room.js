@@ -29,7 +29,7 @@ export const room_columns = [
   },
   {
     key: 'is_virtual',
-    label: 'Open for scheduling',
+    label: 'Is Virtual',
     type: Boolean
   },
   {

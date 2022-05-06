@@ -1,10 +1,47 @@
 <template>
-
+  <div>
+    <div style="padding-bottom: 25px">
+      <VenuesTable
+          defaultFilter=''
+          ref="venues-table"
+      ></VenuesTable>
+    </div>
+    <div style="border: solid">
+      <VenueEditor @saved="init"/>
+    </div>
+  </div>
 </template>
 
+
 <script>
+import VenuesTable from "./venues_table";
+import VenueEditor from "./venue_editor";
+import modelMixin from '../store/model.mixin'
+import {venue_columns as columns} from "./venue.js";
+
 export default {
-  name: "VenuesManager"
+  name: "VenuesManager",
+  components: {VenueEditor, VenuesTable},
+  mixins: [
+    modelMixin,
+  ],
+  data() {
+    return {
+      columns,
+    }
+  },
+  watch: {
+    "selected" : function(val) {
+      alert("in venues_manager.selected: val="+JSON.stringify(val));
+      if(val)
+        this.$refs.venueEditor.setVenueData(val);
+    }
+  },
+  methods: {
+    init() {
+      this.$refs['venues-table'].init();
+    },
+  }
 }
 </script>
 
