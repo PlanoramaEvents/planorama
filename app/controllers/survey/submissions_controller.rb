@@ -44,8 +44,9 @@ class Survey::SubmissionsController < ResourceController
   end
 
   def flat
-    load_resource
     authorize model_class, policy_class: policy_class
+    # If XLS then we do somethng else
+    load_resource
 
     meta = {}
     meta[:total] = @collection_total if paginate
