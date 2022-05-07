@@ -627,7 +627,7 @@ module ResourceMethods
 
   def paginated
     format = params[:format]
-    return false if format == 'xls'
+    return false if format == 'xls' || format == 'xlsx'
 
     paginate
   end

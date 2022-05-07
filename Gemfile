@@ -36,6 +36,7 @@ gem 'aasm'
 gem 'devise'
 # gem 'devise-jwt'
 gem 'rack-cors'
+gem 'request_store'
 
 gem 'ranked-model'
 gem "nilify_blanks"

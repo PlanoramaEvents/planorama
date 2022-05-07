@@ -64,9 +64,15 @@ module AccessControlService
 
   # Return a list of sensitive attributes for the given model
   def self.sensitive_attributes(model:)
+    return RequestStore.store["sensitive_attributes_store"] if RequestStore.store["sensitive_attributes_store"]
+
+    RequestStore.store["sensitive_attributes_store"] = []
     return [] unless attribute_meta_data[model.to_sym]
 
-    attribute_meta_data[model.to_sym].filter{|k,v| v[:sensitive]}.keys
+    res = attribute_meta_data[model.to_sym].filter{|k,v| v[:sensitive]}.keys
+    RequestStore.store["sensitive_attributes_store"] = res
+
+    res
   end
 
   # Return a list of linkable attributes for the given model
@@ -113,7 +119,6 @@ module AccessControlService
   def self.linked_field_access?(linked_field:, person:)
     fields = linked_field.split('.',2)
     return true unless sensitive_attributes(model: fields[0]).include? fields[1].to_sym
-
     allowed_sensitive_access?(person: person)
   end
 
