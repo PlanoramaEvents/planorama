@@ -394,6 +394,14 @@ class PeopleController < ResourceController
       availability_notes
       ids
       attrs
+      can_stream
+      can_stream_exceptions
+      can_record_exceptions
+      do_not_assign_with
+      moderation_experience
+      is_local
+      languages_fluent_in
+      demographic_categories
     ] << [
       email_addresses_attributes: %i[
         id
