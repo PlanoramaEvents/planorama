@@ -110,23 +110,26 @@ class Person < ApplicationRecord
   end
 
   # TODO: we need to add contact flag to email address
-  # def contact_email
-  #   # return the email used for contact (usually the primary?)
-  #   EmailAddress.where(iscontact: true).first
-  # end
+  def contact_email
+    primary_email
+  end
 
-  # def contact_email=(email)
-  #   # If the email is the same as the primary or any others then
-  #   # we ensure it is flagged as the contact email
-  #   cemail = email_addresses.find_by(email: email)
-  #   if cemail
-  #     cemail.iscontact = true
-  #     cemail.save!
-  #   else
-  #     # Otherwise we add it
-  #     email_addresses.create(email: email, iscontact: true)
-  #   end
-  # end
+  def contact_email=(email)
+    primary_email = email
+  end
+
+  def primary_email=(email)
+    # If the email is the same as the primary or any others then
+    # we ensure it is flagged as the contact email
+    cemail = email_addresses.find_by(email: email)
+    if cemail
+      cemail.isdefault = true
+      cemail.save!
+    else
+      # Otherwise we add it
+      email_addresses.create(email: email, isdefault: true)
+    end
+  end
 
   def admin?
     convention_roles.inject(false) { |res, role| res || role.admin? }

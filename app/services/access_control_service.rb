@@ -9,8 +9,8 @@ module AccessControlService
       Person: {
         name: { sensitive: false, linkable: true, type: :string},
         pseudonym: { sensitive: false, linkable: true, type: :string},
-        primary_email: { sensitive: true, linkable: false, type: :email},
-        contact_email: { sensitive: true, linkable: true, type: :email},
+        primary_email: { sensitive: false, linkable: false, type: :email},
+        contact_email: { sensitive: false, linkable: true, type: :email},
         last_sign_in_at: { sensitive: true, linkable: false, type: :datetime},
         current_sign_in_at: { sensitive: true, linkable: false, type: :datetime},
         pronouns: { sensitive: true, linkable: true, type: :string},
