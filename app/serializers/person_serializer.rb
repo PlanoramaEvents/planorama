@@ -2,6 +2,8 @@ class PersonSerializer #< ActiveModel::Serializer
   include JSONAPI::Serializer
   include ::Plano::Serializer
 
+  attributes :primary_email, :contact_email
+
   protected_attributes :id, :lock_version,
               :name, :name_sort_by, :name_sort_by_confirmed,
               :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
@@ -9,7 +11,6 @@ class PersonSerializer #< ActiveModel::Serializer
               :job_title, :organization,
               :current_sign_in_at, :current_sign_in_ip,
               :last_sign_in_at, :last_sign_in_ip,
-              :primary_email,
               :pronouns, :year_of_birth, :gender, :ethnicity,
               :opted_in,
               :can_share,
@@ -44,10 +45,6 @@ class PersonSerializer #< ActiveModel::Serializer
 
   # status and comments hidden except for staff
   protected_attributes :con_state, :comments
-
-  protected_attributes :contact_email do |person|
-    person.contact_email
-  end
 
   # Indicate whether the person has a password set
   protected_attribute :has_password do |person|

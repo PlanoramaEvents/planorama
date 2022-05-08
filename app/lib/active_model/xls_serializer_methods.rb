@@ -60,6 +60,10 @@ module ActiveModel
     end
 
     def associated_serializers
+      return if @associated_serializers
+
+      @associated_serializers = RequestStore.store["associated_serializers"] if RequestStore.store["associated_serializers"]
+
       associations.each do |association|
         @associated_serializers ||= {}
         unless @associated_serializers[association.key.to_s]
@@ -68,6 +72,8 @@ module ActiveModel
           end
         end
       end
+
+      RequestStore.store["associated_serializers"] = @associated_serializers
     end
 
     def value_for_cell(val, name)

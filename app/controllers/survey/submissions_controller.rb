@@ -43,9 +43,54 @@ class Survey::SubmissionsController < ResourceController
     current_person.save!
   end
 
+  def index
+    format = params[:format]
+    super unless format == 'xls' || format == 'xlsx'
+
+    # If XLS then we do somethng else
+    send_data collection_to_xls,
+      filename: "submissions_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+      disposition: 'attachment'
+  end
+
+  # faster collection to Excel
+  def collection_to_xls
+    workbook = FastExcel.open(constant_memory: true) # creates tmp file
+    worksheet = workbook.add_worksheet("Export")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [date_time_style,date_time_style]
+    # Get the survey questions
+    submission = @collection.first
+    survey = submission.survey
+    header = ['Created At', 'Updated At', 'Email']
+    response_columns = {}
+    posn = 3
+    survey.questions.each do |question|
+      next if [:hr, :textonly].include? question.question_type
+      header << question.question
+
+      response_columns[question.id] = posn
+      posn += 1
+    end
+    worksheet.append_row(header)
+
+    @collection.each do |submission|
+      row = [submission.created_at, submission.updated_at, submission.person.email]
+      row.concat Array.new(response_columns.size)
+      submission.responses.each do |response|
+        row[response_columns[response.question_id]] = response.response_as_text
+      end
+      worksheet.append_row(
+        row,
+        styles
+      )
+    end
+    workbook.read_string
+  end
+
   def flat
-    load_resource
     authorize model_class, policy_class: policy_class
+    load_resource
 
     meta = {}
     meta[:total] = @collection_total if paginate
@@ -79,6 +124,15 @@ class Survey::SubmissionsController < ResourceController
   end
 
   def includes
+    [
+      :person,
+      responses: [
+        :question
+      ]
+    ]
+  end
+
+  def references
     [
       :person,
       responses: [

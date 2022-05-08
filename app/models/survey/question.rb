@@ -80,9 +80,9 @@ class Survey::Question < ApplicationRecord
 
   # Check link changes
   def check_linked_update
-    if responses.any? && linked_field_changed?
-      raise 'can not change linked field for a question that has responses in the system'
-    end
+    # if responses.any? && linked_field_changed?
+    #   raise 'can not change linked field for a question that has responses in the system'
+    # end
   end
 
   def check_for_use

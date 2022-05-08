@@ -1265,7 +1265,7 @@ CREATE TABLE public.survey_responses (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     question_id uuid NOT NULL,
-    response json,
+    response jsonb,
     response_as_text text,
     submission_id uuid NOT NULL
 );
@@ -2579,6 +2579,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220502132016'),
 ('20220502152603'),
 ('20220503121253'),
-('20220504140508');
-
-
+('20220504140508'),
+('20220507210839');
