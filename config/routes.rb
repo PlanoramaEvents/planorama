@@ -46,6 +46,7 @@ Rails.application.routes.draw do
 
   get 'report/participant_selections', to: 'reports#participant_selections'
   get 'report/session_selections', to: 'reports#session_selections'
+  get 'report/participant_availabilities', to: 'reports#participant_availabilities'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
