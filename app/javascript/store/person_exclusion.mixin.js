@@ -18,13 +18,9 @@ export const availabilityMixin = {
       update_person_exclusions: UPDATE_PERSON_EXCLUSIONS,
       get_person_exclusions: GET_PERSON_EXCLUSIONS
     }),
-    get_exclusions({person}, success_text = GET_PERSON_EXCLUSION_SUCCESS, error_text = GET_PERSON_EXCLUSION_ERROR) {
+    get_exclusions({person}) {
       this.clear()
-      return this.toastPromise(
-        this.get_person_exclusions({person: person}),
-        success_text,
-        error_text
-      );
+      return this.get_person_exclusions({person: person});
     },
     update_exclusions({person, params}, success_text = UPDATE_PERSON_EXCLUSION_SUCCESS, error_text = UPDATE_PERSON_EXCLUSION_ERROR) {
       this.clear()
