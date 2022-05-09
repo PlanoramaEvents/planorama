@@ -27,10 +27,10 @@ export const personExclusionStore = {
       })
     },
     // Return a promise with the exclusions
-    [GET_PERSON_EXCLUSIONS] ({commit, dispatch, state}) {
+    [GET_PERSON_EXCLUSIONS] ({commit, dispatch, state}, {person}) {
       return new Promise((res, rej) => {
-        if(state.user.id) {
-          dispatch('jv/get',`/person/${state.user.id}/person_exclusion`).then((exclusions) => {
+        if(person.id) {
+          dispatch('jv/get',`/person/${person.id}/person_exclusion`).then((exclusions) => {
             res(exclusions);
           })
         } else {

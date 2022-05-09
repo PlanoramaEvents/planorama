@@ -4,7 +4,9 @@ import {UPDATE_PERSON_EXCLUSIONS, GET_PERSON_EXCLUSIONS} from '@/store/person_ex
 
 import {
   UPDATE_PERSON_EXCLUSION_SUCCESS,
-  UPDATE_PERSON_EXCLUSION_ERROR
+  UPDATE_PERSON_EXCLUSION_ERROR,
+  GET_PERSON_EXCLUSION_SUCCESS,
+  GET_PERSON_EXCLUSION_ERROR
 } from '../constants/strings'
 
 import modelMixin from "./model.mixin";
@@ -14,8 +16,16 @@ export const availabilityMixin = {
   methods: {
     ...mapActions({
       update_person_exclusions: UPDATE_PERSON_EXCLUSIONS,
-      get_exclusions: GET_PERSON_EXCLUSIONS
+      get_person_exclusions: GET_PERSON_EXCLUSIONS
     }),
+    get_exclusions({person}, success_text = GET_PERSON_EXCLUSION_SUCCESS, error_text = GET_PERSON_EXCLUSION_ERROR) {
+      this.clear()
+      return this.toastPromise(
+        this.get_person_exclusions({person: person}),
+        success_text,
+        error_text
+      );
+    },
     update_exclusions({person, params}, success_text = UPDATE_PERSON_EXCLUSION_SUCCESS, error_text = UPDATE_PERSON_EXCLUSION_ERROR) {
       this.clear()
       return this.toastPromise(
@@ -23,7 +33,6 @@ export const availabilityMixin = {
         success_text,
         error_text
       );
-
     }
   }
 }
