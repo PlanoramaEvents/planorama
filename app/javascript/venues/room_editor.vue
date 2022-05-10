@@ -1,8 +1,8 @@
 <template>
   <b-form ref='add-room-form'>
     <model-field label="Name" v-model="roomData.name" type="text" stateless></model-field>
-    <model-field label="Name" v-model="roomData.floor" type="text" stateless></model-field>
-    <model-field label="Name" v-model="roomData.purpose" type="text" stateless></model-field>
+    <model-field label="Floor" v-model="roomData.floor" type="text" stateless></model-field>
+    <model-field label="Purpose" v-model="roomData.purpose" type="text" stateless></model-field>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
       <b-button variant="primary" @click="saveRoom">Save</b-button>
@@ -70,7 +70,7 @@ export default {
     },
     setRoomData(data) {
       //console.log("setRoomData: ", data);
-      if(data && data.name && data['floor'] && data.purpose) {
+      if(data && data.name) {
         this.roomData.name = data.name;
         this.roomData.floor = data['floor'];
         this.roomData.purpose = data.purpose;

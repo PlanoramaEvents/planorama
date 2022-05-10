@@ -7,7 +7,7 @@
       ></RoomsetsTable>
     </div>
     <div style="border: solid">
-      <RoomsetEditor @saved="init"/>
+      <RoomsetEditor @saved="init" ref="roomsetEditor"/>
     </div>
   </div>
 </template>
@@ -32,9 +32,9 @@ export default {
   },
   watch: {
     "selected" : function(val) {
-      alert("in room_sets_manager.selected: val="+JSON.stringify(val));
+      // alert("in room_sets_manager.selected: val="+JSON.stringify(val));
       if(val)
-        this.$refs.roomsetEditor.setRoomsetData(val);
+        this.$refs['roomsetEditor'].setRoomsetData(val);
     }
   },
   methods: {
