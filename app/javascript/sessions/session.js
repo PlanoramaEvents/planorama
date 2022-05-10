@@ -15,6 +15,14 @@ export const session_columns = [
     sortable: true
   },
   {
+    key: 'area.name',
+    sortKey: 'areas.name',
+    search_key: 'areas.name',
+    label: 'Area',
+    type: 'text',
+    sortable: true
+  },
+  {
     key: 'format.name',
     label: 'Format',
     sortKey: 'formats.name',
@@ -28,7 +36,8 @@ export const session_columns = [
   },
   {
     key: 'duration',
-    label: 'Duration'
+    label: 'Duration',
+    // todo formatter here
   },
   {
     key: 'room.name',
@@ -37,58 +46,29 @@ export const session_columns = [
     sortable: true
   },
   {
-    key: 'item_notes',
-    label: 'Item Notes',
-    type: "text"
+    key: 'status',
+    label: 'Status',
   },
   {
     key: 'open_for_interest',
     label: 'Open for Interest',
     type: "radio",
     choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
-  },
-  {
-    key: 'instructions_for_interest',
-    label: 'Interest Instructions',
-    type: "text"
-  },
-  {
-    key: 'minimum_people',
-    label: 'Min Participants'
-  },
-  {
-    key: 'maximum_people',
-    label: 'Max Participants'
+    formatter: (value) => value ? "Yes" : "No"
   },
   {
     key: 'require_signup',
     label: 'Requires Signup',
     type: "radio",
     choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
-  },
-  {
-    key: 'waiting_list_size',
-    label: 'Waiting List Size'
-  },
-  {
-    key: 'audience_size',
-    label: 'Audience Size'
-  },
-  {
-    key: 'is_break',
-    label: 'Is Break',
-    type: "radio",
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
+    formatter: (value) => value ? "Yes" : "No"
   },
   {
     key: 'publish',
     label: 'Publish',
-    type: "radio",
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
+    // type: "radio",
+    // choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
+    // sortable: false
   },
   {
     key: 'visibility',
