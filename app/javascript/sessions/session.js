@@ -15,7 +15,7 @@ export const session_columns = [
     sortable: true
   },
   {
-    key: 'area.name',
+    key: 'area_list',
     sortKey: 'areas.name',
     search_key: 'areas.name',
     label: 'Area',
