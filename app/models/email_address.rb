@@ -1,3 +1,16 @@
+class SinglePrimaryEmail < ActiveModel::Validator
+  def validate(record)
+    emails = EmailAddress.where(isdefault: true, email: record.email).where("person_id != ?", record.person_id)
+    if record.isdefault && emails.any?
+      record.errors.add(
+        :email,
+        "That Primary Email address is already in use"
+      )
+    end
+  end
+end
+
+
 class EmailAddress < ApplicationRecord
   belongs_to :person
 
@@ -5,6 +18,8 @@ class EmailAddress < ApplicationRecord
   after_save  :check_default, :check_contact
 
   has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at]
+
+  validates_with SinglePrimaryEmail
 
   def strip_spaces
     email.strip!

@@ -39,7 +39,7 @@ class Person < ApplicationRecord
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
   has_one :primary_email,
-          -> { where(['isdefault = true']) },
+          -> { where(['email_addresses.isdefault = true']) },
           class_name: 'EmailAddress'
 
   has_many :submissions, class_name: 'Survey::Submission', dependent: :destroy
@@ -53,12 +53,12 @@ class Person < ApplicationRecord
   has_many :convention_roles, dependent: :destroy
   accepts_nested_attributes_for :convention_roles, allow_destroy: true
 
-  # Person roles etc
-  has_many :person_role_assocs
-  has_many :person_roles, through: :person_role_assocs
+  has_and_belongs_to_many :application_roles, class_name: 'ApplicationRole'
 
   has_many  :person_agreements
   has_many  :agreements, through: :person_agreements
+
+  after_update :assigment_consistency
 
   # TODO:
   # - there is talk about having a workflow, including whether a person
@@ -102,27 +102,30 @@ class Person < ApplicationRecord
   validates :name, presence: true
 
   def email
-    addr = contact_email || primary_email || email_addresses.first
+    addr = primary_email || email_addresses.first
 
     addr&.email
   end
 
   # TODO: we need to add contact flag to email address
   def contact_email
-    # return the email used for contact (usually the primary?)
-    EmailAddress.where(iscontact: true).first
+    primary_email
   end
 
   def contact_email=(email)
+    primary_email = email
+  end
+
+  def primary_email=(email)
     # If the email is the same as the primary or any others then
     # we ensure it is flagged as the contact email
     cemail = email_addresses.find_by(email: email)
     if cemail
-      cemail.iscontact = true
+      cemail.isdefault = true
       cemail.save!
     else
       # Otherwise we add it
-      email_addresses.create(email: email, iscontact: true)
+      email_addresses.create(email: email, isdefault: true)
     end
   end
 
@@ -185,6 +188,24 @@ class Person < ApplicationRecord
     if (SessionAssignment.where(person_id: id).count > 0) ||
        (PublishedSessionAssignment.where(person_id: id).count > 0)
       raise 'Cannot delete an assigned person'
+    end
+  end
+
+  # If the state is changed to decline or rejected then they should not
+  # have any assignment roles
+  def assigment_consistency
+    return unless con_state_changed?
+
+    # unassign when declined or rejected (or should we delete?)
+    if con_state == Person.con_states[:declined]
+      self.session_assignments.update_all(
+        session_assignment_role_type: nil
+      )
+    elsif con_state == Person.con_states[:rejected]
+      self.session_assignments.update_all(
+        session_assignment_role_type: nil,
+        state: :rejected
+      )
     end
   end
 

@@ -46,6 +46,7 @@ Rails.application.routes.draw do
 
   get 'report/participant_selections', to: 'reports#participant_selections'
   get 'report/session_selections', to: 'reports#session_selections'
+  get 'report/participant_availabilities', to: 'reports#participant_availabilities'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
@@ -86,6 +87,11 @@ Rails.application.routes.draw do
   resources :responses, path: 'response', controller: 'submission/responses', except: [:index]
 
   get 'rbac', to: 'rbac#index'
+  resources :application_roles, path: 'application_role'
+  post 'application_role/:role_id/assign_people', to: 'application_roles#assign_people'
+  post 'application_role/:role_id/unassign_people', to: 'application_roles#unassign_people'
+  post 'application_role/:role_id/assign_convention_role', to: 'application_roles#assign_convention_role'
+  post 'application_role/:role_id/unassign_convention_role', to: 'application_roles#unassign_convention_role'
 
   resources :formats, path: 'format'
   resources :areas, path: 'area'

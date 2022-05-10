@@ -1,2 +1,0 @@
-class GroupRoleAssoc < ApplicationRecord
-end

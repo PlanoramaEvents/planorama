@@ -21,6 +21,8 @@ gem 'jbuilder', '~> 2.7'
 
 gem "bundler-audit"        # checks for insecure gems
 
+gem 'composite_primary_keys', '~> 13.0' # Version 13.x is designed to work with ActiveRecord 6.1.x
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
@@ -36,6 +38,7 @@ gem 'aasm'
 gem 'devise'
 # gem 'devise-jwt'
 gem 'rack-cors'
+gem 'request_store'
 
 gem 'ranked-model'
 gem "nilify_blanks"

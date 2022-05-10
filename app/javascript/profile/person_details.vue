@@ -8,10 +8,51 @@
         <b-form-input type="text" v-model="editable_person.pseudonym" @blur="onInput"></b-form-input>
       </b-form-group>
       <email-addresses-editor
+        class="mb-4"
         v-model="editable_person"
         model='email_address'
         @input="$emit('input', editable_person)"
       ></email-addresses-editor>
+      <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
+        <b-form-textarea v-model="editable_person.do_not_assign_with" @blur="onInput"></b-form-textarea>
+      </b-form-group>
+      <b-form-group label="Permission to be included in a livestreamed program">
+          <b-form-radio-group
+            stacked
+            v-model="editable_person.can_stream"
+            @change="onInput"
+          >
+            <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
+            <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+          <b-textarea v-model="editable_person.can_stream_exceptions" @blur="onInput"></b-textarea>
+      </b-form-group>
+      <b-form-group label="Permission to be included in a recorded program">
+          <b-form-radio-group
+            stacked
+            v-model="editable_person.can_record"
+            @change="onInput"
+          >
+            <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
+            <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+          <b-textarea v-model="editable_person.can_record_exceptions" @blur="onInput"></b-textarea>
+      </b-form-group>
+      <b-form-group>
+      <b-form-checkbox switch v-model="editable_person.is_local" @change="onInput">Local to the event</b-form-checkbox>
+      </b-form-group>
+      <b-form-group label="Moderating experience">
+        <b-form-textarea v-model="editable_person.moderation_experience" @blur="onInput"></b-form-textarea>
+      </b-form-group>
+      <b-form-group label="Languages spoken">
+        <b-form-checkbox-group stacked>
+          <b-form-checkbox value="polish">Polish</b-form-checkbox>
+          <b-form-checkbox value="spanish">Spanish</b-form-checkbox>
+        </b-form-checkbox-group>
+      </b-form-group>
+
     </div>
     <div class="flex-col w-50 p-2">
       <div><b>I plan to attend the convention:</b></div>
@@ -22,7 +63,7 @@
       >
         <b-form-radio value="in person">In Person</b-form-radio>
         <b-form-radio value="hybrid">In Person AND Virtually</b-form-radio>
-        <b-form-radio value="virtual">Virtual</b-form-radio>
+        <b-form-radio value="virtual">Virtually</b-form-radio>
       </b-form-radio-group>
       <b-form-group label="At the time of the convention I will be at UTC Offset">
         <timezone-selector
@@ -165,6 +206,7 @@ import {
   TIKTOK_ID_INVALID_MSG,
   LINKEDIN_ID_INVALID_MSG
 } from '../constants/strings';
+import settingsMixin from "@/store/settings.mixin";
 
 const { DateTime } = require("luxon");
 
@@ -178,7 +220,8 @@ export default {
     SimpleSocial
   },
   mixins: [
-    modelMixin
+    modelMixin,
+    settingsMixin
   ],
   model: {
     prop: 'person'
@@ -207,7 +250,24 @@ export default {
         return DateTime.now().setZone(this.editable_person.timezone).toLocaleString(DateTime.TIME_SIMPLE)
       }
       return 'Not Set'
-    }
+    },
+    yesLabel() {
+      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "yes") || {
+        label: "Yes",
+        value: "yes"
+      }
+    },
+    noLabel() {
+      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "no") || {
+        label: "No",
+        value: "no"
+      }
+    },
+    maybeLabel() {
+      return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "maybe") || {
+        label: "Yes, except for items focused on the topics listed below.",
+        value: "maybe"};
+    },
   },
   methods: {
     attendanceChanged(arg) {
@@ -222,6 +282,7 @@ export default {
     onInput(arg) {
       this.save(this.editable_person).then(
         (obj) => {
+          console.log(obj);
           this.editable_person = obj
           this.$emit('input',this.editable_person)
         }

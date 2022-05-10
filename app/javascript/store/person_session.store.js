@@ -22,8 +22,7 @@ export const personSessionStore = {
       return state.user;
     },
     currentUserRoles(state, getters) {
-      return Object.entries(state.user.person_roles)
-      .map(r => r[1].role)
+      return Object.entries(state.user.application_roles).map(r => r[1].role)
     },
   },
   actions: {

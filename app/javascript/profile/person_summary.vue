@@ -1,18 +1,21 @@
 <template>
-  <div class="pb-3 pt-3" v-if="person">
-    <div class="d-flex flex-column">
-      <h3>{{person.published_name}}</h3>
+  <div class="container my-3" v-if="person">
+    <div class="row">
+      <div class="col-8">
+        <h3>{{person.published_name}}</h3>
+      </div>
+      <div class="col-4 d-flex flex-row-reverse">
+          <small>Last Login: {{formatLocaleDate(person.current_sign_in_at)}}</small>
+      </div>
+    </div>
+
       <div>
-        {{person.pronouns}}
+        Pronouns: <em>{{person.pronouns}}</em>
+      <div>
+        Willing to moderate sessions: <em>{{willing_to_moderate}}</em>
       </div>
       <div>
-        Willing to moderate sessions: {{willing_to_moderate}}
-      </div>
-      <div>
-        {{person.primary_email.email}}
-      </div>
-      <div>
-        <b>Last Login:</b> {{formatLocaleDate(person.current_sign_in_at)}}
+        Primary email: <em>{{person.primary_email.email}}</em>
       </div>
     </div>
   </div>

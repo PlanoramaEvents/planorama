@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h5>Additional Participants</h5>
     <search-vue
       class="w-75 mt-3"
@@ -77,6 +77,8 @@ export default {
     }
   },
   methods: {
+    // We need to not clear on search ....
+    // fetchPaged(false)
     onSearchChanged(arg) {
       this.filter = arg
     },
@@ -95,6 +97,7 @@ export default {
     // If there is no pager we need to get the initial collection somehow
     // Order should be by created_at date and ranking ...
     // this.fetchPaged(false); // false to not clear store of existing models
+    this.shall_clear = false
   }
 }
 </script>

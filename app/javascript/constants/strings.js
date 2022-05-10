@@ -130,6 +130,8 @@ module.exports = {
 
     UPDATE_PERSON_EXCLUSION_SUCCESS: "Exclusion information has been updated.",
     UPDATE_PERSON_EXCLUSION_ERROR: errorMessage("Error on updating Exclusion information."),
+    GET_PERSON_EXCLUSION_SUCCESS: "Exclusion information has been retrieved.",
+    GET_PERSON_EXCLUSION_ERROR: errorMessage("Error on retrieving Exclusion information."),
 
     UPDATE_AVAILABILITY_SUCCESS: "Availability has been updated.",
     UPDATE_AVAILABILITY_ERROR: errorMessage("Error on updating Availability."),

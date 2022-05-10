@@ -9,8 +9,8 @@ module AccessControlService
       Person: {
         name: { sensitive: false, linkable: true, type: :string},
         pseudonym: { sensitive: false, linkable: true, type: :string},
-        primary_email: { sensitive: true, linkable: false, type: :email},
-        contact_email: { sensitive: true, linkable: true, type: :email},
+        primary_email: { sensitive: false, linkable: false, type: :email},
+        contact_email: { sensitive: false, linkable: true, type: :email},
         last_sign_in_at: { sensitive: true, linkable: false, type: :datetime},
         current_sign_in_at: { sensitive: true, linkable: false, type: :datetime},
         pronouns: { sensitive: true, linkable: true, type: :string},
@@ -62,11 +62,29 @@ module AccessControlService
     }
   end
 
+  #
+  def self.can_execute?(model: , action: , person:)
+    # If the person is an admin then no need to check roles
+    return true if person.convention_roles.collect(&:role).include?('admin')
+
+    policies = PolicyService.policies_for(person: person)
+    model_policy = policies[model.downcase]
+    action_perm = model_policy[action.to_s] if model_policy
+
+    return action_perm ? action_perm : false
+  end
+
   # Return a list of sensitive attributes for the given model
   def self.sensitive_attributes(model:)
+    return RequestStore.store["sensitive_attributes_store"] if RequestStore.store["sensitive_attributes_store"]
+
+    RequestStore.store["sensitive_attributes_store"] = []
     return [] unless attribute_meta_data[model.to_sym]
 
-    attribute_meta_data[model.to_sym].filter{|k,v| v[:sensitive]}.keys
+    res = attribute_meta_data[model.to_sym].filter{|k,v| v[:sensitive]}.keys
+    RequestStore.store["sensitive_attributes_store"] = res
+
+    res
   end
 
   # Return a list of linkable attributes for the given model
@@ -78,15 +96,12 @@ module AccessControlService
   def self.allowed_sensitive_access?(person:)
     return false unless person
 
-    # TODO: add rbac check with DB, based on the role
-    # Rails.logger.debug("******** ALLOWED FOR #{person}")
+    # This is the hard-wired mechanism to limit sensitive information to admins for now
+    return true if person.convention_roles.collect(&:role).include?('admin')
 
-    # Get the role for the person
-    # if that role allow access to sensitive info then true else false
-
-    # NOTE: this is the hard-wired mechanism to limit sensitive information to
-    # admins for now
-    person.convention_roles.collect(&:role).include?('admin')
+    # Use rbac of the person is not an admin
+    policies = PolicyService.policies_for(person: person)
+    return policies[:sensitive_access]
   end
 
   # Return a list of attributes that are not allowed for the person from this instance
@@ -113,7 +128,6 @@ module AccessControlService
   def self.linked_field_access?(linked_field:, person:)
     fields = linked_field.split('.',2)
     return true unless sensitive_attributes(model: fields[0]).include? fields[1].to_sym
-
     allowed_sensitive_access?(person: person)
   end
 

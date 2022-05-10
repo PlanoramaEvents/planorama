@@ -55,6 +55,7 @@ export const modelMixin = {
     },
     // need a save instance
     save(instance) {
+      console.log(instance);
       return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, selected: false, item: instance}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
     },
     delete_by_id(id) {
