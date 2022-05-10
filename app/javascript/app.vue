@@ -1,17 +1,17 @@
 <template>
-  <b-overlay :show="showOverlay" rounded="sm">
-    <div class="container-fluid">
-      <sign-agreements ref="agreement-signer"></sign-agreements>
-      <div class="row">
-        <top-navbar></top-navbar>
-        <side-navbar v-if="loggedIn"></side-navbar>
-        <div :class="['col-12 pr-0', { 'col-sm-10': loggedIn, 'col-xl-10': loggedIn}]">
-          <router-view></router-view>
-        </div>
-        <bottom-navbar></bottom-navbar>
+  <div class="container-fluid">
+    <sign-agreements ref="agreement-signer"></sign-agreements>
+    <div class="row">
+      <top-navbar></top-navbar>
+      <side-navbar v-if="loggedIn"></side-navbar>
+      <div :class="['col-12 pr-0', { 'col-sm-10': loggedIn, 'col-xl-10': loggedIn}]">
+        <b-overlay :show="showOverlay">
+        <router-view></router-view>
+        </b-overlay>
       </div>
+      <bottom-navbar></bottom-navbar>
     </div>
-  </b-overlay>
+  </div>
 </template>
 
 <script>
