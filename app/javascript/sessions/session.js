@@ -20,7 +20,8 @@ export const session_columns = [
     search_key: 'areas.name',
     label: 'Area',
     type: 'text',
-    sortable: true
+    sortable: true,
+    formatter: (value) => value && value.length ? value.join(", ") : value
   },
   {
     key: 'format.name',
