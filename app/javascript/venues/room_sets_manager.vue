@@ -1,27 +1,27 @@
 <template>
   <div>
     <div style="padding-bottom: 25px">
-      <RoomsetsTable
+      <RoomSetsTable
           defaultFilter=''
           ref="room-sets-table"
-      ></RoomsetsTable>
+      ></RoomSetsTable>
     </div>
     <div style="border: solid">
-      <RoomsetEditor @saved="init"/>
+      <RoomSetEditor @saved="init"/>
     </div>
   </div>
 </template>
 
 
 <script>
-import RoomsetsTable from "./roomsets_table";
-import RoomsetEditor from "./roomset_editor";
+import RoomSetsTable from "./room_sets_table";
+import RoomSetEditor from "./room_set_editor";
 import modelMixin from '../store/model.mixin'
-import {roomset_columns as columns} from "./roomset.js";
+import {room_set_columns as columns} from "./room_set.js";
 
 export default {
   name: "RoomsManager",
-  components: {RoomsetEditor, RoomsetsTable},
+  components: {RoomSetEditor, RoomSetsTable},
   mixins: [
     modelMixin,
   ],
@@ -34,7 +34,7 @@ export default {
     "selected" : function(val) {
       alert("in room_sets_manager.selected: val="+JSON.stringify(val));
       if(val)
-        this.$refs.roomsetEditor.setRoomsetData(val);
+        this.$refs.roomSetEditor.setRoomSetData(val);
     }
   },
   methods: {

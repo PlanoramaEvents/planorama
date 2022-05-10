@@ -1,4 +1,4 @@
-export const roomset_columns = [
+export const room_set_columns = [
   {
     key: 'name',
     label: 'Name',

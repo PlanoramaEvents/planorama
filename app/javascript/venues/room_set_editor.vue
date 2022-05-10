@@ -1,10 +1,10 @@
 <template>
-  <b-form ref='add-roomset-form'>
-    <model-field label="Name" v-model="roomsetData.name" type="text" stateless></model-field>
-    <model-field label="Description" v-model="roomsetData.description" type="text" stateless></model-field>
+  <b-form ref='add-room-set-form'>
+    <model-field label="Name" v-model="roomSetData.name" type="text" stateless></model-field>
+    <model-field label="Description" v-model="roomSetData.description" type="text" stateless></model-field>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
-      <b-button variant="primary" @click="saveRoomset">Save</b-button>
+      <b-button variant="primary" @click="saveRoomSet">Save</b-button>
     </div>
   </b-form>
 </template>
@@ -16,10 +16,10 @@ import { VENUES_ADD_ROOMSET_SUCCESS } from '@/constants/strings';
 import ModelField from '../shared/model-field';
 
 import { mapActions } from 'vuex';
-import { NEW_ROOMSET } from '@/store/roomset.store';
+import { NEW_ROOMSET } from '@/store/room_set.store';
 
 export default {
-  name: "RoomsetEditor",
+  name: "RoomSetEditor",
   components: {
     ModelField,
   },
@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      roomsetData: {
+      roomSetData: {
         name: '',
         description: '',
       },
@@ -58,27 +58,27 @@ export default {
     // }
   },
   methods: {
-    ...mapActions({newRoomsetAction: NEW_ROOMSET}),
+    ...mapActions({newRoomSetAction: NEW_ROOMSET}),
     clear() {
-      this.roomsetData.name = '';
-      this.roomsetData.description = '';
+      this.roomSetData.name = '';
+      this.roomSetData.description = '';
     },
-    setRoomsetData(data) {
+    setRoomSetData(data) {
       //console.log("setRoomsetData: ", data);
       if(data && data.name && data.description) {
         this.roomsetData.name = data.name;
         this.roomsetData.description = data.description;
       }
     },
-    saveRoomset() {
-      let res = this.newRoomsetAction(this.roomsetData);
+    saveRoomSet() {
+      let res = this.newRoomSetAction(this.roomSetData);
       res.then(
         (obj) => {
           this.$bvToast.toast(
             VENUES_ADD_ROOMSET_SUCCESS(obj.title),
             {
               variant: 'success',
-              title: 'Roomset Created'
+              title: 'Room Set Created'
             }
           )
           this.clear()

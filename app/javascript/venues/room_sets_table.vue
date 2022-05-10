@@ -1,10 +1,10 @@
 <template>
   <table-vue
-    :model="roomset"
+    :model="roomSetModel"
     :columns="columns"
     :show-add="false"
     :show-settings="false"
-    ref="roomsets-table"
+    ref="room-sets-table"
   >
     <template #cell(name)="{ item }">
       <tooltip-overflow v-if="item.name" :title="item.name">
@@ -17,12 +17,12 @@
 <script>
 import TableVue from '../components/table_vue';
 import TooltipOverflow from '../shared/tooltip-overflow';
-import { roomset_columns as columns } from './roomset';
+import { room_set_columns as columns } from './room_set';
 import { mapActions } from 'vuex';
-import { NEW_ROOMSET, roomsetModel as roomset} from '../store/roomset.store.js';
+import { NEW_ROOMSET, roomSetModel as roomSetModel} from '../store/room_set.store.js';
 
 export default {
-  name: 'RoomsetsTable',
+  name: 'RoomSetsTable',
   components: {
     TableVue,
     TooltipOverflow
@@ -30,13 +30,13 @@ export default {
   data() {
     return {
       columns,
-      roomset
+      roomSetModel
     }
   },
   methods: {
-    ...mapActions({newRoomset: NEW_ROOMSET}),
+    ...mapActions({newRoomSet: NEW_ROOMSET}),
     init() {
-      this.$refs['roomsets-table'].fetchPaged()
+      this.$refs['room-sets-table'].fetchPaged()
     }
   }
 }

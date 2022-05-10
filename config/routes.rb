@@ -104,6 +104,7 @@ Rails.application.routes.draw do
   resources :session_assignments, path: 'session_assignment'
   get 'session_assignment/:id/unexpress_interest(/:person_id)', to: 'session_assignments#unexpress_interest'
 
+  resources :room_sets, path: 'room_set'
   resources :rooms, path: 'room'
   resources :venues, path: 'venue'
   resources :tag_contexts, path: 'tag_context'

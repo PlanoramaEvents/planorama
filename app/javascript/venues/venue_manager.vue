@@ -8,7 +8,7 @@
         <VenuesManager model="venue" ref="venues-manager"></VenuesManager>
       </b-tab>
       <b-tab title="Room Setups">
-        <RoomsetsManager model="roomset" ref="roomsets-manager"></RoomsetsManager>
+        <RoomSetsManager model="roomset" ref="room-sets-manager"></RoomSetsManager>
       </b-tab>
     </b-tabs>
   </div>
@@ -17,11 +17,11 @@
 <script>
 import RoomsManager from './rooms_manager.vue';
 import VenuesManager from './venues_manager.vue';
-import RoomsetsManager from './roomsets_manager.vue';
+import RoomSetsManager from './room_sets_manager.vue';
 
 export default {
   name: "VenueManager",
-  components: {RoomsManager, VenuesManager, RoomsetsManager},
+  components: {RoomsManager, VenuesManager, RoomSetsManager},
   data() {
     return {
       activated: false
@@ -31,7 +31,7 @@ export default {
     input() {
       if(!this.activated) {
         this.$refs['rooms-manager'].init();
-        this.$refs['roomsets-manager'].init();
+        this.$refs['room-sets-manager'].init();
         this.$refs['venues-manager'].init();
         this.activated=true;
       }
