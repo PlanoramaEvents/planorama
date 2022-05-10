@@ -32,7 +32,7 @@ export default {
   },
   watch: {
     "selected" : function(val) {
-      alert("in room_sets_manager.selected: val="+JSON.stringify(val));
+      // alert("in room_sets_manager.selected: val="+JSON.stringify(val));
       if(val)
         this.$refs.roomSetEditor.setRoomSetData(val);
     }

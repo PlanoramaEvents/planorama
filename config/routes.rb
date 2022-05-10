@@ -106,6 +106,7 @@ Rails.application.routes.draw do
 
   resources :room_sets, path: 'room_set'
   resources :rooms, path: 'room'
+  resources :roomsets, path: 'roomset'
   resources :venues, path: 'venue'
   resources :tag_contexts, path: 'tag_context'
   resources :configurations, path: 'configuration'

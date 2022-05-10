@@ -1,4 +1,4 @@
-class RoomSetPolicy < PlannerPolicy
+class RoomSetsPolicy < PlannerPolicy
   class Scope < PlannerPolicy::Scope
     def resolve
       scope.all

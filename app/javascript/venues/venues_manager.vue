@@ -7,7 +7,7 @@
       ></VenuesTable>
     </div>
     <div style="border: solid">
-      <VenueEditor @saved="init"/>
+      <VenueEditor @saved="init" ref="venueEditor"/>
     </div>
   </div>
 </template>
@@ -32,9 +32,9 @@ export default {
   },
   watch: {
     "selected" : function(val) {
-      alert("in venues_manager.selected: val="+JSON.stringify(val));
+      // alert("in venues_manager.selected: val="+JSON.stringify(val));
       if(val)
-        this.$refs.venueEditor.setVenueData(val);
+        this.$refs['venueEditor'].setVenueData(val);
     }
   },
   methods: {
