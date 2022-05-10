@@ -37,11 +37,13 @@ import { CustomIconsPlugin } from '../icons';
 import AsyncComputed from 'vue-async-computed';
 import CKEditor from 'ckeditor4-vue';
 import VuePluralize from 'vue-pluralize';
+/*
 Vue.config.errorHandler = (err, vm, info) => {
   console.error(err);
   window.alert("Whoops! We messed up! Click ok to reload the page.")
   window.location.reload();
 }
+*/
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
