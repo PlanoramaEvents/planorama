@@ -23,6 +23,11 @@
           <span v-html="item.description"></span>
         </tooltip-overflow>
       </template>
+      <template #cell(area_list)="{ item }">
+        <tooltip-overflow v-if="item.area_list" :title="formatAreas(item.area_list)">
+          <span>{{item.area_list && item.area_list.length ? item.area_list.join(", ") : item.area_list}}</span>
+        </tooltip-overflow>
+      </template>
       <!-- placeholder cols -->
       <template #cell(status)>
         <div class="text-center text-muted">&mdash;</div>
@@ -56,6 +61,9 @@ export default {
     model
   }),
   methods: {
+    formatAreas(areas) {
+      return areas && areas.length ? areas.join("<br/>") : areas
+    },
     onNew() {
     },
     onSave() {
