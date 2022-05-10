@@ -1,6 +1,7 @@
 class SinglePrimaryEmail < ActiveModel::Validator
   def validate(record)
-    if record.isdefault && EmailAddress.where(isdefault: true, email: record.email).any?
+    emails = EmailAddress.where(isdefault: true, email: record.email).where("person_id != ?", record.person_id)
+    if record.isdefault && emails.any?
       record.errors.add(
         :email,
         "That Primary Email address is already in use"

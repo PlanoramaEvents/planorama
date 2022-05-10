@@ -39,7 +39,7 @@ class Person < ApplicationRecord
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
   has_one :primary_email,
-          -> { where(['isdefault = true']) },
+          -> { where(['email_addresses.isdefault = true']) },
           class_name: 'EmailAddress'
 
   has_many :submissions, class_name: 'Survey::Submission', dependent: :destroy
@@ -104,27 +104,30 @@ class Person < ApplicationRecord
   validates :name, presence: true
 
   def email
-    addr = contact_email || primary_email || email_addresses.first
+    addr = primary_email || email_addresses.first
 
     addr&.email
   end
 
   # TODO: we need to add contact flag to email address
   def contact_email
-    # return the email used for contact (usually the primary?)
-    EmailAddress.where(iscontact: true).first
+    primary_email
   end
 
   def contact_email=(email)
+    primary_email = email
+  end
+
+  def primary_email=(email)
     # If the email is the same as the primary or any others then
     # we ensure it is flagged as the contact email
     cemail = email_addresses.find_by(email: email)
     if cemail
-      cemail.iscontact = true
+      cemail.isdefault = true
       cemail.save!
     else
       # Otherwise we add it
-      email_addresses.create(email: email, iscontact: true)
+      email_addresses.create(email: email, isdefault: true)
     end
   end
 

@@ -216,23 +216,6 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: action_permissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.action_permissions (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    mdl_name character varying,
-    action character varying,
-    allowed boolean DEFAULT false,
-    person_role_id uuid,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    action_scope character varying
-);
-
-
---
 -- Name: agreements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -248,6 +231,45 @@ CREATE TABLE public.agreements (
     lock_version integer DEFAULT 0,
     target public.agreement_target,
     description character varying(10000) DEFAULT NULL::character varying
+);
+
+
+--
+-- Name: application_role_assocs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.application_role_assocs (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    application_role_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: application_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.application_roles (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    name character varying NOT NULL,
+    sensitive_access boolean DEFAULT false,
+    lock_version integer DEFAULT 0,
+    con_roles text[] DEFAULT '{}'::text[]
+);
+
+
+--
+-- Name: application_roles_people; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.application_roles_people (
+    application_role_id uuid,
+    person_id uuid
 );
 
 
@@ -690,6 +712,20 @@ CREATE TABLE public.mailings (
 
 
 --
+-- Name: model_permissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.model_permissions (
+    mdl_name character varying NOT NULL,
+    application_role_id uuid NOT NULL,
+    actions jsonb,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: parameter_names; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -864,32 +900,6 @@ CREATE TABLE public.person_mailing_assignments (
 
 
 --
--- Name: person_role_assocs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_role_assocs (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid,
-    person_role_id uuid,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: person_roles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_roles (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    can_access_sensitive_data boolean DEFAULT false
-);
-
-
---
 -- Name: publication_dates; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -970,7 +980,8 @@ CREATE TABLE public.room_sets (
     description character varying,
     sort_order integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -1254,7 +1265,7 @@ CREATE TABLE public.survey_responses (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
     question_id uuid NOT NULL,
-    response json,
+    response jsonb,
     response_as_text text,
     submission_id uuid NOT NULL
 );
@@ -1450,14 +1461,6 @@ ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.ver
 
 
 --
--- Name: action_permissions action_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.action_permissions
-    ADD CONSTRAINT action_permissions_pkey PRIMARY KEY (id);
-
-
---
 -- Name: agreements agreements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1626,6 +1629,14 @@ ALTER TABLE ONLY public.mailings
 
 
 --
+-- Name: model_permissions model_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.model_permissions
+    ADD CONSTRAINT model_permissions_pkey PRIMARY KEY (mdl_name, application_role_id);
+
+
+--
 -- Name: parameter_names parameter_names_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1674,18 +1685,18 @@ ALTER TABLE ONLY public.person_mailing_assignments
 
 
 --
--- Name: person_role_assocs person_role_assocs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: application_role_assocs person_role_assocs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.person_role_assocs
+ALTER TABLE ONLY public.application_role_assocs
     ADD CONSTRAINT person_role_assocs_pkey PRIMARY KEY (id);
 
 
 --
--- Name: person_roles person_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: application_roles person_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.person_roles
+ALTER TABLE ONLY public.application_roles
     ADD CONSTRAINT person_roles_pkey PRIMARY KEY (id);
 
 
@@ -1898,6 +1909,13 @@ ALTER TABLE ONLY public.versions
 
 
 --
+-- Name: application_role_assocs_app_role_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX application_role_assocs_app_role_idx ON public.application_role_assocs USING btree (application_role_id);
+
+
+--
 -- Name: by_active_status; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1954,13 +1972,6 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
--- Name: index_action_permissions_on_mdl_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_action_permissions_on_mdl_name ON public.action_permissions USING btree (mdl_name);
-
-
---
 -- Name: index_agreements_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1979,6 +1990,27 @@ CREATE INDEX index_agreements_on_target ON public.agreements USING btree (target
 --
 
 CREATE INDEX index_agreements_on_updated_by_id ON public.agreements USING btree (updated_by_id);
+
+
+--
+-- Name: index_application_roles_on_con_roles; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_application_roles_on_con_roles ON public.application_roles USING gin (con_roles);
+
+
+--
+-- Name: index_application_roles_people_on_application_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_application_roles_people_on_application_role_id ON public.application_roles_people USING btree (application_role_id);
+
+
+--
+-- Name: index_application_roles_people_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_application_roles_people_on_person_id ON public.application_roles_people USING btree (person_id);
 
 
 --
@@ -2035,6 +2067,13 @@ CREATE INDEX index_magic_links_on_person_id ON public.magic_links USING btree (p
 --
 
 CREATE INDEX index_mailings_on_mailing_state ON public.mailings USING btree (mailing_state);
+
+
+--
+-- Name: index_model_permissions_on_application_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_model_permissions_on_application_role_id ON public.model_permissions USING btree (application_role_id);
 
 
 --
@@ -2126,13 +2165,6 @@ CREATE INDEX index_person_mailing_assignments_on_mailing_id ON public.person_mai
 --
 
 CREATE INDEX index_person_mailing_assignments_on_person_id ON public.person_mailing_assignments USING btree (person_id);
-
-
---
--- Name: index_person_role_assocs_on_person_id_and_person_role_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_person_role_assocs_on_person_id_and_person_role_id ON public.person_role_assocs USING btree (person_id, person_role_id);
 
 
 --
@@ -2308,6 +2340,13 @@ CREATE UNIQUE INDEX index_tags_on_name ON public.tags USING btree (name);
 --
 
 CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING btree (item_type, item_id);
+
+
+--
+-- Name: par_approle_person_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX par_approle_person_idx ON public.application_roles_people USING btree (application_role_id, person_id);
 
 
 --
@@ -2533,6 +2572,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220424181346'),
 ('20220426010537'),
 ('20220427170202'),
-('20220428205309');
+('20220428205309'),
+('20220501155733'),
+('20220501160504'),
+('20220501200956'),
+('20220502132016'),
+('20220502152603'),
+('20220503121253'),
+('20220504140508'),
+('20220507210839');
 
 

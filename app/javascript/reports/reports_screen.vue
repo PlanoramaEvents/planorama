@@ -8,6 +8,9 @@
       <li>
         <a href="/report/session_selections" target="_blank">Session Selections</a>
       </li>
+      <li>
+        <a href="/report/participant_availabilities" target="_blank">Participant Availabilities</a>
+      </li>
     </ul>
 
   </div>
