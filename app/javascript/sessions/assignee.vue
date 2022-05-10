@@ -12,21 +12,21 @@
         Session moderation preference: <span class="first-capital"><em>{{sessionModPreference}}</em></span>
       </div>
       <div class="mr-2">
-        Attendance Type: <em>{{assignee.attendance_type | capitalize | na_if_empty}}</em>
+        Attendance type: <em>{{assignee.attendance_type | capitalize | na_if_empty}}</em>
       </div>
       <div class="mr-2">
-        Accessibility Concerns: <em>{{assignee.needs_accommodations ? 'Y' : 'N'}}</em>
+        Accessibility concerns: <em>{{assignee.needs_accommodations ? 'Y' : 'N'}}</em>
       </div>
     </div>
     <div class="mt-2">
       <div v-if="noInterestExpressed"><em>Did not express interest</em></div>
       <div>Status: <em>{{assignee.con_state}}</em></div>
-      <h6>Session Comments</h6>
+      <h6>Session comments</h6>
       <div class="ml-2 keep-format" v-if="assignment">{{assignment.interest_notes | na_if_empty}}</div>
       <div class="ml-2" v-else>N/A</div>
     </div>
     <div class="mt-2">
-      <h6>Other Demographic concerns</h6>
+      <h6>Other demographic categories</h6>
       <div class="ml-2">
         {{assignee.demographic_categories | na_if_empty}}
       </div>

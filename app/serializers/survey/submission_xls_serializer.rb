@@ -23,8 +23,9 @@ class Survey::SubmissionXlsSerializer < ActiveModel::Serializer #< Survey::Submi
 
   # dynamic fields for columns
   def response_columns
-    res = []
+    return RequestStore.store["response_columns_store"] if RequestStore.store["response_columns_store"]
 
+    res = []
     if @model_id
       survey = Survey.find @model_id
       questions = survey.questions
@@ -42,6 +43,8 @@ class Survey::SubmissionXlsSerializer < ActiveModel::Serializer #< Survey::Submi
         end
       end
     end
+
+    RequestStore.store["response_columns_store"] = res
 
     res
   end

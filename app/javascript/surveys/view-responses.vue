@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="survey">
-      <p>Download responses: <a :href="downloadLink" :download="filename">{{filename}}</a></p>
+      <p>Download responses: <b-button variant="link" @click="downloadWithAxios(downloadLink, filename)">{{filename}}</b-button></p>
       <p>There are <em>{{survey.nbr_submissions}}</em> total responses.</p>
     </div>
     <table-vue
@@ -40,6 +40,8 @@ import {
 import TableVue from '../components/table_vue';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import { submissionModel, surveyModel } from '@/store/survey';
+import {http as axios} from '../http';
+
 export default {
   name: 'ViewReponses',
   props: {
@@ -112,6 +114,32 @@ export default {
     },
   },
   methods: {
+    forceFileDownload(response, title) {
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', title)
+      document.body.appendChild(link)
+      link.click()
+    },
+
+    downloadWithAxios(url, title) {
+      this.$router.app.$refs.planorama.displayOverlay()
+      axios({
+        method: 'get',
+        url,
+        responseType: 'arraybuffer',
+      })
+        .then((response) => {
+          this.forceFileDownload(response, title)
+          this.$router.app.$refs.planorama.hideOverlay()
+        })
+        .catch(
+          () => {
+            this.$router.app.$refs.planorama.hideOverlay()
+          }
+        )
+    },
     init() {
       if (!this.survey || !this.survey.pages) {
         this.selectSurvey(this.surveyId)

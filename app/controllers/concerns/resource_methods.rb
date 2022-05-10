@@ -12,10 +12,10 @@ module ResourceMethods
     authorize model_class, policy_class: policy_class
 
     meta = {}
-    meta[:total] = @collection_total if paginate
-    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total if paginate
-    meta[:current_page] = @current_page if @current_page.present? && paginate
-    meta[:perPage] = @per_page if @per_page.present? && paginate
+    meta[:total] = @collection_total if paginated
+    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total if paginated
+    meta[:current_page] = @current_page if @current_page.present? && paginated
+    meta[:perPage] = @per_page if @per_page.present? && paginated
     format = params[:format]
 
     if format == 'xls' || format == 'xlsx'
@@ -165,9 +165,9 @@ module ResourceMethods
   end
 
   def collection_params(do_paginate: true)
-    per_page = params[:perPage]&.to_i || model_class.default_per_page if paginate && do_paginate
-    per_page = nil unless paginate && do_paginate
-    current_page = params[:current_page]&.to_i || 1 if paginate && do_paginate
+    per_page = params[:perPage]&.to_i || model_class.default_per_page if paginated && do_paginate
+    per_page = nil unless paginated && do_paginate
+    current_page = params[:current_page]&.to_i || 1 if paginated && do_paginate
     filters = JSON.parse(params[:filter]) if params[:filter].present?
 
     return per_page, current_page, filters
@@ -227,7 +227,7 @@ module ResourceMethods
     q = q.order(order_string)
 
     # TODO we need the size without the query
-    if paginate
+    if paginated
       @full_collection_total = policy_scope(base, policy_scope_class: policy_scope_class)
                             .where(exclude_deleted_clause)
                             .distinct
@@ -235,7 +235,7 @@ module ResourceMethods
       instance_variable_set("@#{controller_name}", @full_collection_total)
     end
 
-    if paginate
+    if paginated
       q.page(@current_page).per(@per_page)
     else
       q
@@ -489,8 +489,8 @@ module ResourceMethods
       instance_variable_set("@#{object_name}", @object)
     else
       @collection ||= collection
-      @collection_total ||= collection.total_count if paginate
-      @collection_total ||= collection.size unless paginate
+      @collection_total ||= collection.total_count if paginated
+      @collection_total ||= collection.size unless paginated
 
       instance_variable_set("@#{controller_name}", @collection_total)
       instance_variable_set("@#{controller_name}", @collection)
@@ -623,6 +623,13 @@ module ResourceMethods
 
   def paginate
     true
+  end
+
+  def paginated
+    format = params[:format]
+    return false if format == 'xls' || format == 'xlsx'
+
+    paginate
   end
 
   def permitted_params()

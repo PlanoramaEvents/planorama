@@ -27,6 +27,7 @@ const profileRoutes = [
   { path: 'session-selection', component: ProfileTabs, props: {tab: 'session-selection'} },
   { path: 'session-ranking', component: ProfileTabs, props: {tab: 'session-ranking'} },
   { path: 'availability', component: ProfileTabs, props: {tab: 'availability'} },
+  { path: 'other', component: ProfileTabs, props: {tab: 'other'} },
   { path: '', component: ProfileTabs, props: true }
 ]
 
@@ -35,6 +36,7 @@ const personRoutes = [
   { path: 'session-selection/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
   { path: 'session-ranking/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
   { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
+  { path: 'other/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'other'}) },
   { path: '', component: PeopleList }
 ]
 

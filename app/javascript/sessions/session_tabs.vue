@@ -15,7 +15,6 @@
           v-model="session"
           defaultSortBy='session_assignments.interest_ranking, people.published_name'
           :defaultSortDesc="false"
-          defaultO
           :perPage="200"
           :model="sessionAssignmentModel"
           :defaultFilter="assignmentFilter"
@@ -26,8 +25,10 @@
       <b-tab title="Schedule" :active="tab === 'session-schedule'" disabled lazy>
         Schedule
       </b-tab>
-      <b-tab title="Notes" :active="tab === 'session-notes'" disabled lazy>
-        Notes
+      <b-tab title="Notes" :active="tab === 'session-notes'">
+        <session-notes
+          v-model="session"
+        ></session-notes>
       </b-tab>
     </b-tabs>
   </div>
@@ -42,6 +43,7 @@ import modelUtilsMixin from '@/store/model_utils.mixin';
 import AssignParticipants from './assign_participants'
 import SessionSummary from './session_summary'
 import SessionEdit from './session_edit'
+import SessionNotes from './session_notes'
 
 import {
   sessionMixin
@@ -56,7 +58,8 @@ export default {
   components: {
     SessionSummary,
     AssignParticipants,
-    SessionEdit
+    SessionEdit,
+    SessionNotes
   },
   mixins: [
     modelUtilsMixin

@@ -1,15 +1,17 @@
 <template>
-  <div class="container-fluid">
-    <sign-agreements ref="agreement-signer"></sign-agreements>
-    <div class="row">
-      <top-navbar></top-navbar>
-      <side-navbar v-if="loggedIn"></side-navbar>
-      <div :class="['col-12 pr-0', { 'col-sm-10': loggedIn, 'col-xl-10': loggedIn}]">
-        <router-view></router-view>
+  <b-overlay :show="showOverlay" rounded="sm">
+    <div class="container-fluid">
+      <sign-agreements ref="agreement-signer"></sign-agreements>
+      <div class="row">
+        <top-navbar></top-navbar>
+        <side-navbar v-if="loggedIn"></side-navbar>
+        <div :class="['col-12 pr-0', { 'col-sm-10': loggedIn, 'col-xl-10': loggedIn}]">
+          <router-view></router-view>
+        </div>
+        <bottom-navbar></bottom-navbar>
       </div>
-      <bottom-navbar></bottom-navbar>
     </div>
-  </div>
+  </b-overlay>
 </template>
 
 <script>
@@ -51,10 +53,21 @@ export default  {
     SignAgreements
   },
   mixins: [personSessionMixin, settingsMixin],
+  data() {
+    return {
+      showOverlay: false
+    }
+  },
   methods: {
     check_signatures() {
       // TODO: @RALPH - this passes along the check signatures to the agreement signer ...
       this.$refs['agreement-signer'].check_signatures()
+    },
+    displayOverlay() {
+      this.showOverlay = true
+    },
+    hideOverlay() {
+      this.showOverlay = false
     }
   },
   mounted() {
