@@ -62,7 +62,7 @@ export default {
   }),
   methods: {
     formatAreas(areas) {
-      return areas && areas.length ? areas.join("<br/>") : ''
+      return areas && areas.length ? areas.join(", ") : ''
     },
     onNew() {
     },
