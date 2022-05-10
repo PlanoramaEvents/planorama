@@ -1,4 +1,4 @@
-class RoomSetsPolicy < PlannerPolicy
+class RoomsetsPolicy < PlannerPolicy
   def index?
     true
   end

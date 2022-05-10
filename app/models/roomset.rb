@@ -1,4 +1,4 @@
-class RoomSet < ApplicationRecord
+class Roomset < ApplicationRecord
   include RankedModel
   ranks :sort_order
 

@@ -961,20 +961,6 @@ CREATE TABLE public.published_sessions (
 
 
 --
--- Name: room_sets; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.room_sets (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    name character varying,
-    description character varying,
-    sort_order integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
 -- Name: rooms; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -994,7 +980,21 @@ CREATE TABLE public.rooms (
     is_virtual boolean DEFAULT false,
     dimensions text,
     area_of_space numeric,
-    room_set_id uuid
+    roomset_id uuid
+);
+
+
+--
+-- Name: roomsets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.roomsets (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    description character varying,
+    sort_order integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1746,10 +1746,10 @@ ALTER TABLE ONLY public.published_sessions
 
 
 --
--- Name: room_sets room_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: roomsets room_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.room_sets
+ALTER TABLE ONLY public.roomsets
     ADD CONSTRAINT room_sets_pkey PRIMARY KEY (id);
 
 
@@ -2150,10 +2150,10 @@ CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions 
 
 
 --
--- Name: index_rooms_on_room_set_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_rooms_on_roomset_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_rooms_on_room_set_id ON public.rooms USING btree (room_set_id);
+CREATE INDEX index_rooms_on_roomset_id ON public.rooms USING btree (roomset_id);
 
 
 --
@@ -2383,6 +2383,14 @@ ALTER TABLE ONLY public.configurations
 
 
 --
+-- Name: rooms fk_rails_13b78b2c4b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rooms
+    ADD CONSTRAINT fk_rails_13b78b2c4b FOREIGN KEY (roomset_id) REFERENCES public.roomsets(id);
+
+
+--
 -- Name: survey_questions fk_rails_35518ef583; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2420,14 +2428,6 @@ ALTER TABLE ONLY public.survey_pages
 
 ALTER TABLE ONLY public.survey_submissions
     ADD CONSTRAINT fk_rails_cca09747da FOREIGN KEY (person_id) REFERENCES public.people(id);
-
-
---
--- Name: rooms fk_rails_d2498419d7; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rooms
-    ADD CONSTRAINT fk_rails_d2498419d7 FOREIGN KEY (room_set_id) REFERENCES public.room_sets(id);
 
 
 --
@@ -2533,6 +2533,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220424181346'),
 ('20220426010537'),
 ('20220427170202'),
-('20220428205309');
+('20220428205309'),
+('20220510005255');
 
 
