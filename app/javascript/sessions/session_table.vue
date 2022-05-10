@@ -1,5 +1,5 @@
 <template>
-  <div class="scrollable">
+  <div>
     <table-vue
       @new="onNew"
       defaultSortBy='sessions.title'
@@ -23,10 +23,15 @@
           <span v-html="item.description"></span>
         </tooltip-overflow>
       </template>
-      <template #cell(instructions_for_interest)="{ item }">
-        <tooltip-overflow v-if="item.instructions_for_interest" :title="item.instructions_for_interest">
-          <span v-html="item.instructions_for_interest"></span>
-        </tooltip-overflow>
+      <!-- placeholder cols -->
+      <template #cell(status)>
+        <div class="text-center text-muted">&mdash;</div>
+      </template>
+      <template #cell(publish)>
+        <div class="text-center text-muted">&mdash;</div>
+      </template>
+      <template #cell(visibility)>
+        <div class="text-center text-muted">&mdash;</div>
       </template>
     </table-vue>
   </div>
