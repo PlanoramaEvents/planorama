@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scrollable">
     <div style="padding-bottom: 25px">
       <VenuesTable
           defaultFilter=''

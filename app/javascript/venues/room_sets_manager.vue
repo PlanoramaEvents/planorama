@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scrollable">
     <div style="padding-bottom: 25px">
       <RoomSetsTable
           defaultFilter=''
@@ -20,7 +20,7 @@ import modelMixin from '../store/model.mixin'
 import {room_set_columns as columns} from "./room_set.js";
 
 export default {
-  name: "RoomsManager",
+  name: "RoomSetsManager",
   components: {RoomSetEditor, RoomSetsTable},
   mixins: [
     modelMixin,
