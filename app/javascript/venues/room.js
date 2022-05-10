@@ -1,7 +1,6 @@
 export const room_columns = [
   {
     key: 'name',
-    //sortKey: 'agreements.name',
     label: 'Name',
     type: "text",
     sortable: true
@@ -25,53 +24,55 @@ export const room_columns = [
   {
     key: 'open_for_schedule',
     label: 'Open for scheduling',
-    type: 'boolean'
+    type: "radio",
+    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
   },
   {
     key: 'is_virtual',
     label: 'Is Virtual',
-    type: Boolean
+    type: "radio",
+    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
   },
   {
     key: 'length',
     label: 'Length',
-    type: Number,
+    // type: 'number',
   },
   {
     key: 'width',
     label: 'Width',
-    type: Number,
+    // type: 'number',
   },
   {
     key: 'height',
     label: 'Height',
-    type: Number,
+    type: 'number',
   },
   {
     key: 'linear_units',
     label: 'Linear Units',
-    type: String,
+    type: 'text',
   },
   {
     key: 'area',
     label: 'Area',
-    type: Number,
+    // type: 'number',
     sortable: true,
   },
   {
     key: 'area_units',
     label: 'Area Units',
-    type: String,
+    type: 'text',
   },
   {
     key: 'capacity',
     label: 'Capacity',
-    type: Number,
+    // type: 'number',
     sortable: true,
   },
   {
     key: 'room_set',
     label: 'Room Setup',
-    type: String,
+    type: 'text',
   },
 ];
