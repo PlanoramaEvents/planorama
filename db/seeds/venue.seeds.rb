@@ -1,4 +1,4 @@
-if Person.count == 0
+if Venue.count == 0
   3.times.each do |i|
       v = Venue.create(
           name: Faker::Space.unique.planet,

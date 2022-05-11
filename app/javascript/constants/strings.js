@@ -151,6 +151,11 @@ module.exports = {
     PAGE_SAVE_SUCCESS: "Page successfully saved",
     PAGE_SAVE_ERROR: errorMessage("Page failed to be saved."),
 
+    //venues
+    VENUES_ADD_ROOM_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_ADD_ROOMSET_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_ADD_VENUE_SUCCESS: (name) => `${name} successfully added.`,
+
     // linked field names
     LINKED_FIELD_LABELS: {
         Person: {
