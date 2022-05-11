@@ -47,6 +47,9 @@ import SessionTabs from  './sessions/session_tabs.vue';
 import SessionScreen from './sessions/session_screen.vue';
 
 //
+import ScheduleScreen from './schedule/schedule_screen.vue';
+
+//
 import ReportsScreen from './reports/reports_screen.vue'
 
 // surveys
@@ -136,6 +139,14 @@ export const router = new VueRouter({
       path: '/sessions',
       component: SessionScreen,
       children: sessionRoutes,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/schedule',
+      component: ScheduleScreen,
+      // children: sessionRoutes,
       meta: {
         requiresAuth: true
       }

@@ -10,6 +10,7 @@
         <b-nav-item to="/mail-templates" active-class="active"><b-icon-card-text class="mr-2"></b-icon-card-text>Templates</b-nav-item>
       </b-collapse> -->
       <b-nav-item v-if="can_see_this" to="/sessions" active-class="active"><b-icon-calendar2-range-fill class="mr-2"></b-icon-calendar2-range-fill>Sessions</b-nav-item>
+      <b-nav-item v-if="can_see_this" to="/schedule" active-class="active"><b-icon-calendar2-date class="mr-2"></b-icon-calendar2-date>Schedule</b-nav-item>
       <b-nav-item v-if="can_see_this" to="/surveys" active-class="active"><icon-survey class="mr-2"></icon-survey>Surveys</b-nav-item>
       <b-nav-item v-if="can_see_this" to="/reports" active-class="active"><b-icon-bar-chart-line-fill class="mr-2"></b-icon-bar-chart-line-fill>Reports</b-nav-item>
       <b-nav-item to="/profile" active-class="active"><b-icon-person-badge class="mr-2"></b-icon-person-badge>Profile</b-nav-item>
