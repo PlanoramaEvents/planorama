@@ -1,5 +1,6 @@
 <template>
   <div class="all-days-sched">
+    <!-- Eeach schedule day has an eid for the event etc, which we can map to the actual session ... -->
     <schedule-day
       v-for="day in days" :key="day"
       :ref="'day-'+day"
@@ -41,7 +42,7 @@ export default {
   },
   methods: {
     init: function() {
-      console.debug("********** ", this.days)
+      // console.debug("********** ", this.days)
       for (const day of this.days) {
         let component = this.$refs[`day-${day}`][0].scrollBarElement()
         let targets = this.days.filter(d => d != day)
@@ -57,7 +58,6 @@ export default {
       }
     },
     syncScroll: function(day, targets, event) {
-      console.debug("****** SCROLL", event)
       for (const target of targets) {
         let el = this.$refs[`day-${target}`][0].scrollBarElement()
         el.scrollLeft = day.scrollLeft
@@ -73,6 +73,6 @@ export default {
 <style lang="scss">
 .all-days-sched {
   overflow-y: scroll;
-  height: 600px;
+  // height: 600px;
 }
 </style>

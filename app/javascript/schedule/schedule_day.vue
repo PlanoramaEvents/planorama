@@ -11,16 +11,29 @@
     :minSplitWidth="150"
     :split-days="roomHeading"
     :disable-views="['years', 'year', 'month', 'week']"
-    :time-cell-height="20"
+    :time-cell-height="40"
     :editable-events="{ title: false, drag: true, resize: false, delete: true, create: true }"
     class="vuecal--full-height-delete"
     ref="dayRoomGrid"
+    @event-drop="onEventDrop"
   >
     <template v-slot:title="{ title, view }">
       {{ formatDate(view.selectedDate, { weekday: 'long' }) }},
       {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
     </template>
-
+    <template v-slot:event="{ event, view }">
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-row p-1">
+          <small class="event-time">
+            {{ formatLocaleDate(event.start) }} - {{ formatLocaleDate(event.end) }}
+          </small>
+          <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
+        </div>
+        <small>
+          {{event.title}}
+        </small>
+      </div>
+    </template>
   </vue-cal>
 </template>
 
@@ -83,18 +96,29 @@ export default {
     },
   },
   methods: {
+    onEventDrop ({ event, originalEvent, external }) {
+      console.debug("******** 1. DROP EVENT", originalEvent._eid, originalEvent.id)
+      // TODO: use originalEvent.id to set the start time for the session
+    },
+    onDelete(ev) {
+      let cid = ev._eid
+      console.debug("******** 1. DELETE EVENT", ev._eid, ev.id)
+      // TODO: use ev.id to remove the start time for the session
+      this.$refs['dayRoomGrid'].mutableEvents = this.$refs['dayRoomGrid'].mutableEvents.filter(
+        (e) => e._eid != cid
+      )
+      this.$refs['dayRoomGrid'].view.events = this.$refs['dayRoomGrid'].view.events.filter(
+        (e) => e._eid != cid
+      )
+    },
     scrollBarElement: function() {
       return this.$refs['dayRoomGrid'].$el.getElementsByClassName('day-view')[0]
     },
     formatLocaleDate(date) {
       let res = DateTime.fromJSDate(date).toLocaleString(DateTime.TIME_SIMPLE)
-      // console.debug("**** D", date, DateTime.TIME_SIMPLE, res)
-      return res //date.toLocaleString(DateTime.TIME_SIMPLE)
+      return res
     },
     formatDate(date, config) {
-      // return DateTime.fromISO(date).toFormat(config)
-      // console.debug("**** D", date, config)
-      // return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
       // TODO: use the users locale or browsers locale here
       return date.toLocaleString('en-US',config)
     },
@@ -143,5 +167,9 @@ export default {
 
 .vuecal__cell .room-col:nth-of-type(odd){
   background: $color-light-blue; //rgba(0, 0, 0, 0.05);
+}
+
+.event-time {
+  font-size: smaller;
 }
 </style>

@@ -3,13 +3,18 @@
     <div class="container">
       <div class="row mt-3">
         <div class="col-3">
-          ghgggg
+          <schedulable-sessions
+            :model="sessionModel"
+            style="height: 40vh;"
+          >
+          </schedulable-sessions>
         </div>
         <div class="col-9">
           <schedule-calendar
             :rooms="rooms"
             :days="days"
             v-if="days.length > 0"
+            style="height: 70vh;"
           ></schedule-calendar>
         </div>
       </div>
@@ -18,24 +23,28 @@
 </template>
 
 <script>
+import SchedulableSessions from './schedulable_sessions'
 import ScheduleCalendar from './schedule_calendar'
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
 import { roomModel } from '../store/room.store.js';
+import { sessionModel as sessionModel } from '@/store/session.store'
 
 const { DateTime } = require("luxon");
 
 export default {
   name: "ScheduleScreen",
   components: {
-    ScheduleCalendar
+    ScheduleCalendar,
+    SchedulableSessions
   },
   mixins: [
     modelUtilsMixin,
     settingsMixin
   ],
   data: () =>  ({
-    rooms: null
+    rooms: null,
+    sessionModel: sessionModel
   }),
   computed: {
     start_time() {
@@ -86,8 +95,8 @@ export default {
 </script>
 
 <style lang="scss">
-.all-days-sched {
-  overflow-y: scroll;
-  height: 600px;
-}
+// .all-days-sched {
+//   overflow-y: scroll;
+//   height: 600px;
+// }
 </style>
