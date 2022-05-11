@@ -1,5 +1,62 @@
 class ReportsController < ApplicationController
 
+  #
+  #
+  #
+  def participant_availabilities
+    # TZ
+    timezone = ConfigService.value('convention_timezone')
+    # We want the times to be in the TZ of the con for the report
+    Time.use_zone(timezone) do
+      people = Person.includes(
+        :availabilities,
+        :session_limits,
+        :person_exclusions,
+        :exclusions
+      ).references(
+        :availabilities,
+        :session_limits,
+        :person_exclusions
+      ).where(
+        "availabilities.person_id is not null OR session_limits.person_id is not null OR person_exclusions.person_id is not null"
+      )
+
+      workbook = FastExcel.open(constant_memory: true)
+      worksheet = workbook.add_worksheet("Participant Availabilities")
+
+      worksheet.append_row(
+        [
+          'Name',
+          'Pub Name',
+          'Attendance Type',
+          'Availabilities',
+          'Limits',
+          'Exclusions',
+          'Availabilty Notes'
+        ]
+      )
+
+      people.each do |person|
+        worksheet.append_row(
+          [
+            person.name,
+            person.published_name,
+            person.attendance_type,
+            person.availabilities.order('start_time').collect{|av| "#{av.start_time} to #{av.end_time}" }.join(";\n"),
+            person.session_limits.order('day').collect{|l| "#{l.day ? l.day : 'Global'}: #{l.max_sessions}" }.join(";\n"),
+            person.exclusions.collect{|e| "#{e.title}"}.join(";\n"),
+            person.availability_notes
+          ]
+        )
+
+      end
+
+      send_data workbook.read_string,
+                filename: "ParticipantAvailabilities_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+                disposition: 'attachment'
+    end
+  end
+
   # By participant
   # Name
   # What they signed up for

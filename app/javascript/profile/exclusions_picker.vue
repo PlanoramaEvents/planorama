@@ -46,7 +46,8 @@ export default {
        this.update_exclusions({person: this.person, params: vals})
     },
     init: function(arg) {
-      this.get_exclusions().then(
+      this.selectedExclusions = []
+      this.get_exclusions({person: this.person}).then(
         () => {
           this.selectedExclusions = this.collection.map((a) => { return a.exclusion_id })
         }
