@@ -1,100 +1,93 @@
 <template>
-  <div class="container scrollable">
-    <!--
-    Calendar - based on the con days
-    Split - based on the con rooms
-    Session to drag-n-drop (with search etc)
-    -->
-    <div class="row">
-      <div class="col-10">
-        <vue-cal
-          hide-view-selector
-          xsmall
-          selected-date="2022-09-01"
-          :split-days="roomHeading"
-          :disable-views="['years', 'year', 'month', 'week']"
-          :editable-events="{ title: false, drag: false, resize: false, delete: true, create: false }"
-          class="vuecal--full-height-delete"
-        >
-          <template v-slot:title="{ title, view }">
-            {{ formatDate(view.selectedDate, { weekday: 'long' }) }},
-            {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
-          </template>
-
-        </vue-cal>
+  <div class="scrollable">
+    <div class="container">
+      <div class="row mt-3">
+        <div class="col-3">
+          ghgggg
+        </div>
+        <div class="col-9">
+          <schedule-calendar
+            :rooms="rooms"
+            :days="days"
+            v-if="days.length > 0"
+          ></schedule-calendar>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import VueCal from 'vue-cal'
-import 'vue-cal/dist/vuecal.css'
+import ScheduleCalendar from './schedule_calendar'
+import modelUtilsMixin from "@/store/model_utils.mixin";
+import settingsMixin from "@/store/settings.mixin";
+import { roomModel } from '../store/room.store.js';
 
 const { DateTime } = require("luxon");
 
 export default {
   name: "ScheduleScreen",
   components: {
-    VueCal
+    ScheduleCalendar
   },
+  mixins: [
+    modelUtilsMixin,
+    settingsMixin
+  ],
   data: () =>  ({
-    // splitDays: [
-    //   // The id property is added automatically if none (starting from 1), but you can set a custom one.
-    //   // If you need to toggle the splits, you must set the id explicitly.
-    //   { id: 1, class: 'room-col', label: 'Mom' },
-    //   { id: 2, class: 'room-col', label: 'Dad'},
-    //   { id: 3, class: 'room-col', label: 'Kid 1' },
-    //   { id: 4, class: 'room-col', label: 'Kid 2' },
-    //   { id: 5, class: 'room-col', label: 'Kid 3' }
-    // ]
+    rooms: null
   }),
   computed: {
-    roomHeading() {
-      // return this.configByName('email_reply_to_address')
-      return [
-        // The id property is added automatically if none (starting from 1), but you can set a custom one.
-        // If you need to toggle the splits, you must set the id explicitly.
-        { id: 1, class: 'room-col', label: 'Mom' },
-        { id: 2, class: 'room-col', label: 'Dad'},
-        { id: 3, class: 'room-col', label: 'Kid 1' },
-        { id: 4, class: 'room-col', label: 'Kid 2' },
-        { id: 5, class: 'room-col', label: 'Kid 3' }
-      ]
+    start_time() {
+      if (this.currentSettings && this.currentSettings.configs) {
+        let st = this.configByName('convention_start_time')
+        return DateTime.fromISO(st)
+      } else {
+        return null
+      }
     },
+    end_time() {
+      if (this.currentSettings && this.currentSettings.configs) {
+        let et = this.configByName('convention_end_time')
+        return DateTime.fromISO(et)
+      } else {
+        return null
+      }
+    },
+    days() {
+      if (!this.start_time || !this.end_time) return []
+
+      let start_day = this.start_time.setZone(this.calTimeZone).startOf('day')
+      let end_day = this.end_time.setZone(this.calTimeZone).endOf('day')
+      let nbr_days = Math.round(end_day.diff(start_day, 'days').as('days'))
+      let res = []
+      for (let i = 0; i < nbr_days; i++ ) {
+        let d = start_day.toFormat('yyyy-MM-dd') //toLocaleString(DateTime.DATE_SHORT)
+        res.push(d)
+        start_day = start_day.plus({days: 1})
+      }
+      return res
+    }
   },
   methods: {
-    formatLocaleDate(date) {
-      let res = DateTime.fromJSDate(date).toLocaleString(DateTime.TIME_SIMPLE)
-      // console.debug("**** D", date, DateTime.TIME_SIMPLE, res)
-      return res //date.toLocaleString(DateTime.TIME_SIMPLE)
+    init: function() {
     },
-    formatDate(date, config) {
-      // return DateTime.fromISO(date).toFormat(config)
-      // console.debug("**** D", date, config)
-      // return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
-      // TODO: use the users locale or browsers locale here
-      return date.toLocaleString('en-US',config)
-    },
+  },
+  mounted() {
+    //do something after mounting vue instance
+    this.fetch_models(roomModel).then(data => {
+      this.rooms = Object.values(data).filter(
+        obj => (typeof obj.json === 'undefined')
+      )
+      this.init()
+    })
   }
 }
 </script>
 
 <style lang="scss">
-@import '../stylesheets/style.scss';
-
-
-.vuecal__arrow--prev,
-.vuecal__arrow--prev {
-  display: none;
-}
-
-.vuecal__arrow--next,
-.vuecal__arrow--next {
-  display: none;
-}
-
-.vuecal__cell .room-col:nth-of-type(odd){
-  background: rgba(0, 0, 0, 0.05);
+.all-days-sched {
+  overflow-y: scroll;
+  height: 600px;
 }
 </style>
