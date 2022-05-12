@@ -160,7 +160,8 @@ class SessionsController < ResourceController
   def references
     [
       :format,
-      :room
+      :room,
+      :areas
     ]
   end
 
