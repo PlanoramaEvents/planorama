@@ -4,7 +4,8 @@ class Room < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: :venue_id
 
-  belongs_to :venue
+  belongs_to :venue, optional: true
+  belongs_to :room_set, optional: true
 
   has_many :sessions
   has_many :published_sessions
@@ -17,7 +18,7 @@ class Room < ApplicationRecord
     in_use = (sessions.any? || published_sessions.any?)
 
     if in_use
-      raise I18n.t('planner.core.locations.cannot-delete-in-use').html_safe
+      raise 'Cannot delete a Room in use'
     end
   end
 end
