@@ -6,6 +6,8 @@
           <schedulable-sessions
             :model="sessionModel"
             style="height: 40vh;"
+            :defaultFilter="sessionFilter"
+            defaultSortBy="sessions.title"
           >
           </schedulable-sessions>
         </div>
@@ -13,6 +15,7 @@
           <schedule-calendar
             :rooms="rooms"
             :days="days"
+            :timezone="timezone"
             v-if="days.length > 0"
             style="height: 70vh;"
           ></schedule-calendar>
@@ -76,6 +79,22 @@ export default {
         start_day = start_day.plus({days: 1})
       }
       return res
+    },
+    timezone() {
+      let tz = this.configByName('convention_timezone')
+      return tz
+    },
+    sessionFilter() {
+      // Only sessions that have a duration can be scheduled
+      let filter = {
+        "op": "all",
+        "queries":[
+          ["start_time", "is null"],
+          ["duration", ">", "0"]
+        ]
+      }
+
+      return JSON.stringify(filter)
     }
   },
   methods: {
@@ -95,8 +114,4 @@ export default {
 </script>
 
 <style lang="scss">
-// .all-days-sched {
-//   overflow-y: scroll;
-//   height: 600px;
-// }
 </style>

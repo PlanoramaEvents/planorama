@@ -6,6 +6,7 @@
       :ref="'day-'+day"
       :rooms="rooms"
       :selected-date="day"
+      :timezone="timezone"
     ></schedule-day>
   </div>
 </template>
@@ -16,7 +17,7 @@ import ScheduleDay from './schedule_day'
 // import settingsMixin from "@/store/settings.mixin";
 // import { roomModel } from '../store/room.store.js';
 
-// const { DateTime } = require("luxon");
+const { DateTime } = require("luxon");
 
 export default {
   name: "ScheduleCalendar",
@@ -24,8 +25,6 @@ export default {
     ScheduleDay
   },
   mixins: [
-    // modelUtilsMixin,
-    // settingsMixin
   ],
   props: {
     rooms: {
@@ -34,6 +33,10 @@ export default {
     days: {
       type: Array,
       default: []
+    },
+    timezone: {
+      type: String,
+      default: null
     }
   },
   data: () =>  ({
@@ -52,7 +55,6 @@ export default {
           this.syncScroll.bind(event,component,targets),
           false
         )
-
         // let init_events = this.$refs[`day-${day}`][0].init(iniialVals.filter((a) => a.start.setZone(this.timezone).toFormat("yyyy-MM-dd") == day))
         // this.dayEvents = this.dayEvents.concat(init_events)
       }

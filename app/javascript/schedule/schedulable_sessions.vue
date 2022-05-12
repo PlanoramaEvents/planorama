@@ -1,6 +1,7 @@
 <template>
   <div class="all-scheduable-session">
     <!-- TODO: add pager ... -->
+    <!-- TODO: add search/filter ... -->
     <div
       class="scheduable-session mb-1"
       v-for="session in sortedCollection" :key="session.id"
@@ -18,6 +19,7 @@ import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import { sessionModel as model } from '@/store/session.store'
 
+// TODO: filter out sessions with no duration
 export default {
   name: "SchedulableSessions",
   components: {

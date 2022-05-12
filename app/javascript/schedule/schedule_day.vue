@@ -73,6 +73,10 @@ export default {
     selectedDate: {
       type: String,
       required: true
+    },
+    timezone: {
+      type: String,
+      default: null
     }
   },
   data: () =>  ({
@@ -122,15 +126,19 @@ export default {
       // TODO: use the users locale or browsers locale here
       return date.toLocaleString('en-US',config)
     },
+    uiDateToTZDate(date) {
+      return DateTime.fromObject({
+        year: date.getFullYear(),
+        month: date.getMonth() +1,
+        day: date.getDate(),
+        hour: date.getHours(),
+        minute: date.getMinutes()},
+        { zone: this.timezone }
+      )
+    }
   },
-  mounted() {
-    //do something after mounting vue instance
-    // this.fetch_models(roomModel).then(data => {
-    //   this.rooms = Object.values(data).filter(
-    //     obj => (typeof obj.json === 'undefined')
-    //   )
-    // })
-  }
+  // mounted() {
+  // }
 }
 </script>
 
