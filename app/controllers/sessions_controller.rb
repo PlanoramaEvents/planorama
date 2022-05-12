@@ -226,7 +226,7 @@ class SessionsController < ResourceController
       audience_size,
       participant_notes
       is_break
-      start_time,
+      start_time
       visibility
       publish
       room_id
