@@ -20,6 +20,10 @@ class SessionSerializer
     session.areas.collect(&:name)
   end
 
+  attribute :duration_mins do |session|
+    session.duration
+  end
+
   # session_areas
   attribute :session_areas_attributes do |session|
     session.session_areas

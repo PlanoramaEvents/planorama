@@ -12,9 +12,10 @@
     :split-days="roomHeading"
     :disable-views="['years', 'year', 'month', 'week']"
     :time-cell-height="40"
-    :editable-events="{ title: false, drag: true, resize: false, delete: true, create: true }"
+    :editable-events="{ title: false, drag: true, resize: false, delete: false, create: false }"
     class="vuecal--full-height-delete"
     ref="dayRoomGrid"
+    :events="events"
     @event-drop="onEventDrop"
   >
     <template v-slot:title="{ title, view }">
@@ -25,7 +26,7 @@
       <div class="d-flex flex-column">
         <div class="d-flex flex-row p-1">
           <small class="event-time">
-            {{ formatLocaleDate(event.start) }} - {{ formatLocaleDate(event.end) }}
+            {{ formatLocaleDate(event.start) }} - {{ formatDatetime(addMinutes(event.start, event.duration_mins)) }}
           </small>
           <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
         </div>
@@ -40,11 +41,7 @@
 <script>
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-
-// import modelUtilsMixin from "@/store/model_utils.mixin";
-// import { roomModel } from '../store/room.store.js';
-
-const { DateTime } = require("luxon");
+import dateTimeMixin from '../components/date_time.mixin'
 
 export default {
   name: "ScheduleDay",
@@ -52,7 +49,7 @@ export default {
     VueCal
   },
   mixins: [
-    // modelUtilsMixin
+    dateTimeMixin
   ],
   props: {
     startTime: {
@@ -73,13 +70,10 @@ export default {
     selectedDate: {
       type: String,
       required: true
-    },
-    timezone: {
-      type: String,
-      default: null
     }
   },
   data: () =>  ({
+    events: []
   }),
   computed: {
     roomHeading() {
@@ -100,9 +94,20 @@ export default {
     },
   },
   methods: {
+    // onCreate(ev) {
+    //   // console.debug("******** 1. CREATE EVENT", ev)
+    // },
     onEventDrop ({ event, originalEvent, external }) {
-      console.debug("******** 1. DROP EVENT", originalEvent._eid, originalEvent.id)
-      // TODO: use originalEvent.id to set the start time for the session
+      let eventDuration = event.duration_mins
+      let startTimeMinutes = event.startTimeMinutes
+      event.endTimeMinutes = Math.min(startTimeMinutes + eventDuration, 24 * 60)
+      event.end = new Date(event.start.getTime() + event.duration_mins*60000); //event.start + event.duration_mins
+      // TODO: use ev.id to set the start time and room
+
+      // Hack for the display size
+      let mevs = this.$refs['dayRoomGrid'].mutableEvents.filter(e => e._eid == event._eid)
+      mevs[0].endTimeMinutes = event.endTimeMinutes
+      mevs[0].end = event.end
     },
     onDelete(ev) {
       let cid = ev._eid
@@ -118,27 +123,7 @@ export default {
     scrollBarElement: function() {
       return this.$refs['dayRoomGrid'].$el.getElementsByClassName('day-view')[0]
     },
-    formatLocaleDate(date) {
-      let res = DateTime.fromJSDate(date).toLocaleString(DateTime.TIME_SIMPLE)
-      return res
-    },
-    formatDate(date, config) {
-      // TODO: use the users locale or browsers locale here
-      return date.toLocaleString('en-US',config)
-    },
-    uiDateToTZDate(date) {
-      return DateTime.fromObject({
-        year: date.getFullYear(),
-        month: date.getMonth() +1,
-        day: date.getDate(),
-        hour: date.getHours(),
-        minute: date.getMinutes()},
-        { zone: this.timezone }
-      )
-    }
-  },
-  // mounted() {
-  // }
+  }
 }
 </script>
 
@@ -160,7 +145,7 @@ export default {
 
 .vuecal__event {
   color: $color-secondary-2-4;
-  background-color: $color-secondary-2-1; //$color-secondary-1-1;
+  background-color: $color-secondary-2-1;
 }
 
 .vuecal__arrow--prev,
@@ -173,8 +158,11 @@ export default {
   display: none;
 }
 
-.vuecal__cell .room-col:nth-of-type(odd){
-  background: $color-light-blue; //rgba(0, 0, 0, 0.05);
+.day-split-header,
+.vuecal__cell .room-col {
+  border-color: $color-primary-1;
+  border-left-style: solid;
+  border-width: 1px;
 }
 
 .event-time {
