@@ -13,7 +13,7 @@ if Venue.count == 0
               comment: Faker::Movie.quote,
               sort_order: Faker::Number.unique.number(digits: 3),
               capacity: Faker::Number.unique.number(digits: 3),
-              # room_floor: Faker::Number.between(from: 1, to: 10),
+              floor: Faker::Number.between(from: 1, to: 10),
               open_for_schedule: Faker::Boolean.boolean(true_ratio: 0.9),
               is_virtual: false
           )
