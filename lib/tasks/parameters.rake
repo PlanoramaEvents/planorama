@@ -50,6 +50,17 @@ namespace :parameters do
       )
     end
 
+    #TODO: fix front end to only allow the enum value to be selected
+    unless ParameterName.find_by(parameter_name: 'convention_measurement_system')
+      ParameterName.create!(
+        {
+          parameter_name: 'convention_measurement_system',
+          parameter_description: 'Enter the measurement system used by the convention.',
+          parameter_type: 'MeasurementSystem'
+        }
+      )
+    end
+
     unless ParameterName.find_by(parameter_name: 'max_interest_rank1')
       ParameterName.create!(
         {

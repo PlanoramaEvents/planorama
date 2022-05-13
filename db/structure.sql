@@ -130,6 +130,16 @@ CREATE TYPE public.mailing_state_enum AS ENUM (
 
 
 --
+-- Name: measurement_system_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.measurement_system_enum AS ENUM (
+    'Metric',
+    'Imperial'
+);
+
+
+--
 -- Name: next_page_action_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -2576,6 +2586,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220504140508'),
 ('20220507210839'),
 ('20220510015131'),
-('20220512004401');
+('20220512004401'),
+('20220512015521');
 
 
