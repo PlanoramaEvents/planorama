@@ -1,5 +1,5 @@
 <template>
-  <div class="all-days-sched">
+  <div class="all-days-sched" v-if="initialSessions">
     <!-- Eeach schedule day has an eid for the event etc, which we can map to the actual session ... -->
     <schedule-day
       v-for="day in days" :key="day"
@@ -7,17 +7,15 @@
       :rooms="rooms"
       :selected-date="day"
       :timezone="timezone"
+      @schedule-changed="onScheduleChanged"
+      :initialSessions="initialSessions"
     ></schedule-day>
   </div>
 </template>
 
 <script>
 import ScheduleDay from './schedule_day'
-// import modelUtilsMixin from "@/store/model_utils.mixin";
-// import settingsMixin from "@/store/settings.mixin";
-// import { roomModel } from '../store/room.store.js';
-
-const { DateTime } = require("luxon");
+import tableMixin from '../store/table.mixin';
 
 export default {
   name: "ScheduleCalendar",
@@ -25,6 +23,7 @@ export default {
     ScheduleDay
   },
   mixins: [
+    tableMixin
   ],
   props: {
     rooms: {
@@ -40,24 +39,48 @@ export default {
     }
   },
   data: () =>  ({
+    initialSessions: null
   }),
-  computed: {
+  watch: {
+    sortedCollection(n,o) {
+      // console.debug("sorted coll changed")
+      if (n.length > 0) {
+        this.initialSessions = n
+      }
+    },
+    // initialSessions(n,o) {
+    //   console.debug("initialSessions coll changed", n)
+    // }
   },
   methods: {
+    onScheduleChanged: function() {
+      this.$emit("schedule-changed");
+    },
     init: function() {
-      // console.debug("********** ", this.days)
-      for (const day of this.days) {
-        let component = this.$refs[`day-${day}`][0].scrollBarElement()
-        let targets = this.days.filter(d => d != day)
+      this.fetchPaged(false).then(
+        () => {
+          if (this.sortedCollection && this.sortedCollection.length == 0) {
+            this.initialSessions = []
+          }
 
-        component.addEventListener(
-          "scroll",
-          this.syncScroll.bind(event,component,targets),
-          false
-        )
-        // let init_events = this.$refs[`day-${day}`][0].init(iniialVals.filter((a) => a.start.setZone(this.timezone).toFormat("yyyy-MM-dd") == day))
-        // this.dayEvents = this.dayEvents.concat(init_events)
-      }
+          // $nextTick ensures that the DOM is rendered... which is usefull
+          // when we want to do DOM type functions...
+          this.$nextTick(
+            () => {
+              for (const day of this.days) {
+                let component = this.$refs[`day-${day}`][0].scrollBarElement()
+                let targets = this.days.filter(d => d != day)
+
+                component.addEventListener(
+                  "scroll",
+                  this.syncScroll.bind(event,component,targets),
+                  false
+                )
+              }
+            }
+          )
+        }
+      )
     },
     syncScroll: function(day, targets, event) {
       for (const target of targets) {

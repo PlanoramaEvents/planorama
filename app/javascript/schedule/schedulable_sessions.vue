@@ -43,7 +43,7 @@ export default {
       e.dataTransfer.setData('cursor-grab-at', e.offsetY)
     },
     init: function() {
-      this.fetchPaged()
+      this.fetchPaged(false)
     },
   },
   mounted() {

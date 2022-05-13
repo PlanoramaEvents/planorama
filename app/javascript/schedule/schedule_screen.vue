@@ -8,6 +8,7 @@
             style="height: 40vh;"
             :defaultFilter="sessionFilter"
             defaultSortBy="sessions.title"
+            ref="schedulable-sessions"
           >
           </schedulable-sessions>
         </div>
@@ -18,6 +19,10 @@
             :timezone="timezone"
             v-if="days.length > 0"
             style="height: 70vh;"
+            :defaultFilter="scheduleFilter"
+            :model="sessionModel"
+            :perPage="2000"
+            @schedule-changed="onScheduleChanged"
           ></schedule-calendar>
         </div>
       </div>
@@ -84,6 +89,16 @@ export default {
       let tz = this.configByName('convention_timezone')
       return tz
     },
+    scheduleFilter() {
+      let filter = {
+        "op": "all",
+        "queries":[
+          ["start_time", "is not null"]
+        ]
+      }
+
+      return JSON.stringify(filter)
+    },
     sessionFilter() {
       // Only sessions that have a duration can be scheduled
       let filter = {
@@ -98,6 +113,9 @@ export default {
     }
   },
   methods: {
+    onScheduleChanged: function() {
+      this.$refs["schedulable-sessions"].fetchPaged(false)
+    },
     init: function() {
     },
   },
