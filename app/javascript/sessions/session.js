@@ -1,3 +1,5 @@
+import AreaSelectForSearch from './area_select_for_search'
+
 export const session_columns = [
   {
     key: 'title',
@@ -19,7 +21,8 @@ export const session_columns = [
     sortKey: 'areas.name',
     search_key: 'areas.name',
     label: 'Area',
-    type: 'text',
+    component: AreaSelectForSearch,
+    type: 'custom-component',
     sortable: true,
     formatter: (value) => value && value.length ? value.join(", ") : value
   },
