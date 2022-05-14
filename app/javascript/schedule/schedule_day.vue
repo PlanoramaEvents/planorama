@@ -153,18 +153,20 @@ export default {
       if (this.initialSessions && this.initialSessions.length > 0) {
         // plot the sessions
         for (const session of this.initialSessions) {
-          // TODO: check it is for the right day
-          let new_event = this.$refs['dayRoomGrid'].createEvent(
-            DateTime.fromISO(session.start_time).setZone(this.timezone).toFormat('yyyy-MM-dd HH:mm'),
-            session.duration,
-            {
-              id: session.id,
-              duration_mins: session.duration_mins,
-              title: session.title,
-              split: session.room_id
-            }
-          )
-          // console.debug("***** CREATED: ", new_event)
+          let start_time = DateTime.fromISO(session.start_time).setZone(this.timezone)
+          // check it is for the right day
+          if (start_time.toFormat('yyyy-MM-dd') == this.selectedDate) {
+            let new_event = this.$refs['dayRoomGrid'].createEvent(
+              start_time.toFormat('yyyy-MM-dd HH:mm'),
+              session.duration,
+              {
+                id: session.id,
+                duration_mins: session.duration_mins,
+                title: session.title,
+                split: session.room_id
+              }
+            )
+          }
         }
       }
     }

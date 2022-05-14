@@ -2,15 +2,24 @@
   <div class="all-scheduable-session">
     <!-- TODO: add pager ... -->
     <!-- TODO: add search/filter ... -->
-    <div
-      class="scheduable-session mb-1"
-      v-for="session in sortedCollection" :key="session.id"
-      draggable="true"
-      @dragstart="onEventDragStart($event, session)"
-    >
-      <strong>{{session.title}}</strong>
-      ({{ session.duration ? `${session.duration} min` : 'no duration' }})
+    <div class="all-scheduable-session-list">
+      <div
+        class="scheduable-session mb-1"
+        v-for="session in sortedCollection" :key="session.id"
+        draggable="true"
+        @dragstart="onEventDragStart($event, session)"
+      >
+        <strong>{{session.title}}</strong>
+        ({{ session.duration ? `${session.duration} min` : 'no duration' }})
+      </div>
     </div>
+    <b-pagination class="d-flex"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      size="sm"
+      align="center"
+    ></b-pagination>
   </div>
 </template>
 
@@ -61,9 +70,9 @@ export default {
 <style lang="scss">
 @import '../stylesheets/style.scss';
 
-.all-scheduable-session {
+.all-scheduable-session-list {
   overflow-y: scroll;
-  // height: 600px;
+  height: 80%;
 }
 
 .scheduable-session {
