@@ -8,6 +8,7 @@ if Agreement.count == 0
       title: Faker::Lorem.sentence,
       terms: Faker::Lorem.sentences(number: 3).join('. '),
       agreement_type: "test",
+      description: "This is a description"
       target: target,
       created_by_id: creator,
       updated_by_id: creator
