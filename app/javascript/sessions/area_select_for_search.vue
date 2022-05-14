@@ -11,11 +11,11 @@ export default {
   props: ['value'],
   computed: {
     areaNames() {
-      return Object.values(this.$store.getters['jv/get']({_jv: { type: model }})).map(a => a.name)
+      return Object.values(this.$store.getters['jv/get']({_jv: { type: model }})).map(a => a.name).sort((a, b)=> a < b ? -1 : 1 )
     }
   },
   mounted() {
-    this.$store.dispatch(FETCH, {model, params: {limit: 100}});
+    this.$store.dispatch(FETCH, {model});
   }
 }
 
