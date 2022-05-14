@@ -9,8 +9,12 @@ export const dateTimeMixin = {
     }
   },
   methods: {
-    // Take a Javascript datetime and format it as a time string in the local timezone
     formatLocaleDate(date) {
+      let res = DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(DateTime.DATETIME_FULL)
+      return res
+    },
+    // Take a Javascript datetime and format it as a time string in the local timezone
+    formatLocaleJsDate(date) {
       let res = DateTime.fromJSDate(date).toLocaleString(DateTime.TIME_SIMPLE)
       return res
     },

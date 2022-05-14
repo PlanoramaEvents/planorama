@@ -26,7 +26,7 @@
       <div class="d-flex flex-column">
         <div class="d-flex flex-row p-1">
           <small class="event-time">
-            {{ formatLocaleDate(event.start) }} - {{ formatDatetime(addMinutes(event.start, event.duration_mins)) }}
+            {{ formatLocaleJsDate(event.start) }} - {{ formatDatetime(addMinutes(event.start, event.duration_mins)) }}
           </small>
           <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
         </div>
