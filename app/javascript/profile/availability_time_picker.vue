@@ -31,8 +31,8 @@
       <template v-slot:event="{ event, view }">
         <div class="d-flex flex-row">
           <small class="vuecal__event-time">
-            <span>{{ formatLocaleDate(event.start) }} - </span><br/>
-            <span>{{ formatLocaleDate(event.end) }}</span>
+            <span>{{ formatLocaleJsDate(event.start) }} - </span><br/>
+            <span>{{ formatLocaleJsDate(event.end) }}</span>
           </small>
           <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
         </div>

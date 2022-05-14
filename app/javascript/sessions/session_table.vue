@@ -28,6 +28,13 @@
           <span>{{item.area_list && item.area_list.length ? item.area_list.join(", ") : ''}}</span>
         </tooltip-overflow>
       </template>
+      <template #cell(start_time)="{ item }">
+        <span v-if="item.start_time">
+          <tooltip-overflow :title="formatLocaleDate(item.start_time)">
+            {{formatLocaleDate(item.start_time)}}
+          </tooltip-overflow>
+        </span>
+      </template>
       <!-- placeholder cols -->
       <template #cell(status)>
         <div class="text-center text-muted">&mdash;</div>
@@ -48,6 +55,7 @@ import ModalForm from '../components/modal_form';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import { session_columns as columns } from './session';
 import { sessionModel as model } from '@/store/session.store'
+import dateTimeMixin from '../components/date_time.mixin'
 
 export default {
   name: 'SessionTable',
@@ -56,6 +64,9 @@ export default {
     TooltipOverflow,
     ModalForm
   },
+  mixins: [
+    dateTimeMixin
+  ],
   data: () => ({
     columns,
     model

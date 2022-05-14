@@ -90,10 +90,10 @@ export default {
     }
   },
   methods: {
-    formatDate(date, config) {
-      // return DateTime.fromISO(date).setZone(this.timezone).toFormat(config)
-      return DateTime.fromISO(date, {zone: this.timezone}).toFormat(config)
-    },
+    // formatDate(date, config) {
+    //   // return DateTime.fromISO(date).setZone(this.timezone).toFormat(config)
+    //   return DateTime.fromISO(date, {zone: this.timezone}).toFormat(config)
+    // },
     formatLocaleDate(date, config) {
       // return DateTime.fromISO(date).setZone(this.timezone).toLocaleString(config)
       return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
