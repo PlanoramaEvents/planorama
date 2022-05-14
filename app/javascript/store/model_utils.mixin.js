@@ -3,6 +3,7 @@
  needing to set the prop in the component
 **/
 import { toastMixin } from "@/mixins";
+import { utils } from 'jsonapi-vuex'
 
 import { FETCH_BY_ID, DELETE, UPDATE_ALL, SAVE, SELECT, SELECTED, FETCH} from "./model.store";
 import {
@@ -15,6 +16,10 @@ export const modelUtilsMixin = {
     toastMixin
   ],
   methods: {
+    get_model(model, id) {
+      let res = this.$store.getters['jv/get']({_jv: {id: id, type: model}})
+      return utils.deepCopy(res)
+    },
     select_model(model, itemOrId) {
       return this.$store.commit(SELECT, {model: model, itemOrId});
     },

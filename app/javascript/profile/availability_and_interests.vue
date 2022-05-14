@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="d-flex flex-row" v-if="calTimeZone && start_time && end_time">
-      <div class="flex-col">
+      <div class="d-flex flex-column">
         <availability-calendar
           v-model="person"
           :days="days"

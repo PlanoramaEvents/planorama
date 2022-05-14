@@ -44,14 +44,16 @@
 <script>
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-
-const { DateTime } = require("luxon");
+import dateTimeMixin from '../components/date_time.mixin'
 
 export default {
   name: "AvailabilityTimePicker",
   components: {
     VueCal
   },
+  mixins: [
+    dateTimeMixin
+  ],
   props: {
     startTime: {
       type: Number,
@@ -76,10 +78,6 @@ export default {
     showScrollBar: {
       type: Boolean,
       default: false
-    },
-    timezone: {
-      type: String,
-      default: null
     },
     twelveHour: {
       type: Boolean,
@@ -110,22 +108,6 @@ export default {
     }
   },
   methods: {
-    formatLocaleDate(date) {
-      let res = DateTime.fromJSDate(date).toLocaleString(DateTime.TIME_SIMPLE)
-      // console.debug("**** D", date, DateTime.TIME_SIMPLE, res)
-      return res //date.toLocaleString(DateTime.TIME_SIMPLE)
-    },
-    formatDate(date, config) {
-      // return DateTime.fromISO(date).toFormat(config)
-      // console.debug("**** D", date, config)
-      // return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
-      // TODO: use the users locale or browsers locale here
-      return date.toLocaleString('en-US',config)
-    },
-    // logEvents(ty, ev) {
-    //   // events have an _eid that makes them unique
-    //   console.debug("*** EV ",ty, ev)
-    // },
     scrollBarElement: function() {
       return this.$refs['dayColumn'].$el.getElementsByClassName('vuecal__bg')[0]
     },
@@ -160,16 +142,6 @@ export default {
         start: startDate,
         end: endDate
       }
-    },
-    uiDateToTZDate(date) {
-      return DateTime.fromObject({
-        year: date.getFullYear(),
-        month: date.getMonth() +1,
-        day: date.getDate(),
-        hour: date.getHours(),
-        minute: date.getMinutes()},
-        { zone: this.timezone }
-      )
     },
     clearAllEvents() {
       this.dayEvents = {}
