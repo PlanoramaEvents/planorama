@@ -50,6 +50,10 @@ Vue.use(AsyncComputed);
 Vue.use(CKEditor);
 Vue.use(VuePluralize);
 
+import vSelect from "vue-select";
+Vue.component("v-select", vSelect);
+import "vue-select/dist/vue-select.css";
+
 Vue.filter('na_if_empty', function (value) {
   if (!value) return 'N/A'
   if (value.trim().length == 0) return 'N/A'
