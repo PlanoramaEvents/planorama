@@ -11,24 +11,20 @@
             ref="schedulable-sessions"
           >
           </schedulable-sessions>
-          <!--
-            TODO: need a room selector
-            on select return the selected rooms ...
-          -->
           <room-selector
+            v-if="rooms"
             :rooms="rooms"
-            style="height: 40vh;"
+            style="height: 30vh;"
             @change="onRoomChange"
           ></room-selector>
         </div>
         <div class="col-9">
-          <!-- :selectedRooms= -->
           <schedule-calendar
             :rooms="rooms"
             :selectedRooms="selectedRooms"
             :days="days"
             :timezone="timezone"
-            v-if="days.length > 0"
+            v-if="(selectedRooms && selectedRooms.length > 0) && days.length > 0"
             style="height: 70vh;"
             :defaultFilter="scheduleFilter"
             :model="sessionModel"
@@ -69,13 +65,6 @@ export default {
     selectedRooms: []
   }),
   computed: {
-    // selectedRooms() {
-    //   if (this.room) {
-    //     return this.rooms
-    //   } else {
-    //     return []
-    //   }
-    // },
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
         let st = this.configByName('convention_start_time')
@@ -136,18 +125,15 @@ export default {
   methods: {
     onRoomChange: function(rooms) {
       this.selectedRooms = rooms
-      console.debug("set selected rooms", rooms, this.selectedRooms)
     },
     onScheduleChanged: function() {
       this.$refs["schedulable-sessions"].fetchPaged(false)
     },
     init: function() {
       this.selectedRooms = this.rooms.map((r) => r.id)
-      console.debug("set selected rooms", this.selectedRooms)
     },
   },
   mounted() {
-    //do something after mounting vue instance
     this.fetch_models(roomModel).then(data => {
       this.rooms = Object.values(data).filter(
         obj => (typeof obj.json === 'undefined')
