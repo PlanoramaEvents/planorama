@@ -11,10 +11,21 @@
             ref="schedulable-sessions"
           >
           </schedulable-sessions>
+          <!--
+            TODO: need a room selector
+            on select return the selected rooms ...
+          -->
+          <room-selector
+            :rooms="rooms"
+            style="height: 40vh;"
+            @change="onRoomChange"
+          ></room-selector>
         </div>
         <div class="col-9">
+          <!-- :selectedRooms= -->
           <schedule-calendar
             :rooms="rooms"
+            :selectedRooms="selectedRooms"
             :days="days"
             :timezone="timezone"
             v-if="days.length > 0"
@@ -31,6 +42,7 @@
 </template>
 
 <script>
+import RoomSelector from './room_selector'
 import SchedulableSessions from './schedulable_sessions'
 import ScheduleCalendar from './schedule_calendar'
 import modelUtilsMixin from "@/store/model_utils.mixin";
@@ -44,7 +56,8 @@ export default {
   name: "ScheduleScreen",
   components: {
     ScheduleCalendar,
-    SchedulableSessions
+    SchedulableSessions,
+    RoomSelector
   },
   mixins: [
     modelUtilsMixin,
@@ -52,9 +65,17 @@ export default {
   ],
   data: () =>  ({
     rooms: null,
-    sessionModel: sessionModel
+    sessionModel: sessionModel,
+    selectedRooms: []
   }),
   computed: {
+    // selectedRooms() {
+    //   if (this.room) {
+    //     return this.rooms
+    //   } else {
+    //     return []
+    //   }
+    // },
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
         let st = this.configByName('convention_start_time')
@@ -113,10 +134,16 @@ export default {
     }
   },
   methods: {
+    onRoomChange: function(rooms) {
+      this.selectedRooms = rooms
+      console.debug("set selected rooms", rooms, this.selectedRooms)
+    },
     onScheduleChanged: function() {
       this.$refs["schedulable-sessions"].fetchPaged(false)
     },
     init: function() {
+      this.selectedRooms = this.rooms.map((r) => r.id)
+      console.debug("set selected rooms", this.selectedRooms)
     },
   },
   mounted() {

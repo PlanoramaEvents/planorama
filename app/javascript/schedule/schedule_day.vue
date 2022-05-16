@@ -78,6 +78,11 @@ export default {
     },
     initialSessions: {
       type: Array
+    },
+    // which rooms to show (selected)
+    selectedRooms: {
+      type: Array,
+      required: true
     }
   },
   data: () =>  ({
@@ -91,7 +96,9 @@ export default {
             {
               id: obj.id,
               class: 'room-col',
-              label: obj.name
+              label: obj.name,
+              //  You can toggle the splits thanks to the hide property of each split in splitDays.
+              hide: (this.selectedRooms.length ? !this.selectedRooms.includes(obj.id) : false)
             }
           )
         )
