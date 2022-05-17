@@ -69,16 +69,16 @@ export default {
         (col) => {
           // only cols with types are searchable
           if (col.type) {
-              const rule_opts = {
-                type: col.type,
-                id: col.search_key ? col.search_key : col.key,
-                label: col.label,
-                component: col.component,
-                // TODO stop hard coding dynamic choices in search component
-                choices: col.choices === 'dynamic' ? this.dynamicChoices(col.key) : col.choices
-              }
-            if (rule_opts.component) {
-              rule_opts.operators = [];
+            const rule_opts = {
+              type: col.type,
+              id: col.search_key ? col.search_key : col.key,
+              label: col.label,
+              component: col.component,
+              // TODO stop hard coding dynamic choices in search component
+              choices: col.choices === 'dynamic' ? this.dynamicChoices(col.key) : col.choices
+            }
+            if (col.operators) {
+              rule_opts.operators = col.operators;
             }
             rule_set.push(rule_opts)
           }
@@ -89,7 +89,6 @@ export default {
   },
   methods: {
     dynamicChoices(key) {
-      
     },
     filter_by_value() {
       return {

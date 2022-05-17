@@ -226,6 +226,12 @@ module ResourceMethods
 
     q = q.order(order_string)
 
+    # Rails.logger.debug "****************************"
+    # Rails.logger.debug "****************************"
+    # Rails.logger.debug "#{q.to_sql}"
+    # Rails.logger.debug "****************************"
+    # Rails.logger.debug "****************************"
+
     # TODO we need the size without the query
     if paginated
       @full_collection_total = policy_scope(base, policy_scope_class: policy_scope_class)
@@ -357,35 +363,53 @@ module ResourceMethods
     val = "%#{value}%" if op == :does_not_match
     val = "%#{value}" if operation == 'ends with'
     val = "#{value}%" if operation == 'begins with'
-    val = "''" if operation == 'is empty'
-    val = "''" if operation == 'is not empty'
     val = nil if operation == 'is null'
     val = nil if operation == 'is not null'
+    # empty and not empty need to take into account nulls as well
+    val = "''" if operation == 'is empty'
+    val = "''" if operation == 'is not empty'
 
-    part = table[column.to_sym].send(op, val)
+    if operation == 'is empty'
+      part = table[column.to_sym].send(op, val).or(
+        table[column.to_sym].send(op, nil)
+      )
+    elsif operation == 'is not empty'
+      part = table[column.to_sym].send(op, val).and(
+        table[column.to_sym].send(op, nil)
+      )
+    else
+      part = table[column.to_sym].send(op, val)
+    end
   end
 
   # Convert the operation passed in via teh filter into
   # an arel predicate op
-  # is empty
-  # is not empty
-  # begins with
-  # ends with
+  # operators: ['equals','does not equal','contains','does not contain','is empty','is not empty','begins with','ends with'],
+  # operators: ['=','<>','<','<=','>','>='],
+  # TODO: test = "" and != "ssss" ('equals','does not equal') for string values
+  # operators: ['is','is not','is empty','is not empty'] - TEST
   def translate_operator(operation:)
+    # Fix does not match, in (not in), is not empty etc
     case operation.downcase
     when 'does not contain'
       :'does_not_match' # "%val%"
     when 'contains'
+      # depend on type of the search
       :'matches' # "%val%"
     when 'like'
       :'matches' # "%val%"
     when 'in'
       :in
+    when 'not in'
+      :not_in
     when 'equals'
       :eq
     when '='
       :eq
     when 'does not equal'
+      # does not return blanks or nulls
+      :not_eq
+    when '<>'
       :not_eq
     when '!='
       :not_eq
@@ -397,6 +421,10 @@ module ResourceMethods
       :lteq
     when '>='
       :gteq
+    when 'is'
+      :eq
+    when 'is not'
+      :not_eq
     when 'is empty'
       :eq
     when 'is not empty'

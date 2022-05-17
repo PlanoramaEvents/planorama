@@ -151,9 +151,7 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      :areas,
       :base_tags,
-      :session_areas
     ]
   end
 
@@ -161,24 +159,33 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
+    ]
+  end
+
+  def eager_load
+    [
+      {session_areas: :area},
       :areas
     ]
   end
 
-  # def eager_load
-  #   [
-  #     # {session_assignments: :person}
-  #   ]
-  # end
-
   def join_tables
     sessions = Arel::Table.new(Session.table_name)
     session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
+    areas = Arel::Table.new(Area.table_name)
+
     joins = [
       sessions.create_join(
         session_areas,
         sessions.create_on(
           sessions[:id].eq(session_areas[:session_id])
+        ),
+        Arel::Nodes::OuterJoin
+      ),
+      session_areas.create_join(
+        areas,
+        session_areas.create_on(
+          session_areas[:area_id].eq(areas[:id])
         ),
         Arel::Nodes::OuterJoin
       )
