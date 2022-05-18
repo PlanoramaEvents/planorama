@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex" v-if="editable_person">
-    <div class="flex-col w-50 p-2">
+    <div class="d-flex flex-column w-50 p-2">
       <b-form-group label="Name">
         <b-form-input type="text" v-model="editable_person.name" @blur="onInput"></b-form-input>
       </b-form-group>
@@ -54,7 +54,7 @@
       </b-form-group>
 
     </div>
-    <div class="flex-col w-50 p-2">
+    <div class="d-flex flex-column w-50 p-2">
       <div><b>I plan to attend the convention:</b></div>
       <b-form-radio-group
         v-model="editable_person.attendance_type"

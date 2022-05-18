@@ -41,10 +41,13 @@ const personRoutes = [
 ]
 
 //
-import SessionsScreen from './sessions/session_screen.vue';
+//import SessionsScreen from './sessions/session_screen.vue';
 import SessionList from './sessions/sessions-list.vue';
 import SessionTabs from  './sessions/session_tabs.vue';
 import SessionScreen from './sessions/session_screen.vue';
+
+//
+import ScheduleScreen from './schedule/schedule_screen.vue';
 
 //
 import ReportsScreen from './reports/reports_screen.vue'
@@ -81,6 +84,8 @@ import RbacScreen from './rbac/rbac-screen.vue';
 
 // dashboard
 import Dashboard from './dashboard/dashboard.vue';
+
+import VenueManager from './venues/venue_manager.vue';
 
 // main
 import Vue from 'vue';
@@ -141,6 +146,14 @@ export const router = new VueRouter({
       }
     },
     {
+      path: '/schedule',
+      component: ScheduleScreen,
+      // children: sessionRoutes,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/surveys',
       component: SurveyScreen,
       children: surveyRoutes,
@@ -170,6 +183,13 @@ export const router = new VueRouter({
       }
     },
     {
+      path: '/venues',
+      component: VenueManager,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '',
       redirect: '/dashboard'
     }
@@ -187,7 +207,7 @@ router.beforeEach((to, from, next) => {
           query: { redirect: to.fullPath }
         })
       } else {
-        if(con_roles.length==0) {
+        if(con_roles.length===0) {
           // todo clean up side effect assignments
           con_roles = Object.values(session.convention_roles).map(v => {
             isAdmin = isAdmin || v.role === "admin";

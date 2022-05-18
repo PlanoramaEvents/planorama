@@ -3,8 +3,8 @@
     <b-form-select
       v-model="selectedValue"
       @change="onChange"
-      v-bind:options="options"
-      :disabled='disabled'
+      :options="options"
+      :disabled="disabled"
       :multiple="multiple"
     ></b-form-select>
   </b-overlay>

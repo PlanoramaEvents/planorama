@@ -1000,12 +1000,14 @@ CREATE TABLE public.rooms (
     comment text,
     sort_order integer,
     capacity integer,
-    room_floor character varying,
+    floor character varying,
     open_for_schedule boolean DEFAULT true,
     is_virtual boolean DEFAULT false,
-    dimensions text,
     area_of_space numeric,
-    room_set_id uuid
+    room_set_id uuid,
+    length numeric,
+    width numeric,
+    height numeric
 );
 
 
@@ -2462,14 +2464,6 @@ ALTER TABLE ONLY public.survey_submissions
 
 
 --
--- Name: rooms fk_rails_d2498419d7; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rooms
-    ADD CONSTRAINT fk_rails_d2498419d7 FOREIGN KEY (room_set_id) REFERENCES public.room_sets(id);
-
-
---
 -- PostgreSQL database dump complete
 --
 
@@ -2580,4 +2574,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220502152603'),
 ('20220503121253'),
 ('20220504140508'),
-('20220507210839');
+('20220507210839'),
+('20220510015131'),
+('20220512004401');
+
+

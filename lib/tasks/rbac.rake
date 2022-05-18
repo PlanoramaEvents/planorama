@@ -164,8 +164,8 @@ namespace :rbac do
       "configuration": {
           "create": false,
           "destroy": false,
-          "index": false,
-          "show": false,
+          "index": true,
+          "show": true,
           "update": false
       },
       "mailing": {
@@ -385,8 +385,8 @@ namespace :rbac do
       "configuration": {
           "create": false,
           "destroy": false,
-          "index": false,
-          "show": false,
+          "index": true,
+          "show": true,
           "update": false
       },
       "mailing": {
