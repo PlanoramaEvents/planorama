@@ -7,6 +7,7 @@
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
       <b-tab title="General" :active="!tab" lazy>
         <person-details
+          v-if="person"
           v-model="person"
           :model="personModel"
         ></person-details>
@@ -17,6 +18,7 @@
       <!-- Can not make this lazy otherwise we have lock issues with the notes -->
       <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
         <availability-and-interests
+          v-if="person"
           v-model="person"
           @input="onPersonUpdate"
           :start_time="start_time"
@@ -27,6 +29,7 @@
       </b-tab>
       <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
         <session-selector
+          v-if="person"
           v-model="person"
           defaultSortBy='sessions.title'
           :model="sessionModel"
@@ -35,6 +38,7 @@
       </b-tab>
       <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
         <session-ranker
+          v-if="person"
           defaultSortBy='interest_ranking,session_assignments.updated_at'
           :defaultSortDesc="true"
           :perPage="null"
@@ -93,9 +97,11 @@ export default {
     personModel,
     sessionModel,
     sessionAssignmentModel,
-    person: null,
   }),
   computed: {
+    person() {
+      return this.selected_model(personModel);
+    },
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
         let st = this.configByName('convention_start_time')
@@ -160,9 +166,7 @@ export default {
     // get id from URL if present
     let id = this.id ? this.id : this.currentUser.id
     this.fetch_model_by_id(personModel, id).then(
-      (obj) => {
-        this.person = obj
-      }
+      this.select_model(personModel, id)
     )
   },
 }

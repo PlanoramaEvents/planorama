@@ -18,46 +18,49 @@
         Primary email: <em>{{person.primary_email.email}}</em>
       </div>
     </div>
-    <edit-modal id="person-top-modal" body-class="formscroll">
+    <person-edit-modal id="person-top-modal" body-class="formscroll" :person="person" :data="editData">
       <template #modal-title>Edit Profile - {{person.published_name}}</template>
-      <b-form-group label="Name">
-        <b-form-input type="text" v-model="person.name"></b-form-input>
-      </b-form-group>
-      <b-form-group label="Pseudonym">
-        <b-form-input type="text" v-model="person.pseudonym"></b-form-input>
-      </b-form-group>
-      <b-form-group label="Pronouns">
-        <b-form-input type="text" v-model="person.pronouns"></b-form-input>
-      </b-form-group>
-      <b-form-group>
-        <b-form-checkbox switch v-model="person.willing_to_moderate">Willing to moderate session</b-form-checkbox>
-      </b-form-group>
-      <email-addresses-editor
-        v-model="person"
-        model='email_address'
-        @add="scrollToBottom()"
-      ></email-addresses-editor>
-    </edit-modal>
+      <template #default="slotData">
+        <b-form-group label="Name">
+          <b-form-input type="text" v-model="slotData.fields.name"></b-form-input>
+        </b-form-group>
+        <b-form-group label="Pseudonym">
+          <b-form-input type="text" v-model="slotData.fields.pseudonym"></b-form-input>
+        </b-form-group>
+        <b-form-group label="Pronouns">
+          <b-form-input type="text" v-model="slotData.fields.pronouns"></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-form-checkbox switch v-model="slotData.fields.willing_to_moderate" @change="log($event)">Willing to moderate session</b-form-checkbox>
+        </b-form-group>
+      </template>
+    </person-edit-modal>
   </div>
 </template>
 
 <script>
 const { DateTime } = require("luxon");
 import EditButton from '@/components/edit_button';
-import EditModal from '@/components/edit_modal';
-import EmailAddressesEditor from '@/components/email_addresses_editor';
+import PersonEditModal from './person_edit_modal';
 
 export default {
   name: "PersonSummary",
   components: {
     EditButton,
-    EditModal,
-    EmailAddressesEditor
+    PersonEditModal,
   },
   model: {
     prop: 'person',
     // event: 'blur'
   },
+  data: () => ({
+    editData: {
+      name: null,
+      pseudonym: null,
+      pronouns: null,
+      willing_to_moderate: null
+    }
+  }),
   props: {
     person: {
       type: Object,
@@ -78,6 +81,10 @@ export default {
       const el = document.getElementsByClassName('formscroll')[0];
       console.log(el, el.scrollTop, el.scrollHeight);
       el.scrollTop = el.scrollHeight
+    },
+    log(e) {
+      console.log(e)
+      console.log(this.editData)
     }
   }
 }

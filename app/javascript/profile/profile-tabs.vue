@@ -86,9 +86,11 @@ export default {
     personModel,
     sessionModel,
     sessionAssignmentModel,
-    person: null,
   }),
   computed: {
+    person() {
+      return this.selected_model(personModel);
+    },
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
         let st = this.configByName('convention_start_time')
@@ -149,10 +151,9 @@ export default {
   mounted() {
     // get id from URL if present
     let id = this.id ? this.id : this.currentUser.id
+    // changed this to select the person
     this.fetch_model_by_id(personModel, id).then(
-      (obj) => {
-        this.person = obj
-      }
+      this.select_model(personModel, id)
     )
   },
 }
