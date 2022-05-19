@@ -1,14 +1,13 @@
 <template>
   <div>
-    <person-summary v-if="person"
-      v-model="person"
-    ></person-summary>
+    <model-loading-overlay :model="personModel">
+      <person-summary></person-summary>
+    </model-loading-overlay>
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
       <b-tab title="General" :active="!tab" lazy>
-        <person-details
-          v-model="person"
-          :model="personModel"
-        ></person-details>
+        <model-loading-overlay :model="personModel">
+          <person-details></person-details>
+        </model-loading-overlay>
       </b-tab>
       <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
         <person-demographics :selected="person"></person-demographics>
@@ -53,6 +52,7 @@ import AvailabilityAndInterests from './availability_and_interests.vue';
 import PersonDetails from './person_details.vue'
 import PersonSummary from './person_summary.vue';
 import PersonDemographics from './person_demographics';
+import ModelLoadingOverlay from '@/components/model_loading_overlay';
 
 import { personModel } from '@/store/person.store'
 import { sessionModel } from '@/store/session.store'
@@ -76,6 +76,7 @@ export default {
     AvailabilityAndInterests,
     PersonDetails,
     PersonDemographics,
+    ModelLoadingOverlay,
   },
   mixins: [
     personSessionMixin,

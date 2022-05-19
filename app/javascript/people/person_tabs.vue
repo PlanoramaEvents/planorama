@@ -1,16 +1,14 @@
 <template>
   <div>
     <b-button variant="link" @click="back">Back</b-button>
-    <person-summary v-if="person"
-      v-model="person"
-    ></person-summary>
+    <model-loading-overlay :model="personModel">
+      <person-summary></person-summary>
+    </model-loading-overlay>
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
       <b-tab title="General" :active="!tab" lazy>
-        <person-details
-          v-if="person"
-          v-model="person"
-          :model="personModel"
-        ></person-details>
+        <model-loading-overlay :model="personModel">
+          <person-details></person-details>
+        </model-loading-overlay>
       </b-tab>
       <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
         <person-demographics :selected="person"></person-demographics>
@@ -64,6 +62,7 @@ import AvailabilityAndInterests from '../profile/availability_and_interests.vue'
 import PersonDetails from '../profile/person_details.vue'
 import PersonSummary from '../profile/person_summary.vue';
 import PersonDemographics from '../profile/person_demographics.vue';
+import ModelLoadingOverlay from '@/components/model_loading_overlay.vue';
 
 import { personModel } from '@/store/person.store'
 import { sessionModel } from '@/store/session.store'
@@ -86,7 +85,8 @@ export default {
     SessionRanker,
     AvailabilityAndInterests,
     PersonDetails,
-    PersonDemographics
+    PersonDemographics,
+    ModelLoadingOverlay
   },
   mixins: [
     personSessionMixin,
@@ -164,10 +164,16 @@ export default {
   },
   mounted() {
     // get id from URL if present
-    let id = this.id ? this.id : this.currentUser.id
-    this.fetch_model_by_id(personModel, id).then(
-      this.select_model(personModel, id)
-    )
+    let id = this.id || this.currentUser.id;
+    let selectedPerson = this.selected_model(personModel);
+    // don't fetch if already here... todo figure out if we
+    // want to lazy fetch anyhow
+    if (selectedPerson?.id !== id) {
+      this.unselect_model(personModel);
+      this.fetch_model_by_id(personModel, id).then(
+        this.select_model(personModel, id)
+      );
+    }
   },
 }
 </script>

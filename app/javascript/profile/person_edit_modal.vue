@@ -45,10 +45,7 @@ export default {
     },
     patchPerson() {
       this.toastPromise(this.patchPersonModel({person: this.person, data: this.data}), "TODO SAVE MSSAGE", "TODO ERROR MESSAGE").then((savedPerson) => {
-        this.fetchById({model: 'person', id: savedPerson.id}).then((fetchedPerson) => {
-          // TODO do i need this
-          this.$emit('updated', fetchedPerson);
-        })
+        this.$emit('updated', savedPerson);
       })
     }
   }
