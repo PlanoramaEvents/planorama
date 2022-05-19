@@ -45,10 +45,6 @@
     "@babel/preset-env": "^7.15.0",
     "@babel/runtime": "^7.14.8",
     "@rails/webpacker": "4.3.0",
-    "@storybook/addon-actions": "^6.2.9",
-    "@storybook/addon-essentials": "^6.2.9",
-    "@storybook/addon-links": "^6.2.9",
-    "@storybook/vue": "^6.2.9",
     "@vue/test-utils": "^1.3.0",
     "@vue/vue2-jest": "^27.0.0-alpha.3",
     "@webpack-cli/serve": "^1.2.1",
@@ -71,8 +67,6 @@
     "webpack-dev-server": "^3.11.3"
   },
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
   }
 }
