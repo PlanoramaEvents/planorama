@@ -20,18 +20,18 @@
       </div>
       <person-edit-modal id="person-top-modal" body-class="formscroll" :person="selected" :data="editData">
         <template #modal-title>Edit Profile - {{selected.published_name}}</template>
-        <template #default="slotData">
+        <template #default="{fields}">
           <b-form-group label="Name">
-            <b-form-input type="text" v-model="slotData.fields.name"></b-form-input>
+            <b-form-input type="text" v-model="fields.name"></b-form-input>
           </b-form-group>
           <b-form-group label="Pseudonym">
-            <b-form-input type="text" v-model="slotData.fields.pseudonym"></b-form-input>
+            <b-form-input type="text" v-model="fields.pseudonym"></b-form-input>
           </b-form-group>
           <b-form-group label="Pronouns">
-            <b-form-input type="text" v-model="slotData.fields.pronouns"></b-form-input>
+            <b-form-input type="text" v-model="fields.pronouns"></b-form-input>
           </b-form-group>
           <b-form-group>
-            <b-form-checkbox switch v-model="slotData.fields.willing_to_moderate" @change="log($event)">Willing to moderate session</b-form-checkbox>
+            <b-form-checkbox switch v-model="fields.willing_to_moderate" @change="log($event)">Willing to moderate session</b-form-checkbox>
           </b-form-group>
         </template>
       </person-edit-modal>

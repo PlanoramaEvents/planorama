@@ -17,7 +17,7 @@
         </dl>
       </div>
       <div class="w-50">
-        <h5>Community memberships</h5>
+        <h5>Community memberships <edit-button v-b-modal.person-community-modal></edit-button></h5>
         <dl>
           <dt>Experience with being “othered”</dt>
           <dd class="ml-2">{{ selected.othered | na_if_empty }}</dd>
@@ -51,7 +51,27 @@
           <b-form-input type="text" v-model="fields.age_at_convention"></b-form-input>
         </b-form-group>
         <b-form-group label="Romantic and/or sexual orientation">
-          <b-form-input type="text" v-model="fields.romantic_sexual_orientation"></b-form-input>
+          <b-form-textarea v-model="fields.romantic_sexual_orientation"></b-form-textarea>
+        </b-form-group>
+      </template>
+    </person-edit-modal>
+    <person-edit-modal id="person-community-modal" :person="selected" :data="communityData">
+      <template #modal-title>Edit community memberships - {{selected.published_name}}</template>
+      <template #default="{fields}">
+        <b-form-group label="Experience with being &quot;othered&quot;">
+          <b-form-textarea v-model="fields.othered"></b-form-textarea>
+        </b-form-group>
+        <b-form-group label="Member of an Indigenous community">
+          <b-form-textarea v-model="fields.indigenous"></b-form-textarea>
+        </b-form-group>
+        <b-form-group label="Member of the global Black diaspora">
+          <b-form-textarea v-model="fields.black_diaspora"></b-form-textarea>
+        </b-form-group>
+        <b-form-group label="Represent something other than a purely US-centric perspective">
+          <b-form-textarea v-model="fields.non_us_centric_perspectives"></b-form-textarea>
+        </b-form-group>
+        <b-form-group label="Other demographic categories">
+          <b-form-textarea v-model="fields.demographic_categories"></b-form-textarea>
         </b-form-group>
       </template>
     </person-edit-modal>
@@ -78,6 +98,13 @@ export default {
       gender: null,
       age_at_convention: null,
       romantic_sexual_orientation: null
+    },
+    communityData: {
+      othered: null,
+      indigenous: null,
+      black_diaspora: null,
+      non_us_centric_perspectives: null,
+      demographic_categories: null
     }
   }),
   mixins: [
