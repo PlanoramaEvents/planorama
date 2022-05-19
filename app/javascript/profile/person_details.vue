@@ -208,7 +208,6 @@ import {
 import settingsMixin from "@/store/settings.mixin";
 import { modelMixinNoProp } from '@/store/model.mixin';
 import { personModel as model } from "@/store/person.store";
-
 import { DateTime } from "luxon";
 
 export default {

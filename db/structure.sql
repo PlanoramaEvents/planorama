@@ -2464,6 +2464,14 @@ ALTER TABLE ONLY public.survey_submissions
 
 
 --
+-- Name: rooms fk_rails_d2498419d7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rooms
+    ADD CONSTRAINT fk_rails_d2498419d7 FOREIGN KEY (room_set_id) REFERENCES public.room_sets(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 

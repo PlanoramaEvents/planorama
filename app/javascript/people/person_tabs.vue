@@ -11,14 +11,15 @@
         </model-loading-overlay>
       </b-tab>
       <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
-        <person-demographics :selected="person"></person-demographics>
+        <model-loading-overlay :model="personModel">
+          <person-demographics></person-demographics>
+        </model-loading-overlay>
       </b-tab>
       <!-- Can not make this lazy otherwise we have lock issues with the notes -->
       <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
         <availability-and-interests
           v-if="person"
           v-model="person"
-          @input="onPersonUpdate"
           :start_time="start_time"
           :end_time="end_time"
           :timezone="timezone"
@@ -127,9 +128,6 @@ export default {
     }
   },
   methods: {
-    onPersonUpdate(arg) {
-      this.person = arg
-    },
     back() {
       this.$router.push('/people');
     },
