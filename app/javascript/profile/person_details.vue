@@ -46,13 +46,6 @@
       <b-form-group label="Moderating experience">
         <b-form-textarea v-model="selected.moderation_experience" @blur="saveSelected()"></b-form-textarea>
       </b-form-group>
-      <b-form-group label="Languages spoken">
-        <b-form-checkbox-group stacked>
-          <b-form-checkbox value="polish">Polish</b-form-checkbox>
-          <b-form-checkbox value="spanish">Spanish</b-form-checkbox>
-        </b-form-checkbox-group>
-      </b-form-group>
-
     </div>
     <div class="d-flex flex-column w-50 p-2">
       <div><b>I plan to attend the convention:</b></div>
@@ -87,14 +80,8 @@
       <!-- <b-form-checkbox v-model="selected.twelve_hour" @input="saveSelected()">
         12 Hour Display
       </b-form-checkbox> -->
-      <b-form-group label="Bio">
-        <plano-editor
-          v-model="selected.bio"
-          type='classic'
-          @blur="saveSelected()"
-          :disabled="disabled"
-        ></plano-editor>
-      </b-form-group>
+      <h5>Bio <edit-button v-b-modal.person-bio-modal></edit-button></h5>
+      <div class="ml-2" v-html="selected.bio"></div>
       <b class="mt-3">Social Media</b>
       <validated-social
         :rules="{ regex: /^[a-z0-9_]{1,15}$/i }"
@@ -175,6 +162,15 @@
       ></simple-social>
       <!-- We do not appear to cover flickr or reddit in the design -->
     </div>
+    <person-edit-modal id="person-bio-modal" :person="selected" :data="{bio: null}">
+      <template #modal-title>Edit Bio - {{selected.published_name}}</template>
+      <template #default="{fields}">
+        <plano-editor
+          v-model="fields.bio"
+          type='classic'
+        ></plano-editor>
+      </template>
+    </person-edit-modal>
   </div>
   <!-- <br />
   {{person.pronouns}}
@@ -189,11 +185,13 @@
 </template>
 
 <script>
-import TimezoneSelector from "../components/timezone_selector.vue"
-import EmailAddressesEditor from "../components/email_addresses_editor.vue"
-import PlanoEditor from '../components/plano_editor'
-import ValidatedSocial from '../components/validated_social.vue';
+import TimezoneSelector from "@/components/timezone_selector.vue"
+import EmailAddressesEditor from "@/components/email_addresses_editor.vue"
+import PlanoEditor from '@/components/plano_editor'
+import ValidatedSocial from '@/components/validated_social.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
+import EditButton from '@/components/edit_button.vue';
+import PersonEditModal from './person_edit_modal.vue';
 
 import {
   TWITTER_ID_INVALID_MSG,
@@ -217,7 +215,9 @@ export default {
     EmailAddressesEditor,
     PlanoEditor,
     ValidatedSocial,
-    SimpleSocial
+    SimpleSocial,
+    PersonEditModal,
+    EditButton,
   },
   mixins: [
     settingsMixin,

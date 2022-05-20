@@ -133,26 +133,30 @@ export default {
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
       let path = '';
+      const pathStart = this.$route.path.split('/')[1];
       switch(newTab) {
         case 0:
-          path = `edit/${this.person.id}`;
+          path = pathStart === 'people' ? 'edit' : '';
           break;
         case 1:
-          path = `other/${this.person.id}`;
+          path = `other`;
           break;
         case 2:
-          path = `availability/${this.person.id}`;
+          path = `availability`;
           break;
         case 3:
-          path = `session-selection/${this.person.id}`;
+          path = `session-selection`;
           break;
         case 4:
-          path = `session-ranking/${this.person.id}`;
+          path = `session-ranking`;
           break;
       }
       // change the router path to match the current tab
       // so that reloads work right
-      this.$router.push(`/people/${path}`).catch(error => {
+      if(pathStart === 'people') {
+        path += `/${this.person.id}`
+      }
+      this.$router.push(`/${pathStart}/${path}`).catch(error => {
         if(!isNavigationFailure(error, NavigationFailureType.duplicated)) {
           // ignore the duplicates, otherwise -
           throw error;
@@ -173,6 +177,13 @@ export default {
       );
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (from.path.match(/.*profile.*/) && to.path === '/people') {
+      // going from profile to people, clear the selection
+      this.unselect_model(personModel)
+    }
+    next();
+  }
 }
 </script>
 
