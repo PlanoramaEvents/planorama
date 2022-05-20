@@ -55,7 +55,7 @@ gem 'jsonapi.rb'
 
 gem 'deep_cloneable', '~> 3.2.0'
 
-gem "nokogiri", ">= 1.13.4"
+gem "nokogiri", ">= 1.13"
 gem "roo", "~> 2.8.0"
 
 gem 'truemail'
