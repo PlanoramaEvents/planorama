@@ -373,9 +373,15 @@ module ResourceMethods
       part = table[column.to_sym].send(op, val).or(
         table[column.to_sym].send(op, nil)
       )
-    elsif operation == 'is not empty'
+    elsif operation == 'is not empty'  # not_eq
       part = table[column.to_sym].send(op, val).and(
         table[column.to_sym].send(op, nil)
+      )
+    elsif operation == 'is not' # not_eq
+      # is not, need to ignore the others (TODO, how???)
+      part = table[column.to_sym].send(op, val).or(
+        # 'is not' needs to retutn the nulls as well
+        table[column.to_sym].send(:eq, nil)
       )
     else
       part = table[column.to_sym].send(op, val)
