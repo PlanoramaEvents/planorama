@@ -19,6 +19,15 @@ import PeopleScreen from './people/people-screen.vue';
 import PeopleList from './people/people_list.vue';
 import PersonTabs from './people/person_tabs.vue';
 
+const personRoutes = [
+  { path: 'edit/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'person-edit'}) },
+  { path: 'session-selection/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
+  { path: 'session-ranking/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
+  { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
+  { path: 'other/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'other'}) },
+  { path: '', component: PeopleList }
+]
+
 // profile
 import ProfileScreen from './profile/profile-screen.vue';
 import ProfileTabs from './profile/profile-tabs.vue';
@@ -31,13 +40,14 @@ const profileRoutes = [
   { path: '', component: ProfileTabs, props: true }
 ]
 
-const personRoutes = [
-  { path: 'edit/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'person-edit'}) },
-  { path: 'session-selection/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
-  { path: 'session-ranking/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
-  { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
-  { path: 'other/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'other'}) },
-  { path: '', component: PeopleList }
+// venues
+import VenuesScreen from "@/venues/venues-screen";
+import VenuesTabs from "@/venues/venues-tabs";
+
+const venuesRoutes = [
+  { path: 'venues', component: VenuesTabs, props: {tab: 'venues'}},
+  { path: 'roomsets', component: VenuesTabs, props: {tab: 'roomsets'}},
+  { path: '', component: VenuesTabs, props: true},
 ]
 
 //
@@ -91,6 +101,7 @@ import VenueManager from './venues/venue_manager.vue';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { GET_SESSION_USER } from './store/person_session.store';
+
 Vue.use(VueRouter);
 // var ua='', signed_agreements={}, doing_agreements=false;
 var con_roles=[], isAdmin=false, hasPowers=false;
@@ -184,7 +195,8 @@ export const router = new VueRouter({
     },
     {
       path: '/venues',
-      component: VenueManager,
+      component: VenuesScreen,
+      children: venuesRoutes,
       meta: {
         requiresAuth: true
       }
