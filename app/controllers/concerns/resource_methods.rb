@@ -366,7 +366,7 @@ module ResourceMethods
                     when 'is'
                       ::Arel.sql("('#{value}' = ANY(#{table}.#{column}))")
                     when 'is not'
-                      ::Arel.sql("('#{value}' != ANY(#{table}.#{column}) or cardinality(#{table}.#{column}) = 0)")
+                      ::Arel.sql("('#{value}' != ALL(#{table}.#{column}) or cardinality(#{table}.#{column}) = 0)")
                     when 'is empty'
                       ::Arel.sql("(cardinality(#{table}.#{column}) = 0)")
                     when 'is not empty'
