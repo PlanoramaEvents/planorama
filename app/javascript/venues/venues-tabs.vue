@@ -16,7 +16,7 @@
       </b-tab>
       <b-tab title="Roomsets" :active="tab === 'roomsets'" lazy>
         <h2>Roomsets</h2>
-        <RoomSetsManager model="roomset" ref="room-sets-manager"></RoomSetsManager>
+        <RoomSetsManager model="room_set" ref="room-sets-manager"></RoomSetsManager>
         <!--roomsets-manager :selected="roomset"></roomsets-manager-->
       </b-tab>
     </b-tabs>
@@ -43,42 +43,36 @@ export default {
   },
   methods: {
     input() {
-      // if(!this.activated) {
-        if(this.$refs['rooms-manager'])
-          this.$refs['rooms-manager'].init();
-        if(this.$refs['room-sets-manager'])
-          this.$refs['room-sets-manager'].init();
-        if(this.$refs['venues-manager'])
-          this.$refs['venues-manager'].init();
-        this.activated=true;
-      // }
+      if(this.$refs['rooms-manager'])
+        this.$refs['rooms-manager'].init();
+      if(this.$refs['room-sets-manager'])
+        this.$refs['room-sets-manager'].init();
+      if(this.$refs['venues-manager'])
+        this.$refs['venues-manager'].init();
     },
-      onPersonUpdate(arg) {
-        this.person = arg
-      },
-      handleTabActivation(newTab, oldTab, bvEvent) {
-        let path = '';
-        switch(newTab) {
-          case 0:
-            path = '';
-            break;
-          case 1:
-            path = 'venues';
-            break;
-          case 2:
-            path = 'roomsets';
-            break;
-        }
-        // change the router path to match the current tab
-        // so that reloads work right
-        this.$router.push(`/venues/${path}`).catch(error => {
-          if(!isNavigationFailure(error, NavigationFailureType.duplicated)) {
-            // ignore the duplicates, otherwise -
-            throw error;
-          }
-        })
+    handleTabActivation(newTab) {
+      let path = '';
+      switch(newTab) {
+        case 0:
+          path = '';
+          break;
+        case 1:
+          path = 'venues';
+          break;
+        case 2:
+          path = 'roomsets';
+          break;
       }
-    },
+      // change the router path to match the current tab
+      // so that reloads work right
+      this.$router.push(`/venues/${path}`).catch(error => {
+        if(!isNavigationFailure(error, NavigationFailureType.duplicated)) {
+          // ignore the duplicates, otherwise -
+          throw error;
+        }
+      })
+    }
+  },
     // mounted() {
     //   // get id from URL if present
     //   let id = this.id ? this.id : this.currentUser.id
