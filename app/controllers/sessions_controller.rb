@@ -169,23 +169,30 @@ class SessionsController < ResourceController
     ]
   end
 
+  def derived_col?(col_name:)
+    return true if col_name == 'area_list'
+    false
+  end
+
+  def array_col?(col_name:)
+    return true if col_name == 'area_list'
+    false
+  end
+
+  def array_table(col_name:)
+    return 'areas_list' if col_name == 'area_list'
+    false
+  end
+
   def join_tables
     sessions = Arel::Table.new(Session.table_name)
-    session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
-    areas = Arel::Table.new(Area.table_name)
 
+    subquery = Session.area_list.as('areas_list')
     joins = [
       sessions.create_join(
-        session_areas,
+        subquery,
         sessions.create_on(
-          sessions[:id].eq(session_areas[:session_id])
-        ),
-        Arel::Nodes::OuterJoin
-      ),
-      session_areas.create_join(
-        areas,
-        session_areas.create_on(
-          session_areas[:area_id].eq(areas[:id])
+          subquery[:session_id].eq(sessions[:id])
         ),
         Arel::Nodes::OuterJoin
       )

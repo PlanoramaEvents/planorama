@@ -19,7 +19,7 @@ export const session_columns = [
   {
     key: 'area_list',
     sortKey: 'areas.name',
-    search_key: 'areas.name',
+    search_key: 'area_list',
     label: 'Area',
     component: AreaSelectForSearch,
     type: 'custom-component',

@@ -1,27 +1,3 @@
-## schema
-# CREATE TABLE public.sessions (
-#     id integer NOT NULL,
-#     duration integer,
-#     minimum_people integer,
-#     maximum_people integer,
-#     item_notes text,
-#     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-#     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-#     lock_version integer DEFAULT 0,
-#     format_id integer,
-#     pub_reference_number integer,
-#     mobile_card_size integer DEFAULT 1 NOT NULL,
-#     audience_size integer,
-#     participant_notes text,
-#     is_break boolean DEFAULT false,
-#     description text,
-#     title character varying(256),
-#     start_time timestamp without time zone,
-#     room_id integer,
-#     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
-#     publish boolean DEFAULT false NOT NULL
-# );
-
 class Session < ApplicationRecord
   validates_presence_of :title
   validates_numericality_of :duration, allow_nil: true
@@ -92,6 +68,25 @@ class Session < ApplicationRecord
         self.interest_opened_at = Time.now
       end
     end
+  end
+
+  # Aggregate for area queries
+  # '1946 Project' = ANY(area_list) (contains this)
+  # '1946 Project' != ANY(area_list) (does not contain this)
+  # AND array_length(area_list, 1) > 1
+  def self.area_list
+    sessions = Session.arel_table
+    session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
+    areas = Arel::Table.new(Area.table_name)
+
+    sessions.project(sessions[:id].as('session_id'), area_aggregate_fn( areas[:name] ).as('area_list'))
+      .join(session_areas, Arel::Nodes::OuterJoin).on(sessions[:id].eq(session_areas[:session_id]))
+      .join(areas, Arel::Nodes::OuterJoin).on(session_areas[:area_id].eq(areas[:id]))
+      .group('sessions.id')
+  end
+
+  def self.area_aggregate_fn(col)
+    Arel::Nodes::NamedFunction.new('array_remove',[Arel::Nodes::NamedFunction.new('array_agg',[col]), Arel::Nodes::SqlLiteral.new("NULL")])
   end
 
 # NOTE: This only matches  that have the exact set of specified tags. If a user has additional tags, they are not returned.
