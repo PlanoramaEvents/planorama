@@ -112,7 +112,13 @@ export default {
       let filter = {
         "op": "all",
         "queries":[
-          ["start_time", "is null"],
+          {
+            "op": "any",
+            "queries":[
+              ["start_time", "is null"],
+              ["room_id", "is null"]
+            ]
+          },
           ["duration", ">", "0"]
         ]
       }
