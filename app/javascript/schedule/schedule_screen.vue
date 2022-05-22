@@ -1,22 +1,21 @@
 <template>
     <div class="container-fluid pl-0">
       <div class="row">
-        <div class="col-3 mt-3">
+        <div class="col-3 pt-3 d-flex flex-column" style="max-height: calc(100vh - 150px)">
           <schedulable-sessions
             :model="sessionModel"
             :defaultFilter="sessionFilter"
             defaultSortBy="sessions.title"
             ref="schedulable-sessions"
+            style="flex: 1 0 auto"
           >
           </schedulable-sessions>
-          <div>
           <room-selector
             v-if="rooms"
             :rooms="rooms"
             @change="onRoomChange"
-            class="v-100"
+            style="flex: 1 1 40%; overflow-y: auto"
           ></room-selector>
-          </div>
         </div>
         <div class="col-9 scrollable">
           <schedule-calendar
