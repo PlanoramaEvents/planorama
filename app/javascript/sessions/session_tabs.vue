@@ -1,14 +1,10 @@
 <template>
   <div>
     <b-button variant="link" @click="back">Back</b-button>
-    <session-summary
-      :session="session"
-      @input="onSessionUpdate"
-      v-if="session"
-    ></session-summary>
+    <session-summary ></session-summary>
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="session">
       <b-tab title="General" :active="tab === 'session-edit'">
-        <session-edit v-model="session"></session-edit>
+        <session-edit></session-edit>
       </b-tab>
       <b-tab title="Participant Assignment" :active="tab === 'session-assignment'" lazy>
         <assign-participants
@@ -26,9 +22,7 @@
         <session-schedule></session-schedule>
       </b-tab>
       <b-tab title="Notes" :active="tab === 'session-notes'">
-        <session-notes
-          v-model="session"
-        ></session-notes>
+        <session-notes></session-notes>
       </b-tab>
     </b-tabs>
   </div>
@@ -68,9 +62,11 @@ export default {
   ],
   data: () => ({
     sessionAssignmentModel,
-    session: null
   }),
   computed: {
+    session() {
+      return this.selected_model(sessionModel);
+    },
     assignmentFilter() {
       let filter = {
         "op": "all",
@@ -134,7 +130,6 @@ export default {
     // get the session (latest)
     this.fetch_model_by_id(sessionModel, this.id).then(
       (obj) => {
-        this.session = obj
         this.select_model(sessionModel, obj);
       }
     )

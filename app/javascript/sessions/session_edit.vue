@@ -64,20 +64,14 @@ export default {
   mixins: [
     modelUtilsMixin
   ],
-  model: {
-    prop: 'session'
-  },
-  props: {
-    session: {
-      type: Object,
-      required: true
-    }
-  },
   data: () => ({
     editable: false,
     saving: false
   }),
   computed: {
+    session() {
+      return this.selected_model(sessionModel)
+    },
     session_tags: {
       get() {
         return this.session.tag_list
@@ -131,15 +125,7 @@ export default {
       }
     },
     saveSession() {
-      if (this.saving) return
-
-      this.saving = true
-      this.save_model(sessionModel, this.session).then(
-        (obj) => {
-          this.saving = false
-          this.$emit('input',obj)
-        }
-      )
+      this.save_model(sessionModel, this.session)
     }
   }
 }
