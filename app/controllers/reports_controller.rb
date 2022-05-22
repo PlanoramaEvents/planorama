@@ -54,9 +54,9 @@ class ReportsController < ApplicationController
         [
           session.title,
           session.area_list.sort.join(';'),
-          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.name}.join(';'),
-          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.name}.join(';'),
-          session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.published_name}.join(';'),
         ]
       )
     end
