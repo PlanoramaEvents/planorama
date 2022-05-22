@@ -1,5 +1,118 @@
 class ReportsController < ApplicationController
 
+  # Sessions that are assigned - this should only return if at least one of the three below assigned status have anyone assigned to it
+  #
+  #     Area(s)
+  #     Title
+  #     Moderator(s) - The names of people assigned as moderator
+  #     Participants - The names of people assigned as participants
+  #     Reserve - The names of people selected as reserved
+  #
+  def sessions_with_participants
+    authorize SessionAssignment, policy_class: ReportsPolicy
+
+    session_table = Arel::Table.new(Session.table_name)
+    subquery = Session.area_list.as('areas_list')
+    joins = [
+      session_table.create_join(
+        subquery,
+        session_table.create_on(
+          subquery[:session_id].eq(session_table[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    # array aggregate ...
+    sessions = Session.select(
+                  ::Session.arel_table[Arel.star],
+                  'areas_list.area_list'
+                )
+                .joins(joins)
+                .eager_load(:areas, {session_assignments: [:person]})
+                .where("session_assignments.session_assignment_role_type_id is not null")
+                .order('sessions.title')
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Session With Participants")
+
+    worksheet.append_row(
+      [
+        'Title',
+        'Areas',
+        'Moderators',
+        'Participants',
+        'Reserves'
+      ]
+    )
+
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    reserve = SessionAssignmentRoleType.find_by(name: 'Reserve')
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.name}.join(';'),
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "SessionsWithPartiipants#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+
+  end
+
+  # Assigned session by participant - this should only return if the person is assigned as a moderator or a participant
+  #
+  #     Name
+  #     Item title
+  #     If they are assigned as a moderator or not for that item
+  def assigned_sessions_by_participant
+    authorize SessionAssignment, policy_class: ReportsPolicy
+
+    people = Person.includes(
+      {session_assignments: [:session, :session_assignment_role_type]}
+    ).references(
+      {session_assignments: :session}
+    ).where(
+      "session_assignments.session_assignment_role_type_id is not null"
+    ).order("people.name")
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Assigned Sessions")
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Pub Name',
+        'Session Title',
+        'Role'
+      ]
+    )
+
+    people.each do |person|
+      person.session_assignments.each do |assignment|
+        worksheet.append_row(
+          [
+            person.name,
+            person.published_name,
+            assignment.session.title,
+            assignment.session_assignment_role_type.name
+          ]
+        )
+      end
+    end
+
+    send_data workbook.read_string,
+              filename: "AssignedSessionsByPerson_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   #
   #
   #
