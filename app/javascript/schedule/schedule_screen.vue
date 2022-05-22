@@ -132,7 +132,12 @@ export default {
     },
   },
   mounted() {
-    this.fetch_models(roomModel).then(data => {
+    this.fetch_models(
+      roomModel,
+      {
+        perPage: 1000
+      }
+    ).then(data => {
       this.rooms = Object.values(data).filter(
         obj => (typeof obj.json === 'undefined')
       )
