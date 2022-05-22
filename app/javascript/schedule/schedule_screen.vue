@@ -2,7 +2,6 @@
     <div class="container-fluid pl-0">
       <div class="row">
         <div class="col-3 mt-3">
-          <schedule-session-search></schedule-session-search>
           <schedulable-sessions
             :model="sessionModel"
             :defaultFilter="sessionFilter"
@@ -45,7 +44,6 @@ import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
 import { roomModel } from '../store/room.store.js';
 import { sessionModel } from '@/store/session.store'
-import ScheduleSessionSearch from './schedule_session_search';
 
 import { DateTime } from "luxon";
 
@@ -54,8 +52,7 @@ export default {
   components: {
     ScheduleCalendar,
     SchedulableSessions,
-    RoomSelector,
-    ScheduleSessionSearch
+    RoomSelector
   },
   mixins: [
     modelUtilsMixin,

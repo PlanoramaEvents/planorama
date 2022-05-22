@@ -2,6 +2,10 @@
   <div class="all-scheduable-session">
     <!-- TODO: add pager ... -->
     <!-- TODO: add search/filter ... -->
+    <schedule-session-search
+      :value="filter"
+      @change="onSearchChanged"
+    ></schedule-session-search>
     <div class="all-scheduable-session-list">
       <div
         class="scheduable-session mb-1"
@@ -27,11 +31,13 @@
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import { sessionModel as model } from '@/store/session.store'
+import ScheduleSessionSearch from './schedule_session_search';
 
 // TODO: filter out sessions with no duration
 export default {
   name: "SchedulableSessions",
   components: {
+    ScheduleSessionSearch
   },
   mixins: [
     // modelUtilsMixin,
@@ -46,6 +52,9 @@ export default {
   computed: {
   },
   methods: {
+    onSearchChanged(arg) {
+      this.filter = arg
+    },
     onEventDragStart (e, draggable) {
       // Passing the event's data to Vue Cal through the DataTransfer object.
       e.dataTransfer.setData('event', JSON.stringify(draggable))

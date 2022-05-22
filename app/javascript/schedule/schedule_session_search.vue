@@ -37,7 +37,7 @@ import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
 import searchStateMixin from '../store/search_state.mixin'
 
-const SAVED_SEARCH_STATE = "SESSION SELECT STATE";
+const SAVED_SEARCH_STATE = "SCHEDULABLE SESSION SELECT STATE";
 
 export default {
   name: 'ScheduleSessionSearch',
