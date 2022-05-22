@@ -1,40 +1,40 @@
 <template>
-  <div class="scrollable">
-    <div class="container">
-      <div class="row mt-3">
-        <div class="col-3">
+    <div class="container-fluid pl-0">
+      <div class="row">
+        <div class="col-3 mt-3">
+          <schedule-session-search></schedule-session-search>
           <schedulable-sessions
             :model="sessionModel"
-            style="height: 40vh;"
             :defaultFilter="sessionFilter"
             defaultSortBy="sessions.title"
             ref="schedulable-sessions"
           >
           </schedulable-sessions>
+          <div>
           <room-selector
             v-if="rooms"
             :rooms="rooms"
-            style="height: 30vh;"
             @change="onRoomChange"
+            class="v-100"
           ></room-selector>
+          </div>
         </div>
-        <div class="col-9">
+        <div class="col-9 scrollable">
           <schedule-calendar
             :rooms="rooms"
             :selectedRooms="selectedRooms"
             :days="days"
             :timezone="timezone"
             v-if="(selectedRooms && selectedRooms.length > 0) && days.length > 0"
-            style="height: 70vh;"
             :defaultFilter="scheduleFilter"
             :model="sessionModel"
             :perPage="2000"
             @schedule-changed="onScheduleChanged"
+            class="mt-3"
           ></schedule-calendar>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -44,16 +44,18 @@ import ScheduleCalendar from './schedule_calendar'
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
 import { roomModel } from '../store/room.store.js';
-import { sessionModel as sessionModel } from '@/store/session.store'
+import { sessionModel } from '@/store/session.store'
+import ScheduleSessionSearch from './schedule_session_search';
 
-const { DateTime } = require("luxon");
+import { DateTime } from "luxon";
 
 export default {
   name: "ScheduleScreen",
   components: {
     ScheduleCalendar,
     SchedulableSessions,
-    RoomSelector
+    RoomSelector,
+    ScheduleSessionSearch
   },
   mixins: [
     modelUtilsMixin,

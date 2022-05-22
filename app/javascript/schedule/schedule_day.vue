@@ -24,11 +24,11 @@
     </template>
     <template v-slot:event="{ event, view }">
       <div class="d-flex flex-column">
-        <div class="d-flex flex-row p-1">
+        <div class="d-flex flex-row p-1 justify-content-between">
           <small class="event-time">
             {{ formatLocaleJsDate(event.start) }} - {{ formatDatetime(addMinutes(event.start, event.duration_mins)) }}
           </small>
-          <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
+          <b-icon-x @click="onDelete(event)"></b-icon-x>
         </div>
         <small>
           {{event.title}}

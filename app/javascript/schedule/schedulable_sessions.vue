@@ -70,9 +70,10 @@ export default {
 <style lang="scss">
 @import '../stylesheets/style.scss';
 
+
 .all-scheduable-session-list {
   overflow-y: scroll;
-  height: 80%;
+  max-height: 200px;
 }
 
 .scheduable-session {
