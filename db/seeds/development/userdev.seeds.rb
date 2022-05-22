@@ -1,3 +1,5 @@
+p "Start development userdev seeds"
+
 if !Person.find_by(name: 'test')
     p = Person.create(
         name: 'test',
@@ -59,3 +61,4 @@ if !Person.find_by(name: 'participant')
 end
 
 p "Created special test users for development environment."
+p "End development userdev seeds"

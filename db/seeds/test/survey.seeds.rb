@@ -1,10 +1,6 @@
 #surveys
-p "Start development survey seeds"
-
-
-return if Survey.count > 0
-
-after "development:person" do
+p "Start test survey seeds"
+after "test:person" do
 
 
   Survey::Submission.destroy_all
@@ -213,4 +209,4 @@ end
 
 
 p "Created #{Survey.count} surveys."
-p "End development survey seeds"
+p "End test survey seeds"

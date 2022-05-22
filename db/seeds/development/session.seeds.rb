@@ -1,4 +1,5 @@
-#
+p "Start development session seeds"
+
 return if Session.count > 0
 
 unless Format.find_by_name('Panel')
@@ -27,3 +28,5 @@ talk = Format.find_by_name('Talk')
     audience_size: 100
   )
 end
+
+p "End development session seeds"
