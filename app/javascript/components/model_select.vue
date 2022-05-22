@@ -6,6 +6,7 @@
       :options="options"
       :disabled="disabled"
       :multiple="multiple"
+      :size="size"
     ></b-form-select>
   </b-overlay>
 </template>
@@ -23,6 +24,9 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    size: {
+      type: String
     }
   },
   mixins: [

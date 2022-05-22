@@ -22,8 +22,8 @@
           @input="onSessionUpdate"
         ></assign-participants>
       </b-tab>
-      <b-tab title="Schedule" :active="tab === 'session-schedule'" disabled lazy>
-        Schedule
+      <b-tab title="Schedule" :active="tab === 'session-schedule'" lazy>
+        <session-schedule></session-schedule>
       </b-tab>
       <b-tab title="Notes" :active="tab === 'session-notes'">
         <session-notes
@@ -44,6 +44,7 @@ import AssignParticipants from './assign_participants'
 import SessionSummary from './session_summary'
 import SessionEdit from './session_edit'
 import SessionNotes from './session_notes'
+import SessionSchedule from './session_schedule';
 
 import {
   sessionMixin
@@ -59,7 +60,8 @@ export default {
     SessionSummary,
     AssignParticipants,
     SessionEdit,
-    SessionNotes
+    SessionNotes,
+    SessionSchedule
   },
   mixins: [
     modelUtilsMixin
@@ -97,6 +99,9 @@ export default {
     back() {
       this.$router.push('/sessions');
     },
+    log(thing) {
+      console.log(thing)
+    },
     handleTabActivation(newTab, oldTab, bvEvent) {
       // console.debug("****** tab action", newTab, oldTab, bvEvent)
       let path = '';
@@ -130,6 +135,7 @@ export default {
     this.fetch_model_by_id(sessionModel, this.id).then(
       (obj) => {
         this.session = obj
+        this.select_model(sessionModel, obj);
       }
     )
   }
