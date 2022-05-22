@@ -13,7 +13,7 @@
     :disable-views="['years', 'year', 'month', 'week']"
     :time-cell-height="40"
     :editable-events="{ title: false, drag: true, resize: false, delete: false, create: false }"
-    class="vuecal--full-height-delete"
+    class="plano-sched-day vuecal--full-height-delete"
     ref="dayRoomGrid"
     :events="events"
     @event-drop="onEventDrop"
@@ -78,6 +78,10 @@ export default {
     },
     initialSessions: {
       type: Array
+    },
+    timezone: {
+      type: String,
+      default: null
     },
     // which rooms to show (selected)
     selectedRooms: {
@@ -227,5 +231,16 @@ export default {
 
 .event-time {
   font-size: smaller;
+}
+
+// Split header needs to be half the size of the time-cell-height
+.plano-sched-day .vuecal__split-days-headers {
+  max-height: 20px;
+}
+
+.plano-sched-day .day-split-header {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: normal !important;
 }
 </style>
