@@ -8,10 +8,10 @@ class ReportsPolicy < ApplicationPolicy
   end
 
   def assigned_sessions_by_participant?
-    is_admin_or_staff
+    allowed?(action: :assigned_sessions_by_participant)
   end
 
   def sessions_with_participants?
-    is_admin_or_staff
+    allowed?(action: :sessions_with_participants)
   end
 end
