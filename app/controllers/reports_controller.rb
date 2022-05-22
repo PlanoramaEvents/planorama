@@ -11,10 +11,26 @@ class ReportsController < ApplicationController
   def sessions_with_participants
     authorize SessionAssignment, policy_class: ReportsPolicy
 
-    # array aggregate ?
-    sessions = Session
+    session_table = Arel::Table.new(Session.table_name)
+    subquery = Session.area_list.as('areas_list')
+    joins = [
+      session_table.create_join(
+        subquery,
+        session_table.create_on(
+          subquery[:session_id].eq(session_table[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    # array aggregate ...
+    sessions = Session.select(
+                  ::Session.arel_table[Arel.star],
+                  'areas_list.area_list'
+                )
+                .joins(joins)
                 .eager_load(:areas, {session_assignments: [:person]})
-                .where('session_assignments.interested': true)
+                .where("session_assignments.session_assignment_role_type_id is not null")
                 .order('sessions.title')
 
     workbook = FastExcel.open(constant_memory: true)
@@ -26,18 +42,23 @@ class ReportsController < ApplicationController
         'Areas',
         'Moderators',
         'Participants',
-        'Reserve'
+        'Reserves'
       ]
     )
 
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    reserve = SessionAssignmentRoleType.find_by(name: 'Reserve')
     sessions.each do |session|
-      session.session_assignments.each do |assignment|
-        worksheet.append_row(
-          [
-            session.title,
-          ]
-        )
-      end
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.name}.join(';'),
+        ]
+      )
     end
 
     send_data workbook.read_string,
