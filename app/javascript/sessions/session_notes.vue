@@ -27,13 +27,9 @@ export default {
   mixins: [
     modelUtilsMixin
   ],
-  model: {
-    prop: 'session'
-  },
-  props: {
-    session: {
-      type: Object,
-      required: true
+  computed: {
+    session() {
+      return this.selected_model(sessionModel)
     }
   },
   methods: {

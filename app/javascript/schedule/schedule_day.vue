@@ -203,6 +203,9 @@ export default {
 .vuecal__event {
   color: $color-secondary-2-4;
   background-color: $color-secondary-2-1;
+  border-width: 1px;
+  border-color: grey;
+  border-style: solid;
 }
 
 .vuecal__arrow--prev,
