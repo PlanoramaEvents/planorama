@@ -11,7 +11,7 @@
     :minSplitWidth="150"
     :split-days="roomHeading"
     :disable-views="['years', 'year', 'month', 'week']"
-    :time-cell-height="40"
+    :time-cell-height="80"
     :editable-events="{ title: false, drag: true, resize: false, delete: false, create: false }"
     class="plano-sched-day vuecal--full-height-delete"
     ref="dayRoomGrid"
@@ -233,7 +233,7 @@ export default {
   font-size: smaller;
 }
 
-// Split header needs to be half the size of the time-cell-height
+// Split header needs to be 20px so that long titles do not force mis-alignment...
 .plano-sched-day .vuecal__split-days-headers {
   max-height: 20px;
 }
