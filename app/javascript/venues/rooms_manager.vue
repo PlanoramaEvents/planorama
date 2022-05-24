@@ -1,14 +1,11 @@
 <template>
   <div class="scrollable">
-    <div style="padding-bottom: 25px">
-      <RoomsTable
-          defaultFilter=''
-          ref="rooms-table"
-      ></RoomsTable>
-    </div>
-    <div style="border: solid">
-      <RoomEditor @saved="init" ref="roomEditor"/>
-    </div>
+    <RoomsTable
+        defaultFilter=''
+        ref="rooms-table"
+    ></RoomsTable>
+    <!--RoomEditor @saved="init" ref="roomEditor"/-->
+    <RoomSidebar @saved="init" ref="roomEditor"></RoomSidebar>
   </div>
 </template>
 
@@ -16,27 +13,28 @@
 <script>
 import RoomsTable from "./rooms_table";
 import RoomEditor from "./room_editor";
-import modelMixin from '../store/model.mixin'
-import {room_columns as columns} from "./room";
+import RoomSidebar from "./room_sidebar";
+// import modelMixin from '../store/model.mixin'
+// import {room_columns as columns} from "./room";
 
 export default {
   name: "RoomsManager",
-  components: {RoomEditor, RoomsTable},
-  mixins: [
-    modelMixin,
-  ],
-  data() {
-    return {
-      columns,
-    }
-  },
-  watch: {
-    "selected" : function(val) {
-      // alert("in rooms_manager.selected: val="+JSON.stringify(val));
-      if(val)
-        this.$refs['roomEditor'].setRoomData(val);
-    }
-  },
+  components: {RoomSidebar, RoomEditor, RoomsTable},
+  // mixins: [
+  //   modelMixin,
+  // ],
+  // data() {
+  //   return {
+  //     columns,
+  //   }
+  // },
+  // watch: {
+  //   "selected" : function(val) {
+  //     // alert("in rooms_manager.selected: val="+JSON.stringify(val));
+  //     if(val)
+  //       this.$refs['roomEditor'].setRoomData(val);
+  //   }
+  // },
   methods: {
     init() {
       this.$refs['rooms-table'].init();

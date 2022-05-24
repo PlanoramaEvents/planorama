@@ -25,6 +25,12 @@ module.exports = {
     ERROR_TOAST_TITLE: "Error",
     SUCCESS_TOAST_TITLE: "Success",
 
+    //room actions
+    ROOM_SAVE_ERROR: errorMessage("Room failed to be saved."),
+    ROOM_SAVE_ERROR_DELETE: errorMessage("Room failed to be deleted."),
+    ROOM_SAVE_SUCCESS: "Room successfully saved.",
+    ROOM_SAVE_SUCCESS_DELETE: "Survey successfully deleted.",
+
     //survey actions
     SURVEY_SAVE_SUCCESS: "Survey successfully saved.",
     SURVEY_SAVE_ERROR: errorMessage("Survey failed to be saved."),
