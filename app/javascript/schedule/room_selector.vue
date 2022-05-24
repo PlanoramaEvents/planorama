@@ -1,28 +1,41 @@
-<template>
-  <div class="room-list">
-    <b-form-checkbox
-      v-model="selectAll"
-      @change="onSelectAll"
-      ref="select-all"
-    >Select All</b-form-checkbox>
-    <hr />
-    <div v-for="room in rooms" :key="room.id">
-      <b-form-checkbox
-        v-model="selectedRooms"
-        :value="room.id"
-        @change="updateSelectRooms"
-      >{{room.name}}</b-form-checkbox>
-    </div>
+<template> 
+  <div class="d-flex justify-content-end">
+    <icon-button class="mt-1 mr-3" icon="gear" v-b-modal.room-selector-modal></icon-button>
+    <plano-modal id="room-selector-modal" @ok="ok">
+      <div class="room-list">
+        <b-form-checkbox
+          v-model="selectAll"
+          @change="onSelectAll"
+          ref="select-all"
+        >Select All</b-form-checkbox>
+        <hr />
+        <div v-for="room in rooms" :key="room.id">
+          <b-form-checkbox
+            v-model="selectedRooms"
+            :value="room.id"
+            @change="updateSelectRooms"
+          >{{room.name}}</b-form-checkbox>
+        </div>
+      </div>
+    </plano-modal>
   </div>
 </template>
 
 <script>
+import IconButton from '@/components/icon_button.vue';
+import PlanoModal from '@/components/plano_modal.vue';
+
+
 export default {
   name: "RoomSelector",
   props: {
     rooms: {
       type: Array
     }
+  },
+  components: {
+    PlanoModal,
+    IconButton
   },
   data: () =>  ({
     selectAll: true,
@@ -36,10 +49,13 @@ export default {
         this.selectedRooms = []
       }
 
-      this.$emit('change', this.selectedRooms)
+      // this.$emit('change', this.selectedRooms)
     },
     updateSelectRooms() {
       this.$refs['select-all'].checked = this.selectedRooms.length == this.rooms.length
+      // this.$emit('change', this.selectedRooms)
+    },
+    ok() {
       this.$emit('change', this.selectedRooms)
     }
   },
@@ -52,8 +68,4 @@ export default {
 </script>
 
 <style lang="scss">
-.room-list {
-  overflow-y: scroll;
-  height: 80%;
-}
 </style>

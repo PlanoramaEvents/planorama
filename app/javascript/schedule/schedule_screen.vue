@@ -10,26 +10,27 @@
             style="flex: 1 0 auto"
           >
           </schedulable-sessions>
+        </div>
+        <div class="col-9">
           <room-selector
             v-if="rooms"
             :rooms="rooms"
             @change="onRoomChange"
-            style="flex: 1 1 40%; overflow-y: auto"
           ></room-selector>
-        </div>
-        <div class="col-9 scrollable">
-          <schedule-calendar
-            :rooms="rooms"
-            :selectedRooms="selectedRooms"
-            :days="days"
-            :timezone="timezone"
-            v-if="(selectedRooms && selectedRooms.length > 0) && days.length > 0"
-            :defaultFilter="scheduleFilter"
-            :model="sessionModel"
-            :perPage="2000"
-            @schedule-changed="onScheduleChanged"
-            class="mt-3"
-          ></schedule-calendar>
+          <div class="scrollable minus31">
+            <schedule-calendar
+              :rooms="rooms"
+              :selectedRooms="selectedRooms"
+              :days="days"
+              :timezone="timezone"
+              v-if="(selectedRooms && selectedRooms.length > 0) && days.length > 0"
+              :defaultFilter="scheduleFilter"
+              :model="sessionModel"
+              :perPage="2000"
+              @schedule-changed="onScheduleChanged"
+              class="mt-1"
+            ></schedule-calendar>
+          </div>
         </div>
       </div>
     </div>
