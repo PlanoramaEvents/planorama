@@ -17,13 +17,10 @@
     ref="dayRoomGrid"
     :events="events"
     @event-drop="onEventDrop"
+    @event-focus="onEventFocus"
+    @event-mouse-enter="onEventEnter"
+    @event-mouse-leave="onEventLeave"
   >
-  <!--
-  @event-focus="onEventFocus"
-  @event-mouse-enter="onEventEnter"
-  @event-mouse-leave="onEventLeave"
-  cellContextmenu
-  -->
   <!-- hover
     event-mouse-enter
     event-mouse-leave
@@ -111,8 +108,8 @@ export default {
         let end_time = DateTime.fromISO(session.end_time).setZone(this.timezone)
         // check it is for the right day
         if ((start_time.toFormat('yyyy-MM-dd') == this.selectedDate) || (end_time.toFormat('yyyy-MM-dd') == this.selectedDate)) {
-        // if ((start_time.toFormat('yyyy-MM-dd') == this.selectedDate)) {
-          // let new_event = this.$refs['dayRoomGrid'].createEvent(
+          // We need to fudge the end or start time, otherwise the session is no draggable if either is
+          // outside the limits for the day So we aslo keep the display start and end for the UI...
           let display_end_time = end_time
           let display_start_time = start_time
           if (end_time.toFormat('yyyy-MM-dd') != this.selectedDate) {
@@ -121,7 +118,6 @@ export default {
           if (start_time.toFormat('yyyy-MM-dd') != this.selectedDate) {
             display_start_time = end_time.startOf('day')
           }
-          // let display_end_time = end_time.toFormat('yyyy-MM-dd') != this.selectedDate ? start_time.set({hour: 11, minute: 59}) : end_time
           let new_event = {
             start: display_start_time.toFormat('yyyy-MM-dd HH:mm'),
             end: display_end_time.toFormat('yyyy-MM-dd HH:mm'),
@@ -157,14 +153,15 @@ export default {
     },
   },
   methods: {
+    // Event foucus is click the session ...
     onEventFocus (e) {
       console.debug("******* SESSION Focus", e)
-      // this.selectedEvent = event
+      this.select(e.id)
       // TODO: dialog with the event name and times
       // this.showDialog = true
       // Prevent navigating to narrower view (default vue-cal behavior).
-      // e.stopPropagation()
     },
+    // Enter and leave to
     onEventEnter(e) {
       console.debug("******* SESSION Entered", e)
       // e.stopPropagation()
