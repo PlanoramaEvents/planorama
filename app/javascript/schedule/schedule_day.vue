@@ -17,7 +17,18 @@
     ref="dayRoomGrid"
     :events="events"
     @event-drop="onEventDrop"
+    @event-focus="onEventFocus"
+    @event-mouse-enter="onEventEnter"
+    @event-mouse-leave="onEventLeave"
+    cellContextmenu
   >
+  <!-- hover
+    event-mouse-enter
+    event-mouse-leave
+
+    right click
+    cell-contextmenu
+  -->
     <template v-slot:title="{ title, view }">
       {{ formatDate(view.selectedDate, { weekday: 'long' }) }},
       {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
@@ -44,6 +55,7 @@ import 'vue-cal/dist/vuecal.css'
 import dateTimeMixin from '../components/date_time.mixin'
 import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
+import tableMixin from '../store/table.mixin';
 
 const { DateTime } = require("luxon");
 
@@ -54,7 +66,8 @@ export default {
   },
   mixins: [
     dateTimeMixin,
-    modelUtilsMixin
+    modelUtilsMixin,
+    tableMixin
   ],
   props: {
     startTime: {
@@ -76,9 +89,6 @@ export default {
       type: String,
       required: true
     },
-    initialSessions: {
-      type: Array
-    },
     timezone: {
       type: String,
       default: null
@@ -90,9 +100,29 @@ export default {
     }
   },
   data: () =>  ({
-    events: []
   }),
   computed: {
+    events() {
+      let res = []
+      for (const session of this.collection) {
+        let start_time = DateTime.fromISO(session.start_time).setZone(this.timezone)
+        let end_time = DateTime.fromISO(session.end_time).setZone(this.timezone)
+        // check it is for the right day
+        if (start_time.toFormat('yyyy-MM-dd') == this.selectedDate) {
+          // let new_event = this.$refs['dayRoomGrid'].createEvent(
+          let new_event = {
+            start: start_time.toFormat('yyyy-MM-dd HH:mm'),
+            end: end_time.toFormat('yyyy-MM-dd HH:mm'),
+            title: session.title,
+            split: session.room_id,
+            id: session.id,
+            duration_mins: session.duration_mins
+          }
+          res.push(new_event)
+        }
+      }
+      return res
+    },
     roomHeading() {
       if (this.rooms) {
         let headings = this.rooms.map(
@@ -113,31 +143,29 @@ export default {
     },
   },
   methods: {
+    onEventFocus (e) {
+      console.debug("******* SESSION Focus", e)
+      // this.selectedEvent = event
+      // TODO: dialog with the event name and times
+      // this.showDialog = true
+      // Prevent navigating to narrower view (default vue-cal behavior).
+      // e.stopPropagation()
+    },
+    onEventEnter(e) {
+      console.debug("******* SESSION Entered", e)
+      // e.stopPropagation()
+    },
+    onEventLeave(e) {
+      console.debug("******* SESSION Leave", e)
+      // e.stopPropagation()
+    },
     // onCreate(ev) {
     //   // console.debug("******** 1. CREATE EVENT", ev)
     // },
     onEventDrop ({ event, originalEvent, external }) {
-      let eventDuration = event.duration_mins
-      let startTimeMinutes = event.startTimeMinutes
-      event.endTimeMinutes = Math.min(startTimeMinutes + eventDuration, 24 * 60)
-      event.end = new Date(event.start.getTime() + event.duration_mins*60000); //event.start + event.duration_mins
-
-      // Hack for the display size
-      let mevs = this.$refs['dayRoomGrid'].mutableEvents.filter(e => e._eid == event._eid)
-      mevs[0].endTimeMinutes = event.endTimeMinutes
-      mevs[0].end = event.end
-
       this.updateSession(event.id, event.start, event.split)
     },
     onDelete(ev) {
-      let cid = ev._eid
-      this.$refs['dayRoomGrid'].mutableEvents = this.$refs['dayRoomGrid'].mutableEvents.filter(
-        (e) => e._eid != cid
-      )
-      this.$refs['dayRoomGrid'].view.events = this.$refs['dayRoomGrid'].view.events.filter(
-        (e) => e._eid != cid
-      )
-
       this.updateSession(ev.id, null, null)
     },
     scrollBarElement: function() {
@@ -146,44 +174,13 @@ export default {
     updateSession(id, start_time, room_id) {
       let session = this.get_model(sessionModel, id)
       session.start_time = start_time ? this.uiDateToTZDate(start_time) : null
-      console.debug("**** SET ROOM", room_id)
       session.room_id = room_id
       this.save_model(sessionModel, session).then(
         () => {
           this.$emit("schedule-changed");
         }
       )
-    },
-    clearAllEvents() {
-      this.$refs['dayRoomGrid'].mutableEvents = []
-      this.$refs['dayRoomGrid'].view.events = []
-    },
-    // Intialize with the scheduled sessions and out them on the grid
-    init() {
-      this.clearAllEvents()
-      if (this.initialSessions && this.initialSessions.length > 0) {
-        // plot the sessions
-        for (const session of this.initialSessions) {
-          let start_time = DateTime.fromISO(session.start_time).setZone(this.timezone)
-          // check it is for the right day
-          if (start_time.toFormat('yyyy-MM-dd') == this.selectedDate) {
-            let new_event = this.$refs['dayRoomGrid'].createEvent(
-              start_time.toFormat('yyyy-MM-dd HH:mm'),
-              session.duration,
-              {
-                id: session.id,
-                duration_mins: session.duration_mins,
-                title: session.title,
-                split: session.room_id
-              }
-            )
-          }
-        }
-      }
     }
-  },
-  mounted() {
-    this.init()
   }
 }
 </script>
