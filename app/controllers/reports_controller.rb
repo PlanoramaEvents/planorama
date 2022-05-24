@@ -145,7 +145,7 @@ class ReportsController < ApplicationController
           'Availabilities',
           'Limits',
           'Exclusions',
-          'Availabilty Notes'
+          'Availability Notes'
         ]
       )
 
