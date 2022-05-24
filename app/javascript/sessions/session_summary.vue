@@ -72,25 +72,17 @@ export default {
   components: {
     PlanoEditor
   },
-  model: {
-    prop: 'session'
-  },
-  props: {
-    session: {
-      type: Object,
-      required: true
-    }
-  },
   mixins: [
     modelUtilsMixin
   ],
+  computed: {
+    session() {
+      return this.selected_model(sessionModel);
+    }
+  },
   methods: {
     saveSession() {
-      this.save_model(sessionModel, this.session).then(
-        (obj) => {
-          this.$emit('input',obj)
-        }
-      )
+      return this.save_model(sessionModel, this.session).then()
     }
   }
 }

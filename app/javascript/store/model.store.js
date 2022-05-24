@@ -168,7 +168,8 @@ export const store = new Vuex.Store({
     ...searchStateStore.getters,
     ...availabilityStore.getters,
     ...personExclusionStore.getters,
-    ...emailAddressStore.getters
+    ...emailAddressStore.getters,
+    ...settingsStore.getters,
   },
   plugins: [
     ...surveyStore.plugins

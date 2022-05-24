@@ -1,14 +1,10 @@
 <template>
   <div>
     <b-button variant="link" @click="back">Back</b-button>
-    <session-summary
-      :session="session"
-      @input="onSessionUpdate"
-      v-if="session"
-    ></session-summary>
+    <session-summary ></session-summary>
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="session">
       <b-tab title="General" :active="tab === 'session-edit'">
-        <session-edit v-model="session"></session-edit>
+        <session-edit></session-edit>
       </b-tab>
       <b-tab title="Participant Assignment" :active="tab === 'session-assignment'" lazy>
         <assign-participants
@@ -22,13 +18,11 @@
           @input="onSessionUpdate"
         ></assign-participants>
       </b-tab>
-      <b-tab title="Schedule" :active="tab === 'session-schedule'" disabled lazy>
-        Schedule
+      <b-tab title="Schedule" :active="tab === 'session-schedule'" lazy>
+        <session-schedule></session-schedule>
       </b-tab>
       <b-tab title="Notes" :active="tab === 'session-notes'">
-        <session-notes
-          v-model="session"
-        ></session-notes>
+        <session-notes></session-notes>
       </b-tab>
     </b-tabs>
   </div>
@@ -44,6 +38,7 @@ import AssignParticipants from './assign_participants'
 import SessionSummary from './session_summary'
 import SessionEdit from './session_edit'
 import SessionNotes from './session_notes'
+import SessionSchedule from './session_schedule';
 
 import {
   sessionMixin
@@ -59,16 +54,19 @@ export default {
     SessionSummary,
     AssignParticipants,
     SessionEdit,
-    SessionNotes
+    SessionNotes,
+    SessionSchedule
   },
   mixins: [
     modelUtilsMixin
   ],
   data: () => ({
     sessionAssignmentModel,
-    session: null
   }),
   computed: {
+    session() {
+      return this.selected_model(sessionModel);
+    },
     assignmentFilter() {
       let filter = {
         "op": "all",
@@ -96,6 +94,9 @@ export default {
     },
     back() {
       this.$router.push('/sessions');
+    },
+    log(thing) {
+      console.log(thing)
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
       // console.debug("****** tab action", newTab, oldTab, bvEvent)
@@ -129,7 +130,7 @@ export default {
     // get the session (latest)
     this.fetch_model_by_id(sessionModel, this.id).then(
       (obj) => {
-        this.session = obj
+        this.select_model(sessionModel, obj);
       }
     )
   }

@@ -13,7 +13,7 @@
     :disable-views="['years', 'year', 'month', 'week']"
     :time-cell-height="40"
     :editable-events="{ title: false, drag: true, resize: false, delete: false, create: false }"
-    class="vuecal--full-height-delete"
+    class="plano-sched-day vuecal--full-height-delete"
     ref="dayRoomGrid"
     :events="events"
     @event-drop="onEventDrop"
@@ -24,11 +24,11 @@
     </template>
     <template v-slot:event="{ event, view }">
       <div class="d-flex flex-column">
-        <div class="d-flex flex-row p-1">
+        <div class="d-flex flex-row p-1 justify-content-between">
           <small class="event-time">
             {{ formatLocaleJsDate(event.start) }} - {{ formatDatetime(addMinutes(event.start, event.duration_mins)) }}
           </small>
-          <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
+          <b-icon-x @click="onDelete(event)"></b-icon-x>
         </div>
         <small>
           {{event.title}}
@@ -78,6 +78,10 @@ export default {
     },
     initialSessions: {
       type: Array
+    },
+    timezone: {
+      type: String,
+      default: null
     },
     // which rooms to show (selected)
     selectedRooms: {
@@ -203,6 +207,9 @@ export default {
 .vuecal__event {
   color: $color-secondary-2-4;
   background-color: $color-secondary-2-1;
+  border-width: 1px;
+  border-color: grey;
+  border-style: solid;
 }
 
 .vuecal__arrow--prev,
@@ -224,5 +231,16 @@ export default {
 
 .event-time {
   font-size: smaller;
+}
+
+// Split header needs to be half the size of the time-cell-height
+.plano-sched-day .vuecal__split-days-headers {
+  max-height: 20px;
+}
+
+.plano-sched-day .day-split-header {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: normal !important;
 }
 </style>

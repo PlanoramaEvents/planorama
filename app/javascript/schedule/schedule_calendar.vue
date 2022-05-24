@@ -3,7 +3,7 @@
     How about an empty day so we have a fixed top cal?
     and we can hid the split header in the other cals
   -->
-  <div class="all-days-sched" v-if="initialSessions">
+  <div v-if="initialSessions">
     <!-- Eeach schedule day has an eid for the event etc, which we can map to the actual session ... -->
     <schedule-day
       v-for="day in days" :key="day"
@@ -101,7 +101,4 @@ export default {
 </script>
 
 <style lang="scss">
-.all-days-sched {
-  overflow-y: scroll;
-}
 </style>

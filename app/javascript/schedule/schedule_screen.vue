@@ -1,40 +1,38 @@
 <template>
-  <div class="scrollable">
-    <div class="container">
-      <div class="row mt-3">
-        <div class="col-3">
+    <div class="container-fluid pl-0">
+      <div class="row">
+        <div class="col-3 pt-3 d-flex flex-column" style="max-height: calc(100vh - 150px)">
           <schedulable-sessions
             :model="sessionModel"
-            style="height: 40vh;"
             :defaultFilter="sessionFilter"
             defaultSortBy="sessions.title"
             ref="schedulable-sessions"
+            style="flex: 1 0 auto"
           >
           </schedulable-sessions>
           <room-selector
             v-if="rooms"
             :rooms="rooms"
-            style="height: 30vh;"
             @change="onRoomChange"
+            style="flex: 1 1 40%; overflow-y: auto"
           ></room-selector>
         </div>
-        <div class="col-9">
+        <div class="col-9 scrollable">
           <schedule-calendar
             :rooms="rooms"
             :selectedRooms="selectedRooms"
             :days="days"
             :timezone="timezone"
             v-if="(selectedRooms && selectedRooms.length > 0) && days.length > 0"
-            style="height: 70vh;"
             :defaultFilter="scheduleFilter"
             :model="sessionModel"
             :perPage="2000"
             @schedule-changed="onScheduleChanged"
+            class="mt-3"
           ></schedule-calendar>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -44,9 +42,9 @@ import ScheduleCalendar from './schedule_calendar'
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
 import { roomModel } from '../store/room.store.js';
-import { sessionModel as sessionModel } from '@/store/session.store'
+import { sessionModel } from '@/store/session.store'
 
-const { DateTime } = require("luxon");
+import { DateTime } from "luxon";
 
 export default {
   name: "ScheduleScreen",
@@ -114,7 +112,13 @@ export default {
       let filter = {
         "op": "all",
         "queries":[
-          ["start_time", "is null"],
+          {
+            "op": "any",
+            "queries":[
+              ["start_time", "is null"],
+              ["room_id", "is null"]
+            ]
+          },
           ["duration", ">", "0"]
         ]
       }
@@ -134,7 +138,12 @@ export default {
     },
   },
   mounted() {
-    this.fetch_models(roomModel).then(data => {
+    this.fetch_models(
+      roomModel,
+      {
+        perPage: 1000
+      }
+    ).then(data => {
       this.rooms = Object.values(data).filter(
         obj => (typeof obj.json === 'undefined')
       )
