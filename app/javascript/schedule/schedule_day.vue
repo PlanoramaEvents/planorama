@@ -17,17 +17,11 @@
     ref="dayRoomGrid"
     :events="events"
     @event-drop="onEventDrop"
-    @event-focus="onEventFocus"
     @event-mouse-enter="onEventEnter"
     @event-mouse-leave="onEventLeave"
+    :on-event-click="onEventClick"
   >
-  <!-- hover
-    event-mouse-enter
-    event-mouse-leave
-
-    right click
-    cell-contextmenu
-  -->
+    <!-- TODO: change colour or something if selected ... class? -->
     <template v-slot:title="{ title, view }">
       {{ formatDate(view.selectedDate, { weekday: 'long' }) }},
       {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
@@ -35,7 +29,7 @@
     <template v-slot:event="{ event, view }">
       <div class="d-flex flex-column">
         <div class="d-flex flex-row p-1 justify-content-between">
-          <small class="event-time">
+          <small class="event-time" v-if="event.actual_start && event.actual_end">
             {{ formatDatetime(event.actual_start) }} - {{ formatDatetime(event.actual_end) }}
           </small>
           <b-icon-x @click="onDelete(event)"></b-icon-x>
@@ -153,26 +147,19 @@ export default {
     },
   },
   methods: {
-    // Event foucus is click the session ...
-    onEventFocus (e) {
-      console.debug("******* SESSION Focus", e)
-      this.select(e.id)
-      // TODO: dialog with the event name and times
-      // this.showDialog = true
-      // Prevent navigating to narrower view (default vue-cal behavior).
+    onEventClick(event, e) {
+      e.stopPropagation()
+      this.select(event.id)
     },
     // Enter and leave to
     onEventEnter(e) {
-      console.debug("******* SESSION Entered", e)
+      // console.debug("******* SESSION Entered", e)
       // e.stopPropagation()
     },
     onEventLeave(e) {
-      console.debug("******* SESSION Leave", e)
+      // console.debug("******* SESSION Leave", e)
       // e.stopPropagation()
     },
-    // onCreate(ev) {
-    //   // console.debug("******** 1. CREATE EVENT", ev)
-    // },
     onEventDrop ({ event, originalEvent, external }) {
       this.updateSession(event.id, event.start, event.split)
     },
