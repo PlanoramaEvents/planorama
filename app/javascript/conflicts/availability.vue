@@ -5,10 +5,11 @@
         class="availability-conflict mb-1"
         v-for="conflict in sortedCollection" :key="conflict.id"
       >
-        <strong>{{conflict.session.title}}</strong>
-        <p>
-          {{conflict.person.published_name}} is not  available
-        </p>
+        <strong>{{conflict.title}}</strong>
+        <div><em>Outside the availability for:</em></div>
+        <div v-for="availability in conflict.availability_conflicts" :key="availability.id">
+          {{availability.person.published_name}}
+        </div>
       </div>
     </div>
 
@@ -51,4 +52,8 @@ export default {
 </script>
 
 <style lang="scss">
+.availability-conflict {
+  border: 1px solid rgba(0,100,150,.15);
+  padding: .2em .4em;
+}
 </style>

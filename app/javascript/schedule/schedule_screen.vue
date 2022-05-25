@@ -11,7 +11,7 @@
         >
         </schedulable-sessions>
         <availability
-          :model="availabilityConflictModel"
+          :model="sessionConflictModel"
           style="flex: 1 0 auto"
         ></availability>
       </div>
@@ -49,7 +49,7 @@ import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
 import { roomModel } from '../store/room.store.js';
 import { sessionModel } from '@/store/session.store'
-import { availabilityConflictModel } from '@/store/availability_conflict.store'
+import { sessionConflictModel } from '@/store/session_conflict.store'
 import SessionSidebar from '../sessions/session_sidebar.vue';
 import Availability from '../conflicts/availability.vue'
 
@@ -71,7 +71,7 @@ export default {
   data: () =>  ({
     rooms: null,
     sessionModel: sessionModel,
-    availabilityConflictModel: availabilityConflictModel,
+    sessionConflictModel: sessionConflictModel,
     selectedRooms: []
   }),
   computed: {
