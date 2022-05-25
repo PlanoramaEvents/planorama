@@ -1,7 +1,7 @@
 class SessionsController < ResourceController
   SERIALIZER_CLASS = 'SessionSerializer'.freeze
-  POLICY_CLASS = 'SessionPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
+  POLICY_CLASS = 'SessionsPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'SessionsPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
   def express_interest
@@ -151,9 +151,7 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      :areas,
       :base_tags,
-      :session_areas
     ]
   end
 
@@ -161,24 +159,40 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
+    ]
+  end
+
+  def eager_load
+    [
+      {session_areas: :area},
       :areas
     ]
   end
 
-  # def eager_load
-  #   [
-  #     # {session_assignments: :person}
-  #   ]
-  # end
+  def derived_col?(col_name:)
+    return true if col_name == 'area_list'
+    false
+  end
+
+  def array_col?(col_name:)
+    return true if col_name == 'area_list'
+    false
+  end
+
+  def array_table(col_name:)
+    return 'areas_list' if col_name == 'area_list'
+    false
+  end
 
   def join_tables
     sessions = Arel::Table.new(Session.table_name)
-    session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
+
+    subquery = Session.area_list.as('areas_list')
     joins = [
       sessions.create_join(
-        session_areas,
+        subquery,
         sessions.create_on(
-          sessions[:id].eq(session_areas[:session_id])
+          subquery[:session_id].eq(sessions[:id])
         ),
         Arel::Nodes::OuterJoin
       )
@@ -226,7 +240,7 @@ class SessionsController < ResourceController
       audience_size,
       participant_notes
       is_break
-      start_time,
+      start_time
       visibility
       publish
       room_id

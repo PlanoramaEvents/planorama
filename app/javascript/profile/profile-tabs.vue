@@ -10,6 +10,9 @@
           :model="personModel"
         ></person-details>
       </b-tab>
+      <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
+        <person-demographics :selected="person"></person-demographics>
+      </b-tab>
       <!-- Can not make this lazy otherwise we have lock issues with the notes -->
       <b-tab title="Availability &amp; Interests" :active="tab === 'availability'" v-if="currentSettings.configs">
         <availability-and-interests
@@ -49,6 +52,7 @@ import SessionRanker from './session_ranker.vue';
 import AvailabilityAndInterests from './availability_and_interests.vue';
 import PersonDetails from './person_details.vue'
 import PersonSummary from './person_summary.vue';
+import PersonDemographics from './person_demographics';
 
 import { personModel } from '@/store/person.store'
 import { sessionModel } from '@/store/session.store'
@@ -70,7 +74,8 @@ export default {
     SessionSelector,
     SessionRanker,
     AvailabilityAndInterests,
-    PersonDetails
+    PersonDetails,
+    PersonDemographics,
   },
   mixins: [
     personSessionMixin,
@@ -115,13 +120,19 @@ export default {
     handleTabActivation(newTab, oldTab, bvEvent) {
       let path = '';
       switch(newTab) {
+        case 0:
+          path = '';
+          break;
         case 1:
-          path = 'availability';
+          path = 'other';
           break;
         case 2:
-          path = 'session-selection';
+          path = 'availability';
           break;
         case 3:
+          path = 'session-selection';
+          break;
+        case 4:
           path = 'session-ranking';
           break;
       }

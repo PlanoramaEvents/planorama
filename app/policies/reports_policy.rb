@@ -1,22 +1,17 @@
 class ReportsPolicy < ApplicationPolicy
-  # TODO: test staff role, better still move to the Sec Service
-  def is_admin_or_staff
-    @person.convention_roles.inject(false) { |res, grp| res || grp.admin? || grp.staff?}
-  end
-
   def participant_selections?
-    is_admin_or_staff
+    allowed?(action: :participant_selections)
   end
 
   def session_selections?
-    is_admin_or_staff
+    allowed?(action: :session_selections)
   end
 
   def assigned_sessions_by_participant?
-    is_admin_or_staff
+    allowed?(action: :assigned_sessions_by_participant)
   end
 
   def sessions_with_participants?
-    is_admin_or_staff
+    allowed?(action: :sessions_with_participants)
   end
 end

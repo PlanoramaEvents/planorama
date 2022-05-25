@@ -3,16 +3,10 @@ import { mapActions } from 'vuex';
 import { toastMixin } from "@/mixins";
 import { MODEL_SAVE_ERROR, MODEL_SAVE_SUCCESS, MODEL_DELETE_SUCCESS, MODEL_DELETE_ERROR } from "@/constants/strings";
 
-export const modelMixin = {
+export const modelMixinNoProp = {
   mixins: [
     toastMixin
   ],
-  props: {
-    model: {
-      type: String,
-      required: true
-    }
-  },
   computed: {
     selected() {
       return this.$store.getters[SELECTED]({model: this.model})
@@ -55,6 +49,7 @@ export const modelMixin = {
     },
     // need a save instance
     save(instance) {
+      console.log(instance);
       return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, selected: false, item: instance}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
     },
     delete_by_id(id) {
@@ -64,6 +59,18 @@ export const modelMixin = {
       return this.toastPromise(this.$store.dispatch(DELETE, {model: this.model, itemOrId: item}), MODEL_DELETE_SUCCESS(this.model), MODEL_DELETE_ERROR(this.model));
     },
   }
+}
+
+export const modelMixin = {
+  mixins:[
+    modelMixinNoProp
+  ],
+  props: {
+    model: {
+      type: String,
+      required: true
+    }
+  },
 }
 
 /**

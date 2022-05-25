@@ -1,16 +1,20 @@
 <template>
-  <div>
-    <b-form-group
-      label="Notes"
-      label-for="session-notes"
-    >
-      <b-form-textarea
-        id="session-notes"
-        v-model="session.item_notes"
-        rows="10"
-        @blur="saveSession()"
-      ></b-form-textarea>
-    </b-form-group>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <b-form-group
+          label="Notes"
+          label-for="session-notes"
+        >
+          <b-form-textarea
+            id="session-notes"
+            v-model="session.item_notes"
+            rows="10"
+            @blur="saveSession()"
+          ></b-form-textarea>
+        </b-form-group>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -23,13 +27,9 @@ export default {
   mixins: [
     modelUtilsMixin
   ],
-  model: {
-    prop: 'session'
-  },
-  props: {
-    session: {
-      type: Object,
-      required: true
+  computed: {
+    session() {
+      return this.selected_model(sessionModel)
     }
   },
   methods: {

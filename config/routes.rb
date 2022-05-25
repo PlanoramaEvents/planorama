@@ -48,7 +48,7 @@ Rails.application.routes.draw do
   get 'report/session_selections', to: 'reports#session_selections'
   get 'report/participant_availabilities', to: 'reports#participant_availabilities'
   get 'report/assigned_sessions_by_participant', to: 'reports#assigned_sessions_by_participant'
-  get 'report/sessions_with_participants', to: 'reports#sessions_with_participants'  
+  get 'report/sessions_with_participants', to: 'reports#sessions_with_participants'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
@@ -62,6 +62,10 @@ Rails.application.routes.draw do
   put 'agreement/sign/:id', to: 'agreements#sign'
   get 'agreement/latest', to: 'agreements#latest'
   resources :agreements, path: 'agreement'
+
+  resources :availability_conflicts,  path: 'availability_conflict', controller: 'conflicts/availability_conflicts', only: [:index]
+
+  get 'session_conflict', to: 'conflicts/session_conflicts#index'
 
   # Surveys and their nested resources
   post 'survey/:survey_id/assign_people', to: 'surveys#assign_people'
@@ -89,6 +93,11 @@ Rails.application.routes.draw do
   resources :responses, path: 'response', controller: 'submission/responses', except: [:index]
 
   get 'rbac', to: 'rbac#index'
+  resources :application_roles, path: 'application_role'
+  post 'application_role/:role_id/assign_people', to: 'application_roles#assign_people'
+  post 'application_role/:role_id/unassign_people', to: 'application_roles#unassign_people'
+  post 'application_role/:role_id/assign_convention_role', to: 'application_roles#assign_convention_role'
+  post 'application_role/:role_id/unassign_convention_role', to: 'application_roles#unassign_convention_role'
 
   resources :formats, path: 'format'
   resources :areas, path: 'area'
@@ -107,7 +116,9 @@ Rails.application.routes.draw do
   resources :session_assignments, path: 'session_assignment'
   get 'session_assignment/:id/unexpress_interest(/:person_id)', to: 'session_assignments#unexpress_interest'
 
+  resources :room_sets, path: 'room_set'
   resources :rooms, path: 'room'
+  resources :roomsets, path: 'roomset'
   resources :venues, path: 'venue'
   resources :tag_contexts, path: 'tag_context'
   resources :configurations, path: 'configuration'

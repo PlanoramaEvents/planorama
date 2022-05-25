@@ -53,7 +53,7 @@ module.exports = {
     SURVEY_DEFAULT_THANK_YOU: "Your responses have been recorded.",
 
     //survey restrictions
-    SURVEY_NOT_ASSIGNED: "This survey hasn't been assigned to you",
+    SURVEY_NOT_ASSIGNED: "This survey hasn't been assigned to you.",
 
     //survey questions
     SURVEY_YESNOMAYBE_PLACEHOLDER: "Please elaborate here.",
@@ -64,7 +64,7 @@ module.exports = {
     ADMIN_ADD_AGREEMENT_SUCCESS: (title) => `${title} successfully added to Planorama.`,
     ADMIN_ADD_USER_SUCCESS: (name) => `${name} successfully added to Planorama.`,
     ADMIN_ADD_USER_ERROR: (name) => errorMessage(`${name} failed to be added to Planorama.`),
-    IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statments.",
+    IEA_FAILURE_TO_SIGN: "As a member of Staff you can not proceed without agreeing to the ethics and data privacy statements.",
     MODEL_SAVE_SUCCESS: (model) => `${titleCase(model)} sucessfully saved.`,
     MODEL_SAVE_ERROR: (model) => errorMessage(`${titleCase(model)} failed to be saved.`),
     MODEL_ADD_SUCCESS: (model) => `${titleCase(model)} sucessfully added.`,
@@ -80,76 +80,81 @@ module.exports = {
     MAILING_CLONED: (title) => `A clone of the mailing ${title} has been created.`,
 
     //question actions
-    QUESTION_ORDER_SAVE_SUCCESS: "Question reorder successfully saved",
+    QUESTION_ORDER_SAVE_SUCCESS: "Question reorder successfully saved.",
     QUESTION_ORDER_SAVE_ERROR: errorMessage("Question reorder failed to be saved."),
-    QUESTION_SAVE_SUCCESS: "Question successfully saved",
+    QUESTION_SAVE_SUCCESS: "Question successfully saved.",
     QUESTION_SAVE_ERROR: errorMessage("Question failed to be saved."),
-    QUESTION_DELETE_SUCCESS: "Question successfully deleted",
+    QUESTION_DELETE_SUCCESS: "Question successfully deleted.",
     QUESTION_DELETE_ERROR: errorMessage("Question failed to be deleted."),
-    QUESTION_DUPLICATE_SUCCESS: "Question successfully duplicated",
+    QUESTION_DUPLICATE_SUCCESS: "Question successfully duplicated.",
     QUESTION_DUPLICATE_ERROR: errorMessage("Question failed to be duplicated."),
-    QUESTION_ADD_SAVE_SUCCESS: "Question successfully added",
+    QUESTION_ADD_SAVE_SUCCESS: "Question successfully added.",
     QUESTION_ADD_SAVE_ERROR: errorMessage("Question failed to be added."),
-    QUESTION_UNCHANGED: "Question change abandoned",
+    QUESTION_UNCHANGED: "Question change abandoned.",
     QUESTION_MODAL_MESSAGE: "You are changing the question type and there's a linked field associated with that specific question type. If you continue with changing the question type, we will remove the linked field. You can choose to leave the question type as it is and the linking will remain.",
 
     //answer actions
-    ANSWER_ORDER_SAVE_SUCCESS: "Answer reorder sucessfully saved",
+    ANSWER_ORDER_SAVE_SUCCESS: "Answer reorder sucessfully saved.",
     ANSWER_ORDER_SAVE_ERROR: errorMessage("Answer reorder failed to be saved."),
-    ANSWER_SAVE_SUCCESS: "Answer sucessfully saved",
+    ANSWER_SAVE_SUCCESS: "Answer sucessfully saved.",
     ANSWER_SAVE_ERROR: errorMessage("Answer failed to be saved."),
-    ANSWER_ADD_SUCCESS: "Answer sucessfully added",
+    ANSWER_ADD_SUCCESS: "Answer sucessfully added.",
     ANSWER_ADD_ERROR: errorMessage("Answer failed to be added."),
 
     // session interest
-    SESSION_INTEREST_SUCCESS: "Session Interest saved",
-    SESSION_INTEREST_ERROR: errorMessage("Session Interest failed to be saved"),
-    SESSION_INTEREST_REMOVE_SUCCESS: "Session Interest removed",
-    SESSION_INTEREST_REMOVE_ERROR: errorMessage("Session Interest failed to be removed"),
-    SESSION_ASSIGNMENT_SUCCESS: "Session Assignment saved",
-    SESSION_ASSIGNMENT_ERROR: errorMessage("Session Assignment failed to be saved"),
-    SESSION_INTEREST_UPDATE_SUCCESS: "Session Interest updated",
-    SESSION_INTEREST_UPDATE_ERROR: errorMessage("Session Interest failed to be updated"),
+    SESSION_INTEREST_SUCCESS: "Session Interest saved.",
+    SESSION_INTEREST_ERROR: errorMessage("Session Interest failed to be saved."),
+    SESSION_INTEREST_REMOVE_SUCCESS: "Session Interest removed.",
+    SESSION_INTEREST_REMOVE_ERROR: errorMessage("Session Interest failed to be removed."),
+    SESSION_ASSIGNMENT_SUCCESS: "Session Assignment saved.",
+    SESSION_ASSIGNMENT_ERROR: errorMessage("Session Assignment failed to be saved."),
+    SESSION_INTEREST_UPDATE_SUCCESS: "Session Interest updated.",
+    SESSION_INTEREST_UPDATE_ERROR: errorMessage("Session Interest failed to be updated."),
 
     SESSION_SAVE_SUCCESS_DELETE: "Session successfully deleted.",
     SESSION_SAVE_ERROR_DELETE: errorMessage("Session failed to be deleted."),
     SESSION_SAVE_SUCCESS: "Session successfully saved.",
     SESSION_SAVE_ERROR: errorMessage("Session failed to be saved."),
 
-    SESSION_RANKING_ERROR: (total, allowed) => `You have assigned ${total} exceeds the allowed ${allowed}.`,
+    SESSION_RANKING_ERROR: (total, allowed) => `You have assigned ${total} which exceeds the allowed ${allowed}.`,
 
-    CONFIGURATION_SAVED_SUCCESS: "Configuration has been saved",
-    CONFIGURATION_SAVED_ERROR: errorMessage("Error on config save"),
+    CONFIGURATION_SAVED_SUCCESS: "Configuration has been saved.",
+    CONFIGURATION_SAVED_ERROR: errorMessage("Error on config save."),
 
-    CREATE_SESSION_LIMIT_SUCCESS: "Session limit has been saved",
-    CREATE_SESSION_LIMIT_ERROR: errorMessage("Error on Session limit save"),
+    CREATE_SESSION_LIMIT_SUCCESS: "Session limit has been saved.",
+    CREATE_SESSION_LIMIT_ERROR: errorMessage("Error on session limit save."),
 
     AVAILABILITY_DESCRIPTION: "Under each day, please highlight (click and drag) the times you are available in the calendar view below.",
     SAVE_AVAILABILITY_NOTES: "Other scheduling considerations saved successfully.",
     AVAILABILITY_NOTES_LABEL: "Other Scheduling Considerations",
 
     UPDATE_PERSON_EXCLUSION_SUCCESS: "Exclusion information has been updated.",
-    UPDATE_PERSON_EXCLUSION_ERROR: errorMessage("Error on updating Exclusion information."),
+    UPDATE_PERSON_EXCLUSION_ERROR: errorMessage("Error on updating exclusion information."),
     GET_PERSON_EXCLUSION_SUCCESS: "Exclusion information has been retrieved.",
-    GET_PERSON_EXCLUSION_ERROR: errorMessage("Error on retrieving Exclusion information."),
+    GET_PERSON_EXCLUSION_ERROR: errorMessage("Error on retrieving exclusion information."),
 
     UPDATE_AVAILABILITY_SUCCESS: "Availability has been updated.",
-    UPDATE_AVAILABILITY_ERROR: errorMessage("Error on updating Availability."),
+    UPDATE_AVAILABILITY_ERROR: errorMessage("Error on updating availability."),
 
     ADD_EMAIL_SUCCESS: "Email has been added.",
-    ADD_EMAIL_ERROR: errorMessage("Error on add Email."),
+    ADD_EMAIL_ERROR: errorMessage("Error on add email."),
 
     //page actions
-    PAGE_DELETE_SUCCESS: "Page successfully deleted",
+    PAGE_DELETE_SUCCESS: "Page successfully deleted.",
     PAGE_DELETE_ERROR: errorMessage("Page failed to be deleted."),
-    PAGE_MERGE_SUCCESS: "Page successfully merged",
+    PAGE_MERGE_SUCCESS: "Page successfully merged.",
     PAGE_MERGE_ERROR: errorMessage("Page failed to be merged."),
     SURVEY_CONFIRM_DELETE_PAGE_1: "Deleting a page also deletes the questions and response options it contains.",
     SURVEY_CONFIRM_DELETE_PAGE_2: "To preserve the questions, choose \"Merge page up\" from the page options.",
-    PAGE_ADD_SUCCESS: "Page successfully added",
+    PAGE_ADD_SUCCESS: "Page successfully added.",
     PAGE_ADD_ERROR: errorMessage("Page failed to be added."),
-    PAGE_SAVE_SUCCESS: "Page successfully saved",
+    PAGE_SAVE_SUCCESS: "Page successfully saved.",
     PAGE_SAVE_ERROR: errorMessage("Page failed to be saved."),
+
+    //venues
+    VENUES_ADD_ROOM_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_ADD_ROOMSET_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_ADD_VENUE_SUCCESS: (name) => `${name} successfully added.`,
 
     // linked field names
     LINKED_FIELD_LABELS: {
@@ -186,9 +191,9 @@ module.exports = {
     nLines,
 
     ERROR_GENERIC_RECOVERABLE: (email) => twoLines("The server has encountered an internal error and was unable to complete your request.",
-    `Please contact the server administrator at ${email} and let them know the time and date the error occured.`),
+    `Please contact the server administrator at ${email} and let them know the time and date the error occurred.`),
     ERROR_GENERIC_UNRECOVERABLE: (email) => twoLines("The server has encountered an internal error and was unable to complete your request.",
-    `Please contact the server administrator at ${email} and let them know the time and date the error occured.`),
+    `Please contact the server administrator at ${email} and let them know the time and date the error occurred.`),
 
     // Social Links Errors
     TWITTER_ID_INVALID_MSG: "Twitter id is not in a valid format",

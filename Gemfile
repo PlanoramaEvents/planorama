@@ -21,6 +21,8 @@ gem 'jbuilder', '~> 2.7'
 
 gem "bundler-audit"        # checks for insecure gems
 
+gem 'composite_primary_keys', '~> 13.0' # Version 13.x is designed to work with ActiveRecord 6.1.x
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
@@ -53,7 +55,7 @@ gem 'jsonapi.rb'
 
 gem 'deep_cloneable', '~> 3.2.0'
 
-gem "nokogiri", ">= 1.13.4"
+gem "nokogiri", ">= 1.13"
 gem "roo", "~> 2.8.0"
 
 gem 'truemail'

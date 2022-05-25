@@ -226,6 +226,12 @@ module ResourceMethods
 
     q = q.order(order_string)
 
+    # Rails.logger.debug "****************************"
+    # Rails.logger.debug "****************************"
+    # Rails.logger.debug "#{q.to_sql}"
+    # Rails.logger.debug "****************************"
+    # Rails.logger.debug "****************************"
+
     # TODO we need the size without the query
     if paginated
       @full_collection_total = policy_scope(base, policy_scope_class: policy_scope_class)
@@ -298,11 +304,14 @@ module ResourceMethods
             part = subquery(operation: operation, value: value)
           else
             col = if (key.include?('responses.'))
-              'response_as_text'
-            else
-              get_column(column: key)
+                    'response_as_text'
+                  else
+                    get_column(column: key)
+                  end
+            if array_col?(col_name: col)
+              col_table = array_table(col_name: col)
             end
-            part = get_query_part(table: col_table, column: col, operation: operation, value: value)
+            part = get_query_part(table: col_table, column: col, operation: operation, value: value, top: true)
 
             if (key.include?('responses.'))
               key.slice! "responses."
@@ -347,45 +356,93 @@ module ResourceMethods
     return col
   end
 
-  def get_query_part(table:, column:, operation:, value:)
+  def get_query_part(table:, column:, operation:, value:, top: false)
     op = translate_operator(operation: operation)
 
     return nil if value.kind_of?(String) && value.blank?
 
-    val = value
-    val = "%#{value}%" if op == :matches
-    val = "%#{value}%" if op == :does_not_match
-    val = "%#{value}" if operation == 'ends with'
-    val = "#{value}%" if operation == 'begins with'
-    val = "''" if operation == 'is empty'
-    val = "''" if operation == 'is not empty'
-    val = nil if operation == 'is null'
-    val = nil if operation == 'is not null'
+    if array_col?(col_name: column)
+      array_query = case operation.downcase
+                    when 'is'
+                      ::Arel.sql("('#{value}' = ANY(#{table}.#{column}))")
+                    when 'is not'
+                      ::Arel.sql("('#{value}' != ALL(#{table}.#{column}) or cardinality(#{table}.#{column}) = 0)")
+                    when 'is empty'
+                      ::Arel.sql("(cardinality(#{table}.#{column}) = 0)")
+                    when 'is not empty'
+                      ::Arel.sql("(cardinality(#{table}.#{column}) > 0)")
+                    end
 
-    part = table[column.to_sym].send(op, val)
+      # This is crappy, but I do not see a way round it. If the first query part is a array literal one
+      # we can not AND or OR it with subsequent. So prefic with a dummy clause that will then pass along
+      # the ability to chain
+      if top
+        tbl = model_class.arel_table
+        dummy_query = tbl[:id].eq(tbl[:id])
+        return tbl[:id].eq(tbl[:id]).and(array_query)
+      else
+        return array_query
+      end
+    else
+      val = value
+      val = "%#{value}%" if op == :matches
+      val = "%#{value}%" if op == :does_not_match
+      val = "%#{value}" if operation == 'ends with'
+      val = "#{value}%" if operation == 'begins with'
+      val = nil if operation == 'is null'
+      val = nil if operation == 'is not null'
+      # empty and not empty need to take into account nulls as well
+      val = "''" if operation == 'is empty'
+      val = "''" if operation == 'is not empty'
+
+      if operation == 'is empty'
+        part = table[column.to_sym].send(op, val).or(
+          table[column.to_sym].send(op, nil)
+        )
+      elsif operation == 'is not empty'  # not_eq
+        part = table[column.to_sym].send(op, val).and(
+          table[column.to_sym].send(op, nil)
+        )
+      elsif operation == 'is not' # not_eq
+        # is not, need to ignore the others (TODO, how???)
+        part = table[column.to_sym].send(op, val).or(
+          # 'is not' needs to retutn the nulls as well
+          table[column.to_sym].send(:eq, nil)
+        )
+      else
+        part = table[column.to_sym].send(op, val)
+      end
+    end
   end
 
   # Convert the operation passed in via teh filter into
   # an arel predicate op
-  # is empty
-  # is not empty
-  # begins with
-  # ends with
+  # operators: ['equals','does not equal','contains','does not contain','is empty','is not empty','begins with','ends with'],
+  # operators: ['=','<>','<','<=','>','>='],
+  # TODO: test = "" and != "ssss" ('equals','does not equal') for string values
+  # operators: ['is','is not','is empty','is not empty'] - TEST
   def translate_operator(operation:)
+    # Fix does not match, in (not in), is not empty etc
     case operation.downcase
     when 'does not contain'
       :'does_not_match' # "%val%"
     when 'contains'
+      # depend on type of the search
       :'matches' # "%val%"
     when 'like'
       :'matches' # "%val%"
     when 'in'
       :in
+    when 'not in'
+      :not_in
     when 'equals'
       :eq
     when '='
       :eq
     when 'does not equal'
+      # does not return blanks or nulls
+      :not_eq
+    when '<>'
       :not_eq
     when '!='
       :not_eq
@@ -397,6 +454,10 @@ module ResourceMethods
       :lteq
     when '>='
       :gteq
+    when 'is'
+      :eq
+    when 'is not'
+      :not_eq
     when 'is empty'
       :eq
     when 'is not empty'
@@ -632,6 +693,14 @@ module ResourceMethods
     return false if format == 'xls' || format == 'xlsx'
 
     paginate
+  end
+
+  def derived_col?(col_name:)
+    false
+  end
+
+  def array_col?(col_name:)
+    false
   end
 
   def permitted_params()

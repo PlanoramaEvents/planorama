@@ -29,6 +29,11 @@ import { personStore, personEndpoints } from './person.store';
 // agreement add-ons
 import { agreementStore, agreementEndpoints } from './agreement.store';
 
+// venue add-ons
+import { roomStore, roomEndpoints } from './room.store';
+import { roomSetStore, roomSetEndpoints} from "@/store/room_set.store";
+import { venueStore, venueEndpoints} from "@/store/venue.store";
+
 // mailings
 import { mailingStore, mailingEndpoints } from './mailing.store';
 
@@ -52,6 +57,9 @@ import { areaStore, areaEndpoints } from './area.store';
 
 import { availabilityStore } from './availability.store';
 
+import { availabilityConflictStore, availabilityConflictEndpoints } from './availability_conflict.store';
+import { sessionConflictStore, sessionConflictEndpoints } from './session_conflict.store';
+
 import { personExclusionStore } from './person_exclusion.store';
 
 import { emailAddressStore, emailAddressEndpoints } from './email_address.store';
@@ -73,6 +81,9 @@ import merge from 'lodash.merge'
 const endpoints = {
   ...personEndpoints,
   ...agreementEndpoints,
+  ...roomEndpoints,
+  ...roomSetEndpoints,
+  ...venueEndpoints,
   ...surveyEndpoints,
   ...mailingEndpoints,
   ...sessionEndpoints,
@@ -81,7 +92,9 @@ const endpoints = {
   ...sessionAssignmentEndpoints,
   ...parameterNameEndpoints,
   ...configurationEndpoints,
-  ...emailAddressEndpoints
+  ...emailAddressEndpoints,
+  ...availabilityConflictEndpoints,
+  ...sessionConflictEndpoints
   // ...availabilityEndpoints,
   // ...personExclusionEndpoints
 }
@@ -106,6 +119,9 @@ export const store = new Vuex.Store({
     selected: {
       ...personStore.selected,
       ...agreementStore.selected,
+      ...roomStore.selected,
+      ...roomSetStore.selected,
+      ...venueStore.selected,
       ...surveyStore.selected,
       ...mailingStore.selected,
       ...sessionStore.selected,
@@ -113,7 +129,9 @@ export const store = new Vuex.Store({
       ...tagStore.selected,
       ...sessionAssignmentStore.selected,
       ...parameterNameStore.selected,
-      ...configurationStore.selected
+      ...configurationStore.selected,
+      ...availabilityConflictStore.selected,
+      ...sessionConflictStore.selected
     },
     ...personSessionStore.state,
     ...settingsStore.state,
@@ -142,6 +160,9 @@ export const store = new Vuex.Store({
     },
     ...personStore.getters,
     ...agreementStore.getters,
+    ...roomStore.getters,
+    ...roomSetStore.getters,
+    ...venueStore.getters,
     ...surveyStore.getters,
     ...personSessionStore.getters,
     ...mailingStore.getters,
@@ -154,7 +175,8 @@ export const store = new Vuex.Store({
     ...searchStateStore.getters,
     ...availabilityStore.getters,
     ...personExclusionStore.getters,
-    ...emailAddressStore.getters
+    ...emailAddressStore.getters,
+    ...settingsStore.getters,
   },
   plugins: [
     ...surveyStore.plugins
@@ -330,6 +352,9 @@ export const store = new Vuex.Store({
     ...surveyStore.actions,
     ...personStore.actions,
     ...agreementStore.actions,
+    ...roomStore.actions,
+    ...roomSetStore.actions,
+    ...venueStore.actions,
     ...mailingStore.actions,
     ...settingsStore.actions,
     ...searchStateStore.actions,

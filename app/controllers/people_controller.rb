@@ -367,6 +367,7 @@ class PeopleController < ResourceController
       can_share
       registration_number
       can_photo
+      can_photo_exceptions
       can_record
       name
       name_sort_by
@@ -394,6 +395,23 @@ class PeopleController < ResourceController
       availability_notes
       ids
       attrs
+      can_stream
+      can_stream_exceptions
+      can_record_exceptions
+      do_not_assign_with
+      moderation_experience
+      is_local
+      languages_fluent_in
+      demographic_categories
+      age_at_convention
+      romantic_sexual_orientation
+      needs_accommodations
+      accommodations
+      willing_to_moderate
+      othered
+      indigenous
+      black_diaspora
+      non_us_centric_perspectives
     ] << [
       email_addresses_attributes: %i[
         id

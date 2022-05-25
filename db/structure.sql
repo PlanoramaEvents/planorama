@@ -455,6 +455,188 @@ CREATE TABLE public.availabilities (
 
 
 --
+-- Name: people; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.people (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    language character varying(5) DEFAULT ''::character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    lock_version integer DEFAULT 0,
+    comments text,
+    organization character varying,
+    job_title character varying,
+    pronouns character varying(400),
+    year_of_birth integer,
+    gender character varying(400),
+    ethnicity character varying(400),
+    opted_in boolean DEFAULT false NOT NULL,
+    registered boolean DEFAULT false NOT NULL,
+    registration_type character varying,
+    can_share boolean DEFAULT false NOT NULL,
+    registration_number character varying,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0 NOT NULL,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip inet,
+    last_sign_in_ip inet,
+    confirmation_token character varying,
+    confirmed_at timestamp without time zone,
+    confirmation_sent_at timestamp without time zone,
+    unconfirmed_email character varying,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    locked_at timestamp without time zone,
+    name character varying DEFAULT ''::character varying,
+    name_sort_by character varying,
+    name_sort_by_confirmed boolean DEFAULT false,
+    pseudonym character varying,
+    pseudonym_sort_by character varying,
+    pseudonym_sort_by_confirmed boolean DEFAULT false,
+    published_name character varying GENERATED ALWAYS AS (
+CASE
+    WHEN (pseudonym IS NOT NULL) THEN pseudonym
+    ELSE name
+END) STORED,
+    published_name_sort_by character varying GENERATED ALWAYS AS (
+CASE
+    WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
+    ELSE name_sort_by
+END) STORED,
+    bio text,
+    website character varying,
+    twitter character varying,
+    othersocialmedia character varying,
+    facebook character varying,
+    linkedin character varying,
+    twitch character varying,
+    youtube character varying,
+    instagram character varying,
+    flickr character varying,
+    reddit character varying,
+    tiktok character varying,
+    can_stream public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    can_record public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    can_photo public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
+    age_at_convention character varying,
+    romantic_sexual_orientation character varying,
+    needs_accommodations boolean DEFAULT false,
+    accommodations character varying(10000) DEFAULT NULL::character varying,
+    willing_to_moderate boolean DEFAULT false,
+    moderation_experience character varying(10000) DEFAULT NULL::character varying,
+    othered character varying(10000) DEFAULT NULL::character varying,
+    indigenous character varying(10000) DEFAULT NULL::character varying,
+    black_diaspora character varying(10000) DEFAULT NULL::character varying,
+    non_us_centric_perspectives character varying(10000) DEFAULT NULL::character varying,
+    demographic_categories character varying,
+    do_not_assign_with character varying(10000) DEFAULT NULL::character varying,
+    can_stream_exceptions character varying(10000) DEFAULT NULL::character varying,
+    can_record_exceptions character varying(10000) DEFAULT NULL::character varying,
+    can_photo_exceptions character varying(10000) DEFAULT NULL::character varying,
+    is_local boolean DEFAULT false,
+    languages_fluent_in character varying(10000) DEFAULT NULL::character varying,
+    con_state public.person_status_enum DEFAULT 'not_set'::public.person_status_enum,
+    attendance_type character varying(200) DEFAULT NULL::character varying,
+    twelve_hour boolean DEFAULT true,
+    timezone character varying(500) DEFAULT NULL::character varying,
+    availability_notes character varying
+);
+
+
+--
+-- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_assignment_role_type (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    lock_version integer DEFAULT 0,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    name character varying(100) NOT NULL,
+    role_type public.assignment_role_enum,
+    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
+);
+
+
+--
+-- Name: session_assignments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_assignments (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    lock_version integer DEFAULT 0,
+    session_assignment_role_type_id uuid,
+    session_id uuid NOT NULL,
+    sort_order integer,
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
+    interested boolean DEFAULT false,
+    interest_ranking integer,
+    interest_notes text,
+    state character varying,
+    planner_notes text,
+    interest_role public.interest_role_enum DEFAULT 'no_preference'::public.interest_role_enum
+);
+
+
+--
+-- Name: sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sessions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    duration integer,
+    minimum_people integer,
+    maximum_people integer,
+    item_notes text,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    lock_version integer DEFAULT 0,
+    format_id uuid,
+    pub_reference_number integer,
+    audience_size integer,
+    participant_notes text,
+    is_break boolean DEFAULT false,
+    description text,
+    title character varying(256),
+    start_time timestamp without time zone,
+    room_id uuid,
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
+    publish boolean DEFAULT false NOT NULL,
+    require_signup boolean DEFAULT false,
+    waiting_list_size integer DEFAULT 0,
+    open_for_interest boolean DEFAULT false,
+    instructions_for_interest text,
+    updated_by character varying,
+    interest_opened_by character varying,
+    interest_opened_at timestamp without time zone
+);
+
+
+--
+-- Name: availability_conflicts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.availability_conflicts AS
+ SELECT DISTINCT session_assignments.id AS session_assignment_id,
+    people.id AS person_id,
+    sessions.id AS session_id
+   FROM ((((public.session_assignments
+     JOIN public.sessions ON ((sessions.id = session_assignments.session_id)))
+     JOIN public.people ON ((people.id = session_assignments.person_id)))
+     JOIN public.availabilities ON ((availabilities.person_id = people.id)))
+     JOIN public.session_assignment_role_type ON ((session_assignment_role_type.id = session_assignments.session_assignment_role_type_id)))
+  WHERE (((sessions.start_time < availabilities.start_time) OR (sessions.start_time > availabilities.end_time)) AND (session_assignments.person_id = availabilities.person_id) AND (session_assignments.session_assignment_role_type_id IS NOT NULL) AND ((session_assignment_role_type.name)::text <> 'Reserve'::text));
+
+
+--
 -- Name: bios; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -737,100 +919,6 @@ CREATE TABLE public.parameter_names (
 
 
 --
--- Name: people; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.people (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    language character varying(5) DEFAULT ''::character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    comments text,
-    organization character varying,
-    job_title character varying,
-    pronouns character varying(400),
-    year_of_birth integer,
-    gender character varying(400),
-    ethnicity character varying(400),
-    opted_in boolean DEFAULT false NOT NULL,
-    registered boolean DEFAULT false NOT NULL,
-    registration_type character varying,
-    can_share boolean DEFAULT false NOT NULL,
-    registration_number character varying,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-    reset_password_token character varying,
-    reset_password_sent_at timestamp without time zone,
-    remember_created_at timestamp without time zone,
-    sign_in_count integer DEFAULT 0 NOT NULL,
-    current_sign_in_at timestamp without time zone,
-    last_sign_in_at timestamp without time zone,
-    current_sign_in_ip inet,
-    last_sign_in_ip inet,
-    confirmation_token character varying,
-    confirmed_at timestamp without time zone,
-    confirmation_sent_at timestamp without time zone,
-    unconfirmed_email character varying,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    unlock_token character varying,
-    locked_at timestamp without time zone,
-    name character varying DEFAULT ''::character varying,
-    name_sort_by character varying,
-    name_sort_by_confirmed boolean DEFAULT false,
-    pseudonym character varying,
-    pseudonym_sort_by character varying,
-    pseudonym_sort_by_confirmed boolean DEFAULT false,
-    published_name character varying GENERATED ALWAYS AS (
-CASE
-    WHEN (pseudonym IS NOT NULL) THEN pseudonym
-    ELSE name
-END) STORED,
-    published_name_sort_by character varying GENERATED ALWAYS AS (
-CASE
-    WHEN (pseudonym_sort_by IS NOT NULL) THEN pseudonym_sort_by
-    ELSE name_sort_by
-END) STORED,
-    bio text,
-    website character varying,
-    twitter character varying,
-    othersocialmedia character varying,
-    facebook character varying,
-    linkedin character varying,
-    twitch character varying,
-    youtube character varying,
-    instagram character varying,
-    flickr character varying,
-    reddit character varying,
-    tiktok character varying,
-    can_stream public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
-    can_record public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
-    can_photo public.yesnomaybe_enum DEFAULT 'no'::public.yesnomaybe_enum,
-    age_at_convention character varying,
-    romantic_sexual_orientation character varying,
-    needs_accommodations boolean DEFAULT false,
-    accommodations character varying(10000) DEFAULT NULL::character varying,
-    willing_to_moderate boolean DEFAULT false,
-    moderation_experience character varying(10000) DEFAULT NULL::character varying,
-    othered character varying(10000) DEFAULT NULL::character varying,
-    indigenous character varying(10000) DEFAULT NULL::character varying,
-    black_diaspora character varying(10000) DEFAULT NULL::character varying,
-    non_us_centric_perspectives character varying(10000) DEFAULT NULL::character varying,
-    demographic_categories character varying,
-    do_not_assign_with character varying(10000) DEFAULT NULL::character varying,
-    can_stream_exceptions character varying(10000) DEFAULT NULL::character varying,
-    can_record_exceptions character varying(10000) DEFAULT NULL::character varying,
-    can_photo_exceptions character varying(10000) DEFAULT NULL::character varying,
-    is_local boolean DEFAULT false,
-    languages_fluent_in character varying(10000) DEFAULT NULL::character varying,
-    con_state public.person_status_enum DEFAULT 'not_set'::public.person_status_enum,
-    attendance_type character varying(200) DEFAULT NULL::character varying,
-    twelve_hour boolean DEFAULT true,
-    timezone character varying(500) DEFAULT NULL::character varying,
-    availability_notes character varying
-);
-
-
---
 -- Name: people_surveys; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1000,12 +1088,14 @@ CREATE TABLE public.rooms (
     comment text,
     sort_order integer,
     capacity integer,
-    room_floor character varying,
+    floor character varying,
     open_for_schedule boolean DEFAULT true,
     is_virtual boolean DEFAULT false,
-    dimensions text,
     area_of_space numeric,
-    room_set_id uuid
+    room_set_id uuid,
+    length numeric,
+    width numeric,
+    height numeric
 );
 
 
@@ -1034,44 +1124,6 @@ CREATE TABLE public.session_areas (
 
 
 --
--- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.session_assignment_role_type (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    lock_version integer DEFAULT 0,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    name character varying(100) NOT NULL,
-    role_type public.assignment_role_enum,
-    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
-);
-
-
---
--- Name: session_assignments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.session_assignments (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    session_assignment_role_type_id uuid,
-    session_id uuid NOT NULL,
-    sort_order integer,
-    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
-    interested boolean DEFAULT false,
-    interest_ranking integer,
-    interest_notes text,
-    state character varying,
-    planner_notes text,
-    interest_role public.interest_role_enum DEFAULT 'no_preference'::public.interest_role_enum
-);
-
-
---
 -- Name: session_limits; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1083,40 +1135,6 @@ CREATE TABLE public.session_limits (
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: sessions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sessions (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    duration integer,
-    minimum_people integer,
-    maximum_people integer,
-    item_notes text,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    lock_version integer DEFAULT 0,
-    format_id uuid,
-    pub_reference_number integer,
-    audience_size integer,
-    participant_notes text,
-    is_break boolean DEFAULT false,
-    description text,
-    title character varying(256),
-    start_time timestamp without time zone,
-    room_id uuid,
-    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
-    publish boolean DEFAULT false NOT NULL,
-    require_signup boolean DEFAULT false,
-    waiting_list_size integer DEFAULT 0,
-    open_for_interest boolean DEFAULT false,
-    instructions_for_interest text,
-    updated_by character varying,
-    interest_opened_by character varying,
-    interest_opened_at timestamp without time zone
 );
 
 
@@ -2580,6 +2598,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220502152603'),
 ('20220503121253'),
 ('20220504140508'),
-('20220507210839');
+('20220507210839'),
+('20220510015131'),
+('20220512004401'),
+('20220524195624');
 
 
