@@ -101,7 +101,7 @@ after :venue do
       Room.create!(
         name: 'Michigan 1',
         sort_order: 30,
-        purpose: "Programming",
+        purpose: "Programming / Stream out",
         floor: 'Concourse Level, East Tower',
         room_set_id: panel_roomset.id,
         venue_id: physical_venue.id,
@@ -119,7 +119,8 @@ after :venue do
       Room.create!(
         name: 'Michigan 2',
         sort_order: 31,
-        purpose: "Programming",
+        purpose: "Programming / Stream out",
+        comment: "Academic",
         floor: 'Concourse Level, East Tower',
         room_set_id: panel_roomset.id,
         venue_id: physical_venue.id,
@@ -137,7 +138,7 @@ after :venue do
       Room.create!(
         name: 'Michigan 3',
         sort_order: 32,
-        purpose: "Programming",
+        purpose: "Programming / Stream out",
         floor: 'Concourse Level, East Tower',
         room_set_id: panel_roomset.id,
         venue_id: physical_venue.id,
@@ -209,7 +210,6 @@ after :venue do
         name: 'Randolph 3',
         sort_order: 42,
         purpose: "Programming",
-        comment: "Academic",
         floor: 'Concourse Level, East Tower',
         room_set_id: panel_roomset.id,
         venue_id: physical_venue.id,
@@ -261,7 +261,7 @@ after :venue do
       Room.create!(
         name: 'Roosevelt 2 Boardroom',
         sort_order: 51,
-        purpose: "Promotions / Social Media / Publications / Newsletter Office",
+        purpose: "Promotions / Social Media",
         floor: 'Concourse Level, East Tower',
         venue_id: physical_venue.id,
         length: '300',
@@ -295,7 +295,8 @@ after :venue do
       Room.create!(
         name: 'Roosevelt Boardroom',
         sort_order: 53,
-        purpose: "Duplicate?",
+        purpose: "Publications / Newsletter Office",
+        comment: "lose on Sunday night",
         floor: 'Concourse Level, East Tower',
         venue_id: physical_venue.id,
         length: '204',
@@ -513,7 +514,7 @@ after :venue do
         height: '132',
         area_of_space: '264',
         capacity: '16',
-        open_for_schedule: true,
+        open_for_schedule: false,
         is_virtual: false
       )
     end
@@ -530,7 +531,7 @@ after :venue do
         height: '132',
         area_of_space: '764',
         capacity: '60',
-        open_for_schedule: true,
+        open_for_schedule: false,
         is_virtual: false
       )
     end
@@ -720,7 +721,7 @@ after :venue do
       Room.create!(
         name: 'McCormick',
         sort_order: 101,
-        purpose: "Programming",
+        purpose: "Programming / Gaming?",
         floor: 'Third Floor, West Tower',
         room_set_id: panel_roomset.id,
         venue_id: physical_venue.id,
@@ -810,7 +811,7 @@ after :venue do
       Room.create!(
         name: 'Wright',
         sort_order: 106,
-        purpose: "Programming",
+        purpose: "Programming / Gaming?",
         floor: 'Third Floor, West Tower',
         room_set_id: panel_roomset.id,
         venue_id: physical_venue.id,
@@ -856,7 +857,7 @@ after :venue do
         width: '286',
         height: '108',
         area_of_space: '446',
-        open_for_schedule: true,
+        open_for_schedule: false,
         is_virtual: false
       )
     end
@@ -941,13 +942,13 @@ after :venue do
       Room.create!(
         name: 'Gallery Lounge 6',
         sort_order: 115,
-        purpose: "Safer Spaces",
+        purpose: "Public Space",
         floor: 'Skyway Level, West Tower',
         venue_id: physical_venue.id,
         length: '276',
         width: '634',
         area_of_space: '1206',
-        open_for_schedule: true,
+        open_for_schedule: false,
         is_virtual: false
       )
     end
@@ -956,13 +957,13 @@ after :venue do
       Room.create!(
         name: 'Gallery Lounge 7',
         sort_order: 117,
-        purpose: "Safer Spaces",
+        purpose: "Public Space",
         floor: 'Skyway Level, West Tower',
         venue_id: physical_venue.id,
         length: '386',
         width: '290',
         area_of_space: '759',
-        open_for_schedule: true,
+        open_for_schedule: false,
         is_virtual: false
       )
     end
@@ -971,7 +972,7 @@ after :venue do
       Room.create!(
         name: 'Crystal Ballroom A',
         sort_order: 120,
-        purpose: "Programming / WSFS",
+        purpose: "Programming",
         floor: 'Lobby Level, West Tower',
         room_set_id: panel_roomset.id,
         venue_id: physical_venue.id,
@@ -990,6 +991,7 @@ after :venue do
         name: 'Crystal Ballroom B',
         sort_order: 121,
         purpose: "Programming / WSFS",
+        comment: "WSFS BM",
         floor: 'Lobby Level, West Tower',
         room_set_id: panel_roomset.id,
         venue_id: physical_venue.id,
@@ -1007,8 +1009,7 @@ after :venue do
       Room.create!(
         name: 'Crystal Ballroom C',
         sort_order: 122,
-        purpose: "Programming / WSFS",
-        comment: "WSFS BM",
+        purpose: "Programming",
         floor: 'Lobby Level, West Tower',
         room_set_id: panel_roomset.id,
         venue_id: physical_venue.id,
@@ -1074,7 +1075,7 @@ after :venue do
       Room.create!(
         name: 'Gold Coast',
         sort_order: 132,
-        purpose: "Staff Den / Dining Area?",
+        purpose: "Staff Den / Dining Area",
         floor: 'Concourse Level, West Tower',
         venue_id: physical_venue.id,
         length: '570',
@@ -1251,6 +1252,7 @@ after :venue do
         name: 'Atlanta',
         sort_order: 145,
         purpose: "Art Show Print Shop Functions? Or Programming?",
+        comment: "90% sure it's programming - need confirmation",
         floor: 'Ballroom Level, West Tower',
         venue_id: physical_venue.id,
         length: '288',
@@ -1258,7 +1260,7 @@ after :venue do
         height: '93',
         area_of_space: '768',
         capacity: '60',
-        open_for_schedule: false,
+        open_for_schedule: true,
         is_virtual: false
       )
     end
@@ -1308,7 +1310,7 @@ after :venue do
         height: '93',
         area_of_space: '650',
         capacity: '55',
-        open_for_schedule: true,
+        open_for_schedule: false,
         is_virtual: false
       )
     end
@@ -1329,13 +1331,13 @@ after :venue do
       Room.create!(
         name: 'Board of Trade',
         sort_order: 170,
-        purpose: "DH Meetings / WSFS Count",
+        purpose: "WSFS Count / Various things",
         floor: '36th Floor, West Tower',
         venue_id: physical_venue.id,
         length: '276',
         width: '324',
         area_of_space: '621',
-        open_for_schedule: true,
+        open_for_schedule: false,
         is_virtual: false
       )
     end
