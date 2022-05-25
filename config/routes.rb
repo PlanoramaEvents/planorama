@@ -65,6 +65,8 @@ Rails.application.routes.draw do
 
   resources :availability_conflicts,  path: 'availability_conflict', controller: 'conflicts/availability_conflicts', only: [:index]
 
+  get 'session_conflict', to: 'conflicts/session_conflicts#index'
+
   # Surveys and their nested resources
   post 'survey/:survey_id/assign_people', to: 'surveys#assign_people'
   post 'survey/:survey_id/unassign_people', to: 'surveys#unassign_people'

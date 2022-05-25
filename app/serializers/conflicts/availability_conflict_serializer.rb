@@ -1,7 +1,9 @@
 class Conflicts::AvailabilityConflictSerializer
   include JSONAPI::Serializer
 
-  attributes :person_id, :session_id, :session_assignment_id
+  attribute :id do |obj|
+    obj.id.join(',')
+  end
 
   belongs_to :session_assignment, serializer: SessionAssignmentSerializer
   belongs_to :person, serializer: PersonSerializer

@@ -10,6 +10,10 @@
           style="flex: 1 0 auto"
         >
         </schedulable-sessions>
+        <availability
+          :model="availabilityConflictModel"
+          style="flex: 1 0 auto"
+        ></availability>
       </div>
       <div class="col-9">
         <room-selector
@@ -45,7 +49,9 @@ import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
 import { roomModel } from '../store/room.store.js';
 import { sessionModel } from '@/store/session.store'
+import { availabilityConflictModel } from '@/store/availability_conflict.store'
 import SessionSidebar from '../sessions/session_sidebar.vue';
+import Availability from '../conflicts/availability.vue'
 
 import { DateTime } from "luxon";
 
@@ -55,7 +61,8 @@ export default {
     ScheduleCalendar,
     SchedulableSessions,
     RoomSelector,
-    SessionSidebar
+    SessionSidebar,
+    Availability
   },
   mixins: [
     modelUtilsMixin,
@@ -64,6 +71,7 @@ export default {
   data: () =>  ({
     rooms: null,
     sessionModel: sessionModel,
+    availabilityConflictModel: availabilityConflictModel,
     selectedRooms: []
   }),
   computed: {

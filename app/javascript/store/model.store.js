@@ -57,6 +57,8 @@ import { areaStore, areaEndpoints } from './area.store';
 
 import { availabilityStore } from './availability.store';
 
+import { availabilityConflictStore, availabilityConflictEndpoints } from './availability_conflict.store';
+
 import { personExclusionStore } from './person_exclusion.store';
 
 import { emailAddressStore, emailAddressEndpoints } from './email_address.store';
@@ -89,7 +91,8 @@ const endpoints = {
   ...sessionAssignmentEndpoints,
   ...parameterNameEndpoints,
   ...configurationEndpoints,
-  ...emailAddressEndpoints
+  ...emailAddressEndpoints,
+  ...availabilityConflictEndpoints
   // ...availabilityEndpoints,
   // ...personExclusionEndpoints
 }
@@ -124,7 +127,8 @@ export const store = new Vuex.Store({
       ...tagStore.selected,
       ...sessionAssignmentStore.selected,
       ...parameterNameStore.selected,
-      ...configurationStore.selected
+      ...configurationStore.selected,
+      ...availabilityConflictStore.selected
     },
     ...personSessionStore.state,
     ...settingsStore.state,
