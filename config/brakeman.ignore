@@ -21,6 +21,26 @@
       "note": ""
     },
     {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "4746b9529e35b8ffa5684e95d9f1b3e2f282703a6456abf7ad06c98d6a6e714b",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Survey#find`",
+      "file": "app/controllers/surveys_controller.rb",
+      "line": 12,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Survey.find(params[:survey_id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "SurveysController",
+        "method": "assign_people"
+      },
+      "user_input": "params[:survey_id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 70,
       "fingerprint": "5aab4faf0ef95479f4e9850c880bb2fabf7d45f27763ad2e99fd28fe22d72a31",
@@ -39,8 +59,28 @@
       "user_input": null,
       "confidence": "Medium",
       "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "dc8005b6ba8b0b63b65ddb44fe7de9a594358e8fcb047803dd4b512405570d1c",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Survey#find`",
+      "file": "app/controllers/surveys_controller.rb",
+      "line": 26,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Survey.find(params[:survey_id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "SurveysController",
+        "method": "unassign_people"
+      },
+      "user_input": "params[:survey_id]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2022-05-25 17:40:02 -0400",
+  "updated": "2022-05-25 18:17:19 -0400",
   "brakeman_version": "5.2.3"
 }
