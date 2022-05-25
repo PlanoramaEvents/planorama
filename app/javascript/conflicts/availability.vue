@@ -52,6 +52,11 @@ export default {
 </script>
 
 <style lang="scss">
+.availability-conflicts-list {
+  overflow-y: scroll;
+  max-height: 300px;
+}
+
 .availability-conflict {
   border: 1px solid rgba(0,100,150,.15);
   padding: .2em .4em;
