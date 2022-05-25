@@ -26,6 +26,7 @@ module.exports = {
     SUCCESS_TOAST_TITLE: "Success",
 
     //room actions
+    ROOM_CONFIRM_DELETE: "Are you sure you want to permanently delete this room? This cannot be undone.",
     ROOM_SAVE_ERROR: errorMessage("Room failed to be saved."),
     ROOM_SAVE_ERROR_DELETE: errorMessage("Room failed to be deleted."),
     ROOM_SAVE_SUCCESS: "Room successfully saved.",

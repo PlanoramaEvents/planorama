@@ -34,7 +34,7 @@ export const room_columns = [
     choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
   },
   {
-    key: 'length',
+    key: 'is_virtual',
     label: 'Length',
     // type: 'number',
   },
