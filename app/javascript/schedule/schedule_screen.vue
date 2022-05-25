@@ -10,10 +10,10 @@
           style="flex: 1 0 auto"
         >
         </schedulable-sessions>
-        <!-- <availability
+        <availability
           :model="sessionConflictModel"
           style="flex: 1 0 auto"
-        ></availability> -->
+        ></availability>
       </div>
       <div class="col-9">
         <room-selector
