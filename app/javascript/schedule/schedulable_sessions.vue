@@ -30,7 +30,7 @@
 <script>
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
-import { sessionModel as model } from '@/store/session.store'
+// import { sessionModel as model } from '@/store/session.store'
 import ScheduleSessionSearch from './schedule_session_search';
 
 // TODO: filter out sessions with no duration

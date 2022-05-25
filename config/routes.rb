@@ -48,7 +48,7 @@ Rails.application.routes.draw do
   get 'report/session_selections', to: 'reports#session_selections'
   get 'report/participant_availabilities', to: 'reports#participant_availabilities'
   get 'report/assigned_sessions_by_participant', to: 'reports#assigned_sessions_by_participant'
-  get 'report/sessions_with_participants', to: 'reports#sessions_with_participants'  
+  get 'report/sessions_with_participants', to: 'reports#sessions_with_participants'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
@@ -62,6 +62,10 @@ Rails.application.routes.draw do
   put 'agreement/sign/:id', to: 'agreements#sign'
   get 'agreement/latest', to: 'agreements#latest'
   resources :agreements, path: 'agreement'
+
+  resources :availability_conflicts,  path: 'availability_conflict', controller: 'conflicts/availability_conflicts', only: [:index]
+
+  get 'session_conflict', to: 'conflicts/session_conflicts#index'
 
   # Surveys and their nested resources
   post 'survey/:survey_id/assign_people', to: 'surveys#assign_people'

@@ -11,13 +11,17 @@
     :minSplitWidth="150"
     :split-days="roomHeading"
     :disable-views="['years', 'year', 'month', 'week']"
-    :time-cell-height="40"
+    :time-cell-height="80"
     :editable-events="{ title: false, drag: true, resize: false, delete: false, create: false }"
     class="plano-sched-day vuecal--full-height-delete"
     ref="dayRoomGrid"
     :events="events"
     @event-drop="onEventDrop"
+    @event-mouse-enter="onEventEnter"
+    @event-mouse-leave="onEventLeave"
+    :on-event-click="onEventClick"
   >
+    <!-- TODO: change colour or something if selected ... class? -->
     <template v-slot:title="{ title, view }">
       {{ formatDate(view.selectedDate, { weekday: 'long' }) }},
       {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
@@ -25,8 +29,8 @@
     <template v-slot:event="{ event, view }">
       <div class="d-flex flex-column">
         <div class="d-flex flex-row p-1 justify-content-between">
-          <small class="event-time">
-            {{ formatLocaleJsDate(event.start) }} - {{ formatDatetime(addMinutes(event.start, event.duration_mins)) }}
+          <small class="event-time" v-if="event.actual_start && event.actual_end">
+            {{ formatDatetime(event.actual_start) }} - {{ formatDatetime(event.actual_end) }}
           </small>
           <b-icon-x @click="onDelete(event)"></b-icon-x>
         </div>
@@ -44,6 +48,7 @@ import 'vue-cal/dist/vuecal.css'
 import dateTimeMixin from '../components/date_time.mixin'
 import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
+import tableMixin from '../store/table.mixin';
 
 const { DateTime } = require("luxon");
 
@@ -54,7 +59,8 @@ export default {
   },
   mixins: [
     dateTimeMixin,
-    modelUtilsMixin
+    modelUtilsMixin,
+    tableMixin
   ],
   props: {
     startTime: {
@@ -76,9 +82,6 @@ export default {
       type: String,
       required: true
     },
-    initialSessions: {
-      type: Array
-    },
     timezone: {
       type: String,
       default: null
@@ -90,9 +93,40 @@ export default {
     }
   },
   data: () =>  ({
-    events: []
   }),
   computed: {
+    events() {
+      let res = []
+      for (const session of this.collection) {
+        let start_time = DateTime.fromISO(session.start_time).setZone(this.timezone)
+        let end_time = DateTime.fromISO(session.end_time).setZone(this.timezone)
+        // check it is for the right day
+        if ((start_time.toFormat('yyyy-MM-dd') == this.selectedDate) || (end_time.toFormat('yyyy-MM-dd') == this.selectedDate)) {
+          // We need to fudge the end or start time, otherwise the session is no draggable if either is
+          // outside the limits for the day So we aslo keep the display start and end for the UI...
+          let display_end_time = end_time
+          let display_start_time = start_time
+          if (end_time.toFormat('yyyy-MM-dd') != this.selectedDate) {
+            display_end_time = start_time.endOf('day')
+          }
+          if (start_time.toFormat('yyyy-MM-dd') != this.selectedDate) {
+            display_start_time = end_time.startOf('day')
+          }
+          let new_event = {
+            start: display_start_time.toFormat('yyyy-MM-dd HH:mm'),
+            end: display_end_time.toFormat('yyyy-MM-dd HH:mm'),
+            title: session.title,
+            split: session.room_id,
+            id: session.id,
+            duration_mins: session.duration_mins,
+            actual_start: start_time,
+            actual_end: end_time
+          }
+          res.push(new_event)
+        }
+      }
+      return res
+    },
     roomHeading() {
       if (this.rooms) {
         let headings = this.rooms.map(
@@ -113,31 +147,23 @@ export default {
     },
   },
   methods: {
-    // onCreate(ev) {
-    //   // console.debug("******** 1. CREATE EVENT", ev)
-    // },
+    onEventClick(event, e) {
+      e.stopPropagation()
+      this.select(event.id)
+    },
+    // Enter and leave to
+    onEventEnter(e) {
+      // console.debug("******* SESSION Entered", e)
+      // e.stopPropagation()
+    },
+    onEventLeave(e) {
+      // console.debug("******* SESSION Leave", e)
+      // e.stopPropagation()
+    },
     onEventDrop ({ event, originalEvent, external }) {
-      let eventDuration = event.duration_mins
-      let startTimeMinutes = event.startTimeMinutes
-      event.endTimeMinutes = Math.min(startTimeMinutes + eventDuration, 24 * 60)
-      event.end = new Date(event.start.getTime() + event.duration_mins*60000); //event.start + event.duration_mins
-
-      // Hack for the display size
-      let mevs = this.$refs['dayRoomGrid'].mutableEvents.filter(e => e._eid == event._eid)
-      mevs[0].endTimeMinutes = event.endTimeMinutes
-      mevs[0].end = event.end
-
       this.updateSession(event.id, event.start, event.split)
     },
     onDelete(ev) {
-      let cid = ev._eid
-      this.$refs['dayRoomGrid'].mutableEvents = this.$refs['dayRoomGrid'].mutableEvents.filter(
-        (e) => e._eid != cid
-      )
-      this.$refs['dayRoomGrid'].view.events = this.$refs['dayRoomGrid'].view.events.filter(
-        (e) => e._eid != cid
-      )
-
       this.updateSession(ev.id, null, null)
     },
     scrollBarElement: function() {
@@ -146,44 +172,13 @@ export default {
     updateSession(id, start_time, room_id) {
       let session = this.get_model(sessionModel, id)
       session.start_time = start_time ? this.uiDateToTZDate(start_time) : null
-      console.debug("**** SET ROOM", room_id)
       session.room_id = room_id
       this.save_model(sessionModel, session).then(
         () => {
           this.$emit("schedule-changed");
         }
       )
-    },
-    clearAllEvents() {
-      this.$refs['dayRoomGrid'].mutableEvents = []
-      this.$refs['dayRoomGrid'].view.events = []
-    },
-    // Intialize with the scheduled sessions and out them on the grid
-    init() {
-      this.clearAllEvents()
-      if (this.initialSessions && this.initialSessions.length > 0) {
-        // plot the sessions
-        for (const session of this.initialSessions) {
-          let start_time = DateTime.fromISO(session.start_time).setZone(this.timezone)
-          // check it is for the right day
-          if (start_time.toFormat('yyyy-MM-dd') == this.selectedDate) {
-            let new_event = this.$refs['dayRoomGrid'].createEvent(
-              start_time.toFormat('yyyy-MM-dd HH:mm'),
-              session.duration,
-              {
-                id: session.id,
-                duration_mins: session.duration_mins,
-                title: session.title,
-                split: session.room_id
-              }
-            )
-          }
-        }
-      }
     }
-  },
-  mounted() {
-    this.init()
   }
 }
 </script>
@@ -233,7 +228,7 @@ export default {
   font-size: smaller;
 }
 
-// Split header needs to be half the size of the time-cell-height
+// Split header needs to be 20px so that long titles do not force mis-alignment...
 .plano-sched-day .vuecal__split-days-headers {
   max-height: 20px;
 }

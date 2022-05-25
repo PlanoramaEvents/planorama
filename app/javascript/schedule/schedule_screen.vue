@@ -1,23 +1,27 @@
 <template>
-    <div class="container-fluid pl-0">
-      <div class="row">
-        <div class="col-3 pt-3 d-flex flex-column" style="max-height: calc(100vh - 150px)">
-          <schedulable-sessions
-            :model="sessionModel"
-            :defaultFilter="sessionFilter"
-            defaultSortBy="sessions.title"
-            ref="schedulable-sessions"
-            style="flex: 1 0 auto"
-          >
-          </schedulable-sessions>
-          <room-selector
-            v-if="rooms"
-            :rooms="rooms"
-            @change="onRoomChange"
-            style="flex: 1 1 40%; overflow-y: auto"
-          ></room-selector>
-        </div>
-        <div class="col-9 scrollable">
+  <div class="container-fluid pl-0">
+    <div class="row">
+      <div class="col-3 pt-3 d-flex flex-column" style="max-height: calc(100vh - 150px)">
+        <schedulable-sessions
+          :model="sessionModel"
+          :defaultFilter="sessionFilter"
+          defaultSortBy="sessions.title"
+          ref="schedulable-sessions"
+          style="flex: 1 0 auto"
+        >
+        </schedulable-sessions>
+        <availability
+          :model="sessionConflictModel"
+          style="flex: 1 0 auto"
+        ></availability>
+      </div>
+      <div class="col-9">
+        <room-selector
+          v-if="rooms"
+          :rooms="rooms"
+          @change="onRoomChange"
+        ></room-selector>
+        <div class="scrollable minus31">
           <schedule-calendar
             :rooms="rooms"
             :selectedRooms="selectedRooms"
@@ -28,11 +32,13 @@
             :model="sessionModel"
             :perPage="2000"
             @schedule-changed="onScheduleChanged"
-            class="mt-3"
+            class="mt-1"
           ></schedule-calendar>
         </div>
       </div>
     </div>
+    <session-sidebar :model="sessionModel"></session-sidebar>
+  </div>
 </template>
 
 <script>
@@ -43,6 +49,9 @@ import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
 import { roomModel } from '../store/room.store.js';
 import { sessionModel } from '@/store/session.store'
+import { sessionConflictModel } from '@/store/session_conflict.store'
+import SessionSidebar from '../sessions/session_sidebar.vue';
+import Availability from '../conflicts/availability.vue'
 
 import { DateTime } from "luxon";
 
@@ -51,7 +60,9 @@ export default {
   components: {
     ScheduleCalendar,
     SchedulableSessions,
-    RoomSelector
+    RoomSelector,
+    SessionSidebar,
+    Availability
   },
   mixins: [
     modelUtilsMixin,
@@ -60,6 +71,7 @@ export default {
   data: () =>  ({
     rooms: null,
     sessionModel: sessionModel,
+    sessionConflictModel: sessionConflictModel,
     selectedRooms: []
   }),
   computed: {

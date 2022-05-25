@@ -30,6 +30,10 @@ class SessionSerializer
     session.session_areas
   end
 
+  attribute :end_time do |session|
+    session.start_time ? session.start_time + session.duration.minutes : nil
+  end
+
   has_many :session_areas, serializer: SessionAreaSerializer,
           links: {
             self: -> (object, params) {
