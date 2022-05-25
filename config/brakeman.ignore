@@ -1,23 +1,23 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Unscoped Find",
-      "warning_code": 82,
-      "fingerprint": "4746b9529e35b8ffa5684e95d9f1b3e2f282703a6456abf7ad06c98d6a6e714b",
-      "check_name": "UnscopedFind",
-      "message": "Unscoped call to `Survey#find`",
-      "file": "app/controllers/surveys_controller.rb",
-      "line": 12,
-      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
-      "code": "Survey.find(params[:survey_id])",
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "378bf7ce34e373a7114f1ceb3b6287e988ebadd3bcb934ac4a042f52fb90afd7",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/application_roles_controller.rb",
+      "line": 72,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.permit!",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "SurveysController",
-        "method": "assign_people"
+        "class": "ApplicationRolesController",
+        "method": "after_save_or_update"
       },
-      "user_input": "params[:survey_id]",
-      "confidence": "Weak",
+      "user_input": null,
+      "confidence": "Medium",
       "note": ""
     },
     {
@@ -27,7 +27,7 @@
       "check_name": "MassAssignment",
       "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
       "file": "app/controllers/concerns/resource_methods.rb",
-      "line": 602,
+      "line": 729,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.require(model).permit!",
       "render_path": null,
@@ -39,28 +39,8 @@
       "user_input": null,
       "confidence": "Medium",
       "note": ""
-    },
-    {
-      "warning_type": "Unscoped Find",
-      "warning_code": 82,
-      "fingerprint": "dc8005b6ba8b0b63b65ddb44fe7de9a594358e8fcb047803dd4b512405570d1c",
-      "check_name": "UnscopedFind",
-      "message": "Unscoped call to `Survey#find`",
-      "file": "app/controllers/surveys_controller.rb",
-      "line": 26,
-      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
-      "code": "Survey.find(params[:survey_id])",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "SurveysController",
-        "method": "unassign_people"
-      },
-      "user_input": "params[:survey_id]",
-      "confidence": "Weak",
-      "note": ""
     }
   ],
-  "updated": "2022-03-22 17:25:30 -0400",
-  "brakeman_version": "5.2.1"
+  "updated": "2022-05-25 17:40:02 -0400",
+  "brakeman_version": "5.2.3"
 }
