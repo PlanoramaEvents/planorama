@@ -21,7 +21,7 @@ export default {
   }),
   computed: {
     roomOptions() {
-      return [{text: "No room selected", value: null}, ...this.collection.map(r => ({text: r.name, value: r.id}))]
+      return [{text: "No room selected", value: null}, ...this.collection.sort((a,b) => b.sortorder - a.sortorder).map(r => ({text: r.name, value: r.id}))]
     }
   },
   mounted() {
