@@ -1,3 +1,5 @@
+p "Start development venue seeds"
+
 if Venue.count == 0
   2.times.each do |i|
       v = Venue.create(
@@ -39,3 +41,5 @@ if Venue.count == 0
 
   p "Created #{Venue.count} venues with #{Room.count} rooms."
 end
+
+p "End development venue seeds"

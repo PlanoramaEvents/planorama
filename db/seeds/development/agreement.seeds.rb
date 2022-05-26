@@ -1,18 +1,25 @@
+p "Start development agreement seeds"
 
+after "development:person" do
 
-if Agreement.count == 0
+  if Agreement.count == 0
 
-  Agreement::targets.keys.each do |target|
-    creator = Person.all.sample.id
-    Agreement.create(
-      title: Faker::Lorem.sentence,
-      terms: Faker::Lorem.sentences(number: 3).join('. '),
-      agreement_type: "test",
-      description: "This is a description",
-      target: target,
-      created_by_id: creator,
-      updated_by_id: creator
-    )
+    Agreement::targets.keys.each do |target|
+      creator = Person.all.sample.id
+      Agreement.create(
+        title: Faker::Lorem.sentence,
+        terms: Faker::Lorem.sentences(number: 3).join('. '),
+        agreement_type: "test",
+        description: "This is a description",
+        target: target,
+        created_by_id: creator,
+        updated_by_id: creator
+      )
+    end
+
   end
 
 end
+
+
+p "End development agreement seeds"
