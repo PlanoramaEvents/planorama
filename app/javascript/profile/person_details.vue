@@ -46,12 +46,6 @@
       <b-form-group label="Moderating experience">
         <b-form-textarea v-model="editable_person.moderation_experience" @blur="onInput"></b-form-textarea>
       </b-form-group>
-      <b-form-group label="Languages spoken">
-        <b-form-checkbox-group stacked>
-          <b-form-checkbox value="polish">Polish</b-form-checkbox>
-          <b-form-checkbox value="spanish">Spanish</b-form-checkbox>
-        </b-form-checkbox-group>
-      </b-form-group>
 
     </div>
     <div class="d-flex flex-column w-50 p-2">
