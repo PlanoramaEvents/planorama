@@ -12,7 +12,9 @@
         </schedulable-sessions>
         <availability
           :model="sessionConflictModel"
+          :timezone="timezone"
           style="flex: 1 0 auto"
+          ref="conflict-reporting"
         ></availability>
       </div>
       <div class="col-9">
@@ -144,6 +146,8 @@ export default {
     },
     onScheduleChanged: function() {
       this.$refs["schedulable-sessions"].fetchPaged(false)
+      // update the conflicts
+      this.$refs["conflict-reporting"].fetchPaged()
     },
     init: function() {
       this.selectedRooms = this.rooms.map((r) => r.id)
