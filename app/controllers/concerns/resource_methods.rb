@@ -8,6 +8,8 @@ module ResourceMethods
   extend ActiveSupport::Concern
   include JSONAPI::Deserialization
 
+  before_action :prevent_cache
+
   def index
     authorize model_class, policy_class: policy_class
 
