@@ -3,9 +3,10 @@
     <b-form-select
       v-model="selectedValue"
       @change="onChange"
-      v-bind:options="options"
-      :disabled='disabled'
+      :options="options"
+      :disabled="disabled"
       :multiple="multiple"
+      :size="size"
     ></b-form-select>
   </b-overlay>
 </template>
@@ -23,6 +24,9 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    size: {
+      type: String
     }
   },
   mixins: [

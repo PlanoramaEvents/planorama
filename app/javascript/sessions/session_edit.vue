@@ -1,5 +1,5 @@
 <template>
-  <div class="detail container">
+  <div class="detail container-fluid">
     <div class="row">
       <div class="col-12">
         <h2>Basic Information</h2>
@@ -64,19 +64,14 @@ export default {
   mixins: [
     modelUtilsMixin
   ],
-  model: {
-    prop: 'session'
-  },
-  props: {
-    session: {
-      type: Object,
-      required: true
-    }
-  },
   data: () => ({
     editable: false,
+    saving: false
   }),
   computed: {
+    session() {
+      return this.selected_model(sessionModel)
+    },
     session_tags: {
       get() {
         return this.session.tag_list
@@ -102,7 +97,7 @@ export default {
         let newAreas = val;
         let areasForSaving = [];
         for (let area of newAreas) {
-          let existing = existingAreas.find(r => r.area === area);
+          let existing = existingAreas.find(r => r.area.id === area);
           if(existing) {
             areasForSaving.push(this.buildArea(existing));
           } else {
@@ -110,7 +105,7 @@ export default {
           }
         }
         for (let area of existingAreas) {
-          if(!newAreas.includes(area.area)) {
+          if(!newAreas.includes(area.area.id)) {
             areasForSaving.push({...this.buildArea(area), _destroy: 1})
           }
         }
@@ -126,15 +121,11 @@ export default {
     buildArea(v) {
       return {
         id: v.id,
-        area_id: v.area
+        area_id: v.area.id
       }
     },
     saveSession() {
-      this.save_model(sessionModel, this.session).then(
-        (obj) => {
-          this.$emit('input',obj)
-        }
-      )
+      this.save_model(sessionModel, this.session)
     }
   }
 }

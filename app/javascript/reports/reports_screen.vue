@@ -11,6 +11,12 @@
       <li>
         <a href="/report/participant_availabilities" target="_blank">Participant Availabilities</a>
       </li>
+      <li>
+        <a href="/report/assigned_sessions_by_participant" target="_blank">Assigned Sessions by Participant</a>
+      </li>
+      <li>
+        <a href="/report/sessions_with_participants" target="_blank">Sessions with Participants</a>
+      </li>
     </ul>
 
   </div>

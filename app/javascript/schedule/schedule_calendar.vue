@@ -1,14 +1,19 @@
 <template>
-  <div class="all-days-sched" v-if="initialSessions">
-    <!-- Eeach schedule day has an eid for the event etc, which we can map to the actual session ... -->
+  <!--
+    How about an empty day so we have a fixed top cal?
+    and we can hid the split header in the other cals
+  -->
+  <!-- Eeach schedule day has an eid for the event etc, which we can map to the actual session ... -->
+  <div>
     <schedule-day
       v-for="day in days" :key="day"
       :ref="'day-'+day"
       :rooms="rooms"
       :selected-date="day"
+      :selectedRooms="selectedRooms"
       :timezone="timezone"
       @schedule-changed="onScheduleChanged"
-      :initialSessions="initialSessions"
+      :model="sessionModel"
     ></schedule-day>
   </div>
 </template>
@@ -16,6 +21,7 @@
 <script>
 import ScheduleDay from './schedule_day'
 import tableMixin from '../store/table.mixin';
+import { sessionModel } from '@/store/session.store'
 
 export default {
   name: "ScheduleCalendar",
@@ -36,33 +42,24 @@ export default {
     timezone: {
       type: String,
       default: null
+    },
+    selectedRooms: {
+      type: Array,
+      required: true
     }
   },
   data: () =>  ({
-    initialSessions: null
+    sessionModel
   }),
-  watch: {
-    sortedCollection(n,o) {
-      // console.debug("sorted coll changed")
-      if (n.length > 0) {
-        this.initialSessions = n
-      }
-    },
-    // initialSessions(n,o) {
-    //   console.debug("initialSessions coll changed", n)
-    // }
-  },
   methods: {
     onScheduleChanged: function() {
       this.$emit("schedule-changed");
     },
     init: function() {
+      // STORE ????
+      this.perPage = 2000
       this.fetchPaged(false).then(
         () => {
-          if (this.sortedCollection && this.sortedCollection.length == 0) {
-            this.initialSessions = []
-          }
-
           // $nextTick ensures that the DOM is rendered... which is usefull
           // when we want to do DOM type functions...
           this.$nextTick(
@@ -96,8 +93,4 @@ export default {
 </script>
 
 <style lang="scss">
-.all-days-sched {
-  overflow-y: scroll;
-  // height: 600px;
-}
 </style>

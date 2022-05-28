@@ -1,16 +1,15 @@
-return if Format.count > 0
+p "Start development format seeds"
 
-Format.create(
-  name: 'Panel',
-  position: 1
-)
+unless Format.find_by_name('Dev Panel')
+  Format.create!(
+    name: 'Dev Panel'
+  )
+end
 
-Format.create(
-  name: 'Talk',
-  position: 2
-)
+unless Format.find_by_name('Dev Talk')
+  Format.create!(
+   name: 'Dev Talk'
+  )
+end
 
-Format.create(
-  name: 'Workshop',
-  position: 3
-)
+p "End format seeds"
