@@ -125,7 +125,7 @@ export default {
       this.person = arg
     },
     back() {
-      this.$router.push('/people');
+      history.back()
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
       let path = '';
