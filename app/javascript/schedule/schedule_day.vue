@@ -29,12 +29,12 @@
         style="height: 100%;"
         v-bind:class="{ 'selected-event': (selected && (selected.id == event.id)), 'event-with-conflicts': (event.has_conflicts && !(selected && (selected.id == event.id))) }"
       >
-        <div v-b-popover.hover="formatDatetime(event.actual_start) + ' - ' + formatDatetime(event.actual_end)" :title="event.title" >
+        <div v-b-popover.hover="hoverText(event)" :title="event.title" >
           <div class="d-flex flex-row p-1 justify-content-between">
             <small class="event-time" v-if="event.actual_start && event.actual_end">
               {{ formatDatetime(event.actual_start) }} - {{ formatDatetime(event.actual_end) }}
             </small>
-            <b-icon-x @click="onDelete(event)"></b-icon-x>
+            <b-icon-x @click="onDelete($event, event)"></b-icon-x>
           </div>
           <small>
             {{event.title}}
@@ -163,14 +163,25 @@ export default {
     },
   },
   methods: {
+    hoverText(ev) {
+      if (ev.actual_start && ev.actual_end) {
+        return this.formatDatetime(ev.actual_start) + ' - ' + this.formatDatetime(ev.actual_end)
+      } else {
+        return ''
+      }
+    },
     onEventClick(event, e) {
       e.stopPropagation()
-      this.select(event.id)
+      if (event.split) {
+        this.select(event.id)
+      }
     },
     onEventDrop ({ event, originalEvent, external }) {
       this.updateSession(event.id, event.start, event.split)
     },
-    onDelete(ev) {
+    onDelete(event, ev) {
+      event.stopPropagation()
+      this.unselect()
       this.updateSession(ev.id, null, null)
     },
     scrollBarElement: function() {
