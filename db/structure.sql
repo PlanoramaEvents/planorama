@@ -622,7 +622,7 @@ CREATE VIEW public.availability_conflicts AS
              JOIN public.sessions sessions_1 ON ((sessions_1.id = session_assignments_1.session_id)))
              JOIN public.people people_1 ON ((people_1.id = session_assignments_1.person_id)))
              JOIN public.availabilities availabilities_1 ON ((availabilities_1.person_id = people_1.id)))
-          WHERE ((session_assignments_1.person_id = availabilities_1.person_id) AND (session_assignments_1.session_assignment_role_type_id IS NOT NULL) AND ((sessions_1.start_time > availabilities_1.start_time) AND ((sessions_1.start_time + ((sessions_1.duration || ' minute'::text))::interval) < availabilities_1.end_time)))))));
+          WHERE ((session_assignments_1.person_id = availabilities_1.person_id) AND (session_assignments_1.session_assignment_role_type_id IS NOT NULL) AND ((sessions_1.start_time >= availabilities_1.start_time) AND ((sessions_1.start_time + ((sessions_1.duration || ' minute'::text))::interval) <= availabilities_1.end_time)))))));
 
 
 --
@@ -2606,6 +2606,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220510015131'),
 ('20220512004401'),
 ('20220524195624'),
-('20220527143522');
+('20220527143522'),
+('20220528145537');
 
 
