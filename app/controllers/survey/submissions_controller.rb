@@ -125,19 +125,13 @@ class Survey::SubmissionsController < ResourceController
 
   def includes
     [
-      :person,
-      responses: [
-        :question
-      ]
+      :person
     ]
   end
 
   def references
     [
-      :person,
-      responses: [
-        :question
-      ]
+      :person
     ]
   end
 
