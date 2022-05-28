@@ -1,6 +1,7 @@
 class SurveysController < ResourceController
   SERIALIZER_CLASS = 'SurveySerializer'.freeze
   POLICY_CLASS = 'SurveysPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'SurveysPolicy::Scope'.freeze
   DEFAULT_SORTBY = 'surveys.updated_at'.freeze
   DEFAULT_ORDER = 'desc'.freeze
 
