@@ -154,6 +154,7 @@ module MailService
   # if there is a survey then assign it to the person
   def self.post_mail_assign_survey(person:, survey:)
     return unless survey
+    return if survey.assigned_people.where(id: person.id).count > 0
 
     survey.assigned_people << person
   end
