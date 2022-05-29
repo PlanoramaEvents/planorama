@@ -18,11 +18,7 @@
         ></availability>
       </div>
       <div class="col-9">
-        <room-selector
-          v-if="rooms"
-          :rooms="rooms"
-          @change="onRoomChange"
-        ></room-selector>
+        <room-selector></room-selector>
         <div class="scrollable minus31">
           <schedule-calendar
             :rooms="rooms"
@@ -49,13 +45,15 @@ import SchedulableSessions from './schedulable_sessions'
 import ScheduleCalendar from './schedule_calendar'
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
-import { roomModel } from '../store/room.store.js';
+import { roomModel, SET_ROOMS_FOR_SCHEDULING } from '../store/room.store.js';
 import { sessionModel } from '@/store/session.store'
 import { sessionConflictModel } from '@/store/session_conflict.store'
 import SessionSidebar from '../sessions/session_sidebar.vue';
 import Availability from '../conflicts/availability.vue'
 
 import { DateTime } from "luxon";
+import { mapActions, mapState, mapGetters } from 'vuex';
+import { FETCH } from '@/store/model.store';
 
 export default {
   name: "ScheduleScreen",
@@ -71,12 +69,16 @@ export default {
     settingsMixin
   ],
   data: () =>  ({
-    rooms: null,
     sessionModel: sessionModel,
     sessionConflictModel: sessionConflictModel,
-    selectedRooms: []
   }),
   computed: {
+    ...mapState({
+      selectedRooms: 'roomsForScheduling'
+    }),
+    ...mapGetters({
+      rooms: 'fetchedRooms'
+    }),
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
         let st = this.configByName('convention_start_time')
@@ -141,29 +143,20 @@ export default {
     }
   },
   methods: {
-    onRoomChange: function(rooms) {
-      this.selectedRooms = rooms
-    },
+    ...mapActions({
+      fetch: FETCH
+    }),
     onScheduleChanged: function() {
       this.$refs["schedulable-sessions"].fetchPaged(false)
       // update the conflicts
       this.$refs["conflict-reporting"].fetchPaged()
     },
-    init: function() {
-      this.selectedRooms = this.rooms.map((r) => r.id)
-    },
   },
   mounted() {
-    this.fetch_models(
-      roomModel,
-      {
-        perPage: 1000
+    this.fetch({model: roomModel}).then((rooms) => {
+      if (!this.selectedRooms.length) {
+        this.$store.commit(SET_ROOMS_FOR_SCHEDULING, Object.values(rooms).map(r => r.id).filter(r => r))
       }
-    ).then(data => {
-      this.rooms = Object.values(data).filter(
-        obj => (typeof obj.json === 'undefined')
-      )
-      this.init()
     })
   }
 }
