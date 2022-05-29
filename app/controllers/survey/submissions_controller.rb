@@ -61,7 +61,9 @@ class Survey::SubmissionsController < ResourceController
     styles = [date_time_style,date_time_style]
     # Get the survey questions
     submission = @collection.first
-    survey = submission.survey
+
+    survey = Survey.find params[:survey_id] if params[:survey_id]
+    survey ||= submission.survey
     header = ['Created At', 'Updated At', 'Email']
     response_columns = {}
     posn = 3
