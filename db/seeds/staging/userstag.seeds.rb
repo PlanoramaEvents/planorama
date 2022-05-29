@@ -1,3 +1,5 @@
+p "Start staging userstag seeds"
+
 if !Person.find_by(name: 'chicon admin')
     p = Person.create(
         name: 'chicon admin',
@@ -39,3 +41,4 @@ if !Person.find_by(name: 'test')
 end
 
 p "Created special admin user for staging environment."
+p "End staging userstag seeds"

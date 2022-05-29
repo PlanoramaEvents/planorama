@@ -1,3 +1,5 @@
+p "Start development person seeds"
+
 if Person.count < 100
   100.times.each do |i|
       registered = Faker::Boolean.boolean(true_ratio: 0.5)
@@ -67,3 +69,5 @@ if Person.count < 100
 
   p "Created #{Person.count} people."
 end
+
+p "End development person seeds"
