@@ -24,19 +24,21 @@ import ProfileScreen from './profile/profile-screen.vue';
 import ProfileTabs from './profile/profile-tabs.vue';
 
 const profileRoutes = [
-  { path: 'session-selection', component: ProfileTabs, props: {tab: 'session-selection'} },
-  { path: 'session-ranking', component: ProfileTabs, props: {tab: 'session-ranking'} },
-  { path: 'availability', component: ProfileTabs, props: {tab: 'availability'} },
-  { path: 'other', component: ProfileTabs, props: {tab: 'other'} },
-  { path: '', component: ProfileTabs, props: true }
+  // { path: 'session-selection', component: PersonTabs, props: {tab: 'session-selection'} },
+  // { path: 'session-ranking', component: PersonTabs, props: {tab: 'session-ranking'} },
+  // { path: 'availability', component: PersonTabs, props: {tab: 'availability'} },
+  // { path: 'other', component: PersonTabs, props: {tab: 'other'} },
+  { path: ':tab', component: PersonTabs, props: true },
+  { path: '', component: PersonTabs, props: true }
 ]
 
 const personRoutes = [
-  { path: 'edit/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'person-edit'}) },
-  { path: 'session-selection/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
-  { path: 'session-ranking/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
-  { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
-  { path: 'other/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'other'}) },
+  { path: 'edit/:id', component: PersonTabs, props: true },
+  { path: ':tab/:id', component: PersonTabs, props: true },
+  // { path: 'session-selection/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
+  // { path: 'session-ranking/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
+  // { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
+  // { path: 'other/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'other'}) },
   { path: '', component: PeopleList }
 ]
 
