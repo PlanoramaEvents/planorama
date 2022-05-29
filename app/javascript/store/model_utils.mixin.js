@@ -5,7 +5,7 @@
 import { toastMixin } from "@/mixins";
 import { utils } from 'jsonapi-vuex'
 
-import { FETCH_BY_ID, DELETE, UPDATE_ALL, SAVE, SELECT, SELECTED, FETCH} from "./model.store";
+import { FETCH_BY_ID, DELETE, UPDATE_ALL, SAVE, SELECT, SELECTED, FETCH, UNSELECT} from "./model.store";
 import {
   MODEL_SAVE_ERROR, MODEL_SAVE_SUCCESS, MODEL_DELETE_SUCCESS, MODEL_DELETE_ERROR,
   MODEL_MASS_UPDATE_SUCCESS, MODEL_MASS_UPDATE_ERROR
@@ -22,6 +22,9 @@ export const modelUtilsMixin = {
     },
     select_model(model, itemOrId) {
       return this.$store.commit(SELECT, {model: model, itemOrId});
+    },
+    unselect_model(model) {
+      return this.$store.commit(UNSELECT, {model: model});
     },
     selected_model(model) {
       return this.$store.getters[SELECTED]({model: model})
