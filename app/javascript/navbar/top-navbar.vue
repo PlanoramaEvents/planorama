@@ -3,7 +3,7 @@
     <b-navbar toggleable="lg" type="light" class="justify-content-between">
       <b-navbar-brand to="/">Planorama</b-navbar-brand>
       <div class="d-flex flex-column h-100">
-        <div class="text-light mb-2">Logged in as: {{currentUser.primary_email.email}}</div>
+        <div class="text-light mb-2">Logged in as: {{currentUser.primary_email ? currentUser.primary_email.email : ''}}</div>
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
             <help-link></help-link>
