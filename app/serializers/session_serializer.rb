@@ -18,7 +18,7 @@ class SessionSerializer
   end
 
   attribute :area_list do |session|
-    session.areas.collect(&:name)
+    session.areas.collect(&:name).sort{ |a, b| a.downcase <=> b.downcase }
   end
 
   attribute :duration_mins do |session|
@@ -28,6 +28,14 @@ class SessionSerializer
   # session_areas
   attribute :session_areas_attributes do |session|
     session.session_areas
+  end
+
+  attribute :end_time do |session|
+    session.start_time ? session.start_time + session.duration.minutes : nil
+  end
+
+  attribute :has_conflicts do |session|
+    session.availability_conflicts.count > 0
   end
 
   has_many :session_areas, serializer: SessionAreaSerializer,

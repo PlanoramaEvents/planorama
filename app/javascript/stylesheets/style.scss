@@ -45,12 +45,15 @@ dt {
 .description-tooltip .tooltip-inner {
   max-width: 30rem;
 }
-
 .scrollable {
   max-height: calc(100vh - 150px);
   overflow-y: auto;
   overflow-x: auto;
   padding-right: 1em;
+  &.minus31 {
+    max-height: calc(100vh - 181px);
+    padding-right: 0;
+  }
 }
 
 #planotoast {

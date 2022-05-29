@@ -1,15 +1,13 @@
-import {mapState, mapActions } from 'vuex';
-import { GET_SETTINGS }  from "@/store/settings.store";
+import {mapGetters, mapActions } from 'vuex';
+import { GET_SETTINGS}  from "@/store/settings.store";
 
 export const settingsMixin = {
   computed: {
-    ...mapState({
-      currentSettings: 'settings'
-    })
+    ...mapGetters(['currentSettings'])
   },
   methods: {
     ...mapActions({
-      fetchSettings: GET_SETTINGS
+      fetchSettingsInternal: GET_SETTINGS,
     }),
     configByName(name) {
       if (this.currentSettings.configs) {
@@ -38,6 +36,10 @@ export const settingsMixin = {
       } else {
         return null
       }
+    },
+    fetchSettings() {
+      console.log('feetching settings');
+      this.fetchSettingsInternal();
     }
   }
 }
