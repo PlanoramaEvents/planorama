@@ -21,8 +21,7 @@ class Conflicts::SessionConflictsController < ApplicationController
       include: [
         :availability_conflicts,
         :'availability_conflicts.person',
-        :'availability_conflicts.session_assignment',
-        :room
+        :'availability_conflicts.session_assignment'
       ],
       # include: filtered_serializer_includes(fields: fields), # need to adjust based omn field
       params: {

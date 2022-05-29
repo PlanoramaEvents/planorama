@@ -549,6 +549,21 @@ END) STORED,
 
 
 --
+-- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_assignment_role_type (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    lock_version integer DEFAULT 0,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    name character varying(100) NOT NULL,
+    role_type public.assignment_role_enum,
+    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
+);
+
+
+--
 -- Name: session_assignments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -613,16 +628,12 @@ CREATE VIEW public.availability_conflicts AS
  SELECT DISTINCT session_assignments.id AS session_assignment_id,
     people.id AS person_id,
     sessions.id AS session_id
-   FROM (((public.session_assignments
+   FROM ((((public.session_assignments
      JOIN public.sessions ON ((sessions.id = session_assignments.session_id)))
      JOIN public.people ON ((people.id = session_assignments.person_id)))
      JOIN public.availabilities ON ((availabilities.person_id = people.id)))
-  WHERE ((session_assignments.person_id = availabilities.person_id) AND (session_assignments.session_assignment_role_type_id IS NOT NULL) AND (sessions.start_time IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (NOT (session_assignments.id IN ( SELECT session_assignments_1.id
-           FROM (((public.session_assignments session_assignments_1
-             JOIN public.sessions sessions_1 ON ((sessions_1.id = session_assignments_1.session_id)))
-             JOIN public.people people_1 ON ((people_1.id = session_assignments_1.person_id)))
-             JOIN public.availabilities availabilities_1 ON ((availabilities_1.person_id = people_1.id)))
-          WHERE ((session_assignments_1.person_id = availabilities_1.person_id) AND (session_assignments_1.session_assignment_role_type_id IS NOT NULL) AND ((sessions_1.start_time >= availabilities_1.start_time) AND ((sessions_1.start_time + ((sessions_1.duration || ' minute'::text))::interval) <= availabilities_1.end_time)))))));
+     JOIN public.session_assignment_role_type ON ((session_assignment_role_type.id = session_assignments.session_assignment_role_type_id)))
+  WHERE (((sessions.start_time < availabilities.start_time) OR (sessions.start_time > availabilities.end_time)) AND (session_assignments.person_id = availabilities.person_id) AND (session_assignments.session_assignment_role_type_id IS NOT NULL) AND ((session_assignment_role_type.name)::text <> 'Reserve'::text));
 
 
 --
@@ -1109,21 +1120,6 @@ CREATE TABLE public.session_areas (
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.session_assignment_role_type (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    lock_version integer DEFAULT 0,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    name character varying(100) NOT NULL,
-    role_type public.assignment_role_enum,
-    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 );
 
 
@@ -2605,8 +2601,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220507210839'),
 ('20220510015131'),
 ('20220512004401'),
-('20220524195624'),
-('20220527143522'),
-('20220528145537');
+('20220524195624');
 
 

@@ -1,25 +1,59 @@
 <template>
-  <div class="d-flex" v-if="selected">
+  <div class="d-flex" v-if="editable_person">
     <div class="d-flex flex-column w-50 p-2">
-      <dl-person :fields="['name', 'pseudonym']"></dl-person>
+      <b-form-group label="Name">
+        <b-form-input type="text" v-model="editable_person.name" @blur="onInput"></b-form-input>
+      </b-form-group>
+      <b-form-group label="Pseudonym">
+        <b-form-input type="text" v-model="editable_person.pseudonym" @blur="onInput"></b-form-input>
+      </b-form-group>
       <email-addresses-editor
         class="mb-4"
-        v-model="selected"
+        v-model="editable_person"
         model='email_address'
-        @input="$emit('input', selected)"
+        @input="$emit('input', editable_person)"
       ></email-addresses-editor>
-      <h5>Preferences <edit-button v-b-modal.person-misc-modal></edit-button></h5>
-      <dl-person :fields="miscFields">
-        <template #can_stream-val>{{can_stream_label}}</template>
-        <template #can_record-val>{{can_record_label}}</template>
-      </dl-person>
+      <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
+        <b-form-textarea v-model="editable_person.do_not_assign_with" @blur="onInput"></b-form-textarea>
+      </b-form-group>
+      <b-form-group label="Permission to be included in a livestreamed program">
+          <b-form-radio-group
+            stacked
+            v-model="editable_person.can_stream"
+            @change="onInput"
+          >
+            <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
+            <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+          <b-textarea v-model="editable_person.can_stream_exceptions" @blur="onInput"></b-textarea>
+      </b-form-group>
+      <b-form-group label="Permission to be included in a recorded program">
+          <b-form-radio-group
+            stacked
+            v-model="editable_person.can_record"
+            @change="onInput"
+          >
+            <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
+            <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
+          </b-form-radio-group>
+          <b-textarea v-model="editable_person.can_record_exceptions" @blur="onInput"></b-textarea>
+      </b-form-group>
+      <b-form-group>
+      <b-form-checkbox switch v-model="editable_person.is_local" @change="onInput">Local to the event</b-form-checkbox>
+      </b-form-group>
+      <b-form-group label="Moderating experience">
+        <b-form-textarea v-model="editable_person.moderation_experience" @blur="onInput"></b-form-textarea>
+      </b-form-group>
+
     </div>
     <div class="d-flex flex-column w-50 p-2">
       <div><b>I plan to attend the convention:</b></div>
       <b-form-radio-group
-        v-model="selected.attendance_type"
+        v-model="editable_person.attendance_type"
         stacked
-        @change="saveSelected()"
+        @change="attendanceChanged"
       >
         <b-form-radio value="in person">In Person</b-form-radio>
         <b-form-radio value="hybrid">In Person AND Virtually</b-form-radio>
@@ -27,10 +61,10 @@
       </b-form-radio-group>
       <b-form-group label="At the time of the convention I will be at UTC Offset">
         <timezone-selector
-          v-model="selected.timezone"
-          @input="saveSelected()"
+          v-model="editable_person.timezone"
+          @input="onInput"
           class="mb-2"
-          :disabled="disabled || selected.attendance_type != 'virtual'"
+          :disabled="disabled || editable_person.attendance_type != 'virtual'"
         ></timezone-selector>
         <p>
           Your time now in the selected timezone is <b>{{youTimeNow}}</b>
@@ -44,129 +78,97 @@
           and check by specifying the date of September 1 2022 and your location as well as UTC/GMT
         </small>
       </b-form-group>
-      <!-- <b-form-checkbox v-model="selected.twelve_hour" @input="saveSelected()">
+      <!-- <b-form-checkbox v-model="editable_person.twelve_hour" @input="onInput">
         12 Hour Display
       </b-form-checkbox> -->
-      <h5>Bio <edit-button v-b-modal.person-bio-modal></edit-button></h5>
-      <div class="ml-2" v-html="selected.bio"></div>
-      <b class="mt-3">Social Media <edit-button v-b-modal.person-social-modal></edit-button></b>
-      <dl-person :fields="socialFields"></dl-person>
-    </div>
-    <person-edit-modal id="person-bio-modal" :person="selected" :data="{bio: null}">
-      <template #modal-title>Edit Bio - {{selected.published_name}}</template>
-      <template #default="{fields}">
+      <b-form-group label="Bio">
         <plano-editor
-          v-model="fields.bio"
+          v-model="editable_person.bio"
           type='classic'
+          @blur="onInput"
+          :disabled="disabled"
         ></plano-editor>
-      </template>
-    </person-edit-modal>
-    <person-edit-modal id="person-misc-modal" :person="selected" :data="miscData">
-      <template #modal-title>Edit Preferences - {{selected.published_name}}</template>
-      <template #default="{fields}">
-        <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
-          <b-form-textarea v-model="fields.do_not_assign_with"></b-form-textarea>
-        </b-form-group>
-        <b-form-group label="Permission to be included in a livestreamed program">
-            <b-form-radio-group
-              stacked
-              v-model="fields.can_stream"
-            >
-              <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
-              <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
-              <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
-            </b-form-radio-group>
-            <b-textarea v-model="fields.can_stream_exceptions"></b-textarea>
-        </b-form-group>
-        <b-form-group label="Permission to be included in a recorded program">
-            <b-form-radio-group stacked v-model="fields.can_record" >
-              <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
-              <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
-              <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
-            </b-form-radio-group>
-            <b-textarea v-model="fields.can_record_exceptions"></b-textarea>
-        </b-form-group>
-        <b-form-group>
-        <b-form-checkbox switch v-model="fields.is_local">Local to the event</b-form-checkbox>
-        </b-form-group>
-        <b-form-group label="Moderating experience">
-          <b-form-textarea v-model="fields.moderation_experience"></b-form-textarea>
-        </b-form-group>
-      </template>
-    </person-edit-modal>
-    <person-edit-modal id="person-social-modal" :person="selected" :data="socialsData">
-      <template #modal-title>Edit Socials - {{selected.published_name}}</template>
-      <template #default="{fields}">
-        <validated-social
-          :rules="{ regex: /^[a-z0-9_]{1,15}$/i }"
-          label="Twitter"
-          prepend="@"
-          v-model="fields.twitter"
-          :disabled="disabled"
-          :message="TWITTER_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
-          :rules="{ regex: /^[a-z\d.]{5,}$/i }"
-          label="Facebook"
-          prepend="facebook.com/"
-          v-model="fields.facebook"
-          :disabled="disabled"
-          :message="FACEBOOK_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
-          :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
-          label="Website"
-          prepend="url"
-          v-model="fields.website"
-          :disabled="disabled"
-          :message="WEBSITE_INVALID_MSG"
-        ></validated-social>
-        <validated-social
-          :rules="{ regex: /^[a-zA-Z0-9._]+$/ }"
-          label="Instagram"
-          prepend="instagram.com/"
-          v-model="fields.instagram"
-          :disabled="disabled"
-          :message="INSTAGRAM_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
-          :rules="{ regex: /^(#)?[a-zA-Z0-9][\w]{2,24}$/ }"
-          label="Twitch"
-          prepend="twitch.tv/"
-          v-model="fields.twitch"
-          :disabled="disabled"
-          :message="TWITCH_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
-          :rules="{ regex: /^[a-zA-Z0-9\/_]+([\-\.]{1}[a-zA-Z0-9\/_]+)*$/ }"
-          label="YouTube"
-          prepend="youtube.com/"
-          v-model="fields.youtube"
-          :disabled="disabled"
-          :message="YOUTUBE_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
-          :rules="{ regex:/^([a-zA-Z0-9._-])+$/ }"
-          label="TikTok"
-          prepend="@"
-          v-model="fields.tiktok"
-          :disabled="disabled"
-          :message="TIKTOK_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
-          :rules="{ regex:/^([a-zA-Z0-9.\/_-])+$/ }"
-          label="LinkedIn"
-          prepend="linkedin.com/in/"
-          v-model="fields.linkedin"
-          :disabled="disabled"
-          :message="LINKEDIN_ID_INVALID_MSG"
-        ></validated-social>
-        <simple-social
-          label="Other"
-          v-model="fields.othersocialmedia"
-        ></simple-social>
-      </template>
-    </person-edit-modal>
+      </b-form-group>
+      <b class="mt-3">Social Media</b>
+      <validated-social
+        :rules="{ regex: /^[a-z0-9_]{1,15}$/i }"
+        label="Twitter"
+        prepend="@"
+        v-model="editable_person.twitter"
+        @input="onInput"
+        :disabled="disabled"
+        :message="TWITTER_ID_INVALID_MSG"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /^[a-z\d.]{5,}$/i }"
+        label="Facebook"
+        prepend="facebook.com/"
+        v-model="editable_person.facebook"
+        @input="onInput"
+        :disabled="disabled"
+        :message="FACEBOOK_ID_INVALID_MSG"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
+        label="Website"
+        prepend="url"
+        v-model="editable_person.website"
+        @input="onInput"
+        :disabled="disabled"
+        :message="WEBSITE_INVALID_MSG"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /^[a-zA-Z0-9._]+$/ }"
+        label="Instagram"
+        prepend="instagram.com/"
+        v-model="editable_person.instagram"
+        @input="onInput"
+        :disabled="disabled"
+        :message="INSTAGRAM_ID_INVALID_MSG"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /^(#)?[a-zA-Z0-9][\w]{2,24}$/ }"
+        label="Twitch"
+        prepend="twitch.tv/"
+        v-model="editable_person.twitch"
+        @input="onInput"
+        :disabled="disabled"
+        :message="TWITCH_ID_INVALID_MSG"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex: /^[a-zA-Z0-9\/_]+([\-\.]{1}[a-zA-Z0-9\/_]+)*$/ }"
+        label="YouTube"
+        prepend="youtube.com/"
+        v-model="editable_person.youtube"
+        @input="onInput"
+        :disabled="disabled"
+        :message="YOUTUBE_ID_INVALID_MSG"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex:/^([a-zA-Z0-9._-])+$/ }"
+        label="TikTok"
+        prepend="@"
+        v-model="editable_person.tiktok"
+        @input="onInput"
+        :disabled="disabled"
+        :message="TIKTOK_ID_INVALID_MSG"
+      ></validated-social>
+      <validated-social
+        :rules="{ regex:/^([a-zA-Z0-9.\/_-])+$/ }"
+        label="LinkedIn"
+        prepend="linkedin.com/in/"
+        v-model="editable_person.linkedin"
+        @input="onInput"
+        :disabled="disabled"
+        :message="LINKEDIN_ID_INVALID_MSG"
+      ></validated-social>
+      <simple-social
+        label="Other"
+        v-model="editable_person.othersocialmedia"
+        @input="onInput"
+      ></simple-social>
+      <!-- We do not appear to cover flickr or reddit in the design -->
+    </div>
   </div>
   <!-- <br />
   {{person.pronouns}}
@@ -181,14 +183,12 @@
 </template>
 
 <script>
-import TimezoneSelector from "@/components/timezone_selector.vue"
-import EmailAddressesEditor from "@/components/email_addresses_editor.vue"
-import PlanoEditor from '@/components/plano_editor'
-import ValidatedSocial from '@/components/validated_social.vue';
+import TimezoneSelector from "../components/timezone_selector.vue"
+import EmailAddressesEditor from "../components/email_addresses_editor.vue"
+import PlanoEditor from '../components/plano_editor'
+import ValidatedSocial from '../components/validated_social.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
-import EditButton from '@/components/edit_button.vue';
-import PersonEditModal from './person_edit_modal.vue';
-import DlPerson from './dl_person.vue';
+import modelMixin from '../store/model.mixin';
 
 import {
   TWITTER_ID_INVALID_MSG,
@@ -201,9 +201,8 @@ import {
   LINKEDIN_ID_INVALID_MSG
 } from '../constants/strings';
 import settingsMixin from "@/store/settings.mixin";
-import { modelMixinNoProp } from '@/store/model.mixin';
-import { personModel as model } from "@/store/person.store";
-import { DateTime } from "luxon";
+
+const { DateTime } = require("luxon");
 
 export default {
   name: "PersonDetails",
@@ -212,16 +211,23 @@ export default {
     EmailAddressesEditor,
     PlanoEditor,
     ValidatedSocial,
-    SimpleSocial,
-    PersonEditModal,
-    EditButton,
-    DlPerson,
+    SimpleSocial
   },
   mixins: [
-    settingsMixin,
-    modelMixinNoProp
+    modelMixin,
+    settingsMixin
   ],
+  model: {
+    prop: 'person'
+  },
+  props: {
+    person: {
+      type: Object,
+      required: true
+    }
+  },
   data: () =>  ({
+    editable_person: null,
     disabled: false,
     TWITTER_ID_INVALID_MSG,
     FACEBOOK_ID_INVALID_MSG,
@@ -230,64 +236,12 @@ export default {
     TWITCH_ID_INVALID_MSG,
     YOUTUBE_ID_INVALID_MSG,
     TIKTOK_ID_INVALID_MSG,
-    LINKEDIN_ID_INVALID_MSG,
-    model,
-    miscData: {
-      do_not_assign_with: null,
-      can_stream: null,
-      can_stream_exceptions: null,
-      can_record: null,
-      can_record_exceptions: null,
-      is_local: null,
-      moderation_experience: null
-    },
-    socialsData: {
-      twitter: null,
-      facebook: null,
-      website: null,
-      instagram: null,
-      twitch: null,
-      youtube: null,
-      tiktok: null,
-      linkedin: null,
-      othersocialmedia: null
-    },
+    LINKEDIN_ID_INVALID_MSG
   }),
   computed: {
-    socialFields() {
-      return Object.keys(this.socialsData);
-    },
-    miscFields() {
-      return Object.keys(this.miscData);
-    },
-    can_stream_label() {
-      switch(this.selected.can_stream) {
-        case this.noLabel.value:
-          return this.noLabel.label;
-        case this.yesLabel.value:
-          return this.yesLabel.label;
-        case this.maybeLabel.value:
-          return this.maybeLabel.label;
-        default:
-          return this.selected.can_stream;
-      }
-    },
-    can_record_label() {
-      switch(this.selected.can_record) {
-        case this.noLabel.value:
-          return this.noLabel.label;
-        case this.yesLabel.value:
-          return this.yesLabel.label;
-        case this.maybeLabel.value:
-          return this.maybeLabel.label;
-        default:
-          return this.selected.can_record;
-      }
-
-    },
     youTimeNow() {
-      if (this.selected.timezone) {
-        return DateTime.now().setZone(this.selected.timezone).toLocaleString(DateTime.TIME_SIMPLE)
+      if (this.editable_person.timezone) {
+        return DateTime.now().setZone(this.editable_person.timezone).toLocaleString(DateTime.TIME_SIMPLE)
       }
       return 'Not Set'
     },
@@ -309,6 +263,29 @@ export default {
         value: "maybe"};
     },
   },
+  methods: {
+    attendanceChanged(arg) {
+      // console.debug("***** ATT CHNAGED", arg)
+      this.save(this.editable_person).then(
+        (obj) => {
+          this.editable_person = obj
+          this.$emit('input',this.editable_person)
+        }
+      )
+    },
+    onInput(arg) {
+      this.save(this.editable_person).then(
+        (obj) => {
+          console.log(obj);
+          this.editable_person = obj
+          this.$emit('input',this.editable_person)
+        }
+      )
+    }
+  },
+  mounted() {
+    this.editable_person = this.person
+  }
 }
 </script>
 

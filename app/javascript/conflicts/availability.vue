@@ -6,10 +6,6 @@
         v-for="conflict in sortedCollection" :key="conflict.id"
       >
         <strong>{{conflict.title}}</strong>
-        <div>
-          {{conflict.room.name}},
-          {{ formatLocaleDate(conflict.start_time )}}
-        </div>
         <div><em>Outside the availability for:</em></div>
         <div v-for="availability in conflict.availability_conflicts" :key="availability.id">
           {{availability.person.published_name}}
@@ -30,14 +26,13 @@
 <script>
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
-import dateTimeMixin from '../components/date_time.mixin'
+// import { availabilityConflictModel as model } from '@/store/availability_conflict.store'
 
 export default {
   name: "Availability",
   mixins: [
     modelMixin,
-    tableMixin,
-    dateTimeMixin
+    tableMixin
   ],
   props: {
   },

@@ -1,25 +1,24 @@
 <template>
   <div>
     <b-button variant="link" @click="back">Back</b-button>
-    <model-loading-overlay :model="personModel">
-      <person-summary></person-summary>
-    </model-loading-overlay>
+    <person-summary v-if="person"
+      v-model="person"
+    ></person-summary>
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
       <b-tab title="General" :active="!tab" lazy>
-        <model-loading-overlay :model="personModel">
-          <person-details></person-details>
-        </model-loading-overlay>
+        <person-details
+          v-model="person"
+          :model="personModel"
+        ></person-details>
       </b-tab>
       <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
-        <model-loading-overlay :model="personModel">
-          <person-demographics></person-demographics>
-        </model-loading-overlay>
+        <person-demographics :selected="person"></person-demographics>
       </b-tab>
       <!-- Can not make this lazy otherwise we have lock issues with the notes -->
       <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
         <availability-and-interests
-          v-if="person"
           v-model="person"
+          @input="onPersonUpdate"
           :start_time="start_time"
           :end_time="end_time"
           :timezone="timezone"
@@ -28,7 +27,6 @@
       </b-tab>
       <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
         <session-selector
-          v-if="person"
           v-model="person"
           defaultSortBy='sessions.title'
           :model="sessionModel"
@@ -37,7 +35,6 @@
       </b-tab>
       <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
         <session-ranker
-          v-if="person"
           defaultSortBy='interest_ranking,session_assignments.updated_at'
           :defaultSortDesc="true"
           :perPage="null"
@@ -63,7 +60,6 @@ import AvailabilityAndInterests from '../profile/availability_and_interests.vue'
 import PersonDetails from '../profile/person_details.vue'
 import PersonSummary from '../profile/person_summary.vue';
 import PersonDemographics from '../profile/person_demographics.vue';
-import ModelLoadingOverlay from '@/components/model_loading_overlay.vue';
 
 import { personModel } from '@/store/person.store'
 import { sessionModel } from '@/store/session.store'
@@ -86,8 +82,7 @@ export default {
     SessionRanker,
     AvailabilityAndInterests,
     PersonDetails,
-    PersonDemographics,
-    ModelLoadingOverlay
+    PersonDemographics
   },
   mixins: [
     personSessionMixin,
@@ -98,11 +93,9 @@ export default {
     personModel,
     sessionModel,
     sessionAssignmentModel,
+    person: null,
   }),
   computed: {
-    person() {
-      return this.selected_model(personModel);
-    },
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
         let st = this.configByName('convention_start_time')
@@ -128,35 +121,34 @@ export default {
     }
   },
   methods: {
+    onPersonUpdate(arg) {
+      this.person = arg
+    },
     back() {
-      history.back()
+      this.$router.push('/people');
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
       let path = '';
-      const pathStart = this.$route.path.split('/')[1];
       switch(newTab) {
         case 0:
-          path = pathStart === 'people' ? 'edit' : '';
+          path = `edit/${this.person.id}`;
           break;
         case 1:
-          path = `other`;
+          path = `other/${this.person.id}`;
           break;
         case 2:
-          path = `availability`;
+          path = `availability/${this.person.id}`;
           break;
         case 3:
-          path = `session-selection`;
+          path = `session-selection/${this.person.id}`;
           break;
         case 4:
-          path = `session-ranking`;
+          path = `session-ranking/${this.person.id}`;
           break;
       }
       // change the router path to match the current tab
       // so that reloads work right
-      if(pathStart === 'people') {
-        path += `/${this.person.id}`
-      }
-      this.$router.push(`/${pathStart}/${path}`).catch(error => {
+      this.$router.push(`/people/${path}`).catch(error => {
         if(!isNavigationFailure(error, NavigationFailureType.duplicated)) {
           // ignore the duplicates, otherwise -
           throw error;
@@ -166,24 +158,13 @@ export default {
   },
   mounted() {
     // get id from URL if present
-    let id = this.id || this.currentUser.id;
-    let selectedPerson = this.selected_model(personModel);
-    // don't fetch if already here... todo figure out if we
-    // want to lazy fetch anyhow
-    if (selectedPerson?.id !== id) {
-      this.unselect_model(personModel);
-      this.fetch_model_by_id(personModel, id).then(
-        this.select_model(personModel, id)
-      );
-    }
+    let id = this.id ? this.id : this.currentUser.id
+    this.fetch_model_by_id(personModel, id).then(
+      (obj) => {
+        this.person = obj
+      }
+    )
   },
-  beforeRouteLeave(to, from, next) {
-    if (from.path.match(/.*profile.*/) && to.path === '/people') {
-      // going from profile to people, clear the selection
-      this.unselect_model(personModel)
-    }
-    next();
-  }
 }
 </script>
 
