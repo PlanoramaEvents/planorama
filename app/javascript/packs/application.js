@@ -37,13 +37,11 @@ import { CustomIconsPlugin } from '../icons';
 import AsyncComputed from 'vue-async-computed';
 import CKEditor from 'ckeditor4-vue';
 import VuePluralize from 'vue-pluralize';
-/*
 Vue.config.errorHandler = (err, vm, info) => {
   console.error(err);
   window.alert("Whoops! We messed up! Click ok to reload the page.")
   window.location.reload();
 }
-*/
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
@@ -57,7 +55,9 @@ Vue.component("v-select", vSelect);
 import "vue-select/dist/vue-select.css";
 
 Vue.filter('na_if_empty', function (value) {
-  if (!value) return 'N/A'
+  if (value === undefined || value === null) return 'N/A'
+  if (value === true) return "Yes"
+  if (value === false) return "No"
   if (value.trim().length == 0) return 'N/A'
   return value
 })

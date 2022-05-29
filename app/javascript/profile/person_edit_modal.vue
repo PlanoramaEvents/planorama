@@ -17,6 +17,8 @@ import { PATCH_PERSON_MODEL } from '@/store/person.store';
 import { mapActions } from 'vuex';
 import toastMixin from '@/shared/toast-mixin';
 import { FETCH_BY_ID } from '@/store/model.store';
+import { PERSON_SAVE_SUCCESS } from '@/constants/strings';
+
 export default {
   name: "PersonEditModal",
   components: {
@@ -44,7 +46,7 @@ export default {
       })
     },
     patchPerson() {
-      this.toastPromise(this.patchPersonModel({person: this.person, data: this.data}), "TODO SAVE MSSAGE", "TODO ERROR MESSAGE").then((savedPerson) => {
+      this.toastPromise(this.patchPersonModel({person: this.person, data: this.data}), PERSON_SAVE_SUCCESS).then((savedPerson) => {
         this.$emit('updated', savedPerson);
       })
     }

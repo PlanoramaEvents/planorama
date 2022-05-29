@@ -3,7 +3,8 @@
     <div class="d-flex flex-row mt-3">
       <div class="w-50 mr-2">
         <h5>Demographics <edit-button v-b-modal.person-demo-modal></edit-button></h5>
-        <dl>
+        <dl-person :fields="demoFields"></dl-person>
+        <!-- <dl>
           <dt>Ethnicity</dt>
           <dd class="ml-2">{{ selected.ethnicity | na_if_empty }}</dd>
           <dt>Gender</dt>
@@ -14,11 +15,12 @@
           <dd class="ml-2">
             {{ selected.romantic_sexual_orientation | na_if_empty }}
           </dd>
-        </dl>
+        </dl> -->
       </div>
       <div class="w-50">
         <h5>Community memberships <edit-button v-b-modal.person-community-modal></edit-button></h5>
-        <dl>
+        <dl-person :fields="communityFields"></dl-person>
+        <!-- <dl>
           <dt>Experience with being “othered”</dt>
           <dd class="ml-2">{{ selected.othered | na_if_empty }}</dd>
           <dt>Member of an Indigenous community</dt>
@@ -35,7 +37,7 @@
           <dd class="ml-2">
             {{ selected.demographic_categories | na_if_empty }}
           </dd>
-        </dl>
+        </dl> -->
       </div>
     </div>
     <person-edit-modal id="person-demo-modal" :person="selected" :data="demoData">
@@ -84,12 +86,14 @@ import { personModel as model } from "@/store/person.store";
 
 import PersonEditModal from "./person_edit_modal.vue";
 import EditButton from '@/components/edit_button';
+import DlPerson from './dl_person.vue';
 
 export default {
   name: "PersonDemographics",
   components: {
     PersonEditModal,
-    EditButton
+    EditButton,
+    DlPerson
   },
   data: () => ({
     model,
@@ -109,7 +113,15 @@ export default {
   }),
   mixins: [
     modelMixinNoProp
-  ]
+  ],
+  computed: {
+    demoFields() {
+      return Object.keys(this.demoData);
+    },
+    communityFields() {
+      return Object.keys(this.communityData);
+    }
+  }
 };
 </script>
 
