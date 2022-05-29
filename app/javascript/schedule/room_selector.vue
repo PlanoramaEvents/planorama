@@ -1,7 +1,7 @@
 <template> 
   <div class="d-flex justify-content-end">
     <icon-button class="mt-1 mr-3" icon="gear" v-b-modal.room-selector-modal></icon-button>
-    <plano-modal id="room-selector-modal" @ok="ok">
+    <plano-modal id="room-selector-modal" @ok="ok" @show="show">
       <template #modal-title>Displayed Rooms</template>
       <div class="room-list">
         <b-form-checkbox
@@ -10,7 +10,7 @@
           ref="select-all"
         >Select All</b-form-checkbox>
         <hr />
-        <div v-for="room in rooms" :key="room.id">
+        <div v-for="room in collection" :key="room.id">
           <b-form-checkbox
             v-model="selectedRooms"
             :value="room.id"
@@ -25,46 +25,52 @@
 <script>
 import IconButton from '@/components/icon_button.vue';
 import PlanoModal from '@/components/plano_modal.vue';
+import { modelMixinNoProp } from '@/store/model.mixin';
+import { mapMutations, mapState } from 'vuex';
+import { SET_ROOMS_FOR_SCHEDULING } from '@/store/room.store';
+
 
 
 export default {
   name: "RoomSelector",
-  props: {
-    rooms: {
-      type: Array
-    }
-  },
+  mixins: [
+    modelMixinNoProp
+  ],
   components: {
     PlanoModal,
     IconButton
   },
   data: () =>  ({
     selectAll: true,
-    selectedRooms: []
+    model: 'room',
+    selectedRooms: [],
   }),
+  computed: {
+    ...mapState(['roomsForScheduling']),
+  },
   methods: {
+    ...mapMutations({
+      setRoomsForScheduling: SET_ROOMS_FOR_SCHEDULING
+    }),
     onSelectAll(v) {
       if (v) {
-        this.selectedRooms = this.rooms.map((r) => r.id)
+        this.selectedRooms = this.collection.map((r) => r.id)
       } else {
         this.selectedRooms = []
       }
 
-      // this.$emit('change', this.selectedRooms)
     },
     updateSelectRooms() {
-      this.$refs['select-all'].checked = this.selectedRooms.length == this.rooms.length
-      // this.$emit('change', this.selectedRooms)
+      this.selectAll = this.selectedRooms?.length === this.collection?.length
     },
     ok() {
-      this.$emit('change', this.selectedRooms)
+      this.setRoomsForScheduling(this.selectedRooms);
+    },
+    show() {
+      this.selectedRooms = this.roomsForScheduling;
+      this.updateSelectRooms();
     }
   },
-  mounted() {
-    if (this.rooms) {
-      this.selectedRooms = this.rooms.map((r) => r.id)
-    }
-  }
 }
 </script>
 
