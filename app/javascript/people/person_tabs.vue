@@ -1,58 +1,54 @@
 <template>
   <div>
-    <b-button variant="link" @click="back">Back</b-button>
     <model-loading-overlay :model="personModel">
-      <person-summary></person-summary>
-    </model-loading-overlay>
-    <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
-      <b-tab title="General" :active="!tab" lazy>
-        <model-loading-overlay :model="personModel">
+      <b-button variant="link" @click="back">Back</b-button>
+        <person-summary></person-summary>
+      <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
+        <b-tab title="General" :active="!tab" lazy>
           <person-details></person-details>
-        </model-loading-overlay>
-      </b-tab>
-      <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
-        <model-loading-overlay :model="personModel">
+        </b-tab>
+        <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
           <person-demographics></person-demographics>
-        </model-loading-overlay>
-      </b-tab>
-      <!-- Can not make this lazy otherwise we have lock issues with the notes -->
-      <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
-        <availability-and-interests
-          v-if="person"
-          v-model="person"
-          :start_time="start_time"
-          :end_time="end_time"
-          :timezone="timezone"
-          class="mb-5"
-        ></availability-and-interests>
-      </b-tab>
-      <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
-        <session-selector
-          v-if="person"
-          v-model="person"
-          defaultSortBy='sessions.title'
-          :model="sessionModel"
-          defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
-        ></session-selector>
-      </b-tab>
-      <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
-        <session-ranker
-          v-if="person"
-          defaultSortBy='interest_ranking,session_assignments.updated_at'
-          :defaultSortDesc="true"
-          :perPage="null"
-          :model="sessionAssignmentModel"
-          :defaultFilter="rankedFilter"
-          :person_id="person.id"
-        ></session-ranker>
-      </b-tab>
-      <b-tab title="Admin" disabled lazy>
-      </b-tab>
-      <b-tab title="Surveys" disabled lazy>
-      </b-tab>
-      <b-tab title="Emails" disabled lazy>
-      </b-tab>
-    </b-tabs>
+        </b-tab>
+        <!-- Can not make this lazy otherwise we have lock issues with the notes -->
+        <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
+          <availability-and-interests
+            v-if="person"
+            v-model="person"
+            :start_time="start_time"
+            :end_time="end_time"
+            :timezone="timezone"
+            class="mb-5"
+          ></availability-and-interests>
+        </b-tab>
+        <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
+          <session-selector
+            v-if="person"
+            v-model="person"
+            defaultSortBy='sessions.title'
+            :model="sessionModel"
+            defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
+          ></session-selector>
+        </b-tab>
+        <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
+          <session-ranker
+            v-if="person"
+            defaultSortBy='interest_ranking,session_assignments.updated_at'
+            :defaultSortDesc="true"
+            :perPage="null"
+            :model="sessionAssignmentModel"
+            :defaultFilter="rankedFilter"
+            :person_id="person.id"
+          ></session-ranker>
+        </b-tab>
+        <b-tab title="Admin" disabled lazy>
+        </b-tab>
+        <b-tab title="Surveys" disabled lazy>
+        </b-tab>
+        <b-tab title="Emails" disabled lazy>
+        </b-tab>
+      </b-tabs>
+    </model-loading-overlay>
   </div>
 </template>
 
@@ -172,7 +168,7 @@ export default {
     // want to lazy fetch anyhow
     if (selectedPerson?.id !== id) {
       this.unselect_model(personModel);
-      this.fetch_model_by_id(personModel, id).then(
+      this.fetch_model_by_id(personModel, id).then(() =>
         this.select_model(personModel, id)
       );
     }
