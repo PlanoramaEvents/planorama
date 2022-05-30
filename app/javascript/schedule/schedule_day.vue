@@ -212,13 +212,13 @@ export default {
 }
 
 .event-with-conflicts {
-  background: repeating-linear-gradient(
-    45deg,
-    $color-secondary-2-1,
-    $color-secondary-2-1 10px,
-    $color-complement-1 10px,
-    $color-complement-1 20px
-  )
+  // background: repeating-linear-gradient(
+  //   45deg,
+  //   $color-secondary-2-1,
+  //   $color-secondary-2-1 10px,
+  //   $color-complement-1 10px,
+  //   $color-complement-1 20px
+  // )
 }
 
 .vuecal {
