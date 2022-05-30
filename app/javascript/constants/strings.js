@@ -162,6 +162,12 @@ module.exports = {
     VENUES_ADD_ROOM_SUCCESS: (name) => `${name} successfully added.`,
     VENUES_ADD_ROOMSET_SUCCESS: (name) => `${name} successfully added.`,
     VENUES_ADD_VENUE_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_DELETE_ROOM_SUCCESS: "Room successfully deleted.",
+    VENUES_DELETE_ROOM_ERROR: errorMessage("Room failed to be deleted."),
+    VENUES_SAVE_ROOM_ERROR: errorMessage("Room failed to be saved."),
+    VENUES_SAVE_ROOM_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_SAVE_ROOMSET_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_SAVE_VENUE_SUCCESS: (name) => `${name} successfully added.`,
 
     // linked field names
     LINKED_FIELD_LABELS: {

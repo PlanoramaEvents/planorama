@@ -43,8 +43,10 @@ const profileRoutes = [
 // venues
 import VenuesScreen from "@/venues/venues-screen";
 import VenuesTabs from "@/venues/venues-tabs";
+import EditRoom from "@/venues/edit-room";
 
 const venuesRoutes = [
+  { path: 'editRoom/:id', component: EditRoom, props: true},
   { path: 'venues', component: VenuesTabs, props: {tab: 'venues'}},
   { path: 'roomsets', component: VenuesTabs, props: {tab: 'roomsets'}},
   { path: '', component: VenuesTabs, props: true},
