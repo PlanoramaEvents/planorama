@@ -229,7 +229,7 @@ module.exports = {
         can_stream: "Permission to be included in a livestreamed program",
         can_record: "Permission to be included in a recorded program",
         can_stream_exceptions: "Livestream excluded topics",
-        can_record_exceptions: "Record excluded topics",
+        can_record_exceptions: "Recordings excluded topics",
         name: "Name",
         pseudonym: "Pseudonym"
     },
