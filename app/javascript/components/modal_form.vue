@@ -1,6 +1,5 @@
 <template>
-  <b-modal
-    size="xl"
+  <plano-modal
     :title="title"
     ref='model-form'
   >
@@ -8,13 +7,17 @@
     <template #modal-footer="{ ok, cancel, hide }">
       <slot name="footer" v-bind:ok="close" v-bind:cancel="onCancel"></slot>
     </template>
-  </b-modal>
+  </plano-modal>
 </template>
 
 <script>
+import PlanoModal from './plano_modal';
 
 export default {
   name: 'ModalForm',
+  components: {
+    PlanoModal
+  },
   props: {
     title: String
   },

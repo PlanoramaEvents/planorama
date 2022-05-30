@@ -13,19 +13,19 @@ module AccessControlService
         contact_email: { sensitive: false, linkable: true, type: :email},
         last_sign_in_at: { sensitive: true, linkable: false, type: :datetime},
         current_sign_in_at: { sensitive: true, linkable: false, type: :datetime},
-        pronouns: { sensitive: true, linkable: true, type: :string},
+        pronouns: { sensitive: false, linkable: true, type: :string},
         year_of_birth: { sensitive: true, linkable: false, type: :integer},
         gender: { sensitive: true, linkable: true, type: :string},
         ethnicity: { sensitive: true, linkable: true, type: :string},
         opted_in: { sensitive: true, linkable: false, type: :boolean},
         comments: { sensitive: true, linkable: false, type: :text},
-        can_share: { sensitive: true, linkable: true, type: :boolean, values: [true, false]}, # PROB???
-        con_state: { sensitive: true, linkable: false, type: :enum},
+        can_share: { sensitive: false, linkable: true, type: :boolean, values: [true, false]}, # PROB???
+        con_state: { sensitive: false, linkable: false, type: :enum},
         registered: { sensitive: false, linkable: false, type: :boolean},
         registration_type: { sensitive: true, linkable: false, type: :string},
         registration_number: { sensitive: true, linkable: false, type: :string},
         attendance_type: { sensitive: false, linkable: true, type: :attendance_type, values: ['in person', 'virtual', 'hybrid']},
-        bio: { sensitive: true, linkable: true, type: :text},
+        bio: { sensitive: false, linkable: true, type: :text},
         website: { sensitive: false, linkable: true, type: :string},
         twitter: { sensitive: false, linkable: true, type: :string},
         othersocialmedia: { sensitive: false, linkable: true, type: :string},
@@ -37,26 +37,26 @@ module AccessControlService
         flickr: { sensitive: false, linkable: true, type: :string},
         reddit: { sensitive: false, linkable: true, type: :string},
         tiktok: { sensitive: false, linkable: true, type: :string},
-        can_stream: { sensitive: true, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
-        can_record: { sensitive: true, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
-        can_photo: { sensitive: true, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
+        can_stream: { sensitive: false, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
+        can_record: { sensitive: false, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
+        can_photo: { sensitive: false, linkable: true, type: :yesnomaybe, values: ['yes', 'no', 'maybe']},
         age_at_convention: { sensitive: true, linkable: true, type: :string},
         romantic_sexual_orientation: { sensitive: true, linkable: true, type: :string},
         needs_accommodations: { sensitive: true, linkable: true, type: :boolean, values: [true, false]}, # PROB???
         accommodations: { sensitive: true, linkable: true, type: :text},
-        willing_to_moderate: { sensitive: true, linkable: true, type: :boolean, values: [true, false]}, # PROB???
-        moderation_experience: { sensitive: true, linkable: true, type: :text},
+        willing_to_moderate: { sensitive: false, linkable: true, type: :boolean, values: [true, false]}, # PROB???
+        moderation_experience: { sensitive: false, linkable: true, type: :text},
         othered: { sensitive: true, linkable: true, type: :text},
         indigenous: { sensitive: true, linkable: true, type: :text},
         black_diaspora: { sensitive: true, linkable: true, type: :text},
         non_us_centric_perspectives: { sensitive: true, linkable: true, type: :text},
         demographic_categories: { sensitive: true, linkable: true, type: :text},
         do_not_assign_with: { sensitive: true, linkable: true, type: :text},
-        can_stream_exceptions: { sensitive: true, linkable: true, type: :text},
-        can_record_exceptions: { sensitive: true, linkable: true, type: :text},
-        can_photo_exceptions: { sensitive: true, linkable: true, type: :text},
-        is_local: { sensitive: true, linkable: true, type: :boolean, values: [true, false]}, # PROB???
-        languages_fluent_in: { sensitive: true, linkable: true, type: :string},
+        can_stream_exceptions: { sensitive: false, linkable: true, type: :text},
+        can_record_exceptions: { sensitive: false, linkable: true, type: :text},
+        can_photo_exceptions: { sensitive: false, linkable: true, type: :text},
+        is_local: { sensitive: false, linkable: true, type: :boolean, values: [true, false]}, # PROB???
+        languages_fluent_in: { sensitive: false, linkable: true, type: :string},
         socialmedia: { sensitive: false, linkable: true, type: :socialmedia}
       }
     }

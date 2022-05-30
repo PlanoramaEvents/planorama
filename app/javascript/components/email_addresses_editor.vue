@@ -19,16 +19,16 @@
     </div>
     <div class="mt-3">
       Additional Emails
-      <div v-for="email in additional">
+      <div v-for="email in additional" :key="email.id">
         <email-address-editor
-          v-bind:value="email"
+          :value="email"
           @delete="onDelete(email)"
           @input="onInput(email)"
           :disabled="disabled"
         ></email-address-editor>
       </div>
     </div>
-    <b-button @click="onNew" variant="primary" title="New" class="mt-2" size="sm">
+    <b-button ref="add_email_button" @click="onNew" variant="primary" title="New" class="mt-2" size="sm">
       <b-icon-plus></b-icon-plus>
     </b-button>
   </div>
@@ -120,6 +120,8 @@ export default {
     },
     onNew() {
       this.additional.push({email: '', isdefault: false, person_id: this.person.id})
+      this.$emit('add')
+      this.$refs.add_email_button.scrollIntoView({behavior: 'smooth'});
     }
   },
   mounted() {

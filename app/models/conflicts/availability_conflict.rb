@@ -6,5 +6,3 @@ class Conflicts::AvailabilityConflict < ApplicationRecord
   belongs_to :person
   belongs_to :session
 end
-
-# TODO: add conflict check to assignment role type - i.e. leave out reserve

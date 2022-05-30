@@ -139,7 +139,8 @@ export const store = new Vuex.Store({
     ...searchStateStore.state,
     ...availabilityStore.state,
     ...personExclusionStore.state,
-    ...emailAddressStore.state
+    ...emailAddressStore.state,
+    ...roomStore.state,
     // ...mailingStore.state
   },
   getters: {
@@ -194,7 +195,8 @@ export const store = new Vuex.Store({
     ...personSessionStore.mutations,
     ...settingsStore.mutations,
     ...surveyStore.mutations,
-    ...searchStateStore.mutations
+    ...searchStateStore.mutations,
+    ...roomStore.mutations,
   },
   actions: {
     /**

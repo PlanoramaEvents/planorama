@@ -20,57 +20,27 @@
             <dt>Bio:</dt>
             <dd class='ml-2'>
               <span v-html="selected.bio" v-if="selected.bio"></span>
-              <span v-else>N/A</span>
+              <span v-else class="text-muted font-italic">Not Specified</span>
             </dd>
           </dl>
         </div>
         <div class="d-flex flex-row mt-3">
           <div class="w-50 mr-2">
             <h5>Demographics</h5>
-            <dl>
-              <dt>Ethnicity:</dt>
-              <dd class="ml-2">{{selected.ethnicity | na_if_empty}}</dd>
-              <dt>Gender:</dt>
-              <dd class="ml-2">{{selected.gender | na_if_empty}}</dd>
-              <dt>Age at time of Event:</dt>
-              <dd class="ml-2">{{selected.age_at_convention | na_if_empty}}</dd>
-              <dt>Romantic and/or sexual orientation:</dt>
-              <dd class="ml-2">{{selected.romantic_sexual_orientation | na_if_empty}}</dd>
-            </dl>
+            <dl-person :fields="['ethnicity', 'gender', 'age_at_convention', 'romantic_sexual_orientation']"></dl-person>
           </div>
           <div class="w-50">
             <h5>Community Memberships</h5>
-            <dl>
-              <dt>Experience with being “othered”:</dt>
-              <dd class="ml-2">{{selected.othered | na_if_empty }}</dd>
-              <dt>Member of an Indigenous community:</dt>
-              <dd class="ml-2">{{selected.indigenous | na_if_empty}}</dd>
-              <dt>Member of the global Black diaspora:</dt>
-              <dd class="ml-2">{{selected.black_diaspora | na_if_empty}}</dd>
-              <dt>Represent something other than a purely US-centric perspective:</dt>
-              <dd class="ml-2">{{selected.non_us_centric_perspectives| na_if_empty}}</dd>
-            </dl>
+            <dl-person :fields="['othered', 'indigenous', 'black_diaspora', 'non_us_centric_perspectives']"></dl-person>
           </div>
         </div>
         <h5>Other Information</h5>
-        <dl>
-          <dt>Anyone that should not be assigned to be on a panel with participant:</dt>
-          <dd class="ml-2">{{selected.do_not_assign_with | na_if_empty}}</dd>
-          <dt>Permission to be included in live streamed program:</dt>
-          <dd class="ml-2">{{selected.can_stream | capitalize | na_if_empty}}</dd>
-          <dt>Topics participant does not want to be streamed while talking about are:</dt>
-          <dd class="ml-2">{{selected.can_stream_exceptions | na_if_empty}}</dd>
-          <dt>Permission to be included in recorded program:</dt>
-          <dd class="ml-2">{{selected.can_record | capitalize | na_if_empty}}</dd>
-          <dt>Topics participant does not want to be recorded talking about:</dt>
-          <dd class="ml-2">{{selected.can_record_exceptions | na_if_empty}}</dd>
-          <dt>Local to the Event:</dt>
-          <dd class="ml-2">{{selected.is_local ? 'Yes' : 'No'}}</dd>
-          <dt>Moderating experience:</dt>
-          <dd class="ml-2">{{selected.moderation_experience | na_if_empty}}</dd>
-          <dt>Languages spoken:</dt>
-          <dd class="ml-2">{{selected.languages_fluent_in | na_if_empty}}</dd>
-        </dl>
+        <dl-person :fields="['do_not_assign_with', 'can_stream', 'can_stream_exceptions', 'can_record', 'can_record_exceptions', 'is_local', 'moderation_experience', 'languages_fluent_in']">
+          <template #can_stream-val>{{selected.can_stream | capitalize}}</template>
+          <template #can_record-val>{{selected.can_record | capitalize}}</template>
+          <template #can_stream_exceptions-label>Topics participant does not want to be streamed while talking about</template>
+          <template #can_record_exceptions-label>Topics participant does not want to be recorded while talking about</template>
+        </dl-person>
       </div>
     </template>
   </sidebar-vue>
@@ -80,12 +50,14 @@
 import SidebarVue from '../components/sidebar_vue';
 import {modelMixin} from '@/mixins';
 import modelUtilsMixin from "@/store/model_utils.mixin";
+import DlPerson from "@/profile/dl_person.vue";
 
 // Seacrh for people to add as participants
 export default {
   name: "PersonDetails",
   components: {
-    SidebarVue
+    SidebarVue,
+    DlPerson
   },
   mixins: [
     modelMixin,

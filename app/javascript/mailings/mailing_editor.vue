@@ -60,10 +60,10 @@
         label="Select Survey:"
         label-for="email-survey"
       >
-        <!-- TODO: only published surveys -->
         <model-select
           v-model="mailing.survey_id"
           model="survey"
+          filter='{"op":"all","queries":[["public", "=", "true"]]}'
           field="name"
           :disabled="has_survey == false"
         ></model-select>
