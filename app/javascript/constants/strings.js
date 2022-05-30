@@ -196,14 +196,14 @@ module.exports = {
     `Please contact the server administrator at ${email} and let them know the time and date the error occurred.`),
 
     // Social Links Errors
-    TWITTER_ID_INVALID_MSG: "Twitter id is not in a valid format",
-    FACEBOOK_ID_INVALID_MSG: "Facebook id is not in a valid format",
+    TWITTER_ID_INVALID_MSG: "Twitter ID is not in a valid format",
+    FACEBOOK_ID_INVALID_MSG: "Facebook ID is not in a valid format",
     WEBSITE_INVALID_MSG: "Website is not in a valid format",
-    INSTAGRAM_ID_INVALID_MSG: "Instagram id is not in a valid format",
-    TWITCH_ID_INVALID_MSG: "Twitch id is not in a valid format",
+    INSTAGRAM_ID_INVALID_MSG: "Instagram ID is not in a valid format",
+    TWITCH_ID_INVALID_MSG: "Twitch ID is not in a valid format",
     YOUTUBE_ID_INVALID_MSG: "Youtube is not in a valid format",
-    TIKTOK_ID_INVALID_MSG: "TikTok id is not in a valid format",
-    LINKEDIN_ID_INVALID_MSG: "LinkedIn id is not in a valid format",
+    TIKTOK_ID_INVALID_MSG: "TikTok ID is not in a valid format",
+    LINKEDIN_ID_INVALID_MSG: "LinkedIn ID is not in a valid format",
     PROFILE_FIELD_LABELS: {
         ethnicity: "Ethnicity",
         gender: "Gender",
@@ -228,10 +228,10 @@ module.exports = {
         moderation_experience: "Moderating Experience",
         can_stream: "Permission to be included in a livestreamed program",
         can_record: "Permission to be included in a recorded program",
-        can_stream_exceptions: "ANNA WORDS livestream excluded topics",
-        can_record_exceptions: "ANNA WORDS record excluded topics",
+        can_stream_exceptions: "Livestreams excluded topics",
+        can_record_exceptions: "Recordings excluded topics",
         name: "Name",
         pseudonym: "Pseudonym"
     },
-    PERSON_SAVE_SUCCESS: "ANNA WORDS peron saved"
+    PERSON_SAVE_SUCCESS: "Profile record saved successfully"
 }
