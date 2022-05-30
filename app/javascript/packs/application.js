@@ -55,10 +55,10 @@ Vue.component("v-select", vSelect);
 import "vue-select/dist/vue-select.css";
 
 Vue.filter('na_if_empty', function (value) {
-  if (value === undefined || value === null) return 'N/A'
+  if (value === undefined) return 'Restricted'
   if (value === true) return "Yes"
   if (value === false) return "No"
-  if (value.trim().length == 0) return 'N/A'
+  if (value === null || value.trim().length == 0) return 'Not Specified'
   return value
 })
 

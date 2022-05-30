@@ -1,5 +1,5 @@
 <template>
-  <b-overlay :show="!selected" spinner-variant="primary" variant="transparent">
+  <b-overlay :show="!selected" spinner-variant="primary" variant="white" opacity="1">
     <slot></slot>
   </b-overlay>
 </template>

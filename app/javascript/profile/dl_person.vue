@@ -8,7 +8,11 @@
         </dt>
         <dd :key="'dd-' + i" class="ml-2">
           <slot :name="field + '-val'" :slot-scope="{value: selected[field]}">
-            {{selected[field] | na_if_empty }}
+            <span v-if="selected[field] === undefined" class="text-muted font-italic">Restricted</span>
+            <span v-else-if="selected[field] === true">Yes</span>
+            <span v-else-if="selected[field] === false">No</span>
+            <span v-else-if="selected[field] === null || selected[field].trim().length === 0" class="text-muted font-italic">Not Specified</span>
+            <span v-else class="keep-format">{{selected[field]}}</span>
           </slot>
         </dd>
     </template>

@@ -231,7 +231,8 @@ module.exports = {
         can_stream_exceptions: "Livestreams excluded topics",
         can_record_exceptions: "Recordings excluded topics",
         name: "Name",
-        pseudonym: "Pseudonym"
+        pseudonym: "Pseudonym",
+        languages_fluent_in: "Languages spoken"
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully"
 }
