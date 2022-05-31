@@ -601,7 +601,8 @@ CREATE TABLE public.sessions (
     instructions_for_interest text,
     updated_by character varying,
     interest_opened_by character varying,
-    interest_opened_at timestamp without time zone
+    interest_opened_at timestamp without time zone,
+    proofed boolean
 );
 
 
@@ -2607,6 +2608,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220512004401'),
 ('20220524195624'),
 ('20220527143522'),
-('20220528145537');
+('20220528145537'),
+('20220531011606');
 
 

@@ -30,6 +30,12 @@
               Open for Interest
             </b-form-checkbox>
           </b-tab>
+          <b-tab title="Participants">
+            <view-participants :session="selected"></view-participants>
+          </b-tab>
+          <b-tab title="Notes">
+            <session-notes></session-notes>
+          </b-tab>
           <!-- <survey-settings-tab></survey-settings-tab> -->
         </b-tabs>
       </template>
@@ -38,7 +44,9 @@
 </template>
 
 <script>
-import SidebarVue from '../components/sidebar_vue';
+import SidebarVue from '@/components/sidebar_vue';
+import SessionNotes from './session_notes.vue';
+import ViewParticipants from './view_participants';
 import {personSessionMixin, modelMixin} from '@/mixins';
 import Detail from './detail.vue';
 // import SessionAdminTab from './session_admin_tab';
@@ -48,7 +56,8 @@ export default {
   components: {
     SidebarVue,
     Detail,
-    // SessionAdminTab
+    SessionNotes,
+    ViewParticipants
   },
   mixins: [
     modelMixin,

@@ -55,6 +55,8 @@ import { sessionStore, sessionEndpoints } from './session.store';
 // area add-ons
 import { areaStore, areaEndpoints } from './area.store';
 
+import { formatStore, formatEndpoints } from './format.store';
+
 import { availabilityStore } from './availability.store';
 
 import { availabilityConflictStore, availabilityConflictEndpoints } from './availability_conflict.store';
@@ -94,7 +96,8 @@ const endpoints = {
   ...configurationEndpoints,
   ...emailAddressEndpoints,
   ...availabilityConflictEndpoints,
-  ...sessionConflictEndpoints
+  ...sessionConflictEndpoints,
+  ...formatEndpoints,
   // ...availabilityEndpoints,
   // ...personExclusionEndpoints
 }
@@ -131,7 +134,8 @@ export const store = new Vuex.Store({
       ...parameterNameStore.selected,
       ...configurationStore.selected,
       ...availabilityConflictStore.selected,
-      ...sessionConflictStore.selected
+      ...sessionConflictStore.selected,
+      ...formatStore.selected
     },
     ...personSessionStore.state,
     ...settingsStore.state,
@@ -178,6 +182,7 @@ export const store = new Vuex.Store({
     ...personExclusionStore.getters,
     ...emailAddressStore.getters,
     ...settingsStore.getters,
+    ...formatStore.getters,
   },
   plugins: [
     ...surveyStore.plugins
