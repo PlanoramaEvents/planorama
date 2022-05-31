@@ -36,7 +36,7 @@ namespace :survey do
         if q
           item['choices'].each do |choice|
             a = q.answers.where("REPLACE(answer, ' ', '') = ?", choice.gsub(/\s+/, "")).first
-            p "Answer not found #{choice}" if a.nil?
+            p "Answer not found #{choice} for #{item['title']}" if a.nil? && (q.question_type != :boolean && q.question_type != :yesnomaybe && q.question_type != :attendance_type)
           end
         end
         p "Question Not found: #{item['title']}" if q.nil?

@@ -75,7 +75,6 @@ namespace :submission do
           p "person (#{email}) - ERROR: no question for column #{n}"
         end
       end
-
       # Set to applied if the state has not been moved at all from the deafult of not_set
       person.con_state = Person.con_states[:applied] if person.con_state == Person.con_states[:not_set]
       person.save!
@@ -87,7 +86,7 @@ namespace :submission do
     header = []
     cols.each do |col|
       # check survey from id
-      q = Survey::Question.where("REPLACE(question, ' ', '') = ?", col.gsub(/\s+/, "")).first
+      q = Survey::Question.joins(:survey).where("survey_pages.survey_id = ? AND REPLACE(question, ' ', '') = ?", survey.id, col.gsub(/\s+/, "")).first
       header[n] = q
       n += 1
     end
@@ -119,17 +118,20 @@ namespace :submission do
              # Need special consideration for the elaborate section of the question
              # there are 2 questions from google that this should deal with
              if value
-               val = if value.include? 'except for items'
+               v = if value.include? 'except for items'
                        'maybe'
                      elsif value.downcase == 'yes'
                        'yes'
                      elsif value.downcase == 'no'
                        'no'
+                     else # anything else we assume is maybe (see academic mess)
+                       'maybe'
                      end
-               if val
+
+               if v
                  {
                    text: '',
-                   value: [val.downcase]
+                   value: [v.downcase]
                  }
                end
              end
