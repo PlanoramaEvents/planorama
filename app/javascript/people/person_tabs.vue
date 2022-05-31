@@ -161,17 +161,22 @@ export default {
     }
   },
   mounted() {
-    // get id from URL if present
-    let id = this.id || this.currentUser.id;
-    let selectedPerson = this.selected_model(personModel);
-    // don't fetch if already here... todo figure out if we
-    // want to lazy fetch anyhow
-    if (selectedPerson?.id !== id) {
-      this.unselect_model(personModel);
-      this.fetch_model_by_id(personModel, id).then(() =>
-        this.select_model(personModel, id)
-      );
-    }
+    this.$nextTick(
+      () => {
+        // get id from URL if present
+        let id = this.id || this.currentUser.id;
+        let selectedPerson = this.selected_model(personModel);
+        // don't fetch if already here... todo figure out if we
+        // want to lazy fetch anyhow
+        if (selectedPerson?.id !== id) {
+          // tick
+          this.unselect_model(personModel);
+          this.fetch_model_by_id(personModel, id).then(() =>
+            this.select_model(personModel, id)
+          );
+        }
+      }
+    )
   },
   beforeRouteLeave(to, from, next) {
     if (from.path.match(/.*profile.*/) && to.path === '/people') {
