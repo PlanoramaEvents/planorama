@@ -7,6 +7,7 @@
       :disabled="disabled"
       :multiple="multiple"
       :size="size"
+      :select-size="selectSize"
     ></b-form-select>
   </b-overlay>
 </template>
@@ -28,7 +29,10 @@ export default {
     size: {
       type: String
     },
-    filter: null
+    filter: null,
+    selectSize: {
+      default: 0
+    }
   },
   mixins: [
     modelMixin

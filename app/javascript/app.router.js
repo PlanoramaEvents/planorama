@@ -74,10 +74,11 @@ const surveyRoutes = [
 ]
 
 const sessionRoutes = [
-  { path: 'edit/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-edit'}) },
-  { path: 'assignment/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-assignment'}) },
-  { path: 'schedule/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-schedule'}) },
-  { path: 'notes/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'session-notes'}) },
+  // { path: 'edit/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'edit'}) },
+  // { path: 'assignment/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'assignment'}) },
+  // { path: 'schedule/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'schedule'}) },
+  // { path: 'notes/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'notes'}) },
+  { path: ':tab/:id', component: SessionTabs, props: true },
   { path: '', component: SessionList },
 ]
 

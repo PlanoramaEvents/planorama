@@ -3,10 +3,10 @@
     <b-button variant="link" @click="back">Back</b-button>
     <session-summary ></session-summary>
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="session">
-      <b-tab title="General" :active="tab === 'session-edit'">
+      <b-tab title="General" :active="tab === 'edit'">
         <session-edit></session-edit>
       </b-tab>
-      <b-tab title="Participant Assignment" :active="tab === 'session-assignment'" lazy>
+      <b-tab title="Participant Assignment" :active="tab === 'assignment'" lazy>
         <assign-participants
           v-model="session"
           defaultSortBy='session_assignments.interest_ranking, people.published_name'
@@ -18,10 +18,12 @@
           @input="onSessionUpdate"
         ></assign-participants>
       </b-tab>
-      <b-tab title="Schedule" :active="tab === 'session-schedule'" lazy>
+      <b-tab title="Schedule" :active="tab === 'schedule'" lazy>
         <session-schedule></session-schedule>
       </b-tab>
-      <b-tab title="Notes" :active="tab === 'session-notes'">
+      <b-tab title="Conflicts" :active="tab === 'conflicts'" lazy disabled>
+      </b-tab>
+      <b-tab title="Notes" :active="tab === 'notes'">
         <session-notes></session-notes>
       </b-tab>
     </b-tabs>
@@ -93,7 +95,7 @@ export default {
       this.session = arg
     },
     back() {
-      history.back()
+      this.$router.push('/sessions');
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
       // console.debug("****** tab action", newTab, oldTab, bvEvent)
@@ -109,6 +111,9 @@ export default {
           path = `schedule/${this.id}`;
           break;
         case 3:
+          path = `conflicts/${this.id}`;
+          break;
+        case 4:
           path = `notes/${this.id}`;
           break;
       }

@@ -8,9 +8,9 @@
         >
           <b-form-textarea
             id="session-notes"
-            v-model="session.item_notes"
+            v-model="selected.item_notes"
             rows="10"
-            @blur="saveSession()"
+            @blur="patchSelected({item_notes: selected.item_notes}, true)"
           ></b-form-textarea>
         </b-form-group>
       </div>
@@ -19,19 +19,17 @@
 </template>
 
 <script>
-import { sessionModel } from '@/store/session.store'
-import modelUtilsMixin from "@/store/model_utils.mixin";
+import { sessionModel as model} from '@/store/session.store'
+import { modelMixinNoProp } from '@/mixins';
 
 export default {
   name: "SessionNotes",
   mixins: [
-    modelUtilsMixin
+    modelMixinNoProp
   ],
-  computed: {
-    session() {
-      return this.selected_model(sessionModel)
-    }
-  },
+  data: () => ({
+    model
+  }),
   methods: {
     saveSession() {
       this.save_model(sessionModel, this.session).then(
