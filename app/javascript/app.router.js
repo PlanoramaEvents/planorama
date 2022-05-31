@@ -21,7 +21,6 @@ import PersonTabs from './people/person_tabs.vue';
 
 // profile
 import ProfileScreen from './profile/profile-screen.vue';
-import ProfileTabs from './profile/profile-tabs.vue';
 
 const profileRoutes = [
   // { path: 'session-selection', component: PersonTabs, props: {tab: 'session-selection'} },
