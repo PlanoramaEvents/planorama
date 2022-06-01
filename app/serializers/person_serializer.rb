@@ -56,7 +56,6 @@ class PersonSerializer #< ActiveModel::Serializer
   end
 
   has_many  :email_addresses, serializer: EmailAddressSerializer,
-              if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"
@@ -67,7 +66,6 @@ class PersonSerializer #< ActiveModel::Serializer
               }
 
   has_many :convention_roles, serializer: ConventionRoleSerializer,
-              if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"
@@ -78,7 +76,6 @@ class PersonSerializer #< ActiveModel::Serializer
               }
 
   has_many  :submissions, serializer: Survey::SubmissionSerializer,
-              if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"
@@ -174,7 +171,6 @@ class PersonSerializer #< ActiveModel::Serializer
   #            }
 
   has_many :mail_histories, serializer: MailHistorySerializer,
-             if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
              links: {
               self: -> (object, params) {
                 "#{params[:domain]}/person/#{object.id}"
