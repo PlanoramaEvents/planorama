@@ -1,7 +1,7 @@
 <template>
   <b-form ref='add-room-set-form'>
-    <model-field label="Name" v-model="roomSetData.name" type="text" stateless></model-field>
-    <model-field label="Description" v-model="roomSetData.description" type="text" stateless></model-field>
+    <model-field label="Name" v-model="roomsetData.name" type="text" stateless></model-field>
+    <model-field label="Description" v-model="roomsetData.description" type="text" stateless></model-field>
     <div class="d-flex justify-content-end" v-if='showButtons'>
       <b-button variant="link" @click="clear">Cancel</b-button>
       <b-button variant="primary" @click="saveRoomSet">Save</b-button>
@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      roomSetData: {
+      roomsetData: {
         name: '',
         description: '',
       },
@@ -60,22 +60,23 @@ export default {
   methods: {
     ...mapActions({newRoomSetAction: NEW_ROOMSET}),
     clear() {
-      this.roomSetData.name = '';
-      this.roomSetData.description = '';
+      this.roomsetData.name = '';
+      this.roomsetData.description = '';
     },
     setRoomSetData(data) {
-      //console.log("setRoomsetData: ", data);
+      // alert("in room_set_editor.setRoomSetData, data="+JSON.stringify(data))
+      //console.log("setRoomSetData: ", data);
       if(data && data.name && data.description) {
         this.roomsetData.name = data.name;
         this.roomsetData.description = data.description;
       }
     },
     saveRoomSet() {
-      let res = this.newRoomSetAction(this.roomSetData);
+      let res = this.newRoomSetAction(this.roomsetData);
       res.then(
         (obj) => {
           this.$bvToast.toast(
-            VENUES_ADD_ROOMSET_SUCCESS(obj.title),
+            VENUES_ADD_ROOMSET_SUCCESS(obj.name),
             {
               variant: 'success',
               title: 'Room Set Created'

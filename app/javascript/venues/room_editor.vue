@@ -13,7 +13,7 @@
 <script>
 import toastMixin from '../shared/toast-mixin';
 import settingsMixin from "@/store/settings.mixin";
-import { ADMIN_ADD_ROOM_SUCCESS } from '@/constants/strings';
+import { VENUES_ADD_ROOM_SUCCESS } from '@/constants/strings';
 import ModelField from '../shared/model-field';
 import PlanoEditor from '../components/plano_editor';
 
@@ -81,7 +81,7 @@ export default {
       res.then(
         (obj) => {
           this.$bvToast.toast(
-            ADMIN_ADD_ROOM_SUCCESS(obj.title),
+            VENUES_ADD_ROOM_SUCCESS(obj.name),
             {
               variant: 'success',
               title: 'Room Created'

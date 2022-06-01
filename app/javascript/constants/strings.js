@@ -25,6 +25,13 @@ module.exports = {
     ERROR_TOAST_TITLE: "Error",
     SUCCESS_TOAST_TITLE: "Success",
 
+    //room actions
+    ROOM_CONFIRM_DELETE: "Are you sure you want to permanently delete this room? This cannot be undone.",
+    ROOM_SAVE_ERROR: errorMessage("Room failed to be saved."),
+    ROOM_SAVE_ERROR_DELETE: errorMessage("Room failed to be deleted."),
+    ROOM_SAVE_SUCCESS: "Room successfully saved.",
+    ROOM_SAVE_SUCCESS_DELETE: "Survey successfully deleted.",
+
     //survey actions
     SURVEY_SAVE_SUCCESS: "Survey successfully saved.",
     SURVEY_SAVE_ERROR: errorMessage("Survey failed to be saved."),
@@ -155,6 +162,12 @@ module.exports = {
     VENUES_ADD_ROOM_SUCCESS: (name) => `${name} successfully added.`,
     VENUES_ADD_ROOMSET_SUCCESS: (name) => `${name} successfully added.`,
     VENUES_ADD_VENUE_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_DELETE_ROOM_SUCCESS: "Room successfully deleted.",
+    VENUES_DELETE_ROOM_ERROR: errorMessage("Room failed to be deleted."),
+    VENUES_SAVE_ROOM_ERROR: errorMessage("Room failed to be saved."),
+    VENUES_SAVE_ROOM_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_SAVE_ROOMSET_SUCCESS: (name) => `${name} successfully added.`,
+    VENUES_SAVE_VENUE_SUCCESS: (name) => `${name} successfully added.`,
 
     // linked field names
     LINKED_FIELD_LABELS: {

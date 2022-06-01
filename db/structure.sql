@@ -130,6 +130,16 @@ CREATE TYPE public.mailing_state_enum AS ENUM (
 
 
 --
+-- Name: measurement_system_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.measurement_system_enum AS ENUM (
+    'Metric',
+    'Imperial'
+);
+
+
+--
 -- Name: next_page_action_enum; Type: TYPE; Schema: public; Owner: -
 --
 
