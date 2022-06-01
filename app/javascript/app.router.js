@@ -19,15 +19,6 @@ import PeopleScreen from './people/people-screen.vue';
 import PeopleList from './people/people_list.vue';
 import PersonTabs from './people/person_tabs.vue';
 
-const personRoutes = [
-  { path: 'edit/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'person-edit'}) },
-  { path: 'session-selection/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
-  { path: 'session-ranking/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
-  { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
-  { path: 'other/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'other'}) },
-  { path: '', component: PeopleList }
-]
-
 // profile
 import ProfileScreen from './profile/profile-screen.vue';
 
@@ -48,6 +39,8 @@ const personRoutes = [
   // { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
   // { path: 'other/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'other'}) },
   { path: '', component: PeopleList }
+]
+
 // venues
 import VenuesScreen from "@/venues/venues-screen";
 import VenuesTabs from "@/venues/venues-tabs";
