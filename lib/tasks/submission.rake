@@ -3,8 +3,9 @@ desc "Utilities for surveys"
 # Import a excel sheet with the survey submissions (from google)
 namespace :submission do
   # rake submission:import\['prg_survey.csv','00000000-0000-0000-0000-000000000014'\]
-  task :import, [:filename, :survey_id] => :environment do |t, args|
+  task :import, [:filename, :survey_id, :check_linked] => :environment do |t, args|
     survey_id = args[:survey_id]
+    check_linked = args[:check_linked].blank? ? false : args[:check_linked] == "true"
 
     survey = Survey.find survey_id
     p "Did not find survey with id #{survey_id}" unless survey
@@ -21,7 +22,7 @@ namespace :submission do
         count += 1
         next if count == 0
         begin
-          create_submission(header, row, survey)
+          create_submission(header, row, survey, check_linked: check_linked)
         rescue => msg
           p "****** ERROR row: #{count+1} - #{msg}"
         end
@@ -29,7 +30,7 @@ namespace :submission do
     end
   end
 
-  def create_submission(header, row, survey)
+  def create_submission(header, row, survey, check_linked: false)
     Survey::Submission.transaction do
       timestamp = Time.parse row[0]
       email = row[1].strip
@@ -70,12 +71,11 @@ namespace :submission do
       # Also need better error reporting for which questions are a problem etc.
       (2..(row.count-1)).each do |n|
         if header[n]
-          create_response(question: header[n], submission: submission, value: row[n])
+          create_response(question: header[n], submission: submission, value: row[n], check_linked: check_linked)
         else
           p "person (#{email}) - ERROR: no question for column #{n}"
         end
       end
-
       # Set to applied if the state has not been moved at all from the deafult of not_set
       person.con_state = Person.con_states[:applied] if person.con_state == Person.con_states[:not_set]
       person.save!
@@ -87,7 +87,7 @@ namespace :submission do
     header = []
     cols.each do |col|
       # check survey from id
-      q = Survey::Question.where("REPLACE(question, ' ', '') = ?", col.gsub(/\s+/, "")).first
+      q = Survey::Question.joins(:survey).where("survey_pages.survey_id = ? AND REPLACE(question, ' ', '') = ?", survey.id, col.gsub(/\s+/, "")).first
       header[n] = q
       n += 1
     end
@@ -95,7 +95,7 @@ namespace :submission do
     header
   end
 
-  def create_response(question:, submission:, value: )
+  def create_response(question:, submission:, value:, check_linked: false)
     val = case question.question_type
            when :textfield
              value
@@ -119,17 +119,20 @@ namespace :submission do
              # Need special consideration for the elaborate section of the question
              # there are 2 questions from google that this should deal with
              if value
-               val = if value.include? 'except for items'
+               v = if value.include? 'except for items'
                        'maybe'
                      elsif value.downcase == 'yes'
                        'yes'
                      elsif value.downcase == 'no'
                        'no'
+                     else # anything else we assume is maybe (see academic mess)
+                       'maybe'
                      end
-               if val
+
+               if v
                  {
                    text: '',
-                   value: [val.downcase]
+                   value: [v.downcase]
                  }
                end
              end
@@ -149,7 +152,8 @@ namespace :submission do
       response = Survey::Response.create_response(
           question: question,
           submission: submission,
-          value: val
+          value: val,
+          check_update_linked: check_linked
         )
       if question.id == '00000000-0000-0000-0000-000000000052'
         fix_yesnomaybe(question_id: '00000000-0000-0000-0000-000000000051', submission_id: submission.id, val: val)
@@ -166,12 +170,14 @@ namespace :submission do
       new_val = existing_response.response || Survey::Response.empty_json
       new_val[:text] = val
       existing_response.response = new_val
+      existing_response.check_update_linked = check_linked
       existing_response.save!
     else
       response = Survey::Response.create_response(
           question_id: question_id,
           submission: submission,
-          value: val
+          value: val,
+          check_update_linked: check_linked
         )
     end
   end
