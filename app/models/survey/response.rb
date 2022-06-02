@@ -11,6 +11,8 @@ class Survey::Response < ApplicationRecord
   before_save :set_response_text
   after_save :update_linked
 
+  attr_accessor :check_update_linked
+
   #
   # Deal with linked_field from question
   #
@@ -47,6 +49,10 @@ class Survey::Response < ApplicationRecord
           exception_val = response['text']
 
           if exception_val
+            if check_update_linked
+              existing = submission.person.send("#{details[1]}_exceptions")
+              return if !existing.blank?
+            end
             submission.person.send("#{details[1]}_exceptions=", exception_val)
           end
         end
@@ -64,6 +70,10 @@ class Survey::Response < ApplicationRecord
             submission.person.othersocialmedia = val['other']
             submission.person.website = val['website']
           else
+            if check_update_linked
+              existing = submission.person.send("#{details[1]}")
+              return if !existing.blank?
+            end
             submission.person.send("#{details[1]}=", val)
           end
           submission.person.save!
@@ -80,7 +90,8 @@ class Survey::Response < ApplicationRecord
   #   end
   # end
 
-  def self.create_response(question:, submission:, value:)
+  def self.create_response(question:, submission:, value:, check_update_linked: false)
+    # TODO: some conditional check in here???
     json_val = empty_json
     case question.question_type
          when :textfield
@@ -114,7 +125,8 @@ class Survey::Response < ApplicationRecord
       Survey::Response.create!(
         question: question,
         submission: submission,
-        response: json_val
+        response: json_val,
+        check_update_linked: check_update_linked
       )
     end
   end
