@@ -6,6 +6,8 @@ class Room < ApplicationRecord
 
   belongs_to :venue, optional: true
   belongs_to :room_set, optional: true
+  belongs_to :linear_unit, optional: true
+  belongs_to :area_unit, optional: true
 
   has_many :sessions
   has_many :published_sessions

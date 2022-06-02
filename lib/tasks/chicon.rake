@@ -133,4 +133,38 @@ namespace :chicon do
       )
     end
   end
+
+  desc "Seed Chicon Linear and Area Measurement Units"
+  task seed_measurements: :environment do
+    if LinearUnit.count == 0
+      LinearUnit.create!(
+        [
+          {
+            name: 'inch', measurement_system: :Imperial
+          },
+          {
+            name: 'feet', measurement_system: :Imperial
+          },
+          {
+            name: 'centimeter'
+          },
+          {
+            name: 'meter'
+          }
+        ]
+      )
+    end
+    if AreaUnit.count == 0
+      AreaUnit.create!(
+        [
+          {
+            name: 'square feet', measurement_system: :Imperial
+          },
+          {
+            name: 'square meters'
+          }
+        ]
+      )
+    end
+  end
 end

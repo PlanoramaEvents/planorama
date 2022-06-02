@@ -296,6 +296,19 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: area_units; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.area_units (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    measurement_system public.measurement_system_enum DEFAULT 'Metric'::public.measurement_system_enum
+);
+
+
+--
 -- Name: areas; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -832,6 +845,19 @@ CREATE TABLE public.label_dimensions (
 
 
 --
+-- Name: linear_units; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.linear_units (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    measurement_system public.measurement_system_enum DEFAULT 'Metric'::public.measurement_system_enum
+);
+
+
+--
 -- Name: magic_links; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1095,7 +1121,9 @@ CREATE TABLE public.rooms (
     room_set_id uuid,
     length numeric,
     width numeric,
-    height numeric
+    height numeric,
+    linear_unit_id uuid,
+    area_unit_id uuid
 );
 
 
@@ -1510,6 +1538,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: area_units area_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.area_units
+    ADD CONSTRAINT area_units_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: areas areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1635,6 +1671,14 @@ ALTER TABLE ONLY public.formats
 
 ALTER TABLE ONLY public.label_dimensions
     ADD CONSTRAINT label_dimensions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: linear_units linear_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.linear_units
+    ADD CONSTRAINT linear_units_pkey PRIMARY KEY (id);
 
 
 --
@@ -2612,6 +2656,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220524195624'),
 ('20220527143522'),
 ('20220528145537'),
-('20220531011606');
+('20220531011606'),
+('20220601013356'),
+('20220601013405');
 
 
