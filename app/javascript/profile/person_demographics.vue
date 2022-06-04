@@ -2,42 +2,12 @@
   <section>
     <div class="d-flex flex-row mt-3">
       <div class="w-50 mr-2">
-        <h5>Demographics <edit-button v-b-modal.person-demo-modal></edit-button></h5>
+        <h5>Demographics <edit-button v-b-modal.person-demo-modal v-if="canEditInfo"></edit-button></h5>
         <dl-person :fields="demoFields"></dl-person>
-        <!-- <dl>
-          <dt>Ethnicity</dt>
-          <dd class="ml-2">{{ selected.ethnicity | na_if_empty }}</dd>
-          <dt>Gender</dt>
-          <dd class="ml-2">{{ selected.gender | na_if_empty }}</dd>
-          <dt>Age at time of event</dt>
-          <dd class="ml-2">{{ selected.age_at_convention | na_if_empty }}</dd>
-          <dt>Romantic and/or sexual orientation</dt>
-          <dd class="ml-2">
-            {{ selected.romantic_sexual_orientation | na_if_empty }}
-          </dd>
-        </dl> -->
       </div>
       <div class="w-50">
-        <h5>Community memberships <edit-button v-b-modal.person-community-modal></edit-button></h5>
+        <h5>Community memberships <edit-button v-b-modal.person-community-modal v-if="canEditInfo"></edit-button></h5>
         <dl-person :fields="communityFields"></dl-person>
-        <!-- <dl>
-          <dt>Experience with being “othered”</dt>
-          <dd class="ml-2">{{ selected.othered | na_if_empty }}</dd>
-          <dt>Member of an Indigenous community</dt>
-          <dd class="ml-2">{{ selected.indigenous | na_if_empty }}</dd>
-          <dt>Member of the global Black diaspora</dt>
-          <dd class="ml-2">{{ selected.black_diaspora | na_if_empty }}</dd>
-          <dt>
-            Represent something other than a purely US-centric perspective
-          </dt>
-          <dd class="ml-2">
-            {{ selected.non_us_centric_perspectives | na_if_empty }}
-          </dd>
-          <dt>Other demographic categories</dt>
-          <dd class="ml-2">
-            {{ selected.demographic_categories | na_if_empty }}
-          </dd>
-        </dl> -->
       </div>
     </div>
     <person-edit-modal id="person-demo-modal" :person="selected" :data="demoData">
@@ -87,6 +57,7 @@ import { personModel as model } from "@/store/person.store";
 import PersonEditModal from "./person_edit_modal.vue";
 import EditButton from '@/components/edit_button';
 import DlPerson from './dl_person.vue';
+import personSessionMixin from '@/auth/person_session.mixin';
 
 export default {
   name: "PersonDemographics",
@@ -112,7 +83,8 @@ export default {
     }
   }),
   mixins: [
-    modelMixinNoProp
+    modelMixinNoProp,
+    personSessionMixin
   ],
   computed: {
     demoFields() {
@@ -120,6 +92,10 @@ export default {
     },
     communityFields() {
       return Object.keys(this.communityData);
+    },
+    canEditInfo() {
+      // TODO use sensitive data permission in the future
+      return this.currentUserIsAdmin || this.currentUser.id === this.selected.id;
     }
   }
 };
