@@ -2,13 +2,11 @@
   <section>
     <div class="d-flex flex-row mt-3">
       <div class="w-50 mr-2">
-        <!-- TODO change edit permissions to sensitive data tickybox -->
-        <h5>Demographics <edit-button v-b-modal.person-demo-modal v-if="currentUserIsAdmin"></edit-button></h5>
+        <h5>Demographics <edit-button v-b-modal.person-demo-modal v-if="canEditInfo"></edit-button></h5>
         <dl-person :fields="demoFields"></dl-person>
       </div>
       <div class="w-50">
-        <!-- TODO change edit permissions to sensitive data tickybox -->
-        <h5>Community memberships <edit-button v-b-modal.person-community-modal v-if="currentUserIsAdmin"></edit-button></h5>
+        <h5>Community memberships <edit-button v-b-modal.person-community-modal v-if="canEditInfo"></edit-button></h5>
         <dl-person :fields="communityFields"></dl-person>
       </div>
     </div>
@@ -94,6 +92,10 @@ export default {
     },
     communityFields() {
       return Object.keys(this.communityData);
+    },
+    canEditInfo() {
+      // TODO use sensitive data permission in the future
+      return this.currentUserIsAdmin || this.currentUser.id === this.selected.id;
     }
   }
 };

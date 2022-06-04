@@ -66,8 +66,8 @@
       <template #default="{fields}">
         <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
           <!-- TODO change edit permissions to sensitive data tickybox -->
-          <b-form-textarea v-if="currentUserIsAdmin" v-model="fields.do_not_assign_with"></b-form-textarea>
-          <b-form-textarea v-if="!currentUserIsAdmin" disabled value="Restricted"></b-form-textarea>
+          <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.do_not_assign_with"></b-form-textarea>
+          <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
         </b-form-group>
 
         <b-form-group label="Permission to be included in a livestreamed program">
@@ -313,6 +313,10 @@ export default {
         label: "Yes, except for items focused on the topics listed below.",
         value: "maybe"};
     },
+    canEditSensitiveInfo() {
+      // TODO in the future use the sensitive data permission instead of the admin setting
+      return this.currentUserIsAdmin || this.currentUser.id === this.selected.id;
+    }
   },
 }
 </script>
