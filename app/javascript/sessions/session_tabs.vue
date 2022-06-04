@@ -93,7 +93,7 @@ export default {
       this.session = arg
     },
     back() {
-      history.back()
+      this.$router.push('/sessions')
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
       // console.debug("****** tab action", newTab, oldTab, bvEvent)
