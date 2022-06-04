@@ -41,7 +41,7 @@
             :person_id="person.id"
           ></session-ranker>
         </b-tab>
-        <b-tab title="Admin" disabled lazy>
+        <b-tab title="Admin" disabled lazy v-if="currentUserIsAdmin">
         </b-tab>
         <b-tab title="Surveys" disabled lazy>
         </b-tab>
