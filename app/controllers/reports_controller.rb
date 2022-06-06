@@ -1,5 +1,56 @@
 class ReportsController < ApplicationController
 
+  #
+  # Name
+  # Published Name (i.e. Pseudonym)
+  # Email
+  # Attendance Type (Attending In-Person, Virtual or Hybrid)
+  # Participant Status (Applied, Vetted, .....)
+  # Program Participant Survey "Created At" field
+  #
+  def people_and_submissions
+    authorize SessionAssignment, policy_class: ReportsPolicy
+
+    people = Person.includes(
+      {submissions: :survey},
+      :primary_email
+    ).references(
+      :submissions
+    ).order("people.name")
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("People and Submissions")
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Pub Name',
+        'Primary Email',
+        'Attendance Type',
+        'Participant Status',
+        "Survey's Taken"
+      ]
+    )
+
+    # has_many :submissions
+    people.each do |person|
+      worksheet.append_row(
+        [
+          person.name,
+          person.published_name,
+          person.primary_email&.email,
+          person.attendance_type,
+          person.con_state,
+          person.submissions.collect{ |s| "#{s.survey.name}: #{s.created_at}" }.join(";\n")
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "PeopleAndSubmissions_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   # Sessions that are assigned - this should only return if at least one of the three below assigned status have anyone assigned to it
   #
   #     Area(s)
