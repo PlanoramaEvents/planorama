@@ -17,6 +17,9 @@
       <li>
         <a href="/report/sessions_with_participants" target="_blank">Sessions with Participants</a>
       </li>
+      <li>
+        <a href="/report/people_and_submissions" target="_blank">People and Survey Submissions</a>
+      </li>      
     </ul>
 
   </div>
