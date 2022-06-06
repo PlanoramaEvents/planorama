@@ -1,4 +1,8 @@
 class ReportsPolicy < ApplicationPolicy
+  def people_and_submissions?
+    allowed?(action: :people_and_submissions)
+  end
+
   def participant_selections?
     allowed?(action: :participant_selections)
   end
