@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   get 'report/participant_availabilities', to: 'reports#participant_availabilities'
   get 'report/assigned_sessions_by_participant', to: 'reports#assigned_sessions_by_participant'
   get 'report/sessions_with_participants', to: 'reports#sessions_with_participants'
-  get 'report/people_and_submissions', to: 'reports#people_and_submissions'  
+  get 'report/people_and_submissions', to: 'reports#people_and_submissions'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
@@ -112,6 +112,8 @@ Rails.application.routes.draw do
   end
   # need id of person expressing interest
   get 'session/:id/express_interest(/:person_id)', to: 'sessions#express_interest'
+  get 'session/:session_id/assigned_rooms', to: 'sessions#assigned_rooms'
+
   resources :published_sessions, path: 'published_session'
 
   resources :session_assignments, path: 'session_assignment'

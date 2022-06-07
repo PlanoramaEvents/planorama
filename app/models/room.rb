@@ -7,7 +7,8 @@ class Room < ApplicationRecord
   belongs_to :venue, optional: true
   belongs_to :room_set, optional: true
 
-  has_many :sessions
+  # has_many :sessions
+  has_and_belongs_to_many :assigned_sessions, class_name: 'Session'
   has_many :published_sessions
 
   # TODO: need to add start and end availbilty time

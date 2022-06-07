@@ -10,7 +10,7 @@ class SessionSerializer
              :open_for_interest, :instructions_for_interest,
              :require_signup, :waiting_list_size,
              :updated_by, :interest_opened_by, :interest_opened_at,
-             :room_id, :proofed
+             :proofed
 
   # tag_list
   attribute :tag_list do |session|
@@ -37,6 +37,16 @@ class SessionSerializer
   attribute :has_conflicts do |session|
     session.availability_conflicts.count > 0
   end
+
+  has_many :assigned_rooms, serializer: RoomSerializer,
+            links: {
+              self: -> (object, params) {
+                "#{params[:domain]}/session/#{object.id}"
+              },
+              related: -> (object, params) {
+                "#{params[:domain]}/session/#{object.id}/assigned_rooms"
+              }
+            }
 
   has_many :session_areas, serializer: SessionAreaSerializer,
           links: {
@@ -67,17 +77,6 @@ class SessionSerializer
             },
             related: -> (object, params) {
               "#{params[:domain]}/format/#{object.format.id}"
-            }
-          }
-
-  has_one :room,
-          if: Proc.new { |record| record.room },
-          links: {
-            self: -> (object, params) {
-              "#{params[:domain]}/session/#{object.id}"
-            },
-            related: -> (object, params) {
-              "#{params[:domain]}/room/#{object.room.id}"
             }
           }
 end

@@ -9,8 +9,6 @@ class Session < ApplicationRecord
   belongs_to :format, required: false
   has_one :published_session, dependent: :destroy
 
-  belongs_to :room, required: false
-
   before_save :keep_who_did_it, :keep_interest_trail
 
   has_many :availability_conflicts, class_name: 'Conflicts::AvailabilityConflict'
@@ -54,6 +52,20 @@ class Session < ApplicationRecord
   acts_as_taggable_on :tags
 
   # TODO: need to add required setup (allowed to be null)
+
+  # TODO
+  # - change so that there can be multiple rooms in a session (many to many)
+
+  # TODO: Add
+  # - Status (Draft, Reviewed, Revised, Dropped)
+  # - room set(up) (link to a room set)
+  # - environment
+  # - age restrictions (many to one)
+  # - minor participation (many to many)
+  # - services (many to many) [need ref table]
+  # - tech hotel notes
+
+  has_and_belongs_to_many :assigned_rooms, class_name: 'Room'
 
   def published?
     !published_session.nil?

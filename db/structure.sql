@@ -1090,6 +1090,16 @@ CREATE TABLE public.rooms (
 
 
 --
+-- Name: rooms_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rooms_sessions (
+    room_id uuid,
+    session_id uuid
+);
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2212,6 +2222,27 @@ CREATE INDEX index_rooms_on_room_set_id ON public.rooms USING btree (room_set_id
 
 
 --
+-- Name: index_rooms_sessions_on_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rooms_sessions_on_room_id ON public.rooms_sessions USING btree (room_id);
+
+
+--
+-- Name: index_rooms_sessions_on_room_id_and_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rooms_sessions_on_room_id_and_session_id ON public.rooms_sessions USING btree (room_id, session_id);
+
+
+--
+-- Name: index_rooms_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rooms_sessions_on_session_id ON public.rooms_sessions USING btree (session_id);
+
+
+--
 -- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2609,6 +2640,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220524195624'),
 ('20220527143522'),
 ('20220528145537'),
-('20220531011606');
+('20220531011606'),
+('20220607202907'),
+('20220607203240');
 
 

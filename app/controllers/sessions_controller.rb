@@ -138,27 +138,58 @@ class SessionsController < ResourceController
            content_type: 'application/json'
   end
 
+  # For now mailed and assigned are the same, at some point they will not be
+  def assigned_rooms
+    authorize current_person, policy_class: policy_class
+
+    do_paginate = false
+    session = Session.find params[:session_id]
+
+    @per_page, @current_page, @filters = collection_params(do_paginate: do_paginate)
+
+    collection = if do_paginate
+                   session.assigned_rooms.page(@current_page).per(@per_page)
+                 else
+                   session.assigned_rooms
+                 end
+
+    meta = {}
+    meta[:total] = collection_total if do_paginate
+    meta[:current_page] = @current_page if @current_page.present? && do_paginate
+    meta[:perPage] = @per_page if @per_page.present? && do_paginate
+
+    render json: RoomSerializer.new(collection,
+                  {
+                    meta: meta,
+                    include: [],
+                    params: {
+                      domain: "#{request.base_url}"
+                    }
+                  }
+                ).serializable_hash(),
+           content_type: 'application/json'
+  end
+
   def serializer_includes
     [
       :format,
-      :room,
       :session_areas,
-      :'session_areas.area'
+      :'session_areas.area',
+      :assigned_rooms
     ]
   end
 
   def includes
     [
       :format,
-      :room,
       :base_tags,
+      :assigned_rooms
     ]
   end
 
   def references
     [
-      :format,
-      :room,
+      :format
     ]
   end
 

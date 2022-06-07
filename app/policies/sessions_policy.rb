@@ -9,6 +9,10 @@ class SessionsPolicy < PlannerPolicy
     allowed?(action: :express_interest)
   end
 
+  def assigned_rooms?
+    allowed?(action: :assigned_rooms)
+  end
+
   # def index?
   #   # @person.convention_roles.inject(false) { |res, grp| res || (grp.admin? || grp.staff? || grp.participant?) }
   #   allowed?(action: :index)
