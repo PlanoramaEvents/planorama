@@ -132,7 +132,7 @@ export default {
             "op": "any",
             "queries":[
               ["start_time", "is null"],
-              ["room_id", "is null"]
+              ["assigned_rooms.room_id", "is null"]
             ]
           },
           ["duration", ">", "0"]

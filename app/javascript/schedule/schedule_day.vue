@@ -56,6 +56,7 @@ import dateTimeMixin from '../components/date_time.mixin'
 import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
 import tableMixin from '../store/table.mixin';
+import sessionMixin from '../sessions/session.mixin'
 
 const { DateTime } = require("luxon");
 
@@ -67,7 +68,8 @@ export default {
   mixins: [
     dateTimeMixin,
     modelUtilsMixin,
-    tableMixin
+    tableMixin,
+    sessionMixin
   ],
   props: {
     startTime: {
@@ -131,18 +133,20 @@ export default {
               display_start_time = end_time.startOf('day')
             }
           }
-          let new_event = {
-            start: display_start_time.toFormat('yyyy-MM-dd HH:mm'),
-            end: display_end_time.toFormat('yyyy-MM-dd HH:mm'),
-            title: session.title,
-            split: session.room_id,
-            id: session.id,
-            duration_mins: session.duration_mins,
-            actual_start: start_time,
-            actual_end: end_time,
-            has_conflicts: session.has_conflicts
+          for (const room of Object.values(session.assigned_rooms)) {
+            let new_event = {
+              start: display_start_time.toFormat('yyyy-MM-dd HH:mm'),
+              end: display_end_time.toFormat('yyyy-MM-dd HH:mm'),
+              title: session.title,
+              split: room.id, // TODO
+              id: session.id,
+              duration_mins: session.duration_mins,
+              actual_start: start_time,
+              actual_end: end_time,
+              has_conflicts: session.has_conflicts
+            }
+            res.push(new_event)
           }
-          res.push(new_event)
         }
       }
       return res
@@ -194,8 +198,8 @@ export default {
     updateSession(id, start_time, room_id) {
       let session = this.get_model(sessionModel, id)
       session.start_time = start_time ? this.uiDateToTZDate(start_time) : null
-      session.room_id = room_id
-      this.save_model(sessionModel, session).then(
+      // TODO: modify when we have multi-room sessions (maintain list)
+      this.saveSession(session, false, [room_id]).then(
         () => {
           this.$emit("schedule-changed");
         }

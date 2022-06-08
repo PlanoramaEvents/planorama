@@ -30,6 +30,10 @@ class SessionSerializer
     session.session_areas
   end
 
+  attribute :assigned_rooms_attributes do |session|
+    session.assigned_rooms
+  end
+
   attribute :end_time do |session|
     session.start_time ? session.start_time + session.duration.minutes : nil
   end

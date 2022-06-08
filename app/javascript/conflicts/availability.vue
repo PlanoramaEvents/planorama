@@ -7,7 +7,7 @@
       >
         <strong>{{conflict.title}}</strong>
         <div>
-          {{conflict.room.name}},
+          {{ Object.values(conflict.assigned_rooms).map(r => r.name).join(',')}},
           {{ formatLocaleDate(conflict.start_time )}}
         </div>
         <div><em>Outside the availability for:</em></div>

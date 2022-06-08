@@ -15,11 +15,26 @@ export const sessionMixin = {
     }
   },
   methods: {
-    saveSession(newSession, success_text = SESSION_SAVE_SUCCESS, error_text = SESSION_SAVE_ERROR) {
+    saveSession(newSession, selected = true, room_ids = null, success_text = SESSION_SAVE_SUCCESS, error_text = SESSION_SAVE_ERROR) {
       if (!newSession) {
         newSession = this.session;
       }
-      return this.toastPromise(this.$store.dispatch(SAVE, {model, selected: true, item: newSession}), success_text, error_text)
+      if (room_ids) {
+        let existingRooms = Object.values(newSession.assigned_rooms)
+        let newRooms = room_ids
+        let roomsForSaving = []
+
+        for (let room of newRooms) {
+          if (room) roomsForSaving.push({id: room})
+        }
+        for (let room of existingRooms) {
+          if (!newRooms.includes(room.id)) {
+            roomsForSaving.push({id: room.id, _destroy: 1})
+          }
+        }
+        newSession.assigned_rooms_attributes = roomsForSaving
+      }
+      return this.toastPromise(this.$store.dispatch(SAVE, {model, selected: selected, item: newSession}), success_text, error_text)
     },
     selectSession(itemOrId) {
       this.$store.commit(SELECT, {model, itemOrId});

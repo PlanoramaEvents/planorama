@@ -189,7 +189,8 @@ class SessionsController < ResourceController
 
   def references
     [
-      :format
+      :format,
+      :assigned_rooms
     ]
   end
 
@@ -274,15 +275,36 @@ class SessionsController < ResourceController
       start_time
       visibility
       publish
-      room_id
       open_for_interest
       instructions_for_interest
       tag_list
       session_areas_attributes
       proofed
+    ] << [
+      assigned_rooms_attributes: %i[
+        id
+        _destroy
+      ]
     ]
     # Tags
     # format
-    # areas
+  end
+
+  def after_save
+    update_rooms
+  end
+
+  def after_update
+    update_rooms
+  end
+
+  def update_rooms
+    p = params.require(:data).permit! #.permit(:assigned_rooms_attributes) #.permit(:assigned_rooms_attributes)
+    candidates = p[:attributes][:assigned_rooms_attributes]
+    rooms_to_add = Room.find(candidates.select{|c| !c[:_destroy] }.collect{|c| c[:id]}) - @object.assigned_rooms
+    rooms_to_remove = Room.find(candidates.select{|c| c[:_destroy] }.collect{|c| c[:id]})
+
+    @object.assigned_rooms << rooms_to_add
+    @object.assigned_rooms.delete rooms_to_remove
   end
 end
