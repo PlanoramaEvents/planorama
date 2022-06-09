@@ -100,12 +100,12 @@ export default {
       required: true
     },
     start_time: {
-      type: DateTime,
+      //type: DateTime,
       // default: null
       required: true
     },
     end_time: {
-      type: DateTime,
+      //type: DateTime,
       required: true
     },
     timezone: {

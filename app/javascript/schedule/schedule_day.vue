@@ -17,26 +17,29 @@
     ref="dayRoomGrid"
     :events="events"
     @event-drop="onEventDrop"
-    @event-mouse-enter="onEventEnter"
-    @event-mouse-leave="onEventLeave"
     :on-event-click="onEventClick"
   >
-    <!-- TODO: change colour or something if selected ... class? -->
     <template v-slot:title="{ title, view }">
       {{ formatDate(view.selectedDate, { weekday: 'long' }) }},
       {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
     </template>
     <template v-slot:event="{ event, view }">
-      <div class="d-flex flex-column">
-        <div class="d-flex flex-row p-1 justify-content-between">
-          <small class="event-time" v-if="event.actual_start && event.actual_end">
-            {{ formatDatetime(event.actual_start) }} - {{ formatDatetime(event.actual_end) }}
+      <div
+        class="d-flex flex-column"
+        style="height: 100%;"
+        v-bind:class="{ 'selected-event': (selected && (selected.id == event.id)), 'event-with-conflicts': (event.has_conflicts && !(selected && (selected.id == event.id))) }"
+      >
+        <div v-b-popover.hover="hoverText(event)" :title="event.title" >
+          <div class="d-flex flex-row p-1 justify-content-between">
+            <small class="event-time" v-if="event.actual_start && event.actual_end">
+              {{ formatDatetime(event.actual_start) }} - {{ formatDatetime(event.actual_end) }}
+            </small>
+            <b-icon-x @click="onDelete($event, event)"></b-icon-x>
+          </div>
+          <small>
+            {{event.title}}
           </small>
-          <b-icon-x @click="onDelete(event)"></b-icon-x>
         </div>
-        <small>
-          {{event.title}}
-        </small>
       </div>
     </template>
   </vue-cal>
@@ -101,16 +104,28 @@ export default {
         let start_time = DateTime.fromISO(session.start_time).setZone(this.timezone)
         let end_time = DateTime.fromISO(session.end_time).setZone(this.timezone)
         // check it is for the right day
-        if ((start_time.toFormat('yyyy-MM-dd') == this.selectedDate) || (end_time.toFormat('yyyy-MM-dd') == this.selectedDate)) {
+        if (
+          ((start_time.toFormat('yyyy-MM-dd') == this.selectedDate) || (end_time.toFormat('yyyy-MM-dd') == this.selectedDate))
+          ||
+          ((start_time.startOf('day') < DateTime.fromISO(this.selectedDate).startOf('day')) && (end_time.startOf('day') > DateTime.fromISO(this.selectedDate).startOf('day')))
+        ) {
           // We need to fudge the end or start time, otherwise the session is no draggable if either is
           // outside the limits for the day So we aslo keep the display start and end for the UI...
           let display_end_time = end_time
           let display_start_time = start_time
           if (end_time.toFormat('yyyy-MM-dd') != this.selectedDate) {
-            display_end_time = start_time.endOf('day')
+            if (end_time.startOf('day') > DateTime.fromISO(this.selectedDate).startOf('day')) {
+              display_end_time = DateTime.fromISO(this.selectedDate).endOf('day')
+            } else {
+              display_end_time = start_time.endOf('day')
+            }
           }
           if (start_time.toFormat('yyyy-MM-dd') != this.selectedDate) {
-            display_start_time = end_time.startOf('day')
+            if (start_time.startOf('day') < DateTime.fromISO(this.selectedDate).startOf('day')) {
+              display_start_time = DateTime.fromISO(this.selectedDate).startOf('day')
+            } else {
+              display_start_time = end_time.startOf('day')
+            }
           }
           let new_event = {
             start: display_start_time.toFormat('yyyy-MM-dd HH:mm'),
@@ -120,7 +135,8 @@ export default {
             id: session.id,
             duration_mins: session.duration_mins,
             actual_start: start_time,
-            actual_end: end_time
+            actual_end: end_time,
+            has_conflicts: session.has_conflicts
           }
           res.push(new_event)
         }
@@ -147,23 +163,25 @@ export default {
     },
   },
   methods: {
+    hoverText(ev) {
+      if (ev.actual_start && ev.actual_end) {
+        return this.formatDatetime(ev.actual_start) + ' - ' + this.formatDatetime(ev.actual_end)
+      } else {
+        return ''
+      }
+    },
     onEventClick(event, e) {
       e.stopPropagation()
-      this.select(event.id)
-    },
-    // Enter and leave to
-    onEventEnter(e) {
-      // console.debug("******* SESSION Entered", e)
-      // e.stopPropagation()
-    },
-    onEventLeave(e) {
-      // console.debug("******* SESSION Leave", e)
-      // e.stopPropagation()
+      if (event.split) {
+        this.select(event.id)
+      }
     },
     onEventDrop ({ event, originalEvent, external }) {
       this.updateSession(event.id, event.start, event.split)
     },
-    onDelete(ev) {
+    onDelete(event, ev) {
+      event.stopPropagation()
+      this.unselect()
       this.updateSession(ev.id, null, null)
     },
     scrollBarElement: function() {
@@ -179,12 +197,29 @@ export default {
         }
       )
     }
+  },
+  mounted() {
+    this.unselect();
   }
 }
 </script>
 
 <style lang="scss">
 @import '../stylesheets/style.scss';
+
+.selected-event {
+  background-color: $color-secondary-2-2;
+}
+
+.event-with-conflicts {
+  // background: repeating-linear-gradient(
+  //   45deg,
+  //   $color-secondary-2-1,
+  //   $color-secondary-2-1 10px,
+  //   $color-complement-1 10px,
+  //   $color-complement-1 20px
+  // )
+}
 
 .vuecal {
   height: unset;

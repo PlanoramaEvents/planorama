@@ -1,55 +1,54 @@
 <template>
   <div>
-    <b-button variant="link" @click="back">Back</b-button>
-    <person-summary v-if="person"
-      v-model="person"
-    ></person-summary>
-    <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
-      <b-tab title="General" :active="!tab" lazy>
-        <person-details
-          v-model="person"
-          :model="personModel"
-        ></person-details>
-      </b-tab>
-      <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
-        <person-demographics :selected="person"></person-demographics>
-      </b-tab>
-      <!-- Can not make this lazy otherwise we have lock issues with the notes -->
-      <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
-        <availability-and-interests
-          v-model="person"
-          @input="onPersonUpdate"
-          :start_time="start_time"
-          :end_time="end_time"
-          :timezone="timezone"
-          class="mb-5"
-        ></availability-and-interests>
-      </b-tab>
-      <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
-        <session-selector
-          v-model="person"
-          defaultSortBy='sessions.title'
-          :model="sessionModel"
-          defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
-        ></session-selector>
-      </b-tab>
-      <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
-        <session-ranker
-          defaultSortBy='interest_ranking,session_assignments.updated_at'
-          :defaultSortDesc="true"
-          :perPage="null"
-          :model="sessionAssignmentModel"
-          :defaultFilter="rankedFilter"
-          :person_id="person.id"
-        ></session-ranker>
-      </b-tab>
-      <b-tab title="Admin" disabled lazy>
-      </b-tab>
-      <b-tab title="Surveys" disabled lazy>
-      </b-tab>
-      <b-tab title="Emails" disabled lazy>
-      </b-tab>
-    </b-tabs>
+    <model-loading-overlay :model="personModel">
+      <b-button variant="link" @click="back">Back</b-button>
+        <person-summary></person-summary>
+      <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
+        <b-tab title="General" :active="!tab" lazy>
+          <person-details></person-details>
+        </b-tab>
+        <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
+          <person-demographics></person-demographics>
+        </b-tab>
+        <!-- Can not make this lazy otherwise we have lock issues with the notes -->
+        <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
+          <availability-and-interests
+            v-if="person"
+            v-model="person"
+            :start_time="start_time"
+            :end_time="end_time"
+            :timezone="timezone"
+            class="mb-5"
+          ></availability-and-interests>
+        </b-tab>
+        <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
+          <session-selector
+            v-if="person"
+            v-model="person"
+            defaultSortBy='sessions.title'
+            :model="sessionModel"
+            defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
+          ></session-selector>
+        </b-tab>
+        <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
+          <session-ranker
+            v-if="person"
+            defaultSortBy='interest_ranking,session_assignments.updated_at'
+            :defaultSortDesc="true"
+            :perPage="null"
+            :model="sessionAssignmentModel"
+            :defaultFilter="rankedFilter"
+            :person_id="person.id"
+          ></session-ranker>
+        </b-tab>
+        <b-tab title="Admin" disabled lazy v-if="currentUserIsAdmin">
+        </b-tab>
+        <b-tab title="Surveys" disabled lazy>
+        </b-tab>
+        <b-tab title="Emails" disabled lazy>
+        </b-tab>
+      </b-tabs>
+    </model-loading-overlay>
   </div>
 </template>
 
@@ -60,6 +59,7 @@ import AvailabilityAndInterests from '../profile/availability_and_interests.vue'
 import PersonDetails from '../profile/person_details.vue'
 import PersonSummary from '../profile/person_summary.vue';
 import PersonDemographics from '../profile/person_demographics.vue';
+import ModelLoadingOverlay from '@/components/model_loading_overlay.vue';
 
 import { personModel } from '@/store/person.store'
 import { sessionModel } from '@/store/session.store'
@@ -82,7 +82,8 @@ export default {
     SessionRanker,
     AvailabilityAndInterests,
     PersonDetails,
-    PersonDemographics
+    PersonDemographics,
+    ModelLoadingOverlay
   },
   mixins: [
     personSessionMixin,
@@ -93,9 +94,11 @@ export default {
     personModel,
     sessionModel,
     sessionAssignmentModel,
-    person: null,
   }),
   computed: {
+    person() {
+      return this.selected_model(personModel);
+    },
     start_time() {
       if (this.currentSettings && this.currentSettings.configs) {
         let st = this.configByName('convention_start_time')
@@ -121,34 +124,35 @@ export default {
     }
   },
   methods: {
-    onPersonUpdate(arg) {
-      this.person = arg
-    },
     back() {
-      this.$router.push('/people');
+      this.$router.push('/people')
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
       let path = '';
+      const pathStart = this.$route.path.split('/')[1];
       switch(newTab) {
         case 0:
-          path = `edit/${this.person.id}`;
+          path = pathStart === 'people' ? 'edit' : '';
           break;
         case 1:
-          path = `other/${this.person.id}`;
+          path = `other`;
           break;
         case 2:
-          path = `availability/${this.person.id}`;
+          path = `availability`;
           break;
         case 3:
-          path = `session-selection/${this.person.id}`;
+          path = `session-selection`;
           break;
         case 4:
-          path = `session-ranking/${this.person.id}`;
+          path = `session-ranking`;
           break;
       }
       // change the router path to match the current tab
       // so that reloads work right
-      this.$router.push(`/people/${path}`).catch(error => {
+      if(pathStart === 'people') {
+        path += `/${this.person.id}`
+      }
+      this.$router.push(`/${pathStart}/${path}`).catch(error => {
         if(!isNavigationFailure(error, NavigationFailureType.duplicated)) {
           // ignore the duplicates, otherwise -
           throw error;
@@ -157,14 +161,30 @@ export default {
     }
   },
   mounted() {
-    // get id from URL if present
-    let id = this.id ? this.id : this.currentUser.id
-    this.fetch_model_by_id(personModel, id).then(
-      (obj) => {
-        this.person = obj
+    this.$nextTick(
+      () => {
+        // get id from URL if present
+        let id = this.id || this.currentUser.id;
+        let selectedPerson = this.selected_model(personModel);
+        // don't fetch if already here... todo figure out if we
+        // want to lazy fetch anyhow
+        if (selectedPerson?.id !== id) {
+          // tick
+          this.unselect_model(personModel);
+          this.fetch_model_by_id(personModel, id).then(() =>
+            this.select_model(personModel, id)
+          );
+        }
       }
     )
   },
+  beforeRouteLeave(to, from, next) {
+    if (from.path.match(/.*profile.*/) && to.path === '/people') {
+      // going from profile to people, clear the selection
+      this.unselect_model(personModel)
+    }
+    next();
+  }
 }
 </script>
 

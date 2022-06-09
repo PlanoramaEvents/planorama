@@ -34,6 +34,10 @@ class SessionSerializer
     session.start_time ? session.start_time + session.duration.minutes : nil
   end
 
+  attribute :has_conflicts do |session|
+    session.availability_conflicts.count > 0
+  end
+
   has_many :session_areas, serializer: SessionAreaSerializer,
           links: {
             self: -> (object, params) {
