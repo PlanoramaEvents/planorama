@@ -2,6 +2,7 @@ class Survey::SubmissionsController < ResourceController
   SERIALIZER_CLASS = 'Survey::SubmissionSerializer'.freeze
   MODEL_CLASS = 'Survey::Submission'.freeze
   POLICY_CLASS = 'Survey::SubmissionsPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'Survey::SubmissionsPolicy::Scope'.freeze
   XLS_SERIALIZER_CLASS = 'Survey::SubmissionXlsSerializer'.freeze
   DEFAULT_SORTBY = 'survey_submissions.updated_at'
 
@@ -45,12 +46,15 @@ class Survey::SubmissionsController < ResourceController
 
   def index
     format = params[:format]
-    super unless format == 'xls' || format == 'xlsx'
 
     # If XLS then we do somethng else
-    send_data collection_to_xls,
-      filename: "submissions_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
-      disposition: 'attachment'
+    if (format == 'xls') || (format == 'xlsx')
+      send_data collection_to_xls,
+        filename: "submissions_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+        disposition: 'attachment'
+    else
+      super
+    end
   end
 
   # faster collection to Excel
