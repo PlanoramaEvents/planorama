@@ -187,7 +187,7 @@
         </validation-provider>
       </template>
     </b-form-group>
-    <p v-if="textonly">{{question.question}}</p>
+    <div v-if="textonly" v-html="question.question"></div>
     <hr v-if="hr" />
     <div v-if="socialmedia">
       <span v-html="questionText"></span><mandatory-star :mandatory="question.mandatory"></mandatory-star>
