@@ -65,8 +65,11 @@
       <template #modal-title>Edit Preferences - {{selected.published_name}}</template>
       <template #default="{fields}">
         <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
-          <b-form-textarea v-model="fields.do_not_assign_with"></b-form-textarea>
+          <!-- TODO change edit permissions to sensitive data tickybox -->
+          <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.do_not_assign_with"></b-form-textarea>
+          <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
         </b-form-group>
+
         <b-form-group label="Permission to be included in a livestreamed program">
             <b-form-radio-group
               stacked
@@ -204,6 +207,7 @@ import settingsMixin from "@/store/settings.mixin";
 import { modelMixinNoProp } from '@/store/model.mixin';
 import { personModel as model } from "@/store/person.store";
 import { DateTime } from "luxon";
+import personSessionMixin from '@/auth/person_session.mixin';
 
 export default {
   name: "PersonDetails",
@@ -219,7 +223,8 @@ export default {
   },
   mixins: [
     settingsMixin,
-    modelMixinNoProp
+    modelMixinNoProp,
+    personSessionMixin
   ],
   data: () =>  ({
     disabled: false,
@@ -308,6 +313,10 @@ export default {
         label: "Yes, except for items focused on the topics listed below.",
         value: "maybe"};
     },
+    canEditSensitiveInfo() {
+      // TODO in the future use the sensitive data permission instead of the admin setting
+      return this.currentUserIsAdmin || this.currentUser.id === this.selected.id;
+    }
   },
 }
 </script>

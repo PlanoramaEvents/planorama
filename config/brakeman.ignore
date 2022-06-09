@@ -27,7 +27,7 @@
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `Survey#find`",
       "file": "app/controllers/surveys_controller.rb",
-      "line": 12,
+      "line": 13,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
       "code": "Survey.find(params[:survey_id])",
       "render_path": null,
@@ -67,7 +67,7 @@
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `Survey#find`",
       "file": "app/controllers/surveys_controller.rb",
-      "line": 26,
+      "line": 27,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
       "code": "Survey.find(params[:survey_id])",
       "render_path": null,
@@ -79,8 +79,28 @@
       "user_input": "params[:survey_id]",
       "confidence": "Weak",
       "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "e0a467eb92e491babf6eb1b1cca265d97fe39fe11959adacf2e11dcc148f4d0d",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Survey#find`",
+      "file": "app/controllers/survey/submissions_controller.rb",
+      "line": 65,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Survey.find(params[:survey_id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Survey::SubmissionsController",
+        "method": "collection_to_xls"
+      },
+      "user_input": "params[:survey_id]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2022-05-25 18:17:19 -0400",
+  "updated": "2022-06-09 07:31:36 -0400",
   "brakeman_version": "5.2.3"
 }
