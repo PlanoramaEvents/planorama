@@ -14,6 +14,7 @@
       :timezone="timezone"
       @schedule-changed="onScheduleChanged"
       :model="sessionModel"
+      @show-conflicts="onShowConflicts"
     ></schedule-day>
   </div>
 </template>
@@ -54,6 +55,9 @@ export default {
   methods: {
     onScheduleChanged: function() {
       this.$emit("schedule-changed");
+    },
+    onShowConflicts: function(session_id) {
+      this.$emit("show-conflicts", session_id);
     },
     init: function() {
       // STORE ????

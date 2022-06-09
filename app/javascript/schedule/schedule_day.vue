@@ -31,7 +31,10 @@
       >
         <div v-b-popover.hover="hoverText(event)" :title="event.title" >
           <div class="d-flex flex-row p-1 justify-content-between">
-            <b-iconstack v-if="event.has_conflicts">
+            <!-- NOTE: using mouseup because that is what on-event-click is using and we want this to stop the event click sesson select -->
+            <b-iconstack v-if="event.has_conflicts"
+              @mouseup="conflictsForSession($event, event.id)"
+            >
               <b-icon-exclamation-triangle-fill stacked variant="warning"></b-icon-exclamation-triangle-fill>
               <b-icon-exclamation-triangle stacked ></b-icon-exclamation-triangle>
             </b-iconstack>
@@ -173,6 +176,10 @@ export default {
       } else {
         return ''
       }
+    },
+    conflictsForSession(e, id) {
+      e.stopPropagation()
+      this.$emit("show-conflicts", id);
     },
     onEventClick(event, e) {
       e.stopPropagation()

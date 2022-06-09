@@ -10,12 +10,13 @@
           style="flex: 1 0 auto"
         >
         </schedulable-sessions>
-        <availability
+        <!-- TODO - replace this -->
+        <!-- <availability
           :model="sessionConflictModel"
           :timezone="timezone"
           style="flex: 1 0 auto"
           ref="conflict-reporting"
-        ></availability>
+        ></availability> -->
       </div>
       <div class="col-9">
         <room-selector></room-selector>
@@ -30,6 +31,7 @@
             :model="sessionModel"
             :perPage="2000"
             @schedule-changed="onScheduleChanged"
+            @show-conflicts="onShowConflicts"
             class="mt-1"
           ></schedule-calendar>
         </div>
@@ -49,7 +51,6 @@ import { roomModel, SET_ROOMS_FOR_SCHEDULING } from '../store/room.store.js';
 import { sessionModel } from '@/store/session.store'
 import { sessionConflictModel } from '@/store/session_conflict.store'
 import SessionSidebar from '../sessions/session_sidebar.vue';
-import Availability from '../conflicts/availability.vue'
 
 import { DateTime } from "luxon";
 import { mapActions, mapState, mapGetters } from 'vuex';
@@ -61,8 +62,7 @@ export default {
     ScheduleCalendar,
     SchedulableSessions,
     RoomSelector,
-    SessionSidebar,
-    Availability
+    SessionSidebar
   },
   mixins: [
     modelUtilsMixin,
@@ -151,6 +151,9 @@ export default {
       // update the conflicts
       this.$refs["conflict-reporting"].fetchPaged()
     },
+    onShowConflicts: function(session_id) {
+      console.debug("**** SHOW CONFLICTS FOR", session_id)
+    }
   },
   mounted() {
     this.fetch({model: roomModel}).then((rooms) => {
