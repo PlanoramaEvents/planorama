@@ -41,7 +41,7 @@
             :person_id="person.id"
           ></session-ranker>
         </b-tab>
-        <b-tab title="Admin" disabled lazy>
+        <b-tab title="Admin" disabled lazy v-if="currentUserIsAdmin">
         </b-tab>
         <b-tab title="Surveys" disabled lazy>
         </b-tab>
@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     back() {
-      history.back()
+      this.$router.push('/people')
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
       let path = '';

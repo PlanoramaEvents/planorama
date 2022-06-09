@@ -95,7 +95,7 @@ export default {
       this.session = arg
     },
     back() {
-      this.$router.push('/sessions');
+      this.$router.push('/sessions')
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
       // console.debug("****** tab action", newTab, oldTab, bvEvent)
