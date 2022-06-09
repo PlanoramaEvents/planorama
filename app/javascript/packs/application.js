@@ -37,10 +37,14 @@ import { CustomIconsPlugin } from '../icons';
 import AsyncComputed from 'vue-async-computed';
 import CKEditor from 'ckeditor4-vue';
 import VuePluralize from 'vue-pluralize';
+
 Vue.config.errorHandler = (err, vm, info) => {
   console.error(err);
-  window.alert("Whoops! We messed up! Click ok to reload the page.")
-  window.location.reload();
+  // set up in webpack
+  if(NODE_ENV !== 'development' || (err?.response && err.response?.status !== 422)) {
+    window.alert("Whoops! We messed up! Click ok to reload the page.")
+    window.location.reload();
+  }
 }
 
 Vue.use(BootstrapVue);
