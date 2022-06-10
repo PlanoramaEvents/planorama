@@ -528,6 +528,9 @@ class ReportsController < ApplicationController
       ]
     )
 
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    invisible = SessionAssignmentRoleType.find_by(name: 'Invisible')
     people.each do |person|
       person.session_assignments.each do |sa|
         worksheet.append_row(
@@ -536,7 +539,7 @@ class ReportsController < ApplicationController
             person.published_name,
             sa.session.title,
             person.area_list.join('; '),
-            sa.session.session_assignments.collect{|s| s.person.published_name}.join('; '),
+            sa.session.session_assignments.select{|a| [participant.id, moderator.id, invisible.id].include?(a.session_assignment_role_type_id)}.collect{|s| s.person.published_name}.join('; '),
             person.do_not_assign_with
           ]
         )
