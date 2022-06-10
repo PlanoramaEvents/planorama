@@ -49,7 +49,10 @@ Rails.application.routes.draw do
   get 'report/participant_availabilities', to: 'reports#participant_availabilities'
   get 'report/assigned_sessions_by_participant', to: 'reports#assigned_sessions_by_participant'
   get 'report/sessions_with_participants', to: 'reports#sessions_with_participants'
+  get 'report/schedule_by_person', to: 'reports#schedule_by_person'
+  get 'report/schedule_by_room_then_time', to: 'reports#schedule_by_room_then_time'
   get 'report/people_and_submissions', to: 'reports#people_and_submissions'
+  get 'report/participant_do_not_assign_with', to: 'reports#participant_do_not_assign_with'
 
   get 'report/session_reports/panels_with_too_few_people', to: 'reports/session_reports#panels_with_too_few_people'
   get 'report/session_reports/panels_with_too_many_people', to: 'reports/session_reports#panels_with_too_many_people'
