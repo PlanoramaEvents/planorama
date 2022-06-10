@@ -1129,6 +1129,20 @@ CREATE TABLE public.session_assignment_role_type (
 
 
 --
+-- Name: session_conflicts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.session_conflicts AS
+ SELECT availability_conflicts.session_id,
+    NULL::text AS room_id,
+    availability_conflicts.person_id,
+    availability_conflicts.session_assignment_id,
+    NULL::text AS conflict_session_id,
+    'availability'::text AS conflict_type
+   FROM public.availability_conflicts;
+
+
+--
 -- Name: session_limits; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2609,6 +2623,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220524195624'),
 ('20220527143522'),
 ('20220528145537'),
-('20220531011606');
+('20220531011606'),
+('20220609202747');
 
 
