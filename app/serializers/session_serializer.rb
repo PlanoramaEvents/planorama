@@ -35,7 +35,7 @@ class SessionSerializer
   end
 
   attribute :has_conflicts do |session|
-    session.availability_conflicts.count > 0
+    session.session_conflicts.count > 0
   end
 
   has_many :session_areas, serializer: SessionAreaSerializer,

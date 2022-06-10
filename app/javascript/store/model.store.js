@@ -59,7 +59,6 @@ import { formatStore, formatEndpoints } from './format.store';
 
 import { availabilityStore } from './availability.store';
 
-import { availabilityConflictStore, availabilityConflictEndpoints } from './availability_conflict.store';
 import { sessionConflictStore, sessionConflictEndpoints } from './session_conflict.store';
 
 import { personExclusionStore } from './person_exclusion.store';
@@ -95,7 +94,6 @@ const endpoints = {
   ...parameterNameEndpoints,
   ...configurationEndpoints,
   ...emailAddressEndpoints,
-  ...availabilityConflictEndpoints,
   ...sessionConflictEndpoints,
   ...formatEndpoints,
   // ...availabilityEndpoints,
@@ -133,7 +131,6 @@ export const store = new Vuex.Store({
       ...sessionAssignmentStore.selected,
       ...parameterNameStore.selected,
       ...configurationStore.selected,
-      ...availabilityConflictStore.selected,
       ...sessionConflictStore.selected,
       ...formatStore.selected
     },
@@ -373,6 +370,7 @@ export const store = new Vuex.Store({
     ...availabilityStore.actions,
     ...personExclusionStore.actions,
     ...sessionLimitStore.actions,
-    ...emailAddressStore.actions
+    ...emailAddressStore.actions,
+    ...sessionConflictStore.actions
   }
 })

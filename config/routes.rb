@@ -53,9 +53,9 @@ Rails.application.routes.draw do
   get 'report/schedule_by_room_then_time', to: 'reports#schedule_by_room_then_time'
   get 'report/people_and_submissions', to: 'reports#people_and_submissions'
   get 'report/participant_do_not_assign_with', to: 'reports#participant_do_not_assign_with'
-
   get 'report/session_reports/panels_with_too_few_people', to: 'reports/session_reports#panels_with_too_few_people'
   get 'report/session_reports/panels_with_too_many_people', to: 'reports/session_reports#panels_with_too_many_people'
+
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
@@ -70,9 +70,8 @@ Rails.application.routes.draw do
   get 'agreement/latest', to: 'agreements#latest'
   resources :agreements, path: 'agreement'
 
-  resources :availability_conflicts,  path: 'availability_conflict', controller: 'conflicts/availability_conflicts', only: [:index]
-
   get 'session_conflict', to: 'conflicts/session_conflicts#index'
+  get 'session_conflict/conflicts_for/:session_id', to: 'conflicts/session_conflicts#conflicts_for'
 
   # Surveys and their nested resources
   post 'survey/:survey_id/assign_people', to: 'surveys#assign_people'
