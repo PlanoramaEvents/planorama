@@ -185,10 +185,12 @@ export default {
       e.stopPropagation()
       if (event.split) {
         this.select(event.id)
+        this.$emit("show-conflicts", event.id);
       }
     },
     onEventDrop ({ event, originalEvent, external }) {
       this.updateSession(event.id, event.start, event.split)
+      this.$emit("show-conflicts", event.id);
     },
     onDelete(event, ev) {
       event.stopPropagation()
