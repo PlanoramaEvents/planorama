@@ -25,10 +25,18 @@
       </li>
       <li>
         <a href="/report/people_and_submissions" target="_blank">People and Survey Submissions</a>
-      </li>      
+      </li>
       <li>
         <a href="/report/participant_do_not_assign_with" target="_blank">Participants and Do Not Assign With</a>
       </li>
+
+      <li>
+        <a href="/report/session_reports/panels_with_too_few_people" target="_blank">Panels with too few Participants</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
+      </li>
+
     </ul>
 
   </div>
