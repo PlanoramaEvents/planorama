@@ -35,7 +35,7 @@ class Conflicts::SessionConflictsController < ApplicationController
            content_type: 'application/json'
   end
 
-  def show
+  def conflicts_for
     session_id = params[:session_id]
     collection = Conflicts::SessionConflict.includes([:session,:person,:session_assignment,:room]).where(session_id: session_id).distinct
 

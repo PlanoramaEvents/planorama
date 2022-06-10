@@ -11,12 +11,13 @@
         >
         </schedulable-sessions>
         <!-- TODO - replace this -->
-        <!-- <availability
+        <session-conflicts
           :model="sessionConflictModel"
+          :sessionId="sessionIdForConflict"
           :timezone="timezone"
           style="flex: 1 0 auto"
           ref="conflict-reporting"
-        ></availability> -->
+        ></session-conflicts>
       </div>
       <div class="col-9">
         <room-selector></room-selector>
@@ -51,6 +52,7 @@ import { roomModel, SET_ROOMS_FOR_SCHEDULING } from '../store/room.store.js';
 import { sessionModel } from '@/store/session.store'
 import { sessionConflictModel } from '@/store/session_conflict.store'
 import SessionSidebar from '../sessions/session_sidebar.vue';
+import SessionConflicts from '../conflicts/session_conflicts.vue'
 
 import { DateTime } from "luxon";
 import { mapActions, mapState, mapGetters } from 'vuex';
@@ -62,7 +64,8 @@ export default {
     ScheduleCalendar,
     SchedulableSessions,
     RoomSelector,
-    SessionSidebar
+    SessionSidebar,
+    SessionConflicts
   },
   mixins: [
     modelUtilsMixin,
@@ -71,6 +74,7 @@ export default {
   data: () =>  ({
     sessionModel: sessionModel,
     sessionConflictModel: sessionConflictModel,
+    sessionIdForConflict: null
   }),
   computed: {
     ...mapState({
@@ -149,10 +153,11 @@ export default {
     onScheduleChanged: function() {
       this.$refs["schedulable-sessions"].fetchPaged(false)
       // update the conflicts
-      this.$refs["conflict-reporting"].fetchPaged()
+      // this.$refs["conflict-reporting"].fetchPaged()
     },
     onShowConflicts: function(session_id) {
       console.debug("**** SHOW CONFLICTS FOR", session_id)
+      this.sessionIdForConflict = session_id
     }
   },
   mounted() {

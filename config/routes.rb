@@ -65,7 +65,7 @@ Rails.application.routes.draw do
   resources :agreements, path: 'agreement'
 
   get 'session_conflict', to: 'conflicts/session_conflicts#index'
-  get 'session_conflict/:session_id', to: 'conflicts/session_conflicts#show'
+  get 'session_conflict/conflicts_for/:session_id', to: 'conflicts/session_conflicts#conflicts_for'
 
   # Surveys and their nested resources
   post 'survey/:survey_id/assign_people', to: 'surveys#assign_people'
