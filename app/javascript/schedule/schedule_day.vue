@@ -31,6 +31,13 @@
       >
         <div v-b-popover.hover="hoverText(event)" :title="event.title" >
           <div class="d-flex flex-row p-1 justify-content-between">
+            <!-- NOTE: using mouseup because that is what on-event-click is using and we want this to stop the event click sesson select -->
+            <b-iconstack v-if="event.has_conflicts"
+              @mouseup="conflictsForSession($event, event.id)"
+            >
+              <b-icon-exclamation-triangle-fill stacked variant="warning"></b-icon-exclamation-triangle-fill>
+              <b-icon-exclamation-triangle stacked ></b-icon-exclamation-triangle>
+            </b-iconstack>
             <small class="event-time" v-if="event.actual_start && event.actual_end">
               {{ formatDatetime(event.actual_start) }} - {{ formatDatetime(event.actual_end) }}
             </small>
@@ -170,14 +177,20 @@ export default {
         return ''
       }
     },
+    conflictsForSession(e, id) {
+      e.stopPropagation()
+      this.$emit("show-conflicts", id);
+    },
     onEventClick(event, e) {
       e.stopPropagation()
       if (event.split) {
         this.select(event.id)
+        this.$emit("show-conflicts", event.id);
       }
     },
     onEventDrop ({ event, originalEvent, external }) {
       this.updateSession(event.id, event.start, event.split)
+      this.$emit("show-conflicts", event.id);
     },
     onDelete(event, ev) {
       event.stopPropagation()
@@ -211,15 +224,15 @@ export default {
   background-color: $color-secondary-2-2;
 }
 
-.event-with-conflicts {
-  // background: repeating-linear-gradient(
-  //   45deg,
-  //   $color-secondary-2-1,
-  //   $color-secondary-2-1 10px,
-  //   $color-complement-1 10px,
-  //   $color-complement-1 20px
-  // )
-}
+// .event-with-conflicts {
+//   background: repeating-linear-gradient(
+//     45deg,
+//     $color-secondary-2-1,
+//     $color-secondary-2-1 10px,
+//     $color-complement-1 10px,
+//     $color-complement-1 20px
+//   )
+// }
 
 .vuecal {
   height: unset;

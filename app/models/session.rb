@@ -13,7 +13,7 @@ class Session < ApplicationRecord
 
   before_save :keep_who_did_it, :keep_interest_trail
 
-  has_many :availability_conflicts, class_name: 'Conflicts::AvailabilityConflict'
+  has_many :session_conflicts, class_name: 'Conflicts::SessionConflict'
 
   has_many :session_assignments, dependent: :destroy do
     def role(role)

@@ -44,8 +44,8 @@ export const modelMixinNoProp = {
     saveSelected() {
       return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, item: this.selected}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
     },
-    patchSelected(data) {
-      return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model: this.model, item: {...this.selected, ...data}, fields: Object.keys(data), selected: false}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
+    patchSelected(data, selected = false) {
+      return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model: this.model, item: {...this.selected, ...data}, fields: Object.keys(data), selected}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
     },
     // need a save instance
     save(instance) {

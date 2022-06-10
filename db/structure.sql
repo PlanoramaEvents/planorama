@@ -601,7 +601,8 @@ CREATE TABLE public.sessions (
     instructions_for_interest text,
     updated_by character varying,
     interest_opened_by character varying,
-    interest_opened_at timestamp without time zone
+    interest_opened_at timestamp without time zone,
+    proofed boolean
 );
 
 
@@ -1125,6 +1126,20 @@ CREATE TABLE public.session_assignment_role_type (
     role_type public.assignment_role_enum,
     default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
 );
+
+
+--
+-- Name: session_conflicts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.session_conflicts AS
+ SELECT availability_conflicts.session_id,
+    NULL::text AS room_id,
+    availability_conflicts.person_id,
+    availability_conflicts.session_assignment_id,
+    NULL::text AS conflict_session_id,
+    'availability'::text AS conflict_type
+   FROM public.availability_conflicts;
 
 
 --
@@ -2607,6 +2622,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220512004401'),
 ('20220524195624'),
 ('20220527143522'),
-('20220528145537');
+('20220528145537'),
+('20220531011606'),
+('20220609202747');
 
 

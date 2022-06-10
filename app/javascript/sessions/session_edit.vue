@@ -17,6 +17,19 @@
     </div>
     <div class="row">
       <div class="col-6">
+
+        <b-form-group
+          label="Areas"
+        >
+          <model-select
+            v-model="session_areas"
+            model="area"
+            field="name"
+            :multiple="true"
+            @change="saveSession()"
+          ></model-select>
+        </b-form-group>
+        <!--
         <b-form-group
           label="Tags"
         >
@@ -30,16 +43,19 @@
             disabled
           ></model-tags>
         </b-form-group>
-
+        -->
+      </div>
+      <div class="col-6">
         <b-form-group
-          label="Areas"
+          label="Format"
         >
           <model-select
-            v-model="session_areas"
-            model="area"
+            v-model="session.format_id"
+            model="format"
             field="name"
-            :multiple="true"
+            :multiple="false"
             @change="saveSession()"
+            :selectSize="4"
           ></model-select>
         </b-form-group>
       </div>

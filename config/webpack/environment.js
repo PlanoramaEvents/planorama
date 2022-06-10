@@ -11,6 +11,12 @@ environment.loaders.prepend('erb', erb)
 
 var path = require('path');
 
+environment.plugins.prepend('env',
+  new webpack.DefinePlugin({
+    'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  })
+)
+
 // added and allow BootstrapVue to work.
 const config = environment.toWebpackConfig()
 config.resolve = {

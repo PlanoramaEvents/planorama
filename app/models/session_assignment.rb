@@ -26,6 +26,8 @@ class SessionAssignment < ApplicationRecord
   belongs_to  :session
   belongs_to  :session_assignment_role_type, required: false
   has_one     :published_session_assignment # TODO: cascade delete?
+  has_one :room, through: :session
+  has_many :areas, through: :session
 
   validate :check_unique
 
