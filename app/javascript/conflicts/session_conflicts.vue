@@ -8,7 +8,7 @@
         v-for="conflict in conflicts" :key="conflict.id"
       >
         <div>
-          <router-link :to="'/people/edit/' + conflict.person.id">{{conflict.person.published_name}}</router-link>
+          <router-link :to="'/people/availability/' + conflict.person.id">{{conflict.person.published_name}}</router-link>
           {{conflict_type_string(conflict.conflict_type)}}
         </div>
       </div>
