@@ -1,14 +1,14 @@
 <template>
   <div class="session-conflicts">
     <div class="session-conflicts-list" v-if="conflicts.length > 0">
-      <strong>X {{conflicts[0].session.title}}</strong>
+      <strong>{{conflicts[0].session.title}}</strong><br />
       {{ formatLocaleDate(conflicts[0].session.start_time )}}
       <div
         class="session-conflict mb-1"
         v-for="conflict in conflicts" :key="conflict.id"
       >
         <div>
-          {{conflict.person.published_name}}
+          <router-link :to="'/people/availability/' + conflict.person.id">{{conflict.person.published_name}}</router-link>
           {{conflict_type_string(conflict.conflict_type)}}
         </div>
       </div>
@@ -65,7 +65,7 @@ export default {
 
 <style lang="scss">
 .session-conflicts-list {
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 300px;
 }
 
