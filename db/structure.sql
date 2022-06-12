@@ -1049,21 +1049,6 @@ CREATE TABLE public.published_sessions (
 
 
 --
--- Name: room_sets; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.room_sets (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    name character varying,
-    description character varying,
-    sort_order integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    lock_version integer DEFAULT 0
-);
-
-
---
 -- Name: rooms; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1086,6 +1071,55 @@ CREATE TABLE public.rooms (
     length numeric,
     width numeric,
     height numeric
+);
+
+
+--
+-- Name: room_allocations; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.room_allocations AS
+ SELECT s.room_id,
+    s.start_time,
+    (s.start_time + ((s.duration || ' minute'::text))::interval) AS end_time,
+    s.id AS session_id
+   FROM (public.sessions s
+     JOIN public.rooms r ON (((r.id = s.room_id) AND (s.start_time IS NOT NULL))));
+
+
+--
+-- Name: room_conflicts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.room_conflicts AS
+ SELECT b1.room_id,
+    b1.session_id,
+    b1.start_time,
+    b1.end_time,
+    b2.session_id AS conflicting_session_id,
+    b2.start_time AS conflicting_session_start_time,
+    b2.end_time AS conflicting_session_end_time,
+        CASE
+            WHEN ((b1.start_time = b2.end_time) OR (b2.start_time = b1.end_time)) THEN true
+            ELSE false
+        END AS "case"
+   FROM (public.room_allocations b1
+     JOIN public.room_allocations b2 ON (((b1.room_id = b2.room_id) AND (b1.session_id <> b2.session_id) AND ((b1.start_time > b2.start_time) AND (b1.start_time <= b2.end_time)))))
+  ORDER BY b1.room_id, b1.start_time;
+
+
+--
+-- Name: room_sets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.room_sets (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    description character varying,
+    sort_order integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -2624,6 +2658,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220527143522'),
 ('20220528145537'),
 ('20220531011606'),
-('20220609202747');
+('20220609202747'),
+('20220612134513'),
+('20220612135253');
 
 
