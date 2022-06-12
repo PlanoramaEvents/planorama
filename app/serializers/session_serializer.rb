@@ -10,7 +10,7 @@ class SessionSerializer
              :open_for_interest, :instructions_for_interest,
              :require_signup, :waiting_list_size,
              :updated_by, :interest_opened_by, :interest_opened_at,
-             :room_id, :proofed
+             :room_id, :proofed, :format_id
 
   # tag_list
   attribute :tag_list do |session|

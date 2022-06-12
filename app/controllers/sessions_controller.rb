@@ -249,6 +249,7 @@ class SessionsController < ResourceController
       tag_list
       session_areas_attributes
       proofed
+      format_id
     ]
     # Tags
     # format
