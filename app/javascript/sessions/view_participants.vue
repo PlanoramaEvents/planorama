@@ -3,7 +3,7 @@
     <view-participant-type :session="session" sessionRoleName="Moderator"></view-participant-type>
     <view-participant-type :session="session" sessionRoleName="Participant"></view-participant-type>
     <view-participant-type :session="session" sessionRoleName="Invisible" sessionRoleLabel="Invisible Participant"></view-participant-type>
-    <view-participant-type :session="session" sessionRoleName="Reserve"></view-participant-type>
+    <view-participant-type :session="session" sessionRoleName="Reserve" sessionRoleLabel="Reserved"></view-participant-type>
   </div>
 </template>
 
