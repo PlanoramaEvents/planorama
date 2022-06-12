@@ -189,8 +189,11 @@ export default {
       }
     },
     onEventDrop ({ event, originalEvent, external }) {
-      this.updateSession(event.id, event.start, event.split)
-      this.$emit("show-conflicts", event.id);
+      this.updateSession(event.id, event.start, event.split).this(
+        () => {
+          this.$emit("show-conflicts", event.id);
+        }
+      )
     },
     onDelete(event, ev) {
       event.stopPropagation()
@@ -204,7 +207,7 @@ export default {
       let session = this.get_model(sessionModel, id)
       session.start_time = start_time ? this.uiDateToTZDate(start_time) : null
       session.room_id = room_id
-      this.save_model(sessionModel, session).then(
+      return this.save_model(sessionModel, session).then(
         () => {
           this.$emit("schedule-changed");
         }
