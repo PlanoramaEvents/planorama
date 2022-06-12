@@ -185,7 +185,6 @@ export default {
       e.stopPropagation()
       if (event.split) {
         this.select(event.id)
-        this.$emit("show-conflicts", event.id);
       }
     },
     onEventDrop ({ event, originalEvent, external }) {
