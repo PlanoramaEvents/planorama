@@ -10,7 +10,6 @@
           style="flex: 1 0 auto"
         >
         </schedulable-sessions>
-        <!-- TODO - replace this -->
         <session-conflicts
           :model="sessionConflictModel"
           :sessionId="sessionIdForConflict"
