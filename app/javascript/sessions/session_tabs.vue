@@ -8,14 +8,12 @@
       </b-tab>
       <b-tab title="Participant Assignment" :active="tab === 'assignment'" lazy>
         <assign-participants
-          v-model="session"
           defaultSortBy='session_assignments.interest_ranking, people.published_name'
           :defaultSortDesc="false"
           :perPage="200"
-          :model="sessionAssignmentModel"
           :defaultFilter="assignmentFilter"
+          :model="sessionAssignmentModel"
           nullsFirst="false"
-          @input="onSessionUpdate"
         ></assign-participants>
       </b-tab>
       <b-tab title="Schedule" :active="tab === 'schedule'" lazy>
@@ -91,9 +89,6 @@ export default {
     }
   },
   methods: {
-    onSessionUpdate(arg) {
-      this.session = arg
-    },
     back() {
       this.$router.push('/sessions')
     },

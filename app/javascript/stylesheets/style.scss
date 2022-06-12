@@ -97,9 +97,5 @@ body {
     &:before {
       border: solid 1px $color-primary-disabled;
     }
-
-    &:after {
-      background-color: $color-primary-disabled;
-    }
   }
 }

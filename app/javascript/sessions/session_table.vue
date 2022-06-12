@@ -25,7 +25,7 @@
       </template>
       <template #cell(area_list)="{ item }">
         <tooltip-overflow v-if="item.area_list" :title="formatAreas(item.area_list)">
-          <span>{{item.area_list && item.area_list.length ? item.area_list.join(", ") : ''}}</span>
+          <span>{{formatAreas(item.area_list)}}</span>
         </tooltip-overflow>
       </template>
       <template #cell(start_time)="{ item }">
@@ -56,6 +56,7 @@ import TooltipOverflow from '../shared/tooltip-overflow';
 import { session_columns as columns } from './session';
 import { sessionModel as model } from '@/store/session.store'
 import dateTimeMixin from '../components/date_time.mixin'
+import { areaMixin } from './session_fields.mixin';
 
 export default {
   name: 'SessionTable',
@@ -65,16 +66,14 @@ export default {
     ModalForm
   },
   mixins: [
-    dateTimeMixin
+    dateTimeMixin,
+    areaMixin
   ],
   data: () => ({
     columns,
     model
   }),
   methods: {
-    formatAreas(areas) {
-      return areas && areas.length ? areas.join(", ") : ''
-    },
     onNew() {
     },
     onSave() {
