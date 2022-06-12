@@ -4,8 +4,7 @@
     <div class="scrollable" v-if="is_assigned">
       <div class="survey-page" v-if="selectedPage">
         <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
-        //<b-alert show variant="info">{{SURVEY_LINKED_FIELD}}<linked-field-icon :linked_field="true"></linked-field-icon></b-alert>
-        <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"> {{SURVEY_LINKED_FIELD2}}</linked-field-icon></b-alert>
+        <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"></linked-field-icon>{{SURVEY_LINKED_FIELD2}}</b-alert>
         <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
         <ValidationObserver v-slot="{ handleSubmit }">
           <form @submit.prevent="handleSubmit(submit)">
