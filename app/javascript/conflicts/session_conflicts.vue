@@ -36,20 +36,24 @@ export default {
   }),
   watch: {
     sessionId(newVal, oldVal) {
+      console.debug("SEssion id set")
       if (newVal) {
-        this.get_conflicts({session_id: newVal}).then(
-          (conflicts) => {
-            this.conflicts = Object.values(conflicts).filter(
-              obj => (typeof obj.json === 'undefined')
-            )
-          }
-        )
+        this.getConflicts(newVal)
       } else {
         this.conflicts = []
       }
     }
   },
   methods: {
+    getConflicts(sessionId) {
+      this.get_conflicts({session_id: sessionId}).then(
+        (conflicts) => {
+          this.conflicts = Object.values(conflicts).filter(
+            obj => (typeof obj.json === 'undefined')
+          )
+        }
+      )
+    },
     conflict_type_string(conflict_type) {
       switch (conflict_type) {
         case 'availability':
@@ -58,6 +62,11 @@ export default {
         default:
           return "a conflict"
       }
+    }
+  },
+  mounted() {
+    if (this.sessionId) {
+      this.getConflicts(this.sessionId)
     }
   }
 }
