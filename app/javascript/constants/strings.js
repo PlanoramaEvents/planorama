@@ -47,7 +47,7 @@ module.exports = {
     SURVEY_RESULTS_FREEZE_SUCCESS: "Response edits successfully frozen.",
     SURVEY_RESULTS_FREEZE_ERROR: errorMessage("Response edits failed to be frozen."),
     SURVEY_RESULTS_UNFREEZE_SUCCESS: "Response edits successfully unfrozen.",
-    SURVEY_RESULTS_UNFREEZE_ERROR: errorMessage("Response edits failed to be unfrozen."),
+    SURVEY_RESULTS_UNFREEZE_ERROR: errorMessage("Response edits failed to be unfrozSURVEYen."),
 
     //survey defaults
     SURVEY_DEFAULT_THANK_YOU: "Your responses have been recorded.",
@@ -58,7 +58,9 @@ module.exports = {
     //survey questions
     SURVEY_YESNOMAYBE_PLACEHOLDER: "Please elaborate here.",
     SURVEY_LINKED_FIELD: "This answer is linked directly to a profile field. Any information in that field will be mirrored here, and editing this information will edit your profile. Linked fields have a special icon: ",
-
+    SURVEY_LINKED_FIELD1: "Any field marked with (",
+    SURVEY_LINKED_FIELD2: ") is linked directly to a profile field. Any information from that field is mirrored here, and editing that information will edit your profile.",
+    
     //generic app wide
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_AGREEMENT_SUCCESS: (title) => `${title} successfully added to Planorama.`,
