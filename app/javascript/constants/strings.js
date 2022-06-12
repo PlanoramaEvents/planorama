@@ -234,5 +234,9 @@ module.exports = {
         pseudonym: "Pseudonym",
         languages_fluent_in: "Languages spoken"
     },
-    PERSON_SAVE_SUCCESS: "Profile record saved successfully"
+    PERSON_SAVE_SUCCESS: "Profile record saved successfully",
+    CONFLICT_TEXT: {
+        availability: 'is outside of availability',
+        default: 'a conflict'
+    }
 }

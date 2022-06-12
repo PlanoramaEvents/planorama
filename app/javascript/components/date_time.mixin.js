@@ -1,16 +1,25 @@
+import { conventionTimezoneMixin } from "@/mixins";
 
 const { DateTime } = require("luxon");
 
 export const dateTimeMixin = {
+  mixins: [
+    conventionTimezoneMixin
+  ],
   props: {
     timezone: {
       type: String,
       default: null
     }
   },
+  computed: {
+    tz() {
+      return this.timezone || this.conventionTimezone;
+    }
+  },
   methods: {
     formatLocaleDate(date) {
-      let res = DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(DateTime.DATETIME_FULL)
+      let res = DateTime.fromISO(date, {zone: this.tz}).toLocaleString(DateTime.DATETIME_FULL)
       return res
     },
     // Take a Javascript datetime and format it as a time string in the local timezone
@@ -45,7 +54,7 @@ export const dateTimeMixin = {
         day: date.getDate(),
         hour: date.getHours(),
         minute: date.getMinutes()},
-        { zone: this.timezone }
+        { zone: this.tz }
       )
     }
   }

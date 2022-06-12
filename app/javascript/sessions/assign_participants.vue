@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import modelMixin from '../store/model.mixin';
+import { modelMixin } from '@/store/model.mixin';
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import tableMixin from '../store/table.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
@@ -46,6 +46,7 @@ import AssignmentState from './assignment_state'
 import ParticipantSearch from './participant_search'
 import Assignee from './assignee'
 import PersonDetails from './person_details'
+import { sessionModel } from '@/store/session.store';
 
 export default {
   name: "AssignParticipants",
@@ -58,17 +59,8 @@ export default {
   mixins: [
     modelMixin,
     modelUtilsMixin,
-    tableMixin // covers pagination and sorting
+    tableMixin, // covers pagination and sorting
   ],
-  model: {
-    prop: 'session'
-  },
-  props: {
-    session: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     return {
       sessionAssignmentModel,
@@ -76,6 +68,9 @@ export default {
     }
   },
   computed: {
+    session() {
+      return this.selected_model(sessionModel);
+    },
     peopleFilter() {
       let filter = {
         "op": "all",
@@ -105,11 +100,7 @@ export default {
       )
     },
     refreshSession() {
-      this.fetch_model_by_id('session',this.session.id).then(
-        (obj) => {
-          this.$emit('input',obj)
-        }
-      )
+      this.fetch_model_by_id('session',this.session.id);
     }
   },
   mounted() {
