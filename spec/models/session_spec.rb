@@ -8,7 +8,7 @@ RSpec.describe Session, "#factories" do
             expect(session).to_not be_published
             expect(session.people).to be_empty
             expect(session.session_assignments).to be_empty
-            expect(session.duration).to be_nil
+            expect(session.duration).to be(0)
             expect(session.minimum_people).to be_nil
             expect(session.maximum_people).to be_nil
         end
