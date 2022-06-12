@@ -17,7 +17,8 @@ export const areaMixin = {
 export const scheduledMixin = {
   computed: {
     scheduled() {
-      return this.session ? (!!this.session.room && !!this.session.start_time && !!this.session.duration) : false;
+      const session = this.session || this.selected;
+      return session ? (!!session.room && !!session.start_time && !!session.duration) : false;
     }
   }
 }
