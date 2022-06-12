@@ -4,7 +4,8 @@
     <div class="scrollable" v-if="is_assigned">
       <div class="survey-page" v-if="selectedPage">
         <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
-        <b-alert show variant="info">{{SURVEY_LINKED_FIELD}}<linked-field-icon :linked_field="true"></linked-field-icon></b-alert>
+        //<b-alert show variant="info">{{SURVEY_LINKED_FIELD}}<linked-field-icon :linked_field="true"></linked-field-icon></b-alert>
+        <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"> {{SURVEY_LINKED_FIELD2}}</linked-field-icon></b-alert>
         <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
         <ValidationObserver v-slot="{ handleSubmit }">
           <form @submit.prevent="handleSubmit(submit)">
@@ -60,7 +61,7 @@ import {
 import { SET_PREVIEW_MODE } from '@/store/survey';
 import { ValidationObserver } from 'vee-validate';
 import personSessionMixin from '../auth/person_session.mixin';
-import {SURVEY_NOT_ASSIGNED, SURVEY_LINKED_FIELD} from "@/constants/strings";
+import {SURVEY_NOT_ASSIGNED, SURVEY_LINKED_FIELD1, SURVEY_LINKED_FIELD2} from "@/constants/strings";
 import LinkedFieldIcon from './linked-field-icon';
 
 export default {
@@ -70,7 +71,9 @@ export default {
     submitted: false,
     nextPageId: null,
     SURVEY_NOT_ASSIGNED,
-    SURVEY_LINKED_FIELD
+    //SURVEY_LINKED_FIELD
+    SURVEY_LINKED_FIELD1,
+    SURVEY_LINKED_FIELD2
   }),
   components: {
     SurveyQuestion,
