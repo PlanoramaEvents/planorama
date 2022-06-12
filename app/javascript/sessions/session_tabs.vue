@@ -23,7 +23,7 @@
         <session-conflicts
           :model="sessionConflictModel"
           :sessionId="id"
-          :timezone="timezone"
+          :displaySessionInfo="false"
           ref="conflict-reporting"
         ></session-conflicts>
       </b-tab>
@@ -48,10 +48,6 @@ import SessionSchedule from './session_schedule';
 import SessionConflicts from '../conflicts/session_conflicts.vue'
 import { sessionConflictModel } from '@/store/session_conflict.store'
 import settingsMixin from "@/store/settings.mixin";
-
-import {
-  sessionMixin
-}from '@mixins'
 
 export default {
   name: "SessionTabs",
@@ -98,10 +94,6 @@ export default {
       }
 
       return JSON.stringify(filter)
-    },
-    timezone() {
-      let tz = this.configByName('convention_timezone')
-      return tz
     },
   },
   methods: {

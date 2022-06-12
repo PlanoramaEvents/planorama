@@ -1,4 +1,4 @@
-import { settingsMixin } from '@/mixins';
+import { conventionTimezoneMixin } from '@/mixins';
 import { DateTime } from 'luxon';
 
 export const areaMixin = {
@@ -24,7 +24,7 @@ export const scheduledMixin = {
 
 export const startTimeMixin = {
   mixins: [
-    settingsMixin,
+    conventionTimezoneMixin
   ],
   computed: {
     formattedStartTime() {
@@ -32,9 +32,6 @@ export const startTimeMixin = {
         return DateTime.fromISO(this.selected.start_time, {zone: 'utc'}).setZone(this.conventionTimezone).toFormat('DDDD, t ZZZZ');
       }
       return '';
-    },
-    conventionTimezone() {
-      return this.currentSettings?.configs?.find(c => c.parameter === 'convention_timezone')?.parameter_value || 'UTC'
     },
   }
 }

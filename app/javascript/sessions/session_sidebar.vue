@@ -74,6 +74,14 @@
               <dd class="ml-2 font-italic">{{selected.duration}} minutes</dd>
             </dl>
           </b-tab>
+          <b-tab title="Conflicts">
+            <session-conflicts
+              :model="sessionConflictModel"
+              :sessionId="selected.id"
+              :displaySessionInfo="false"
+              ref="conflict-reporting"
+            ></session-conflicts>
+          </b-tab>
           <b-tab title="Notes">
             <session-notes></session-notes>
           </b-tab>
@@ -91,6 +99,8 @@ import ViewParticipants from './view_participants';
 import {personSessionMixin, modelMixin} from '@/mixins';
 import Detail from './detail.vue';
 import { areaMixin, scheduledMixin, startTimeMixin } from './session_fields.mixin';
+import { sessionConflictModel } from '@/store/session_conflict.store';
+import SessionConflicts from '@/conflicts/session_conflicts.vue';
 // import SessionAdminTab from './session_admin_tab';
 
 export default {
@@ -99,7 +109,8 @@ export default {
     SidebarVue,
     Detail,
     SessionNotes,
-    ViewParticipants
+    ViewParticipants,
+    SessionConflicts
   },
   mixins: [
     modelMixin,
@@ -108,6 +119,9 @@ export default {
     scheduledMixin,
     startTimeMixin
   ],
+  data: () => ({
+    sessionConflictModel
+  }),
   computed: {
     editLink() {
       return `/sessions/edit/${this.selected.id}`;
