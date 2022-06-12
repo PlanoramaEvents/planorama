@@ -150,8 +150,8 @@
         <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="patchSelectedQuestion({branching: $event})">Branching</b-form-checkbox>
       </div>
       <div class="col-6 d-flex justify-content-end">
-        <b-button variant="info" class="mr-2" @click="duplicateSelectedQuestion"><b-icon-files></b-icon-files></b-button>
-        <b-button variant="info" @click="deleteSelectedQuestion"><b-icon-trash></b-icon-trash></b-button>
+        <b-button variant="info" class="mr-2" @click="duplicateSelectedQuestion" title="Duplicate" v-b-tooltip.bottom><b-icon-files></b-icon-files></b-button>
+        <b-button variant="info" @click="deleteSelectedQuestion" title="Delete" v-b-tooltip.bottom><b-icon-trash></b-icon-trash></b-button>
       </div>
     </div>
     <b-modal id='unlink-question-modal' size="lg"
