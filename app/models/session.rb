@@ -14,7 +14,7 @@ class Session < ApplicationRecord
 
   belongs_to :room, required: false
 
-  before_save :keep_who_did_it, :keep_interest_trail
+  before_save :check_time_and_duration, :keep_who_did_it, :keep_interest_trail
 
   has_many :session_conflicts, class_name: 'Conflicts::SessionConflict'
 
@@ -64,6 +64,13 @@ class Session < ApplicationRecord
 
   def keep_who_did_it
     self.updated_by = PaperTrail.request.whodunnit
+  end
+
+  # Do not allow a time to be set if the duration is not a positive number
+  def check_time_and_duration
+    return if self.duration && self.duration > 0
+
+    raise "Can not set a start time for a session with no duration!" if self.start_time
   end
 
   def keep_interest_trail
