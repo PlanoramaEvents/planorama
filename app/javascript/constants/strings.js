@@ -47,7 +47,7 @@ module.exports = {
     SURVEY_RESULTS_FREEZE_SUCCESS: "Response edits successfully frozen.",
     SURVEY_RESULTS_FREEZE_ERROR: errorMessage("Response edits failed to be frozen."),
     SURVEY_RESULTS_UNFREEZE_SUCCESS: "Response edits successfully unfrozen.",
-    SURVEY_RESULTS_UNFREEZE_ERROR: errorMessage("Response edits failed to be unfrozSURVEYen."),
+    SURVEY_RESULTS_UNFREEZE_ERROR: errorMessage("Response edits failed to be unfrozen."),
 
     //survey defaults
     SURVEY_DEFAULT_THANK_YOU: "Your responses have been recorded.",
