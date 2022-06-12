@@ -36,8 +36,9 @@ class Survey::Question < ApplicationRecord
       # :address
     ]
 
-  before_destroy :check_for_use, prepend: true #, :check_if_published
-  before_update :check_linked_update
+  before_destroy :check_for_use, prepend: true
+  before_destroy :check_if_published
+  before_update :check_linked_update, :check_if_published
 
   def soft_delete
     if responses.any?
@@ -96,7 +97,7 @@ class Survey::Question < ApplicationRecord
 
   def check_if_published
     if survey.public
-      raise 'can not delete a question for a survey that is public'
+      raise 'can not update or delete a question for a survey that is public'
     end
   end
 end
