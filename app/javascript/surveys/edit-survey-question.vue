@@ -105,8 +105,14 @@
       </template>
       <template v-if="textonly">
         <div class="col-12">
-          <b-form-textarea v-if="isSelected" v-model="question.question" @blur="patchSelectedQuestion({question: $event.target.value})"></b-form-textarea>
-          <p v-if="!isSelected">{{question.question}}</p>
+          <plano-editor
+            class="pb-2"
+            v-if="isSelected"
+            v-model="question.question"
+            @blur="patchSelectedQuestion({question: $event.editor._.data})"
+            type="classic"
+          ></plano-editor>
+          <div v-if="!isSelected" v-html="question.question"></div>
         </div>
       </template>
       <template v-if="yesnomaybe">
