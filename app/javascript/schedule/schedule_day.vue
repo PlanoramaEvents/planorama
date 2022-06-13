@@ -188,7 +188,7 @@ export default {
       }
     },
     onEventDrop ({ event, originalEvent, external }) {
-      this.updateSession(event.id, event.start, event.split).this(
+      this.updateSession(event.id, event.start, event.split).then(
         () => {
           this.$emit("show-conflicts", event.id);
         }
