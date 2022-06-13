@@ -15,7 +15,7 @@ class RoomConflictsView < ActiveRecord::Migration[6.1]
         		when b1.start_time = b2.end_time or b2.start_time = b1.end_time
         		then true
         		else FALSE
-        	end
+        	end as back_to_back
         from
         	room_allocations b1
         inner join room_allocations b2
