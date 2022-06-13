@@ -176,7 +176,7 @@ class ReportsController < ApplicationController
         worksheet.append_row(
           [
             session.room.name,
-            session.start_time,
+            FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
             session.title,
             session.area_list.sort.join(';'),
             session.session_assignments.collect{|a| a.person.published_name}.join(';'),
@@ -255,7 +255,7 @@ class ReportsController < ApplicationController
             sa.published_name,
             sa.title,
             sa.area_list.join('; '),
-            sa.start_time,
+            FastExcel.date_num(sa.start_time, session.start_time.in_time_zone.utc_offset),
             sa.rname,
             if sa.moderator then 'Y' else 'N' end,
             if sa.invisible then 'Y' else 'N' end,
