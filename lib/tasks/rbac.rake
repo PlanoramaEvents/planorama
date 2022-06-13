@@ -1,7 +1,6 @@
 namespace :rbac do
   desc "Create Default RBAC Policies"
   task seed_defaults: :environment do
-
     cleanup
     create_admin_roles
     create_staff_roles
@@ -464,6 +463,20 @@ namespace :rbac do
           "index": true,
           "show": true,
           "update": false
+      },
+      "report": {
+        "assigned_sessions_by_participant": true,
+        "participant_do_not_assign_with": true,
+        "participant_selections": true,
+        "people_and_submissions": true,
+        "schedule_by_person": true,
+        "schedule_by_room_then_time": true,
+        "session_selections": true,
+        "sessions_with_participants": true
+      },
+      "session_report": {
+        "panels_with_too_few_people": true,
+        "panels_with_too_many_people": true
       }
     })
   end
@@ -685,6 +698,20 @@ namespace :rbac do
           "index": true,
           "show": true,
           "update": true
+      },
+      "report": {
+        "assigned_sessions_by_participant": true,
+        "participant_do_not_assign_with": true,
+        "participant_selections": true,
+        "people_and_submissions": true,
+        "schedule_by_person": true,
+        "schedule_by_room_then_time": true,
+        "session_selections": true,
+        "sessions_with_participants": true
+      },
+      "session_report": {
+        "panels_with_too_few_people": true,
+        "panels_with_too_many_people": true,
       }
     })
   end

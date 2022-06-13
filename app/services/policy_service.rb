@@ -4,6 +4,8 @@ module PolicyService
     Rails.application.eager_load! # ensure that the controller classes are loaded
 
     classes = ResourceController.descendants.collect{|c| name_for_class(clazz: c)}
+    classes << "Reports"
+    classes << "Reports::SessionReports"
 
     permissions = { }
 
@@ -29,6 +31,8 @@ module PolicyService
     Rails.application.eager_load! # ensure that the controller classes are loaded
 
     classes = ResourceController.descendants.collect{|c| name_for_class(clazz: c)}
+    classes << "Reports"
+    classes << "Reports::SessionReports"
 
     permissions = list_policies # default set (which we can not do anything but list the policies)
     permissions[:sensitive_access] = false

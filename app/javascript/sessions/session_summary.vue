@@ -74,6 +74,7 @@
 <script>
 import { sessionModel } from '@/store/session.store'
 import modelUtilsMixin from '@/store/model_utils.mixin';
+import { scheduledMixin } from './session_fields.mixin';
 
 import PlanoEditor from '../components/plano_editor';
 
@@ -83,15 +84,13 @@ export default {
     PlanoEditor
   },
   mixins: [
-    modelUtilsMixin
+    modelUtilsMixin,
+    scheduledMixin
   ],
   computed: {
     session() {
       return this.selected_model(sessionModel);
     },
-    scheduled() {
-      return this.session ? (!!this.session.room && !!this.session.start_time && !!this.session.duration) : false;
-    }
   },
   methods: {
     saveSession() {
