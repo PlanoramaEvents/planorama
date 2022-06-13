@@ -102,4 +102,9 @@ body {
       background-color: $color-primary-disabled;
     }
   }
+
+  .custom-control-input:disabled:checked ~ .custom-control-label:after ,
+  .custom-control-input[disabled]:checked ~ .custom-control-label:after {
+    background-color: rgba(white, 0.72);
+  }
 }

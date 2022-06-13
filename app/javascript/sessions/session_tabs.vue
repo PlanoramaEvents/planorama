@@ -8,20 +8,24 @@
       </b-tab>
       <b-tab title="Participant Assignment" :active="tab === 'assignment'" lazy>
         <assign-participants
-          v-model="session"
           defaultSortBy='session_assignments.interest_ranking, people.published_name'
           :defaultSortDesc="false"
           :perPage="200"
-          :model="sessionAssignmentModel"
           :defaultFilter="assignmentFilter"
+          :model="sessionAssignmentModel"
           nullsFirst="false"
-          @input="onSessionUpdate"
         ></assign-participants>
       </b-tab>
       <b-tab title="Schedule" :active="tab === 'schedule'" lazy>
         <session-schedule></session-schedule>
       </b-tab>
-      <b-tab title="Conflicts" :active="tab === 'conflicts'" lazy disabled>
+      <b-tab title="Conflicts" :active="tab === 'conflicts'">
+        <session-conflicts
+          :model="sessionConflictModel"
+          :sessionId="id"
+          :displaySessionInfo="false"
+          ref="conflict-reporting"
+        ></session-conflicts>
       </b-tab>
       <b-tab title="Notes" :active="tab === 'notes'">
         <session-notes></session-notes>
@@ -41,10 +45,9 @@ import SessionSummary from './session_summary'
 import SessionEdit from './session_edit'
 import SessionNotes from './session_notes'
 import SessionSchedule from './session_schedule';
-
-import {
-  sessionMixin
-}from '@mixins'
+import SessionConflicts from '../conflicts/session_conflicts.vue'
+import { sessionConflictModel } from '@/store/session_conflict.store'
+import settingsMixin from "@/store/settings.mixin";
 
 export default {
   name: "SessionTabs",
@@ -57,13 +60,16 @@ export default {
     AssignParticipants,
     SessionEdit,
     SessionNotes,
-    SessionSchedule
+    SessionSchedule,
+    SessionConflicts
   },
   mixins: [
-    modelUtilsMixin
+    modelUtilsMixin,
+    settingsMixin
   ],
   data: () => ({
     sessionAssignmentModel,
+    sessionConflictModel
   }),
   computed: {
     session() {
@@ -88,12 +94,9 @@ export default {
       }
 
       return JSON.stringify(filter)
-    }
+    },
   },
   methods: {
-    onSessionUpdate(arg) {
-      this.session = arg
-    },
     back() {
       this.$router.push('/sessions')
     },

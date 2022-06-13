@@ -3,6 +3,7 @@ p "Start test survey seeds"
 after "test:person" do
 
 
+  Survey.update_all(public: false)
   Survey::Submission.destroy_all
   Survey.destroy_all
   # Survey::Page.delete_all
@@ -20,7 +21,7 @@ after "test:person" do
     thank_you: Faker::Lorem.sentence,
     submit_string: 'submit',
     use_captcha: Faker::Boolean.boolean(true_ratio: 0.8),
-    public: Faker::Boolean.boolean(true_ratio: 0.8),
+    public: false,
     transition_accept_status: nil,
     transition_decline_status: nil,
     welcome: Faker::Lorem.sentence,
@@ -90,7 +91,7 @@ after "test:person" do
     thank_you: Faker::Lorem.sentence,
     submit_string: 'submit',
     use_captcha: Faker::Boolean.boolean(true_ratio: 0.8),
-    public: Faker::Boolean.boolean(true_ratio: 0.8),
+    public: false,
     transition_accept_status: nil,
     transition_decline_status: nil,
     welcome: Faker::Lorem.sentence,
@@ -164,7 +165,7 @@ after "test:person" do
       thank_you: Faker::Lorem.sentence,
       submit_string: 'submit',
       use_captcha: Faker::Boolean.boolean(true_ratio: 0.8),
-      public: Faker::Boolean.boolean(true_ratio: 0.8),
+      public: false,
       transition_accept_status: [nil, :probable, :accepted].sample,
       transition_decline_status: [nil, :not_set, :declined].sample,
       welcome: Faker::Lorem.sentence,
