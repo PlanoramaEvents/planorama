@@ -21,7 +21,10 @@ class PlannerPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def allowed?(action:)
-      cname = self.class.name.split("::").first
+      class_parts = self.class.name.split("::")
+      # Need the part before scope
+      class_parts.pop if class_parts.last == "Scope"
+      cname = class_parts.last
       cname.slice! "Policy"
       cname = cname.singularize.snakecase
 
