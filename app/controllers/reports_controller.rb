@@ -255,7 +255,7 @@ class ReportsController < ApplicationController
             sa.published_name,
             sa.title,
             sa.area_list.join('; '),
-            FastExcel.date_num(sa.start_time, session.start_time.in_time_zone.utc_offset),
+            FastExcel.date_num(sa.session.start_time, sa.session.start_time.in_time_zone.utc_offset),
             sa.rname,
             if sa.moderator then 'Y' else 'N' end,
             if sa.invisible then 'Y' else 'N' end,
