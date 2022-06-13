@@ -155,7 +155,7 @@ class ReportsController < ApplicationController
                   .joins(joins)
                   .references(:room)
                   .eager_load(:areas, :room, {session_assignments: [:person]})
-                  .where("sessions.room_id is not null and sessions.start_time is not null and session_assignments.visibility = 'public'")
+                  .where("sessions.room_id is not null and sessions.start_time is not null")
                   .order('rooms.sort_order', 'sessions.start_time', 'sessions.title')
 
       workbook = FastExcel.open(constant_memory: true)
@@ -172,6 +172,9 @@ class ReportsController < ApplicationController
       )
       date_time_style = workbook.number_format("d mmm yyyy h:mm")
       styles = [nil, date_time_style, nil, nil, nil]
+      moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+      participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+      invisible = SessionAssignmentRoleType.find_by(name: 'Invisible')
       sessions.each do |session|
         worksheet.append_row(
           [
@@ -179,7 +182,9 @@ class ReportsController < ApplicationController
             FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
             session.title,
             session.area_list.sort.join(';'),
-            session.session_assignments.collect{|a| a.person.published_name}.join(';'),
+            session.session_assignments.
+              select{|a| [participant.id, moderator.id, invisible.id].include?(a.session_assignment_role_type_id)}.
+              collect{|s| s.person.published_name}.join('; ')
           ],
           styles
         )
