@@ -1,8 +1,11 @@
 class Session < ApplicationRecord
   validates_presence_of :title
-  validates_numericality_of :duration, allow_nil: true
+  validates_numericality_of :duration, allow_nil: false
   validates_numericality_of :minimum_people, allow_nil: true
   validates_numericality_of :maximum_people, allow_nil: true
+
+  # NOTE: when we have a config for default duration change to use a lambda
+  attribute :duration, default: 0
 
   has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
 
@@ -13,7 +16,7 @@ class Session < ApplicationRecord
 
   before_save :keep_who_did_it, :keep_interest_trail
 
-  has_many :availability_conflicts, class_name: 'Conflicts::AvailabilityConflict'
+  has_many :session_conflicts, class_name: 'Conflicts::SessionConflict'
 
   has_many :session_assignments, dependent: :destroy do
     def role(role)

@@ -3,25 +3,31 @@
     <b-button variant="link" @click="back">Back</b-button>
     <session-summary ></session-summary>
     <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="session">
-      <b-tab title="General" :active="tab === 'session-edit'">
+      <b-tab title="General" :active="tab === 'edit'">
         <session-edit></session-edit>
       </b-tab>
-      <b-tab title="Participant Assignment" :active="tab === 'session-assignment'" lazy>
+      <b-tab title="Participant Assignment" :active="tab === 'assignment'" lazy>
         <assign-participants
-          v-model="session"
           defaultSortBy='session_assignments.interest_ranking, people.published_name'
           :defaultSortDesc="false"
           :perPage="200"
-          :model="sessionAssignmentModel"
           :defaultFilter="assignmentFilter"
+          :model="sessionAssignmentModel"
           nullsFirst="false"
-          @input="onSessionUpdate"
         ></assign-participants>
       </b-tab>
-      <b-tab title="Schedule" :active="tab === 'session-schedule'" lazy>
+      <b-tab title="Schedule" :active="tab === 'schedule'" lazy>
         <session-schedule></session-schedule>
       </b-tab>
-      <b-tab title="Notes" :active="tab === 'session-notes'">
+      <b-tab title="Conflicts" :active="tab === 'conflicts'">
+        <session-conflicts
+          :model="sessionConflictModel"
+          :sessionId="id"
+          :displaySessionInfo="false"
+          ref="conflict-reporting"
+        ></session-conflicts>
+      </b-tab>
+      <b-tab title="Notes" :active="tab === 'notes'">
         <session-notes></session-notes>
       </b-tab>
     </b-tabs>
@@ -39,10 +45,9 @@ import SessionSummary from './session_summary'
 import SessionEdit from './session_edit'
 import SessionNotes from './session_notes'
 import SessionSchedule from './session_schedule';
-
-import {
-  sessionMixin
-}from '@mixins'
+import SessionConflicts from '../conflicts/session_conflicts.vue'
+import { sessionConflictModel } from '@/store/session_conflict.store'
+import settingsMixin from "@/store/settings.mixin";
 
 export default {
   name: "SessionTabs",
@@ -55,13 +60,16 @@ export default {
     AssignParticipants,
     SessionEdit,
     SessionNotes,
-    SessionSchedule
+    SessionSchedule,
+    SessionConflicts
   },
   mixins: [
-    modelUtilsMixin
+    modelUtilsMixin,
+    settingsMixin
   ],
   data: () => ({
     sessionAssignmentModel,
+    sessionConflictModel
   }),
   computed: {
     session() {
@@ -86,12 +94,9 @@ export default {
       }
 
       return JSON.stringify(filter)
-    }
+    },
   },
   methods: {
-    onSessionUpdate(arg) {
-      this.session = arg
-    },
     back() {
       this.$router.push('/sessions')
     },
@@ -109,6 +114,9 @@ export default {
           path = `schedule/${this.id}`;
           break;
         case 3:
+          path = `conflicts/${this.id}`;
+          break;
+        case 4:
           path = `notes/${this.id}`;
           break;
       }

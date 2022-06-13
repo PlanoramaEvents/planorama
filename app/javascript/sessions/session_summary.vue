@@ -41,10 +41,6 @@
               by {{ session.interest_opened_by ? session.interest_opened_by.toLocaleString() : 'n/a'}}
             </span>
           </b-form-checkbox>
-          <!--
-            TODO: we need the date when the session was opened for interest .... ????
-            This is a new requirement?!?
-          -->
         </b-form-group>
       </div>
       <div class='ml-auto' v-if="session">
@@ -56,6 +52,20 @@
           Last edited on:
           <em>{{new Date(session.updated_at).toLocaleString()}}</em>
         </small>
+        <b-form-group class="mt-5">
+          <b-form-checkbox
+            switch
+            v-model="session.proofed"
+            @change="saveSession()"
+          >Copy Edited/Proofed</b-form-checkbox>
+        </b-form-group>
+        <b-form-group>
+          <b-form-checkbox
+            switch
+            disabled
+            :checked="scheduled"
+          >Scheduled</b-form-checkbox>
+        </b-form-group>
       </div>
     </div>
   </div>
@@ -64,6 +74,7 @@
 <script>
 import { sessionModel } from '@/store/session.store'
 import modelUtilsMixin from '@/store/model_utils.mixin';
+import { scheduledMixin } from './session_fields.mixin';
 
 import PlanoEditor from '../components/plano_editor';
 
@@ -73,12 +84,13 @@ export default {
     PlanoEditor
   },
   mixins: [
-    modelUtilsMixin
+    modelUtilsMixin,
+    scheduledMixin
   ],
   computed: {
     session() {
       return this.selected_model(sessionModel);
-    }
+    },
   },
   methods: {
     saveSession() {

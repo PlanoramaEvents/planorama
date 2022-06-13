@@ -86,22 +86,22 @@ export default {
           case 'participant':
             this.sessionAssignment.state = 'accepted'
             this.sessionAssignment.visibility = 'is_public'
-            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Participant').id
+            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Participant')?.id
             break;
           case 'invisible':
             this.sessionAssignment.state = 'accepted'
             this.sessionAssignment.visibility = 'is_private'
-            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Invisible').id
+            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Invisible')?.id
             break;
           case 'moderator':
             this.sessionAssignment.state = 'accepted'
             this.sessionAssignment.visibility = 'is_public'
-            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Moderator').id
+            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Moderator')?.id
             break;
           case 'reserved':
             this.sessionAssignment.state = 'accepted'
             this.sessionAssignment.visibility = 'is_private'
-            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Reserve').id
+            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Reserve')?.id
             break;
           case 'rejected':
             this.sessionAssignment.state = 'rejected'

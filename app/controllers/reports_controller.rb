@@ -118,6 +118,158 @@ class ReportsController < ApplicationController
 
   end
 
+  # Schedule by room and time - this should only return sessions that have a spacetime
+  #
+  #     Room name
+  #     Session start time (CDT)
+  #     Session Title
+  #     Area(s)
+  #     Moderator & visible participants (published_name)
+  #
+  #  sort by room then time then session title
+  #
+  def schedule_by_room_then_time
+    # TZ
+    timezone = ConfigService.value('convention_timezone')
+    # We want the times to be in the TZ of the con for the report
+    Time.use_zone(timezone) do
+      authorize SessionAssignment, policy_class: ReportsPolicy
+
+      session_table = Arel::Table.new(Session.table_name)
+      subquery = Session.area_list.as('areas_list')
+      joins = [
+        session_table.create_join(
+          subquery,
+          session_table.create_on(
+            subquery[:session_id].eq(session_table[:id])
+          ),
+          Arel::Nodes::OuterJoin
+        )
+      ]
+
+      # array aggregate ...
+      sessions = Session.select(
+                    ::Session.arel_table[Arel.star],
+                    'areas_list.area_list'
+                  )
+                  .joins(joins)
+                  .references(:room)
+                  .eager_load(:areas, :room, {session_assignments: [:person]})
+                  .where("sessions.room_id is not null and sessions.start_time is not null and session_assignments.visibility = 'public'")
+                  .order('rooms.sort_order', 'sessions.start_time', 'sessions.title')
+
+      workbook = FastExcel.open(constant_memory: true)
+      worksheet = workbook.add_worksheet("Schedule by Room then Time")
+
+      worksheet.append_row(
+        [
+          'Room',
+          'Start Time',
+          'Title',
+          'Area',
+          'Assigned'
+        ]
+      )
+      date_time_style = workbook.number_format("d mmm yyyy h:mm")
+      styles = [nil, date_time_style, nil, nil, nil]
+      sessions.each do |session|
+        worksheet.append_row(
+          [
+            session.room.name,
+            FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
+            session.title,
+            session.area_list.sort.join(';'),
+            session.session_assignments.collect{|a| a.person.published_name}.join(';'),
+          ],
+          styles
+        )
+      end
+
+      send_data workbook.read_string,
+                filename: "ScheduleByRoomThenTime#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+                disposition: 'attachment'
+
+    end
+  end
+
+
+  # Schedule by person - this should only return sessions where person is assigned as a moderator or a participant
+  # on items that have spacetimes
+  #
+  #     Name
+  #     Published name (ie pseudonym)
+  #     Session Name
+  #     Area(s)
+  #     Session start time (CDT)
+  #     Room name
+  #     Moderator indicator (Y/N)
+  #     Invisible indicator (Y/N) (only for invisible participants)
+  #
+  #  sort by person (alpha asc) then by start time (asc) then by session title
+  #
+  def schedule_by_person
+    # TZ
+    timezone = ConfigService.value('convention_timezone')
+    # We want the times to be in the TZ of the con for the report
+    Time.use_zone(timezone) do
+      authorize SessionAssignment, policy_class: ReportsPolicy
+
+      session_table = Arel::Table.new(Session.table_name)
+      subquery = Session.area_list.as('areas_list')
+
+      people_sessions = SessionAssignment.select(
+        'people.name as pname',
+        'people.published_name',
+        'sessions.title',
+        'rooms.name as rname',
+        'sessions.start_time',
+        'session_assignment_role_type.name = \'Moderator\' as moderator',
+        'session_assignment_role_type.name = \'Invisible\' as invisible',
+        'session_id',
+        'areas_list.area_list',
+      ).joins(:person, :room, :session_assignment_role_type, :session, session_table.create_join( subquery, session_table.create_on( subquery[:session_id].eq(session_table[:id])), Arel::Nodes::OuterJoin))
+      .where("session_assignment_role_type.name in (?)", ['Moderator', 'Participant', "Invisible"])
+      .order('people.name', 'sessions.start_time', 'sessions.title')
+
+      workbook = FastExcel.open(constant_memory: true)
+      worksheet = workbook.add_worksheet("Schedule by Participant")
+
+      worksheet.append_row(
+        [
+          'Name',
+          'Published Name',
+          'Session Title',
+          'Area',
+          'Start Time',
+          'Room',
+          'Moderator',
+          'Invisible',
+        ]
+      )
+
+      date_time_style = workbook.number_format("d mmm yyyy h:mm")
+      styles = [nil, nil, nil, nil,date_time_style, nil, nil, nil]
+      people_sessions.each do |sa|
+        worksheet.append_row(
+          [ sa.pname,
+            sa.published_name,
+            sa.title,
+            sa.area_list.join('; '),
+            FastExcel.date_num(sa.session.start_time, sa.session.start_time.in_time_zone.utc_offset),
+            sa.rname,
+            if sa.moderator then 'Y' else 'N' end,
+            if sa.invisible then 'Y' else 'N' end,
+          ],
+          styles
+        )
+      end
+
+      send_data workbook.read_string,
+                filename: "ScheduleByParticipant#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+                disposition: 'attachment'
+    end
+  end
+
   # Assigned session by participant - this should only return if the person is assigned as a moderator or a participant
   #
   #     Name
@@ -311,6 +463,91 @@ class ReportsController < ApplicationController
 
     send_data workbook.read_string,
               filename: "SessionSelections_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
+  # Person with do not assign with - only people with 'do not assign with'
+  #
+  #     Name
+  #     Published name (ie pseudonym)
+  #     Session Name
+  #     Area(s)
+  #     All participants
+  #     Do not assign with
+  #
+  #  sort by person name, session title
+  #
+  def participant_do_not_assign_with
+    authorize SessionAssignment, policy_class: ReportsPolicy
+
+    sa_table = Arel::Table.new(SessionAssignment.table_name)
+    subquery = Session.area_list.as('areas_list')
+    joins = [
+      sa_table.create_join(
+        subquery,
+        sa_table.create_on(
+          subquery[:session_id].eq(sa_table[:session_id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    people = Person.select(
+                ::Person.arel_table[Arel.star],
+                'areas_list.area_list'
+              )
+              .joins({session_assignments: [:person, :session_assignment_role_type]})
+              .joins(
+                joins
+              )
+              .eager_load(
+                {
+                  session_assignments: [
+                    {
+                      session: [session_assignments: :person]
+                    },
+                    :person
+                  ]
+                }
+              )
+              .where("people.do_not_assign_with is not null and people.do_not_assign_with <> ''")
+              .where("session_assignment_role_type.name in (?)", ['Moderator', 'Participant', "Invisible"])
+              .order("people.published_name asc")
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Participant Do Not Assign With")
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Published Name',
+        'Session Title',
+        'Area',
+        'Assigned to session',
+        'Do not assign with'
+      ]
+    )
+
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    invisible = SessionAssignmentRoleType.find_by(name: 'Invisible')
+    people.each do |person|
+      person.session_assignments.each do |sa|
+        worksheet.append_row(
+          [
+            person.name,
+            person.published_name,
+            sa.session.title,
+            person.area_list.join('; '),
+            sa.session.session_assignments.select{|a| [participant.id, moderator.id, invisible.id].include?(a.session_assignment_role_type_id)}.collect{|s| s.person.published_name}.join('; '),
+            person.do_not_assign_with
+          ]
+        )
+      end
+    end
+
+    send_data workbook.read_string,
+              filename: "ParticipantDoNotAssignWith#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 end

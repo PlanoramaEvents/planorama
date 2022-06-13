@@ -79,3 +79,32 @@ body {
 .vqb-custom-component-wrap {
   flex: 1 1 auto;
 }
+
+/*  make the ticky switch controls more colorful */
+.custom-switch {
+  .custom-control-label {
+    &:after {
+      background-color: $color-primary-0;
+    }
+
+    &:before {
+      border: solid 1px $color-primary-0;
+    }
+  }
+
+  .custom-control-input:disabled ~ .custom-control-label,
+  .custom-control-input[disabled] ~ .custom-control-label {
+    &:before {
+      border: solid 1px $color-primary-disabled;
+    }
+
+    &:after {
+      background-color: $color-primary-disabled;
+    }
+  }
+
+  .custom-control-input:disabled:checked ~ .custom-control-label:after ,
+  .custom-control-input[disabled]:checked ~ .custom-control-label:after {
+    background-color: rgba(white, 0.72);
+  }
+}

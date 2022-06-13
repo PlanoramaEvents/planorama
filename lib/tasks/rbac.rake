@@ -1,14 +1,32 @@
 namespace :rbac do
   desc "Create Default RBAC Policies"
   task seed_defaults: :environment do
-
+    cleanup
     create_admin_roles
     create_staff_roles
     create_participant_roles
   end
 
+  def cleanup
+    ApplicationRole.where(
+      con_roles: ['participant'],
+      name: 'Participant_Roles_Default',
+      sensitive_access: false
+    ).delete_all
+    role = ApplicationRole.where(
+      con_roles: ['staff'],
+      name: 'Staff_Roles_Default',
+      sensitive_access: false
+    ).delete_all
+    role = ApplicationRole.where(
+      con_roles: ['admin'],
+      name: 'Admin_Roles_Default',
+      sensitive_access: true
+    ).delete_all
+  end
+
   def create_participant_roles
-    role = ApplicationRole.create(
+    role = ApplicationRole.find_or_create_by(
       con_roles: ['participant'],
       name: 'Participant_Roles_Default',
       sensitive_access: false
@@ -91,10 +109,10 @@ namespace :rbac do
       },
       "availability": {
           "create": true,
-          "destroy": false,
-          "index": false,
-          "show": false,
-          "update": false
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true
       },
       "venue": {
           "create": false,
@@ -195,21 +213,21 @@ namespace :rbac do
           "show": false,
           "update": false
       },
-      "submission": {
+      "submissions": {
           "create": true,
           "delete_all": false,
           "flat": false,
-          "show": false,
-          "update": false,
+          "show": true,
+          "update": true,
           "destroy": false,
-          "index": false
+          "index": true
       },
       "response": {
           "create": true,
           "destroy": false,
-          "index": false,
-          "show": false,
-          "update": false
+          "index": true,
+          "show": true,
+          "update": true
       },
       "question": {
           "create": false,
@@ -229,7 +247,7 @@ namespace :rbac do
   end
 
   def create_staff_roles
-    role = ApplicationRole.create(
+    role = ApplicationRole.find_or_create_by(
       con_roles: ['staff'],
       name: 'Staff_Roles_Default',
       sensitive_access: false
@@ -421,16 +439,16 @@ namespace :rbac do
           "delete_all": false,
           "flat": true,
           "show": true,
-          "update": false,
+          "update": true,
           "destroy": false,
           "index": true
       },
       "response": {
           "create": true,
-          "destroy": false,
+          "destroy": true,
           "index": true,
           "show": true,
-          "update": false
+          "update": true
       },
       "question": {
           "create": false,
@@ -445,12 +463,26 @@ namespace :rbac do
           "index": true,
           "show": true,
           "update": false
+      },
+      "report": {
+        "assigned_sessions_by_participant": true,
+        "participant_do_not_assign_with": false,
+        "participant_selections": true,
+        "people_and_submissions": true,
+        "schedule_by_person": true,
+        "schedule_by_room_then_time": true,
+        "session_selections": true,
+        "sessions_with_participants": true
+      },
+      "session_report": {
+        "panels_with_too_few_people": true,
+        "panels_with_too_many_people": true
       }
     })
   end
 
   def create_admin_roles
-    role = ApplicationRole.create(
+    role = ApplicationRole.find_or_create_by(
       con_roles: ['admin'],
       name: 'Admin_Roles_Default',
       sensitive_access: true
@@ -666,6 +698,20 @@ namespace :rbac do
           "index": true,
           "show": true,
           "update": true
+      },
+      "report": {
+        "assigned_sessions_by_participant": true,
+        "participant_do_not_assign_with": true,
+        "participant_selections": true,
+        "people_and_submissions": true,
+        "schedule_by_person": true,
+        "schedule_by_room_then_time": true,
+        "session_selections": true,
+        "sessions_with_participants": true
+      },
+      "session_report": {
+        "panels_with_too_few_people": true,
+        "panels_with_too_many_people": true,
       }
     })
   end

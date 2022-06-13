@@ -10,7 +10,7 @@ class SessionSerializer
              :open_for_interest, :instructions_for_interest,
              :require_signup, :waiting_list_size,
              :updated_by, :interest_opened_by, :interest_opened_at,
-             :room_id
+             :room_id, :proofed, :format_id
 
   # tag_list
   attribute :tag_list do |session|
@@ -35,7 +35,7 @@ class SessionSerializer
   end
 
   attribute :has_conflicts do |session|
-    session.availability_conflicts.count > 0
+    session.session_conflicts.count > 0
   end
 
   has_many :session_areas, serializer: SessionAreaSerializer,
