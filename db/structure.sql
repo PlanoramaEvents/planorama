@@ -1052,6 +1052,7 @@ CREATE VIEW public.person_schedule_conflicts AS
     ps1.session_id,
     ps1.start_time,
     ps1.end_time,
+    ps1.session_assignment_id,
     ps1.session_assignment_role_type_id,
     ps1.session_assignment_name,
     ps1.session_assignment_role_type,
@@ -1247,12 +1248,38 @@ CREATE TABLE public.session_areas (
 
 CREATE VIEW public.session_conflicts AS
  SELECT availability_conflicts.session_id,
-    NULL::text AS room_id,
+    NULL::uuid AS room_id,
     availability_conflicts.person_id,
     availability_conflicts.session_assignment_id,
-    NULL::text AS conflict_session_id,
+    NULL::uuid AS conflict_session_id,
     'availability'::text AS conflict_type
-   FROM public.availability_conflicts;
+   FROM public.availability_conflicts
+UNION
+ SELECT room_conflicts.session_id,
+    room_conflicts.room_id,
+    NULL::uuid AS person_id,
+    NULL::uuid AS session_assignment_id,
+    room_conflicts.conflicting_session_id AS conflict_session_id,
+    'room_conflict'::text AS conflict_type
+   FROM public.room_conflicts
+UNION
+ SELECT person_schedule_conflicts.session_id,
+    person_schedule_conflicts.room_id,
+    person_schedule_conflicts.person_id,
+    person_schedule_conflicts.session_assignment_id,
+    person_schedule_conflicts.conflict_session_id,
+    'person_session_conflict'::text AS conflict_type
+   FROM public.person_schedule_conflicts
+  WHERE (person_schedule_conflicts.back_to_back = false)
+UNION
+ SELECT person_schedule_conflicts.session_id,
+    person_schedule_conflicts.room_id,
+    person_schedule_conflicts.person_id,
+    person_schedule_conflicts.session_assignment_id,
+    person_schedule_conflicts.conflict_session_id,
+    'back_to_back'::text AS conflict_type
+   FROM public.person_schedule_conflicts
+  WHERE (person_schedule_conflicts.back_to_back = true);
 
 
 --
@@ -2741,6 +2768,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220612134513'),
 ('20220612135253'),
 ('20220613152827'),
-('20220613171929');
+('20220613171929'),
+('20220613194424');
 
 

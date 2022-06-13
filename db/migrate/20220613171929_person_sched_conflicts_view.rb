@@ -9,6 +9,7 @@ class PersonSchedConflictsView < ActiveRecord::Migration[6.1]
         	ps1.session_id,
         	ps1.start_time,
         	ps1.end_time,
+          ps1.session_assignment_id,
         	ps1.session_assignment_role_type_id,
         	ps1.session_assignment_name,
         	ps1.session_assignment_role_type,
