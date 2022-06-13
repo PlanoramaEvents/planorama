@@ -109,10 +109,10 @@ namespace :rbac do
       },
       "availability": {
           "create": true,
-          "destroy": false,
-          "index": false,
-          "show": false,
-          "update": false
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true
       },
       "venue": {
           "create": false,
@@ -466,7 +466,7 @@ namespace :rbac do
       },
       "report": {
         "assigned_sessions_by_participant": true,
-        "participant_do_not_assign_with": true,
+        "participant_do_not_assign_with": false,
         "participant_selections": true,
         "people_and_submissions": true,
         "schedule_by_person": true,
