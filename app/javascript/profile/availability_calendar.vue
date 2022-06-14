@@ -98,20 +98,24 @@ export default {
       // return DateTime.fromISO(date).setZone(this.timezone).toLocaleString(config)
       return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
     },
+    syncScrolling() {
+      for (const day of this.days) {
+        let component = this.$refs[`day-${day}`][0].scrollBarElement()
+        let targets = this.days.filter(d => d != day)
+
+        component.addEventListener("scroll",
+          this.syncScroll.bind(event,component,targets),
+          false
+        )
+      }
+    },
     init: function(arg) {
+      this.syncScrolling();
       this.get_availability({person: this.person}).then(
         (availabilities) => {
           let coll = Object.values(availabilities)
           let iniialVals = coll.map((a) => { return {start: DateTime.fromISO(a.start_time) , end: DateTime.fromISO(a.end_time)} })
           for (const day of this.days) {
-            let component = this.$refs[`day-${day}`][0].scrollBarElement()
-            let targets = this.days.filter(d => d != day)
-
-            component.addEventListener("scroll",
-              this.syncScroll.bind(event,component,targets),
-              false
-            )
-
             let init_events = this.$refs[`day-${day}`][0].init(iniialVals.filter((a) => a.start.setZone(this.timezone).toFormat("yyyy-MM-dd") == day))
 
             this.dayEvents = this.dayEvents.concat(init_events)
