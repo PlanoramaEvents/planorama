@@ -6,6 +6,7 @@ module PolicyService
     classes = ResourceController.descendants.collect{|c| name_for_class(clazz: c)}
     classes << "Reports"
     classes << "Reports::SessionReports"
+    classes << "Reports::ConflictReports"
 
     permissions = { }
 
@@ -33,6 +34,7 @@ module PolicyService
     classes = ResourceController.descendants.collect{|c| name_for_class(clazz: c)}
     classes << "Reports"
     classes << "Reports::SessionReports"
+    classes << "Reports::ConflictReports"
 
     permissions = list_policies # default set (which we can not do anything but list the policies)
     permissions[:sensitive_access] = false

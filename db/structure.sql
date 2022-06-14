@@ -631,7 +631,8 @@ CREATE VIEW public.availability_conflicts AS
     sessions.id AS session_id,
     session_assignments.session_assignment_role_type_id,
     sart.role_type AS session_assignment_role_type,
-    sart.name AS session_assignment_name
+    sart.name AS session_assignment_name,
+    concat(session_assignments.id, ':', people.id, ':', sessions.id) AS id
    FROM ((((public.session_assignments
      JOIN public.sessions ON ((sessions.id = session_assignments.session_id)))
      JOIN public.people ON ((people.id = session_assignments.person_id)))
@@ -1045,7 +1046,8 @@ CREATE VIEW public.person_schedule_conflicts AS
         CASE
             WHEN ((ps1.start_time = ps2.end_time) OR (ps2.start_time = ps1.end_time)) THEN true
             ELSE false
-        END AS back_to_back
+        END AS back_to_back,
+    concat(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) AS id
    FROM (public.person_schedules ps1
      JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps1.start_time >= ps2.start_time) AND ((ps1.start_time <= ps2.end_time) OR ((ps1.end_time >= ps2.start_time) AND (ps1.end_time <= ps2.end_time))))))
   ORDER BY ps1.person_id, GREATEST(ps1.start_time, ps2.start_time);
@@ -2766,6 +2768,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220613152827'),
 ('20220613171929'),
 ('20220613194424'),
-('20220614014103');
+('20220614014103'),
+('20220614183042'),
+('20220614190928');
 
 
