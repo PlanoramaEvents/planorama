@@ -631,7 +631,8 @@ CREATE VIEW public.availability_conflicts AS
     sessions.id AS session_id,
     session_assignments.session_assignment_role_type_id,
     sart.role_type AS session_assignment_role_type,
-    sart.name AS session_assignment_name
+    sart.name AS session_assignment_name,
+    concat(session_assignments.id, ':', people.id, ':', sessions.id) AS id
    FROM ((((public.session_assignments
      JOIN public.sessions ON ((sessions.id = session_assignments.session_id)))
      JOIN public.people ON ((people.id = session_assignments.person_id)))
@@ -2766,6 +2767,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220613152827'),
 ('20220613171929'),
 ('20220613194424'),
-('20220614014103');
+('20220614014103'),
+('20220614183042');
 
 

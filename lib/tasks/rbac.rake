@@ -477,6 +477,9 @@ namespace :rbac do
       "session_report": {
         "panels_with_too_few_people": true,
         "panels_with_too_many_people": true
+      },
+      "conflict_report": {
+        "people_outside_availability": true
       }
     })
   end
@@ -712,6 +715,9 @@ namespace :rbac do
       "session_report": {
         "panels_with_too_few_people": true,
         "panels_with_too_many_people": true,
+      },
+      "conflict_report": {
+        "people_outside_availability": true
       }
     })
   end

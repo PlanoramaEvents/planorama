@@ -56,6 +56,7 @@ Rails.application.routes.draw do
   get 'report/session_reports/panels_with_too_few_people', to: 'reports/session_reports#panels_with_too_few_people'
   get 'report/session_reports/panels_with_too_many_people', to: 'reports/session_reports#panels_with_too_many_people'
 
+  get 'report/conflict_reports/people_outside_availability', to: 'reports/conflict_reports#people_outside_availability'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]

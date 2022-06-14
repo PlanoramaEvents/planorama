@@ -41,6 +41,9 @@
       <li>
         <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
       </li>
+      <li>
+        <a href="/report/conflict_reports/people_outside_availability" target="_blank">People outside of Availability</a>
+      </li>
     </ul>
 
     <p><b>Schedule</b></p>
