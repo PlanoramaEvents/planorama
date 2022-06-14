@@ -37,7 +37,12 @@ class Conflicts::SessionConflictsController < ApplicationController
 
   def conflicts_for
     session_id = params[:session_id]
-    collection = Conflicts::SessionConflict.includes([:session,:person,:session_assignment,:room]).where(session_id: session_id).distinct
+    reserve = SessionAssignmentRoleType.find_by name: 'Reserve'
+    collection = Conflicts::SessionConflict.includes([:session,:person,:session_assignment])
+                  .references([:session,:person,:session_assignment])
+                  .where(session_id: session_id)
+                  .where("session_assignments.session_assignment_role_type_id != ?",reserve.id)
+                  .distinct
 
     meta = {}
     meta[:total] = collection.count
@@ -47,8 +52,7 @@ class Conflicts::SessionConflictsController < ApplicationController
       include: [
         :session,
         :person,
-        :session_assignment,
-        :room
+        :session_assignment
       ],
       params: {
         domain: "#{request.base_url}",
