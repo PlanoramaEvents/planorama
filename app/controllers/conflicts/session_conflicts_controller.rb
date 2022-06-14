@@ -6,7 +6,11 @@ class Conflicts::SessionConflictsController < ApplicationController
     per_page = params[:perPage]&.to_i || Conflicts::SessionConflict.default_per_page
     current_page = params[:current_page]&.to_i
 
-    collection = Conflicts::SessionConflict.includes([:session,:person,:session_assignment,:room]).distinct.page(current_page).per(per_page)
+    collection = Conflicts::SessionConflict
+                  .includes([:session,:person,:session_assignment,:room])
+                  .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .distinct.page(current_page).per(per_page)
 
     collection_total = collection.total_count
     full_collection_total = Conflicts::SessionConflict.distinct.count
@@ -38,7 +42,12 @@ class Conflicts::SessionConflictsController < ApplicationController
 
   def conflicts_for
     session_id = params[:session_id]
-    collection = Conflicts::SessionConflict.includes([:session,:person,:session_assignment,:room]).where(session_id: session_id).distinct
+    collection = Conflicts::SessionConflict
+                  .includes([:session,:person,:session_assignment,:room])
+                  .where("session_id = ? or conflict_session_id = ?", session_id, session_id)
+                  .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .distinct
 
     meta = {}
     meta[:total] = collection.count
