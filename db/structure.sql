@@ -997,31 +997,6 @@ CREATE TABLE public.person_mailing_assignments (
 
 
 --
--- Name: person_schedule; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.person_schedule AS
- SELECT p.id AS person_id,
-    p.name,
-    p.published_name,
-    sa.id AS session_assignment_id,
-    sart.id AS session_assignment_role_type_id,
-    sart.name AS session_assignment_name,
-    sart.role_type AS session_assignment_role_type,
-    sa.sort_order,
-    sessions.id AS session_id,
-    sessions.title,
-    sessions.start_time,
-    (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
-    sessions.room_id
-   FROM (((public.session_assignments sa
-     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
-     JOIN public.people p ON ((p.id = sa.person_id)))
-     LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
-  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL));
-
-
---
 -- Name: person_schedules; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -2790,6 +2765,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220612135253'),
 ('20220613152827'),
 ('20220613171929'),
+('20220613194424'),
 ('20220614014103');
 
 
