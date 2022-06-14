@@ -35,7 +35,8 @@ class SessionSerializer
   end
 
   attribute :has_conflicts do |session|
-    session.session_conflicts.count > 0
+    reserve = SessionAssignmentRoleType.find_by name: 'Reserve'
+    session.session_conflicts.joins(:session_assignment).where("session_assignments.session_assignment_role_type_id != ?",reserve.id).count > 0
   end
 
   has_many :session_areas, serializer: SessionAreaSerializer,
