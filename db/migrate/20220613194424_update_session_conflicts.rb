@@ -1,5 +1,9 @@
 class UpdateSessionConflicts < ActiveRecord::Migration[6.1]
   def up
+    execute <<-SQL
+      DROP VIEW IF EXISTS session_conflicts;
+    SQL
+
     # This will be extended to union the other conflicts
     execute <<-SQL
       CREATE OR REPLACE VIEW session_conflicts AS
