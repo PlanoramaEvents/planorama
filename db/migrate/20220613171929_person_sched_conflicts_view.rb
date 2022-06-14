@@ -1,3 +1,4 @@
+
 class PersonSchedConflictsView < ActiveRecord::Migration[6.1]
   def up
     # This will be extended to union the other conflicts

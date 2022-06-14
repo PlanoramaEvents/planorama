@@ -1,11 +1,11 @@
 class FixConflictView < ActiveRecord::Migration[6.1]
   def up
-    person_sched_conflicts
-    avail_conflicts
-
     execute <<-SQL
       DROP VIEW IF EXISTS session_conflicts;
     SQL
+
+    person_sched_conflicts
+    avail_conflicts
 
     execute <<-SQL
       CREATE OR REPLACE VIEW session_conflicts AS
