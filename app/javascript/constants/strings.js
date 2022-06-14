@@ -60,7 +60,7 @@ module.exports = {
     SURVEY_LINKED_FIELD: "This answer is linked directly to a profile field. Any information in that field will be mirrored here, and editing this information will edit your profile. Linked fields have a special icon: ",
     SURVEY_LINKED_FIELD1: "Any field marked with (",
     SURVEY_LINKED_FIELD2: ") is linked directly to a profile field. Any information from that field is mirrored here, and editing that information will edit your profile.",
-    
+
     //generic app wide
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_AGREEMENT_SUCCESS: (title) => `${title} successfully added to Planorama.`,
@@ -242,9 +242,9 @@ module.exports = {
         // room has multiple sessions ... room, conflicting session
         room_conflict: (person_name, conflict_session_name, room_name) => `${room_name} has multiple sessions`,
         // Person has conflicting sessions ...
-        person_session_conflict: (person_name, conflict_session_name, room_name) => `${person_name} is double booked with ${conflict_session_name}`,
+        person_session_conflict: (person_name, conflict_session_name, room_name) => `${person_name} is double booked with "${conflict_session_name}"`,
         // Person is back to back with conflicting sessions ...
-        back_to_back: (person_name, conflict_session_name, room_name) => `${person_name} has back to back with ${conflict_session_name}`,
+        back_to_back: (person_name, conflict_session_name, room_name) => `${person_name} has back to back with "${conflict_session_name}"`,
         default: 'a conflict'
     }
 }
