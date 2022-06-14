@@ -58,7 +58,9 @@ module.exports = {
     //survey questions
     SURVEY_YESNOMAYBE_PLACEHOLDER: "Please elaborate here.",
     SURVEY_LINKED_FIELD: "This answer is linked directly to a profile field. Any information in that field will be mirrored here, and editing this information will edit your profile. Linked fields have a special icon: ",
-
+    SURVEY_LINKED_FIELD1: "Any field marked with (",
+    SURVEY_LINKED_FIELD2: ") is linked directly to a profile field. Any information from that field is mirrored here, and editing that information will edit your profile.",
+    
     //generic app wide
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
     ADMIN_ADD_AGREEMENT_SUCCESS: (title) => `${title} successfully added to Planorama.`,

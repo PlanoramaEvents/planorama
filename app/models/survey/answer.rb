@@ -19,11 +19,10 @@ class Survey::Answer < ApplicationRecord
              foreign_key: 'question_id',
              inverse_of: :answers
 
-
-  # TODO: on save need to remove next_page refs that do not exist
-  # TODO: put validate back in once Gail has fixed the new question types
-  # before_save :validate_answer, prepend: true
-  before_save :ensure_next_page_consistency
+  before_save :validate_answer, prepend: true
+  before_save :check_if_published, :ensure_next_page_consistency
+  before_destroy :check_if_published
+  before_update :check_if_published
 
   private
 
@@ -47,5 +46,11 @@ class Survey::Answer < ApplicationRecord
     return unless next_page_id # && next_page_id > 0
 
     next_page_id = nil unless Survey::Page.exists? next_page_id
+  end
+
+  def check_if_published
+    if question.survey.public
+      raise 'can not update or delete an answer in a survey that is public'
+    end
   end
 end
