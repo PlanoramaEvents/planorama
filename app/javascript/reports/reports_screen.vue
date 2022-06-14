@@ -41,6 +41,15 @@
       <li>
         <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
       </li>
+      <li>
+        <a href="/report/conflict_reports/people_outside_availability" target="_blank">People outside of Availability</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/people_double_booked" target="_blank">People double booked</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/back_to_back" target="_blank">Back to Back</a>
+      </li>
     </ul>
 
     <p><b>Schedule</b></p>
