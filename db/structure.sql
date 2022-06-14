@@ -997,21 +997,6 @@ CREATE TABLE public.person_mailing_assignments (
 
 
 --
--- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.session_assignment_role_type (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    lock_version integer DEFAULT 0,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    name character varying(100) NOT NULL,
-    role_type public.assignment_role_enum,
-    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
-);
-
-
---
 -- Name: person_schedule; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -2807,3 +2792,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220613171929'),
 ('20220613194424'),
 ('20220614014103');
+
+
