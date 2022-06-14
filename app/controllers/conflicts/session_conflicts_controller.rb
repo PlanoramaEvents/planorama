@@ -21,6 +21,7 @@ class Conflicts::SessionConflictsController < ApplicationController
       meta: meta,
       include: [
         :session,
+        :conflict_session,
         :person,
         :session_assignment,
         :room
@@ -46,6 +47,7 @@ class Conflicts::SessionConflictsController < ApplicationController
       meta: meta,
       include: [
         :session,
+        :conflict_session,
         :person,
         :session_assignment,
         :room
