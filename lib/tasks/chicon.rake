@@ -1,6 +1,6 @@
 namespace :chicon do
   desc "Ensure that the session formats are correct"
-  task fix_formets: :environment do
+  task fix_formats: :environment do
     %i[
       Autographing
       Ceremony
