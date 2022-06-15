@@ -29,7 +29,7 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/rake parameters:seed_names
   bin/rake chicon:seed_exclusions
   bin/rake chicon:seed_rooms
-  bin/rake chicon:fix_formets
+  bin/rake chicon:fix_formats
   bin/rake rbac:seed_defaults
 
   # Run migrations and start the server, anything that comes in on 3000 is accepted
