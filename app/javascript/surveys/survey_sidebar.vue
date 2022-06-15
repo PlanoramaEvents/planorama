@@ -19,11 +19,12 @@
           </b-col>
         </b-row>
         <div class="float-right d-flex justify-content-end">
-          <b-button title="Survey Link" variant="primary" :href="surveyLink" target="_blank"><b-icon-link45deg variant="white"></b-icon-link45deg></b-button>
-          <b-button title="Preview Survey" class="mx-2" variant="primary" :href="previewLink" target="_blank"><b-icon-eye-fill variant="white"></b-icon-eye-fill></b-button>
-          <b-button title="Edit Survey" variant="primary" :to="editLink"><b-icon-pencil variant="white"></b-icon-pencil></b-button>
-          <span title="Send Survey"><b-button variant="primary" disabled class="mx-2" title="Send Survey"><b-icon-envelope></b-icon-envelope></b-button></span>
-          <b-dropdown variant="primary" right no-caret>
+          <icon-button title="Survey Link" :href="surveyLink" target="_blank" icon="link45deg"></icon-button>
+          <icon-button title="Preview Survey" :href="previewLink" target="_blank" icon="eye-fill"></icon-button>
+          <icon-button title="Edit Survey" :to="editLink" :disabled="survey.public" :disabledTooltip="SURVEY_PUBLIC_NO_EDIT" icon="pencil"></icon-button>
+          <icon-button icon="envelope" disabled disabledTooltip="Send Survey"></icon-button>
+          <!-- <span title="Send Survey"><b-button variant="primary" disabled class="mx-2" title="Send Survey"><b-icon-envelope></b-icon-envelope></b-button></span> -->
+          <b-dropdown variant="primary" right no-caret size="sm" class="ml-1">
             <template #button-content>
               <b-icon-three-dots></b-icon-three-dots>
             </template>
@@ -62,6 +63,7 @@ import SurveyQuestion from './survey_question';
 import surveyMixin from './survey.mixin';
 import SurveySettingsTab from './survey-settings-tab';
 import SidebarVue from '../components/sidebar_vue';
+import IconButton from '@/components/icon_button.vue';
 import {
   SURVEY_RESULTS_CLEAR_CONFIRM,
   SURVEY_SAVE_SUCCESS_DELETE,
@@ -70,6 +72,7 @@ import {
   SURVEY_RESULTS_FREEZE_SUCCESS,
   SURVEY_RESULTS_UNFREEZE_SUCCESS,
   SURVEY_CONFIRM_DELETE,
+  SURVEY_PUBLIC_NO_EDIT
 } from '../constants/strings';
 import { DUPLICATE_SURVEY } from '@/store/survey';
 import { CLEAR_SURVEY_SUBMISSIONS } from '../store/survey/survey.actions';
@@ -80,13 +83,15 @@ export default {
     SidebarVue,
     SurveyQuestion,
     SurveySettingsTab,
+    IconButton
   },
   mixins: [
     surveyMixin
   ],
   data: () => ({
     SURVEY_RESULTS_CLEAR_CONFIRM,
-    SURVEY_CONFIRM_DELETE
+    SURVEY_CONFIRM_DELETE,
+    SURVEY_PUBLIC_NO_EDIT
   }),
   computed: {
     questions() {
