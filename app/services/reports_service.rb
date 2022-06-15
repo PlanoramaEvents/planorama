@@ -1,4 +1,98 @@
 module ReportsService
+  # ReportsService.participant_and_session_limits
+  def self.participant_and_session_limits
+    timezone = ConfigService.value('convention_timezone')
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' or name != 'Reserve')")
+
+    Time.use_zone(timezone) do
+      people = ::Person.arel_table
+      count_query = self.people_day_counts.as('count_query')
+      Person
+        .select(
+          ::Person.arel_table[Arel.star],
+          'count_query.day',
+          'count(count_query.day) as session_count',
+          'session_limits.max_sessions'
+        )
+        .joins(
+          :session_limits,
+          [
+            people.create_join(
+              count_query,
+              people.create_on(
+                count_query[:person_id].eq(people[:id])
+              )
+            )
+          ]
+        )
+        .where("session_limits.day = count_query.day::DATE")
+        .group('people.id, count_query.day, session_limits.max_sessions')
+        .having(
+          "count(count_query.day) < session_limits.max_sessions"
+        )
+        .order('people.published_name, count_query.day asc')
+    end
+  end
+
+  # ReportsService.participant_and_con_session_limits
+  def self.participant_and_con_session_limits(con_limit: 6)
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' or name != 'Reserve')")
+    excluded_formats = Format.where("name in (?)",['Table Talk', 'Reading', 'Autographing'])
+
+    Person
+      .select(
+        ::Person.arel_table[Arel.star],
+        'count(people.id) as session_count'
+      )
+      .joins(:session_assignments, :sessions)
+      .where("session_assignments.session_assignment_role_type_id in (?)", active_roles.collect{|a| a.id})
+      .where("sessions.format_id not in (?)",excluded_formats.collect{|f| f.id})
+      .group('people.id')
+      .having("count(people.id) > ?", con_limit)
+      .order('people.published_name')
+  end
+
+  # ReportsService.people_day_counts
+  def self.people_day_counts
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' or name != 'Reserve')")
+    people = ::Person.arel_table
+    assignments = ::SessionAssignment.arel_table
+    sessions = ::Session.arel_table
+
+    people.project(
+      people[:id].as('person_id'),
+      self.day_fn().as('day')
+    )
+    .join(assignments).on(assignments[:person_id].eq(people[:id]))
+    .join(sessions).on(sessions[:id].eq(assignments[:session_id]))
+    .where(assignments[:session_assignment_role_type_id].in(active_roles.collect{|a| a.id}))
+    .group("people.id, sessions.id")
+    .order("people.id")
+  end
+
+  # ReportsService.day_fn
+  def self.day_fn
+    start_time = Time.parse(ConfigService.value('convention_start_time')).beginning_of_day
+    end_time = Time.parse(ConfigService.value('convention_end_time')).end_of_day
+    days = (end_time - start_time).round / (24 * 60 * 60)
+
+    sessions = ::Session.arel_table
+
+    clause = Arel::Nodes::Case.new
+
+    (0..(days-1)).each do |day|
+      clause = clause.when(
+        sessions[:start_time]
+        .gteq(start_time + (day*24).hour)
+        .and(
+          sessions[:start_time].lteq(start_time + ((day+1)*24).hour)
+        )
+      ).then((start_time + (day*24).hour).to_date)
+    end
+
+    clause #.else(nil)
+  end
+
   def self.panels_with_too_few_people
     sub = self.sessions_and_participant_count.as("session_list")
     self.panels_with_counts(sub).where(sub[:nbr_assignments].lteq(3))

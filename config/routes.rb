@@ -56,6 +56,9 @@ Rails.application.routes.draw do
   get 'report/session_reports/panels_with_too_few_people', to: 'reports/session_reports#panels_with_too_few_people'
   get 'report/session_reports/panels_with_too_many_people', to: 'reports/session_reports#panels_with_too_many_people'
 
+  get 'report/session_reports/participants_over_session_limits', to: 'reports/session_reports#participants_over_session_limits'
+  get 'report/session_reports/participants_over_con_session_limits', to: 'reports/session_reports#participants_over_con_session_limits'
+
   get 'report/conflict_reports/people_outside_availability', to: 'reports/conflict_reports#people_outside_availability'
   get 'report/conflict_reports/people_double_booked', to: 'reports/conflict_reports#people_double_booked'
   get 'report/conflict_reports/back_to_back', to: 'reports/conflict_reports#back_to_back'
