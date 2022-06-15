@@ -36,7 +36,7 @@
             <b-dd-item disabled>Export</b-dd-item>
             <b-dd-item disabled>Make Template</b-dd-item>
             <b-dd-item disabled>Freeze Survey Edits</b-dd-item>
-            <b-dd-item v-b-modal.confirmDelete>Delete</b-dd-item>
+            <b-dd-item v-b-modal.confirmDelete v-b-tooltip.left :title="deleteTitle" :disabled="survey.public">Delete</b-dd-item>
           </b-dropdown>
         </div>
         <b-tabs content-class="mt-3" nav-class="border-0" nav-wrapper-class="border-bottom">
@@ -72,7 +72,8 @@ import {
   SURVEY_RESULTS_FREEZE_SUCCESS,
   SURVEY_RESULTS_UNFREEZE_SUCCESS,
   SURVEY_CONFIRM_DELETE,
-  SURVEY_PUBLIC_NO_EDIT
+  SURVEY_PUBLIC_NO_EDIT,
+SURVEY_PUBLIC_NO_DELETE
 } from '../constants/strings';
 import { DUPLICATE_SURVEY } from '@/store/survey';
 import { CLEAR_SURVEY_SUBMISSIONS } from '../store/survey/survey.actions';
@@ -118,6 +119,9 @@ export default {
     },
     previewLink() {
       return `${this.surveyLink}/preview`;
+    },
+    deleteTitle() {
+      return this.survey.public ? SURVEY_PUBLIC_NO_DELETE : '';
     }
   },
   methods: {
