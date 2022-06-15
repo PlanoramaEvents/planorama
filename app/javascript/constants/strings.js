@@ -246,5 +246,7 @@ module.exports = {
         // Person is back to back with conflicting sessions ...
         back_to_back: (person_name, conflict_session_name, room_name) => `${person_name} has back to back with "${conflict_session_name}"`,
         default: 'a conflict'
-    }
+    },
+
+    SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
 }

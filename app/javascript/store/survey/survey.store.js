@@ -9,7 +9,9 @@ import {
   DUPLICATE_SURVEY,
   DUPLICATE_QUESTION,
   NEW_RESPONSE,
-  SET_PREVIEW_MODE
+  SET_PREVIEW_MODE,
+  SHOW_REDIR,
+  REDIR_SHOWN
 } from './survey.actions';
 import {
   surveyModel,
@@ -51,6 +53,7 @@ export const surveyStore = {
   },
   state: {
     previewMode: false,
+    redirMessage: false,
     // A cache for the survey sorting
     indexCache: {
       pages: [], // ordered pages
@@ -81,6 +84,12 @@ export const surveyStore = {
     [SET_PREVIEW_MODE](state, previewMode) {
       // console.debug("previewMode", previewMode)
       state.previewMode = previewMode
+    },
+    [SHOW_REDIR](state) {
+      state.redirMessage = true
+    },
+    [REDIR_SHOWN](state) {
+      state.redirMessage = false
     },
     [NEW_RESPONSE] (state, {relationships = {}, text = '', answers = [], socialmedia = {
         twitter: null, facebook: null, linkedin: null,
