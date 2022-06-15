@@ -246,5 +246,7 @@ module.exports = {
         // Person is back to back with conflicting sessions ...
         back_to_back: (person_name, conflict_session_name, room_name) => `${person_name} has back to back with "${conflict_session_name}"`,
         default: 'a conflict'
-    }
+    },
+
+    SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
 }
