@@ -10,7 +10,7 @@ import {
   pageMixin,
   surveyIdPropMixinId
 } from '@mixins';
-import { NEW_SUBMISSION, SET_PREVIEW_MODE } from '@/store/survey';
+import { NEW_SUBMISSION, SET_PREVIEW_MODE, SHOW_REDIR } from '@/store/survey';
 
 export default {
   name: "TakeSurvey",
@@ -21,7 +21,8 @@ export default {
   ],
   methods: {
     ...mapMutations({
-      setPreviewMode: SET_PREVIEW_MODE
+      setPreviewMode: SET_PREVIEW_MODE,
+      showRedir: SHOW_REDIR
     }),
     ...mapActions({
       newSubmission: NEW_SUBMISSION,
@@ -29,11 +30,14 @@ export default {
   },
   mounted() {
     this.surveyLoadedPromise.then(() => {
-      this.setPreviewMode(!!this.preview)
-      if (!this.preview) {
+      this.setPreviewMode(this.preview === "preview")
+      if (this.preview !== "preview") {
         this.newSubmission({surveyId: this.id});
       }
-      let path = `/surveys/${this.id}/page/${this.selectedPage.id}${this.preview ? '/preview' : ''}`
+      if (this.preview === 'redir') {
+        this.showRedir();
+      }
+      let path = `/surveys/${this.id}/page/${this.selectedPage.id}${this.preview === 'preview' ? `/preview` : ''}`
       // console.log('redirecting to ', path)
       this.$router.push({path})
     })
