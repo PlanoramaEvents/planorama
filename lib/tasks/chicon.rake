@@ -1,4 +1,50 @@
 namespace :chicon do
+  desc "Ensure that the session formats are correct"
+  task fix_formats: :environment do
+    %i[
+      Autographing
+      Ceremony
+      Concert
+      Demonstration
+      Dialog
+      Discussion
+      Filk Circle
+      Game
+      Game Show
+      Interview
+      Meeting
+      Meetup
+      Other
+      Panel
+      Performance
+      Presentation
+      Reading
+      Rehearsal
+      Room Turn
+      Table Talk
+      Workshop
+    ].each do |format_name|
+      Format.create(name: format_name) unless Format.exists?(name: format_name)
+    end
+
+    format = Format.find_by name: ""
+    if format
+      Session.where(format_id: format.id).update_all(format_id: nil)
+    end
+
+    format = Format.find_by name: "Rehersal"
+    new_format = Format.find_by name: "Rehearsal"
+    if format
+      Session.where(format_id: format.id).update_all(format_id: new_format.id)
+    end
+
+    format = Format.find_by name: "Other (add to notes)"
+    new_format = Format.find_by name: "Other"
+    if format
+      Session.where(format_id: format.id).update_all(format_id: new_format.id)
+    end
+  end
+
   desc "Seed Chicon Data"
   task seed_exclusions: :environment do
     if Exclusion.count == 0
