@@ -43,7 +43,7 @@ elif [[ $RAILS_ENV = "staging" ]]; then
   bin/rake role_types:seed_role_types
   bin/rake chicon:seed_exclusions
   bin/rake chicon:seed_rooms
-  bin/rake chicon:fix_formets
+  bin/rake chicon:fix_formats
   bin/rake rbac:seed_defaults
 
   bin/rails db:seed
