@@ -1,4 +1,9 @@
-class MailingsPolicy < PlannerPolicy
+class SurveyPolicy < PlannerPolicy
+  # Anyone can see a survey ...
+  # def show?
+  #   return true
+  # end
+
   def assign_people?
     allowed?(action: :assign_people)
   end
@@ -7,24 +12,13 @@ class MailingsPolicy < PlannerPolicy
     allowed?(action: :unassign_people)
   end
 
-  def schedule?
-    allowed?(action: :schedule)
-  end
-
-  def preview?
-    allowed?(action: :preview)
-  end
-
-  def clone?
-    allowed?(action: :clone)
-  end
-
   class Scope < PlannerPolicy::Scope
     def resolve
       if allowed?(action: :index)
+        # Rails.logger.debug "**** ALL #{@person.id}"
         scope.all
       else
-        scope.where(id: @person.id)
+        scope.where(public: true)
       end
     end
   end

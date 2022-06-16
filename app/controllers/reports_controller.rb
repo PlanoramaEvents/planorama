@@ -9,7 +9,7 @@ class ReportsController < ApplicationController
   # Program Participant Survey "Created At" field
   #
   def people_and_submissions
-    authorize SessionAssignment, policy_class: ReportsPolicy
+    authorize SessionAssignment, policy_class: ReportPolicy
 
     people = Person.includes(
       {submissions: :survey},
@@ -60,7 +60,7 @@ class ReportsController < ApplicationController
   #     Reserve - The names of people selected as reserved
   #
   def sessions_with_participants
-    authorize SessionAssignment, policy_class: ReportsPolicy
+    authorize SessionAssignment, policy_class: ReportPolicy
 
     session_table = Arel::Table.new(Session.table_name)
     subquery = Session.area_list.as('areas_list')
@@ -133,7 +133,7 @@ class ReportsController < ApplicationController
     timezone = ConfigService.value('convention_timezone')
     # We want the times to be in the TZ of the con for the report
     Time.use_zone(timezone) do
-      authorize SessionAssignment, policy_class: ReportsPolicy
+      authorize SessionAssignment, policy_class: ReportPolicy
 
       session_table = Arel::Table.new(Session.table_name)
       subquery = Session.area_list.as('areas_list')
@@ -217,7 +217,7 @@ class ReportsController < ApplicationController
     timezone = ConfigService.value('convention_timezone')
     # We want the times to be in the TZ of the con for the report
     Time.use_zone(timezone) do
-      authorize SessionAssignment, policy_class: ReportsPolicy
+      authorize SessionAssignment, policy_class: ReportPolicy
 
       session_table = Arel::Table.new(Session.table_name)
       subquery = Session.area_list.as('areas_list')
@@ -281,7 +281,7 @@ class ReportsController < ApplicationController
   #     Item title
   #     If they are assigned as a moderator or not for that item
   def assigned_sessions_by_participant
-    authorize SessionAssignment, policy_class: ReportsPolicy
+    authorize SessionAssignment, policy_class: ReportPolicy
 
     people = Person.includes(
       {session_assignments: [:session, :session_assignment_role_type]}
@@ -385,7 +385,7 @@ class ReportsController < ApplicationController
   # What they wrote in the free text box
   # (Nice to have) Area
   def participant_selections
-    authorize SessionAssignment, policy_class: ReportsPolicy
+    authorize SessionAssignment, policy_class: ReportPolicy
 
     assignments = SessionAssignment
                     .joins(:person)
@@ -430,7 +430,7 @@ class ReportsController < ApplicationController
   # What they wrote in the free text box
   # (Nice to have) Area
   def session_selections
-    authorize Session, policy_class: ReportsPolicy
+    authorize Session, policy_class: ReportPolicy
 
     sessions = Session
                 .eager_load(:areas, {session_assignments: [:person]})
@@ -483,7 +483,7 @@ class ReportsController < ApplicationController
   #  sort by person name, session title
   #
   def participant_do_not_assign_with
-    authorize SessionAssignment, policy_class: ReportsPolicy
+    authorize SessionAssignment, policy_class: ReportPolicy
 
     sa_table = Arel::Table.new(SessionAssignment.table_name)
     subquery = Session.area_list.as('areas_list')

@@ -428,11 +428,11 @@ namespace :rbac do
           "update": true
       },
       "page": {
-          "create": false,
-          "destroy": false,
+          "create": true,
+          "destroy": true,
           "index": true,
           "show": true,
-          "update": false
+          "update": true
       },
       "submission": {
           "create": true,
@@ -451,18 +451,18 @@ namespace :rbac do
           "update": true
       },
       "question": {
-          "create": false,
-          "destroy": false,
+          "create": true,
+          "destroy": true,
           "index": true,
           "show": true,
-          "update": false
+          "update": true
       },
       "answer": {
-          "create": false,
-          "destroy": false,
+          "create": true,
+          "destroy": true,
           "index": true,
           "show": true,
-          "update": false
+          "update": true
       },
       "report": {
         "assigned_sessions_by_participant": true,

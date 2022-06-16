@@ -1,8 +1,8 @@
 class Survey::SubmissionsController < ResourceController
   SERIALIZER_CLASS = 'Survey::SubmissionSerializer'.freeze
   MODEL_CLASS = 'Survey::Submission'.freeze
-  POLICY_CLASS = 'Survey::SubmissionsPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'Survey::SubmissionsPolicy::Scope'.freeze
+  POLICY_CLASS = 'Survey::SubmissionPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'Survey::SubmissionPolicy::Scope'.freeze
   XLS_SERIALIZER_CLASS = 'Survey::SubmissionXlsSerializer'.freeze
   DEFAULT_SORTBY = 'survey_submissions.updated_at'
 

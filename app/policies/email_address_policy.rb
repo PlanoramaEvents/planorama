@@ -1,24 +1,15 @@
-class SessionLimitsPolicy < PlannerPolicy
+class EmailAddressPolicy < PlannerPolicy
   # def index?
-  #   # return true if @record.class != Symbol && @record.id == @person.id
-  #   # TODO???
   #   # @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
   #   true
   # end
   #
   # def create?
-  #   return true if @record.class != Symbol && @record.person_id == @person.id
-  #
-  #   is_admin_or_staff
+  #   # @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
+  #   true
   # end
   #
   # def update?
-  #   return true if @record.class != Symbol && @record.person_id == @person.id
-  #
-  #   is_admin_or_staff
-  # end
-  #
-  # def show?
   #   return true if @record.class != Symbol && @record.person_id == @person.id
   #
   #   is_admin_or_staff
@@ -29,6 +20,16 @@ class SessionLimitsPolicy < PlannerPolicy
   #
   #   is_admin_or_staff
   # end
+  #
+  # def show?
+  #   return true if @record.class != Symbol && @record.person_id == @person.id
+  #
+  #   is_admin_or_staff
+  # end
+
+  def mailed_surveys?
+    allowed?(action: :mailed_surveys)
+  end
 
   class Scope < PlannerPolicy::Scope
     def resolve
@@ -39,5 +40,4 @@ class SessionLimitsPolicy < PlannerPolicy
       end
     end
   end
-
 end

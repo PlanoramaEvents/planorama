@@ -1,7 +1,7 @@
 class RoomSetsController < ResourceController
   SERIALIZER_CLASS = 'RoomSetSerializer'.freeze
-  POLICY_CLASS = 'RoomSetsPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'RoomSetsPolicy::Scope'.freeze
+  POLICY_CLASS = 'RoomSetPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'RoomSetPolicy::Scope'.freeze
 
   def paginate
     false
