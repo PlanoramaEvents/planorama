@@ -99,6 +99,7 @@ export default {
       return [].concat.apply([
         {
           key: "submitter",
+          search_key: 'person.name',
           label: "Submitter",
           type: "text"
         },
