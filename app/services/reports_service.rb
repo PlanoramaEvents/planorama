@@ -58,10 +58,10 @@ module ReportsService
             )
           ]
         )
-        .order('people.published_name, count_query.day asc')
         .where(
           "count_query.session_count > session_limits.max_sessions"
         )
+        .order('people.published_name, count_query.day asc')
     end
   end
 
