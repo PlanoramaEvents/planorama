@@ -31,7 +31,7 @@ class SessionSerializer
   end
 
   attribute :end_time do |session|
-    session.start_time ? session.start_time + session.duration.minutes : nil
+    (session.start_time && session.duration) ? session.start_time + session.duration.minutes : nil
   end
 
   attribute :has_conflicts do |session|
