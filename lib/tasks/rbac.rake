@@ -476,7 +476,9 @@ namespace :rbac do
       },
       "session_report": {
         "panels_with_too_few_people": true,
-        "panels_with_too_many_people": true
+        "panels_with_too_many_people": true,
+        "participants_over_session_limits": true,
+        "participants_over_con_session_limits": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -718,6 +720,8 @@ namespace :rbac do
       "session_report": {
         "panels_with_too_few_people": true,
         "panels_with_too_many_people": true,
+        "participants_over_session_limits": true,
+        "participants_over_con_session_limits": true
       },
       "conflict_report": {
         "people_outside_availability": true,
