@@ -2,7 +2,7 @@ class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
   def participants_over_session_limits
-    authorize SessionAssignment, policy_class: Reports::SessionReportsPolicy
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Participants too Many Sessions")
@@ -36,10 +36,10 @@ class Reports::SessionReportsController < ApplicationController
   end
 
   def participants_over_con_session_limits
-    authorize SessionAssignment, policy_class: Reports::SessionReportsPolicy
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Participants with too Many Sessions for Con")
+    worksheet = workbook.add_worksheet("Too Many Sessions for Con")
     people = ::ReportsService.participant_and_con_session_limits
 
     worksheet.append_row(
