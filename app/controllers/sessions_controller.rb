@@ -83,7 +83,8 @@ class SessionsController < ResourceController
             open_for_interest: interest_open && interest_open == 'Yes',
             instructions_for_interest: interest_instructions.strip,
             item_notes: [notes, goh_notes].join("\n").strip,
-            format: format
+            format: format,
+            duration: 60
           )
 
           # NOTE: we are not worried about tags as yet
