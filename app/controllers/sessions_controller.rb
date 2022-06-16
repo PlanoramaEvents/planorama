@@ -1,7 +1,7 @@
 class SessionsController < ResourceController
   SERIALIZER_CLASS = 'SessionSerializer'.freeze
-  POLICY_CLASS = 'SessionsPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'SessionsPolicy::Scope'.freeze
+  POLICY_CLASS = 'SessionPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
   def express_interest

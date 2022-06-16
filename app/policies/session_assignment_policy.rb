@@ -1,4 +1,4 @@
-class SessionAssignmentsPolicy < PlannerPolicy
+class SessionAssignmentPolicy < PlannerPolicy
   def unexpress_interest?
     return true if @record.person_id == @person.id
 

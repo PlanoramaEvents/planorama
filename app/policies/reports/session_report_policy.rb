@@ -1,4 +1,4 @@
-class Reports::SessionReportsPolicy < BasePolicy
+class Reports::SessionReportPolicy < BasePolicy
   def panels_with_too_few_people?
     allowed?(action: :panels_with_too_few_people)
   end

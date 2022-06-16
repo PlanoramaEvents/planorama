@@ -1,7 +1,7 @@
 class Reports::SessionReportsController < ApplicationController
 
   def panels_with_too_few_people
-    authorize SessionAssignment, policy_class: Reports::SessionReportsPolicy
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Panels with too Few People")
@@ -35,7 +35,7 @@ class Reports::SessionReportsController < ApplicationController
   end
 
   def panels_with_too_many_people
-    authorize SessionAssignment, policy_class: Reports::SessionReportsPolicy
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Panels with too Many People")

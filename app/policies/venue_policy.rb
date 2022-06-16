@@ -1,4 +1,4 @@
-class VenuesPolicy < PlannerPolicy
+class VenuePolicy < PlannerPolicy
   class Scope < PlannerPolicy::Scope
     def resolve
       scope.all

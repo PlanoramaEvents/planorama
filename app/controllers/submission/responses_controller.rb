@@ -3,8 +3,8 @@ class Submission::ResponsesController < ResourceController
   DEFAULT_SORTBY = 'id'
   SERIALIZER_CLASS = 'Survey::ResponseSerializer'.freeze
 
-  POLICY_CLASS = 'Submission::ResponsesPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'Submission::ResponsesPolicy::Scope'.freeze
+  POLICY_CLASS = 'Submission::ResponsePolicy'.freeze
+  POLICY_SCOPE_CLASS = 'Submission::ResponsePolicy::Scope'.freeze
 
   # TODO: need the survey id etc as a parameter to the collection/index method
 

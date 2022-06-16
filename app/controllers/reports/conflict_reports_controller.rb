@@ -2,7 +2,7 @@ class Reports::ConflictReportsController < ApplicationController
   around_action :set_timezone
 
   def back_to_back
-    authorize SessionAssignment, policy_class: Reports::ConflictReportsPolicy
+    authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
 
     conflicts_table = Arel::Table.new(Conflicts::PersonScheduleConflict.table_name)
     subquery = Session.area_list.as('areas_list')
@@ -83,7 +83,7 @@ class Reports::ConflictReportsController < ApplicationController
 
   # Names, time, list of {session name, area, room} tuples
   def people_double_booked
-    authorize SessionAssignment, policy_class: Reports::ConflictReportsPolicy
+    authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
 
     conflicts_table = Arel::Table.new(Conflicts::PersonScheduleConflict.table_name)
     subquery = Session.area_list.as('areas_list')
@@ -161,7 +161,7 @@ class Reports::ConflictReportsController < ApplicationController
   end
 
   def people_outside_availability
-    authorize SessionAssignment, policy_class: Reports::ConflictReportsPolicy
+    authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
 
     conflicts_table = Arel::Table.new(Conflicts::AvailabilityConflict.table_name)
     subquery = Session.area_list.as('areas_list')

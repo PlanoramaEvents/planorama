@@ -1,7 +1,7 @@
 class PersonExclusionsController < ResourceController
   SERIALIZER_CLASS = 'PersonExclusionSerializer'.freeze
-  POLICY_CLASS = 'PersonExclusionsPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'PersonExclusionsPolicy::Scope'.freeze
+  POLICY_CLASS = 'PersonExclusionPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'PersonExclusionPolicy::Scope'.freeze
 
   def replace
     exclusions = params[:data][:attributes][:person_exclusions_attributes]

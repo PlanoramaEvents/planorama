@@ -1,6 +1,6 @@
 class RoomPolicy < PlannerPolicy
   def index?
-    false
+    true
   end
 
   def show?

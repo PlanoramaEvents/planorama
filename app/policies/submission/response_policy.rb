@@ -1,4 +1,4 @@
-class Submission::ResponsesPolicy < PlannerPolicy
+class Submission::ResponsePolicy < PlannerPolicy
   def create?
     # Anyone can create a submission response ....
     return true #if @person
