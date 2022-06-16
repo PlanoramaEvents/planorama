@@ -62,6 +62,7 @@ Rails.application.routes.draw do
   get 'report/conflict_reports/people_outside_availability', to: 'reports/conflict_reports#people_outside_availability'
   get 'report/conflict_reports/people_double_booked', to: 'reports/conflict_reports#people_double_booked'
   get 'report/conflict_reports/back_to_back', to: 'reports/conflict_reports#back_to_back'
+  get 'report/conflict_reports/back_to_back_to_back', to: 'reports/conflict_reports#back_to_back_to_back'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]

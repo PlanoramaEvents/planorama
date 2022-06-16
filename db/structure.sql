@@ -955,49 +955,6 @@ CREATE TABLE public.person_agreements (
 
 
 --
--- Name: person_constraints; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_constraints (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    max_items_per_day integer,
-    max_items_per_con integer,
-    person_id uuid,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0
-);
-
-
---
--- Name: person_exclusions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_exclusions (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid,
-    exclusion_id uuid,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: person_mailing_assignments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_mailing_assignments (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid,
-    mailing_id uuid,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0
-);
-
-
---
 -- Name: person_schedules; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -1051,6 +1008,83 @@ CREATE VIEW public.person_schedule_conflicts AS
    FROM (public.person_schedules ps1
      JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps1.start_time >= ps2.start_time) AND ((ps1.start_time <= ps2.end_time) OR ((ps1.end_time >= ps2.start_time) AND (ps1.end_time <= ps2.end_time))))))
   ORDER BY ps1.person_id, GREATEST(ps1.start_time, ps2.start_time);
+
+
+--
+-- Name: person_back_to_back_to_back; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_back_to_back_to_back AS
+ SELECT psc1.person_id,
+    psc1.session_id,
+    psc1.start_time,
+    psc1.end_time,
+    psc1.session_assignment_id,
+    psc1.session_assignment_role_type_id,
+    psc1.session_assignment_name,
+    psc1.session_assignment_role_type,
+    psc1.room_id,
+    psc2.session_id AS middle_session_id,
+    psc2.start_time AS middle_start_time,
+    psc2.end_time AS middle_end_time,
+    psc2.session_assignment_id AS middle_session_assignment_id,
+    psc2.session_assignment_role_type_id AS middle_session_assignment_role_type_id,
+    psc2.session_assignment_name AS middle_session_assignment_name,
+    psc2.session_assignment_role_type AS middle_session_assignment_role_type,
+    psc2.room_id AS middle_room_id,
+    psc2.conflict_session_id,
+    psc2.conflict_end_time,
+    psc2.conflict_session_assignment_role_type_id,
+    psc2.conflict_session_assignment_role_type,
+    psc2.conflict_session_assignment_name,
+    psc2.conflict_room_id,
+    concat(psc1.person_id, ':', psc1.session_id, ':', psc2.session_id, ':', psc2.conflict_session_id) AS id
+   FROM (public.person_schedule_conflicts psc1
+     JOIN public.person_schedule_conflicts psc2 ON (((psc2.session_id = psc1.conflict_session_id) AND (psc2.back_to_back = true))))
+  WHERE (psc1.back_to_back = true);
+
+
+--
+-- Name: person_constraints; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_constraints (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    max_items_per_day integer,
+    max_items_per_con integer,
+    person_id uuid,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: person_exclusions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_exclusions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    exclusion_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: person_mailing_assignments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_mailing_assignments (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    mailing_id uuid,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    lock_version integer DEFAULT 0
+);
 
 
 --
@@ -2770,6 +2804,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220613194424'),
 ('20220614014103'),
 ('20220614183042'),
-('20220614190928');
+('20220614190928'),
+('20220616160624');
 
 

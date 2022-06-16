@@ -10,4 +10,8 @@ class Reports::ConflictReportPolicy < BasePolicy
   def back_to_back?
     allowed?(action: :back_to_back)
   end
+
+  def back_to_back_to_back?
+    allowed?(action: :back_to_back_to_back)
+  end
 end
