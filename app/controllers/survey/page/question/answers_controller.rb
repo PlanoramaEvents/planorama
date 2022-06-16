@@ -2,6 +2,8 @@ class Survey::Page::Question::AnswersController < ResourceController
   MODEL_CLASS = 'Survey::Answer'.freeze
   SERIALIZER_CLASS = 'Survey::AnswerSerializer'.freeze
   DEFAULT_SORTBY = 'sort_order'
+  POLICY_CLASS = 'Survey::Page::Question::AnswerPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'Survey::Page::Question::AnswerPolicy::Scope'.freeze
 
   def belongs_to_param_id
     params[:question_id]

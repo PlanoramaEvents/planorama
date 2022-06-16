@@ -1,6 +1,6 @@
-class RoomsPolicy < PlannerPolicy
+class RoomPolicy < PlannerPolicy
   def index?
-    true
+    false
   end
 
   def show?
