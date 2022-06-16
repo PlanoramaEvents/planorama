@@ -28,7 +28,9 @@ export default {
       if(this.selectedQuestion) {
         insertAt = this.getQuestionIndex(this.selectedQuestion) + 1
       }
-      this.newQuestion({pageId: this.selectedPage.id, questionType, insertAt});
+      this.newQuestion({pageId: this.selectedPage.id, questionType, insertAt}).then((newQuestion) => {
+        this.fetchSelectedSurvey();
+      });
     },
     onNewPage() {
       let questionIds=[]
