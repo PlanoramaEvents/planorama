@@ -1,4 +1,71 @@
 class Reports::SessionReportsController < ApplicationController
+  around_action :set_timezone
+
+  def participants_over_session_limits
+    authorize SessionAssignment, policy_class: Reports::SessionReportsPolicy
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Participants too Many Sessions")
+    people = ::ReportsService.participant_and_session_limits
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Pub Name',
+        'Day',
+        'Session Count',
+        "Person's Limit"
+      ]
+    )
+
+    people.each do |person|
+      worksheet.append_row(
+        [
+          person.name,
+          person.published_name,
+          person.day ? person.day : 'All',
+          person.session_count,
+          person.max_sessions
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "Participants_with_too_many_sessions#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
+  def participants_over_con_session_limits
+    authorize SessionAssignment, policy_class: Reports::SessionReportsPolicy
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Participants with too Many Sessions for Con")
+    people = ::ReportsService.participant_and_con_session_limits
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Pub Name',
+        'Session Count',
+        'Con Limit'
+      ]
+    )
+
+    people.each do |person|
+      worksheet.append_row(
+        [
+          person.name,
+          person.published_name,
+          person.session_count,
+          6
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "Participants_with_too_many_sessions_for_con#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
 
   def panels_with_too_few_people
     authorize SessionAssignment, policy_class: Reports::SessionReportsPolicy
@@ -66,5 +133,10 @@ class Reports::SessionReportsController < ApplicationController
     send_data workbook.read_string,
               filename: "Panels_With_Too_Many_People_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
+  end
+
+  def set_timezone(&block)
+    timezone = ConfigService.value('convention_timezone')
+    Time.use_zone(timezone, &block)
   end
 end
