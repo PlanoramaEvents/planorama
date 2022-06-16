@@ -21,6 +21,14 @@
       <li>
         <a href="/report/participant_do_not_assign_with" target="_blank">Participants and Do Not Assign With</a>
       </li>
+
+      <li>
+        <a href="/report/session_reports/participants_over_session_limits" target="_blank">Participants over Daily Limits</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/participants_over_con_session_limits" target="_blank">Participants over Con Limit</a>
+      </li>
+
     </ul>
 
     <p><b>Sessions</b></p>
