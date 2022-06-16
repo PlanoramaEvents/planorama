@@ -100,9 +100,10 @@ class Survey::SubmissionsController < ResourceController
 
     meta = {}
     meta[:total] = @collection_total if paginate
+    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total if paginated
     meta[:current_page] = @current_page if @current_page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
-
+    
     # This is only loading responses that matc, shoudl be all response in the submission
     options = {
       meta: meta,
