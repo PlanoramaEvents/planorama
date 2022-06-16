@@ -23,7 +23,7 @@ class Reports::SessionReportsController < ApplicationController
         [
           person.name,
           person.published_name,
-          person.day,
+          person.day ? person.day : 'All',
           person.session_count,
           person.max_sessions
         ]
