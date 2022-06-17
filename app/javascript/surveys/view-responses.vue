@@ -41,6 +41,7 @@ import TableVue from '../components/table_vue';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import { submissionModel, surveyModel } from '@/store/survey';
 import {http as axios} from '../http';
+import pageMixin from './page.mixin';
 
 export default {
   name: 'ViewReponses',
@@ -56,7 +57,8 @@ export default {
   },
   mixins: [
     surveyMixin,
-    submissionMixin
+    submissionMixin,
+    pageMixin
   ],
   computed: {
     defaultUrl() {
@@ -79,8 +81,8 @@ export default {
         ]
       }
 
-      let res = Object.values(this.survey.pages).map(
-        p => Object.values(p.questions).filter(
+      let res = Object.values(this.getSurveyPages(this.survey)).map(
+        p => Object.values(this.getPageQuestions(p)).filter(
           // Filter for question types that are questions
           // :textfield, :textbox, :singlechoice, :multiplechoice, :hr,
           // :dropdown, :address, :email, :socialmedia, :textonly
@@ -89,7 +91,7 @@ export default {
           q => (
             {
               key: `responses.${q.id}`,
-              label: q.question,
+              label: q.question.length > 103 ? q.question.substring(0,100) + '...' : q.question,
               type: "text"
             }
           )
