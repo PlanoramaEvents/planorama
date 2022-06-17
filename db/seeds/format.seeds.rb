@@ -42,9 +42,9 @@ unless Format.find_by_name('Meetup')
   )
 end
 
-unless Format.find_by_name('Other (add to notes)')
+unless Format.find_by_name('Other')
   Format.create!(
-    name: 'Other (add to notes)',
+    name: 'Other',
     position: 7
   )
 end
