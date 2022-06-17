@@ -802,6 +802,16 @@ CREATE TABLE public.exclusions (
 
 
 --
+-- Name: exclusions_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exclusions_sessions (
+    exclusion_id uuid,
+    session_id uuid
+);
+
+
+--
 -- Name: formats; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2267,6 +2277,27 @@ CREATE INDEX index_convention_roles_on_person_id ON public.convention_roles USIN
 
 
 --
+-- Name: index_exclusions_sessions_on_exclusion_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exclusions_sessions_on_exclusion_id ON public.exclusions_sessions USING btree (exclusion_id);
+
+
+--
+-- Name: index_exclusions_sessions_on_exclusion_id_and_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_exclusions_sessions_on_exclusion_id_and_session_id ON public.exclusions_sessions USING btree (exclusion_id, session_id);
+
+
+--
+-- Name: index_exclusions_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exclusions_sessions_on_session_id ON public.exclusions_sessions USING btree (session_id);
+
+
+--
 -- Name: index_magic_links_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2808,6 +2839,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220614183042'),
 ('20220614190928'),
 ('20220616160624'),
-('20220617012940');
+('20220617012940'),
+('20220617185031');
 
 

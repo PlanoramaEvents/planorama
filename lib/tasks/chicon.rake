@@ -58,6 +58,41 @@ namespace :chicon do
     end
   end
 
+  desc "Map Chicon Exclusions to Session"
+  task map_session_to_exclusion: :environment do
+    mapping = {
+      'Hugo Award Ceremony' => ['Hugo Award Ceremony'],
+      'Hugo Award Ceremony rehearsal' => ['Hugo Award Ceremony Rehersal'],
+      'Masquerade' => ['Masquerade'],
+      'Masquerade rehearsal' => ['Masquerade Rehersal'],
+      'Opening Ceremony' => ['Opening Ceremony'],
+      'Closing Ceremony' => ['Closing Ceremony'],
+      'WSFS Business Meeting' => ['WSFS Buisness Meeting (Friday)', 'WSFS Buisness Meeting (Monday)', 'WSFS Buisness Meeting (Saturday)', 'WSFS Buisness Meeting (Sunday)',],
+      'Mark Protection Committee meetings' => ['Mark Protection Committee Meeting'],
+      'Joe Siclari and Edie Stern GoH highlight session' => ['Joe Siclari and Edie Stern Session'],
+      'Floyd Norman highlight session'=> ['Floyd Norman Session'],
+      'Erle Korshak highlight session' => ['Eve L Ewing Session'],
+      'Eve L. Ewing highlight session' => ['Gene Ha Session'],
+      'Gene Ha highlight session' => ['Eric Wilkerson Session'],
+      'Eric Wilkerson highlight session' => ['Remembering Erle Melvin Korshak'],
+    }
+    # find session, find exclusion
+
+    mapping.each do |ex_text, session_list|
+      exclusion = Exclusion.find_by title: ex_text
+      if exclusion
+        session_list.each do |title|
+          session = Session.find_by title: title
+          next unless session
+          next if exclusion.sessions.include?(session)
+
+          puts "#{ex_text} --> #{session}"
+          exclusion.sessions << session
+        end
+      end
+    end
+  end
+
   desc "Seed Chicon Data"
   task seed_exclusions: :environment do
     if Exclusion.count == 0
