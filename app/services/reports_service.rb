@@ -1,6 +1,7 @@
 module ReportsService
   # ReportsService.participant_and_con_session_limits
   def self.participant_and_con_session_limits(con_limit: 6)
+    person_schedules = Arel::Table.new("person_schedules")
     active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' or name != 'Reserve')")
     excluded_formats = Format.where("name in (?)",['Table Talk', 'Reading', 'Autographing'])
 
@@ -9,9 +10,9 @@ module ReportsService
         ::Person.arel_table[Arel.star],
         'count(people.id) as session_count'
       )
-      .joins(:session_assignments, :sessions)
-      .where("session_assignments.session_assignment_role_type_id in (?)", active_roles.collect{|a| a.id})
-      .where("sessions.format_id not in (?)",excluded_formats.collect{|f| f.id})
+      .left_outer_joins(:person_schedules)
+      .where("person_schedules.session_assignment_role_type_id in (?)", active_roles.collect{|a| a.id})
+      .where("person_schedules.format_id not in (?)", excluded_formats.collect{|f| f.id})
       .group('people.id')
       .having("count(people.id) > ?", con_limit)
       .order('people.published_name')
