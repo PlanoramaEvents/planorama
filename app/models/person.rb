@@ -27,6 +27,8 @@ class Person < ApplicationRecord
 
   has_many  :session_limits
 
+  has_many  :person_schedules
+
   # We let the publish mechanism do the destroy so that the update service knows what is happening
   # has_many  :published_session_assignments
   # has_many  :published_sessions, through: :published_session_assignments

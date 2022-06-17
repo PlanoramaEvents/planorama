@@ -213,7 +213,7 @@ namespace :rbac do
           "show": false,
           "update": false
       },
-      "submissions": {
+      "submission": {
           "create": true,
           "delete_all": false,
           "flat": false,

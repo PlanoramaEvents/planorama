@@ -971,7 +971,9 @@ CREATE VIEW public.person_schedules AS
     sessions.title,
     sessions.start_time,
     (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
-    sessions.room_id
+    sessions.room_id,
+    sessions.format_id,
+    concat(p.id, ':', sa.id) AS id
    FROM (((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
      JOIN public.people p ON ((p.id = sa.person_id)))
@@ -2805,6 +2807,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220614014103'),
 ('20220614183042'),
 ('20220614190928'),
-('20220616160624');
+('20220616160624'),
+('20220617012940');
 
 
