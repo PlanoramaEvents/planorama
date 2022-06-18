@@ -1,7 +1,7 @@
 class SessionAssignmentsController < ResourceController
   SERIALIZER_CLASS = 'SessionAssignmentSerializer'.freeze
-  POLICY_CLASS = 'SessionAssignmentsPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'SessionAssignmentsPolicy::Scope'.freeze
+  POLICY_CLASS = 'SessionAssignmentPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'SessionAssignmentPolicy::Scope'.freeze
 
   def unexpress_interest
     model_class.transaction do

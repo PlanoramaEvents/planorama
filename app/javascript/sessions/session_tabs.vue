@@ -86,8 +86,9 @@ export default {
             "op": "any",
             "queries": [
               ["interested","=","true"],
-              ["state","!=","proposed"],
-              ["session_assignment_role_type_id","is not null"]
+              ["state","=","proposed"],
+              ["state","!=", "proposed"],
+              ["session_assignment_role_type_id","is not null"],
             ]
           },
         ]

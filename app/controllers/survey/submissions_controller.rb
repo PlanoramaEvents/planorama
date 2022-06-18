@@ -1,7 +1,8 @@
 class Survey::SubmissionsController < ResourceController
   SERIALIZER_CLASS = 'Survey::SubmissionSerializer'.freeze
   MODEL_CLASS = 'Survey::Submission'.freeze
-  POLICY_CLASS = 'Survey::SubmissionsPolicy'.freeze
+  POLICY_CLASS = 'Survey::SubmissionPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'Survey::SubmissionPolicy::Scope'.freeze
   XLS_SERIALIZER_CLASS = 'Survey::SubmissionXlsSerializer'.freeze
   DEFAULT_SORTBY = 'survey_submissions.updated_at'
 
@@ -45,12 +46,15 @@ class Survey::SubmissionsController < ResourceController
 
   def index
     format = params[:format]
-    super unless format == 'xls' || format == 'xlsx'
 
     # If XLS then we do somethng else
-    send_data collection_to_xls,
-      filename: "submissions_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
-      disposition: 'attachment'
+    if (format == 'xls') || (format == 'xlsx')
+      send_data collection_to_xls,
+        filename: "submissions_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+        disposition: 'attachment'
+    else
+      super
+    end
   end
 
   # faster collection to Excel
@@ -96,9 +100,10 @@ class Survey::SubmissionsController < ResourceController
 
     meta = {}
     meta[:total] = @collection_total if paginate
+    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total if paginated
     meta[:current_page] = @current_page if @current_page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
-
+    
     # This is only loading responses that matc, shoudl be all response in the submission
     options = {
       meta: meta,

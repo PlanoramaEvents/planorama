@@ -1,7 +1,7 @@
 class AvailabilitiesController < ResourceController
   SERIALIZER_CLASS = 'AvailabilitySerializer'.freeze
-  POLICY_CLASS = 'AvailabilitiesPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'AvailabilitiesPolicy::Scope'.freeze
+  POLICY_CLASS = 'AvailabilityPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'AvailabilityPolicy::Scope'.freeze
 
   def replace
     availabilities = params[:data][:attributes][:availabilities_attributes]

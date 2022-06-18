@@ -9,10 +9,11 @@
       label="Survey Name"
       label-for="survey-name"
     >
-      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()"></b-form-input>
+      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()" :disabled="survey.public"></b-form-input>
     </b-form-group>
+    <b-alert :show="survey.public" variant="warning" class="alert-bright mx-3">{{SURVEY_PUBLIC_NO_EDIT}}</b-alert>
     <b-tabs>
-      <b-tab title="Questions" :active="!responses" lazy>
+      <b-tab button-id="questionTab" title="Question" :active="!responses && !survey.public" lazy :disabled="survey.public">
         <edit-survey :survey-id="id"></edit-survey>
       </b-tab>
       <b-tab title="Responses" :active="!!responses" lazy>
@@ -22,6 +23,7 @@
       <b-tab title="Audit Log" disabled lazy>
       </b-tab>
     </b-tabs>
+    <b-tooltip :title="questionsTitle" target="questionTab"></b-tooltip>
   </div>
 </template>
 
@@ -31,6 +33,7 @@ import SurveySettingsTab from './survey-settings-tab.vue';
 import NotImplemented from '../shared/not-implemented.vue';
 import ViewResponses from './view-responses';
 import EditSurvey from './edit-survey';
+import { SURVEY_PUBLIC_NO_EDIT } from '@/constants/strings';
 
 export default {
   name: "ManageSurvey",
@@ -46,7 +49,13 @@ export default {
     ViewResponses,
     EditSurvey
   },
+  data: () => ({
+    SURVEY_PUBLIC_NO_EDIT
+  }),
   computed: {
+    questionsTitle() {
+      return this.survey.public ? SURVEY_PUBLIC_NO_EDIT : '';
+    }
   },
   methods: {
     init() {

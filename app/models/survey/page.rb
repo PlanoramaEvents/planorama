@@ -37,7 +37,9 @@ class Survey::Page < ApplicationRecord
 
 
   before_destroy :on_delete_next_page_consistency, prepend: true
-  before_save :ensure_next_page_consistency
+  before_destroy :check_if_published
+  before_update :check_if_published
+  before_save :check_if_published, :ensure_next_page_consistency
 
   private
 
@@ -54,5 +56,11 @@ class Survey::Page < ApplicationRecord
     previous_pages.update_all(next_page_id: nil)
 
     answers.update_all(next_page_id: nil)
+  end
+
+  def check_if_published
+    if survey.public
+      raise 'can not add, update, or delete a page for a survey that is public'
+    end
   end
 end

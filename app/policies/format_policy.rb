@@ -1,4 +1,4 @@
-class AreasPolicy < PlannerPolicy
+class FormatPolicy < PlannerPolicy
   def index?
     true
   end

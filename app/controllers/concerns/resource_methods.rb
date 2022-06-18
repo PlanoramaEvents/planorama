@@ -236,6 +236,10 @@ module ResourceMethods
     if paginated
       @full_collection_total = policy_scope(base, policy_scope_class: policy_scope_class)
                             .where(exclude_deleted_clause)
+                            .includes(includes)
+                            .references(references)
+                            .eager_load(eager_load)
+                            .joins(join_tables)
                             .distinct
                             .count
       instance_variable_set("@#{controller_name}", @full_collection_total)

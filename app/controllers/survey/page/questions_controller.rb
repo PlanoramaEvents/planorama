@@ -1,6 +1,8 @@
 class Survey::Page::QuestionsController < ResourceController
   MODEL_CLASS = 'Survey::Question'.freeze
   SERIALIZER_CLASS = 'Survey::QuestionSerializer'.freeze
+  POLICY_CLASS = 'Survey::Page::QuestionPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'Survey::Page::QuestionPolicy::Scope'.freeze
 
   # Need to take into account the soft delete ???
 

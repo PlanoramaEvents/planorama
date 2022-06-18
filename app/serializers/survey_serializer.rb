@@ -69,6 +69,6 @@ class SurveySerializer
               }
 
   attribute :nbr_submissions do |object|
-    object.submissions.size
+    object.submissions.joins(:responses).distinct.size
   end
 end

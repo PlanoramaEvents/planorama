@@ -1,4 +1,4 @@
-class AgreementsPolicy < PlannerPolicy
+class AgreementPolicy < PlannerPolicy
   # Anyone can see ...
   # def index?
   #   return true

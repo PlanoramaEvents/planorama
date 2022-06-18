@@ -1,8 +1,8 @@
 # Get application roles etc
 class ApplicationRolesController < ResourceController
   SERIALIZER_CLASS = 'ApplicationRoleSerializer'.freeze
-  POLICY_CLASS = 'ApplicationRolesPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'ApplicationRolesPolicy::Scope'.freeze
+  POLICY_CLASS = 'ApplicationRolePolicy'.freeze
+  POLICY_SCOPE_CLASS = 'ApplicationRolePolicy::Scope'.freeze
 
   def assign_people
     authorize current_person, policy_class: policy_class

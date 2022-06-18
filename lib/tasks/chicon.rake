@@ -1,4 +1,63 @@
 namespace :chicon do
+  desc "Ensure that the session formats are correct"
+  task fix_formats: :environment do
+    [
+      'Autographing',
+      'Ceremony',
+      'Concert',
+      'Demonstration',
+      'Dialog',
+      'Discussion',
+      'Filk Circle',
+      'Game',
+      'Game Show',
+      'Interview',
+      'Meeting',
+      'Meetup',
+      'Other',
+      'Panel',
+      'Performance',
+      'Presentation',
+      'Reading',
+      'Rehearsal',
+      'Room Turn',
+      'Table Talk',
+      'Workshop'
+    ].each do |format_name|
+      Format.create(name: format_name) unless Format.exists?(name: format_name)
+    end
+
+    format = Format.find_by name: ""
+    if format
+      Session.where(format_id: format.id).update_all(format_id: nil)
+      format.delete
+    end
+    format = Format.find_by name: "Edit"
+    if format
+      Session.where(format_id: format.id).update_all(format_id: nil)
+      format.delete
+    end
+
+    fix_format("Other (add to notes)", "Other")
+    fix_format("Rehersal", "Rehearsal")
+    fix_format("Filk", "Filk Circle")
+    fix_format("Circle", "Filk Circle")
+    fix_format("Room", "Room Turn")
+    fix_format("Turn", "Room Turn")
+    fix_format("Show", "Game Show")
+    fix_format("Table", "Table Talk")
+    fix_format("Talk", "Table Talk")
+  end
+
+  def fix_format(old_format, new_format)
+    format = Format.find_by name: old_format
+    new_format = Format.find_by name: new_format
+    if format
+      Session.where(format_id: format.id).update_all(format_id: new_format.id)
+      format.delete
+    end
+  end
+
   desc "Seed Chicon Data"
   task seed_exclusions: :environment do
     if Exclusion.count == 0

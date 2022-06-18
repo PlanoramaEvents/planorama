@@ -3,8 +3,13 @@
   <div>
     <div class="scrollable" v-if="is_assigned">
       <div class="survey-page" v-if="selectedPage">
+        <b-alert :show="redirMessage" dismissible fade class="mt-3 alert-bright d-flex align-items-center" variant="warning" @dismissed="redirShown()">
+          <b-icon-exclamation-triangle class="h3 mb-0 mr-3"></b-icon-exclamation-triangle>
+          {{SURVEY_REDIRECT}}
+          <b-icon-exclamation-triangle class="h3 mb-0 ml-3"></b-icon-exclamation-triangle>
+        </b-alert>
         <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
-        <b-alert show variant="info">{{SURVEY_LINKED_FIELD}}<linked-field-icon :linked_field="true"></linked-field-icon></b-alert>
+        <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"></linked-field-icon>{{SURVEY_LINKED_FIELD2}}</b-alert>
         <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
         <ValidationObserver v-slot="{ handleSubmit }">
           <form @submit.prevent="handleSubmit(submit)">
@@ -50,17 +55,17 @@
 
 <script>
 import SurveyQuestion from './survey_question';
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import {
   pageMixin,
   surveyIdPropMixinSurveyId,
   surveyMixin,
   submissionMixin
 } from '@mixins';
-import { SET_PREVIEW_MODE } from '@/store/survey';
+import { SET_PREVIEW_MODE, REDIR_SHOWN } from '@/store/survey';
 import { ValidationObserver } from 'vee-validate';
 import personSessionMixin from '../auth/person_session.mixin';
-import {SURVEY_NOT_ASSIGNED, SURVEY_LINKED_FIELD} from "@/constants/strings";
+import {SURVEY_NOT_ASSIGNED, SURVEY_LINKED_FIELD1, SURVEY_LINKED_FIELD2, SURVEY_REDIRECT} from "@/constants/strings";
 import LinkedFieldIcon from './linked-field-icon';
 
 export default {
@@ -69,8 +74,11 @@ export default {
   data: () =>  ({
     submitted: false,
     nextPageId: null,
+    prevPageId: null,
     SURVEY_NOT_ASSIGNED,
-    SURVEY_LINKED_FIELD
+    SURVEY_LINKED_FIELD1,
+    SURVEY_LINKED_FIELD2,
+    SURVEY_REDIRECT
   }),
   components: {
     SurveyQuestion,
@@ -85,11 +93,12 @@ export default {
     personSessionMixin
   ],
   computed: {
+    ...mapState(['redirMessage']),
     is_assigned() {
       return this.preview || this.currentUser.assigned_surveys[this.surveyId]!=undefined;
     },
     next_page() {
-      return `/surveys/${this.surveyId}/page/${this.nextPageId}${this.preview ? '/preview' : ''}`
+      return `/surveys/${this.surveyId}/page/${this.nextPageId}${this.preview === "preview" ? '/preview' : ''}`
     },
     submit_disabled() {
       return !!this.preview || !(this.survey && this.survey.public);
@@ -102,7 +111,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setPreviewMode: SET_PREVIEW_MODE
+      setPreviewMode: SET_PREVIEW_MODE,
+      redirShown: REDIR_SHOWN
     }),
     submit() {
       if (this.nextPageId !== -1 && !this.lastPage) {
@@ -119,9 +129,11 @@ export default {
       }
     },
     next() {
+      this.redirShown();
       this.$router.push(this.next_page);
     },
     prev() {
+      this.redirShown();
       this.$router.go(-1);
     },
     setNextPageId(id) {
@@ -139,12 +151,19 @@ export default {
     this.setNextPageId(this.selectedPage?.next_page_id);
     next()
   },
+  beforeRouteEnter(to, from, next) {
+    if (from.path === '/') {
+      next(`/surveys/${to.params.surveyId}/redir`);
+      return;
+    }
+    next();
+  },
   mounted() {
     // console.debug('mounting page...')
     this.surveyLoadedPromise.then((surveyLoaded) => {
       // console.debug("i get here! and should have a survey", this.survey)
       // this.setPreviewMode(!!this.preview);
-      if (surveyLoaded && !this.preview) {
+      if (surveyLoaded && this.preview !== "preview") {
         this.newSubmission({surveyId: this.surveyId});
       }
       if((!this.selectedPage && this.id) || (this.id && this.selectedPage.id != this.id)) {

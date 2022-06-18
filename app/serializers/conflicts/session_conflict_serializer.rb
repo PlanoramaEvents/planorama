@@ -1,7 +1,7 @@
 class Conflicts::SessionConflictSerializer
   include JSONAPI::Serializer
 
-  attribute :session_id, :room_id, :person_id, :session_assignment_id, :conflict_type
+  attribute :session_id, :room_id, :person_id, :session_assignment_id, :conflict_session_id, :conflict_type
 
   has_one :room, serializer: ::RoomSerializer,
           if: Proc.new { |record| record.room },
@@ -16,6 +16,14 @@ class Conflicts::SessionConflictSerializer
           links: {
             related: -> (object, params) {
               "#{params[:domain]}/session/#{object.session_id}"
+            }
+          }
+
+  has_one :conflict_session, serializer: ::SessionSerializer,
+          if: Proc.new { |record| record.conflict_session },
+          links: {
+            related: -> (object, params) {
+              "#{params[:domain]}/session/#{object.conflict_session_id}"
             }
           }
 

@@ -1,4 +1,4 @@
-class ApplicationRolesPolicy < PlannerPolicy
+class ApplicationRolePolicy < PlannerPolicy
   def bletch?
     allowed?(action: :assign_people)
   end

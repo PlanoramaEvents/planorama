@@ -31,12 +31,11 @@ class SessionSerializer
   end
 
   attribute :end_time do |session|
-    session.start_time ? session.start_time + session.duration.minutes : nil
+    (session.start_time && session.duration) ? session.start_time + session.duration.minutes : nil
   end
 
   attribute :has_conflicts do |session|
-    reserve = SessionAssignmentRoleType.find_by name: 'Reserve'
-    session.session_conflicts.joins(:session_assignment).where("session_assignments.session_assignment_role_type_id != ?",reserve.id).count > 0
+    session.session_conflicts.where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')").count > 0
   end
 
   has_many :session_areas, serializer: SessionAreaSerializer,

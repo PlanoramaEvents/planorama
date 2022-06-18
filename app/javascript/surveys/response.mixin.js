@@ -72,6 +72,8 @@ export const responseMixin = {
           socialmedia.tiktok = this.currentUser.tiktok
           socialmedia.other = this.currentUser.othersocialmedia
           socialmedia.website = this.currentUser.website
+        } else if (fieldName=='contact_email') {
+          text = this.currentUser.contact_email.email
         } else { // text answer
           text = this.currentUser[fieldName]
         }

@@ -15,7 +15,9 @@ class Survey < ApplicationRecord
   has_many :mailings
   has_many :mailed_submitters, through: :mailings, source: :person
 
-  before_destroy :check_for_use #, :check_if_public
+  before_destroy :check_for_use, :check_if_public
+  before_update :check_if_public
+  before_save :check_if_public
 
   belongs_to :published_by, class_name: 'Person', required: false
   belongs_to :created_by, class_name: 'Person', required: false
@@ -42,6 +44,10 @@ class Survey < ApplicationRecord
   end
 
   def check_if_public
-    raise 'can not delete a survey that is public' if public
+    return if self.new_record?
+
+    return if self.public && self.public_changed? # to allow for changing to "published"
+
+    raise 'can not delete or update a survey that is public' if self.public
   end
 end

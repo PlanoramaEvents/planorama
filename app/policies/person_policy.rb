@@ -1,4 +1,4 @@
-class PeoplePolicy < PlannerPolicy
+class PersonPolicy < PlannerPolicy
   def me?
     true
   end

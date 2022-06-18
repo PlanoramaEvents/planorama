@@ -58,6 +58,8 @@ module.exports = {
     //survey questions
     SURVEY_YESNOMAYBE_PLACEHOLDER: "Please elaborate here.",
     SURVEY_LINKED_FIELD: "This answer is linked directly to a profile field. Any information in that field will be mirrored here, and editing this information will edit your profile. Linked fields have a special icon: ",
+    SURVEY_LINKED_FIELD1: "Any field marked with (",
+    SURVEY_LINKED_FIELD2: ") is linked directly to a profile field. Any information from that field is mirrored here, and editing that information will edit your profile.",
 
     //generic app wide
     NOT_IMPLEMENTED: "This feature is not yet implemented. Check back soon!",
@@ -236,7 +238,17 @@ module.exports = {
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     CONFLICT_TEXT: {
-        availability: 'is outside of availability',
+        availability: (person_name, conflict_session_name, room_name) => `is outside of availability`,
+        // room has multiple sessions ... room, conflicting session
+        room_conflict: (person_name, conflict_session_name, room_name) => `${room_name} has multiple sessions`,
+        // Person has conflicting sessions ...
+        person_session_conflict: (person_name, conflict_session_name, room_name) => `${person_name} is double booked with "${conflict_session_name}"`,
+        // Person is back to back with conflicting sessions ...
+        back_to_back: (person_name, conflict_session_name, room_name) => `${person_name} has back to back with "${conflict_session_name}"`,
         default: 'a conflict'
-    }
+    },
+
+    SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
+    SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
+    SURVEY_PUBLIC_NO_DELETE: "You cannot delete a published survey. Close the survey to enable deletion.",
 }
