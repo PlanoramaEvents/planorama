@@ -144,7 +144,8 @@ class SessionsController < ResourceController
       :format,
       :room,
       :session_areas,
-      :'session_areas.area'
+      :'session_areas.area',
+      :session_assignments
     ]
   end
 
