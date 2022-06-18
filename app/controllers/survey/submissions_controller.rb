@@ -6,6 +6,29 @@ class Survey::SubmissionsController < ResourceController
   XLS_SERIALIZER_CLASS = 'Survey::SubmissionXlsSerializer'.freeze
   DEFAULT_SORTBY = 'survey_submissions.updated_at'
 
+  def can_access_question?(question, person)
+    if question.private
+      AccessControlService.allowed_sensitive_access?(person: person)
+    elsif question.linked_field
+      AccessControlService.linked_field_access?(linked_field: question.linked_field, person: person)
+    else
+      true
+    end
+  end
+
+  def can_access_response?(response, person)
+    # if it is my response then I can have access
+    return true if response.submission&.person_id == person.id
+
+    if response.question.private
+      AccessControlService.allowed_sensitive_access?(person: person)
+    elsif response.question.linked_field
+      AccessControlService.linked_field_access?(linked_field: response.question.linked_field, person: person)
+    else
+      true
+    end
+  end
+
   def belong_to_class
     return Survey if params[:survey_id].present?
     return Person if params[:person_id].present?
@@ -73,6 +96,8 @@ class Survey::SubmissionsController < ResourceController
     posn = 3
     survey.questions.each do |question|
       next if [:hr, :textonly].include? question.question_type
+      next unless can_access_question?(question, current_person)
+
       header << question.question
 
       response_columns[question.id] = posn
@@ -84,7 +109,9 @@ class Survey::SubmissionsController < ResourceController
       row = [submission.created_at, submission.updated_at, submission.person.email]
       row.concat Array.new(response_columns.size)
       submission.responses.each do |response|
-        row[response_columns[response.question_id]] = response.response_as_text
+        if can_access_response?(response, current_person)
+          row[response_columns[response.question_id]] = response.response_as_text
+        end
       end
       worksheet.append_row(
         row,
@@ -103,7 +130,7 @@ class Survey::SubmissionsController < ResourceController
     meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total if paginated
     meta[:current_page] = @current_page if @current_page.present? && paginate
     meta[:perPage] = @per_page if @per_page.present? && paginate
-    
+
     # This is only loading responses that matc, shoudl be all response in the submission
     options = {
       meta: meta,
