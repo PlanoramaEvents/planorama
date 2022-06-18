@@ -186,6 +186,9 @@ class Survey::SubmissionsController < ResourceController
     end
   end
 
+  # Corrected structure for nested attrs
+  # BUT - client is sending a new response with a UUID which is confusing Rails
+  # because a new instance is not expected to have a id...
   def allowed_params
     %i[
       id
@@ -194,6 +197,7 @@ class Survey::SubmissionsController < ResourceController
       responses
       person
       survey
+      responses_attributes
     ] << [
       responses_attributes: %i[
         id
@@ -201,35 +205,9 @@ class Survey::SubmissionsController < ResourceController
         _destroy
         submission_id
         question_id
-      ] << [
-        response: %i[
-          id
-          text
-        ] << [
-          answers: [],
-          address: %i[
-            id
-            street
-            street2
-            city
-            state
-            zip
-            country
-          ],
-          socialmedia: %i[
-            id
-            twitter
-            facebook
-            linkedin
-            twitch
-            youtube
-            instagram
-            website
-            other
-            tiktok
-          ]
-        ]
+        response
       ]
     ]
+    # The response should be plain JSON
   end
 end
