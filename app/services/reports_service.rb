@@ -2,7 +2,7 @@ module ReportsService
   # ReportsService.participant_and_con_session_limits
   def self.participant_and_con_session_limits(con_limit: 6)
     person_schedules = Arel::Table.new("person_schedules")
-    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' or name != 'Reserve')")
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
     excluded_formats = Format.where("name in (?)",['Table Talk', 'Reading', 'Autographing'])
 
     Person
@@ -84,7 +84,7 @@ module ReportsService
 
   # ReportsService.people_day_counts
   def self.people_day_counts
-    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' or name != 'Reserve')")
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
     people = ::Person.arel_table
     person_schedules = Arel::Table.new("person_schedules") # TODO - put in a view
 
@@ -169,7 +169,7 @@ module ReportsService
 
   def self.sessions_and_participant_count
     format = Format.find_by(name: 'Panel')
-    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' or name != 'Reserve')")
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
     sessions = Session.arel_table
     session_assignments = SessionAssignment.arel_table
 
