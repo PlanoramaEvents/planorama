@@ -214,11 +214,13 @@ class Survey::SubmissionsController < ResourceController
   def allowed_params
     %i[
       id
+      lock_version
       person_id
       survey_id
       responses
       person
       survey
+      submission_state
     ]
     # responses_attributes
     # ] << [
