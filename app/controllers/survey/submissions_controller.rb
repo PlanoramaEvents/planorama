@@ -81,7 +81,7 @@ class Survey::SubmissionsController < ResourceController
   end
 
   def post_submission_transition
-    acceptance_status = @object.transition_accept_status
+    acceptance_status = @object.survey.transition_accept_status
     return unless acceptance_status
     return unless @object.person_id || (@object.person_id != current_person.id)
 
