@@ -49,15 +49,15 @@ class SessionSerializer
           }
 
   # Can I parameterize this??? session_assignments.interests_for(person)
-  # has_many :session_assignments, serializer: SessionAssignmentSerializer,
-  #          links: {
-  #            self: -> (object, params) {
-  #              "#{params[:domain]}/session/#{object.id}"
-  #            },
-  #            related: -> (object, params) {
-  #              "#{params[:domain]}/session/#{object.id}/session_assignments"
-  #            }
-  #          }
+  has_many :session_assignments, serializer: SessionAssignmentSerializer,
+           links: {
+             self: -> (object, params) {
+               "#{params[:domain]}/session/#{object.id}"
+             },
+             related: -> (object, params) {
+               "#{params[:domain]}/session/#{object.id}/session_assignments"
+             }
+           }
 
   has_one :format,
           if: Proc.new { |record| record.format },
