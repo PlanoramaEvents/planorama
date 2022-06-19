@@ -144,8 +144,10 @@ class SessionsController < ResourceController
       :format,
       :room,
       :session_areas,
-      :'session_areas.area',
-      :session_assignments
+      :'session_areas.area'
+      # Do not include assignment by default as that can slow client down,
+      # let client request them when needed
+      # :session_assignments
     ]
   end
 
