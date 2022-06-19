@@ -55,7 +55,11 @@ export const responseMixin = {
         tiktok: null, other: null, website: null
       }
       // first check for a linked field
-      if (question.linked_field) {
+      // console.debug("now i have both", this.question, this.selectedSubmission)
+      let existingResponse = this.getExistingResponse(relationships)
+      if (existingResponse?.id) {
+        return utils.deepCopy(existingResponse)
+      } else if (question.linked_field) {
         // get the relevant linked data and use that instead
         const fieldName = question.linked_field.split(".")[1] // assuming only one dot. is this bad?
         if (['singlechoice', 'yesnomaybe', 'boolean', 'attendance_type', 'dropdown'].includes(question.question_type)) {
@@ -81,13 +85,6 @@ export const responseMixin = {
         if (fieldName.startsWith('can_')) {
           text = this.currentUser[`${fieldName}_exceptions`]
         }
-
-      } else {
-      // console.debug("now i have both", this.question, this.selectedSubmission)
-        let existingResponse = this.getExistingResponse(relationships)
-        if (existingResponse?.id) {
-          return utils.deepCopy(existingResponse)
-        }
       }
       // if there's not one, create a new one
       // console.debug("getting a new response")
@@ -98,7 +95,8 @@ export const responseMixin = {
       // saving the response only
       if (!this.previewMode) {
         // only save if not in preview mode and if the response was already saved!
-        return this.mergeRecords(response);
+        return this.mergeRecords(response); // this version only saves locally
+        //return this.jvPost(response); // this version saves to the server
       }
     }
   }
