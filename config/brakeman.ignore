@@ -3,6 +3,26 @@
     {
       "warning_type": "Mass Assignment",
       "warning_code": 70,
+      "fingerprint": "293c7e87978c80406e8c9e704de08af28ea1cc5ec235accf649c8e95fcd6ad74",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/controllers/survey/submissions_controller.rb",
+      "line": 64,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:data).permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Survey::SubmissionsController",
+        "method": "process_responses"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
       "fingerprint": "378bf7ce34e373a7114f1ceb3b6287e988ebadd3bcb934ac4a042f52fb90afd7",
       "check_name": "MassAssignment",
       "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
@@ -47,7 +67,7 @@
       "check_name": "MassAssignment",
       "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
       "file": "app/controllers/concerns/resource_methods.rb",
-      "line": 729,
+      "line": 733,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.require(model).permit!",
       "render_path": null,
@@ -87,7 +107,7 @@
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `Survey#find`",
       "file": "app/controllers/survey/submissions_controller.rb",
-      "line": 65,
+      "line": 114,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
       "code": "Survey.find(params[:survey_id])",
       "render_path": null,
@@ -101,6 +121,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-06-09 07:31:36 -0400",
+  "updated": "2022-06-19 15:32:55 -0400",
   "brakeman_version": "5.2.3"
 }
