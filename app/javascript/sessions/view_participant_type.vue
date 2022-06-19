@@ -35,7 +35,9 @@ export default {
       return this.sessionRoleByName(this.sessionRoleName);
     },
     myAssignments() {
-      return this.collection.filter(sa => sa.session_assignment_role_type_id === this.sessionRole?.id);
+      return Object.values(this.session.session_assignments).filter(
+        obj => (typeof obj.json === 'undefined')
+      ).filter(sa => sa.session_assignment_role_type_id === this.sessionRole?.id);
     }
   },
 }

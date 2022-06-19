@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="d-inline-block">
     <span :id="spanId" class="d-inline-block" :tabindex="disabled ? 0 : -1">
       <b-button
         :size="size"

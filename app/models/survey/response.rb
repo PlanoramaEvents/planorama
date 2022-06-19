@@ -44,6 +44,7 @@ class Survey::Response < ApplicationRecord
               end
 
         submission.person.reload
+        Rails.logger.debug("submission.person #{submission.person.id} #{submission.person.lock_version}")
         if question.question_type == :yesnomaybe
           # Yes not maybe and attendance should only have one answer
           exception_val = response['text']
