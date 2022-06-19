@@ -11,8 +11,8 @@
           v-for="conflict in conflicts" :key="conflict.id"
         >
           <div>
-            <router-link :to="'/people/availability/' + conflict.person.id">{{conflict.person.published_name}}</router-link>
-            {{conflict_type_string(conflict.conflict_type)}}
+            <span v-if="conflict.person"><router-link :to="'/people/availability/' + conflict.person.id">{{conflict.person.published_name}}</router-link></span>
+            {{conflict_type_string(conflict.conflict_type, conflict.person, conflict.session, conflict.room)}}
           </div>
         </div>
       </div>
@@ -45,7 +45,6 @@ export default {
   }),
   watch: {
     sessionId(newVal, oldVal) {
-      console.debug("SEssion id set")
       if (newVal) {
         this.getConflicts(newVal)
       } else {
@@ -63,8 +62,8 @@ export default {
         }
       )
     },
-    conflict_type_string(conflict_type) {
-      return CONFLICT_TEXT[conflict_type] || CONFLICT_TEXT.default;
+    conflict_type_string(conflict_type, person, session, room) {
+      return CONFLICT_TEXT[conflict_type](person?.published_name, session?.title, room?.name) || CONFLICT_TEXT.default;
     }
   },
   mounted() {

@@ -46,6 +46,8 @@ class Survey < ApplicationRecord
   def check_if_public
     return if self.new_record?
 
-    raise 'can not delete or update a survey that is public' if public
+    return if self.public && self.public_changed? # to allow for changing to "published"
+
+    raise 'can not delete or update a survey that is public' if self.public
   end
 end

@@ -1,7 +1,7 @@
 class SessionsController < ResourceController
   SERIALIZER_CLASS = 'SessionSerializer'.freeze
-  POLICY_CLASS = 'SessionsPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'SessionsPolicy::Scope'.freeze
+  POLICY_CLASS = 'SessionPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
   def express_interest
@@ -83,7 +83,8 @@ class SessionsController < ResourceController
             open_for_interest: interest_open && interest_open == 'Yes',
             instructions_for_interest: interest_instructions.strip,
             item_notes: [notes, goh_notes].join("\n").strip,
-            format: format
+            format: format,
+            duration: 60
           )
 
           # NOTE: we are not worried about tags as yet
@@ -143,7 +144,8 @@ class SessionsController < ResourceController
       :format,
       :room,
       :session_areas,
-      :'session_areas.area'
+      :'session_areas.area',
+      :session_assignments
     ]
   end
 

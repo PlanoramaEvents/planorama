@@ -1,4 +1,4 @@
-class RoomsPolicy < PlannerPolicy
+class AreaPolicy < PlannerPolicy
   def index?
     true
   end

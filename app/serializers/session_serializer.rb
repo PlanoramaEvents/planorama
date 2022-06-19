@@ -31,11 +31,11 @@ class SessionSerializer
   end
 
   attribute :end_time do |session|
-    session.start_time ? session.start_time + session.duration.minutes : nil
+    (session.start_time && session.duration) ? session.start_time + session.duration.minutes : nil
   end
 
   attribute :has_conflicts do |session|
-    session.session_conflicts.count > 0
+    session.session_conflicts.where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')").count > 0
   end
 
   has_many :session_areas, serializer: SessionAreaSerializer,
@@ -49,15 +49,15 @@ class SessionSerializer
           }
 
   # Can I parameterize this??? session_assignments.interests_for(person)
-  # has_many :session_assignments, serializer: SessionAssignmentSerializer,
-  #          links: {
-  #            self: -> (object, params) {
-  #              "#{params[:domain]}/session/#{object.id}"
-  #            },
-  #            related: -> (object, params) {
-  #              "#{params[:domain]}/session/#{object.id}/session_assignments"
-  #            }
-  #          }
+  has_many :session_assignments, serializer: SessionAssignmentSerializer,
+           links: {
+             self: -> (object, params) {
+               "#{params[:domain]}/session/#{object.id}"
+             },
+             related: -> (object, params) {
+               "#{params[:domain]}/session/#{object.id}/session_assignments"
+             }
+           }
 
   has_one :format,
           if: Proc.new { |record| record.format },

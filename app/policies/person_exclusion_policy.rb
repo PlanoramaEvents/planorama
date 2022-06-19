@@ -1,4 +1,4 @@
-class PersonExclusionsPolicy < PlannerPolicy
+class PersonExclusionPolicy < PlannerPolicy
   def index?
     # return true if @record.class != Symbol && @record.id == @person.id
     # TODO???

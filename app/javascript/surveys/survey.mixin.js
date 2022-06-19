@@ -24,6 +24,9 @@ export const surveyMixin = {
     },
     selectedSurveyFirstPage() {
       return this.survey && this.selectedSurveyPages[0];
+    },
+    selectedSurveyLastPage() {
+      return this.survey && this.selectedSurveyPages[this.getNbrSurveyPages(this.survey) - 1];
     }
   },
   methods: {

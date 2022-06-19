@@ -21,6 +21,14 @@
       <li>
         <a href="/report/participant_do_not_assign_with" target="_blank">Participants and Do Not Assign With</a>
       </li>
+
+      <li>
+        <a href="/report/session_reports/participants_over_session_limits" target="_blank">Participants over Daily Limits</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/participants_over_con_session_limits" target="_blank">Participants over Con Limit</a>
+      </li>
+
     </ul>
 
     <p><b>Sessions</b></p>
@@ -41,6 +49,18 @@
       <li>
         <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
       </li>
+      <li>
+        <a href="/report/conflict_reports/people_outside_availability" target="_blank">People outside of Availability</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/people_double_booked" target="_blank">People double booked</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/back_to_back" target="_blank">Back to Back</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/back_to_back_to_back" target="_blank">Back to Back to Back</a>
+      </li>      
     </ul>
 
     <p><b>Schedule</b></p>

@@ -1,4 +1,4 @@
-class ReportsPolicy < BasePolicy
+class ReportPolicy < BasePolicy
   def people_and_submissions?
     allowed?(action: :people_and_submissions)
   end

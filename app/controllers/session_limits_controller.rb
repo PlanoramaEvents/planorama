@@ -1,7 +1,7 @@
 class SessionLimitsController < ResourceController
   SERIALIZER_CLASS = 'SessionLimitSerializer'.freeze
-  POLICY_CLASS = 'SessionLimitsPolicy'.freeze
-  POLICY_SCOPE_CLASS = 'SessionLimitsPolicy::Scope'.freeze
+  POLICY_CLASS = 'SessionLimitPolicy'.freeze
+  POLICY_SCOPE_CLASS = 'SessionLimitPolicy::Scope'.freeze
 
   def belongs_to_param_id
     params[:person_id]

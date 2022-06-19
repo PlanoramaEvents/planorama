@@ -1,6 +1,6 @@
 class AgreementsController < ResourceController
   SERIALIZER_CLASS = 'AgreementSerializer'.freeze
-  POLICY_CLASS = 'AgreementsPolicy'.freeze
+  POLICY_CLASS = 'AgreementPolicy'.freeze
 
   def paginate
     false

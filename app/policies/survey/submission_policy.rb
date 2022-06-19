@@ -1,4 +1,4 @@
-class Survey::SubmissionsPolicy < PlannerPolicy
+class Survey::SubmissionPolicy < PlannerPolicy
   def create?
     # Anyone can create a submission
     return true #if @person

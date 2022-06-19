@@ -2,6 +2,9 @@ class Survey::PagesController < ResourceController
   MODEL_CLASS = 'Survey::Page'.freeze
   SERIALIZER_CLASS = 'Survey::PageSerializer'.freeze
   DEFAULT_SORTBY = 'sort_order'
+  POLICY_CLASS = 'Survey::PagePolicy'.freeze
+  POLICY_SCOPE_CLASS = 'Survey::PagePolicy::Scope'.freeze
+
 
   def serializer_includes
     [

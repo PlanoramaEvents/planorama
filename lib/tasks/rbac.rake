@@ -213,7 +213,7 @@ namespace :rbac do
           "show": false,
           "update": false
       },
-      "submissions": {
+      "submission": {
           "create": true,
           "delete_all": false,
           "flat": false,
@@ -428,11 +428,11 @@ namespace :rbac do
           "update": true
       },
       "page": {
-          "create": false,
-          "destroy": false,
+          "create": true,
+          "destroy": true,
           "index": true,
           "show": true,
-          "update": false
+          "update": true
       },
       "submission": {
           "create": true,
@@ -451,18 +451,18 @@ namespace :rbac do
           "update": true
       },
       "question": {
-          "create": false,
-          "destroy": false,
+          "create": true,
+          "destroy": true,
           "index": true,
           "show": true,
-          "update": false
+          "update": true
       },
       "answer": {
-          "create": false,
-          "destroy": false,
+          "create": true,
+          "destroy": true,
           "index": true,
           "show": true,
-          "update": false
+          "update": true
       },
       "report": {
         "assigned_sessions_by_participant": true,
@@ -476,7 +476,15 @@ namespace :rbac do
       },
       "session_report": {
         "panels_with_too_few_people": true,
-        "panels_with_too_many_people": true
+        "panels_with_too_many_people": true,
+        "participants_over_session_limits": true,
+        "participants_over_con_session_limits": true
+      },
+      "conflict_report": {
+        "people_outside_availability": true,
+        "people_double_booked": true,
+        "back_to_back": true,
+        "back_to_back_to_back": true
       }
     })
   end
@@ -712,6 +720,14 @@ namespace :rbac do
       "session_report": {
         "panels_with_too_few_people": true,
         "panels_with_too_many_people": true,
+        "participants_over_session_limits": true,
+        "participants_over_con_session_limits": true
+      },
+      "conflict_report": {
+        "people_outside_availability": true,
+        "people_double_booked": true,
+        "back_to_back": true,
+        "back_to_back_to_back": true
       }
     })
   end

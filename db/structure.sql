@@ -549,6 +549,21 @@ END) STORED,
 
 
 --
+-- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_assignment_role_type (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    lock_version integer DEFAULT 0,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    name character varying(100) NOT NULL,
+    role_type public.assignment_role_enum,
+    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
+);
+
+
+--
 -- Name: session_assignments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -613,11 +628,16 @@ CREATE TABLE public.sessions (
 CREATE VIEW public.availability_conflicts AS
  SELECT DISTINCT session_assignments.id AS session_assignment_id,
     people.id AS person_id,
-    sessions.id AS session_id
-   FROM (((public.session_assignments
+    sessions.id AS session_id,
+    session_assignments.session_assignment_role_type_id,
+    sart.role_type AS session_assignment_role_type,
+    sart.name AS session_assignment_name,
+    concat(session_assignments.id, ':', people.id, ':', sessions.id) AS id
+   FROM ((((public.session_assignments
      JOIN public.sessions ON ((sessions.id = session_assignments.session_id)))
      JOIN public.people ON ((people.id = session_assignments.person_id)))
      JOIN public.availabilities ON ((availabilities.person_id = people.id)))
+     JOIN public.session_assignment_role_type sart ON ((sart.id = session_assignments.session_assignment_role_type_id)))
   WHERE ((session_assignments.person_id = availabilities.person_id) AND (session_assignments.session_assignment_role_type_id IS NOT NULL) AND (sessions.start_time IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (NOT (session_assignments.id IN ( SELECT session_assignments_1.id
            FROM (((public.session_assignments session_assignments_1
              JOIN public.sessions sessions_1 ON ((sessions_1.id = session_assignments_1.session_id)))
@@ -935,6 +955,98 @@ CREATE TABLE public.person_agreements (
 
 
 --
+-- Name: person_schedules; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_schedules AS
+ SELECT p.id AS person_id,
+    p.name,
+    p.published_name,
+    sa.id AS session_assignment_id,
+    sart.id AS session_assignment_role_type_id,
+    sart.name AS session_assignment_name,
+    sart.role_type AS session_assignment_role_type,
+    sa.sort_order,
+    sessions.id AS session_id,
+    sessions.title,
+    sessions.start_time,
+    (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
+    sessions.room_id,
+    sessions.format_id,
+    concat(p.id, ':', sa.id) AS id
+   FROM (((public.session_assignments sa
+     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
+     JOIN public.people p ON ((p.id = sa.person_id)))
+     LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
+  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL));
+
+
+--
+-- Name: person_schedule_conflicts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_schedule_conflicts AS
+ SELECT ps1.person_id,
+    GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
+    ps1.session_id,
+    ps1.start_time,
+    ps1.end_time,
+    ps1.session_assignment_id,
+    ps1.session_assignment_role_type_id,
+    ps1.session_assignment_name,
+    ps1.session_assignment_role_type,
+    ps1.room_id,
+    ps2.session_id AS conflict_session_id,
+    ps2.end_time AS conflict_end_time,
+    ps2.session_assignment_role_type_id AS conflict_session_assignment_role_type_id,
+    ps2.session_assignment_role_type AS conflict_session_assignment_role_type,
+    ps2.session_assignment_name AS conflict_session_assignment_name,
+    ps2.room_id AS conflict_room_id,
+        CASE
+            WHEN ((ps1.start_time = ps2.end_time) OR (ps2.start_time = ps1.end_time)) THEN true
+            ELSE false
+        END AS back_to_back,
+    concat(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) AS id
+   FROM (public.person_schedules ps1
+     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps1.start_time >= ps2.start_time) AND ((ps1.start_time <= ps2.end_time) OR ((ps1.end_time >= ps2.start_time) AND (ps1.end_time <= ps2.end_time))))))
+  ORDER BY ps1.person_id, GREATEST(ps1.start_time, ps2.start_time);
+
+
+--
+-- Name: person_back_to_back_to_back; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_back_to_back_to_back AS
+ SELECT psc1.person_id,
+    psc1.session_id,
+    psc1.start_time,
+    psc1.end_time,
+    psc1.session_assignment_id,
+    psc1.session_assignment_role_type_id,
+    psc1.session_assignment_name,
+    psc1.session_assignment_role_type,
+    psc1.room_id,
+    psc2.session_id AS middle_session_id,
+    psc2.start_time AS middle_start_time,
+    psc2.end_time AS middle_end_time,
+    psc2.session_assignment_id AS middle_session_assignment_id,
+    psc2.session_assignment_role_type_id AS middle_session_assignment_role_type_id,
+    psc2.session_assignment_name AS middle_session_assignment_name,
+    psc2.session_assignment_role_type AS middle_session_assignment_role_type,
+    psc2.room_id AS middle_room_id,
+    psc2.conflict_session_id,
+    psc2.conflict_end_time,
+    psc2.conflict_session_assignment_role_type_id,
+    psc2.conflict_session_assignment_role_type,
+    psc2.conflict_session_assignment_name,
+    psc2.conflict_room_id,
+    concat(psc1.person_id, ':', psc1.session_id, ':', psc2.session_id, ':', psc2.conflict_session_id) AS id
+   FROM (public.person_schedule_conflicts psc1
+     JOIN public.person_schedule_conflicts psc2 ON (((psc2.session_id = psc1.conflict_session_id) AND (psc2.back_to_back = true))))
+  WHERE (psc1.back_to_back = true);
+
+
+--
 -- Name: person_constraints; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -975,101 +1087,6 @@ CREATE TABLE public.person_mailing_assignments (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
 );
-
-
---
--- Name: session_assignment_role_type; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.session_assignment_role_type (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    lock_version integer DEFAULT 0,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    name character varying(100) NOT NULL,
-    role_type public.assignment_role_enum,
-    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
-);
-
-
---
--- Name: person_schedule; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.person_schedule AS
- SELECT p.id AS person_id,
-    p.name,
-    p.published_name,
-    sa.id AS session_assignment_id,
-    sart.id AS session_assignment_role_type_id,
-    sart.name AS session_assignment_name,
-    sart.role_type AS session_assignment_role_type,
-    sa.sort_order,
-    sessions.id AS session_id,
-    sessions.title,
-    sessions.start_time,
-    (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
-    sessions.room_id
-   FROM (((public.session_assignments sa
-     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
-     JOIN public.people p ON ((p.id = sa.person_id)))
-     LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
-  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL));
-
-
---
--- Name: person_schedules; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.person_schedules AS
- SELECT p.id AS person_id,
-    p.name,
-    p.published_name,
-    sa.id AS session_assignment_id,
-    sart.id AS session_assignment_role_type_id,
-    sart.name AS session_assignment_name,
-    sart.role_type AS session_assignment_role_type,
-    sa.sort_order,
-    sessions.id AS session_id,
-    sessions.title,
-    sessions.start_time,
-    (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
-    sessions.room_id
-   FROM (((public.session_assignments sa
-     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
-     JOIN public.people p ON ((p.id = sa.person_id)))
-     LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
-  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL));
-
-
---
--- Name: person_schedule_conflicts; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.person_schedule_conflicts AS
- SELECT ps1.person_id,
-    GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
-    ps1.session_id,
-    ps1.start_time,
-    ps1.end_time,
-    ps1.session_assignment_id,
-    ps1.session_assignment_role_type_id,
-    ps1.session_assignment_name,
-    ps1.session_assignment_role_type,
-    ps1.room_id,
-    ps2.session_id AS conflict_session_id,
-    ps2.end_time AS conflict_end_time,
-    ps1.session_assignment_role_type_id AS conflict_session_assignment_role_type_id,
-    ps1.session_assignment_name AS conflict_session_assignment_name,
-    ps1.session_assignment_role_type AS conflict_session_assignment_role_type,
-    ps1.room_id AS conflict_room_id,
-        CASE
-            WHEN ((ps1.start_time = ps2.end_time) OR (ps2.start_time = ps1.end_time)) THEN true
-            ELSE false
-        END AS back_to_back
-   FROM (public.person_schedules ps1
-     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps1.start_time >= ps2.start_time) AND ((ps1.start_time <= ps2.end_time) OR ((ps1.end_time >= ps2.start_time) AND (ps1.end_time <= ps2.end_time))))))
-  ORDER BY ps1.person_id, GREATEST(ps1.start_time, ps2.start_time);
 
 
 --
@@ -1251,7 +1268,11 @@ CREATE VIEW public.session_conflicts AS
     NULL::uuid AS room_id,
     availability_conflicts.person_id,
     availability_conflicts.session_assignment_id,
+    availability_conflicts.session_assignment_role_type_id,
+    availability_conflicts.session_assignment_name,
     NULL::uuid AS conflict_session_id,
+    NULL::uuid AS conflict_session_assignment_role_type_id,
+    NULL::text AS conflict_session_assignment_name,
     'availability'::text AS conflict_type
    FROM public.availability_conflicts
 UNION
@@ -1259,15 +1280,24 @@ UNION
     room_conflicts.room_id,
     NULL::uuid AS person_id,
     NULL::uuid AS session_assignment_id,
+    NULL::uuid AS session_assignment_role_type_id,
+    NULL::character varying AS session_assignment_name,
     room_conflicts.conflicting_session_id AS conflict_session_id,
+    NULL::uuid AS conflict_session_assignment_role_type_id,
+    NULL::text AS conflict_session_assignment_name,
     'room_conflict'::text AS conflict_type
    FROM public.room_conflicts
+  WHERE (room_conflicts.back_to_back = false)
 UNION
  SELECT person_schedule_conflicts.session_id,
     person_schedule_conflicts.room_id,
     person_schedule_conflicts.person_id,
     person_schedule_conflicts.session_assignment_id,
+    person_schedule_conflicts.session_assignment_role_type_id,
+    person_schedule_conflicts.session_assignment_name,
     person_schedule_conflicts.conflict_session_id,
+    person_schedule_conflicts.conflict_session_assignment_role_type_id,
+    person_schedule_conflicts.conflict_session_assignment_name,
     'person_session_conflict'::text AS conflict_type
    FROM public.person_schedule_conflicts
   WHERE (person_schedule_conflicts.back_to_back = false)
@@ -1276,7 +1306,11 @@ UNION
     person_schedule_conflicts.room_id,
     person_schedule_conflicts.person_id,
     person_schedule_conflicts.session_assignment_id,
+    person_schedule_conflicts.session_assignment_role_type_id,
+    person_schedule_conflicts.session_assignment_name,
     person_schedule_conflicts.conflict_session_id,
+    person_schedule_conflicts.conflict_session_assignment_role_type_id,
+    person_schedule_conflicts.conflict_session_assignment_name,
     'back_to_back'::text AS conflict_type
    FROM public.person_schedule_conflicts
   WHERE (person_schedule_conflicts.back_to_back = true);
@@ -2769,6 +2803,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220612135253'),
 ('20220613152827'),
 ('20220613171929'),
-('20220613194424');
+('20220613194424'),
+('20220614014103'),
+('20220614183042'),
+('20220614190928'),
+('20220616160624'),
+('20220617012940');
 
 

@@ -33,11 +33,14 @@ export const submissionMixin = {
     },
     submitSelectedSubmission() {
       return this.toastPromise(new Promise((res, rej) => {
-        this.patch({model, item: {...this.selectedSubmission, submission_state: SubmissionStatus.SUBMITTED}, fields: ['submission_state']}).then((data) => {
-          Promise.all(this.getStoreResponses(this.selectedSubmission).map(r => this.jvPost(r))).then(() => {
+        const responses_attributes = this.getStoreResponses(this.selectedSubmission).map(r => {
+          return {id: r.id, question_id: r.question.id, response: r.response, submission_id: r.submission.id};
+        })
+        this.patch({model, item: {...this.selectedSubmission, submission_state: SubmissionStatus.SUBMITTED, responses_attributes}, fields: ['submission_state', 'responses_attributes']}).then((data) => {
+          // Promise.all(this.getStoreResponses(this.selectedSubmission).map(r => this.jvPost(r))).then(() => {
             this.unselect({model})
             res(data)
-          }).catch(rej)
+          // }).catch(rej)
         }).catch(rej)
       }));
     },
