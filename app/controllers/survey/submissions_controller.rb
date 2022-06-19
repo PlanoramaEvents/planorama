@@ -51,11 +51,33 @@ class Survey::SubmissionsController < ResourceController
   # After save and if state changes to submitted we may need
   # to transistion the person's state?
   def after_save
+    process_responses
     post_submission_transition if @object.submission_state == Survey::Submission.submission_states[:submitted]
   end
 
   def after_update
+    process_responses
     post_submission_transition if @object.submission_state == Survey::Submission.submission_states[:submitted]
+  end
+
+  def process_responses
+    p = params.require(:data).permit! #({attributes: {responses_attributes: [:id, :lock_version, :submission_id, :question_id, :response]}})
+    responses = p[:attributes][:responses_attributes]
+
+    if (responses)
+      # Rails.logger.debug("****** SAVE RESPONSES #{responses}")
+      responses.each do |res|
+        # Rails.logger.debug("****** SAVE RESPONSE #{res}")
+        r = Survey::Response.exists? res[:id]
+        if r
+          r.update(res)
+        else
+          Survey::Response.create(
+            res
+          )
+        end
+      end
+    end
   end
 
   def post_submission_transition
@@ -186,6 +208,9 @@ class Survey::SubmissionsController < ResourceController
     end
   end
 
+  # Corrected structure for nested attrs
+  # BUT - client is sending a new response with a UUID which is confusing Rails
+  # because a new instance is not expected to have a id...
   def allowed_params
     %i[
       id
@@ -194,42 +219,17 @@ class Survey::SubmissionsController < ResourceController
       responses
       person
       survey
-    ] << [
-      responses_attributes: %i[
-        id
-        lock_version
-        _destroy
-        submission_id
-        question_id
-      ] << [
-        response: %i[
-          id
-          text
-        ] << [
-          answers: [],
-          address: %i[
-            id
-            street
-            street2
-            city
-            state
-            zip
-            country
-          ],
-          socialmedia: %i[
-            id
-            twitter
-            facebook
-            linkedin
-            twitch
-            youtube
-            instagram
-            website
-            other
-            tiktok
-          ]
-        ]
-      ]
     ]
+    # responses_attributes
+    # ] << [
+    #   responses_attributes: %i[
+    #     id
+    #     lock_version
+    #     _destroy
+    #     submission_id
+    #     question_id
+    #     response
+    #   ]
+    # The response should be plain JSON
   end
 end

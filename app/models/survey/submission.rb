@@ -7,7 +7,7 @@ class Survey::Submission < ApplicationRecord
            foreign_key: 'submission_id',
            inverse_of: :submission,
            dependent: :destroy
-  accepts_nested_attributes_for :responses, allow_destroy: true
+  # accepts_nested_attributes_for :responses, allow_destroy: true
 
   enum submission_state: { draft: 'draft', submitted: 'submitted' }
 end
