@@ -273,7 +273,7 @@ class Reports::ConflictReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "PeopleDoubleBooked#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "ParticipantsDoubleBooked#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
