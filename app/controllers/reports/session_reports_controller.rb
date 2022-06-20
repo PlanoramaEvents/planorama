@@ -14,7 +14,7 @@ class Reports::SessionReportsController < ApplicationController
         'Published Name',
         'Day',
         'Session Count',
-        "Person's Limit"
+        "Participant's Limit"
       ]
     )
 
