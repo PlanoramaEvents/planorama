@@ -24,11 +24,11 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Primary Email',
         'Attendance Type',
         'Participant Status',
-        "Survey's Taken"
+        "Surveys Taken"
       ]
     )
 
@@ -297,7 +297,7 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Session Title',
         'Role'
       ]
@@ -348,7 +348,7 @@ class ReportsController < ApplicationController
       worksheet.append_row(
         [
           'Name',
-          'Pub Name',
+          'Published Name',
           'Attendance Type',
           'Availabilities',
           'Limits',
@@ -398,7 +398,7 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Title',
         'Ranking',
         'Notes',
@@ -444,7 +444,7 @@ class ReportsController < ApplicationController
       [
         'Title',
         'Who is Interested',
-        'Who is Interested (Pub Name)',
+        'Who is Interested (Published Name)',
         'Ranking',
         'Notes',
         'Areas'
