@@ -303,7 +303,7 @@ class Reports::ConflictReportsController < ApplicationController
 
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("People Outside Availability")
+    worksheet = workbook.add_worksheet("Participants Outside of Availability")
 
     worksheet.append_row(
       [
