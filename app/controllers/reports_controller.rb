@@ -19,7 +19,7 @@ class ReportsController < ApplicationController
     ).order("people.name")
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("People and Submissions")
+    worksheet = workbook.add_worksheet("People and Survey Submissions")
 
     worksheet.append_row(
       [
