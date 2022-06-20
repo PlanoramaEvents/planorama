@@ -47,7 +47,7 @@ class ReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "PeopleAndSubmissions_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "PeopleAndSubmissions#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
