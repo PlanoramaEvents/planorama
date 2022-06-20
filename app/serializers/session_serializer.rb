@@ -35,7 +35,15 @@ class SessionSerializer
   end
 
   attribute :has_conflicts do |session|
-    session.session_conflicts.where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')").count > 0
+    if session.has_attribute?(:conflict_count)
+      session.conflict_count > 0
+    else
+      session
+        .session_conflicts
+        .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+        .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+        .count > 0
+    end
   end
 
   has_many :session_areas, serializer: SessionAreaSerializer,
@@ -48,8 +56,7 @@ class SessionSerializer
             }
           }
 
-  # Can I parameterize this??? session_assignments.interests_for(person)
-  has_many :session_assignments, serializer: SessionAssignmentSerializer,
+  has_many :session_assignments, lazy_load_data: true, serializer: SessionAssignmentSerializer,
            links: {
              self: -> (object, params) {
                "#{params[:domain]}/session/#{object.id}"

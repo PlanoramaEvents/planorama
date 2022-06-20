@@ -92,6 +92,26 @@ class Session < ApplicationRecord
       .group('sessions.id')
   end
 
+  def self.conflict_counts
+    sessions = Session.arel_table
+    conflicts = Conflicts::SessionConflict.arel_table
+
+    sessions.project(
+      sessions[:id].as('session_id'),
+      conflicts[:session_id].count.as('conflict_count')
+    )
+    .join(conflicts, Arel::Nodes::OuterJoin)
+    .on(
+      sessions[:id].eq(conflicts[:session_id])
+      .and(
+        conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible']).and(
+          conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])
+        )
+      )
+    )
+    .group('sessions.id')
+  end
+
   def self.area_aggregate_fn(col)
     Arel::Nodes::NamedFunction.new('array_remove',[Arel::Nodes::NamedFunction.new('array_agg',[col]), Arel::Nodes::SqlLiteral.new("NULL")])
   end

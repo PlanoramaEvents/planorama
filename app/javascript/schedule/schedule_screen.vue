@@ -29,7 +29,6 @@
             v-if="(selectedRooms && selectedRooms.length > 0) && days.length > 0"
             :defaultFilter="scheduleFilter"
             :model="sessionModel"
-            :perPage="2000"
             @schedule-changed="onScheduleChanged"
             @show-conflicts="onShowConflicts"
             class="mt-1"
@@ -152,10 +151,9 @@ export default {
     onScheduleChanged: function() {
       this.$refs["schedulable-sessions"].fetchPaged(false)
       // update the conflicts
-      // this.$refs["conflict-reporting"].fetchPaged()
+      this.$refs["conflict-reporting"].fetchPaged()
     },
     onShowConflicts: function(session_id) {
-      console.debug("**** SHOW CONFLICTS FOR", session_id)
       this.sessionIdForConflict = session_id
     }
   },
