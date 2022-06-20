@@ -154,7 +154,7 @@ class Reports::ConflictReportsController < ApplicationController
                   .order('people.published_name asc, conflict_start_time asc')
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("People Scheduled Back to Back")
+    worksheet = workbook.add_worksheet("Participants Scheduled Back to Back")
 
     worksheet.append_row(
       [
