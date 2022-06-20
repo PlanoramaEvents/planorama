@@ -152,7 +152,7 @@ export default {
     onScheduleChanged: function() {
       // this.$refs["schedulable-sessions"].fetchPaged(false)
       // update the conflicts
-      // this.$refs["conflict-reporting"].fetchPaged()
+      this.$refs["conflict-reporting"].fetchPaged()
     },
     onShowConflicts: function(session_id) {
       console.debug("**** SHOW CONFLICTS FOR", session_id)
