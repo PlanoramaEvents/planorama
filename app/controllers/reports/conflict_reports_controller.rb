@@ -235,7 +235,7 @@ class Reports::ConflictReportsController < ApplicationController
                   .order('people.published_name asc, conflict_start_time asc')
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("People Double Booked")
+    worksheet = workbook.add_worksheet("Participants Double Booked")
 
     worksheet.append_row(
       [
