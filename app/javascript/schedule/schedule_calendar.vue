@@ -54,7 +54,7 @@ export default {
   }),
   methods: {
     onScheduleChanged: function() {
-      this.$emit("schedule-changed");
+      // this.$emit("schedule-changed");
     },
     onShowConflicts: function(session_id) {
       this.$emit("show-conflicts", session_id);

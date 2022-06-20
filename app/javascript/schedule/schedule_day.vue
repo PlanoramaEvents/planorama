@@ -208,7 +208,7 @@ export default {
       session.room_id = room_id
       return this.save_model(sessionModel, session).then(
         () => {
-          this.$emit("schedule-changed");
+          // this.$emit("schedule-changed");
         }
       )
     }
