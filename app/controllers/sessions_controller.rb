@@ -243,6 +243,9 @@ class SessionsController < ResourceController
     )
   end
 
+  def paginate
+    !params[:perPage].blank?
+  end
 
   def allowed_params
     %i[
