@@ -131,7 +131,7 @@ class Reports::SessionReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "Panels_With_Too_Many_People_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "PanelsWithTooManyParticipants#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
