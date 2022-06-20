@@ -144,8 +144,10 @@ class SessionsController < ResourceController
       :format,
       :room,
       :session_areas,
-      :'session_areas.area',
-      :session_assignments
+      :'session_areas.area'
+      # Do not include assignment in the JSON by default as that can slow client down,
+      # let client request them when needed
+      # :session_assignments
     ]
   end
 
@@ -153,7 +155,7 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      :base_tags,
+      :base_tags
     ]
   end
 
@@ -190,6 +192,7 @@ class SessionsController < ResourceController
     sessions = Arel::Table.new(Session.table_name)
 
     subquery = Session.area_list.as('areas_list')
+    conflict_counts = Session.conflict_counts.as('conflict_counts')
     joins = [
       sessions.create_join(
         subquery,
@@ -197,6 +200,12 @@ class SessionsController < ResourceController
           subquery[:session_id].eq(sessions[:id])
         ),
         Arel::Nodes::OuterJoin
+      ),
+      sessions.create_join(
+        conflict_counts,
+        sessions.create_on(
+          conflict_counts[:session_id].eq(sessions[:id])
+        )
       )
     ]
 
@@ -225,6 +234,17 @@ class SessionsController < ResourceController
     end
 
     joins
+  end
+
+  def select_fields
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'conflict_counts.conflict_count'
+    )
+  end
+
+  def paginate
+    !params[:perPage].blank?
   end
 
   def allowed_params

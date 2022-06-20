@@ -2,7 +2,7 @@
   <div class="session-conflicts">
     <div class="session-conflicts-list" v-if="conflicts.length > 0">
       <div v-if="displaySessionInfo">
-        <strong>{{conflicts[0].session.title}}</strong><br />
+        <strong>{{sessionTitle}}</strong><br />
         {{ formatLocaleDate(conflicts[0].session.start_time )}}
       </div>
       <div class="ml-2">
@@ -23,6 +23,8 @@
 <script>
 import sessionConflictMixin from '../store/session_conflict.mixin';
 import modelMixin from '../store/model.mixin';
+import modelUtilsMixin from "@/store/model_utils.mixin"
+import { sessionModel } from '@/store/session.store'
 import dateTimeMixin from '../components/date_time.mixin'
 import { CONFLICT_TEXT } from '@/constants/strings';
 
@@ -30,6 +32,7 @@ export default {
   name: "SessionConflicts",
   mixins: [
     modelMixin,
+    modelUtilsMixin,
     dateTimeMixin,
     sessionConflictMixin
   ],
@@ -43,6 +46,18 @@ export default {
   data: () =>  ({
     conflicts: []
   }),
+  computed: {
+    sessionTitle() {
+      // conflicts[0].session.title
+      let session = this.get_model(sessionModel, this.sessionId)
+      if (session) {
+        return session.title
+      } else {
+        return ''
+      }
+      // return this.selected_model(sessionModel);
+    },
+  },
   watch: {
     sessionId(newVal, oldVal) {
       if (newVal) {

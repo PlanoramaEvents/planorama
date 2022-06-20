@@ -215,8 +215,12 @@ module ResourceMethods
 
     @per_page, @current_page, @filters = collection_params
 
-    q = policy_scope(base, policy_scope_class: policy_scope_class)
-         .includes(includes)
+    q = if select_fields
+          select_fields
+        else
+          policy_scope(base, policy_scope_class: policy_scope_class)
+        end
+    q = q.includes(includes)
          .references(references)
          .eager_load(eager_load)
          .joins(join_tables)
@@ -482,6 +486,10 @@ module ResourceMethods
   end
 
   def subquery(operation:, value: nil)
+    nil
+  end
+
+  def select_fields
     nil
   end
 

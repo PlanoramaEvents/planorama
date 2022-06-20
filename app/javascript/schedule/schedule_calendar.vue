@@ -60,9 +60,7 @@ export default {
       this.$emit("show-conflicts", session_id);
     },
     init: function() {
-      // STORE ????
-      this.perPage = 2000
-      this.fetchPaged(false).then(
+      this.fetch({}).then(
         () => {
           // $nextTick ensures that the DOM is rendered... which is usefull
           // when we want to do DOM type functions...
