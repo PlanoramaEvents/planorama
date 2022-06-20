@@ -56,7 +56,7 @@ class Reports::ConflictReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Session',
         'Area',
         'Time',
@@ -159,7 +159,7 @@ class Reports::ConflictReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Session',
         'Area',
         'Time',
@@ -240,7 +240,7 @@ class Reports::ConflictReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Time',
         'Session',
         'Area',
@@ -308,7 +308,7 @@ class Reports::ConflictReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Session',
         'Areas',
         'Start Time',
