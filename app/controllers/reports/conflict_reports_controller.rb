@@ -333,7 +333,7 @@ class Reports::ConflictReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "PeopleOutSideAvailability#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "ParticipantsOutsideOfAvailability#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
