@@ -6,7 +6,7 @@ class SessionAssignmentSerializer
              :visibility, :state, :planner_notes,
              :interested, :interest_ranking, :interest_notes, :interest_role
 
-  belongs_to :person, lazy_load_data: true,
+  belongs_to :person,
              if: Proc.new { |record| record.session },
              links: {
                self: -> (object, params) {
