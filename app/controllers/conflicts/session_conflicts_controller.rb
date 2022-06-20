@@ -42,9 +42,10 @@ class Conflicts::SessionConflictsController < ApplicationController
 
   def conflicts_for
     session_id = params[:session_id]
+    # .where("session_id = ? or conflict_session_id = ?", session_id, session_id)
     collection = Conflicts::SessionConflict
                   .includes([:session,:person,:session_assignment,:room])
-                  .where("session_id = ? or conflict_session_id = ?", session_id, session_id)
+                  .where(session_id: session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .distinct
