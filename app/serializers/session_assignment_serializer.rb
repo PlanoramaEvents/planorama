@@ -17,7 +17,7 @@ class SessionAssignmentSerializer
                }
              }
 
-  belongs_to :session,
+  belongs_to :session, lazy_load_data: true,
              if: Proc.new { |record| record.session },
              links: {
                self: -> (object, params) {

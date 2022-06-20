@@ -29,10 +29,11 @@ class SessionAssignmentsController < ResourceController
   end
 
   def serializer_includes
+    # remove included data for now to speed up loads
     [
       :person,
-      :session,
-      :'session.format'
+      # :session,
+      # :'session.format'
     ]
   end
 
