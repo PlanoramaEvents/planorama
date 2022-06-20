@@ -802,6 +802,16 @@ CREATE TABLE public.exclusions (
 
 
 --
+-- Name: exclusions_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exclusions_sessions (
+    exclusion_id uuid,
+    session_id uuid
+);
+
+
+--
 -- Name: formats; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1073,6 +1083,23 @@ CREATE TABLE public.person_exclusions (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: person_exclusion_conflicts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_exclusion_conflicts AS
+ SELECT concat(person_schedules.person_id, ':', es.exclusion_id, ':', person_schedules.session_id) AS id,
+    person_schedules.person_id,
+    es.exclusion_id,
+    person_schedules.session_id,
+    es.session_id AS excluded_session_id
+   FROM (((public.person_schedules
+     LEFT JOIN public.person_exclusions pe ON ((pe.person_id = person_schedules.person_id)))
+     JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
+     LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
+  WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time >= s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
 
 
 --
@@ -2267,6 +2294,27 @@ CREATE INDEX index_convention_roles_on_person_id ON public.convention_roles USIN
 
 
 --
+-- Name: index_exclusions_sessions_on_exclusion_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exclusions_sessions_on_exclusion_id ON public.exclusions_sessions USING btree (exclusion_id);
+
+
+--
+-- Name: index_exclusions_sessions_on_exclusion_id_and_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_exclusions_sessions_on_exclusion_id_and_session_id ON public.exclusions_sessions USING btree (exclusion_id, session_id);
+
+
+--
+-- Name: index_exclusions_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exclusions_sessions_on_session_id ON public.exclusions_sessions USING btree (session_id);
+
+
+--
 -- Name: index_magic_links_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2808,6 +2856,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220614183042'),
 ('20220614190928'),
 ('20220616160624'),
-('20220617012940');
+('20220617012940'),
+('20220617185031'),
+('20220620180039');
 
 
