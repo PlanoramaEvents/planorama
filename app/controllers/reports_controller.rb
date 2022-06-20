@@ -317,7 +317,7 @@ class ReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "AssignedSessionsByPerson_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "AssignedSessionsByParticipant#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
