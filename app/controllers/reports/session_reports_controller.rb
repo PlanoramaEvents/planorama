@@ -39,7 +39,7 @@ class Reports::SessionReportsController < ApplicationController
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Too Many Sessions for Con")
+    worksheet = workbook.add_worksheet("Participants Over Con Limit")
     people = ::ReportsService.participant_and_con_session_limits
 
     worksheet.append_row(
