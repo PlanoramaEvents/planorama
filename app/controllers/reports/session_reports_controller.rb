@@ -105,7 +105,7 @@ class Reports::SessionReportsController < ApplicationController
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Panels with too Many People")
+    worksheet = workbook.add_worksheet("Panels with Too Many Participants")
     sessions = ::ReportsService.panels_with_too_many_people
 
     # Session name, Area, session start, participant count, participant count lower bound, list of participants
