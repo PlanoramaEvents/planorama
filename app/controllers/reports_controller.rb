@@ -292,7 +292,7 @@ class ReportsController < ApplicationController
     ).order("people.name")
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Assigned Sessions")
+    worksheet = workbook.add_worksheet("Assigned Sessions by Participant")
 
     worksheet.append_row(
       [
