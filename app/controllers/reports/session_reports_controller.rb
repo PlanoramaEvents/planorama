@@ -11,7 +11,7 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Day',
         'Session Count',
         "Person's Limit"
@@ -45,7 +45,7 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Session Count',
         'Con Limit'
       ]
