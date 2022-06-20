@@ -51,7 +51,7 @@ class Reports::ConflictReportsController < ApplicationController
 
     #
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Back to Back to Back")
+    worksheet = workbook.add_worksheet("Participants Back to Back to Back")
 
     worksheet.append_row(
       [
