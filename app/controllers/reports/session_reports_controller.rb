@@ -97,7 +97,7 @@ class Reports::SessionReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "Panels_With_Too_Few_People_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "PanelsWithTooFewParticipants#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
