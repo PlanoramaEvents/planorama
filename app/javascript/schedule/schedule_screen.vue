@@ -150,7 +150,7 @@ export default {
       fetch: FETCH
     }),
     onScheduleChanged: function() {
-      // this.$refs["schedulable-sessions"].fetchPaged(false)
+      this.$refs["schedulable-sessions"].fetchPaged(false)
       // update the conflicts
       this.$refs["conflict-reporting"].fetchPaged()
     },
