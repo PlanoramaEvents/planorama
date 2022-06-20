@@ -111,7 +111,7 @@ class Reports::ConflictReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "PeopleBackToBackToBack#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "ParticipantsBackToBackToBack#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
 
 
