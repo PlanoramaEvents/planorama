@@ -983,7 +983,8 @@ CREATE VIEW public.person_schedules AS
     (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
     sessions.room_id,
     sessions.format_id,
-    concat(p.id, ':', sa.id) AS id
+    concat(p.id, ':', sa.id) AS id,
+    sessions.duration
    FROM (((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
      JOIN public.people p ON ((p.id = sa.person_id)))
@@ -1093,8 +1094,15 @@ CREATE VIEW public.person_exclusion_conflicts AS
  SELECT concat(person_schedules.person_id, ':', es.exclusion_id, ':', person_schedules.session_id) AS id,
     person_schedules.person_id,
     es.exclusion_id,
+    es.session_id AS excluded_session_id,
     person_schedules.session_id,
-    es.session_id AS excluded_session_id
+    person_schedules.title,
+    person_schedules.start_time,
+    person_schedules.end_time,
+    person_schedules.duration,
+    person_schedules.session_assignment_role_type_id,
+    person_schedules.session_assignment_name,
+    person_schedules.session_assignment_role_type
    FROM (((public.person_schedules
      LEFT JOIN public.person_exclusions pe ON ((pe.person_id = person_schedules.person_id)))
      JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
@@ -2858,6 +2866,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220616160624'),
 ('20220617012940'),
 ('20220617185031'),
+('20220620180030'),
 ('20220620180039');
 
 

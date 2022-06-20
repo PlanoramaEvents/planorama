@@ -3,29 +3,23 @@ class PersonExclusionConflicts < ActiveRecord::Migration[6.1]
     # This will be extended to union the other conflicts
     execute <<-SQL
       CREATE OR REPLACE VIEW person_exclusion_conflicts AS
-      select
-        CONCAT(person_schedules.person_id, ':', es.exclusion_id, ':', person_schedules.session_id) as id,
-        person_schedules.person_id,
-        es.exclusion_id,
-        person_schedules.session_id,
-        es.session_id as excluded_session_id
-      from person_schedules
-      left join person_exclusions pe on
-        pe.person_id = person_schedules.person_id
-      join exclusions_sessions es on
-        es.exclusion_id = pe.exclusion_id
-      left join sessions s on
-        s.id = es.session_id
-      where
-        person_schedules.session_id != s.id
-        and
-        person_schedules.start_time >= s.start_time
-        and (
-          person_schedules.start_time <= (s.start_time + (s.duration || ' minute')::interval)
-          or (
-            person_schedules.end_time >= s.start_time and person_schedules.end_time <= (s.start_time + (s.duration || ' minute')::interval)
-          )
-        )
+       SELECT concat(person_schedules.person_id, ':', es.exclusion_id, ':', person_schedules.session_id) AS id,
+          person_schedules.person_id,
+          es.exclusion_id,
+          es.session_id AS excluded_session_id,
+          person_schedules.session_id,
+          person_schedules.title,
+          person_schedules.start_time,
+          person_schedules.end_time,
+          person_schedules.duration,
+          person_schedules.session_assignment_role_type_id,
+          person_schedules.session_assignment_name,
+          person_schedules.session_assignment_role_type
+         FROM (((public.person_schedules
+           LEFT JOIN public.person_exclusions pe ON ((pe.person_id = person_schedules.person_id)))
+           JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
+           LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
+        WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time >= s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
     SQL
   end
 
@@ -35,3 +29,6 @@ class PersonExclusionConflicts < ActiveRecord::Migration[6.1]
     SQL
   end
 end
+
+('20220620181659'),
+('20220620181701');

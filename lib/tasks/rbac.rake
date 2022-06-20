@@ -484,7 +484,8 @@ namespace :rbac do
         "people_outside_availability": true,
         "people_double_booked": true,
         "back_to_back": true,
-        "back_to_back_to_back": true
+        "back_to_back_to_back": true,
+        "person_exclusion_conflicts": true
       }
     })
   end
@@ -727,7 +728,8 @@ namespace :rbac do
         "people_outside_availability": true,
         "people_double_booked": true,
         "back_to_back": true,
-        "back_to_back_to_back": true
+        "back_to_back_to_back": true,
+        "person_exclusion_conflicts": true
       }
     })
   end
