@@ -63,7 +63,7 @@ class Reports::SessionReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "Participants_with_too_many_sessions_for_con#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "ParticipantsOverConLimit#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
