@@ -67,4 +67,22 @@ class SessionAssignmentsController < ResourceController
     false
   end
 
+  def allowed_params
+    %i[
+      id
+      lock_version
+      interest_notes
+      interest_ranking
+      interest_role
+      interested
+      person_id
+      planner_notes
+      session_assignment_role_type_id
+      session_id
+      sort_order
+      state
+      visibility
+    ]
+  end
+
 end
