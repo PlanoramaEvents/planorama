@@ -991,6 +991,21 @@ CREATE TABLE public.rooms (
 
 
 --
+-- Name: session_areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_areas (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    session_id uuid,
+    area_id uuid,
+    "primary" boolean,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: person_schedules; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
@@ -999,6 +1014,7 @@ CREATE MATERIALIZED VIEW public.person_schedules AS
     p.id AS person_id,
     p.name,
     p.published_name,
+    p.con_state,
     sa.id AS session_assignment_id,
     sart.id AS session_assignment_role_type_id,
     sart.name AS session_assignment_name,
@@ -1010,16 +1026,23 @@ CREATE MATERIALIZED VIEW public.person_schedules AS
     (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
     sessions.duration,
     sessions.room_id,
+    areas.area_list,
     r.name AS room_name,
     r.room_set_id,
     sessions.format_id,
     f.name AS format_name
-   FROM (((((public.session_assignments sa
+   FROM ((((((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
      JOIN public.people p ON ((p.id = sa.person_id)))
      LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
      RIGHT JOIN public.rooms r ON ((r.id = sessions.room_id)))
      RIGHT JOIN public.formats f ON ((f.id = sessions.format_id)))
+     RIGHT JOIN ( SELECT sessions_1.id AS session_id,
+            array_remove(array_agg(areas_1.name), NULL::character varying) AS area_list
+           FROM ((public.sessions sessions_1
+             LEFT JOIN public.session_areas ON ((session_areas.session_id = sessions_1.id)))
+             RIGHT JOIN public.areas areas_1 ON ((areas_1.id = session_areas.area_id)))
+          GROUP BY sessions_1.id) areas ON ((areas.session_id = sessions.id)))
   WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL))
   WITH NO DATA;
 
@@ -1031,21 +1054,32 @@ CREATE MATERIALIZED VIEW public.person_schedules AS
 CREATE VIEW public.person_schedule_conflicts AS
  SELECT concat(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) AS id,
     ps1.person_id,
+    ps1.name,
+    ps1.published_name,
+    ps1.con_state,
     GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
     ps1.session_id,
+    ps1.title,
+    ps1.area_list,
     ps1.start_time,
     ps1.end_time,
+    ps1.duration,
     ps1.session_assignment_id,
     ps1.session_assignment_role_type_id,
     ps1.session_assignment_name,
     ps1.session_assignment_role_type,
     ps1.room_id,
+    ps1.room_name,
     ps2.session_id AS conflict_session_id,
+    ps2.title AS conflict_session_title,
+    ps2.area_list AS conflict_area_list,
     ps2.end_time AS conflict_end_time,
+    ps2.duration AS conflict_duration,
     ps2.session_assignment_role_type_id AS conflict_session_assignment_role_type_id,
     ps2.session_assignment_role_type AS conflict_session_assignment_role_type,
     ps2.session_assignment_name AS conflict_session_assignment_name,
     ps2.room_id AS conflict_room_id,
+    ps2.room_name AS conflict_room_name,
         CASE
             WHEN (((ps2.start_time >= ps1.end_time) AND (ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval))) OR ((ps1.start_time >= ps2.end_time) AND (ps1.start_time <= (ps2.end_time + ((40 || ' minute'::text))::interval)))) THEN true
             ELSE false
@@ -1062,7 +1096,12 @@ CREATE VIEW public.person_schedule_conflicts AS
 CREATE VIEW public.person_back_to_back_to_back AS
  SELECT concat(psc1.person_id, ':', psc1.session_id, ':', psc2.session_id, ':', psc2.conflict_session_id) AS id,
     psc1.person_id,
+    psc1.name,
+    psc1.published_name,
+    psc1.con_state,
     psc1.session_id,
+    psc1.title,
+    psc1.area_list,
     psc1.start_time,
     psc1.end_time,
     psc1.session_assignment_id,
@@ -1071,6 +1110,8 @@ CREATE VIEW public.person_back_to_back_to_back AS
     psc1.session_assignment_role_type,
     psc1.room_id,
     psc2.session_id AS middle_session_id,
+    psc2.title AS middle_title,
+    psc2.area_list AS middle_area_list,
     psc2.start_time AS middle_start_time,
     psc2.end_time AS middle_end_time,
     psc2.session_assignment_id AS middle_session_assignment_id,
@@ -1079,6 +1120,8 @@ CREATE VIEW public.person_back_to_back_to_back AS
     psc2.session_assignment_role_type AS middle_session_assignment_role_type,
     psc2.room_id AS middle_room_id,
     psc2.conflict_session_id,
+    psc2.conflict_session_title,
+    psc2.conflict_area_list,
     psc2.conflict_end_time,
     psc2.conflict_session_assignment_role_type_id,
     psc2.conflict_session_assignment_role_type,
@@ -1125,10 +1168,14 @@ CREATE TABLE public.person_exclusions (
 CREATE VIEW public.person_exclusion_conflicts AS
  SELECT concat(person_schedules.person_id, ':', es.exclusion_id, ':', person_schedules.session_id) AS id,
     person_schedules.person_id,
+    person_schedules.name,
+    person_schedules.published_name,
+    person_schedules.con_state,
     es.exclusion_id,
     es.session_id AS excluded_session_id,
     person_schedules.session_id,
     person_schedules.title,
+    person_schedules.area_list,
     person_schedules.start_time,
     person_schedules.end_time,
     person_schedules.duration,
@@ -1283,21 +1330,6 @@ CREATE TABLE public.room_sets (
 
 CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
-);
-
-
---
--- Name: session_areas; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.session_areas (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    session_id uuid,
-    area_id uuid,
-    "primary" boolean,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
 );
 
 

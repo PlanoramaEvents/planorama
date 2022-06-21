@@ -23,6 +23,7 @@ module MigrationHelpers
             p.id as person_id ,
             p.name,
             p.published_name,
+            p.con_state,
             sa.id as session_assignment_id,
             sart.id as session_assignment_role_type_id,
             sart.name as session_assignment_name,
@@ -34,6 +35,7 @@ module MigrationHelpers
             (sessions.start_time + (sessions.duration || ' minute')::interval) as end_time,
             sessions.duration,
             sessions.room_id,
+            areas.area_list,
             r.name as room_name,
             r.room_set_id,
             sessions.format_id,
@@ -56,6 +58,19 @@ module MigrationHelpers
           right join
             formats f on
             f.id = sessions.format_id
+          right join (
+            select
+              sessions.id as session_id,
+              array_remove(
+              	array_agg(areas.name),
+              	NULL
+              ) as area_list
+              from sessions
+              left join session_areas
+              on session_areas.session_id = sessions.id
+              right join areas on areas.id = session_areas.area_id
+              group by sessions.id
+          ) as areas on areas.session_id = sessions.id
           where
             sa.session_assignment_role_type_id is not null
             and sessions.room_id is not null
@@ -118,21 +133,32 @@ module MigrationHelpers
           select
             CONCAT(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) as id,
             ps1.person_id,
+            ps1.name,
+            ps1.published_name,
+            ps1.con_state,
             GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
             ps1.session_id,
+            ps1.title,
+            ps1.area_list,
             ps1.start_time,
             ps1.end_time,
+            ps1.duration,
             ps1.session_assignment_id,
             ps1.session_assignment_role_type_id,
             ps1.session_assignment_name as session_assignment_name,
             ps1.session_assignment_role_type,
             ps1.room_id,
+            ps1.room_name,
             ps2.session_id as conflict_session_id,
+            ps2.title as conflict_session_title,
+            ps2.area_list as conflict_area_list,
             ps2.end_time as conflict_end_time,
+            ps2.duration as conflict_duration,
             ps2.session_assignment_role_type_id as conflict_session_assignment_role_type_id,
             ps2.session_assignment_role_type as conflict_session_assignment_role_type,
             ps2.session_assignment_name as conflict_session_assignment_name,
             ps2.room_id as conflict_room_id,
+            ps2.room_name as conflict_room_name,
             case
             when
               ((ps2.start_time >= ps1.end_time) and (ps2.start_time <= (ps1.end_time + (40 || ' minute')::interval)))
@@ -167,10 +193,14 @@ module MigrationHelpers
           SELECT
             concat(person_schedules.person_id, ':', es.exclusion_id, ':', person_schedules.session_id) AS id,
             person_schedules.person_id,
+            person_schedules.name,
+            person_schedules.published_name,
+            person_schedules.con_state,
              es.exclusion_id,
              es.session_id AS excluded_session_id,
              person_schedules.session_id,
              person_schedules.title,
+             person_schedules.area_list,
              person_schedules.start_time,
              person_schedules.end_time,
              person_schedules.duration,
@@ -192,7 +222,12 @@ module MigrationHelpers
           select
             CONCAT(psc1.person_id, ':', psc1.session_id, ':', psc2.session_id, ':', psc2.conflict_session_id) as id,
             psc1.person_id,
+            psc1.name,
+            psc1.published_name,
+            psc1.con_state,
             psc1.session_id,
+            psc1.title,
+            psc1.area_list,
             psc1.start_time,
             psc1.end_time,
             psc1.session_assignment_id,
@@ -201,6 +236,8 @@ module MigrationHelpers
             psc1.session_assignment_role_type,
             psc1.room_id,
             psc2.session_id as middle_session_id,
+            psc2.title as middle_title,
+            psc2.area_list as middle_area_list,
             psc2.start_time as middle_start_time,
             psc2.end_time as middle_end_time,
             psc2.session_assignment_id as middle_session_assignment_id,
@@ -209,6 +246,8 @@ module MigrationHelpers
             psc2.session_assignment_role_type as middle_session_assignment_role_type,
             psc2.room_id as middle_room_id,
             psc2.conflict_session_id,
+            psc2.conflict_session_title,
+            psc2.conflict_area_list,
             psc2.conflict_end_time,
             psc2.conflict_session_assignment_role_type_id,
             psc2.conflict_session_assignment_role_type,
