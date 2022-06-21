@@ -14,4 +14,8 @@ class Reports::ConflictReportPolicy < BasePolicy
   def back_to_back_to_back?
     allowed?(action: :back_to_back_to_back)
   end
+
+  def person_exclusion_conflicts?
+    allowed?(action: :person_exclusion_conflicts)
+  end
 end

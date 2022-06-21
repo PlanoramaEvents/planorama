@@ -48,6 +48,8 @@ class Session < ApplicationRecord
   accepts_nested_attributes_for :session_areas, allow_destroy: true
   # accepts_nested_attributes_for :areas, allow_destroy: true
 
+  has_and_belongs_to_many :exclusions
+
   enum visibility: {
     is_public: 'public',
     is_private: 'private'
