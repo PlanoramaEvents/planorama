@@ -38,8 +38,9 @@ class SessionSerializer
     if session.has_attribute?(:conflict_count)
       session.conflict_count > 0
     else
-      session
-        .session_conflicts
+      # FIX - need conflct count for this session
+      # .session_conflicts
+      session.conflict_counts.
         .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
         .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
         .count > 0

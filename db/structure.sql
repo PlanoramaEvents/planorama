@@ -626,13 +626,13 @@ CREATE TABLE public.sessions (
 --
 
 CREATE VIEW public.availability_conflicts AS
- SELECT DISTINCT session_assignments.id AS session_assignment_id,
+ SELECT DISTINCT concat(session_assignments.id, ':', people.id, ':', sessions.id) AS id,
+    session_assignments.id AS session_assignment_id,
     people.id AS person_id,
     sessions.id AS session_id,
     session_assignments.session_assignment_role_type_id,
     sart.role_type AS session_assignment_role_type,
-    sart.name AS session_assignment_name,
-    concat(session_assignments.id, ':', people.id, ':', sessions.id) AS id
+    sart.name AS session_assignment_name
    FROM ((((public.session_assignments
      JOIN public.sessions ON ((sessions.id = session_assignments.session_id)))
      JOIN public.people ON ((people.id = session_assignments.person_id)))
@@ -802,6 +802,16 @@ CREATE TABLE public.exclusions (
 
 
 --
+-- Name: exclusions_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exclusions_sessions (
+    exclusion_id uuid,
+    session_id uuid
+);
+
+
+--
 -- Name: formats; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -955,11 +965,38 @@ CREATE TABLE public.person_agreements (
 
 
 --
--- Name: person_schedules; Type: VIEW; Schema: public; Owner: -
+-- Name: rooms; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE VIEW public.person_schedules AS
- SELECT p.id AS person_id,
+CREATE TABLE public.rooms (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    venue_id uuid,
+    name character varying(490) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    lock_version integer DEFAULT 0,
+    purpose character varying,
+    comment text,
+    sort_order integer,
+    capacity integer,
+    floor character varying,
+    open_for_schedule boolean DEFAULT true,
+    is_virtual boolean DEFAULT false,
+    area_of_space numeric,
+    room_set_id uuid,
+    length numeric,
+    width numeric,
+    height numeric
+);
+
+
+--
+-- Name: person_schedules; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.person_schedules AS
+ SELECT concat(p.id, ':', sa.id) AS id,
+    p.id AS person_id,
     p.name,
     p.published_name,
     sa.id AS session_assignment_id,
@@ -971,14 +1008,20 @@ CREATE VIEW public.person_schedules AS
     sessions.title,
     sessions.start_time,
     (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
+    sessions.duration,
     sessions.room_id,
+    r.name AS room_name,
+    r.room_set_id,
     sessions.format_id,
-    concat(p.id, ':', sa.id) AS id
-   FROM (((public.session_assignments sa
+    f.name AS format_name
+   FROM (((((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
      JOIN public.people p ON ((p.id = sa.person_id)))
      LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
-  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL));
+     RIGHT JOIN public.rooms r ON ((r.id = sessions.room_id)))
+     RIGHT JOIN public.formats f ON ((f.id = sessions.format_id)))
+  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL))
+  WITH NO DATA;
 
 
 --
@@ -986,7 +1029,8 @@ CREATE VIEW public.person_schedules AS
 --
 
 CREATE VIEW public.person_schedule_conflicts AS
- SELECT ps1.person_id,
+ SELECT concat(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) AS id,
+    ps1.person_id,
     GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
     ps1.session_id,
     ps1.start_time,
@@ -1003,12 +1047,11 @@ CREATE VIEW public.person_schedule_conflicts AS
     ps2.session_assignment_name AS conflict_session_assignment_name,
     ps2.room_id AS conflict_room_id,
         CASE
-            WHEN ((ps1.start_time = ps2.end_time) OR (ps2.start_time = ps1.end_time)) THEN true
+            WHEN ((ps2.start_time = ps1.end_time) OR (ps1.start_time = ps2.end_time)) THEN true
             ELSE false
-        END AS back_to_back,
-    concat(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) AS id
+        END AS back_to_back
    FROM (public.person_schedules ps1
-     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps1.start_time >= ps2.start_time) AND ((ps1.start_time <= ps2.end_time) OR ((ps1.end_time >= ps2.start_time) AND (ps1.end_time <= ps2.end_time))))))
+     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time <= ps1.end_time) OR ((ps2.end_time >= ps1.start_time) AND (ps2.end_time <= ps1.end_time))))))
   ORDER BY ps1.person_id, GREATEST(ps1.start_time, ps2.start_time);
 
 
@@ -1017,7 +1060,8 @@ CREATE VIEW public.person_schedule_conflicts AS
 --
 
 CREATE VIEW public.person_back_to_back_to_back AS
- SELECT psc1.person_id,
+ SELECT concat(psc1.person_id, ':', psc1.session_id, ':', psc2.session_id, ':', psc2.conflict_session_id) AS id,
+    psc1.person_id,
     psc1.session_id,
     psc1.start_time,
     psc1.end_time,
@@ -1039,8 +1083,7 @@ CREATE VIEW public.person_back_to_back_to_back AS
     psc2.conflict_session_assignment_role_type_id,
     psc2.conflict_session_assignment_role_type,
     psc2.conflict_session_assignment_name,
-    psc2.conflict_room_id,
-    concat(psc1.person_id, ':', psc1.session_id, ':', psc2.session_id, ':', psc2.conflict_session_id) AS id
+    psc2.conflict_room_id
    FROM (public.person_schedule_conflicts psc1
      JOIN public.person_schedule_conflicts psc2 ON (((psc2.session_id = psc1.conflict_session_id) AND (psc2.back_to_back = true))))
   WHERE (psc1.back_to_back = true);
@@ -1073,6 +1116,30 @@ CREATE TABLE public.person_exclusions (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: person_exclusion_conflicts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_exclusion_conflicts AS
+ SELECT concat(person_schedules.person_id, ':', es.exclusion_id, ':', person_schedules.session_id) AS id,
+    person_schedules.person_id,
+    es.exclusion_id,
+    es.session_id AS excluded_session_id,
+    person_schedules.session_id,
+    person_schedules.title,
+    person_schedules.start_time,
+    person_schedules.end_time,
+    person_schedules.duration,
+    person_schedules.session_assignment_role_type_id,
+    person_schedules.session_assignment_name,
+    person_schedules.session_assignment_role_type
+   FROM (((public.person_schedules
+     LEFT JOIN public.person_exclusions pe ON ((pe.person_id = person_schedules.person_id)))
+     JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
+     LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
+  WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time >= s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
 
 
 --
@@ -1161,32 +1228,6 @@ CREATE TABLE public.published_sessions (
 
 
 --
--- Name: rooms; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rooms (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    venue_id uuid,
-    name character varying(490) NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    lock_version integer DEFAULT 0,
-    purpose character varying,
-    comment text,
-    sort_order integer,
-    capacity integer,
-    floor character varying,
-    open_for_schedule boolean DEFAULT true,
-    is_virtual boolean DEFAULT false,
-    area_of_space numeric,
-    room_set_id uuid,
-    length numeric,
-    width numeric,
-    height numeric
-);
-
-
---
 -- Name: room_allocations; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -1204,7 +1245,8 @@ CREATE VIEW public.room_allocations AS
 --
 
 CREATE VIEW public.room_conflicts AS
- SELECT b1.room_id,
+ SELECT concat(b1.room_id, ':', b1.session_id) AS id,
+    b1.room_id,
     b1.session_id,
     b1.start_time,
     b1.end_time,
@@ -1273,6 +1315,7 @@ CREATE VIEW public.session_conflicts AS
     NULL::uuid AS conflict_session_id,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
+    availability_conflicts.id AS conflict_id,
     'availability'::text AS conflict_type
    FROM public.availability_conflicts
 UNION
@@ -1285,6 +1328,7 @@ UNION
     room_conflicts.conflicting_session_id AS conflict_session_id,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
+    room_conflicts.id AS conflict_id,
     'room_conflict'::text AS conflict_type
    FROM public.room_conflicts
   WHERE (room_conflicts.back_to_back = false)
@@ -1298,6 +1342,7 @@ UNION
     person_schedule_conflicts.conflict_session_id,
     person_schedule_conflicts.conflict_session_assignment_role_type_id,
     person_schedule_conflicts.conflict_session_assignment_name,
+    person_schedule_conflicts.id AS conflict_id,
     'person_session_conflict'::text AS conflict_type
    FROM public.person_schedule_conflicts
   WHERE (person_schedule_conflicts.back_to_back = false)
@@ -1311,6 +1356,7 @@ UNION
     person_schedule_conflicts.conflict_session_id,
     person_schedule_conflicts.conflict_session_assignment_role_type_id,
     person_schedule_conflicts.conflict_session_assignment_name,
+    person_schedule_conflicts.id AS conflict_id,
     'back_to_back'::text AS conflict_type
    FROM public.person_schedule_conflicts
   WHERE (person_schedule_conflicts.back_to_back = true);
@@ -2267,6 +2313,27 @@ CREATE INDEX index_convention_roles_on_person_id ON public.convention_roles USIN
 
 
 --
+-- Name: index_exclusions_sessions_on_exclusion_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exclusions_sessions_on_exclusion_id ON public.exclusions_sessions USING btree (exclusion_id);
+
+
+--
+-- Name: index_exclusions_sessions_on_exclusion_id_and_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_exclusions_sessions_on_exclusion_id_and_session_id ON public.exclusions_sessions USING btree (exclusion_id, session_id);
+
+
+--
+-- Name: index_exclusions_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exclusions_sessions_on_session_id ON public.exclusions_sessions USING btree (session_id);
+
+
+--
 -- Name: index_magic_links_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2808,6 +2875,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220614183042'),
 ('20220614190928'),
 ('20220616160624'),
-('20220617012940');
+('20220617012940'),
+('20220617185031'),
+('20220620180030'),
+('20220620180039'),
+('20220620215358');
 
 

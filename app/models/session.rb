@@ -101,6 +101,7 @@ class Session < ApplicationRecord
     .join(conflicts, Arel::Nodes::OuterJoin)
     .on(
       sessions[:id].eq(conflicts[:session_id])
+      .or(sessions[:id].eq(conflicts[:conflict_session_id]))
       .and(
         conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible']).and(
           conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])
