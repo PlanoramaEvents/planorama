@@ -13,11 +13,11 @@ module MigrationHelpers
 
     def self.create_person_schedules
       ActiveRecord::Base.connection.execute <<-SQL
-        DROP MATERIALIZED VIEW IF EXISTS person_schedules;
+        DROP VIEW IF EXISTS person_schedules;
       SQL
 
       query = <<-SQL.squish
-        CREATE MATERIALIZED VIEW person_schedules AS
+        CREATE OR REPLACE VIEW person_schedules AS
           select
             CONCAT(p.id, ':', sa.id) as id,
             p.id as person_id ,
@@ -174,10 +174,10 @@ module MigrationHelpers
             and ps2.session_id != ps1.session_id
             and ps2.start_time >= ps1.start_time
             and (
-              ps2.start_time <= ps1.end_time
+              ps2.start_time <= ps1.end_time + (40 || ' minute')::interval
               or
               (
-                ps2.end_time >= ps1.start_time and ps2.end_time <= ps1.end_time
+                ps2.end_time  >= ps1.start_time - (40 || ' minute')::interval and ps2.end_time <= ps1.end_time
               )
             )
           order by
@@ -217,6 +217,7 @@ module MigrationHelpers
     end
 
     def self.create_person_back_to_back_to_back
+      # check
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW person_back_to_back_to_back AS
           select
@@ -230,29 +231,36 @@ module MigrationHelpers
             psc1.area_list,
             psc1.start_time,
             psc1.end_time,
+            psc1.duration as duration,
             psc1.session_assignment_id,
             psc1.session_assignment_role_type_id,
             psc1.session_assignment_name as session_assignment_name,
             psc1.session_assignment_role_type,
             psc1.room_id,
+            psc1.room_name,
             psc2.session_id as middle_session_id,
             psc2.title as middle_title,
             psc2.area_list as middle_area_list,
             psc2.start_time as middle_start_time,
             psc2.end_time as middle_end_time,
+            psc2.duration as middle_duration,
             psc2.session_assignment_id as middle_session_assignment_id,
             psc2.session_assignment_role_type_id as middle_session_assignment_role_type_id,
             psc2.session_assignment_name as middle_session_assignment_name,
             psc2.session_assignment_role_type as middle_session_assignment_role_type,
             psc2.room_id as middle_room_id,
+            psc2.room_name as middle_room_name,
             psc2.conflict_session_id,
             psc2.conflict_session_title,
             psc2.conflict_area_list,
+            psc2.conflict_start_time,
             psc2.conflict_end_time,
+            psc2.conflict_duration,
             psc2.conflict_session_assignment_role_type_id,
             psc2.conflict_session_assignment_role_type,
             psc2.conflict_session_assignment_name,
-            psc2.conflict_room_id
+            psc2.conflict_room_id,
+            psc2.conflict_room_name as conflict_room_name
           from
             person_schedule_conflicts psc1
           inner join person_schedule_conflicts psc2 on
@@ -406,7 +414,7 @@ module MigrationHelpers
         DROP VIEW IF EXISTS room_allocations;
       SQL
       ActiveRecord::Base.connection.execute <<-SQL
-        DROP MATERIALIZED VIEW IF EXISTS person_schedules;
+        DROP VIEW IF EXISTS person_schedules;
       SQL
     end
   end

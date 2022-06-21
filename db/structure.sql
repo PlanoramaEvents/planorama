@@ -1006,10 +1006,10 @@ CREATE TABLE public.session_areas (
 
 
 --
--- Name: person_schedules; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+-- Name: person_schedules; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW public.person_schedules AS
+CREATE VIEW public.person_schedules AS
  SELECT concat(p.id, ':', sa.id) AS id,
     p.id AS person_id,
     p.name,
@@ -1043,8 +1043,7 @@ CREATE MATERIALIZED VIEW public.person_schedules AS
              LEFT JOIN public.session_areas ON ((session_areas.session_id = sessions_1.id)))
              RIGHT JOIN public.areas areas_1 ON ((areas_1.id = session_areas.area_id)))
           GROUP BY sessions_1.id) areas ON ((areas.session_id = sessions.id)))
-  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL))
-  WITH NO DATA;
+  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL));
 
 
 --
@@ -1085,7 +1084,7 @@ CREATE VIEW public.person_schedule_conflicts AS
             ELSE false
         END AS back_to_back
    FROM (public.person_schedules ps1
-     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time <= ps1.end_time) OR ((ps2.end_time >= ps1.start_time) AND (ps2.end_time <= ps1.end_time))))))
+     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval)) OR ((ps2.end_time >= (ps1.start_time - ((40 || ' minute'::text))::interval)) AND (ps2.end_time <= ps1.end_time))))))
   ORDER BY ps1.person_id, GREATEST(ps1.start_time, ps2.start_time);
 
 
@@ -1104,29 +1103,36 @@ CREATE VIEW public.person_back_to_back_to_back AS
     psc1.area_list,
     psc1.start_time,
     psc1.end_time,
+    psc1.duration,
     psc1.session_assignment_id,
     psc1.session_assignment_role_type_id,
     psc1.session_assignment_name,
     psc1.session_assignment_role_type,
     psc1.room_id,
+    psc1.room_name,
     psc2.session_id AS middle_session_id,
     psc2.title AS middle_title,
     psc2.area_list AS middle_area_list,
     psc2.start_time AS middle_start_time,
     psc2.end_time AS middle_end_time,
+    psc2.duration AS middle_duration,
     psc2.session_assignment_id AS middle_session_assignment_id,
     psc2.session_assignment_role_type_id AS middle_session_assignment_role_type_id,
     psc2.session_assignment_name AS middle_session_assignment_name,
     psc2.session_assignment_role_type AS middle_session_assignment_role_type,
     psc2.room_id AS middle_room_id,
+    psc2.room_name AS middle_room_name,
     psc2.conflict_session_id,
     psc2.conflict_session_title,
     psc2.conflict_area_list,
+    psc2.conflict_start_time,
     psc2.conflict_end_time,
+    psc2.conflict_duration,
     psc2.conflict_session_assignment_role_type_id,
     psc2.conflict_session_assignment_role_type,
     psc2.conflict_session_assignment_name,
-    psc2.conflict_room_id
+    psc2.conflict_room_id,
+    psc2.conflict_room_name
    FROM (public.person_schedule_conflicts psc1
      JOIN public.person_schedule_conflicts psc2 ON (((psc2.session_id = psc1.conflict_session_id) AND (psc2.back_to_back = true))))
   WHERE (psc1.back_to_back = true);
