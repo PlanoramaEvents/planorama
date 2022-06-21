@@ -29,12 +29,19 @@ class SessionAssignmentsController < ResourceController
   end
 
   def serializer_includes
-    # remove included data for now to speed up loads
-    [
-      :person,
-      # :session,
-      # :'session.format'
-    ]
+    if params[:session_id]
+      # remove included data for now to speed up loads
+      # if we are asking with a session id then we just need the other parts
+      [
+        :person
+      ]
+    else
+      [
+        :person,
+        :session,
+        :'session.format'
+      ]
+    end
   end
 
   def includes
