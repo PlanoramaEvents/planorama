@@ -234,6 +234,7 @@ class ReportsController < ApplicationController
         'areas_list.area_list',
       ).joins(:person, :room, :session_assignment_role_type, :session, session_table.create_join( subquery, session_table.create_on( subquery[:session_id].eq(session_table[:id])), Arel::Nodes::OuterJoin))
       .where("session_assignment_role_type.name in (?)", ['Moderator', 'Participant', "Invisible"])
+      .where("sessions.start_time is not null and sessions.room_id is not null")
       .order('people.name', 'sessions.start_time', 'sessions.title')
 
       workbook = FastExcel.open(constant_memory: true)
