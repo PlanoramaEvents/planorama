@@ -28,7 +28,9 @@
       <li>
         <a href="/report/session_reports/participants_over_con_session_limits" target="_blank">Participants over Con Limit</a>
       </li>
-
+      <li>
+        <a href="/report/conflict_reports/person_exclusion_conflicts" target="_blank">Person scheduled against a conflict item</a>
+      </li>
     </ul>
 
     <p><b>Sessions</b></p>
@@ -60,7 +62,7 @@
       </li>
       <li>
         <a href="/report/conflict_reports/back_to_back_to_back" target="_blank">Back to Back to Back</a>
-      </li>      
+      </li>
     </ul>
 
     <p><b>Schedule</b></p>
