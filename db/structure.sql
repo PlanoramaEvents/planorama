@@ -1047,7 +1047,7 @@ CREATE VIEW public.person_schedule_conflicts AS
     ps2.session_assignment_name AS conflict_session_assignment_name,
     ps2.room_id AS conflict_room_id,
         CASE
-            WHEN ((ps2.start_time = ps1.end_time) OR (ps1.start_time = ps2.end_time)) THEN true
+            WHEN (((ps2.start_time >= ps1.end_time) AND (ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval))) OR ((ps1.start_time >= ps2.end_time) AND (ps1.start_time <= (ps2.end_time + ((40 || ' minute'::text))::interval)))) THEN true
             ELSE false
         END AS back_to_back
    FROM (public.person_schedules ps1
@@ -2879,6 +2879,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220617185031'),
 ('20220620180030'),
 ('20220620180039'),
-('20220620215358');
+('20220620215358'),
+('20220621153128');
 
 

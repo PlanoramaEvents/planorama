@@ -134,9 +134,12 @@ module MigrationHelpers
             ps2.session_assignment_name as conflict_session_assignment_name,
             ps2.room_id as conflict_room_id,
             case
-            when ps2.start_time = ps1.end_time or ps1.start_time = ps2.end_time
-              then true
-              else FALSE
+            when
+              ((ps2.start_time >= ps1.end_time) and (ps2.start_time <= (ps1.end_time + (40 || ' minute')::interval)))
+              or
+              ((ps1.start_time >= ps2.end_time) and (ps1.start_time <= (ps2.end_time + (40 || ' minute')::interval)))
+            then true
+            else FALSE
             end as back_to_back
           from
             person_schedules ps1
