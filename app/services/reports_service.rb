@@ -1,4 +1,34 @@
 module ReportsService
+
+  def self.sessions_with_no_moderator
+    sched_table = PersonSchedule.arel_table
+    session_and_roles = sched_table.project(
+      :session_id,
+      Arel::Nodes::NamedFunction.new('array_agg',[sched_table[:session_assignment_name]]).as('roles')
+    ).group(:session_id).as('session_and_roles')
+
+    sessions = Session.arel_table
+    joins = [
+      sessions.create_join(
+        session_and_roles,
+        sessions.create_on(
+          session_and_roles[:session_id].eq(sessions[:id]).and(
+            ::Arel.sql("'Moderator' != ALL(session_and_roles.roles)")
+          )
+        )
+      )
+    ]
+
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .joins(joins)
+      .joins(self.area_subquery)
+      .eager_load(:areas, :format, {session_assignments: [:person]})
+      .order(:start_time)
+  end
+
   # ReportsService.participant_and_con_session_limits
   def self.participant_and_con_session_limits(con_limit: 6)
     person_schedules = Arel::Table.new("person_schedules")

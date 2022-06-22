@@ -1,6 +1,50 @@
 class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
+  def session_with_no_moderator
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+    sessions = ReportsService.sessions_with_no_moderator
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Session no Moderator")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil, nil, nil
+    ]
+
+    worksheet.append_row(
+      [
+        'Title',
+        'Area',
+        'Start Time',
+        'Format',
+        'People Assigned',
+        'Reserved'
+      ]
+    )
+
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    reserve = SessionAssignmentRoleType.find_by(name: 'Reserve')
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
+          session.format.name,
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.published_name}.join(';')
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "SessionsWithoutModerator#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def non_accepted_on_schedule
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 

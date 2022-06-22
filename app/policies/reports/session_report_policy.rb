@@ -22,4 +22,8 @@ class Reports::SessionReportPolicy < BasePolicy
   def invited_accepted_not_scheduled?
     allowed?(action: :invited_accepted_not_scheduled)
   end
+
+  def session_with_no_moderator?
+    allowed?(action: :session_with_no_moderator)
+  end
 end

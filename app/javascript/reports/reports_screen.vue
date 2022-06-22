@@ -48,6 +48,9 @@
       <li>
         <a href="/report/sessions_with_participants" target="_blank">Sessions with Participants</a>
       </li>
+      <li>
+        <a href="/report/session_reports/session_with_no_moderator" target="_blank">Sessions with no Moderator</a>
+      </li>
     </ul>
 
     <p><b>Conflicts</b></p>
