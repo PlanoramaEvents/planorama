@@ -26,4 +26,8 @@ class Reports::SessionReportPolicy < BasePolicy
   def session_with_no_moderator?
     allowed?(action: :session_with_no_moderator)
   end
+
+  def scheduled_session_no_people?
+    allowed?(action: :scheduled_session_no_people)
+  end
 end

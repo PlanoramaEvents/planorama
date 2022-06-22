@@ -51,6 +51,9 @@
       <li>
         <a href="/report/session_reports/session_with_no_moderator" target="_blank">Sessions with no Moderator</a>
       </li>
+      <li>
+        <a href="/report/session_reports/scheduled_session_no_people" target="_blank">Scehduled Sessions with no Participants</a>        
+      </li>
     </ul>
 
     <p><b>Conflicts</b></p>

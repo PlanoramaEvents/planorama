@@ -1,6 +1,45 @@
 class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
+  def scheduled_session_no_people
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    sessions = ReportsService.scheduled_session_no_people
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Sched Sessions no Participants")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil
+    ]
+
+    worksheet.append_row(
+      [
+        'Title',
+        'Area',
+        'Start Time',
+        'Room'
+      ]
+    )
+
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
+          session.room.name
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "ScheduledSessionsWithNoPeople#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+
+  end
+
   def session_with_no_moderator
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
     sessions = ReportsService.sessions_with_no_moderator

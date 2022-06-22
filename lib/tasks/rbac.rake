@@ -481,7 +481,8 @@ namespace :rbac do
         "participants_over_con_session_limits": true,
         "non_accepted_on_schedule": true,
         "invited_accepted_not_scheduled": true,
-        "session_with_no_moderator": true
+        "session_with_no_moderator": true,
+        "scheduled_session_no_people": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -728,7 +729,8 @@ namespace :rbac do
         "participants_over_con_session_limits": true,
         "non_accepted_on_schedule": true,
         "invited_accepted_not_scheduled": true,
-        "session_with_no_moderator": true
+        "session_with_no_moderator": true,
+        "scheduled_session_no_people": true
       },
       "conflict_report": {
         "people_outside_availability": true,
