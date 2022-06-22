@@ -125,7 +125,7 @@ module MigrationHelpers
           on
           	b1.room_id = b2.room_id
           	and b1.session_id <> b2.session_id
-          	and (b1.start_time > b2.start_time and b1.start_time <= b2.end_time)
+          	and (b2.start_time >= b1.start_time and b2.start_time <= b1.end_time)
           order by
           	b1.room_id,
           	b1.start_time

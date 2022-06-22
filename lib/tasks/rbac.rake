@@ -490,7 +490,8 @@ namespace :rbac do
         "people_double_booked": true,
         "back_to_back": true,
         "back_to_back_to_back": true,
-        "person_exclusion_conflicts": true
+        "person_exclusion_conflicts": true,
+        "multiple_sessions_in_room": true
       }
     })
   end
@@ -739,7 +740,8 @@ namespace :rbac do
         "people_double_booked": true,
         "back_to_back": true,
         "back_to_back_to_back": true,
-        "person_exclusion_conflicts": true
+        "person_exclusion_conflicts": true,
+        "multiple_sessions_in_room": true
       }
     })
   end

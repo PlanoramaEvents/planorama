@@ -18,4 +18,8 @@ class Reports::ConflictReportPolicy < BasePolicy
   def person_exclusion_conflicts?
     allowed?(action: :person_exclusion_conflicts)
   end
+
+  def multiple_sessions_in_room?
+    allowed?(action: :multiple_sessions_in_room)
+  end
 end

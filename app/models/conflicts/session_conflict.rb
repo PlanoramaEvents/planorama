@@ -1,6 +1,6 @@
 class Conflicts::SessionConflict < ApplicationRecord
   self.table_name = :session_conflicts
-  self.primary_key = :session_id, :person_id, :room_id, :conflict_session_id, :conflict_type
+  self.primary_key = :conflict_id
 
   belongs_to :session
   belongs_to :person
