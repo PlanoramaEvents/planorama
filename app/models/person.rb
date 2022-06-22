@@ -196,16 +196,14 @@ class Person < ApplicationRecord
   # If the state is changed to decline or rejected then they should not
   # have any assignment roles
   def assigment_consistency
-    return unless con_state_changed?
-
     # unassign when declined or rejected (or should we delete?)
     if con_state == Person.con_states[:declined]
       self.session_assignments.update_all(
-        session_assignment_role_type: nil
+        session_assignment_role_type_id: nil
       )
     elsif con_state == Person.con_states[:rejected]
       self.session_assignments.update_all(
-        session_assignment_role_type: nil,
+        session_assignment_role_type_id: nil,
         state: :rejected
       )
     end
