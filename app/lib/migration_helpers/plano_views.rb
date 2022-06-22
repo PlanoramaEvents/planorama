@@ -84,6 +84,8 @@ module MigrationHelpers
         CREATE OR REPLACE VIEW room_allocations AS
         select
         	s.room_id,
+          r.name as room_name,
+          s.title as session_title,
         	s.start_time,
         	(s.start_time + (s.duration || ' minute')::interval) as end_time,
         	s.id as session_id
@@ -97,15 +99,19 @@ module MigrationHelpers
     end
 
     def self.create_room_conflicts
+      # Add room name, session name
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW room_conflicts AS
           select
             CONCAT(b1.room_id, ':', b1.session_id) as id,
           	b1.room_id,
+            b1.room_name,
+            b1.session_title,
           	b1.session_id,
           	b1.start_time,
           	b1.end_time,
           	b2.session_id as conflicting_session_id,
+            b2.session_title as conflicting_session_title,
           	b2.start_time as conflicting_session_start_time,
           	b2.end_time as conflicting_session_end_time,
           	case
