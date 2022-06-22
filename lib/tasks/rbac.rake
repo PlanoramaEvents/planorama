@@ -88,6 +88,7 @@ namespace :rbac do
           "submissions": false,
           "update": true,
           "update_all": false,
+          "session_names": false,
           "create": false,
           "destroy": false
       },
@@ -309,6 +310,7 @@ namespace :rbac do
           "submissions": true,
           "update": true,
           "update_all": true,
+          "session_names": true,
           "create": true,
           "destroy": true
       },
@@ -553,6 +555,7 @@ namespace :rbac do
           "submissions": true,
           "update": true,
           "update_all": true,
+          "session_names": true,
           "create": true,
           "destroy": true
       },
