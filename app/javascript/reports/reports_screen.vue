@@ -31,6 +31,9 @@
       <li>
         <a href="/report/conflict_reports/person_exclusion_conflicts" target="_blank">Person scheduled against a conflict item</a>
       </li>
+      <li>
+        <a href="/report/session_reports/non_accepted_on_schedule" target="_blank">Non-Accepted Participants on Scheduled Sessions</a>
+      </li>
     </ul>
 
     <p><b>Sessions</b></p>

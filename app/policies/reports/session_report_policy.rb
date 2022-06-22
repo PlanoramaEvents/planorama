@@ -14,4 +14,8 @@ class Reports::SessionReportPolicy < BasePolicy
   def participants_over_con_session_limits?
     allowed?(action: :participants_over_con_session_limits)
   end
+
+  def non_accepted_on_schedule?
+    allowed?(action: :non_accepted_on_schedule)
+  end
 end

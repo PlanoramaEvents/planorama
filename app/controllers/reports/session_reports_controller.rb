@@ -1,6 +1,44 @@
 class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
+  def non_accepted_on_schedule
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    people_sessions = PersonSchedule
+                        .where("con_state not in ('not_set', 'accepted')")
+                        .where("start_time is not null and room_id is not null")
+                        .order('name', 'start_time', 'title')
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Non-Accepted on Sched")
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Published Name',
+        'Status',
+        'Session Title',
+        'Area'
+      ]
+    )
+
+    people_sessions.each do |sa|
+      worksheet.append_row(
+        [
+          sa.name,
+          sa.published_name,
+          sa.con_state,
+          sa.title,
+          sa.area_list.join('; ')
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "NonAcceptedPeopleOnSessions#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def participants_over_session_limits
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
