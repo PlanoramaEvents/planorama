@@ -181,8 +181,7 @@ module MigrationHelpers
               )
             )
           order by
-            ps1.person_id,
-            GREATEST(ps1.start_time, ps2.start_time)
+            ps1.person_id
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
