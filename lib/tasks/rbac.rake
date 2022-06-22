@@ -479,7 +479,8 @@ namespace :rbac do
         "panels_with_too_many_people": true,
         "participants_over_session_limits": true,
         "participants_over_con_session_limits": true,
-        "non_accepted_on_schedule": true
+        "non_accepted_on_schedule": true,
+        "invited_accepted_not_scheduled": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -724,7 +725,8 @@ namespace :rbac do
         "panels_with_too_many_people": true,
         "participants_over_session_limits": true,
         "participants_over_con_session_limits": true,
-        "non_accepted_on_schedule": true
+        "non_accepted_on_schedule": true,
+        "invited_accepted_not_scheduled": true
       },
       "conflict_report": {
         "people_outside_availability": true,

@@ -18,4 +18,8 @@ class Reports::SessionReportPolicy < BasePolicy
   def non_accepted_on_schedule?
     allowed?(action: :non_accepted_on_schedule)
   end
+
+  def invited_accepted_not_scheduled?
+    allowed?(action: :invited_accepted_not_scheduled)
+  end
 end

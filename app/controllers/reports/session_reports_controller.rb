@@ -5,6 +5,7 @@ class Reports::SessionReportsController < ApplicationController
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
     people_sessions = PersonSchedule
+                        .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                         .where("con_state not in ('not_set', 'accepted')")
                         .where("start_time is not null and room_id is not null")
                         .order('name', 'start_time', 'title')
@@ -37,6 +38,51 @@ class Reports::SessionReportsController < ApplicationController
     send_data workbook.read_string,
               filename: "NonAcceptedPeopleOnSessions#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
+  end
+
+  def invited_accepted_not_scheduled
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    people = Person.where(
+                "id not in (?)",
+                PersonSchedule
+                  .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .where("start_time is not null and room_id is not null")
+                  .pluck('session_id')
+              ).where(
+                "con_state in (?)",
+                ['invited', 'accepted']
+              )
+
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Not Scheduled")
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Published Name',
+        'Status',
+        'Attendance Type',
+        'Bio'
+      ]
+    )
+
+    people.each do |person|
+    worksheet.append_row(
+      [
+        person.name,
+        person.published_name,
+        person.con_state,
+        person.attendance_type,
+        person.bio
+      ]
+    )
+    end
+
+    send_data workbook.read_string,
+            filename: "InvitedAcceptedNotScheduled#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+            disposition: 'attachment'
   end
 
   def participants_over_session_limits

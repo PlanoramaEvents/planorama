@@ -56,6 +56,7 @@ Rails.application.routes.draw do
   get 'report/session_reports/panels_with_too_few_people', to: 'reports/session_reports#panels_with_too_few_people'
   get 'report/session_reports/panels_with_too_many_people', to: 'reports/session_reports#panels_with_too_many_people'
 
+  get 'report/session_reports/invited_accepted_not_scheduled', to: 'reports/session_reports#invited_accepted_not_scheduled'
   get 'report/session_reports/non_accepted_on_schedule', to: 'reports/session_reports#non_accepted_on_schedule'
   get 'report/session_reports/participants_over_session_limits', to: 'reports/session_reports#participants_over_session_limits'
   get 'report/session_reports/participants_over_con_session_limits', to: 'reports/session_reports#participants_over_con_session_limits'
