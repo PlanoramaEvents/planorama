@@ -1085,7 +1085,7 @@ CREATE VIEW public.person_schedule_conflicts AS
         END AS back_to_back
    FROM (public.person_schedules ps1
      JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval)) OR ((ps2.end_time >= (ps1.start_time - ((40 || ' minute'::text))::interval)) AND (ps2.end_time <= ps1.end_time))))))
-  ORDER BY ps1.person_id, GREATEST(ps1.start_time, ps2.start_time);
+  ORDER BY ps1.person_id;
 
 
 --
@@ -2918,6 +2918,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220620180030'),
 ('20220620180039'),
 ('20220620215358'),
-('20220621153128');
+('20220621153128'),
+('20220622034153');
 
 
