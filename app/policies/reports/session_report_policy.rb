@@ -30,4 +30,8 @@ class Reports::SessionReportPolicy < BasePolicy
   def scheduled_session_no_people?
     allowed?(action: :scheduled_session_no_people)
   end
+
+  def assigned_sessions_not_scheduled?
+    allowed?(action: :assigned_sessions_not_scheduled)
+  end
 end

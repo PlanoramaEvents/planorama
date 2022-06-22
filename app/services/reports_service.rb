@@ -1,5 +1,20 @@
 module ReportsService
 
+  def self.assigned_sessions_not_scheduled
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
+
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .joins(self.area_subquery)
+      .joins(:session_assignments)
+      .eager_load(:areas, {session_assignments: [:person]})
+      .where("session_assignments.session_assignment_role_type_id in (?)", active_roles.collect{|a| a.id})
+      .where("sessions.start_time is null or sessions.room_id is null")
+      .order('sessions.title')
+  end
+
   def self.scheduled_session_no_people
     active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
 

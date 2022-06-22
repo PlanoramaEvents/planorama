@@ -1,6 +1,42 @@
 class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
+  def assigned_sessions_not_scheduled
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    sessions = ReportsService.assigned_sessions_not_scheduled
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Assigned Session not Sched")
+
+    worksheet.append_row(
+      [
+        'Title',
+        'Areas',
+        'Moderators',
+        'Participants'
+      ]
+    )
+
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    reserve = SessionAssignmentRoleType.find_by(name: 'Reserve')
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "AssignedSessionsNotScheduled#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def scheduled_session_no_people
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 

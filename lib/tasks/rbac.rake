@@ -482,7 +482,8 @@ namespace :rbac do
         "non_accepted_on_schedule": true,
         "invited_accepted_not_scheduled": true,
         "session_with_no_moderator": true,
-        "scheduled_session_no_people": true
+        "scheduled_session_no_people": true,
+        "assigned_sessions_not_scheduled": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -730,7 +731,8 @@ namespace :rbac do
         "non_accepted_on_schedule": true,
         "invited_accepted_not_scheduled": true,
         "session_with_no_moderator": true,
-        "scheduled_session_no_people": true
+        "scheduled_session_no_people": true,
+        "assigned_sessions_not_scheduled": true
       },
       "conflict_report": {
         "people_outside_availability": true,

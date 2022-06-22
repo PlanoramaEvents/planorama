@@ -52,7 +52,10 @@
         <a href="/report/session_reports/session_with_no_moderator" target="_blank">Sessions with no Moderator</a>
       </li>
       <li>
-        <a href="/report/session_reports/scheduled_session_no_people" target="_blank">Scehduled Sessions with no Participants</a>        
+        <a href="/report/session_reports/scheduled_session_no_people" target="_blank">Scehduled Sessions with no Participants</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>
       </li>
     </ul>
 
