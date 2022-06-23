@@ -1,4 +1,19 @@
 namespace :chicon do
+  desc ""
+  task init_age_restrictions: :environment do
+    unless AgeRestriction.find_by_name('18+')
+      AgeRestriction.create!(
+        name: '18+'
+      )
+    end
+
+    unless AgeRestriction.find_by_name('21+')
+      AgeRestriction.create!(
+       name: '21+'
+      )
+    end
+  end
+
   desc "Ensure that the session formats are correct"
   task fix_formats: :environment do
     [

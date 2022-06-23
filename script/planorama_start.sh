@@ -30,6 +30,7 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/rake chicon:seed_exclusions
   bin/rake chicon:seed_rooms
   bin/rake chicon:fix_formats
+  bin/rake chicon:init_age_restrictions
   bin/rake chicon:map_session_to_exclusion
   bin/rake rbac:seed_defaults
 
@@ -45,6 +46,7 @@ elif [[ $RAILS_ENV = "staging" ]]; then
   bin/rake chicon:seed_exclusions
   bin/rake chicon:seed_rooms
   bin/rake chicon:fix_formats
+  bin/rake chicon:init_age_restrictions
   bin/rake chicon:map_session_to_exclusion
   bin/rake rbac:seed_defaults
 
@@ -63,6 +65,7 @@ else
   bin/rake chicon:seed_exclusions
   bin/rake chicon:seed_rooms
   bin/rake chicon:fix_formats
+  bin/rake chicon:init_age_restrictions
   bin/rake chicon:map_session_to_exclusion
   bin/rake rbac:seed_defaults
 fi
