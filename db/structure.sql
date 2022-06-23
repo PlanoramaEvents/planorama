@@ -181,6 +181,30 @@ CREATE TYPE public.phone_type_enum AS ENUM (
 
 
 --
+-- Name: session_environments_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.session_environments_enum AS ENUM (
+    'unknown',
+    'in_person',
+    'hybrid',
+    'virtual'
+);
+
+
+--
+-- Name: session_status_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.session_status_enum AS ENUM (
+    'draft',
+    'reviewed',
+    'revised',
+    'dropped'
+);
+
+
+--
 -- Name: submission_state_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -214,6 +238,19 @@ CREATE TYPE public.yesnomaybe_enum AS ENUM (
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: age_restrictions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.age_restrictions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying(500),
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
 
 --
 -- Name: agreements; Type: TABLE; Schema: public; Owner: -
@@ -617,7 +654,12 @@ CREATE TABLE public.sessions (
     updated_by character varying,
     interest_opened_by character varying,
     interest_opened_at timestamp without time zone,
-    proofed boolean
+    proofed boolean,
+    status public.session_status_enum DEFAULT 'draft'::public.session_status_enum,
+    environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
+    tech_notes text,
+    age_restriction_id uuid,
+    minors_participation jsonb
 );
 
 
@@ -1286,6 +1328,8 @@ CREATE TABLE public.published_sessions (
 
 CREATE VIEW public.room_allocations AS
  SELECT s.room_id,
+    r.name AS room_name,
+    s.title AS session_title,
     s.start_time,
     (s.start_time + ((s.duration || ' minute'::text))::interval) AS end_time,
     s.id AS session_id
@@ -1300,10 +1344,13 @@ CREATE VIEW public.room_allocations AS
 CREATE VIEW public.room_conflicts AS
  SELECT concat(b1.room_id, ':', b1.session_id) AS id,
     b1.room_id,
+    b1.room_name,
+    b1.session_title,
     b1.session_id,
     b1.start_time,
     b1.end_time,
     b2.session_id AS conflicting_session_id,
+    b2.session_title AS conflicting_session_title,
     b2.start_time AS conflicting_session_start_time,
     b2.end_time AS conflicting_session_end_time,
         CASE
@@ -1311,8 +1358,31 @@ CREATE VIEW public.room_conflicts AS
             ELSE false
         END AS back_to_back
    FROM (public.room_allocations b1
-     JOIN public.room_allocations b2 ON (((b1.room_id = b2.room_id) AND (b1.session_id <> b2.session_id) AND ((b1.start_time > b2.start_time) AND (b1.start_time <= b2.end_time)))))
+     JOIN public.room_allocations b2 ON (((b1.room_id = b2.room_id) AND (b1.session_id <> b2.session_id) AND ((b2.start_time >= b1.start_time) AND (b2.start_time <= b1.end_time)))))
   ORDER BY b1.room_id, b1.start_time;
+
+
+--
+-- Name: room_services; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.room_services (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying(2000),
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: room_services_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.room_services_sessions (
+    room_service_id uuid,
+    session_id uuid
+);
 
 
 --
@@ -1756,6 +1826,14 @@ ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.ver
 
 
 --
+-- Name: age_restrictions age_restrictions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.age_restrictions
+    ADD CONSTRAINT age_restrictions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: agreements agreements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2049,6 +2127,14 @@ ALTER TABLE ONLY public.published_session_assignments
 
 ALTER TABLE ONLY public.published_sessions
     ADD CONSTRAINT published_programme_items_pkey PRIMARY KEY (session_id);
+
+
+--
+-- Name: room_services room_services_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_services
+    ADD CONSTRAINT room_services_pkey PRIMARY KEY (id);
 
 
 --
@@ -2498,6 +2584,27 @@ CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions 
 
 
 --
+-- Name: index_room_services_sessions_on_room_service_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_room_services_sessions_on_room_service_id ON public.room_services_sessions USING btree (room_service_id);
+
+
+--
+-- Name: index_room_services_sessions_on_room_service_id_and_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_room_services_sessions_on_room_service_id_and_session_id ON public.room_services_sessions USING btree (room_service_id, session_id);
+
+
+--
+-- Name: index_room_services_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_room_services_sessions_on_session_id ON public.room_services_sessions USING btree (session_id);
+
+
+--
 -- Name: index_rooms_on_room_set_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2919,6 +3026,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220620180039'),
 ('20220620215358'),
 ('20220621153128'),
-('20220622034153');
+('20220622034153'),
+('20220623135745'),
+('20220623141950'),
+('20220623142741'),
+('20220623143613'),
+('20220623144036'),
+('20220623145514'),
+('20220623172955');
 
 

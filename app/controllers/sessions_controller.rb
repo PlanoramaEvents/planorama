@@ -258,6 +258,7 @@ class SessionsController < ResourceController
       minimum_people
       maximum_people
       item_notes
+      tech_notes
       pub_reference_number
       audience_size,
       participant_notes
@@ -272,6 +273,9 @@ class SessionsController < ResourceController
       session_areas_attributes
       proofed
       format_id
+      status
+      environment
+      minors_participation
     ]
     # Tags
     # format
