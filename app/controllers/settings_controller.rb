@@ -70,8 +70,9 @@ class SettingsController < ApplicationController
           label: '**In-person and virtual:** I am planning to attend Chicon 8 in-person, but would also like to be considered for virtual panels.'
         },
       ],
-      # TODO: this needs to change
-      timezones: zones #ActiveSupport::TimeZone::MAPPING
+      age_restrictions: ::AgeRestriction.all,
+      room_services: ::RoomService.all,
+      timezones: zones
     }
 
     render json: settings,
