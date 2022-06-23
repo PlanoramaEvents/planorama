@@ -29,6 +29,3 @@ class PersonExclusionConflicts < ActiveRecord::Migration[6.1]
     SQL
   end
 end
-
-('20220620181659'),
-('20220620181701');
