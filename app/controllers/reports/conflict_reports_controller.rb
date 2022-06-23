@@ -1,6 +1,45 @@
 class Reports::ConflictReportsController < ApplicationController
   around_action :set_timezone
 
+  def multiple_sessions_in_room
+    authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
+
+    # Room name, Session name 1, Session name 2, Session name 3, …
+    room_conflicts = Conflicts::RoomConflict.order(:room_name, :start_time)
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Room Conflicts")
+
+    worksheet.append_row(
+      [
+        'Room Name',
+        'Session',
+        'Conflict Session',
+        'Start Time'
+      ]
+    )
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, nil, date_time_style,
+    ]
+
+    room_conflicts.each do |conflict|
+      worksheet.append_row(
+        [
+          conflict.room_name,
+          conflict.session_title,
+          conflict.conflicting_session_title,
+          FastExcel.date_num(conflict.start_time, conflict.start_time.in_time_zone.utc_offset)
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "MultipleSessionsInRoom#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def person_exclusion_conflicts
     authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
 

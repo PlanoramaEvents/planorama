@@ -25,6 +25,7 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
 
   # bin/rails db:structure:load
+  bin/rake views:recreate
   bin/rake db:migrate
   bin/rake parameters:seed_names
   bin/rake chicon:seed_exclusions
@@ -40,6 +41,7 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
 elif [[ $RAILS_ENV = "staging" ]]; then
   bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
 
+  bin/rake views:recreate
   bin/rake db:migrate
   bin/rake parameters:seed_names
   bin/rake role_types:seed_role_types
@@ -59,6 +61,7 @@ else
 
   bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
 
+  bin/rake views:recreate
   bin/rake db:migrate
   bin/rake parameters:seed_names
   bin/rake role_types:seed_role_types
