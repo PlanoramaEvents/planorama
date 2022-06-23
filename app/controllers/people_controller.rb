@@ -21,6 +21,38 @@ class PeopleController < ResourceController
     )
   end
 
+  # Get all the session names for the people ids passed in
+  def session_names
+    authorize current_person, policy_class: policy_class
+    ids = params[:ids]
+
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    invisible = SessionAssignmentRoleType.find_by(name: 'Invisible')
+
+    allowed = [moderator.id, participant.id, invisible.id]
+
+    people = Person.distinct
+              .eager_load(session_assignments: :session)
+              .where(
+                "session_assignments.session_assignment_role_type_id in (?)",
+                allowed
+              )
+              .where("people.id in (?)", ids)
+
+    results = []
+
+    people.each do |person|
+      results << {
+        person.id => person.session_assignments.select{|a| allowed.include?(a.session_assignment_role_type_id) }.collect{|sa| sa.session.title}
+      }
+    end
+
+    # render result
+    render json: results,
+           content_type: 'application/json'
+  end
+
   # Mass update for the people (given ids and params)
   def update_all
     authorize current_person, policy_class: policy_class
