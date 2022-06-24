@@ -362,9 +362,9 @@ class Reports::ConflictReportsController < ApplicationController
         'Name',
         'Pub Name',
         'Session',
-        'Areas',
-        'Start Time',
-        'Reason'
+        'Area',
+        'Start Time'
+        
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
@@ -377,15 +377,15 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.person.published_name,
           conflict.session.title,
           conflict.area_list.join('; '),
-          FastExcel.date_num(conflict.session.start_time, conflict.session.start_time.in_time_zone.utc_offset),
-          'Outside Availability'
+          FastExcel.date_num(conflict.session.start_time, conflict.session.start_time.in_time_zone.utc_offset)
+          
         ],
         styles
       )
     end
 
     send_data workbook.read_string,
-              filename: "PeopleOutSideAvailability#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "PeopleOutsideAvailability#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
