@@ -332,12 +332,12 @@ class ReportsController < ApplicationController
       )
 
       workbook = FastExcel.open(constant_memory: true)
-      worksheet = workbook.add_worksheet("Participant Availabilities")
+      worksheet = workbook.add_worksheet("Participant Availability")
 
       worksheet.append_row(
         [
           'Name',
-          'Pub Name',
+          'Published Name',
           'Attendance Type',
           'Availabilities',
           'Limits',
