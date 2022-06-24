@@ -130,14 +130,14 @@ class Reports::SessionReportsController < ApplicationController
                         .order('name', 'start_time', 'title')
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Non-Accepted on Sched")
+    worksheet = workbook.add_worksheet("Non-Accepted on Schedule")
 
     worksheet.append_row(
       [
         'Name',
         'Published Name',
-        'Status',
-        'Session Title',
+        'Participant Status',
+        'Session',
         'Area'
       ]
     )
