@@ -136,7 +136,7 @@ class Session < ApplicationRecord
 
   def schedule_consistency
     # if status dropped then we should not be scheduled in a space and time
-    if status == Session.status[:dropped]
+    if status == Session.statuses[:dropped]
       self.room_id = nil
       self.start_time = nil
     end
