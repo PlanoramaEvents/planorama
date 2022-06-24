@@ -659,7 +659,8 @@ CREATE TABLE public.sessions (
     environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
     tech_notes text,
     age_restriction_id uuid,
-    minors_participation jsonb
+    minors_participation jsonb,
+    room_set_id uuid
 );
 
 
@@ -3033,6 +3034,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220623143613'),
 ('20220623144036'),
 ('20220623145514'),
-('20220623172955');
+('20220623172955'),
+('20220624121252');
 
 
