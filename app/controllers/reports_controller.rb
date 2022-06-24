@@ -165,7 +165,7 @@ class ReportsController < ApplicationController
         [
           'Room',
           'Start Time',
-          'Title',
+          'Session',
           'Area',
           'Assigned'
         ]
