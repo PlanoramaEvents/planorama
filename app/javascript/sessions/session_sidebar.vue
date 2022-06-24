@@ -55,8 +55,20 @@
               <dd v-if="!selected.area_list.length" class="ml-2 font-italic text-muted">None Selected</dd>
               <dt>Format</dt>
               <dd class="ml-2 font-italic">{{selected.format.name}}</dd>
+              <!-- <dt>Attendee Signup Required</dt>
+              <dd class="ml-2 font-italic">{{selected.require_signup ? 'Yes' : 'No'}}</dd>
+              <dt class="ml-2">If "Yes", max openings</dt>
+              <dd class="ml-3 font-italic">{{selected.maximum_people}}</dd>
+              <dd class="ml-3 font-italic text-muted" v-if="!selected.maximum_people">None Set</dd> -->
               <dt>Interest Instructions</dt>
               <dd class="ml-2 font-italic" v-html="selected.instructions_for_interest"></dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.instructions_for_interest">No Entry</dd>
+              <dt>Scheduled Participant Notes</dt>
+              <dd class="ml-2 font-italic" v-html="selected.participant_notes"></dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.participant_notes">No Entry</dd>
+              <dt>Tech/Hotel Notes</dt>
+              <dd class="ml-2 font-italic keep-format">{{selected.tech_notes}}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.tech_notes">No Entry</dd>
             </dl>
           </b-tab>
           <b-tab title="Participant Assignment">

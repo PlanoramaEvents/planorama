@@ -31,6 +31,13 @@
       <li>
         <a href="/report/conflict_reports/person_exclusion_conflicts" target="_blank">Person scheduled against a conflict item</a>
       </li>
+      <li>
+        <a href="/report/session_reports/non_accepted_on_schedule" target="_blank">Non-Accepted Participants on Scheduled Sessions</a>
+      </li>
+
+      <li>
+        <a href="/report/session_reports/invited_accepted_not_scheduled" target="_blank">Invited and Accepted not on Schedule</a>
+      </li>
     </ul>
 
     <p><b>Sessions</b></p>
@@ -40,6 +47,15 @@
       </li>
       <li>
         <a href="/report/sessions_with_participants" target="_blank">Sessions with Participants</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/session_with_no_moderator" target="_blank">Sessions with no Moderator</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/scheduled_session_no_people" target="_blank">Scehduled Sessions with no Participants</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>
       </li>
     </ul>
 
@@ -62,6 +78,9 @@
       </li>
       <li>
         <a href="/report/conflict_reports/back_to_back_to_back" target="_blank">Back to Back to Back</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/multiple_sessions_in_room" target="_blank">Multiple Sessions in a Room</a>
       </li>
     </ul>
 

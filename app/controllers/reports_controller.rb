@@ -218,23 +218,10 @@ class ReportsController < ApplicationController
     # We want the times to be in the TZ of the con for the report
     Time.use_zone(timezone) do
       authorize SessionAssignment, policy_class: ReportPolicy
-
-      session_table = Arel::Table.new(Session.table_name)
-      subquery = Session.area_list.as('areas_list')
-
-      people_sessions = SessionAssignment.select(
-        'people.name as pname',
-        'people.published_name',
-        'sessions.title',
-        'rooms.name as rname',
-        'sessions.start_time',
-        'session_assignment_role_type.name = \'Moderator\' as moderator',
-        'session_assignment_role_type.name = \'Invisible\' as invisible',
-        'session_id',
-        'areas_list.area_list',
-      ).joins(:person, :room, :session_assignment_role_type, :session, session_table.create_join( subquery, session_table.create_on( subquery[:session_id].eq(session_table[:id])), Arel::Nodes::OuterJoin))
-      .where("session_assignment_role_type.name in (?)", ['Moderator', 'Participant', "Invisible"])
-      .order('people.name', 'sessions.start_time', 'sessions.title')
+      people_sessions = PersonSchedule
+        .where("session_assignment_name in (?)", ['Moderator', 'Participant', "Invisible"])
+        .where("start_time is not null and room_id is not null")
+        .order('name', 'start_time', 'title')
 
       workbook = FastExcel.open(constant_memory: true)
       worksheet = workbook.add_worksheet("Schedule by Participant")
@@ -243,6 +230,7 @@ class ReportsController < ApplicationController
         [
           'Name',
           'Published Name',
+          'Status',
           'Session Title',
           'Area',
           'Start Time',
@@ -256,14 +244,15 @@ class ReportsController < ApplicationController
       styles = [nil, nil, nil, nil,date_time_style, nil, nil, nil]
       people_sessions.each do |sa|
         worksheet.append_row(
-          [ sa.pname,
+          [ sa.name,
             sa.published_name,
+            sa.con_state,
             sa.title,
             sa.area_list.join('; '),
-            FastExcel.date_num(sa.session.start_time, sa.session.start_time.in_time_zone.utc_offset),
-            sa.rname,
-            if sa.moderator then 'Y' else 'N' end,
-            if sa.invisible then 'Y' else 'N' end,
+            FastExcel.date_num(sa.start_time, sa.start_time.in_time_zone.utc_offset),
+            sa.room_name,
+            if sa.session_assignment_name == 'Moderator' then 'Y' else 'N' end,
+            if sa.session_assignment_name == 'Invisible' then 'Y' else 'N' end
           ],
           styles
         )

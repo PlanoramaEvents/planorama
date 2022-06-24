@@ -13,10 +13,14 @@ class Session < ApplicationRecord
   has_one :published_session, dependent: :destroy
 
   belongs_to :room, required: false
+  belongs_to :age_restriction, required: false
 
-  before_save :check_time_and_duration, :keep_who_did_it, :keep_interest_trail
+  before_save :check_time_and_duration, :keep_who_did_it, :keep_interest_trail, :schedule_consistency
+
 
   has_many :session_conflicts, class_name: 'Conflicts::SessionConflict'
+
+  has_and_belongs_to_many :room_services
 
   has_many :session_assignments, dependent: :destroy do
     def role(role)
@@ -53,6 +57,20 @@ class Session < ApplicationRecord
   enum visibility: {
     is_public: 'public',
     is_private: 'private'
+  }
+
+  enum status: {
+    draft: 'draft',
+    reviewed: 'reviewed',
+    revised: 'revised',
+    revised: 'dropped'
+  }
+
+  enum environment: {
+    unknown: 'unknown',
+    in_person: 'in_person',
+    hybrid: 'hybrid',
+    virtual: 'virtual'
   }
 
   # acts_as_taggable
@@ -109,6 +127,7 @@ class Session < ApplicationRecord
     .join(conflicts, Arel::Nodes::OuterJoin)
     .on(
       sessions[:id].eq(conflicts[:session_id])
+      .or(sessions[:id].eq(conflicts[:conflict_session_id]))
       .and(
         conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible']).and(
           conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])
@@ -120,6 +139,14 @@ class Session < ApplicationRecord
 
   def self.area_aggregate_fn(col)
     Arel::Nodes::NamedFunction.new('array_remove',[Arel::Nodes::NamedFunction.new('array_agg',[col]), Arel::Nodes::SqlLiteral.new("NULL")])
+  end
+
+  def schedule_consistency
+    # if status dropped then we should not be scheduled in a space and time
+    if status == Session.statuses[:dropped]
+      self.room_id = nil
+      self.start_time = nil
+    end
   end
 
 # NOTE: This only matches  that have the exact set of specified tags. If a user has additional tags, they are not returned.
