@@ -85,11 +85,11 @@ class ReportsController < ApplicationController
                 .order('sessions.title')
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Session With Participants")
+    worksheet = workbook.add_worksheet("Sessions With Participants")
 
     worksheet.append_row(
       [
-        'Title',
+        'Session',
         'Areas',
         'Moderators',
         'Participants',
