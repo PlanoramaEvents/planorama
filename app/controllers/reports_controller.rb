@@ -515,7 +515,7 @@ class ReportsController < ApplicationController
       [
         'Name',
         'Published Name',
-        'Session Title',
+        'Session',
         'Area',
         'Assigned to session',
         'Do not assign with'
