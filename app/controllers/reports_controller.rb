@@ -286,8 +286,8 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
-        'Session Title',
+        'Published Name',
+        'Session',
         'Role'
       ]
     )
