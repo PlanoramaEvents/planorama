@@ -129,22 +129,22 @@ class Reports::ConflictReportsController < ApplicationController
         'State',
         'Session',
         'Area',
-        'Time',
+        'Start Time',
         'Duration',
         'Room',
 
-        'Conflict Session',
-        'Conflict Area',
-        'Conflict Time',
-        'Duration',
-        'Conflict Room',
+        'Conflict 1 Session',
+        'Conflict 1 Area',
+        'Conflict 1 Start Time',
+        'Conflict 1 Duration',
+        'Conflict 1 Room',
 
-        'Conflict Session',
-        'Conflict Area',
-        'Conflict Time',
-        'Duration',
-        'Conflict Room',
-        'Reason'
+        'Conflict 2 Session',
+        'Conflict 2 Area',
+        'Conflict 2 Start Time',
+        'Conflict 2 Duration',
+        'Conflict 2 Room'
+        
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
@@ -177,9 +177,9 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.conflict_area_list.join('; '),
           FastExcel.date_num(conflict.conflict_start_time, conflict.conflict_start_time.in_time_zone.utc_offset),
           conflict.conflict_duration,
-          conflict.conflict_room_name,
+          conflict.conflict_room_name
 
-          'Back to Back to Back'
+          
         ],
         styles
       )
