@@ -24,11 +24,11 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Primary Email',
         'Attendance Type',
         'Participant Status',
-        "Survey's Taken"
+        "Surveys Taken"
       ]
     )
 
