@@ -72,14 +72,14 @@ class Reports::ConflictReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
-        'Person Status',
+        'Published Name',
+        'Participant Status',
         'Session',
         'Area',
         'Start Time',
-        'Duration',
+        'Session Duration',
         'Conflict Session',
-        'Conflict Start Time'
+        'Conflict Session Start Time'
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
