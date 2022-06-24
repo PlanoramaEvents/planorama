@@ -230,8 +230,8 @@ class ReportsController < ApplicationController
         [
           'Name',
           'Published Name',
-          'Status',
-          'Session Title',
+          'Participant Status',
+          'Session',
           'Area',
           'Start Time',
           'Room',
