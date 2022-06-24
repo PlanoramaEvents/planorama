@@ -252,6 +252,7 @@ class SessionsController < ResourceController
       id
       lock_version
       format_id
+      room_set_id
       title
       description
       duration
