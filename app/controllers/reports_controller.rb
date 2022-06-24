@@ -24,11 +24,11 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Primary Email',
         'Attendance Type',
         'Participant Status',
-        "Survey's Taken"
+        "Surveys Taken"
       ]
     )
 
@@ -85,11 +85,11 @@ class ReportsController < ApplicationController
                 .order('sessions.title')
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Session With Participants")
+    worksheet = workbook.add_worksheet("Sessions With Participants")
 
     worksheet.append_row(
       [
-        'Title',
+        'Session',
         'Areas',
         'Moderators',
         'Participants',
@@ -165,7 +165,7 @@ class ReportsController < ApplicationController
         [
           'Room',
           'Start Time',
-          'Title',
+          'Session',
           'Area',
           'Assigned'
         ]
@@ -230,8 +230,8 @@ class ReportsController < ApplicationController
         [
           'Name',
           'Published Name',
-          'Status',
-          'Session Title',
+          'Participant Status',
+          'Session',
           'Area',
           'Start Time',
           'Room',
@@ -286,8 +286,8 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
-        'Session Title',
+        'Published Name',
+        'Session',
         'Role'
       ]
     )
@@ -332,12 +332,12 @@ class ReportsController < ApplicationController
       )
 
       workbook = FastExcel.open(constant_memory: true)
-      worksheet = workbook.add_worksheet("Participant Availabilities")
+      worksheet = workbook.add_worksheet("Participant Availability")
 
       worksheet.append_row(
         [
           'Name',
-          'Pub Name',
+          'Published Name',
           'Attendance Type',
           'Availabilities',
           'Limits',
@@ -387,10 +387,10 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
-        'Title',
+        'Published Name',
+        'Session',
         'Ranking',
-        'Notes',
+        'Ranking Notes',
         'Areas'
       ]
     )
@@ -515,7 +515,7 @@ class ReportsController < ApplicationController
       [
         'Name',
         'Published Name',
-        'Session Title',
+        'Session',
         'Area',
         'Assigned to session',
         'Do not assign with'
