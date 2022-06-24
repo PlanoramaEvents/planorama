@@ -292,15 +292,15 @@ class Reports::ConflictReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Time',
         'Session',
         'Area',
         'Room',
         'Conflict Session',
         'Conflict Area',
-        'Conflict Room',
-        'Reason'
+        'Conflict Room'
+        
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
@@ -317,8 +317,8 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.room.name,
           conflict.conflict_session.title,
           conflict.conflict_areas_list.join('; '),
-          conflict.conflict_room.name,
-          'Double Booked'
+          conflict.conflict_room.name
+          
         ],
         styles
       )
