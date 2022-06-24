@@ -387,10 +387,10 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
-        'Title',
+        'Published Name',
+        'Session',
         'Ranking',
-        'Notes',
+        'Ranking Notes',
         'Areas'
       ]
     )
