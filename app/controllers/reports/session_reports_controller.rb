@@ -181,7 +181,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Name',
         'Published Name',
-        'Status',
+        'Participant Status',
         'Attendance Type',
         'Bio'
       ]
