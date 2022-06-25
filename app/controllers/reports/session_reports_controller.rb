@@ -11,7 +11,7 @@ class Reports::SessionReportsController < ApplicationController
 
     worksheet.append_row(
       [
-        'Title',
+        'Session',
         'Areas',
         'Moderators',
         'Participants'
@@ -51,7 +51,7 @@ class Reports::SessionReportsController < ApplicationController
 
     worksheet.append_row(
       [
-        'Title',
+        'Session',
         'Area',
         'Start Time',
         'Room'
@@ -81,7 +81,7 @@ class Reports::SessionReportsController < ApplicationController
     sessions = ReportsService.sessions_with_no_moderator
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Session no Moderator")
+    worksheet = workbook.add_worksheet("Sessions no Moderator")
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, date_time_style, nil, nil, nil
@@ -89,7 +89,7 @@ class Reports::SessionReportsController < ApplicationController
 
     worksheet.append_row(
       [
-        'Title',
+        'Session',
         'Area',
         'Start Time',
         'Format',
@@ -130,14 +130,14 @@ class Reports::SessionReportsController < ApplicationController
                         .order('name', 'start_time', 'title')
 
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Non-Accepted on Sched")
+    worksheet = workbook.add_worksheet("Non-Accepted on Schedule")
 
     worksheet.append_row(
       [
         'Name',
         'Published Name',
-        'Status',
-        'Session Title',
+        'Participant Status',
+        'Session',
         'Area'
       ]
     )
@@ -181,7 +181,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Name',
         'Published Name',
-        'Status',
+        'Participant Status',
         'Attendance Type',
         'Bio'
       ]
@@ -214,7 +214,7 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Day',
         'Session Count',
         "Person's Limit"
@@ -248,7 +248,7 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Session Count',
         'Con Limit'
       ]
@@ -314,7 +314,7 @@ class Reports::SessionReportsController < ApplicationController
     # Session name, Area, session start, participant count, participant count lower bound, list of participants
     worksheet.append_row(
       [
-        'Title',
+        'Session',
         'Areas',
         'Participant Count',
         'List of Participants'

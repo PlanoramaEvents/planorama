@@ -14,6 +14,7 @@ class Session < ApplicationRecord
 
   belongs_to :room, required: false
   belongs_to :age_restriction, required: false
+  belongs_to :room_set, required: false
 
   before_save :keep_who_did_it, :keep_interest_trail, :schedule_consistency
 
@@ -64,7 +65,7 @@ class Session < ApplicationRecord
     draft: 'draft',
     reviewed: 'reviewed',
     revised: 'revised',
-    revised: 'dropped'
+    dropped: 'dropped'
   }
 
   enum environment: {
