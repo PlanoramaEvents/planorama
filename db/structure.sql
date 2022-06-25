@@ -659,7 +659,8 @@ CREATE TABLE public.sessions (
     environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
     tech_notes text,
     age_restriction_id uuid,
-    minors_participation jsonb
+    minors_participation jsonb,
+    room_set_id uuid
 );
 
 
@@ -671,7 +672,10 @@ CREATE VIEW public.availability_conflicts AS
  SELECT DISTINCT concat(session_assignments.id, ':', people.id, ':', sessions.id) AS id,
     session_assignments.id AS session_assignment_id,
     people.id AS person_id,
+    people.name AS person_name,
+    people.published_name AS person_published_name,
     sessions.id AS session_id,
+    sessions.title AS session_title,
     session_assignments.session_assignment_role_type_id,
     sart.role_type AS session_assignment_role_type,
     sart.name AS session_assignment_name
@@ -1415,12 +1419,16 @@ CREATE TABLE public.schema_migrations (
 
 CREATE VIEW public.session_conflicts AS
  SELECT availability_conflicts.session_id,
+    availability_conflicts.session_title,
     NULL::uuid AS room_id,
     availability_conflicts.person_id,
+    availability_conflicts.person_name,
+    availability_conflicts.person_published_name,
     availability_conflicts.session_assignment_id,
     availability_conflicts.session_assignment_role_type_id,
     availability_conflicts.session_assignment_name,
     NULL::uuid AS conflict_session_id,
+    NULL::text AS conflict_session_title,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     availability_conflicts.id AS conflict_id,
@@ -1428,12 +1436,16 @@ CREATE VIEW public.session_conflicts AS
    FROM public.availability_conflicts
 UNION
  SELECT room_conflicts.session_id,
+    room_conflicts.session_title,
     room_conflicts.room_id,
     NULL::uuid AS person_id,
+    NULL::character varying AS person_name,
+    NULL::character varying AS person_published_name,
     NULL::uuid AS session_assignment_id,
     NULL::uuid AS session_assignment_role_type_id,
     NULL::character varying AS session_assignment_name,
     room_conflicts.conflicting_session_id AS conflict_session_id,
+    NULL::text AS conflict_session_title,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     room_conflicts.id AS conflict_id,
@@ -1442,12 +1454,16 @@ UNION
   WHERE (room_conflicts.back_to_back = false)
 UNION
  SELECT person_schedule_conflicts.session_id,
+    person_schedule_conflicts.title AS session_title,
     person_schedule_conflicts.room_id,
     person_schedule_conflicts.person_id,
+    person_schedule_conflicts.name AS person_name,
+    person_schedule_conflicts.published_name AS person_published_name,
     person_schedule_conflicts.session_assignment_id,
     person_schedule_conflicts.session_assignment_role_type_id,
     person_schedule_conflicts.session_assignment_name,
     person_schedule_conflicts.conflict_session_id,
+    person_schedule_conflicts.conflict_session_title,
     person_schedule_conflicts.conflict_session_assignment_role_type_id,
     person_schedule_conflicts.conflict_session_assignment_name,
     person_schedule_conflicts.id AS conflict_id,
@@ -1456,16 +1472,20 @@ UNION
   WHERE (person_schedule_conflicts.back_to_back = false)
 UNION
  SELECT person_schedule_conflicts.session_id,
+    person_schedule_conflicts.title AS session_title,
     person_schedule_conflicts.room_id,
     person_schedule_conflicts.person_id,
+    person_schedule_conflicts.name AS person_name,
+    person_schedule_conflicts.published_name AS person_published_name,
     person_schedule_conflicts.session_assignment_id,
     person_schedule_conflicts.session_assignment_role_type_id,
     person_schedule_conflicts.session_assignment_name,
     person_schedule_conflicts.conflict_session_id,
+    person_schedule_conflicts.conflict_session_title,
     person_schedule_conflicts.conflict_session_assignment_role_type_id,
     person_schedule_conflicts.conflict_session_assignment_name,
     person_schedule_conflicts.id AS conflict_id,
-    'back_to_back'::text AS conflict_type
+    'person_session_conflict'::text AS conflict_type
    FROM public.person_schedule_conflicts
   WHERE (person_schedule_conflicts.back_to_back = true);
 
@@ -3033,6 +3053,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220623143613'),
 ('20220623144036'),
 ('20220623145514'),
-('20220623172955');
+('20220623172955'),
+('20220624121252');
 
 

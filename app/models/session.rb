@@ -18,6 +18,8 @@ class Session < ApplicationRecord
   before_save :keep_who_did_it, :keep_interest_trail, :schedule_consistency
 
   has_many :session_conflicts, class_name: 'Conflicts::SessionConflict'
+  # Get where this session is on the other side of the conflict relationship
+  has_many :conflict_sessions, foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
 
   has_and_belongs_to_many :room_services
 
@@ -122,8 +124,8 @@ class Session < ApplicationRecord
       sessions[:id].eq(conflicts[:session_id])
       .or(sessions[:id].eq(conflicts[:conflict_session_id]))
       .and(
-        conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible']).and(
-          conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])
+        conflicts[:session_assignment_name].eq(nil).or(conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])).and(
+          conflicts[:conflict_session_assignment_name].eq(nil).or(conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible']))
         )
       )
     )

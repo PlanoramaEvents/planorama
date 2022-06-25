@@ -203,6 +203,7 @@ module MigrationHelpers
             person_schedules.con_state,
              es.exclusion_id,
              es.session_id AS excluded_session_id,
+             s.title as excluded_session_title,
              person_schedules.session_id,
              person_schedules.title,
              person_schedules.area_list,
@@ -210,6 +211,7 @@ module MigrationHelpers
              person_schedules.end_time,
              person_schedules.duration,
              person_schedules.session_assignment_role_type_id,
+             person_schedules.session_assignment_id,
              person_schedules.session_assignment_name,
              person_schedules.session_assignment_role_type
             FROM (((public.person_schedules
@@ -283,7 +285,11 @@ module MigrationHelpers
             CONCAT(session_assignments.id, ':', people.id, ':', sessions.id) as id,
             session_assignments.id as session_assignment_id,
             people.id as person_id,
+            people.name as person_name,
+            people.published_name as person_published_name,
             sessions.id as session_id,
+            sessions.title as session_title,
+            sessions.start_time as session_start_time,
             session_assignments.session_assignment_role_type_id as session_assignment_role_type_id,
             sart.role_type as session_assignment_role_type,
             sart.name as session_assignment_name
@@ -332,30 +338,64 @@ module MigrationHelpers
     end
 
     def self.create_session_conflicts
+      # change conflict_type etc to polymorphic relationship
+      # self.create_person_back_to_back_to_back
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW session_conflicts AS
+            select
+              session_id,
+              title as session_title,
+              start_time as session_start_time,
+              CAST(NULL as uuid) as room_id,
+              NULL as room_name,
+              person_id,
+              name as person_name,
+              published_name as person_published_name,
+              session_assignment_id,
+              session_assignment_role_type_id,
+              session_assignment_name,
+              excluded_session_id as conflict_session_id,
+              excluded_session_title as conflict_session_title,
+              CAST(NULL as uuid) as conflict_session_assignment_role_type_id,
+              null as conflict_session_assignment_name,
+              id as conflict_id,
+              'person_exclusion_conflict' as conflict_type
+            from person_exclusion_conflicts
+          UNION
           select
             session_id,
+            session_title,
+            session_start_time,
             CAST(NULL as uuid) as room_id,
+            NULL as room_name,
             person_id,
+            person_name,
+            person_published_name,
             session_assignment_id,
             session_assignment_role_type_id,
             session_assignment_name,
             CAST(NULL as uuid) as conflict_session_id,
+            NULL as conflict_session_title,
             CAST(NULL as uuid) as conflict_session_assignment_role_type_id,
             null as conflict_session_assignment_name,
             id as conflict_id,
-            'availability' as conflict_type
+            'availability_conflict' as conflict_type
           from availability_conflicts
           UNION
           select
             session_id,
+            session_title,
+            start_time as session_start_time,
             room_id,
+            room_name,
             CAST(NULL as uuid) as person_id,
+            NULL as person_name,
+            NULL as person_published_name,
             CAST(NULL as uuid) as session_assignment_id,
             CAST(NULL as uuid) as session_assignment_role_type_id,
             null as session_assignment_name,
             conflicting_session_id as conflict_session_id,
+            conflicting_session_title as conflict_session_title,
             CAST(NULL as uuid) as conflict_session_assignment_role_type_id,
             null as conflict_session_assignment_name,
             id as conflict_id,
@@ -365,33 +405,45 @@ module MigrationHelpers
           UNION
           select
             session_id,
+            title as session_title,
+            start_time as session_start_time,
             room_id,
+            room_name,
             person_id,
+            name as person_name,
+            published_name as person_published_name,
             session_assignment_id,
             session_assignment_role_type_id,
             session_assignment_name,
             conflict_session_id,
+            conflict_session_title,
             conflict_session_assignment_role_type_id,
             conflict_session_assignment_name,
             id as conflict_id,
-            'person_session_conflict' as conflict_type
+            'person_schedule_conflict' as conflict_type
           from person_schedule_conflicts
           where person_schedule_conflicts.back_to_back = false
           UNION
-          select
+        select
             session_id,
+            title as session_title,
+            start_time as session_start_time,
             room_id,
+            room_name,
             person_id,
+            name person_name,
+            published_name as person_published_name,
             session_assignment_id,
             session_assignment_role_type_id,
             session_assignment_name,
             conflict_session_id,
+            conflict_session_title,
             conflict_session_assignment_role_type_id,
             conflict_session_assignment_name,
             id as conflict_id,
-            'back_to_back' as conflict_type
+            'person_back_to_back' as conflict_type
           from person_schedule_conflicts
-          where person_schedule_conflicts.back_to_back = true;
+          where person_schedule_conflicts.back_to_back = true
       SQL
       ActiveRecord::Base.connection.execute(query)
     end

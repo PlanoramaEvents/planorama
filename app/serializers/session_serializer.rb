@@ -41,7 +41,7 @@ class SessionSerializer
     if session.has_attribute?(:conflict_count)
       session.conflict_count > 0
     else
-      session.session_conflicts.count > 0
+      (session.session_conflicts.count > 0) || (session.conflict_sessions.count > 0)
     end
   end
 
