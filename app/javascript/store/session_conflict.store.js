@@ -1,4 +1,5 @@
 export const GET_CONFLICTS_FOR_SESSION = 'GET CONFLICTS FOR SESSION';
+export const GET_CONFLICTS_WITH_SESSION = 'GET CONFLICTS WITH SESSION';
 export const sessionConflictModel = 'session_conflict';
 
 export const sessionConflictEndpoints = {
@@ -7,6 +8,17 @@ export const sessionConflictEndpoints = {
 
 export const sessionConflictStore = {
   actions: {
+    [GET_CONFLICTS_WITH_SESSION]  ({commit, dispatch, state}, {session_id}) {
+      return new Promise((res, rej) => {
+        if(session_id) {
+          dispatch('jv/get',`/session_conflict/conflicts_with/${session_id}`).then((conflicts) => {
+            res(conflicts);
+          })
+        } else {
+          res({});
+        }
+      })
+    },
     [GET_CONFLICTS_FOR_SESSION] ({commit, dispatch, state}, {session_id}) {
       return new Promise((res, rej) => {
         if(session_id) {
