@@ -3,7 +3,7 @@
     <div class="session-conflicts-list" v-if="conflicts.length > 0">
       <div v-if="displaySessionInfo">
         <strong>{{sessionTitle}}</strong><br />
-        {{ formatLocaleDate(conflicts[0].session.start_time )}}
+        {{ formatLocaleDate(conflicts[0].session_start_time )}}
       </div>
       <div class="ml-2">
         <div
@@ -100,16 +100,16 @@ export default {
           return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a> is outside of availability`
         break;
         case 'room_conflict':
-          let start_time = DateTime.fromISO(conflict.session_start_time).setZone(this.timezone)
+          let start_time = this.formatLocaleDate(conflict.session_start_time) //DateTime.fromISO(conflict.session_start_time).setZone(this.timezone)
           if (conflict_with) {
             return `${conflict.room_name}<br />
-             ${start_time.toLocaleString(DateTime. DATETIME_SHORT)} <br />
+             ${start_time} <br />
              "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
              overlaps with  <br />
              "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"`
           } else {
             return `${conflict.room_name}<br />
-            ${start_time.toLocaleString(DateTime. DATETIME_SHORT)} <br />
+            ${start_time} <br />
             "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"
             overlaps with  <br />
             "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
