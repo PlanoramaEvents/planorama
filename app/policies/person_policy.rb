@@ -13,6 +13,10 @@ class PersonPolicy < PlannerPolicy
     allowed?(action: :update_all)
   end
 
+  def session_names?
+    allowed?(action: :session_names)
+  end
+
   def import?
     allowed?(action: :import)
   end

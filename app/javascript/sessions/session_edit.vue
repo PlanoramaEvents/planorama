@@ -60,6 +60,36 @@
         </b-form-group>
       </div>
     </div>
+    <!-- <div class="row">
+      <div class="col-12">
+        <b-form-group label="Attendee Signup Required">
+          <span>No</span>
+          <b-form-checkbox inline switch v-model="session.require_signup" @change="saveSession()">Yes</b-form-checkbox>
+          <label :class="{'text-muted': !session.require_signup}">If yes, max openings: <b-form-input inline type="number" min="1" :disabled="!session.require_signup" v-model="session.max_people"></b-form-input></label>
+        </b-form-group>
+      </div>
+    </div> -->
+    <div class="row">
+      <div class="col-12">
+        <b-form-group
+          label="Scheduled Participant Notes"
+        >
+          <plano-editor
+            id="scheduled-participant-text"
+            v-model="session.participant_notes"
+            type='classic'
+            @change="saveSession()"
+          ></plano-editor>
+        </b-form-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <b-form-group label="Tech/Hotel Notes">
+          <b-textarea v-model="session.tech_notes" @blur="saveSession()"></b-textarea>
+        </b-form-group>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -1,6 +1,209 @@
 class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
+  def assigned_sessions_not_scheduled
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    sessions = ReportsService.assigned_sessions_not_scheduled
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Assigned Session not Sched")
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Areas',
+        'Moderators',
+        'Participants'
+      ]
+    )
+
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    reserve = SessionAssignmentRoleType.find_by(name: 'Reserve')
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "AssignedSessionsNotScheduled#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
+  def scheduled_session_no_people
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    sessions = ReportsService.scheduled_session_no_people
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Sched Sessions no Participants")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil
+    ]
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Area',
+        'Start Time',
+        'Room'
+      ]
+    )
+
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
+          session.room.name
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "ScheduledSessionsWithNoPeople#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+
+  end
+
+  def session_with_no_moderator
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+    sessions = ReportsService.sessions_with_no_moderator
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Sessions no Moderator")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil, nil, nil
+    ]
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Area',
+        'Start Time',
+        'Format',
+        'People Assigned',
+        'Reserved'
+      ]
+    )
+
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    reserve = SessionAssignmentRoleType.find_by(name: 'Reserve')
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
+          session.format.name,
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.published_name}.join(';')
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "SessionsWithoutModerator#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
+  def non_accepted_on_schedule
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    people_sessions = PersonSchedule
+                        .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                        .where("con_state not in ('not_set', 'accepted')")
+                        .where("start_time is not null and room_id is not null")
+                        .order('name', 'start_time', 'title')
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Non-Accepted on Schedule")
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Published Name',
+        'Participant Status',
+        'Session',
+        'Area'
+      ]
+    )
+
+    people_sessions.each do |sa|
+      worksheet.append_row(
+        [
+          sa.name,
+          sa.published_name,
+          sa.con_state,
+          sa.title,
+          sa.area_list.join('; ')
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "NonAcceptedPeopleOnSessions#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
+  def invited_accepted_not_scheduled
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    people = Person.where(
+                "id not in (?)",
+                PersonSchedule
+                  .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .where("start_time is not null and room_id is not null")
+                  .pluck('session_id')
+              ).where(
+                "con_state in (?)",
+                ['invited', 'accepted']
+              )
+
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Not Scheduled")
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Published Name',
+        'Participant Status',
+        'Attendance Type',
+        'Bio'
+      ]
+    )
+
+    people.each do |person|
+    worksheet.append_row(
+      [
+        person.name,
+        person.published_name,
+        person.con_state,
+        person.attendance_type,
+        person.bio
+      ]
+    )
+    end
+
+    send_data workbook.read_string,
+            filename: "InvitedAcceptedNotScheduled#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+            disposition: 'attachment'
+  end
+
   def participants_over_session_limits
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
@@ -11,7 +214,7 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Day',
         'Session Count',
         "Person's Limit"
@@ -45,7 +248,7 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
+        'Published Name',
         'Session Count',
         'Con Limit'
       ]
@@ -111,7 +314,7 @@ class Reports::SessionReportsController < ApplicationController
     # Session name, Area, session start, participant count, participant count lower bound, list of participants
     worksheet.append_row(
       [
-        'Title',
+        'Session',
         'Areas',
         'Participant Count',
         'List of Participants'

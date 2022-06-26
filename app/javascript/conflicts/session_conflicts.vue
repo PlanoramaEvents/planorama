@@ -10,10 +10,13 @@
           class="session-conflict mb-1"
           v-for="conflict in conflicts" :key="conflict.id"
         >
-          <div>
-            <span v-if="conflict.person"><router-link :to="'/people/availability/' + conflict.person.id">{{conflict.person.published_name}}</router-link></span>
-            {{conflict_type_string(conflict.conflict_type, conflict.person, conflict.session, conflict.room)}}
-          </div>
+          <div  v-html="conflict_type_string(conflict)"></div>
+        </div>
+        <div
+          class="session-conflict mb-1"
+          v-for="conflict in conflicts_with" :key="conflict.id"
+        >
+          <div  v-html="conflict_type_string(conflict, true)"></div>
         </div>
       </div>
     </div>
@@ -26,7 +29,8 @@ import modelMixin from '../store/model.mixin';
 import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
 import dateTimeMixin from '../components/date_time.mixin'
-import { CONFLICT_TEXT } from '@/constants/strings';
+
+const { DateTime } = require("luxon");
 
 export default {
   name: "SessionConflicts",
@@ -44,7 +48,8 @@ export default {
     }
   },
   data: () =>  ({
-    conflicts: []
+    conflicts: [],
+    conflicts_with: []
   }),
   computed: {
     sessionTitle() {
@@ -64,11 +69,13 @@ export default {
         this.getConflicts(newVal)
       } else {
         this.conflicts = []
+        this.conflicts_with = []
       }
     }
   },
   methods: {
     getConflicts(sessionId) {
+      this.clear()
       this.get_conflicts({session_id: sessionId}).then(
         (conflicts) => {
           this.conflicts = Object.values(conflicts).filter(
@@ -76,9 +83,56 @@ export default {
           )
         }
       )
+      this.get_conflicts_with({session_id: sessionId}).then(
+        (conflicts) => {
+          this.conflicts_with = Object.values(conflicts).filter(
+            obj => (typeof obj.json === 'undefined')
+          )
+        }
+      )
     },
-    conflict_type_string(conflict_type, person, session, room) {
-      return CONFLICT_TEXT[conflict_type](person?.published_name, session?.title, room?.name) || CONFLICT_TEXT.default;
+    conflict_type_string(conflict, conflict_with=false) {
+      switch(conflict.conflict_type){
+        case 'person_exclusion_conflict':
+          return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a> scheduled against exclusion`
+        break;
+        case 'availability_conflict':
+          return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a> is outside of availability`
+        break;
+        case 'room_conflict':
+          let start_time = DateTime.fromISO(conflict.session_start_time).setZone(this.timezone)
+          if (conflict_with) {
+            return `${conflict.room_name}<br />
+             ${start_time.toLocaleString(DateTime. DATETIME_SHORT)} <br />
+             "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
+             overlaps with  <br />
+             "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"`
+          } else {
+            return `${conflict.room_name}<br />
+            ${start_time.toLocaleString(DateTime. DATETIME_SHORT)} <br />
+            "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"
+            overlaps with  <br />
+            "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+          }
+        break;
+        case 'person_schedule_conflict':
+          return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
+                 "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+        break;
+        case 'person_back_to_back':
+          if (conflict_with) {
+            return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a> has back to back with
+                   "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
+                   and "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"`
+          } else {
+            return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a> has back to back with
+                   "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"
+                   and "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+          }
+        break;
+        default:
+          return `Some conflict ${conflict}`
+      }
     }
   },
   mounted() {

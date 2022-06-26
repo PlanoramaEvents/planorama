@@ -252,12 +252,14 @@ class SessionsController < ResourceController
       id
       lock_version
       format_id
+      room_set_id
       title
       description
       duration
       minimum_people
       maximum_people
       item_notes
+      tech_notes
       pub_reference_number
       audience_size,
       participant_notes
@@ -272,6 +274,9 @@ class SessionsController < ResourceController
       session_areas_attributes
       proofed
       format_id
+      status
+      environment
+      minors_participation
     ]
     # Tags
     # format
