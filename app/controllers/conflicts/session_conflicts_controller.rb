@@ -38,7 +38,7 @@ class Conflicts::SessionConflictsController < ApplicationController
 
     session_id = params[:session_id]
     collection = Conflicts::SessionConflict
-                  .includes([:session,:person,:session_assignment,:room])
+                  .includes([:session])
                   .where("conflict_session_id = ?", session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
@@ -49,6 +49,9 @@ class Conflicts::SessionConflictsController < ApplicationController
 
     options = {
       meta: meta,
+      include: [
+        # :session
+      ],
       params: {
         domain: "#{request.base_url}",
         current_person: current_person
@@ -63,7 +66,7 @@ class Conflicts::SessionConflictsController < ApplicationController
 
     session_id = params[:session_id]
     collection = Conflicts::SessionConflict
-                  .includes([:session,:person,:session_assignment,:room])
+                  .includes([:conflict_session])
                   .where("session_id = ?", session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
@@ -74,6 +77,9 @@ class Conflicts::SessionConflictsController < ApplicationController
 
     options = {
       meta: meta,
+      include: [
+        # :conflict_session
+      ],
       params: {
         domain: "#{request.base_url}",
         current_person: current_person
