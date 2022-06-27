@@ -1,15 +1,15 @@
 <template>
   <div class="session-conflicts">
-    <div class="session-conflicts-list" v-if="(conflicts.length > 0) || (conflicts_with.length > 0)">
-      <div v-if="displaySessionInfo && conflicts.length > 0">
+    <div class="session-conflicts-list">
+      <div v-if="displaySessionInfo && sessionId && conflicts.length > 0">
         <strong>{{sessionTitle}}</strong><br />
         {{ formatLocaleDate(conflicts[0].session_start_time )}}
       </div>
-      <div v-if="displaySessionInfo && conflicts_with.length > 0">
+      <div v-else-if="displaySessionInfo && sessionId && conflicts_with.length > 0">
         <strong>{{sessionTitle}}</strong><br />
         {{ formatLocaleDate(conflicts_with[0].session_start_time )}}
       </div>
-      <div class="ml-2">
+      <div class="ml-2" v-if="(conflicts.length > 0) || (conflicts_with.length > 0)">
         <div
           class="session-conflict mb-1"
           v-for="conflict in conflicts" :key="conflict.id"
@@ -22,6 +22,9 @@
         >
           <div  v-html="conflict_type_string(conflict, true)"></div>
         </div>
+      </div>
+      <div class="ml-2" v-else-if="sessionId && conflicts.length == 0">
+        There are no conflicts for this session
       </div>
     </div>
   </div>
@@ -79,6 +82,8 @@ export default {
   },
   methods: {
     getConflicts(sessionId) {
+      this.conflicts = []
+      this.conflicts_with = []
       this.clear()
       this.get_conflicts({session_id: sessionId}).then(
         (conflicts) => {

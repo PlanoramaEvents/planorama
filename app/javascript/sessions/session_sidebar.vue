@@ -48,7 +48,7 @@
         </div>
         <b-tabs content-class="mt-3" nav-class="border-0" nav-wrapper-class="border-bottom">
           <!-- TODO: more details etc -->
-          <b-tab title="General" active>
+          <b-tab title="General" active lazy>
             <dl>
               <dt>Areas</dt>
               <dd v-if="selected.area_list.length" class="ml-2 font-italic">{{formattedAreaList}}</dd>
@@ -86,7 +86,7 @@
               <dd class="ml-2 font-italic">{{selected.duration}} minutes</dd>
             </dl>
           </b-tab>
-          <b-tab title="Conflicts">
+          <b-tab title="Conflicts" lazy>
             <session-conflicts
               :model="sessionConflictModel"
               :sessionId="selected.id"

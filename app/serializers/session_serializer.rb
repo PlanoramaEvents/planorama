@@ -45,7 +45,7 @@ class SessionSerializer
     end
   end
 
-  has_many :session_areas, serializer: SessionAreaSerializer,
+  has_many :session_areas, lazy_load_data: true, serializer: SessionAreaSerializer,
           links: {
             self: -> (object, params) {
               "#{params[:domain]}/session/#{object.id}"
@@ -65,7 +65,7 @@ class SessionSerializer
              }
            }
 
-  has_one :format,
+  has_one :format, lazy_load_data: true,
           if: Proc.new { |record| record.format },
           links: {
             self: -> (object, params) {
@@ -76,7 +76,7 @@ class SessionSerializer
             }
           }
 
-  has_one :room_set,
+  has_one :room_set, lazy_load_data: true,
           if: Proc.new { |record| record.room_set },
           links: {
             self: -> (object, params) {
@@ -87,7 +87,7 @@ class SessionSerializer
             }
           }
 
-  has_one :room,
+  has_one :room, lazy_load_data: true,
           if: Proc.new { |record| record.room },
           links: {
             self: -> (object, params) {
