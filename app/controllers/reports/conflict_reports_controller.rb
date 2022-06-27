@@ -12,7 +12,7 @@ class Reports::ConflictReportsController < ApplicationController
 
     worksheet.append_row(
       [
-        'Room Name',
+        'Room',
         'Session',
         'Conflict Session',
         'Start Time'
