@@ -12,7 +12,7 @@ class Reports::ConflictReportsController < ApplicationController
 
     worksheet.append_row(
       [
-        'Room Name',
+        'Room',
         'Session',
         'Conflict Session',
         'Start Time'
@@ -125,24 +125,24 @@ class Reports::ConflictReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
-        'State',
+        'Published Name',
+        'Participant Status',
         'Session',
         'Area',
         'Start Time',
-        'Duration',
+        'Session Duration',
         'Room',
 
         'Conflict 1 Session',
         'Conflict 1 Area',
         'Conflict 1 Start Time',
-        'Conflict 1 Duration',
+        'Conflict 1 Session Duration',
         'Conflict 1 Room',
 
         'Conflict 2 Session',
         'Conflict 2 Area',
         'Conflict 2 Start Time',
-        'Conflict 2 Duration',
+        'Conflict 2 Session Duration',
         'Conflict 2 Room'
         
       ]
