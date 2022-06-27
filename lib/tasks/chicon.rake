@@ -82,7 +82,7 @@ namespace :chicon do
       'Masquerade rehearsal' => ['Masquerade Rehersal'],
       'Opening Ceremony' => ['Opening Ceremony'],
       'Closing Ceremony' => ['Closing Ceremony'],
-      'WSFS Business Meeting' => ['WSFS Buisness Meeting (Friday)', 'WSFS Buisness Meeting (Monday)', 'WSFS Buisness Meeting (Saturday)', 'WSFS Buisness Meeting (Sunday)',],
+      'WSFS Business Meeting' => ['WSFS Business Meeting (Friday)', 'WSFS Business Meeting (Monday)', 'WSFS Business Meeting (Saturday)', 'WSFS Business Meeting (Sunday)',],
       'Mark Protection Committee meetings' => ['Mark Protection Committee Meeting'],
       'Joe Siclari and Edie Stern GoH highlight session' => ['Joe Siclari and Edie Stern Session'],
       'Floyd Norman highlight session'=> ['Floyd Norman Session'],
