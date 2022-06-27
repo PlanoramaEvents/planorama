@@ -9,15 +9,13 @@
         <strong>{{sessionTitle}}</strong><br />
         {{ formatLocaleDate(conflicts_with[0].session_start_time )}}
       </div>
-      <div class="ml-2" v-if="conflicts.length > 0">
+      <div class="ml-2">
         <div
           class="session-conflict mb-1"
           v-for="conflict in conflicts" :key="conflict.id"
         >
           <div  v-html="conflict_type_string(conflict)"></div>
         </div>
-      </div>
-      <div class="ml-2" v-if="conflicts_with.length > 0">
         <div
           class="session-conflict mb-1"
           v-for="conflict in conflicts_with" :key="conflict.id"
@@ -100,40 +98,45 @@ export default {
     conflict_type_string(conflict, conflict_with=false) {
       switch(conflict.conflict_type){
         case 'person_exclusion_conflict':
-          return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a> scheduled against exclusion`
+          return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> scheduled against exclusion`
         break;
         case 'availability_conflict':
-          return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a> is outside of availability`
+          return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> is outside of availability`
         break;
         case 'room_conflict':
           let start_time = this.formatLocaleDate(conflict.session_start_time) //DateTime.fromISO(conflict.session_start_time).setZone(this.timezone)
           if (conflict_with) {
             return `${conflict.room_name}<br />
              ${start_time} <br />
-             "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
+             "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
              overlaps with  <br />
-             "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"`
+             "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
           } else {
             return `${conflict.room_name}<br />
             ${start_time} <br />
-            "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"
+            "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"
             overlaps with  <br />
-            "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+            "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
         break;
         case 'person_schedule_conflict':
-          return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
-                 "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+          if (conflict_with) {
+            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
+                   "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
+          } else {
+            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
+                   "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+          }
         break;
         case 'person_back_to_back':
           if (conflict_with) {
-            return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a> has back to back with
-                   "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
-                   and "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"`
+            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> has back to back with
+                   "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
+                   and "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
           } else {
-            return `<a href="/people/${conflict.person_id}">${conflict.person_published_name}</a> has back to back with
-                   "<a href="/session/${conflict.session_id}">${conflict.session_title}</a>"
-                   and "<a href="/session/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> has back to back with
+                   "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"
+                   and "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
         break;
         default:
