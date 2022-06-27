@@ -23,7 +23,7 @@
           <div  v-html="conflict_type_string(conflict, true)"></div>
         </div>
       </div>
-      <div class="ml-2" v-else-if="sessionId && conflicts.length == 0">
+      <div class="ml-2 text-muted font-italic" v-else-if="sessionId && conflicts.length == 0">
         There are no conflicts for this session
       </div>
     </div>
