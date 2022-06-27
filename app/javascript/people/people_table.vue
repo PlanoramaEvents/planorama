@@ -1,7 +1,7 @@
 <template>
   <div>
     <modal-form
-      title="Mass Edit State"
+      title="Bulk Edit Status"
       ref="mass-edit-state"
       @save="onConfirmMassEdit"
     >
@@ -17,7 +17,7 @@
     </modal-form>
 
     <modal-form
-      title="Mass Edit State Confirmation"
+      title="Bulk Edit Status Confirmation"
       ref="mass-edit-confirm"
       @save="onSaveMassEdit"
     >
