@@ -78,7 +78,7 @@
             variant="primary"
             @click="onEditStates(editableIds)"
             :disabled="editableIds.length == 0"
-          >Edit State(s)
+          >Edit Status(es)
           </b-button>
         </div>
       </template>
