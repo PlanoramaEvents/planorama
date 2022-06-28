@@ -2,6 +2,7 @@ module MigrationHelpers
   module PlanoViews
     def self.create_views
       self.create_person_schedules
+      self.create_person_and_exclusions
       self.create_room_allocations
       self.create_room_conflicts
       self.create_person_schedule_conflicts
@@ -192,33 +193,65 @@ module MigrationHelpers
       ActiveRecord::Base.connection.execute(query)
     end
 
+    def self.create_person_and_exclusions
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW person_and_exclusions AS
+          select
+            pe.exclusion_id,
+          	pe.person_id,
+          	s.id as session_id,
+          	s.start_time,
+            (s.start_time + (s.duration || ' minute')::interval) as end_time,
+          	s.title
+          from
+          	person_exclusions pe
+          left join exclusions_sessions es on
+          	es.exclusion_id = pe.exclusion_id
+          left join sessions s on
+          	s.id = es.session_id
+          where
+          	session_id is not null
+          order by
+          	pe.person_id, session_id
+      SQL
+      ActiveRecord::Base.connection.execute(query)
+    end
+
     def self.create_person_exclusion_conflicts
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW person_exclusion_conflicts AS
-          SELECT
-            concat(person_schedules.person_id, ':', es.exclusion_id, ':', person_schedules.session_id) AS id,
-            person_schedules.person_id,
-            person_schedules.name,
-            person_schedules.published_name,
-            person_schedules.con_state,
-             es.exclusion_id,
-             es.session_id AS excluded_session_id,
-             s.title as excluded_session_title,
-             person_schedules.session_id,
-             person_schedules.title,
-             person_schedules.area_list,
-             person_schedules.start_time,
-             person_schedules.end_time,
-             person_schedules.duration,
-             person_schedules.session_assignment_role_type_id,
-             person_schedules.session_assignment_id,
-             person_schedules.session_assignment_name,
-             person_schedules.session_assignment_role_type
-            FROM (((public.person_schedules
-              LEFT JOIN public.person_exclusions pe ON ((pe.person_id = person_schedules.person_id)))
-              JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
-              LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
-           WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time >= s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
+          select
+          	concat(person_schedules.person_id, ':', pe.exclusion_id, ':', person_schedules.session_id) as id,
+          	person_schedules.person_id,
+          	person_schedules.name,
+          	person_schedules.published_name,
+          	person_schedules.con_state,
+          	pe.exclusion_id,
+          	pe.session_id as excluded_session_id,
+          	pe.title as excluded_session_title,
+          	person_schedules.session_id,
+          	person_schedules.title,
+          	person_schedules.area_list,
+          	person_schedules.start_time,
+          	person_schedules.end_time,
+          	person_schedules.duration,
+          	person_schedules.session_assignment_role_type_id,
+          	person_schedules.session_assignment_id,
+          	person_schedules.session_assignment_name,
+          	person_schedules.session_assignment_role_type
+          from
+          	person_schedules
+          join
+          	person_and_exclusions pe on pe.person_id = person_schedules.person_id
+          	and person_schedules.session_id != pe.session_id
+          	and pe.start_time >= person_schedules.start_time
+          	and (
+          	  person_schedules.start_time <= person_schedules.end_time
+          	  or
+          	  (
+          	    person_schedules.end_time  >= person_schedules.start_time and pe.end_time <= person_schedules.end_time
+          	  )
+          	)
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
@@ -469,6 +502,9 @@ module MigrationHelpers
       SQL
       ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS room_allocations;
+      SQL
+      ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS person_and_exclusions;
       SQL
       ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS person_schedules;
