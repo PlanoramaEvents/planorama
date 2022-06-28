@@ -32,15 +32,8 @@ export const sessionConflictStore = {
       })
     },
     [IGNORE_CONFLICT] ({commit, dispatch, state}, {conflict_id, conflict_type}) {
-      console.debug("***** do ignore", conflict_id, conflict_type)
-      return new Promise((res, rej) => {
-        if(conflict_id && conflict_type) {
-          dispatch('jv/get',`/session_conflict/ignore/${conflict_type}/${conflict_id}`)
-        } else {
-          res({});
-        }
-      })
-    },
+      return dispatch('jv/get',`/session_conflict/ignore/${conflict_type}/${conflict_id}`);
+    }
   },
   selected: {
     [sessionConflictModel]: undefined
