@@ -169,11 +169,11 @@ class Reports::SessionReportsController < ApplicationController
                 PersonSchedule
                   .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("start_time is not null and room_id is not null")
-                  .pluck('session_id')
+                  .pluck('person_id')
               ).where(
                 "con_state in (?)",
-                ['invited', 'accepted']
-              )
+                ['invite_pending', 'invited', 'accepted']
+              ).order('name')
 
 
     workbook = FastExcel.open(constant_memory: true)
