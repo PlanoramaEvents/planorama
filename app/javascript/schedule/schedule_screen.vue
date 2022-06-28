@@ -19,7 +19,10 @@
         ></session-conflicts>
       </div>
       <div class="col-9">
-        <room-selector></room-selector>
+        <div class="d-flex justify-content-end">
+          <magical-reload class="mt-1" title="Reload Schedule" label="Schedule last reloaded at"></magical-reload>
+          <room-selector></room-selector>
+        </div>
         <div class="scrollable minus31">
           <schedule-calendar
             :rooms="rooms"
@@ -51,6 +54,7 @@ import { sessionModel } from '@/store/session.store'
 import { sessionConflictModel } from '@/store/session_conflict.store'
 import SessionSidebar from '../sessions/session_sidebar.vue';
 import SessionConflicts from '../conflicts/session_conflicts.vue'
+import MagicalReload from '@/components/magical_reload.vue'
 
 import { DateTime } from "luxon";
 import { mapActions, mapState, mapGetters } from 'vuex';
@@ -63,7 +67,8 @@ export default {
     SchedulableSessions,
     RoomSelector,
     SessionSidebar,
-    SessionConflicts
+    SessionConflicts,
+    MagicalReload
   },
   mixins: [
     modelUtilsMixin,

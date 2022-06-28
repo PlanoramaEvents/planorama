@@ -77,6 +77,9 @@ import { configurationStore, configurationEndpoints } from './configuration.stor
 // session add-ons
 import { sessionAssignmentStore, sessionAssignmentEndpoints } from './session_assignment.store';
 
+// global app things
+import { appStore } from './app.store';
+
 import merge from 'lodash.merge'
 
 const endpoints = {
@@ -142,6 +145,7 @@ export const store = new Vuex.Store({
     ...personExclusionStore.state,
     ...emailAddressStore.state,
     ...roomStore.state,
+    ...appStore.state,
     // ...mailingStore.state
   },
   getters: {
@@ -199,6 +203,7 @@ export const store = new Vuex.Store({
     ...surveyStore.mutations,
     ...searchStateStore.mutations,
     ...roomStore.mutations,
+    ...appStore.mutations
   },
   actions: {
     /**
