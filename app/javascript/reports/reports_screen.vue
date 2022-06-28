@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3">
+  <div class="mb-3 scrollable">
     <p>These are interim reports.</p>
     <p><b>Participants</b></p>
     <ul>
@@ -28,9 +28,9 @@
       <li>
         <a href="/report/session_reports/participants_over_con_session_limits" target="_blank">Participants over Con Limit</a>
       </li>
-      <li>
+      <!--<li>
         <a href="/report/conflict_reports/person_exclusion_conflicts" target="_blank">Person scheduled against a conflict item</a>
-      </li>
+      </li>-->
       <li>
         <a href="/report/session_reports/non_accepted_on_schedule" target="_blank">Non-Accepted Participants on Scheduled Sessions</a>
       </li>
@@ -51,9 +51,9 @@
       <li>
         <a href="/report/session_reports/session_with_no_moderator" target="_blank">Sessions with no Moderator</a>
       </li>
-      <li>
+      <!--<li>
         <a href="/report/session_reports/scheduled_session_no_people" target="_blank">Scheduled Sessions with no Participants</a>
-      </li>
+      </li>-->
       <li>
         <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>
       </li>
