@@ -108,6 +108,7 @@ export default {
         }
       )
     },
+    // TODO template these
     conflict_type_string(conflict, conflict_with=false) {
       switch(conflict.conflict_type){
         case 'person_exclusion_conflict':
