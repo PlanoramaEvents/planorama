@@ -32,7 +32,7 @@ class Conflicts::SessionConflictsController < ApplicationController
     options = {
       meta: meta,
       include: [
-        # :session
+        :session
       ],
       params: {
         domain: "#{request.base_url}",
@@ -61,7 +61,7 @@ class Conflicts::SessionConflictsController < ApplicationController
     options = {
       meta: meta,
       include: [
-        # :conflict_session
+        :conflict_session
       ],
       params: {
         domain: "#{request.base_url}",
