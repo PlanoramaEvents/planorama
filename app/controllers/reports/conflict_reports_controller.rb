@@ -65,6 +65,7 @@ class Reports::ConflictReportsController < ApplicationController
                   :person, :session, :exclusion, :excluded_session
                 )
                 .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                .order('people.published_name asc')
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Person vs Exclusion")
@@ -144,7 +145,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Conflict 2 Start Time',
         'Conflict 2 Session Duration',
         'Conflict 2 Room'
-        
+
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
@@ -179,7 +180,7 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.conflict_duration,
           conflict.conflict_room_name
 
-          
+
         ],
         styles
       )
@@ -217,7 +218,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Conflict Start Time',
         'Conflict Session Duration',
         'Conflict Room'
-        
+
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
@@ -239,7 +240,7 @@ class Reports::ConflictReportsController < ApplicationController
           FastExcel.date_num(conflict.conflict_start_time, conflict.conflict_start_time.in_time_zone.utc_offset),
           conflict.conflict_duration,
           conflict.conflict_room_name
-          
+
         ],
         styles
       )
@@ -300,7 +301,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Conflict Session',
         'Conflict Area',
         'Conflict Room'
-        
+
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
@@ -318,7 +319,7 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.conflict_session.title,
           conflict.conflict_areas_list.join('; '),
           conflict.conflict_room.name
-          
+
         ],
         styles
       )
@@ -364,7 +365,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Session',
         'Area',
         'Start Time'
-        
+
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
@@ -378,7 +379,7 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.session.title,
           conflict.area_list.join('; '),
           FastExcel.date_num(conflict.session.start_time, conflict.session.start_time.in_time_zone.utc_offset)
-          
+
         ],
         styles
       )
