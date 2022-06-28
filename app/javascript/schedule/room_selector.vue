@@ -1,5 +1,5 @@
 <template> 
-  <div class="d-flex justify-content-end">
+  <div>
     <icon-button class="mt-1 mr-3" icon="gear" v-b-modal.room-selector-modal></icon-button>
     <plano-modal id="room-selector-modal" @ok="ok" @show="show">
       <template #modal-title>Displayed Rooms</template>
