@@ -23,6 +23,7 @@ class Conflicts::SessionConflictsController < ApplicationController
                   .where("conflict_session_id = ?", session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
                   .distinct
 
     meta = {}
@@ -51,6 +52,7 @@ class Conflicts::SessionConflictsController < ApplicationController
                   .where("session_id = ?", session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
                   .distinct
 
     meta = {}

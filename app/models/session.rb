@@ -18,9 +18,14 @@ class Session < ApplicationRecord
 
   before_save :keep_who_did_it, :keep_interest_trail, :schedule_consistency
 
-  has_many :session_conflicts, class_name: 'Conflicts::SessionConflict'
+  has_many :session_conflicts,
+    -> { where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)") },
+    class_name: 'Conflicts::SessionConflict'
+
   # Get where this session is on the other side of the conflict relationship
-  has_many :conflict_sessions, foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
+  has_many :conflict_sessions,
+    -> { where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)") },
+    foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
 
   has_and_belongs_to_many :room_services
 
@@ -115,6 +120,7 @@ class Session < ApplicationRecord
   def self.conflict_counts
     sessions = Session.arel_table
     conflicts = Conflicts::SessionConflict.arel_table
+    ignored_conflicts = ::IgnoredConflict.arel_table
 
     sessions.project(
       sessions[:id].as('session_id'),
@@ -127,6 +133,10 @@ class Session < ApplicationRecord
       .and(
         conflicts[:session_assignment_name].eq(nil).or(conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])).and(
           conflicts[:conflict_session_assignment_name].eq(nil).or(conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible']))
+        ).and(
+          conflicts[:conflict_id].not_in(
+            ignored_conflicts.project(ignored_conflicts[:conflict_id])
+          )
         )
       )
     )

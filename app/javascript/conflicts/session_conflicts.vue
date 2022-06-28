@@ -85,8 +85,7 @@ export default {
     ignore(conflict) {
       this.ignore_conflict({conflict_id: conflict.id, conflict_type: conflict.conflict_type}).then(
         () => {
-          // console.debug("***** conflict ignored ...")
-          // TODO: refresh
+          this.getConflicts(this.sessionId)
         }
       )
     },
