@@ -241,7 +241,7 @@ class ReportsController < ApplicationController
       )
 
       date_time_style = workbook.number_format("d mmm yyyy h:mm")
-      styles = [nil, nil, nil, nil,date_time_style, nil, nil, nil]
+      styles = [nil, nil, nil, nil, nil, date_time_style, nil, nil, nil]
       people_sessions.each do |sa|
         worksheet.append_row(
           [ sa.name,
