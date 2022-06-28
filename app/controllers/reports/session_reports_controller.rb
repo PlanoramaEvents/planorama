@@ -14,13 +14,14 @@ class Reports::SessionReportsController < ApplicationController
         'Session',
         'Areas',
         'Moderators',
-        'Participants'
+        'Participants',
+        'Invisible',
       ]
     )
 
     moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
-    reserve = SessionAssignmentRoleType.find_by(name: 'Reserve')
+    invisible = SessionAssignmentRoleType.find_by(name: 'Invisible')
     sessions.each do |session|
       worksheet.append_row(
         [
@@ -28,6 +29,7 @@ class Reports::SessionReportsController < ApplicationController
           session.area_list.sort.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == invisible.id}.collect{|a| a.person.published_name}.join(';')
         ]
       )
     end
