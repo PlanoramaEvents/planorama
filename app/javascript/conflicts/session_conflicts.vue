@@ -11,12 +11,14 @@
           v-for="conflict in conflicts" :key="conflict.id"
         >
           <div  v-html="conflict_type_string(conflict)"></div>
+          <button @click="ignore(conflict)" class="btn btn-primary mb-2 btn-sm">Ignore</button>
         </div>
         <div
           class="session-conflict mb-1"
           v-for="conflict in conflicts_with" :key="conflict.id"
         >
           <div  v-html="conflict_type_string(conflict, true)"></div>
+          <button @click="ignore(conflict)" class="btn btn-primary mb-2 btn-sm">Ignore</button>
         </div>
       </div>
       <div class="ml-2 text-muted font-italic" v-else-if="sessionId && conflicts.length === 0 && conflicts_with.length === 0">
@@ -80,6 +82,13 @@ export default {
     }
   },
   methods: {
+    ignore(conflict) {
+      this.ignore_conflict({conflict_id: conflict.id, conflict_type: conflict.conflict_type}).then(
+        () => {
+          console.debug("***** conflict ignored ...")
+        }
+      )
+    },
     getConflicts(sessionId) {
       this.conflicts = []
       this.conflicts_with = []

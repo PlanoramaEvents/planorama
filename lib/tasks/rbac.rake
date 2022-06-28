@@ -497,7 +497,8 @@ namespace :rbac do
       },
       "session_conflict": {
         "conflicts_with": true,
-        "conflicts_for": true
+        "conflicts_for": true,
+        "ignore": true
       }
     })
   end
@@ -752,7 +753,8 @@ namespace :rbac do
       },
       "session_conflict": {
         "conflicts_with": true,
-        "conflicts_for": true
+        "conflicts_for": true,
+        "ignore": true
       }
     })
   end

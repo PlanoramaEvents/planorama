@@ -11,7 +11,7 @@ export const modelMixinNoProp = {
     selected() {
       return this.$store.getters[SELECTED]({model: this.model})
     },
-    collection() {
+    collection() {      
       return Object.values(this.$store.getters['jv/get']({_jv: { type: this.model }}))
     }
   },

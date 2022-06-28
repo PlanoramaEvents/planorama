@@ -1,6 +1,6 @@
 class Conflicts::SessionConflictPolicy < BasePolicy
-  def index?
-    allowed?(action: :index)
+  def ignore?
+    allowed?(action: :ignore)
   end
 
   def conflicts_with?

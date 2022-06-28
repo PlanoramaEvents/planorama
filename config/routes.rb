@@ -85,7 +85,7 @@ Rails.application.routes.draw do
   get 'agreement/latest', to: 'agreements#latest'
   resources :agreements, path: 'agreement'
 
-  get 'session_conflict', to: 'conflicts/session_conflicts#index'
+  get 'session_conflict/ignore/:conflict_type/:conflict_id', to: 'conflicts/session_conflicts#ignore'
   get 'session_conflict/conflicts_for/:session_id', to: 'conflicts/session_conflicts#conflicts_for'
   get 'session_conflict/conflicts_with/:session_id', to: 'conflicts/session_conflicts#conflicts_with'
 
