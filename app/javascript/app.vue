@@ -6,7 +6,7 @@
       <side-navbar v-if="loggedIn"></side-navbar>
       <div :class="['col-12 pr-0', { 'col-sm-10': loggedIn, 'col-xl-10': loggedIn}]">
         <b-overlay :show="showOverlay">
-        <router-view></router-view>
+        <router-view :key="magicalReload"></router-view>
         </b-overlay>
       </div>
       <bottom-navbar></bottom-navbar>
@@ -30,6 +30,7 @@ import { required, email, numeric, digits, regex } from 'vee-validate/dist/rules
 
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
+import { mapState } from 'vuex';
 
 extend('email', email);
 extend('numeric', numeric);
@@ -57,6 +58,9 @@ export default  {
     return {
       showOverlay: false
     }
+  },
+  computed: {
+    ...mapState(['magicalReload'])
   },
   methods: {
     check_signatures() {

@@ -1,13 +1,9 @@
 <template>
   <div class="session-conflicts">
     <div class="session-conflicts-list">
-      <div v-if="displaySessionInfo && sessionId && conflicts.length > 0">
+      <div v-if="displaySessionInfo && sessionId">
         <strong>{{sessionTitle}}</strong><br />
-        {{ formatLocaleDate(conflicts[0].session_start_time )}}
-      </div>
-      <div v-else-if="displaySessionInfo && sessionId && conflicts_with.length > 0">
-        <strong>{{sessionTitle}}</strong><br />
-        {{ formatLocaleDate(conflicts_with[0].session_start_time )}}
+        {{sessionTime}}
       </div>
       <div class="ml-2" v-if="(conflicts.length > 0) || (conflicts_with.length > 0)">
         <div
@@ -23,7 +19,7 @@
           <div  v-html="conflict_type_string(conflict, true)"></div>
         </div>
       </div>
-      <div class="ml-2 text-muted font-italic" v-else-if="sessionId && conflicts.length == 0">
+      <div class="ml-2 text-muted font-italic" v-else-if="sessionId && conflicts.length === 0 && conflicts_with.length === 0">
         There are no conflicts for this session
       </div>
     </div>
@@ -36,8 +32,6 @@ import modelMixin from '../store/model.mixin';
 import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
 import dateTimeMixin from '../components/date_time.mixin'
-
-const { DateTime } = require("luxon");
 
 export default {
   name: "SessionConflicts",
@@ -59,16 +53,21 @@ export default {
     conflicts_with: []
   }),
   computed: {
+    selectedSession() {
+      return this.get_model(sessionModel, this.sessionId)
+    },
     sessionTitle() {
       // conflicts[0].session.title
-      let session = this.get_model(sessionModel, this.sessionId)
-      if (session) {
-        return session.title
+      if (this.selectedSession) {
+        return this.selectedSession.title
       } else {
         return ''
       }
       // return this.selected_model(sessionModel);
     },
+    sessionTime() {
+      return this.formatLocaleDate(this.selectedSession.start_time )
+    }
   },
   watch: {
     sessionId(newVal, oldVal) {
@@ -100,14 +99,13 @@ export default {
         }
       )
     },
+    // TODO template these
     conflict_type_string(conflict, conflict_with=false) {
       switch(conflict.conflict_type){
         case 'person_exclusion_conflict':
           return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> scheduled against exclusion`
-        break;
         case 'availability_conflict':
           return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> is outside of availability`
-        break;
         case 'room_conflict':
           let start_time = this.formatLocaleDate(conflict.session_start_time) //DateTime.fromISO(conflict.session_start_time).setZone(this.timezone)
           if (conflict_with) {
@@ -123,7 +121,6 @@ export default {
             overlaps with  <br />
             "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
-        break;
         case 'person_schedule_conflict':
           if (conflict_with) {
             return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
@@ -132,7 +129,6 @@ export default {
             return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
                    "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
-        break;
         case 'person_back_to_back':
           if (conflict_with) {
             return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> has back to back with
@@ -143,7 +139,6 @@ export default {
                    "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"
                    and "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
-        break;
         default:
           return `Some conflict ${conflict}`
       }
