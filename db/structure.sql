@@ -676,6 +676,7 @@ CREATE VIEW public.availability_conflicts AS
     people.published_name AS person_published_name,
     sessions.id AS session_id,
     sessions.title AS session_title,
+    sessions.start_time AS session_start_time,
     session_assignments.session_assignment_role_type_id,
     sart.role_type AS session_assignment_role_type,
     sart.name AS session_assignment_name
@@ -868,6 +869,19 @@ CREATE TABLE public.formats (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: ignored_conflicts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ignored_conflicts (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    conflict_id character varying(2048),
+    conflict_type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1225,6 +1239,7 @@ CREATE VIEW public.person_exclusion_conflicts AS
     person_schedules.con_state,
     es.exclusion_id,
     es.session_id AS excluded_session_id,
+    s.title AS excluded_session_title,
     person_schedules.session_id,
     person_schedules.title,
     person_schedules.area_list,
@@ -1232,6 +1247,7 @@ CREATE VIEW public.person_exclusion_conflicts AS
     person_schedules.end_time,
     person_schedules.duration,
     person_schedules.session_assignment_role_type_id,
+    person_schedules.session_assignment_id,
     person_schedules.session_assignment_name,
     person_schedules.session_assignment_role_type
    FROM (((public.person_schedules
@@ -1418,9 +1434,30 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE VIEW public.session_conflicts AS
+ SELECT person_exclusion_conflicts.session_id,
+    person_exclusion_conflicts.title AS session_title,
+    person_exclusion_conflicts.start_time AS session_start_time,
+    NULL::uuid AS room_id,
+    NULL::text AS room_name,
+    person_exclusion_conflicts.person_id,
+    person_exclusion_conflicts.name AS person_name,
+    person_exclusion_conflicts.published_name AS person_published_name,
+    person_exclusion_conflicts.session_assignment_id,
+    person_exclusion_conflicts.session_assignment_role_type_id,
+    person_exclusion_conflicts.session_assignment_name,
+    person_exclusion_conflicts.excluded_session_id AS conflict_session_id,
+    person_exclusion_conflicts.excluded_session_title AS conflict_session_title,
+    NULL::uuid AS conflict_session_assignment_role_type_id,
+    NULL::text AS conflict_session_assignment_name,
+    person_exclusion_conflicts.id AS conflict_id,
+    'person_exclusion_conflict'::text AS conflict_type
+   FROM public.person_exclusion_conflicts
+UNION
  SELECT availability_conflicts.session_id,
     availability_conflicts.session_title,
+    availability_conflicts.session_start_time,
     NULL::uuid AS room_id,
+    NULL::text AS room_name,
     availability_conflicts.person_id,
     availability_conflicts.person_name,
     availability_conflicts.person_published_name,
@@ -1428,16 +1465,18 @@ CREATE VIEW public.session_conflicts AS
     availability_conflicts.session_assignment_role_type_id,
     availability_conflicts.session_assignment_name,
     NULL::uuid AS conflict_session_id,
-    NULL::text AS conflict_session_title,
+    NULL::character varying AS conflict_session_title,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     availability_conflicts.id AS conflict_id,
-    'availability'::text AS conflict_type
+    'availability_conflict'::text AS conflict_type
    FROM public.availability_conflicts
 UNION
  SELECT room_conflicts.session_id,
     room_conflicts.session_title,
+    room_conflicts.start_time AS session_start_time,
     room_conflicts.room_id,
+    room_conflicts.room_name,
     NULL::uuid AS person_id,
     NULL::character varying AS person_name,
     NULL::character varying AS person_published_name,
@@ -1445,7 +1484,7 @@ UNION
     NULL::uuid AS session_assignment_role_type_id,
     NULL::character varying AS session_assignment_name,
     room_conflicts.conflicting_session_id AS conflict_session_id,
-    NULL::text AS conflict_session_title,
+    room_conflicts.conflicting_session_title AS conflict_session_title,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     room_conflicts.id AS conflict_id,
@@ -1455,7 +1494,9 @@ UNION
 UNION
  SELECT person_schedule_conflicts.session_id,
     person_schedule_conflicts.title AS session_title,
+    person_schedule_conflicts.start_time AS session_start_time,
     person_schedule_conflicts.room_id,
+    person_schedule_conflicts.room_name,
     person_schedule_conflicts.person_id,
     person_schedule_conflicts.name AS person_name,
     person_schedule_conflicts.published_name AS person_published_name,
@@ -1467,13 +1508,15 @@ UNION
     person_schedule_conflicts.conflict_session_assignment_role_type_id,
     person_schedule_conflicts.conflict_session_assignment_name,
     person_schedule_conflicts.id AS conflict_id,
-    'person_session_conflict'::text AS conflict_type
+    'person_schedule_conflict'::text AS conflict_type
    FROM public.person_schedule_conflicts
   WHERE (person_schedule_conflicts.back_to_back = false)
 UNION
  SELECT person_schedule_conflicts.session_id,
     person_schedule_conflicts.title AS session_title,
+    person_schedule_conflicts.start_time AS session_start_time,
     person_schedule_conflicts.room_id,
+    person_schedule_conflicts.room_name,
     person_schedule_conflicts.person_id,
     person_schedule_conflicts.name AS person_name,
     person_schedule_conflicts.published_name AS person_published_name,
@@ -1485,7 +1528,7 @@ UNION
     person_schedule_conflicts.conflict_session_assignment_role_type_id,
     person_schedule_conflicts.conflict_session_assignment_name,
     person_schedule_conflicts.id AS conflict_id,
-    'person_session_conflict'::text AS conflict_type
+    'person_back_to_back'::text AS conflict_type
    FROM public.person_schedule_conflicts
   WHERE (person_schedule_conflicts.back_to_back = true);
 
@@ -1990,6 +2033,14 @@ ALTER TABLE ONLY public.formats
 
 
 --
+-- Name: ignored_conflicts ignored_conflicts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ignored_conflicts
+    ADD CONSTRAINT ignored_conflicts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: label_dimensions label_dimensions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2475,6 +2526,13 @@ CREATE UNIQUE INDEX index_exclusions_sessions_on_exclusion_id_and_session_id ON 
 --
 
 CREATE INDEX index_exclusions_sessions_on_session_id ON public.exclusions_sessions USING btree (session_id);
+
+
+--
+-- Name: index_ignored_conflicts_on_conflict_id_and_conflict_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ignored_conflicts_on_conflict_id_and_conflict_type ON public.ignored_conflicts USING btree (conflict_id, conflict_type);
 
 
 --
@@ -3054,6 +3112,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220623144036'),
 ('20220623145514'),
 ('20220623172955'),
-('20220624121252');
+('20220624121252'),
+('20220628121934');
 
 

@@ -1,7 +1,7 @@
 class Conflicts::SessionConflictSerializer
   include JSONAPI::Serializer
 
-  attribute :person_id, :person_name, :person_published_name,
+  attribute :id, :person_id, :person_name, :person_published_name,
             :session_assignment_id,
             :session_id, :session_title, :session_start_time,
             :conflict_session_id, :conflict_session_title,

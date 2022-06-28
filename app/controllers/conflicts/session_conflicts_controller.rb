@@ -1,36 +1,17 @@
 class Conflicts::SessionConflictsController < ApplicationController
   respond_to :json
 
-  def index
+  # Add the requested conflict id to the ignored conflicts
+  def ignore
     authorize Conflicts::SessionConflict, policy_class: Conflicts::SessionConflictPolicy
 
-    per_page = params[:perPage]&.to_i || Conflicts::SessionConflict.default_per_page
-    current_page = params[:current_page]&.to_i
+    IgnoredConflict.transaction do
+      permitted = params.permit(:conflict_id, :conflict_type)
 
-    collection = Conflicts::SessionConflict
-                  .includes([:session,:person,:session_assignment,:room])
-                  .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                  .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                  .distinct.page(current_page).per(per_page)
+      ignored = IgnoredConflict.create(permitted)
+    end
 
-    collection_total = collection.total_count
-    full_collection_total = Conflicts::SessionConflict.distinct.count
-
-    meta = {}
-    meta[:total] = collection_total
-    meta[:full_total] = full_collection_total ? full_collection_total : collection_total
-    meta[:current_page] = current_page if current_page.present?
-    meta[:perPage] = per_page if per_page.present?
-
-    options = {
-      meta: meta,
-      params: {
-        domain: "#{request.base_url}",
-        current_person: current_person
-      }
-    }
-    render json: Conflicts::SessionConflictSerializer.new(collection,options).serializable_hash(),
-           content_type: 'application/json'
+    render status: :ok, json: {}.to_json, content_type: 'application/json'
   end
 
   def conflicts_with
@@ -42,6 +23,7 @@ class Conflicts::SessionConflictsController < ApplicationController
                   .where("conflict_session_id = ?", session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
                   .distinct
 
     meta = {}
@@ -70,6 +52,7 @@ class Conflicts::SessionConflictsController < ApplicationController
                   .where("session_id = ?", session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
                   .distinct
 
     meta = {}
