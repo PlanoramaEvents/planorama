@@ -1,0 +1,2 @@
+class IgnoredConflict < ApplicationRecord
+end

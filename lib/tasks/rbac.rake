@@ -494,6 +494,11 @@ namespace :rbac do
         "back_to_back_to_back": true,
         "person_exclusion_conflicts": true,
         "multiple_sessions_in_room": true
+      },
+      "session_conflict": {
+        "conflicts_with": true,
+        "conflicts_for": true,
+        "ignore": true
       }
     })
   end
@@ -745,6 +750,11 @@ namespace :rbac do
         "back_to_back_to_back": true,
         "person_exclusion_conflicts": true,
         "multiple_sessions_in_room": true
+      },
+      "session_conflict": {
+        "conflicts_with": true,
+        "conflicts_for": true,
+        "ignore": true
       }
     })
   end

@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   get 'people/me', to: 'people#me'
   post 'person/import', to: 'people#import'
   post 'person/update_all', to: 'people#update_all'
-  post 'person/session_names', to: 'people#session_names'  
+  post 'person/session_names', to: 'people#session_names'
   resources :people, path: 'person' do
     get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
@@ -85,8 +85,9 @@ Rails.application.routes.draw do
   get 'agreement/latest', to: 'agreements#latest'
   resources :agreements, path: 'agreement'
 
-  get 'session_conflict', to: 'conflicts/session_conflicts#index'
+  get 'session_conflict/ignore/:conflict_type/:conflict_id', to: 'conflicts/session_conflicts#ignore'
   get 'session_conflict/conflicts_for/:session_id', to: 'conflicts/session_conflicts#conflicts_for'
+  get 'session_conflict/conflicts_with/:session_id', to: 'conflicts/session_conflicts#conflicts_with'
 
   # Surveys and their nested resources
   post 'survey/:survey_id/assign_people', to: 'surveys#assign_people'

@@ -2,6 +2,7 @@ module MigrationHelpers
   module PlanoViews
     def self.create_views
       self.create_person_schedules
+      self.create_person_and_exclusions
       self.create_room_allocations
       self.create_room_conflicts
       self.create_person_schedule_conflicts
@@ -35,11 +36,7 @@ module MigrationHelpers
             (sessions.start_time + (sessions.duration || ' minute')::interval) as end_time,
             sessions.duration,
             sessions.room_id,
-            areas.area_list,
-            r.name as room_name,
-            r.room_set_id,
-            sessions.format_id,
-            f.name as format_name
+            sessions.format_id
           from
             session_assignments sa
           join
@@ -52,25 +49,6 @@ module MigrationHelpers
           left join
             sessions
             on sessions.id = sa.session_id
-          right join
-            rooms r on
-            r.id = sessions.room_id
-          right join
-            formats f on
-            f.id = sessions.format_id
-          right join (
-            select
-              sessions.id as session_id,
-              array_remove(
-              	array_agg(areas.name),
-              	NULL
-              ) as area_list
-              from sessions
-              left join session_areas
-              on session_areas.session_id = sessions.id
-              right join areas on areas.id = session_areas.area_id
-              group by sessions.id
-          ) as areas on areas.session_id = sessions.id
           where
             sa.session_assignment_role_type_id is not null
             and sessions.room_id is not null
@@ -84,7 +62,6 @@ module MigrationHelpers
         CREATE OR REPLACE VIEW room_allocations AS
         select
         	s.room_id,
-          r.name as room_name,
           s.title as session_title,
         	s.start_time,
         	(s.start_time + (s.duration || ' minute')::interval) as end_time,
@@ -105,7 +82,6 @@ module MigrationHelpers
           select
             CONCAT(b1.room_id, ':', b1.session_id) as id,
           	b1.room_id,
-            b1.room_name,
             b1.session_title,
           	b1.session_id,
           	b1.start_time,
@@ -145,7 +121,6 @@ module MigrationHelpers
             GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
             ps1.session_id,
             ps1.title,
-            ps1.area_list,
             ps1.start_time,
             ps1.end_time,
             ps1.duration,
@@ -154,17 +129,14 @@ module MigrationHelpers
             ps1.session_assignment_name as session_assignment_name,
             ps1.session_assignment_role_type,
             ps1.room_id,
-            ps1.room_name,
             ps2.session_id as conflict_session_id,
             ps2.title as conflict_session_title,
-            ps2.area_list as conflict_area_list,
             ps2.end_time as conflict_end_time,
             ps2.duration as conflict_duration,
             ps2.session_assignment_role_type_id as conflict_session_assignment_role_type_id,
             ps2.session_assignment_role_type as conflict_session_assignment_role_type,
             ps2.session_assignment_name as conflict_session_assignment_name,
             ps2.room_id as conflict_room_id,
-            ps2.room_name as conflict_room_name,
             case
             when
               ((ps2.start_time >= ps1.end_time) and (ps2.start_time <= (ps1.end_time + (40 || ' minute')::interval)))
@@ -192,6 +164,30 @@ module MigrationHelpers
       ActiveRecord::Base.connection.execute(query)
     end
 
+    def self.create_person_and_exclusions
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW person_and_exclusions AS
+          select
+            pe.exclusion_id,
+          	pe.person_id,
+          	s.id as session_id,
+          	s.start_time,
+            (s.start_time + (s.duration || ' minute')::interval) as end_time,
+          	s.title
+          from
+          	person_exclusions pe
+          left join exclusions_sessions es on
+          	es.exclusion_id = pe.exclusion_id
+          left join sessions s on
+          	s.id = es.session_id
+          where
+          	session_id is not null
+          order by
+          	pe.person_id, session_id
+      SQL
+      ActiveRecord::Base.connection.execute(query)
+    end
+
     def self.create_person_exclusion_conflicts
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW person_exclusion_conflicts AS
@@ -203,13 +199,14 @@ module MigrationHelpers
             person_schedules.con_state,
              es.exclusion_id,
              es.session_id AS excluded_session_id,
+             s.title as excluded_session_title,
              person_schedules.session_id,
              person_schedules.title,
-             person_schedules.area_list,
              person_schedules.start_time,
              person_schedules.end_time,
              person_schedules.duration,
              person_schedules.session_assignment_role_type_id,
+             person_schedules.session_assignment_id,
              person_schedules.session_assignment_name,
              person_schedules.session_assignment_role_type
             FROM (((public.person_schedules
@@ -233,7 +230,6 @@ module MigrationHelpers
             psc1.con_state,
             psc1.session_id,
             psc1.title,
-            psc1.area_list,
             psc1.start_time,
             psc1.end_time,
             psc1.duration as duration,
@@ -242,10 +238,8 @@ module MigrationHelpers
             psc1.session_assignment_name as session_assignment_name,
             psc1.session_assignment_role_type,
             psc1.room_id,
-            psc1.room_name,
             psc2.session_id as middle_session_id,
             psc2.title as middle_title,
-            psc2.area_list as middle_area_list,
             psc2.start_time as middle_start_time,
             psc2.end_time as middle_end_time,
             psc2.duration as middle_duration,
@@ -254,18 +248,15 @@ module MigrationHelpers
             psc2.session_assignment_name as middle_session_assignment_name,
             psc2.session_assignment_role_type as middle_session_assignment_role_type,
             psc2.room_id as middle_room_id,
-            psc2.room_name as middle_room_name,
             psc2.conflict_session_id,
             psc2.conflict_session_title,
-            psc2.conflict_area_list,
             psc2.conflict_start_time,
             psc2.conflict_end_time,
             psc2.conflict_duration,
             psc2.conflict_session_assignment_role_type_id,
             psc2.conflict_session_assignment_role_type,
             psc2.conflict_session_assignment_name,
-            psc2.conflict_room_id,
-            psc2.conflict_room_name as conflict_room_name
+            psc2.conflict_room_id
           from
             person_schedule_conflicts psc1
           inner join person_schedule_conflicts psc2 on
@@ -283,7 +274,11 @@ module MigrationHelpers
             CONCAT(session_assignments.id, ':', people.id, ':', sessions.id) as id,
             session_assignments.id as session_assignment_id,
             people.id as person_id,
+            people.name as person_name,
+            people.published_name as person_published_name,
             sessions.id as session_id,
+            sessions.title as session_title,
+            sessions.start_time as session_start_time,
             session_assignments.session_assignment_role_type_id as session_assignment_role_type_id,
             sart.role_type as session_assignment_role_type,
             sart.name as session_assignment_name
@@ -332,30 +327,61 @@ module MigrationHelpers
     end
 
     def self.create_session_conflicts
+      # change conflict_type etc to polymorphic relationship
+      # self.create_person_back_to_back_to_back
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW session_conflicts AS
+            select
+              session_id,
+              title as session_title,
+              start_time as session_start_time,
+              CAST(NULL as uuid) as room_id,
+              person_id,
+              name as person_name,
+              published_name as person_published_name,
+              session_assignment_id,
+              session_assignment_role_type_id,
+              session_assignment_name,
+              excluded_session_id as conflict_session_id,
+              excluded_session_title as conflict_session_title,
+              CAST(NULL as uuid) as conflict_session_assignment_role_type_id,
+              null as conflict_session_assignment_name,
+              id as conflict_id,
+              'person_exclusion_conflict' as conflict_type
+            from person_exclusion_conflicts
+          UNION
           select
             session_id,
+            session_title,
+            session_start_time,
             CAST(NULL as uuid) as room_id,
             person_id,
+            person_name,
+            person_published_name,
             session_assignment_id,
             session_assignment_role_type_id,
             session_assignment_name,
             CAST(NULL as uuid) as conflict_session_id,
+            NULL as conflict_session_title,
             CAST(NULL as uuid) as conflict_session_assignment_role_type_id,
             null as conflict_session_assignment_name,
             id as conflict_id,
-            'availability' as conflict_type
+            'availability_conflict' as conflict_type
           from availability_conflicts
           UNION
           select
             session_id,
+            session_title,
+            start_time as session_start_time,
             room_id,
             CAST(NULL as uuid) as person_id,
+            NULL as person_name,
+            NULL as person_published_name,
             CAST(NULL as uuid) as session_assignment_id,
             CAST(NULL as uuid) as session_assignment_role_type_id,
             null as session_assignment_name,
             conflicting_session_id as conflict_session_id,
+            conflicting_session_title as conflict_session_title,
             CAST(NULL as uuid) as conflict_session_assignment_role_type_id,
             null as conflict_session_assignment_name,
             id as conflict_id,
@@ -365,33 +391,43 @@ module MigrationHelpers
           UNION
           select
             session_id,
+            title as session_title,
+            start_time as session_start_time,
             room_id,
             person_id,
+            name as person_name,
+            published_name as person_published_name,
             session_assignment_id,
             session_assignment_role_type_id,
             session_assignment_name,
             conflict_session_id,
+            conflict_session_title,
             conflict_session_assignment_role_type_id,
             conflict_session_assignment_name,
             id as conflict_id,
-            'person_session_conflict' as conflict_type
+            'person_schedule_conflict' as conflict_type
           from person_schedule_conflicts
           where person_schedule_conflicts.back_to_back = false
           UNION
-          select
+        select
             session_id,
+            title as session_title,
+            start_time as session_start_time,
             room_id,
             person_id,
+            name person_name,
+            published_name as person_published_name,
             session_assignment_id,
             session_assignment_role_type_id,
             session_assignment_name,
             conflict_session_id,
+            conflict_session_title,
             conflict_session_assignment_role_type_id,
             conflict_session_assignment_name,
             id as conflict_id,
-            'back_to_back' as conflict_type
+            'person_back_to_back' as conflict_type
           from person_schedule_conflicts
-          where person_schedule_conflicts.back_to_back = true;
+          where person_schedule_conflicts.back_to_back = true
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
@@ -417,6 +453,9 @@ module MigrationHelpers
       SQL
       ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS room_allocations;
+      SQL
+      ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS person_and_exclusions;
       SQL
       ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS person_schedules;

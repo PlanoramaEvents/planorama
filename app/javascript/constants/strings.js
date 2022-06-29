@@ -197,6 +197,9 @@ module.exports = {
     ERROR_GENERIC_UNRECOVERABLE: (email) => twoLines("The server has encountered an internal error and was unable to complete your request.",
     `Please contact the server administrator at ${email} and let them know the time and date the error occurred.`),
 
+    ADD_CONFLICT_IGNORE_SUCCESS: "Ignore Conflict Added",
+    ADD_CONFLICT_IGNORE_ERROR: "Ignore Conflict Failed",
+
     // Social Links Errors
     TWITTER_ID_INVALID_MSG: "Twitter ID is not in a valid format",
     FACEBOOK_ID_INVALID_MSG: "Facebook ID is not in a valid format",
@@ -237,16 +240,6 @@ module.exports = {
         languages_fluent_in: "Languages spoken"
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
-    CONFLICT_TEXT: {
-        availability: (person_name, conflict_session_name, room_name) => `is outside of availability`,
-        // room has multiple sessions ... room, conflicting session
-        room_conflict: (person_name, conflict_session_name, room_name) => `${room_name} has multiple sessions`,
-        // Person has conflicting sessions ...
-        person_session_conflict: (person_name, conflict_session_name, room_name) => `${person_name} is double booked with "${conflict_session_name}"`,
-        // Person is back to back with conflicting sessions ...
-        back_to_back: (person_name, conflict_session_name, room_name) => `${person_name} has back to back with "${conflict_session_name}"`,
-        default: 'a conflict'
-    },
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",

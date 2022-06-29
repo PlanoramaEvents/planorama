@@ -14,11 +14,19 @@ class Session < ApplicationRecord
 
   belongs_to :room, required: false
   belongs_to :age_restriction, required: false
+  belongs_to :room_set, required: false
 
   before_save :check_time_and_duration, :keep_who_did_it, :keep_interest_trail, :schedule_consistency
 
 
-  has_many :session_conflicts, class_name: 'Conflicts::SessionConflict'
+  has_many :session_conflicts,
+    -> { where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)") },
+    class_name: 'Conflicts::SessionConflict'
+
+  # Get where this session is on the other side of the conflict relationship
+  has_many :conflict_sessions,
+    -> { where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)") },
+    foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
 
   has_and_belongs_to_many :room_services
 
@@ -63,7 +71,7 @@ class Session < ApplicationRecord
     draft: 'draft',
     reviewed: 'reviewed',
     revised: 'revised',
-    revised: 'dropped'
+    dropped: 'dropped'
   }
 
   enum environment: {
@@ -119,6 +127,7 @@ class Session < ApplicationRecord
   def self.conflict_counts
     sessions = Session.arel_table
     conflicts = Conflicts::SessionConflict.arel_table
+    ignored_conflicts = ::IgnoredConflict.arel_table
 
     sessions.project(
       sessions[:id].as('session_id'),
@@ -129,8 +138,12 @@ class Session < ApplicationRecord
       sessions[:id].eq(conflicts[:session_id])
       .or(sessions[:id].eq(conflicts[:conflict_session_id]))
       .and(
-        conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible']).and(
-          conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])
+        conflicts[:session_assignment_name].eq(nil).or(conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])).and(
+          conflicts[:conflict_session_assignment_name].eq(nil).or(conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible']))
+        ).and(
+          conflicts[:conflict_id].not_in(
+            ignored_conflicts.project(ignored_conflicts[:conflict_id])
+          )
         )
       )
     )

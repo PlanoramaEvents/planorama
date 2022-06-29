@@ -1,6 +1,9 @@
 import AreaSelectForSearch from './area_select_for_search'
 
 export const session_columns = [
+  // {
+  //   key: 'id'
+  // },
   {
     key: 'title',
     sortKey: 'sessions.title',
