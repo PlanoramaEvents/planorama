@@ -35,11 +35,7 @@ module MigrationHelpers
             (sessions.start_time + (sessions.duration || ' minute')::interval) as end_time,
             sessions.duration,
             sessions.room_id,
-            areas.area_list,
-            r.name as room_name,
-            r.room_set_id,
-            sessions.format_id,
-            f.name as format_name
+            sessions.format_id
           from
             session_assignments sa
           join
@@ -52,25 +48,6 @@ module MigrationHelpers
           left join
             sessions
             on sessions.id = sa.session_id
-          right join
-            rooms r on
-            r.id = sessions.room_id
-          right join
-            formats f on
-            f.id = sessions.format_id
-          right join (
-            select
-              sessions.id as session_id,
-              array_remove(
-              	array_agg(areas.name),
-              	NULL
-              ) as area_list
-              from sessions
-              left join session_areas
-              on session_areas.session_id = sessions.id
-              right join areas on areas.id = session_areas.area_id
-              group by sessions.id
-          ) as areas on areas.session_id = sessions.id
           where
             sa.session_assignment_role_type_id is not null
             and sessions.room_id is not null
@@ -84,7 +61,6 @@ module MigrationHelpers
         CREATE OR REPLACE VIEW room_allocations AS
         select
         	s.room_id,
-          r.name as room_name,
           s.title as session_title,
         	s.start_time,
         	(s.start_time + (s.duration || ' minute')::interval) as end_time,
@@ -105,7 +81,6 @@ module MigrationHelpers
           select
             CONCAT(b1.room_id, ':', b1.session_id) as id,
           	b1.room_id,
-            b1.room_name,
             b1.session_title,
           	b1.session_id,
           	b1.start_time,
@@ -145,7 +120,6 @@ module MigrationHelpers
             GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
             ps1.session_id,
             ps1.title,
-            ps1.area_list,
             ps1.start_time,
             ps1.end_time,
             ps1.duration,
@@ -154,17 +128,14 @@ module MigrationHelpers
             ps1.session_assignment_name as session_assignment_name,
             ps1.session_assignment_role_type,
             ps1.room_id,
-            ps1.room_name,
             ps2.session_id as conflict_session_id,
             ps2.title as conflict_session_title,
-            ps2.area_list as conflict_area_list,
             ps2.end_time as conflict_end_time,
             ps2.duration as conflict_duration,
             ps2.session_assignment_role_type_id as conflict_session_assignment_role_type_id,
             ps2.session_assignment_role_type as conflict_session_assignment_role_type,
             ps2.session_assignment_name as conflict_session_assignment_name,
             ps2.room_id as conflict_room_id,
-            ps2.room_name as conflict_room_name,
             case
             when
               ((ps2.start_time >= ps1.end_time) and (ps2.start_time <= (ps1.end_time + (40 || ' minute')::interval)))
@@ -206,7 +177,6 @@ module MigrationHelpers
              s.title as excluded_session_title,
              person_schedules.session_id,
              person_schedules.title,
-             person_schedules.area_list,
              person_schedules.start_time,
              person_schedules.end_time,
              person_schedules.duration,
@@ -235,7 +205,6 @@ module MigrationHelpers
             psc1.con_state,
             psc1.session_id,
             psc1.title,
-            psc1.area_list,
             psc1.start_time,
             psc1.end_time,
             psc1.duration as duration,
@@ -244,10 +213,8 @@ module MigrationHelpers
             psc1.session_assignment_name as session_assignment_name,
             psc1.session_assignment_role_type,
             psc1.room_id,
-            psc1.room_name,
             psc2.session_id as middle_session_id,
             psc2.title as middle_title,
-            psc2.area_list as middle_area_list,
             psc2.start_time as middle_start_time,
             psc2.end_time as middle_end_time,
             psc2.duration as middle_duration,
@@ -256,18 +223,15 @@ module MigrationHelpers
             psc2.session_assignment_name as middle_session_assignment_name,
             psc2.session_assignment_role_type as middle_session_assignment_role_type,
             psc2.room_id as middle_room_id,
-            psc2.room_name as middle_room_name,
             psc2.conflict_session_id,
             psc2.conflict_session_title,
-            psc2.conflict_area_list,
             psc2.conflict_start_time,
             psc2.conflict_end_time,
             psc2.conflict_duration,
             psc2.conflict_session_assignment_role_type_id,
             psc2.conflict_session_assignment_role_type,
             psc2.conflict_session_assignment_name,
-            psc2.conflict_room_id,
-            psc2.conflict_room_name as conflict_room_name
+            psc2.conflict_room_id
           from
             person_schedule_conflicts psc1
           inner join person_schedule_conflicts psc2 on
@@ -347,7 +311,6 @@ module MigrationHelpers
               title as session_title,
               start_time as session_start_time,
               CAST(NULL as uuid) as room_id,
-              NULL as room_name,
               person_id,
               name as person_name,
               published_name as person_published_name,
@@ -367,7 +330,6 @@ module MigrationHelpers
             session_title,
             session_start_time,
             CAST(NULL as uuid) as room_id,
-            NULL as room_name,
             person_id,
             person_name,
             person_published_name,
@@ -387,7 +349,6 @@ module MigrationHelpers
             session_title,
             start_time as session_start_time,
             room_id,
-            room_name,
             CAST(NULL as uuid) as person_id,
             NULL as person_name,
             NULL as person_published_name,
@@ -408,7 +369,6 @@ module MigrationHelpers
             title as session_title,
             start_time as session_start_time,
             room_id,
-            room_name,
             person_id,
             name as person_name,
             published_name as person_published_name,
@@ -429,7 +389,6 @@ module MigrationHelpers
             title as session_title,
             start_time as session_start_time,
             room_id,
-            room_name,
             person_id,
             name person_name,
             published_name as person_published_name,
