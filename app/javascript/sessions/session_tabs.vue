@@ -19,7 +19,7 @@
       <b-tab title="Schedule" :active="tab === 'schedule'" lazy>
         <session-schedule></session-schedule>
       </b-tab>
-      <b-tab title="Conflicts" :active="tab === 'conflicts'">
+      <b-tab title="Conflicts" :active="tab === 'conflicts'" lazy>
         <session-conflicts
           :model="sessionConflictModel"
           :sessionId="id"

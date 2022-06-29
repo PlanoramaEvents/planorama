@@ -10,7 +10,10 @@ class SessionSerializer
              :open_for_interest, :instructions_for_interest,
              :require_signup, :waiting_list_size,
              :updated_by, :interest_opened_by, :interest_opened_at,
-             :room_id, :proofed, :format_id
+             :room_id, :proofed, :format_id, :room_set_id,
+             :status, :environment,
+             :tech_notes,
+             :minors_participation
 
   # tag_list
   attribute :tag_list do |session|
@@ -38,15 +41,11 @@ class SessionSerializer
     if session.has_attribute?(:conflict_count)
       session.conflict_count > 0
     else
-      session
-        .session_conflicts
-        .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-        .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-        .count > 0
+      (session.session_conflicts.count > 0) || (session.conflict_sessions.count > 0)
     end
   end
 
-  has_many :session_areas, serializer: SessionAreaSerializer,
+  has_many :session_areas, lazy_load_data: true, serializer: SessionAreaSerializer,
           links: {
             self: -> (object, params) {
               "#{params[:domain]}/session/#{object.id}"
@@ -66,7 +65,7 @@ class SessionSerializer
              }
            }
 
-  has_one :format,
+  has_one :format, lazy_load_data: true,
           if: Proc.new { |record| record.format },
           links: {
             self: -> (object, params) {
@@ -77,14 +76,25 @@ class SessionSerializer
             }
           }
 
-  has_one :room,
+  has_one :room_set, lazy_load_data: true,
+          if: Proc.new { |record| record.room_set },
+          links: {
+            self: -> (object, params) {
+              "#{params[:domain]}/session/#{object.id}"
+            },
+            related: -> (object, params) {
+              "#{params[:domain]}/room_set/#{object.room_set_id}"
+            }
+          }
+
+  has_one :room, lazy_load_data: true,
           if: Proc.new { |record| record.room },
           links: {
             self: -> (object, params) {
               "#{params[:domain]}/session/#{object.id}"
             },
             related: -> (object, params) {
-              "#{params[:domain]}/room/#{object.room.id}"
+              "#{params[:domain]}/room/#{object.room_id}"
             }
           }
 end

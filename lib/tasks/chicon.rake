@@ -1,4 +1,19 @@
 namespace :chicon do
+  desc ""
+  task init_age_restrictions: :environment do
+    unless AgeRestriction.find_by_name('18+')
+      AgeRestriction.create!(
+        name: '18+'
+      )
+    end
+
+    unless AgeRestriction.find_by_name('21+')
+      AgeRestriction.create!(
+       name: '21+'
+      )
+    end
+  end
+
   desc "Ensure that the session formats are correct"
   task fix_formats: :environment do
     [
@@ -55,6 +70,41 @@ namespace :chicon do
     if format
       Session.where(format_id: format.id).update_all(format_id: new_format.id)
       format.delete
+    end
+  end
+
+  desc "Map Chicon Exclusions to Session"
+  task map_session_to_exclusion: :environment do
+    mapping = {
+      'Hugo Award Ceremony' => ['Hugo Award Ceremony'],
+      'Hugo Award Ceremony rehearsal' => ['Hugo Award Ceremony Rehersal'],
+      'Masquerade' => ['Masquerade'],
+      'Masquerade rehearsal' => ['Masquerade Rehersal'],
+      'Opening Ceremony' => ['Opening Ceremony'],
+      'Closing Ceremony' => ['Closing Ceremony'],
+      'WSFS Business Meeting' => ['WSFS Business Meeting (Friday)', 'WSFS Business Meeting (Monday)', 'WSFS Business Meeting (Saturday)', 'WSFS Business Meeting (Sunday)',],
+      'Mark Protection Committee meetings' => ['Mark Protection Committee Meeting'],
+      'Joe Siclari and Edie Stern GoH highlight session' => ['Joe Siclari and Edie Stern Session'],
+      'Floyd Norman highlight session'=> ['Floyd Norman Session'],
+      'Eve L. Ewing highlight session' => ['Eve L Ewing Session'],
+      'Gene Ha highlight session' => ['Gene Ha Session'],
+      'Eric Wilkerson highlight session' => ['Eric Wilkerson Session'],
+      'Erle Korshak highlight session' => ['Remembering Erle Melvin Korshak']
+    }
+    # find session, find exclusion
+
+    mapping.each do |ex_text, session_list|
+      exclusion = Exclusion.find_by title: ex_text
+      if exclusion
+        session_list.each do |title|
+          session = Session.find_by title: title
+          next unless session
+          next if exclusion.sessions.include?(session)
+
+          puts "#{ex_text} --> #{session}"
+          exclusion.sessions << session
+        end
+      end
     end
   end
 

@@ -4,6 +4,8 @@ class RoomSet < ApplicationRecord
   include RankedModel
   ranks :sort_order
 
+  has_many :sessions
+
   has_many :rooms
   validates_presence_of :name
 

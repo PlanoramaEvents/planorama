@@ -88,6 +88,7 @@ namespace :rbac do
           "submissions": false,
           "update": true,
           "update_all": false,
+          "session_names": false,
           "create": false,
           "destroy": false
       },
@@ -309,6 +310,7 @@ namespace :rbac do
           "submissions": true,
           "update": true,
           "update_all": true,
+          "session_names": true,
           "create": true,
           "destroy": true
       },
@@ -478,13 +480,24 @@ namespace :rbac do
         "panels_with_too_few_people": true,
         "panels_with_too_many_people": true,
         "participants_over_session_limits": true,
-        "participants_over_con_session_limits": true
+        "participants_over_con_session_limits": true,
+        "non_accepted_on_schedule": true,
+        "invited_accepted_not_scheduled": true,
+        "session_with_no_moderator": true,
+        "scheduled_session_no_people": true,
+        "assigned_sessions_not_scheduled": true
       },
       "conflict_report": {
         "people_outside_availability": true,
         "people_double_booked": true,
         "back_to_back": true,
-        "back_to_back_to_back": true
+        "back_to_back_to_back": true,
+        "person_exclusion_conflicts": true,
+        "multiple_sessions_in_room": true
+      },
+      "session_conflict": {
+        "conflicts_with": true,
+        "conflicts_for": true
       }
     })
   end
@@ -552,6 +565,7 @@ namespace :rbac do
           "submissions": true,
           "update": true,
           "update_all": true,
+          "session_names": true,
           "create": true,
           "destroy": true
       },
@@ -721,13 +735,24 @@ namespace :rbac do
         "panels_with_too_few_people": true,
         "panels_with_too_many_people": true,
         "participants_over_session_limits": true,
-        "participants_over_con_session_limits": true
+        "participants_over_con_session_limits": true,
+        "non_accepted_on_schedule": true,
+        "invited_accepted_not_scheduled": true,
+        "session_with_no_moderator": true,
+        "scheduled_session_no_people": true,
+        "assigned_sessions_not_scheduled": true
       },
       "conflict_report": {
         "people_outside_availability": true,
         "people_double_booked": true,
         "back_to_back": true,
-        "back_to_back_to_back": true
+        "back_to_back_to_back": true,
+        "person_exclusion_conflicts": true,
+        "multiple_sessions_in_room": true
+      },
+      "session_conflict": {
+        "conflicts_with": true,
+        "conflicts_for": true
       }
     })
   end

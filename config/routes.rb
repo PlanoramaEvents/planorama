@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   get 'people/me', to: 'people#me'
   post 'person/import', to: 'people#import'
   post 'person/update_all', to: 'people#update_all'
+  post 'person/session_names', to: 'people#session_names'
   resources :people, path: 'person' do
     get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
@@ -56,6 +57,11 @@ Rails.application.routes.draw do
   get 'report/session_reports/panels_with_too_few_people', to: 'reports/session_reports#panels_with_too_few_people'
   get 'report/session_reports/panels_with_too_many_people', to: 'reports/session_reports#panels_with_too_many_people'
 
+  get 'report/session_reports/invited_accepted_not_scheduled', to: 'reports/session_reports#invited_accepted_not_scheduled'
+  get 'report/session_reports/session_with_no_moderator', to: 'reports/session_reports#session_with_no_moderator'
+  get 'report/session_reports/assigned_sessions_not_scheduled', to: 'reports/session_reports#assigned_sessions_not_scheduled'
+  get 'report/session_reports/scheduled_session_no_people', to: 'reports/session_reports#scheduled_session_no_people'
+  get 'report/session_reports/non_accepted_on_schedule', to: 'reports/session_reports#non_accepted_on_schedule'
   get 'report/session_reports/participants_over_session_limits', to: 'reports/session_reports#participants_over_session_limits'
   get 'report/session_reports/participants_over_con_session_limits', to: 'reports/session_reports#participants_over_con_session_limits'
 
@@ -63,6 +69,8 @@ Rails.application.routes.draw do
   get 'report/conflict_reports/people_double_booked', to: 'reports/conflict_reports#people_double_booked'
   get 'report/conflict_reports/back_to_back', to: 'reports/conflict_reports#back_to_back'
   get 'report/conflict_reports/back_to_back_to_back', to: 'reports/conflict_reports#back_to_back_to_back'
+  get 'report/conflict_reports/person_exclusion_conflicts', to: 'reports/conflict_reports#person_exclusion_conflicts'
+  get 'report/conflict_reports/multiple_sessions_in_room', to: 'reports/conflict_reports#multiple_sessions_in_room'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
@@ -79,6 +87,7 @@ Rails.application.routes.draw do
 
   get 'session_conflict', to: 'conflicts/session_conflicts#index'
   get 'session_conflict/conflicts_for/:session_id', to: 'conflicts/session_conflicts#conflicts_for'
+  get 'session_conflict/conflicts_with/:session_id', to: 'conflicts/session_conflicts#conflicts_with'
 
   # Surveys and their nested resources
   post 'survey/:survey_id/assign_people', to: 'surveys#assign_people'

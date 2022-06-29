@@ -156,15 +156,15 @@ namespace :submission do
           check_update_linked: check_linked
         )
       if question.id == '00000000-0000-0000-0000-000000000052'
-        fix_yesnomaybe(question_id: '00000000-0000-0000-0000-000000000051', submission_id: submission.id, val: val)
+        fix_yesnomaybe(question_id: '00000000-0000-0000-0000-000000000051', submission_id: submission.id, val: val, check_linked: check_linked)
       end
       if question.id == '00000000-0000-0000-0000-000000000055'
-        fix_yesnomaybe(question_id: '00000000-0000-0000-0000-000000000054', submission_id: submission.id, val: val)
+        fix_yesnomaybe(question_id: '00000000-0000-0000-0000-000000000054', submission_id: submission.id, val: val, check_linked: check_linked)
       end
     end
   end
 
-  def fix_yesnomaybe(question_id: , submission_id:, val:)
+  def fix_yesnomaybe(question_id: , submission_id:, val:, check_linked: false)
     existing_response = Survey::Response.find_or_create_by(question_id: question_id, submission_id: submission_id)
     if existing_response
       new_val = existing_response.response || Survey::Response.empty_json

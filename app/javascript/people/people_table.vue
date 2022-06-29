@@ -1,7 +1,7 @@
 <template>
   <div>
     <modal-form
-      title="Mass Edit State"
+      title="Bulk Edit Status"
       ref="mass-edit-state"
       @save="onConfirmMassEdit"
     >
@@ -17,14 +17,16 @@
     </modal-form>
 
     <modal-form
-      title="Mass Edit State Confirmation"
+      title="Bulk Edit Status Confirmation"
       ref="mass-edit-confirm"
       @save="onSaveMassEdit"
     >
       <p>
         Please confirm that you want to change the
-        status of {{editableIds.length}} {{editableIds.length == 1 ? 'person' : 'people'}}
+        status of {{editableIds.length}} {{editableIds.length == 1 ? 'person' : 'people'}} to '{{selectedConState}}'
+        <span v-if="declinedRejected">and they will be removed from the below sessions.</span>
       </p>
+      <people-session-names :declinedRejected="declinedRejected" :ids="editableIds"></people-session-names>
       <template #footer="{ ok, cancel }">
         <b-button variant="link" @click="cancel()">Cancel</b-button>
         <b-button variant="primary" @click="ok()">Save</b-button>
@@ -76,7 +78,7 @@
             variant="primary"
             @click="onEditStates(editableIds)"
             :disabled="editableIds.length == 0"
-          >Edit State(s)
+          >Edit Status(es)
           </b-button>
         </div>
       </template>
@@ -115,6 +117,7 @@ import { people_columns as columns } from './people';
 import { personModel as model } from '@/store/person.store'
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import PersonConStateSelector from '../components/person_con_state_selector'
+import PeopleSessionNames from './people_session_names';
 
 import searchStateMixin from '../store/search_state.mixin'
 
@@ -125,7 +128,8 @@ export default {
     TooltipOverflow,
     ModalForm,
     PersonAdd,
-    PersonConStateSelector
+    PersonConStateSelector,
+    PeopleSessionNames
   },
   mixins: [
     modelUtilsMixin,
@@ -138,6 +142,11 @@ export default {
     selectedConState: null,
     searchEmails: null,
   }),
+  computed: {
+    declinedRejected() {
+      return this.selectedConState === "declined" || this.selectedConState === "rejected"
+    }
+  },
   methods: {
     queries(searchEmails) {
       let queries = {

@@ -7,7 +7,7 @@ This software is open source! If you'd like to contribute, please email planoram
 
 [Planorama Data Privacy & Protection Policy](/planorama/privacy)
 
-Production version: 1.3.5
+Production version: 1.4.0
 
 Staging version: 1.4.0
 

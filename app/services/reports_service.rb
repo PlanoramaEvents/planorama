@@ -1,4 +1,65 @@
 module ReportsService
+
+  def self.assigned_sessions_not_scheduled
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and name != 'Reserve'")
+
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .joins(self.area_subquery)
+      .joins(:session_assignments)
+      .eager_load(:areas, {session_assignments: [:person]})
+      .where("session_assignments.session_assignment_role_type_id in (?)", active_roles.collect{|a| a.id})
+      .where("sessions.start_time is null or sessions.room_id is null")
+      .order('sessions.title')
+  end
+
+  def self.scheduled_session_no_people
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
+
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .joins(self.area_subquery)
+      .joins(:session_assignments)
+      .eager_load(:areas, :room)
+      .where("session_assignments.session_assignment_role_type_id not in (?)", active_roles.collect{|a| a.id})
+      .where("start_time is not null and room_id is not null")
+      .order(:start_time)
+  end
+
+
+  def self.sessions_with_no_moderator
+    sched_table = PersonSchedule.arel_table
+    session_and_roles = sched_table.project(
+      :session_id,
+      Arel::Nodes::NamedFunction.new('array_agg',[sched_table[:session_assignment_name]]).as('roles')
+    ).group(:session_id).as('session_and_roles')
+
+    sessions = Session.arel_table
+    joins = [
+      sessions.create_join(
+        session_and_roles,
+        sessions.create_on(
+          session_and_roles[:session_id].eq(sessions[:id]).and(
+            ::Arel.sql("'Moderator' != ALL(session_and_roles.roles)")
+          )
+        )
+      )
+    ]
+
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .joins(joins)
+      .joins(self.area_subquery)
+      .eager_load(:areas, :format, {session_assignments: [:person]})
+      .order(:start_time)
+  end
+
   # ReportsService.participant_and_con_session_limits
   def self.participant_and_con_session_limits(con_limit: 6)
     person_schedules = Arel::Table.new("person_schedules")

@@ -1,8 +1,9 @@
 class Conflicts::SessionConflictsController < ApplicationController
   respond_to :json
 
-  # TODO: policies
   def index
+    authorize Conflicts::SessionConflict, policy_class: Conflicts::SessionConflictPolicy
+
     per_page = params[:perPage]&.to_i || Conflicts::SessionConflict.default_per_page
     current_page = params[:current_page]&.to_i
 
@@ -23,28 +24,22 @@ class Conflicts::SessionConflictsController < ApplicationController
 
     options = {
       meta: meta,
-      include: [
-        :session,
-        :conflict_session,
-        :person,
-        :session_assignment,
-        :room
-      ],
       params: {
         domain: "#{request.base_url}",
         current_person: current_person
       }
     }
-    # options[:fields] = fields
     render json: Conflicts::SessionConflictSerializer.new(collection,options).serializable_hash(),
            content_type: 'application/json'
   end
 
-  def conflicts_for
+  def conflicts_with
+    authorize Conflicts::SessionConflict, policy_class: Conflicts::SessionConflictPolicy
+
     session_id = params[:session_id]
     collection = Conflicts::SessionConflict
-                  .includes([:session,:person,:session_assignment,:room])
-                  .where("session_id = ? or conflict_session_id = ?", session_id, session_id)
+                  .includes([:session])
+                  .where("conflict_session_id = ?", session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .distinct
@@ -55,18 +50,41 @@ class Conflicts::SessionConflictsController < ApplicationController
     options = {
       meta: meta,
       include: [
-        :session,
-        :conflict_session,
-        :person,
-        :session_assignment,
-        :room
+        # :session
       ],
       params: {
         domain: "#{request.base_url}",
         current_person: current_person
       }
     }
-    # options[:fields] = fields
+    render json: Conflicts::SessionConflictSerializer.new(collection,options).serializable_hash(),
+           content_type: 'application/json'
+  end
+
+  def conflicts_for
+    authorize Conflicts::SessionConflict, policy_class: Conflicts::SessionConflictPolicy
+
+    session_id = params[:session_id]
+    collection = Conflicts::SessionConflict
+                  .includes([:conflict_session])
+                  .where("session_id = ?", session_id)
+                  .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                  .distinct
+
+    meta = {}
+    meta[:total] = collection.count
+
+    options = {
+      meta: meta,
+      include: [
+        # :conflict_session
+      ],
+      params: {
+        domain: "#{request.base_url}",
+        current_person: current_person
+      }
+    }
     render json: Conflicts::SessionConflictSerializer.new(collection,options).serializable_hash(),
            content_type: 'application/json'
   end

@@ -237,16 +237,6 @@ module.exports = {
         languages_fluent_in: "Languages spoken"
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
-    CONFLICT_TEXT: {
-        availability: (person_name, conflict_session_name, room_name) => `is outside of availability`,
-        // room has multiple sessions ... room, conflicting session
-        room_conflict: (person_name, conflict_session_name, room_name) => `${room_name} has multiple sessions`,
-        // Person has conflicting sessions ...
-        person_session_conflict: (person_name, conflict_session_name, room_name) => `${person_name} is double booked with "${conflict_session_name}"`,
-        // Person is back to back with conflicting sessions ...
-        back_to_back: (person_name, conflict_session_name, room_name) => `${person_name} has back to back with "${conflict_session_name}"`,
-        default: 'a conflict'
-    },
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
