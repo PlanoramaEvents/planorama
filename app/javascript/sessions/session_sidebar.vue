@@ -3,7 +3,7 @@
     <sidebar-vue v-if="selected" model="session">
       <template #header>
         <h3>{{selected.title}}</h3>
-        <small class="text-muted d-block">Last updated:</small>
+        <small class="text-muted d-block">Last updated</small>
         <!-- <small class="text-muted d-block"> by <em><strong>{{selected.updated_by && selected.updated_by.name}}</strong></em></small> -->
         <small class="text-muted d-block"> on <em><strong>{{new Date(selected.updated_at).toLocaleString()}}</strong></em></small>
       </template>
@@ -11,10 +11,14 @@
         <b-row>
           <b-col>
             <dl>
+              <dt>Status:</dt>
+              <dd class="ml-2">
+                {{SESSION_STATUS[selected.status]}}
+              </dd>
               <dt>
                 Description:
               </dt>
-              <dd>
+              <dd class="ml-2">
                 <div v-html="selected.description"></div>
               </dd>
             </dl>
@@ -116,7 +120,7 @@ import { areaMixin, scheduledMixin, startTimeMixin } from './session_fields.mixi
 import { sessionConflictModel } from '@/store/session_conflict.store';
 import SessionConflicts from '@/conflicts/session_conflicts.vue';
 // import SessionAdminTab from './session_admin_tab';
-import { SESSION_ENVIRONMENT} from '@/constants/strings';
+import { SESSION_ENVIRONMENT, SESSION_STATUS} from '@/constants/strings';
 
 export default {
   name: 'SessionSidebar',
@@ -136,7 +140,8 @@ export default {
   ],
   data: () => ({
     sessionConflictModel,
-    SESSION_ENVIRONMENT
+    SESSION_ENVIRONMENT,
+    SESSION_STATUS
   }),
   computed: {
     editLink() {
