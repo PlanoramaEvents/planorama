@@ -5,8 +5,12 @@ class Conflicts::SessionConflictSerializer
             :session_assignment_id,
             :session_id, :session_title, :session_start_time,
             :conflict_session_id, :conflict_session_title,
-            :room_id, :room_name,
+            :room_id,
             :conflict_type
+
+  attribute :room_name do |record|
+    record.room ? record.room.name : ''
+  end
 
   has_one :room, lazy_load_data: true, serializer: ::RoomSerializer,
           if: Proc.new { |record| record.room },
