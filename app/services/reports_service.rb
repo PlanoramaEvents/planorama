@@ -1,7 +1,7 @@
 module ReportsService
 
   def self.assigned_sessions_not_scheduled
-    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and name != 'Reserve'")
 
     Session.select(
       ::Session.arel_table[Arel.star],
