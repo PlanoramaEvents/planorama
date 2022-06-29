@@ -1025,6 +1025,38 @@ CREATE TABLE public.person_agreements (
 
 
 --
+-- Name: person_exclusions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_exclusions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    exclusion_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: person_and_exclusions; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_and_exclusions AS
+ SELECT pe.exclusion_id,
+    pe.person_id,
+    s.id AS session_id,
+    s.start_time,
+    (s.start_time + ((s.duration || ' minute'::text))::interval) AS end_time,
+    s.title
+   FROM ((public.person_exclusions pe
+     LEFT JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
+     LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
+  WHERE (es.session_id IS NOT NULL)
+  ORDER BY pe.person_id, s.id;
+
+
+--
 -- Name: person_schedules; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -1147,20 +1179,6 @@ CREATE TABLE public.person_constraints (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
-);
-
-
---
--- Name: person_exclusions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_exclusions (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid,
-    exclusion_id uuid,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1431,7 +1449,6 @@ UNION
     availability_conflicts.session_title,
     availability_conflicts.session_start_time,
     NULL::uuid AS room_id,
-    NULL::text AS room_name,
     availability_conflicts.person_id,
     availability_conflicts.person_name,
     availability_conflicts.person_published_name,
@@ -1450,7 +1467,6 @@ UNION
     room_conflicts.session_title,
     room_conflicts.start_time AS session_start_time,
     room_conflicts.room_id,
-    room_conflicts.room_name,
     NULL::uuid AS person_id,
     NULL::character varying AS person_name,
     NULL::character varying AS person_published_name,
@@ -1470,7 +1486,6 @@ UNION
     person_schedule_conflicts.title AS session_title,
     person_schedule_conflicts.start_time AS session_start_time,
     person_schedule_conflicts.room_id,
-    person_schedule_conflicts.room_name,
     person_schedule_conflicts.person_id,
     person_schedule_conflicts.name AS person_name,
     person_schedule_conflicts.published_name AS person_published_name,
@@ -1490,7 +1505,6 @@ UNION
     person_schedule_conflicts.title AS session_title,
     person_schedule_conflicts.start_time AS session_start_time,
     person_schedule_conflicts.room_id,
-    person_schedule_conflicts.room_name,
     person_schedule_conflicts.person_id,
     person_schedule_conflicts.name AS person_name,
     person_schedule_conflicts.published_name AS person_published_name,
@@ -3101,4 +3115,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220623145514'),
 ('20220623172955'),
 ('20220624121252'),
+('20220628121934'),
 ('20220629132145');
+
+
