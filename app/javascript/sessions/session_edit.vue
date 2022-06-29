@@ -129,7 +129,7 @@ import ModelTags from '../components/model_tags';
 import PlanoEditor from '@/components/plano_editor';
 import { ValidationProvider, extend } from 'vee-validate';
 import { min_value } from 'vee-validate/dist/rules'
-import { SESSION_ENVIRONMENT } from '@/constants/strings'
+import { SESSION_ENVIRONMENT, SESSION_STATUS } from '@/constants/strings'
 
 extend('min_value', {
   ...min_value,
@@ -196,7 +196,16 @@ export default {
 
         this.session.session_areas_attributes = areasForSaving
       }
+    },
+    statusOptions() {
+      return [
+        {value: 'draft', text: SESSION_STATUS.draft},
+        {value: 'reviewed', text: SESSION_STATUS.reviewed},
+        {value: 'revised', text: SESSION_STATUS.revised},
+        {value: 'dropped', text: SESSION_STATUS.dropped}
+      ]
     }
+
   },
   methods: {
     edit() {

@@ -250,4 +250,10 @@ module.exports = {
         hybrid: "Hybrid",
         virtual: "Virtual"
     },
+    SESSION_STATUS: {
+        draft: "Draft",
+        reviewed: "Reviewed",
+        revised: "Revised",
+        dropped: "Drpped",
+    }
 }
