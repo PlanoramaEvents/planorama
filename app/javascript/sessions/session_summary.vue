@@ -66,6 +66,14 @@
             :checked="scheduled"
           >Scheduled</b-form-checkbox>
         </b-form-group>
+        <b-form-group label="Status" label-cols="auto">
+          <b-form-select v-model="session.status" @change="saveSession()">
+            <b-form-select-option value="draft">{{SESSION_STATUS.draft}}</b-form-select-option>
+            <b-form-select-option value="reviewed">{{SESSION_STATUS.reviewed}}</b-form-select-option>
+            <b-form-select-option value="revised">{{SESSION_STATUS.revised}}</b-form-select-option>
+            <b-form-select-option :title="scheduled ? SESSION_MUST_UNSCHEDULE : ''" value="dropped" :disabled="scheduled">{{SESSION_STATUS.dropped}}</b-form-select-option>
+          </b-form-select>
+        </b-form-group>
       </div>
     </div>
   </div>
@@ -75,6 +83,7 @@
 import { sessionModel } from '@/store/session.store'
 import modelUtilsMixin from '@/store/model_utils.mixin';
 import { scheduledMixin } from './session_fields.mixin';
+import { SESSION_STATUS, SESSION_MUST_UNSCHEDULE } from '@/constants/strings';
 
 import PlanoEditor from '../components/plano_editor';
 
@@ -87,6 +96,10 @@ export default {
     modelUtilsMixin,
     scheduledMixin
   ],
+  data: () => ({
+    SESSION_STATUS,
+    SESSION_MUST_UNSCHEDULE
+  }),
   computed: {
     session() {
       return this.selected_model(sessionModel);

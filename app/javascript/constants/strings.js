@@ -254,6 +254,7 @@ module.exports = {
         draft: "Draft",
         reviewed: "Reviewed",
         revised: "Revised",
-        dropped: "Drpped",
-    }
+        dropped: "Dropped",
+    },
+    SESSION_MUST_UNSCHEDULE: "You must unschedule a session before dropping it",
 }
