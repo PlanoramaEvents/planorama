@@ -19,7 +19,7 @@ class Conflicts::SessionConflictsController < ApplicationController
 
     session_id = params[:session_id]
     collection = Conflicts::SessionConflict
-                  .includes([:session])
+                  .includes([:session, :room])
                   .where("conflict_session_id = ?", session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
@@ -48,7 +48,7 @@ class Conflicts::SessionConflictsController < ApplicationController
 
     session_id = params[:session_id]
     collection = Conflicts::SessionConflict
-                  .includes([:conflict_session])
+                  .includes([:conflict_session, :room])
                   .where("session_id = ?", session_id)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
