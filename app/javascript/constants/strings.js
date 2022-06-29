@@ -244,4 +244,10 @@ module.exports = {
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
     SURVEY_PUBLIC_NO_DELETE: "You cannot delete a published survey. Close the survey to enable deletion.",
+    SESSION_ENVIRONMENT: {
+        unknown: "Unknown",
+        in_person: "In Person",
+        hybrid: "Hybrid",
+        virtual: "Virtual"
+    },
 }

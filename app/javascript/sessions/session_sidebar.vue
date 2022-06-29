@@ -55,11 +55,13 @@
               <dd v-if="!selected.area_list.length" class="ml-2 font-italic text-muted">None Selected</dd>
               <dt>Format</dt>
               <dd class="ml-2 font-italic">{{selected.format.name}}</dd>
-              <!-- <dt>Attendee Signup Required</dt>
+              <dt>Session Environment</dt>
+              <dd class="ml-2 font-italic">{{SESSION_ENVIRONMENT[selected.environment]}}</dd>
+              <dt>Attendee Signup Required</dt>
               <dd class="ml-2 font-italic">{{selected.require_signup ? 'Yes' : 'No'}}</dd>
               <dt class="ml-2">If "Yes", max openings</dt>
               <dd class="ml-3 font-italic">{{selected.maximum_people}}</dd>
-              <dd class="ml-3 font-italic text-muted" v-if="!selected.maximum_people">None Set</dd> -->
+              <dd class="ml-3 font-italic text-muted" v-if="!selected.maximum_people">None Set</dd>
               <dt>Interest Instructions</dt>
               <dd class="ml-2 font-italic" v-html="selected.instructions_for_interest"></dd>
               <dd class="ml-2 font-italic text-muted" v-if="!selected.instructions_for_interest">No Entry</dd>
@@ -114,6 +116,7 @@ import { areaMixin, scheduledMixin, startTimeMixin } from './session_fields.mixi
 import { sessionConflictModel } from '@/store/session_conflict.store';
 import SessionConflicts from '@/conflicts/session_conflicts.vue';
 // import SessionAdminTab from './session_admin_tab';
+import { SESSION_ENVIRONMENT} from '@/constants/strings';
 
 export default {
   name: 'SessionSidebar',
@@ -132,7 +135,8 @@ export default {
     startTimeMixin
   ],
   data: () => ({
-    sessionConflictModel
+    sessionConflictModel,
+    SESSION_ENVIRONMENT
   }),
   computed: {
     editLink() {

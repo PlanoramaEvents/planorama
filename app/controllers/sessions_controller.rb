@@ -277,6 +277,7 @@ class SessionsController < ResourceController
       status
       environment
       minors_participation
+      require_signup
     ]
     # Tags
     # format
