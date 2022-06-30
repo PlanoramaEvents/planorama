@@ -66,12 +66,18 @@
               <dt class="ml-2">If "Yes", max openings</dt>
               <dd class="ml-3 font-italic">{{selected.maximum_people}}</dd>
               <dd class="ml-3 font-italic text-muted" v-if="!selected.maximum_people">None Set</dd>
+              <dt>Attendee Age Restrictions</dt>
+              <dd class="ml-2 font-italic" v-if="selected.age_restriction_id">{{ ageRestrictionName(selected.age_restriction_id)}}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.age_restriction_id">None</dd>
               <dt>Minors Participation</dt>
               <dd class="ml-2 font-italic" v-for="mp in minors_participation" :key="mp">{{ SESSION_MINORS_PARTICIPATION[mp]}}</dd>
               <dd class="ml-2 font-italic text-muted" v-if="!minors_participation.length">No Selection</dd>
               <dt>Interest Instructions</dt>
               <dd class="ml-2 font-italic" v-html="selected.instructions_for_interest"></dd>
               <dd class="ml-2 font-italic text-muted" v-if="!selected.instructions_for_interest">No Entry</dd>
+              <dt>Required Room Features/Services</dt>
+              <dd class="ml-2 font-italic keep-format">{{selected.room_notes}}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.room_notes">No Entry</dd>
               <dt>Scheduled Participant Notes</dt>
               <dd class="ml-2 font-italic" v-html="selected.participant_notes"></dd>
               <dd class="ml-2 font-italic text-muted" v-if="!selected.participant_notes">No Entry</dd>
@@ -125,6 +131,7 @@ import SessionConflicts from '@/conflicts/session_conflicts.vue';
 // import SessionAdminTab from './session_admin_tab';
 import { SESSION_ENVIRONMENT, SESSION_STATUS} from '@/constants/strings';
 import { minorsParticipationMixin } from './minors_participation.mixin';
+import { ageRestrictionMixin } from './age_restriction.mixin';
 
 export default {
   name: 'SessionSidebar',
@@ -142,6 +149,7 @@ export default {
     scheduledMixin,
     startTimeMixin,
     minorsParticipationMixin,
+    ageRestrictionMixin,
   ],
   data: () => ({
     sessionConflictModel,

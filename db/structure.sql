@@ -660,7 +660,8 @@ CREATE TABLE public.sessions (
     tech_notes text,
     age_restriction_id uuid,
     minors_participation jsonb,
-    room_set_id uuid
+    room_set_id uuid,
+    room_notes character varying
 );
 
 
@@ -3113,6 +3114,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220623145514'),
 ('20220623172955'),
 ('20220624121252'),
-('20220628121934');
+('20220628121934'),
+('20220630032544');
 
 

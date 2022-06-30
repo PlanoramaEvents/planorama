@@ -99,9 +99,23 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <b-form-group label="Minors participation">
+        <b-form-group label="Attendee Age Restrictions">
+          <b-form-radio-group stacked name="age_restriction" :options="ageRestrictionOptions" v-model="session.age_restriction_id" @change="saveSession()"></b-form-radio-group>
+        </b-form-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <b-form-group label="Minors Participation">
           <b-form-checkbox-group stacked :options="minorsParticipationOptions" v-model="minors_participation" @change="saveSession()" name="minors_participation">
           </b-form-checkbox-group>
+        </b-form-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <b-form-group label="Required Room Features/Services">
+          <b-textarea v-model="session.room_notes" @blur="saveSession()"></b-textarea>
         </b-form-group>
       </div>
     </div>
@@ -139,6 +153,7 @@ import { ValidationProvider, extend } from 'vee-validate';
 import { min_value } from 'vee-validate/dist/rules'
 import { SESSION_ENVIRONMENT } from '@/constants/strings'
 import {minorsParticipationMixin} from './minors_participation.mixin';
+import { ageRestrictionMixin } from './age_restriction.mixin';
 
 extend('min_value', {
   ...min_value,
@@ -155,7 +170,8 @@ export default {
   },
   mixins: [
     modelUtilsMixin,
-    minorsParticipationMixin
+    minorsParticipationMixin,
+    ageRestrictionMixin
   ],
   data: () => ({
     editable: false,
