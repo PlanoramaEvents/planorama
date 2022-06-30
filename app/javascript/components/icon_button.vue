@@ -12,7 +12,9 @@
         v-b-tooltip.bottom
         v-bind="$attrs"
       >
-        <b-icon v-if="icon" :icon="icon" :variant="iconVariant"></b-icon>
+        <slot v-bind="{variant: iconVariant}">
+          <b-icon v-if="icon" :icon="icon" :variant="iconVariant"></b-icon>
+        </slot>
       </b-button>
     </span>
     <b-tooltip :target="spanId" v-if="disabled" placement="bottom">{{disabledTooltip}}</b-tooltip>
@@ -77,7 +79,7 @@ export default {
         styles.pointerEvents = 'none';
       }
       return styles;
-    }
+    },
   },
 }
 </script>
