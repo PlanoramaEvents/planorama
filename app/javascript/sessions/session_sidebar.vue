@@ -3,7 +3,7 @@
     <sidebar-vue v-if="selected" model="session">
       <template #header>
         <h3>{{selected.title}}</h3>
-        <small class="text-muted d-block">Last updated:</small>
+        <small class="text-muted d-block">Last updated</small>
         <!-- <small class="text-muted d-block"> by <em><strong>{{selected.updated_by && selected.updated_by.name}}</strong></em></small> -->
         <small class="text-muted d-block"> on <em><strong>{{new Date(selected.updated_at).toLocaleString()}}</strong></em></small>
       </template>
@@ -11,10 +11,14 @@
         <b-row>
           <b-col>
             <dl>
+              <dt>Status:</dt>
+              <dd class="ml-2">
+                {{SESSION_STATUS[selected.status]}}
+              </dd>
               <dt>
                 Description:
               </dt>
-              <dd>
+              <dd class="ml-2">
                 <div v-html="selected.description"></div>
               </dd>
             </dl>
@@ -55,14 +59,25 @@
               <dd v-if="!selected.area_list.length" class="ml-2 font-italic text-muted">None Selected</dd>
               <dt>Format</dt>
               <dd class="ml-2 font-italic">{{selected.format.name}}</dd>
-              <!-- <dt>Attendee Signup Required</dt>
+              <dt>Session Environment</dt>
+              <dd class="ml-2 font-italic">{{SESSION_ENVIRONMENT[selected.environment]}}</dd>
+              <dt>Attendee Signup Required</dt>
               <dd class="ml-2 font-italic">{{selected.require_signup ? 'Yes' : 'No'}}</dd>
               <dt class="ml-2">If "Yes", max openings</dt>
               <dd class="ml-3 font-italic">{{selected.maximum_people}}</dd>
-              <dd class="ml-3 font-italic text-muted" v-if="!selected.maximum_people">None Set</dd> -->
+              <dd class="ml-3 font-italic text-muted" v-if="!selected.maximum_people">None Set</dd>
+              <dt>Attendee Age Restrictions</dt>
+              <dd class="ml-2 font-italic" v-if="selected.age_restriction_id">{{ ageRestrictionName(selected.age_restriction_id)}}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.age_restriction_id">None</dd>
+              <dt>Minors Participation</dt>
+              <dd class="ml-2 font-italic" v-for="mp in minors_participation" :key="mp">{{ SESSION_MINORS_PARTICIPATION[mp]}}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!minors_participation.length">No Selection</dd>
               <dt>Interest Instructions</dt>
               <dd class="ml-2 font-italic" v-html="selected.instructions_for_interest"></dd>
               <dd class="ml-2 font-italic text-muted" v-if="!selected.instructions_for_interest">No Entry</dd>
+              <dt>Required Room Features/Services</dt>
+              <dd class="ml-2 font-italic keep-format">{{selected.room_notes}}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.room_notes">No Entry</dd>
               <dt>Scheduled Participant Notes</dt>
               <dd class="ml-2 font-italic" v-html="selected.participant_notes"></dd>
               <dd class="ml-2 font-italic text-muted" v-if="!selected.participant_notes">No Entry</dd>
@@ -114,6 +129,9 @@ import { areaMixin, scheduledMixin, startTimeMixin } from './session_fields.mixi
 import { sessionConflictModel } from '@/store/session_conflict.store';
 import SessionConflicts from '@/conflicts/session_conflicts.vue';
 // import SessionAdminTab from './session_admin_tab';
+import { SESSION_ENVIRONMENT, SESSION_STATUS} from '@/constants/strings';
+import { minorsParticipationMixin } from './minors_participation.mixin';
+import { ageRestrictionMixin } from './age_restriction.mixin';
 
 export default {
   name: 'SessionSidebar',
@@ -129,10 +147,14 @@ export default {
     personSessionMixin,
     areaMixin,
     scheduledMixin,
-    startTimeMixin
+    startTimeMixin,
+    minorsParticipationMixin,
+    ageRestrictionMixin,
   ],
   data: () => ({
-    sessionConflictModel
+    sessionConflictModel,
+    SESSION_ENVIRONMENT,
+    SESSION_STATUS
   }),
   computed: {
     editLink() {

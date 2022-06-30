@@ -2,9 +2,13 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
+        <b-alert variant="warning" class="alert-bright d-flex align-items-center" :show="scheduleDisabled">
+          <b-icon-exclamation-triangle class="h3 mb-0 mr-3"></b-icon-exclamation-triangle>
+          {{SESSION_MUST_UNDROP}}
+        </b-alert>
         <h5>Space</h5>
-        <room-picker :value="selected.room_id" @change="patchSelected({room_id: $event})"></room-picker>
-        <datetime-picker :value="selected.start_time" @input="patchSelected({start_time: $event})"></datetime-picker>
+        <room-picker :value="selected.room_id" @change="patchSelected({room_id: $event})" :disabled="scheduleDisabled"></room-picker>
+        <datetime-picker :value="selected.start_time" @input="patchSelected({start_time: $event})" :disabled="scheduleDisabled"></datetime-picker>
         <b-form-group label="Duration" class="pl-2" label-cols="12" label-cols-md="1">
           <ValidationProvider v-slot="validationCtx" rules="min_value:10" class="form-row h-100">
             <b-form-input
@@ -29,6 +33,7 @@
 import { modelMixinNoProp } from "@/mixins";
 import RoomPicker from './room_picker';
 import DatetimePicker from './datetime_picker';
+import { SESSION_MUST_UNDROP } from "@/constants/strings";
 import { ValidationProvider, extend } from 'vee-validate';
 import { min_value } from 'vee-validate/dist/rules'
 
@@ -49,9 +54,13 @@ export default {
   },
   data: () => ({
     tempDuration: null,
-    model: 'session'
+    model: 'session',
+    SESSION_MUST_UNDROP
   }),
   computed: {
+    scheduleDisabled() {
+      return this.selected.status === 'dropped'
+    },
     duration: {
       get() {
         return this.tempDuration || this.selected.duration;

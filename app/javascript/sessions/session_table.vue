@@ -36,9 +36,6 @@
         </span>
       </template>
       <!-- placeholder cols -->
-      <template #cell(status)>
-        <div class="text-center text-muted">&mdash;</div>
-      </template>
       <template #cell(publish)>
         <div class="text-center text-muted">&mdash;</div>
       </template>
