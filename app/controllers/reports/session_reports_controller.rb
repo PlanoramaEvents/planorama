@@ -14,13 +14,14 @@ class Reports::SessionReportsController < ApplicationController
         'Session',
         'Areas',
         'Moderators',
-        'Participants'
+        'Participants',
+        'Invisible',
       ]
     )
 
     moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
-    reserve = SessionAssignmentRoleType.find_by(name: 'Reserve')
+    invisible = SessionAssignmentRoleType.find_by(name: 'Invisible')
     sessions.each do |session|
       worksheet.append_row(
         [
@@ -28,6 +29,7 @@ class Reports::SessionReportsController < ApplicationController
           session.area_list.sort.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == invisible.id}.collect{|a| a.person.published_name}.join(';')
         ]
       )
     end
@@ -123,7 +125,24 @@ class Reports::SessionReportsController < ApplicationController
   def non_accepted_on_schedule
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
-    people_sessions = PersonSchedule
+    conflicts_table = ::PersonSchedule.arel_table
+    subquery = Session.area_list.as('areas_list')
+
+    joins = [
+      conflicts_table.create_join(
+        subquery,
+        conflicts_table.create_on(
+          subquery[:session_id].eq(conflicts_table[:session_id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    people_sessions = PersonSchedule.select(
+                          ::PersonSchedule.arel_table[Arel.star],
+                          'areas_list.area_list'
+                        )
+                        .joins(joins)
                         .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                         .where("con_state not in ('not_set', 'accepted')")
                         .where("start_time is not null and room_id is not null")
@@ -167,11 +186,11 @@ class Reports::SessionReportsController < ApplicationController
                 PersonSchedule
                   .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("start_time is not null and room_id is not null")
-                  .pluck('session_id')
+                  .pluck('person_id')
               ).where(
                 "con_state in (?)",
-                ['invited', 'accepted']
-              )
+                ['invite_pending', 'invited', 'accepted']
+              ).order('name')
 
 
     workbook = FastExcel.open(constant_memory: true)

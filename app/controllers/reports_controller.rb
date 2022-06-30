@@ -218,10 +218,29 @@ class ReportsController < ApplicationController
     # We want the times to be in the TZ of the con for the report
     Time.use_zone(timezone) do
       authorize SessionAssignment, policy_class: ReportPolicy
-      people_sessions = PersonSchedule
+
+      conflicts_table = ::PersonSchedule.arel_table
+      subquery = Session.area_list.as('areas_list')
+
+      joins = [
+        conflicts_table.create_join(
+          subquery,
+          conflicts_table.create_on(
+            subquery[:session_id].eq(conflicts_table[:session_id])
+          ),
+          Arel::Nodes::OuterJoin
+        )
+      ]
+
+      people_sessions = PersonSchedule.select(
+          ::PersonSchedule.arel_table[Arel.star],
+          'areas_list.area_list'
+        )
+        .includes(:room).references(:room)
+        .joins(joins)
         .where("session_assignment_name in (?)", ['Moderator', 'Participant', "Invisible"])
         .where("start_time is not null and room_id is not null")
-        .order('name', 'start_time', 'title')
+        .order('person_schedules.name', 'start_time', 'title')
 
       workbook = FastExcel.open(constant_memory: true)
       worksheet = workbook.add_worksheet("Schedule by Participant")
@@ -241,7 +260,7 @@ class ReportsController < ApplicationController
       )
 
       date_time_style = workbook.number_format("d mmm yyyy h:mm")
-      styles = [nil, nil, nil, nil,date_time_style, nil, nil, nil]
+      styles = [nil, nil, nil, nil, nil, date_time_style, nil, nil, nil]
       people_sessions.each do |sa|
         worksheet.append_row(
           [ sa.name,
@@ -250,7 +269,7 @@ class ReportsController < ApplicationController
             sa.title,
             sa.area_list.join('; '),
             FastExcel.date_num(sa.start_time, sa.start_time.in_time_zone.utc_offset),
-            sa.room_name,
+            sa.room.name,
             if sa.session_assignment_name == 'Moderator' then 'Y' else 'N' end,
             if sa.session_assignment_name == 'Invisible' then 'Y' else 'N' end
           ],
