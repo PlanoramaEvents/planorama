@@ -258,4 +258,11 @@ module.exports = {
     },
     SESSION_MUST_UNSCHEDULE: "You must unschedule a session before dropping it",
     SESSION_MUST_UNDROP: "You must un-drop the session to be able to schedule it.",
+    SESSION_MINORS_PARTICIPATION: {
+        kids_observe: "Kids welcome to observe",
+        kids_supervision: "Kids welcome to participate with supervision",
+        kids_participate: "Kids welcome to participate",
+        geared_families: "Geared towards families",
+        geared_kids: "Geared towards kids",
+    },
 }

@@ -99,6 +99,14 @@
     </div>
     <div class="row">
       <div class="col-12">
+        <b-form-group label="Minors participation">
+          <b-form-checkbox-group stacked :options="minorsParticipationOptions" v-model="minors_participation" @change="saveSession()" name="minors_participation">
+          </b-form-checkbox-group>
+        </b-form-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
         <b-form-group
           label="Scheduled Participant Notes"
         >
@@ -130,6 +138,7 @@ import PlanoEditor from '@/components/plano_editor';
 import { ValidationProvider, extend } from 'vee-validate';
 import { min_value } from 'vee-validate/dist/rules'
 import { SESSION_ENVIRONMENT } from '@/constants/strings'
+import {minorsParticipationMixin} from './minors_participation.mixin';
 
 extend('min_value', {
   ...min_value,
@@ -145,12 +154,13 @@ export default {
     ValidationProvider
   },
   mixins: [
-    modelUtilsMixin
+    modelUtilsMixin,
+    minorsParticipationMixin
   ],
   data: () => ({
     editable: false,
     saving: false,
-    SESSION_ENVIRONMENT
+    SESSION_ENVIRONMENT,
   }),
   computed: {
     session() {
