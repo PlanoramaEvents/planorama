@@ -268,6 +268,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Statue',
         'Session Count',
         'Con Limit'
       ]
@@ -278,6 +279,7 @@ class Reports::SessionReportsController < ApplicationController
         [
           person.name,
           person.published_name,
+          person.con_state,
           person.session_count,
           6
         ]
