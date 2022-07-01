@@ -661,7 +661,7 @@ CREATE TABLE public.sessions (
     age_restriction_id uuid,
     minors_participation jsonb,
     room_set_id uuid,
-    room_notes character varying
+    room_notes text
 );
 
 
@@ -1209,7 +1209,7 @@ CREATE VIEW public.person_exclusion_conflicts AS
      LEFT JOIN public.person_exclusions pe ON ((pe.person_id = person_schedules.person_id)))
      JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
      LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
-  WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time >= s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
+  WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time < (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time > s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
 
 
 --
