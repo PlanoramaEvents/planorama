@@ -661,7 +661,7 @@ CREATE TABLE public.sessions (
     age_restriction_id uuid,
     minors_participation jsonb,
     room_set_id uuid,
-    room_notes character varying
+    room_notes text
 );
 
 
