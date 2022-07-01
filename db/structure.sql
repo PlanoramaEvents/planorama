@@ -1087,16 +1087,16 @@ CREATE VIEW public.person_schedules AS
 
 
 --
--- Name: person_schedule_conflicts; Type: VIEW; Schema: public; Owner: -
+-- Name: person_back_to_back; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.person_schedule_conflicts AS
+CREATE VIEW public.person_back_to_back AS
  SELECT concat(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) AS id,
     ps1.person_id,
     ps1.name,
     ps1.published_name,
     ps1.con_state,
-    GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
+    ps2.start_time AS conflict_start_time,
     ps1.session_id,
     ps1.title,
     ps1.start_time,
@@ -1114,14 +1114,10 @@ CREATE VIEW public.person_schedule_conflicts AS
     ps2.session_assignment_role_type_id AS conflict_session_assignment_role_type_id,
     ps2.session_assignment_role_type AS conflict_session_assignment_role_type,
     ps2.session_assignment_name AS conflict_session_assignment_name,
-    ps2.room_id AS conflict_room_id,
-        CASE
-            WHEN (((ps2.start_time >= ps1.end_time) AND (ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval))) OR ((ps1.start_time >= ps2.end_time) AND (ps1.start_time <= (ps2.end_time + ((40 || ' minute'::text))::interval)))) THEN true
-            ELSE false
-        END AS back_to_back
+    ps2.room_id AS conflict_room_id
    FROM (public.person_schedules ps1
-     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval)) OR ((ps2.end_time >= (ps1.start_time - ((40 || ' minute'::text))::interval)) AND (ps2.end_time <= ps1.end_time))))))
-  ORDER BY ps1.person_id;
+     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id))))
+  WHERE ((ps2.start_time >= ps1.end_time) AND (ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval)));
 
 
 --
@@ -1163,9 +1159,8 @@ CREATE VIEW public.person_back_to_back_to_back AS
     psc2.conflict_session_assignment_role_type,
     psc2.conflict_session_assignment_name,
     psc2.conflict_room_id
-   FROM (public.person_schedule_conflicts psc1
-     JOIN public.person_schedule_conflicts psc2 ON (((psc2.session_id = psc1.conflict_session_id) AND (psc2.back_to_back = true))))
-  WHERE (psc1.back_to_back = true);
+   FROM (public.person_back_to_back psc1
+     JOIN public.person_back_to_back psc2 ON ((psc2.session_id = psc1.conflict_session_id)));
 
 
 --
@@ -1224,6 +1219,39 @@ CREATE TABLE public.person_mailing_assignments (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
 );
+
+
+--
+-- Name: person_schedule_conflicts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_schedule_conflicts AS
+ SELECT concat(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) AS id,
+    ps1.person_id,
+    ps1.name,
+    ps1.published_name,
+    ps1.con_state,
+    GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
+    ps1.session_id,
+    ps1.title,
+    ps1.start_time,
+    ps1.end_time,
+    ps1.duration,
+    ps1.session_assignment_id,
+    ps1.session_assignment_role_type_id,
+    ps1.session_assignment_name,
+    ps1.session_assignment_role_type,
+    ps1.room_id,
+    ps2.session_id AS conflict_session_id,
+    ps2.title AS conflict_session_title,
+    ps2.end_time AS conflict_end_time,
+    ps2.duration AS conflict_duration,
+    ps2.session_assignment_role_type_id AS conflict_session_assignment_role_type_id,
+    ps2.session_assignment_role_type AS conflict_session_assignment_role_type,
+    ps2.session_assignment_name AS conflict_session_assignment_name,
+    ps2.room_id AS conflict_room_id
+   FROM (public.person_schedules ps1
+     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time <= ps1.end_time) OR ((ps2.end_time >= ps1.start_time) AND (ps2.end_time <= ps1.end_time))))));
 
 
 --
@@ -1500,26 +1528,24 @@ UNION
     person_schedule_conflicts.id AS conflict_id,
     'person_schedule_conflict'::text AS conflict_type
    FROM public.person_schedule_conflicts
-  WHERE (person_schedule_conflicts.back_to_back = false)
 UNION
- SELECT person_schedule_conflicts.session_id,
-    person_schedule_conflicts.title AS session_title,
-    person_schedule_conflicts.start_time AS session_start_time,
-    person_schedule_conflicts.room_id,
-    person_schedule_conflicts.person_id,
-    person_schedule_conflicts.name AS person_name,
-    person_schedule_conflicts.published_name AS person_published_name,
-    person_schedule_conflicts.session_assignment_id,
-    person_schedule_conflicts.session_assignment_role_type_id,
-    person_schedule_conflicts.session_assignment_name,
-    person_schedule_conflicts.conflict_session_id,
-    person_schedule_conflicts.conflict_session_title,
-    person_schedule_conflicts.conflict_session_assignment_role_type_id,
-    person_schedule_conflicts.conflict_session_assignment_name,
-    person_schedule_conflicts.id AS conflict_id,
+ SELECT person_back_to_back.session_id,
+    person_back_to_back.title AS session_title,
+    person_back_to_back.start_time AS session_start_time,
+    person_back_to_back.room_id,
+    person_back_to_back.person_id,
+    person_back_to_back.name AS person_name,
+    person_back_to_back.published_name AS person_published_name,
+    person_back_to_back.session_assignment_id,
+    person_back_to_back.session_assignment_role_type_id,
+    person_back_to_back.session_assignment_name,
+    person_back_to_back.conflict_session_id,
+    person_back_to_back.conflict_session_title,
+    person_back_to_back.conflict_session_assignment_role_type_id,
+    person_back_to_back.conflict_session_assignment_name,
+    person_back_to_back.id AS conflict_id,
     'person_back_to_back'::text AS conflict_type
-   FROM public.person_schedule_conflicts
-  WHERE (person_schedule_conflicts.back_to_back = true);
+   FROM public.person_back_to_back;
 
 
 --
