@@ -3,8 +3,8 @@
     <h5>Time</h5>
     <b-form-group label="Start" class="pl-2" label-cols="12" label-cols-md="1">
       <div class="form-row">
-        <b-form-select class="col-3" size="sm" :value="day" :options="dayOptions" @change="changeDay($event)"></b-form-select>
-        <b-timepicker class="col-3 ml-2" size="sm" :value="time" @input="changeTime($event)" @hidden="$emit('input', tempDate)"></b-timepicker>
+        <b-form-select class="col-3" size="sm" :value="day" :options="dayOptions" @change="changeDay($event)" :disabled="disabled"></b-form-select>
+        <b-timepicker class="col-3 ml-2" size="sm" :value="time" @input="changeTime($event)" @hidden="$emit('input', tempDate)" :disabled="disabled"></b-timepicker>
       </div>
     </b-form-group>
   </div>
@@ -16,7 +16,13 @@ import { settingsMixin } from '@/mixins';
 
 export default {
   name: "DatetimePicker",
-  props: ['value'],
+  props:  {
+    value: null,
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
   mixins: [settingsMixin],
   data: () => ({
     tempDate: null

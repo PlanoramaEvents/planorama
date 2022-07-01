@@ -660,7 +660,8 @@ CREATE TABLE public.sessions (
     tech_notes text,
     age_restriction_id uuid,
     minors_participation jsonb,
-    room_set_id uuid
+    room_set_id uuid,
+    room_notes text
 );
 
 
@@ -873,6 +874,19 @@ CREATE TABLE public.formats (
 
 
 --
+-- Name: ignored_conflicts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ignored_conflicts (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    conflict_id character varying(2048),
+    conflict_type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: label_dimensions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1012,6 +1026,38 @@ CREATE TABLE public.person_agreements (
 
 
 --
+-- Name: person_exclusions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_exclusions (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    exclusion_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: person_and_exclusions; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_and_exclusions AS
+ SELECT pe.exclusion_id,
+    pe.person_id,
+    s.id AS session_id,
+    s.start_time,
+    (s.start_time + ((s.duration || ' minute'::text))::interval) AS end_time,
+    s.title
+   FROM ((public.person_exclusions pe
+     LEFT JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
+     LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
+  WHERE (es.session_id IS NOT NULL)
+  ORDER BY pe.person_id, s.id;
+
+
+--
 -- Name: person_schedules; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -1041,16 +1087,16 @@ CREATE VIEW public.person_schedules AS
 
 
 --
--- Name: person_schedule_conflicts; Type: VIEW; Schema: public; Owner: -
+-- Name: person_back_to_back; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.person_schedule_conflicts AS
+CREATE VIEW public.person_back_to_back AS
  SELECT concat(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) AS id,
     ps1.person_id,
     ps1.name,
     ps1.published_name,
     ps1.con_state,
-    GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
+    ps2.start_time AS conflict_start_time,
     ps1.session_id,
     ps1.title,
     ps1.start_time,
@@ -1068,14 +1114,10 @@ CREATE VIEW public.person_schedule_conflicts AS
     ps2.session_assignment_role_type_id AS conflict_session_assignment_role_type_id,
     ps2.session_assignment_role_type AS conflict_session_assignment_role_type,
     ps2.session_assignment_name AS conflict_session_assignment_name,
-    ps2.room_id AS conflict_room_id,
-        CASE
-            WHEN (((ps2.start_time >= ps1.end_time) AND (ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval))) OR ((ps1.start_time >= ps2.end_time) AND (ps1.start_time <= (ps2.end_time + ((40 || ' minute'::text))::interval)))) THEN true
-            ELSE false
-        END AS back_to_back
+    ps2.room_id AS conflict_room_id
    FROM (public.person_schedules ps1
-     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval)) OR ((ps2.end_time >= (ps1.start_time - ((40 || ' minute'::text))::interval)) AND (ps2.end_time <= ps1.end_time))))))
-  ORDER BY ps1.person_id;
+     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id))))
+  WHERE ((ps2.start_time >= ps1.end_time) AND (ps2.start_time <= (ps1.end_time + ((40 || ' minute'::text))::interval)));
 
 
 --
@@ -1117,9 +1159,8 @@ CREATE VIEW public.person_back_to_back_to_back AS
     psc2.conflict_session_assignment_role_type,
     psc2.conflict_session_assignment_name,
     psc2.conflict_room_id
-   FROM (public.person_schedule_conflicts psc1
-     JOIN public.person_schedule_conflicts psc2 ON (((psc2.session_id = psc1.conflict_session_id) AND (psc2.back_to_back = true))))
-  WHERE (psc1.back_to_back = true);
+   FROM (public.person_back_to_back psc1
+     JOIN public.person_back_to_back psc2 ON ((psc2.session_id = psc1.conflict_session_id)));
 
 
 --
@@ -1134,20 +1175,6 @@ CREATE TABLE public.person_constraints (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
-);
-
-
---
--- Name: person_exclusions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_exclusions (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    person_id uuid,
-    exclusion_id uuid,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1177,7 +1204,7 @@ CREATE VIEW public.person_exclusion_conflicts AS
      LEFT JOIN public.person_exclusions pe ON ((pe.person_id = person_schedules.person_id)))
      JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
      LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
-  WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time >= s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
+  WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time < (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time > s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
 
 
 --
@@ -1192,6 +1219,39 @@ CREATE TABLE public.person_mailing_assignments (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
 );
+
+
+--
+-- Name: person_schedule_conflicts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_schedule_conflicts AS
+ SELECT concat(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) AS id,
+    ps1.person_id,
+    ps1.name,
+    ps1.published_name,
+    ps1.con_state,
+    GREATEST(ps1.start_time, ps2.start_time) AS conflict_start_time,
+    ps1.session_id,
+    ps1.title,
+    ps1.start_time,
+    ps1.end_time,
+    ps1.duration,
+    ps1.session_assignment_id,
+    ps1.session_assignment_role_type_id,
+    ps1.session_assignment_name,
+    ps1.session_assignment_role_type,
+    ps1.room_id,
+    ps2.session_id AS conflict_session_id,
+    ps2.title AS conflict_session_title,
+    ps2.end_time AS conflict_end_time,
+    ps2.duration AS conflict_duration,
+    ps2.session_assignment_role_type_id AS conflict_session_assignment_role_type_id,
+    ps2.session_assignment_role_type AS conflict_session_assignment_role_type,
+    ps2.session_assignment_name AS conflict_session_assignment_name,
+    ps2.room_id AS conflict_room_id
+   FROM (public.person_schedules ps1
+     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time <= ps1.end_time) OR ((ps2.end_time >= ps1.start_time) AND (ps2.end_time <= ps1.end_time))))));
 
 
 --
@@ -1468,26 +1528,24 @@ UNION
     person_schedule_conflicts.id AS conflict_id,
     'person_schedule_conflict'::text AS conflict_type
    FROM public.person_schedule_conflicts
-  WHERE (person_schedule_conflicts.back_to_back = false)
 UNION
- SELECT person_schedule_conflicts.session_id,
-    person_schedule_conflicts.title AS session_title,
-    person_schedule_conflicts.start_time AS session_start_time,
-    person_schedule_conflicts.room_id,
-    person_schedule_conflicts.person_id,
-    person_schedule_conflicts.name AS person_name,
-    person_schedule_conflicts.published_name AS person_published_name,
-    person_schedule_conflicts.session_assignment_id,
-    person_schedule_conflicts.session_assignment_role_type_id,
-    person_schedule_conflicts.session_assignment_name,
-    person_schedule_conflicts.conflict_session_id,
-    person_schedule_conflicts.conflict_session_title,
-    person_schedule_conflicts.conflict_session_assignment_role_type_id,
-    person_schedule_conflicts.conflict_session_assignment_name,
-    person_schedule_conflicts.id AS conflict_id,
+ SELECT person_back_to_back.session_id,
+    person_back_to_back.title AS session_title,
+    person_back_to_back.start_time AS session_start_time,
+    person_back_to_back.room_id,
+    person_back_to_back.person_id,
+    person_back_to_back.name AS person_name,
+    person_back_to_back.published_name AS person_published_name,
+    person_back_to_back.session_assignment_id,
+    person_back_to_back.session_assignment_role_type_id,
+    person_back_to_back.session_assignment_name,
+    person_back_to_back.conflict_session_id,
+    person_back_to_back.conflict_session_title,
+    person_back_to_back.conflict_session_assignment_role_type_id,
+    person_back_to_back.conflict_session_assignment_name,
+    person_back_to_back.id AS conflict_id,
     'person_back_to_back'::text AS conflict_type
-   FROM public.person_schedule_conflicts
-  WHERE (person_schedule_conflicts.back_to_back = true);
+   FROM public.person_back_to_back;
 
 
 --
@@ -1990,6 +2048,14 @@ ALTER TABLE ONLY public.formats
 
 
 --
+-- Name: ignored_conflicts ignored_conflicts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ignored_conflicts
+    ADD CONSTRAINT ignored_conflicts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: label_dimensions label_dimensions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2475,6 +2541,13 @@ CREATE UNIQUE INDEX index_exclusions_sessions_on_exclusion_id_and_session_id ON 
 --
 
 CREATE INDEX index_exclusions_sessions_on_session_id ON public.exclusions_sessions USING btree (session_id);
+
+
+--
+-- Name: index_ignored_conflicts_on_conflict_id_and_conflict_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ignored_conflicts_on_conflict_id_and_conflict_type ON public.ignored_conflicts USING btree (conflict_id, conflict_type);
 
 
 --
@@ -3069,6 +3142,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220623145514'),
 ('20220623172955'),
 ('20220624121252'),
-('20220629132145');
+('20220628121934'),
+('20220629132145'),
+('20220630032544');
 
 

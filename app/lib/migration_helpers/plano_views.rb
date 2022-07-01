@@ -2,9 +2,11 @@ module MigrationHelpers
   module PlanoViews
     def self.create_views
       self.create_person_schedules
+      self.create_person_and_exclusions
       self.create_room_allocations
       self.create_room_conflicts
       self.create_person_schedule_conflicts
+      self.create_person_back_to_back
       self.create_person_exclusion_conflicts
       self.create_person_back_to_back_to_back
       self.create_availability_conflicts
@@ -109,6 +111,7 @@ module MigrationHelpers
     end
 
     def self.create_person_schedule_conflicts
+      # change for back to backs
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW person_schedule_conflicts AS
           select
@@ -135,15 +138,7 @@ module MigrationHelpers
             ps2.session_assignment_role_type_id as conflict_session_assignment_role_type_id,
             ps2.session_assignment_role_type as conflict_session_assignment_role_type,
             ps2.session_assignment_name as conflict_session_assignment_name,
-            ps2.room_id as conflict_room_id,
-            case
-            when
-              ((ps2.start_time >= ps1.end_time) and (ps2.start_time <= (ps1.end_time + (40 || ' minute')::interval)))
-              or
-              ((ps1.start_time >= ps2.end_time) and (ps1.start_time <= (ps2.end_time + (40 || ' minute')::interval)))
-            then true
-            else FALSE
-            end as back_to_back
+            ps2.room_id as conflict_room_id
           from
             person_schedules ps1
           join
@@ -151,14 +146,78 @@ module MigrationHelpers
             and ps2.session_id != ps1.session_id
             and ps2.start_time >= ps1.start_time
             and (
-              ps2.start_time <= ps1.end_time + (40 || ' minute')::interval
+              ps2.start_time <= ps1.end_time
               or
               (
-                ps2.end_time  >= ps1.start_time - (40 || ' minute')::interval and ps2.end_time <= ps1.end_time
+                ps2.end_time  >= ps1.start_time and ps2.end_time <= ps1.end_time
               )
-            )
+            );
+      SQL
+      ActiveRecord::Base.connection.execute(query)
+    end
+
+    def self.create_person_back_to_back
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW person_back_to_back AS
+          select
+            CONCAT(ps1.person_id, ':', ps1.session_id, ':', ps2.session_id) as id,
+            ps1.person_id,
+            ps1.name,
+            ps1.published_name,
+            ps1.con_state,
+            ps2.start_time AS conflict_start_time,
+            ps1.session_id,
+            ps1.title,
+            ps1.start_time,
+            ps1.end_time,
+            ps1.duration,
+            ps1.session_assignment_id,
+            ps1.session_assignment_role_type_id,
+            ps1.session_assignment_name as session_assignment_name,
+            ps1.session_assignment_role_type,
+            ps1.room_id,
+            ps2.session_id as conflict_session_id,
+            ps2.title as conflict_session_title,
+            ps2.end_time as conflict_end_time,
+            ps2.duration as conflict_duration,
+            ps2.session_assignment_role_type_id as conflict_session_assignment_role_type_id,
+            ps2.session_assignment_role_type as conflict_session_assignment_role_type,
+            ps2.session_assignment_name as conflict_session_assignment_name,
+            ps2.room_id as conflict_room_id
+          from
+            person_schedules ps1
+          join
+            person_schedules ps2 on ps2.person_id = ps1.person_id
+            and ps2.session_id != ps1.session_id
+          where
+            (ps2.start_time >= ps1.end_time) and (ps2.start_time <= (ps1.end_time + (40 || ' minute')::interval));
+      SQL
+      # or
+      # ((ps1.start_time >= ps2.end_time) and (ps1.start_time <= (ps2.end_time + (40 || ' minute')::interval)))
+
+      ActiveRecord::Base.connection.execute(query)
+    end
+
+    def self.create_person_and_exclusions
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW person_and_exclusions AS
+          select
+            pe.exclusion_id,
+          	pe.person_id,
+          	s.id as session_id,
+          	s.start_time,
+            (s.start_time + (s.duration || ' minute')::interval) as end_time,
+          	s.title
+          from
+          	person_exclusions pe
+          left join exclusions_sessions es on
+          	es.exclusion_id = pe.exclusion_id
+          left join sessions s on
+          	s.id = es.session_id
+          where
+          	session_id is not null
           order by
-            ps1.person_id
+          	pe.person_id, session_id
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
@@ -188,13 +247,25 @@ module MigrationHelpers
               LEFT JOIN public.person_exclusions pe ON ((pe.person_id = person_schedules.person_id)))
               JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
               LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
-           WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time >= s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
+           WHERE (
+              person_schedules.session_id <> s.id
+             AND
+              person_schedules.start_time >= s.start_time
+             AND (
+               person_schedules.start_time < (s.start_time + (s.duration || ' minute'::text)::interval)
+               OR (
+                 person_schedules.end_time > s.start_time
+                 AND person_schedules.end_time <= (s.start_time + (s.duration || ' minute'::text)::interval
+               )
+             )
+           )
+          );
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
 
     def self.create_person_back_to_back_to_back
-      # check
+      # TODO: change new view
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW person_back_to_back_to_back AS
           select
@@ -233,11 +304,9 @@ module MigrationHelpers
             psc2.conflict_session_assignment_name,
             psc2.conflict_room_id
           from
-            person_schedule_conflicts psc1
-          inner join person_schedule_conflicts psc2 on
+            person_back_to_back psc1
+          inner join person_back_to_back psc2 on
             psc2.session_id = psc1.conflict_session_id
-            and psc2.back_to_back = true
-          where psc1.back_to_back = true
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
@@ -382,7 +451,6 @@ module MigrationHelpers
             id as conflict_id,
             'person_schedule_conflict' as conflict_type
           from person_schedule_conflicts
-          where person_schedule_conflicts.back_to_back = false
           UNION
         select
             session_id,
@@ -401,8 +469,7 @@ module MigrationHelpers
             conflict_session_assignment_name,
             id as conflict_id,
             'person_back_to_back' as conflict_type
-          from person_schedule_conflicts
-          where person_schedule_conflicts.back_to_back = true
+          from person_back_to_back
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
@@ -424,10 +491,16 @@ module MigrationHelpers
         DROP VIEW IF EXISTS person_schedule_conflicts;
       SQL
       ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS person_back_to_back;
+      SQL
+      ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS room_conflicts;
       SQL
       ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS room_allocations;
+      SQL
+      ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS person_and_exclusions;
       SQL
       ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS person_schedules;

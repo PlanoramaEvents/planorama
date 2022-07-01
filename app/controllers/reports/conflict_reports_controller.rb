@@ -68,6 +68,7 @@ class Reports::ConflictReportsController < ApplicationController
                   :person, :session, :exclusion, :excluded_session
                 )
                 .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                .order('people.published_name asc')
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Person vs Exclusion")
@@ -232,7 +233,7 @@ class Reports::ConflictReportsController < ApplicationController
   def back_to_back
     authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
 
-    conflicts_table = ::Conflicts::PersonScheduleConflict.arel_table
+    conflicts_table = ::Conflicts::PersonBackToBack.arel_table
     subquery = Session.area_list.as('areas_list')
     conflict_subquery = Session.area_list.as('conflict_areas_list')
     joins = [
@@ -252,8 +253,8 @@ class Reports::ConflictReportsController < ApplicationController
       )
     ]
 
-    conflicts = Conflicts::PersonScheduleConflict.select(
-      Conflicts::PersonScheduleConflict.arel_table[Arel.star],
+    conflicts = Conflicts::PersonBackToBack.select(
+      Conflicts::PersonBackToBack.arel_table[Arel.star],
                   'areas_list.area_list as area_list',
                   'conflict_areas_list.area_list as conflict_area_list'
     )
@@ -262,7 +263,6 @@ class Reports::ConflictReportsController < ApplicationController
     .joins(joins)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                  .where(back_to_back: true)
                   .order('published_name asc, conflict_start_time asc')
 
     workbook = FastExcel.open(constant_memory: true)
@@ -347,8 +347,7 @@ class Reports::ConflictReportsController < ApplicationController
                   .joins(joins)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                  .where(back_to_back: false)
-                  .order('people.published_name asc, conflict_start_time asc')
+                  .order('people.published_name asc, start_time asc')
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("People Double Booked")
