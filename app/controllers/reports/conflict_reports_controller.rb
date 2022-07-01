@@ -412,6 +412,7 @@ class Reports::ConflictReportsController < ApplicationController
                     'areas_list.area_list'
                   )
                   .includes(:session, :person)
+                  .eager_load(person: :availabilities)
                   .joins(joins)
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .order('people.published_name')
@@ -424,24 +425,28 @@ class Reports::ConflictReportsController < ApplicationController
       [
         'Name',
         'Pub Name',
+        'Status',
         'Session',
         'Area',
-        'Start Time'
-
+        'Start Time',
+        'Duration',
+        'Availability'
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
-    styles = [nil, nil, nil, nil, date_time_style, nil]
+    styles = [nil, nil, nil, nil, nil, date_time_style, nil, nil]
 
     conflicts.each do |conflict|
       worksheet.append_row(
         [
           conflict.person.name,
           conflict.person.published_name,
+          conflict.person.con_state,
           conflict.session.title,
           conflict.area_list.join('; '),
-          FastExcel.date_num(conflict.session.start_time, conflict.session.start_time.in_time_zone.utc_offset)
-
+          FastExcel.date_num(conflict.session.start_time, conflict.session.start_time.in_time_zone.utc_offset),
+          conflict.session.duration,
+          conflict.person.availabilities.order('start_time').collect{|av| "#{av.start_time} to #{av.end_time}" }.join(";\n"),
         ],
         styles
       )
