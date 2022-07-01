@@ -317,7 +317,7 @@ class Reports::SessionReportsController < ApplicationController
           session.area_list.sort.join(';'),
           session.nbr_assignments,
           session.session_assignments.select{|a| a.session_assignment_role_type_id != moderator.id}.collect{|a| a.person.published_name}.join(';'),
-          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';')
         ]
       )
     end
@@ -340,18 +340,21 @@ class Reports::SessionReportsController < ApplicationController
         'Session',
         'Areas',
         'Participant Count',
-        'List of Participants'
+        'List of Participants',
+        'Moderators'
       ]
     )
 
     # has_many :submissions
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
     sessions.each do |session|
       worksheet.append_row(
         [
           session.title,
           session.area_list.sort.join(';'),
           session.nbr_assignments,
-          session.session_assignments.collect{|a| a.person.published_name}.join(';')
+          session.session_assignments.select{|a| a.session_assignment_role_type_id != moderator.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';')
         ]
       )
     end
