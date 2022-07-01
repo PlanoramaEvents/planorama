@@ -19,12 +19,20 @@ class Session < ApplicationRecord
   before_save :keep_who_did_it, :keep_interest_trail, :schedule_consistency
 
   has_many :session_conflicts,
-    -> { where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)") },
+    -> {
+      where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
+      .where("session_assignment_name is null or session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
+      .where("conflict_session_assignment_name is null or conflict_session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
+    },
     class_name: 'Conflicts::SessionConflict'
 
   # Get where this session is on the other side of the conflict relationship
   has_many :conflict_sessions,
-    -> { where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)") },
+    -> {
+      where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
+      .where("session_assignment_name is null or session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
+      .where("conflict_session_assignment_name is null or conflict_session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
+    },
     foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
 
   has_and_belongs_to_many :room_services
