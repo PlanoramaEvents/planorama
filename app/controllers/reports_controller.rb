@@ -306,8 +306,10 @@ class ReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Participant Status',
         'Session',
-        'Role'
+        'Role',
+        'Scheduled'
       ]
     )
 
@@ -317,8 +319,10 @@ class ReportsController < ApplicationController
           [
             person.name,
             person.published_name,
+            person.con_state,
             assignment.session.title,
-            assignment.session_assignment_role_type.name
+            assignment.session_assignment_role_type.name,
+            assignment.session.start_time && assignment.session.room_id ? 'Y' : 'N'
           ]
         )
       end
