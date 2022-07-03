@@ -392,7 +392,7 @@ class ReportsController < ApplicationController
 
     assignments = SessionAssignment
                     .joins(:person)
-                    .includes([{session: :areas}, :person])
+                    .includes([{session: :areas}, :person, :session_assignment_role_type])
                     .where(interested: true).order("people.name")
 
     workbook = FastExcel.open(constant_memory: true)
@@ -402,10 +402,13 @@ class ReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Participant Status',
         'Session',
         'Ranking',
         'Ranking Notes',
-        'Areas'
+        'Areas',
+        'Assigned',
+        'Scheduled'
       ]
     )
     assignments.each do |assignment|
@@ -413,10 +416,13 @@ class ReportsController < ApplicationController
         [
           assignment.person.name,
           assignment.person.published_name,
+          assignment.person.con_state,
           assignment.session.title,
           assignment.interest_ranking,
           assignment.interest_notes,
-          assignment.session.areas.collect(&:name).join("; ")
+          assignment.session.areas.collect(&:name).join("; "),
+          assignment.session_assignment_role_type && assignment.session_assignment_role_type.role_type == 'participant' &&  ['Moderator', 'Participant'].include?(assignment.session_assignment_role_type.name) ? 'Y' : 'N',
+          assignment.session.start_time && assignment.session.room_id ? 'Y' : 'N'
         ]
       )
     end
