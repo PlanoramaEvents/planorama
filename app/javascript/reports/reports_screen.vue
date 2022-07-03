@@ -80,7 +80,10 @@
         <a href="/report/conflict_reports/back_to_back_to_back" target="_blank">Back to Back to Back</a>
       </li>
       <li>
-        <a href="/report/conflict_reports/multiple_sessions_in_room" target="_blank">Multiple Sessions in a Room</a>
+        <a href="/report/conflict_reports/all_conflicts" target="_blank">All Conflicts</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/all_ignored_conflicts" target="_blank">All Ignored Conflicts</a>
       </li>
     </ul>
 
