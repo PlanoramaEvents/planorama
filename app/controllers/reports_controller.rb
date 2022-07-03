@@ -91,10 +91,12 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Session',
+        'Session Type/Format',
         'Areas',
         'Moderators',
         'Participants',
-        'Reserves'
+        'Reserves',
+        'Scehduled'
       ]
     )
 
@@ -105,10 +107,12 @@ class ReportsController < ApplicationController
       worksheet.append_row(
         [
           session.title,
+          session.format.name,
           session.area_list.sort.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.published_name}.join(';'),
+          session.start_time && session.room_id ? 'Y' : 'N'
         ]
       )
     end
