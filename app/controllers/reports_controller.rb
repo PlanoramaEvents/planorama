@@ -448,6 +448,7 @@ class ReportsController < ApplicationController
         'Title',
         'Who is Interested',
         'Who is Interested (Pub Name)',
+        'Participant Status',
         'Ranking',
         'Notes',
         'Areas'
@@ -461,6 +462,7 @@ class ReportsController < ApplicationController
             session.title,
             assignment.person.name,
             assignment.person.published_name,
+            assignment.person.con_state,
             assignment.interest_ranking,
             assignment.interest_notes,
             session.areas.collect(&:name).join("; ")
