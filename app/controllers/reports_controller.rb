@@ -353,6 +353,7 @@ class ReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Participant Status',
         'Attendance Type',
         'Availabilities',
         'Limits',
@@ -366,6 +367,7 @@ class ReportsController < ApplicationController
         [
           person.name,
           person.published_name,
+          person.con_state,
           person.attendance_type,
           person.availabilities.order('start_time').collect{|av| "#{av.start_time} to #{av.end_time}" }.join(";\n"),
           person.session_limits.order('day').collect{|l| "#{l.day ? l.day : 'Global'}: #{l.max_sessions}" }.join(";\n"),
