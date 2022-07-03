@@ -14,7 +14,9 @@ class Reports::ConflictReportsController < ApplicationController
         'Session',
         'Areas',
         'Start Time',
+        'Duration',
         'Room',
+        'Person',
         'Conflict Type'
       ]
     )
@@ -28,8 +30,10 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.session_title,
           conflict.area_list.join('; '),
           FastExcel.date_num(conflict.session_start_time, conflict.session_start_time.in_time_zone.utc_offset),
+          conflict.session&.duration,
           conflict.room&.name,
-          conflict.conflict_type
+          conflict.person_published_name,
+          conflict.conflict_type,
         ],
         styles
       )

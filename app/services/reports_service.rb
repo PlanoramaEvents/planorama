@@ -25,7 +25,7 @@ module ReportsService
       'areas_list.area_list'
     )
       .joins(joins)
-      .includes(:room)
+      .includes(:room, :session)
       .where(where_clause)
       .order(:session_title)
   end
