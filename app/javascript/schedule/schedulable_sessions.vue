@@ -1,7 +1,5 @@
 <template>
   <div class="all-scheduable-session">
-    <!-- TODO: add pager ... -->
-    <!-- TODO: add search/filter ... -->
     <schedule-session-search
       :value="filter"
       @change="onSearchChanged"
@@ -30,23 +28,17 @@
 <script>
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
-// import { sessionModel as model } from '@/store/session.store'
 import ScheduleSessionSearch from './schedule_session_search';
 
-// TODO: filter out sessions with no duration
 export default {
   name: "SchedulableSessions",
   components: {
     ScheduleSessionSearch
   },
   mixins: [
-    // modelUtilsMixin,
     modelMixin,
     tableMixin
   ],
-  props: {
-    // TODO: add filter
-  },
   data: () => ({
   }),
   computed: {
@@ -59,19 +51,10 @@ export default {
       // Passing the event's data to Vue Cal through the DataTransfer object.
       e.dataTransfer.setData('event', JSON.stringify(draggable))
       e.dataTransfer.setData('cursor-grab-at', e.offsetY)
-    },
-    init: function() {
-      this.fetchPaged(false)
-    },
+    }
   },
   mounted() {
-    //do something after mounting vue instance
-    // this.fetch_models(roomModel).then(data => {
-    //   this.rooms = Object.values(data).filter(
-    //     obj => (typeof obj.json === 'undefined')
-    //   )
-    this.init()
-    // })
+    this.fetchPaged(false)
   }
 }
 </script>
