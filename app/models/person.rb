@@ -16,6 +16,7 @@ class Person < ApplicationRecord
   has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at]
 
   before_destroy :check_if_assigned
+  before_save :check_primary_email
 
   has_many  :availabilities
 
@@ -145,6 +146,12 @@ class Person < ApplicationRecord
 
   def no_group?
     convention_roles.size == 0
+  end
+
+  def check_primary_email
+    if EmailAddress.where("person_id != ? and email ilike ? and isdefault = true").count > 0
+      raise "That email has been taken by someone else as a primary email address"
+    end
   end
 
   #
