@@ -1,6 +1,88 @@
 class Reports::ConflictReportsController < ApplicationController
   around_action :set_timezone
 
+  def all_ignored_conflicts
+    authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
+
+    conflicts = ReportsService::all_conflicts(ignored: true)
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("All Conflicts")
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Areas',
+        'Start Time',
+        'Duration',
+        'Room',
+        'Person',
+        'Conflict Type'
+      ]
+    )
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil, nil
+    ]
+    conflicts.each do |conflict|
+      worksheet.append_row(
+        [
+          conflict.session_title,
+          conflict.area_list.join('; '),
+          FastExcel.date_num(conflict.session_start_time, conflict.session_start_time.in_time_zone.utc_offset),
+          conflict.session&.duration,
+          conflict.room&.name,
+          conflict.person_published_name,
+          conflict.conflict_type,
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "all_ignored_conflicts#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
+  def all_conflicts
+    authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
+
+    conflicts = ReportsService::all_conflicts
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("All Conflicts")
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Areas',
+        'Start Time',
+        'Room',
+        'Conflict Type'
+      ]
+    )
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil, nil
+    ]
+    conflicts.each do |conflict|
+      worksheet.append_row(
+        [
+          conflict.session_title,
+          conflict.area_list.join('; '),
+          FastExcel.date_num(conflict.session_start_time, conflict.session_start_time.in_time_zone.utc_offset),
+          conflict.room&.name,
+          conflict.conflict_type
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "all_conflicts#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def multiple_sessions_in_room
     authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
 
