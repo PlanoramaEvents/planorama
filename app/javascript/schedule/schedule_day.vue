@@ -29,7 +29,7 @@
         style="height: 100%;"
         v-bind:class="{ 'selected-event': (selected && (selected.id == event.id)), 'event-with-conflicts': (event.has_conflicts && !(selected && (selected.id == event.id))) }"
       >
-        <div v-b-popover.hover="hoverText(event)" :title="event.title" >
+        <div v-b-popover.hover.top="hoverText(event)" :title="event.title" >
           <div class="d-flex flex-row p-1 justify-content-between">
             <!-- NOTE: using mouseup because that is what on-event-click is using and we want this to stop the event click sesson select -->
             <b-iconstack v-if="event.has_conflicts"
