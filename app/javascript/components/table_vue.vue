@@ -286,13 +286,16 @@ export default {
       }
     },
     onSortChanged(ctx) {
+      this.editable_ids = []
       this.sortBy = ctx.sortBy;
       this.sortDesc = ctx.sortDesc;
     },
     onSearchChanged(arg) {
+      this.editable_ids = []
       this.filter = arg
     },
     setFilter(newFilter) {
+      this.editable_ids = []
       this.filter = newFilter
     },
     showAlternateSearch() {
