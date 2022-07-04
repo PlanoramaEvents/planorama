@@ -137,10 +137,12 @@ export default {
         case 'person_schedule_conflict':
           if (conflict_with) {
             return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
-                   "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
+                   "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
+                   and "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
           } else {
             return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
-                   "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+                   "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"
+                   and "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
         case 'person_back_to_back':
           if (conflict_with) {
