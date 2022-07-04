@@ -72,6 +72,7 @@ export default {
       return this.selected_model(sessionModel);
     },
     peopleFilter() {
+      // NOTE: sessionAssignmentModel
       let filter = {
         "op": "all",
         "queries":[

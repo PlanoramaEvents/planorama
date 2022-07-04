@@ -596,7 +596,8 @@ CREATE TABLE public.session_assignment_role_type (
     updated_at timestamp without time zone,
     name character varying(100) NOT NULL,
     role_type public.assignment_role_enum,
-    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
+    default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
+    sort_order integer
 );
 
 
@@ -3144,6 +3145,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220624121252'),
 ('20220628121934'),
 ('20220629132145'),
-('20220630032544');
+('20220630032544'),
+('20220704121816');
 
 

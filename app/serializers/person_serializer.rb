@@ -55,7 +55,7 @@ class PersonSerializer #< ActiveModel::Serializer
     person.base_tags.collect(&:name)
   end
 
-  has_many  :email_addresses, serializer: EmailAddressSerializer,
+  has_many  :email_addresses, lazy_load_data: true, serializer: EmailAddressSerializer,
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"
@@ -65,7 +65,7 @@ class PersonSerializer #< ActiveModel::Serializer
                 }
               }
 
-  has_many :convention_roles, serializer: ConventionRoleSerializer,
+  has_many :convention_roles, lazy_load_data: true, serializer: ConventionRoleSerializer,
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"
@@ -75,7 +75,7 @@ class PersonSerializer #< ActiveModel::Serializer
                 }
               }
 
-  has_many  :submissions, serializer: Survey::SubmissionSerializer,
+  has_many  :submissions, lazy_load_data: true, serializer: Survey::SubmissionSerializer,
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"
@@ -86,7 +86,7 @@ class PersonSerializer #< ActiveModel::Serializer
               }
 
   #
-  has_many :mailed_surveys, serializer: SurveySerializer,
+  has_many :mailed_surveys, lazy_load_data: true, serializer: SurveySerializer,
              links: {
                self: -> (object, params) {
                  "#{params[:domain]}/person/#{object.id}"
@@ -96,7 +96,7 @@ class PersonSerializer #< ActiveModel::Serializer
                }
              }
 
-  has_many :assigned_surveys, serializer: SurveySerializer,
+  has_many :assigned_surveys, lazy_load_data: true, serializer: SurveySerializer,
             links: {
               self: -> (object, params) {
                 "#{params[:domain]}/person/#{object.id}"
@@ -108,7 +108,7 @@ class PersonSerializer #< ActiveModel::Serializer
 
   #
   # Availabilities
-  has_many :availabilities, serializer: AvailabilitySerializer,
+  has_many :availabilities, lazy_load_data: true, serializer: AvailabilitySerializer,
            links: {
              self: -> (object, params) {
                "#{params[:domain]}/person/#{object.id}"
@@ -118,7 +118,7 @@ class PersonSerializer #< ActiveModel::Serializer
              }
            }
 
-  has_many :person_exclusions, serializer:PersonExclusionSerializer,
+  has_many :person_exclusions, lazy_load_data: true, serializer:PersonExclusionSerializer,
           links: {
             self: -> (object, params) {
               "#{params[:domain]}/person/#{object.id}"
@@ -128,7 +128,7 @@ class PersonSerializer #< ActiveModel::Serializer
             }
           }
 
-  has_many :session_limits, serializer:SessionLimitSerializer,
+  has_many :session_limits, lazy_load_data: true, serializer:SessionLimitSerializer,
             links: {
               self: -> (object, params) {
                 "#{params[:domain]}/person/#{object.id}"
@@ -170,7 +170,7 @@ class PersonSerializer #< ActiveModel::Serializer
   #              }
   #            }
 
-  has_many :mail_histories, serializer: MailHistorySerializer,
+  has_many :mail_histories, lazy_load_data: true, serializer: MailHistorySerializer,
              links: {
               self: -> (object, params) {
                 "#{params[:domain]}/person/#{object.id}"

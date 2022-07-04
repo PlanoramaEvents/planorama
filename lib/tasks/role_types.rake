@@ -43,5 +43,18 @@ namespace :role_types do
       )
     end
 
+    fix_sort_order
+
+  end
+
+  def fix_sort_order
+    rt = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    rt.update!(sort_order: 1)
+    rt = SessionAssignmentRoleType.find_by(name: 'Participant')
+    rt.update!(sort_order: 2)
+    rt = SessionAssignmentRoleType.find_by(name: 'Invisible')
+    rt.update!(sort_order: 3)
+    rt = SessionAssignmentRoleType.find_by(name: 'Reserve')
+    rt.update!(sort_order: 4)
   end
 end

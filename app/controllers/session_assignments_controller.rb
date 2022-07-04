@@ -28,6 +28,20 @@ class SessionAssignmentsController < ResourceController
     [:update, :unexpress_interest]
   end
 
+  def order_string(order_by: nil)
+    return super(order_by: order_by) if order_by
+
+    order_str = %(session_assignment_role_type.sort_order asc NULLS LAST,
+      CASE WHEN session_assignments.state = 'accepted' THEN 1
+      WHEN session_assignments.state = 'proposed' THEN 2
+      WHEN session_assignments.state = 'rejected' THEN 3
+      else 4
+      end
+    )
+
+    Arel.sql(order_str.squish)
+  end
+
   def serializer_includes
     if params[:session_id]
       # remove included data for now to speed up loads
@@ -47,7 +61,8 @@ class SessionAssignmentsController < ResourceController
   def includes
     [
       :person,
-      :session
+      :session,
+      :session_assignment_role_type
     ]
   end
 
