@@ -28,6 +28,22 @@ class SessionAssignmentsController < ResourceController
     [:update, :unexpress_interest]
   end
 
+  def after_update_tx
+    # if unassigning and they are not selected then we delete ....
+    if @object.state == 'proposed' && !@object.interested && !@object.session_assignment_role_type_id
+      # Get rid of the assignment
+      @object.destroy
+
+      # tell the client to refetch so it updates data correctly
+      # we may need to revist cause this is not good either
+      redirect_to(action: :destroy, id: @object.id, status: 303)
+
+      return true
+    else
+      return false
+    end
+  end
+
   def order_string(order_by: nil)
     return super(order_by: order_by) if order_by
 

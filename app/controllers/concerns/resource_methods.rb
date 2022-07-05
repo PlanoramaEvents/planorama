@@ -91,7 +91,8 @@ module ResourceMethods
         after_update
       end
     end
-    after_update_tx
+    ret = after_update_tx
+    return if ret
     render_object(@object)
   end
 
