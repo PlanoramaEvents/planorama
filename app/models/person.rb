@@ -149,7 +149,7 @@ class Person < ApplicationRecord
   end
 
   def check_primary_email
-    if EmailAddress.where("person_id != ? and email ilike ? and isdefault = true").count > 0
+    if EmailAddress.where("person_id != ? and email ilike ? and isdefault = true", id, email.strip).count > 0
       raise "That email has been taken by someone else as a primary email address"
     end
   end
