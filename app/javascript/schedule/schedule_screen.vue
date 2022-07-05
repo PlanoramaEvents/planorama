@@ -142,7 +142,8 @@ export default {
               ["room_id", "is null"]
             ]
           },
-          ["duration", ">", "0"]
+          ["duration", ">", "0"],
+          ["status", "!=", "dropped"]
         ]
       }
 
