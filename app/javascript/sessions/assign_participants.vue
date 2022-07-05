@@ -7,10 +7,10 @@
     </div>
     <div class='row mb-4' v-if="sortedCollection.length > 0">
       <div class="col-3">
-        <spen>
+        <span>
           Assignment State
           <button @click="reorder" class="btn btn-primary btn-sm">Re-order</button>
-        </spen>
+        </span>
       </div>
       <div class="col-9">
         Potential Participants
@@ -95,7 +95,14 @@ export default {
     saveAssignment(assignment) {
       this.save(assignment).then(
         () => {
-          this.refreshSession()
+          // TODO?
+          // this.refreshSession()
+          this.fetchPaged(false)
+        }
+      ).catch(
+        () => {
+          // this.refreshSession()
+          this.fetchPaged(false)
         }
       )
     },

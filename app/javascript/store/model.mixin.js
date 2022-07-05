@@ -11,7 +11,7 @@ export const modelMixinNoProp = {
     selected() {
       return this.$store.getters[SELECTED]({model: this.model})
     },
-    collection() {      
+    collection() {
       return Object.values(this.$store.getters['jv/get']({_jv: { type: this.model }}))
     }
   },
@@ -49,7 +49,6 @@ export const modelMixinNoProp = {
     },
     // need a save instance
     save(instance) {
-      console.log(instance);
       return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, selected: false, item: instance}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
     },
     delete_by_id(id) {
