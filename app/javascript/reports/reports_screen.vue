@@ -13,9 +13,6 @@
         <a href="/report/assigned_sessions_by_participant" target="_blank">Assigned Sessions by Participant</a>
       </li>
       <li>
-        <a href="/report/schedule_by_person" target="_blank">Schedule by Participant</a>
-      </li>
-      <li>
         <a href="/report/people_and_submissions" target="_blank">People and Survey Submissions</a>
       </li>
       <li>
@@ -27,9 +24,6 @@
       </li>
       <li>
         <a href="/report/session_reports/participants_over_con_session_limits" target="_blank">Participants over Con Limit</a>
-      </li>
-      <li>
-        <a href="/report/conflict_reports/person_exclusion_conflicts" target="_blank">Person scheduled against a conflict item</a>
       </li>
       <li>
         <a href="/report/session_reports/non_accepted_on_schedule" target="_blank">Non-Accepted Participants on Scheduled Sessions</a>
@@ -56,16 +50,19 @@
       </li>
       <li>
         <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>
+        <li>
+          <a href="/report/session_reports/panels_with_too_few_people" target="_blank">Panels with too few Participants</a>
+        </li>
+        <li>
+          <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
+        </li>
       </li>
     </ul>
 
     <p><b>Conflicts</b></p>
     <ul>
       <li>
-        <a href="/report/session_reports/panels_with_too_few_people" target="_blank">Panels with too few Participants</a>
-      </li>
-      <li>
-        <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
+        <a href="/report/conflict_reports/person_exclusion_conflicts" target="_blank">Person scheduled against a conflict item</a>
       </li>
       <li>
         <a href="/report/conflict_reports/people_outside_availability" target="_blank">People outside of Availability</a>
@@ -80,7 +77,10 @@
         <a href="/report/conflict_reports/back_to_back_to_back" target="_blank">Back to Back to Back</a>
       </li>
       <li>
-        <a href="/report/conflict_reports/multiple_sessions_in_room" target="_blank">Multiple Sessions in a Room</a>
+        <a href="/report/conflict_reports/all_conflicts" target="_blank">All Conflicts</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/all_ignored_conflicts" target="_blank">All Ignored Conflicts</a>
       </li>
     </ul>
 
@@ -88,6 +88,9 @@
     <ul>
       <li>
         <a href="/report/schedule_by_room_then_time" target="_blank">Schedule by Room then Time</a>
+      </li>
+      <li>
+        <a href="/report/schedule_by_person" target="_blank">Schedule by Participant</a>
       </li>
     </ul>
 
