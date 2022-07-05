@@ -8,6 +8,7 @@ class Reports::ConflictReportsController < ApplicationController
     room_conflicts = Conflicts::RoomConflict
                       .includes(:room)
                       .references(:room)
+                      .where("room_conflicts.back_to_back = false")
                       .order('rooms.name, start_time')
 
     workbook = FastExcel.open(constant_memory: true)
