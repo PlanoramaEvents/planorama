@@ -21,6 +21,32 @@ class PeopleController < ResourceController
     )
   end
 
+  def draft_sessions
+    authorize current_person, policy_class: policy_class
+
+    person = Person.find params{:person_id}
+
+    if person
+      reserved = SessionAssignmentRoleType.find_by(name: 'Reserve')
+      sessions = person.sessions
+                  .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
+                  .where("session_assignments.session_assignment_role_type_id != ?", reserved)
+                  .where("sessions.start_time is not null AND sessions.room_id is not null")
+                  .order("sessions.start_time asc, sessions.title asc")
+
+      render json: SessionSerializer.new(
+               sessions,
+               {
+                 params: {
+                   domain: "#{request.base_url}",
+                   current_person: current_person
+                 }
+               }
+             ).serializable_hash(),
+             content_type: 'application/json'
+    end
+  end
+
   # Get all the session names for the people ids passed in
   def session_names
     authorize current_person, policy_class: policy_class

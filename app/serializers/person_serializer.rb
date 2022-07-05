@@ -138,26 +138,26 @@ class PersonSerializer #< ActiveModel::Serializer
               }
             }
 
-  #         links: {
-  #           self: -> (object, params) {
-  #             "#{params[:domain]}/person/#{object.id}"
-  #           },
-  #           related: -> (object, params) {
-  #             "#{params[:domain]}/person/#{object.id}/session_limit"
-  #           }
-  #         }
-
   # sessions
-  # has_many :sessions, serializer: SessionSerializer,
-  #            if: Proc.new { |record, params| AccessControlService.allowed_access?(instance: record, person: params[:current_person]) },
-  #            links: {
-  #              self: -> (object, params) {
-  #                "#{params[:domain]}/person/#{object.id}"
-  #              },
-  #              related: -> (object, params) {
-  #                "#{params[:domain]}/person/#{object.id}/sessions"
-  #              }
-  #            }
+  has_many :draft_sessions, lazy_load_data: true, serializer: SessionSerializer,
+             links: {
+               self: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}"
+               },
+               related: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}/draft_sessions"
+               }
+             }
+  # sessions
+  has_many :sessions, lazy_load_data: true, serializer: SessionSerializer,
+             links: {
+               self: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}"
+               },
+               related: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}/sessions"
+               }
+             }
 
   # published_sessions
   # has_many :published_sessions, serializer: PublishedSessionSerializer,
