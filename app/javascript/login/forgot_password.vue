@@ -86,8 +86,10 @@ export default {
             }
           })
           .catch((error) => {
-            this.alert.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
-            this.alert.visible = true;
+            // this.alert.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
+            // this.alert.visible = true;
+            // Even if we have a problem we need to pretend that we do not
+            this.$router.push("/?alert=reset_sent");
           });
       }
     },

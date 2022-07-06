@@ -35,6 +35,18 @@ class Session < ApplicationRecord
     },
     foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
 
+  has_many :ignored_session_conflicts,
+    -> {
+      where("session_conflicts.conflict_id in (select conflict_id from ignored_conflicts)")
+    },
+    class_name: 'Conflicts::SessionConflict'
+
+  has_many :ignored_conflict_sessions,
+    -> {
+      where("session_conflicts.conflict_id in (select conflict_id from ignored_conflicts)")
+    },
+    foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
+
   has_and_belongs_to_many :room_services
 
   has_many :session_assignments, dependent: :destroy do

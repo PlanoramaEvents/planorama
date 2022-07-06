@@ -10,12 +10,12 @@ class Survey < ApplicationRecord
 
   has_many :questions, through: :pages, class_name: 'Survey::Question'
 
-  has_many :submissions, class_name: 'Survey::Submission'
+  has_many :submissions, class_name: 'Survey::Submission', dependent: :destroy
 
   has_many :mailings
   has_many :mailed_submitters, through: :mailings, source: :person
 
-  before_destroy :check_for_use, :check_if_public
+  before_destroy :check_if_public, :check_for_use
   before_update :check_if_public
   before_save :check_if_public
 
@@ -40,7 +40,8 @@ class Survey < ApplicationRecord
   private
 
   def check_for_use
-    raise 'can not delete a survey that has responses in the system' if submissions.any?
+    # If it has submissions with responses
+    raise 'can not delete a survey that has responses in the system' if submissions.joins(:responses).any?
   end
 
   def check_if_public

@@ -90,6 +90,8 @@ class Reports::ConflictReportsController < ApplicationController
     room_conflicts = Conflicts::RoomConflict
                       .includes(:room)
                       .references(:room)
+                      .where("room_conflicts.back_to_back = false")
+                      .where("room_conflicts.id not in (select conflict_id from ignored_conflicts)")
                       .order('rooms.name, start_time')
 
     workbook = FastExcel.open(constant_memory: true)
@@ -150,6 +152,7 @@ class Reports::ConflictReportsController < ApplicationController
                   :person, :session, :exclusion, :excluded_session
                 )
                 .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                .where("person_exclusion_conflicts.id not in (select conflict_id from ignored_conflicts)")
                 .order('people.published_name asc')
 
     workbook = FastExcel.open(constant_memory: true)
@@ -336,16 +339,17 @@ class Reports::ConflictReportsController < ApplicationController
     ]
 
     conflicts = Conflicts::PersonBackToBack.select(
-      Conflicts::PersonBackToBack.arel_table[Arel.star],
-                  'areas_list.area_list as area_list',
-                  'conflict_areas_list.area_list as conflict_area_list'
-    )
-    .includes(:room, :conflict_room)
-    .references(:room, :conflict_room)
-    .joins(joins)
-                  .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                  .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                  .order('published_name asc, conflict_start_time asc')
+        Conflicts::PersonBackToBack.arel_table[Arel.star],
+                    'areas_list.area_list as area_list',
+                    'conflict_areas_list.area_list as conflict_area_list'
+      )
+      .includes(:room, :conflict_room)
+      .references(:room, :conflict_room)
+      .joins(joins)
+      .where("person_back_to_back.id not in (select conflict_id from ignored_conflicts)")
+      .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .order('published_name asc, conflict_start_time asc')
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("People Scheduled Back to Back")
@@ -427,6 +431,7 @@ class Reports::ConflictReportsController < ApplicationController
                   )
                   .includes(:person, :session, :conflict_session, :room, :conflict_room)
                   .joins(joins)
+                  .where("person_schedule_conflicts.id not in (select conflict_id from ignored_conflicts)")
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .order('people.published_name asc, start_time asc')
@@ -498,6 +503,7 @@ class Reports::ConflictReportsController < ApplicationController
                   .includes(:session, :person)
                   .eager_load(person: :availabilities)
                   .joins(joins)
+                  .where("availability_conflicts.id not in (select conflict_id from ignored_conflicts)")
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .order('people.published_name')
 

@@ -142,7 +142,8 @@ export default {
           //     ["room_id", "is null"]
           //   ]
           // },
-          ["duration", ">", "0"]
+          ["duration", ">", "0"],
+          ["status", "!=", "dropped"]
         ]
       }
 
@@ -153,10 +154,14 @@ export default {
     ...mapActions({
       fetch: FETCH
     }),
-    onScheduleChanged: function() {
+    onScheduleChanged: function(id) {
       this.$refs["schedulable-sessions"].fetchPaged(false)
       // update the conflicts
-      this.$refs["conflict-reporting"].fetchPaged()
+      if (this.sessionIdForConflict == id) {
+        this.$refs["conflict-reporting"].refreshConflicts()
+      } else {
+        this.sessionIdForConflict = id
+      }
     },
     onShowConflicts: function(session_id) {
       this.sessionIdForConflict = session_id
