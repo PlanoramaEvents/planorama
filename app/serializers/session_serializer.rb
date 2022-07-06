@@ -65,6 +65,8 @@ class SessionSerializer
              }
            }
 
+  has_many :participant_assignments, lazy_load_data: true, serializer: SessionAssignmentSerializer
+
   has_one :format, lazy_load_data: true,
           if: Proc.new { |record| record.format },
           links: {

@@ -61,6 +61,16 @@ class Session < ApplicationRecord
   end
   has_many :people, through: :session_assignments
 
+  has_many :participant_assignments,
+    -> {
+      joins("JOIN session_assignment_role_type as sart ON sart.id = session_assignments.session_assignment_role_type_id")
+      .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
+      .order("sart.sort_order")
+    },
+    class_name: 'SessionAssignment'
+  has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
+
   # TODO: Will also need a published versioon of the relationship
   has_many :session_areas, inverse_of: :session
   has_many :areas, through: :session_areas
