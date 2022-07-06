@@ -24,7 +24,7 @@ class PeopleController < ResourceController
   def draft_sessions
     authorize current_person, policy_class: policy_class
 
-    person = Person.find params{:person_id}
+    person = Person.find params[:person_id]
 
     if person
       reserved = SessionAssignmentRoleType.find_by(name: 'Reserve')
