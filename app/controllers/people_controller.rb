@@ -29,6 +29,7 @@ class PeopleController < ResourceController
     if person
       reserved = SessionAssignmentRoleType.find_by(name: 'Reserve')
       sessions = person.sessions
+                  .eager_load({session_assignments: :person}, :format, :session_areas)
                   .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
                   .where("session_assignments.session_assignment_role_type_id != ?", reserved)
                   .where("sessions.start_time is not null AND sessions.room_id is not null")
@@ -37,6 +38,15 @@ class PeopleController < ResourceController
       render json: SessionSerializer.new(
                sessions,
                {
+                 # need assgnments and rooms etc
+                 include: [
+                   :format,
+                   :room,
+                   :session_areas,
+                   :'session_areas.area',
+                   :session_assignments,
+                   :'session_assignments.person'
+                 ],
                  params: {
                    domain: "#{request.base_url}",
                    current_person: current_person
