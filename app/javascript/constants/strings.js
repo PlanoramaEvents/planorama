@@ -240,6 +240,7 @@ module.exports = {
         languages_fluent_in: "Languages spoken"
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
+    PERSON_NEVER_LOGGED_IN: "Never logged in",
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
