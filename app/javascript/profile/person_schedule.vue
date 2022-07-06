@@ -16,7 +16,8 @@
             <dt>Title</dt>
             <dd>{{session.title}}</dd>
             <dt>Participants (with contact information where allowed)</dt>
-            <dd class="text-muted">TODO</dd>
+            <dd v-for="sa in session.session_assignments" :key="sa.id">{{sa.person.publication_name}}{{ isModerator(sa) ? " (m)" : ""}} {{sa.person.pronouns}} - {{ sa.person.contact_email ? sa.person.contact_email : 'permission not given'}}</dd>
+            <dd class="text-muted" v-if="!session.session_assignments.length">None Assigned</dd>
             <dt>Description</dt>
             <dd v-html="session.description"></dd>
             <dt>Space/Time</dt>
@@ -26,9 +27,10 @@
             <dt>Session Environment</dt>
             <dd>{{SESSION_ENVIRONMENT[session.environment]}}</dd>
             <dt>Session Format</dt>
-            <dd class="text-muted">TODO</dd>
+            <dd class="not-italic"><span class="badge badge-pill badge-info">{{session.format.name || session.format_id}}</span></dd>
             <dt>Session Area(s)</dt>
-            <dd class="text-muted">TODO</dd>
+            <dd v-if="session.area_list.length" class="not-italic"><span v-for="area in session.area_list" class="badge badge-pill badge-primary" :key="area">{{area}}</span></dd>
+            <dd v-if="!session.area_list.length" class="text-muted">None Selected</dd>
             <dt>Schedule Notes</dt>
             <dd v-html="session.participant_notes"></dd>
           </dl>
@@ -45,6 +47,7 @@ import { personModel as model } from '@/store/person.store';
 import { modelMixinNoProp } from '@/mixins';
 import { startTimeMixinNoSelected } from '@/sessions/session_fields.mixin';
 import { SESSION_ENVIRONMENT } from '@/constants/strings';
+import { sessionRoleMixin } from '@/sessions/session_role.mixin';
 
 export default {
   name: "PersonSchedule",
@@ -53,7 +56,8 @@ export default {
   },
   mixins: [
     modelMixinNoProp,
-    startTimeMixinNoSelected
+    startTimeMixinNoSelected,
+    sessionRoleMixin
   ],
   data: () => ({
     sessions: {},
@@ -102,7 +106,9 @@ export default {
 .indented-dl {
   dd {
     margin-left: 0.5rem;
-    font-style: italic;
+    &:not(.not-italic) {
+      font-style: italic;
+    }
   }
 }
 </style>
