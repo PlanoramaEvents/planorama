@@ -50,12 +50,12 @@
       </li>
       <li>
         <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>
-        <li>
-          <a href="/report/session_reports/panels_with_too_few_people" target="_blank">Panels with too few Participants</a>
-        </li>
-        <li>
-          <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
-        </li>
+      </li>
+      <li>
+        <a href="/report/session_reports/panels_with_too_few_people" target="_blank">Panels with too few Participants</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
       </li>
     </ul>
 
