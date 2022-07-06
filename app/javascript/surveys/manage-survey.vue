@@ -9,7 +9,7 @@
       label="Survey Name"
       label-for="survey-name"
     >
-      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()" :disabled="survey.public"></b-form-input>
+      <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()"></b-form-input>
     </b-form-group>
     <b-alert :show="survey.public" variant="warning" class="alert-bright mx-3">{{SURVEY_PUBLIC_NO_EDIT}}</b-alert>
     <b-tabs>
