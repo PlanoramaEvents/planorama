@@ -105,7 +105,7 @@ export default {
             break;
           case 'rejected':
             this.sessionAssignment.state = 'rejected'
-            this.sessionAssignment.visibility = 'private'
+            this.sessionAssignment.visibility = 'is_private'
             this.sessionAssignment.session_assignment_role_type_id = null
             break;
         }
