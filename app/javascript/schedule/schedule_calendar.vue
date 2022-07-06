@@ -59,8 +59,8 @@ export default {
     loading: false
   }),
   methods: {
-    onScheduleChanged: function() {
-      this.$emit("schedule-changed");
+    onScheduleChanged: function(id) {
+      this.$emit("schedule-changed", id);
     },
     onShowConflicts: function(session_id) {
       this.$emit("show-conflicts", session_id);
@@ -75,7 +75,6 @@ export default {
             () => {
               this.loading = false
               for (const day of this.days) {
-                console.debug("******** DAY IS ", day)
                 let component = this.$refs[`day-${day}`][0].scrollBarElement()
                 let targets = this.days.filter(d => d != day)
 
