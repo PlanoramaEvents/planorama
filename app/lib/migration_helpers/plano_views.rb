@@ -146,10 +146,10 @@ module MigrationHelpers
             and ps2.session_id != ps1.session_id
             and ps2.start_time >= ps1.start_time
             and (
-              ps2.start_time <= ps1.end_time
+              ps2.start_time < ps1.end_time
               or
               (
-                ps2.end_time  >= ps1.start_time and ps2.end_time <= ps1.end_time
+                ps2.end_time  > ps1.start_time and ps2.end_time <= ps1.end_time
               )
             );
       SQL
