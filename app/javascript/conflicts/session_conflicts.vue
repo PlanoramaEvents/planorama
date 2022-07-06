@@ -104,14 +104,16 @@ export default {
       this.conflicts = []
       this.conflicts_with = []
       this.clear()
-      let p1 = this.get_conflicts({session_id: sessionId}).then(
+      let p1 = this.get_conflicts({session_id: sessionId});
+      p1.then(
         (conflicts) => {
           this.conflicts = Object.values(conflicts).filter(
             obj => (typeof obj.json === 'undefined')
           )
         }
       )
-      let p2 = this.get_conflicts_with({session_id: sessionId}).then(
+      let p2 = this.get_conflicts_with({session_id: sessionId});
+      p2.then(
         (conflicts) => {
           this.conflicts_with = Object.values(conflicts).filter(
             obj => (typeof obj.json === 'undefined')
