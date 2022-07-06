@@ -188,11 +188,7 @@ export default {
       }
     },
     onEventDrop ({ event, originalEvent, external }) {
-      this.updateSession(event.id, event.start, event.split).then(
-        () => {
-          this.$emit("show-conflicts", event.id);
-        }
-      )
+      this.updateSession(event.id, event.start, event.split)
     },
     onDelete(event, ev) {
       event.stopPropagation()
@@ -204,11 +200,16 @@ export default {
     },
     updateSession(id, start_time, room_id) {
       let session = this.get_model(sessionModel, id)
+      let removed = start_time == null
       session.start_time = start_time ? this.uiDateToTZDate(start_time) : null
       session.room_id = room_id
       return this.save_model(sessionModel, session).then(
         () => {
-          this.$emit("schedule-changed");
+          if (removed) {
+            this.$emit("schedule-changed", null);
+          } else {
+            this.$emit("schedule-changed", id);
+          }
         }
       )
     }
