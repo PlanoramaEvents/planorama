@@ -188,7 +188,9 @@ export default {
   data () {
     return {
       selected_items: [],
-      editable_ids: []
+      editable_ids: [],
+      keep: false, // semaphore to catch "false" unselect
+      selecedRowNbr: -1 // keep track of selected row to keep display
     }
   },
   computed: {
@@ -266,9 +268,21 @@ export default {
     onRowSelected(items) {
       this.selected_items = items
       if (items[0] && (items.length == 1)) {
+        // keep the index of the row that was selected
+        this.selecedRowNbr = this.sortedCollection.indexOf(items[0])
         this.select(items[0]);
       } else {
-        this.select(null);
+        if (this.keep) { // semaphore to keep selected from getting unselected ...
+          // This is ugly but it works !!!!
+          this.keep = false
+          if (this.selecedRowNbr > -1) {
+            this.$refs.table.selectRow(this.selecedRowNbr)
+          }
+        } else {
+          // standard unselect
+          this.select(null);
+          this.selecedRowNbr = -1;
+        }
       }
     },
     onSortChanged(ctx) {
@@ -288,21 +302,30 @@ export default {
     }
   },
   watch: {
+    sortedCollection(nv, ov) {
+      if (ov.length == 0 && nv.length > 0) {
+        this.keep = false
+      } else {
+        // If the length has not changed ...
+        this.keep = true
+      }
+    },
     selected(val) {
       if (!val && this.selected_items.length == 1) {
         this.$refs.table.clearSelected()
       }
     },
-    currentPage(ov,nv) {
+    currentPage(nv,ov) {
       if (ov != nv) {
         // page was changed so we clear our selected
         this.selected_items = []
         this.editable_ids = []
+        this.keep = false
+        this.selecedRowNbr = -1
       }
     }
   },
   mounted() {
-    // ensure that there is no model selected when the table is loaded
     this.editable_ids = []
     this.unselect();
   }

@@ -197,6 +197,9 @@ module.exports = {
     ERROR_GENERIC_UNRECOVERABLE: (email) => twoLines("The server has encountered an internal error and was unable to complete your request.",
     `Please contact the server administrator at ${email} and let them know the time and date the error occurred.`),
 
+    ADD_CONFLICT_IGNORE_SUCCESS: "Ignore Conflict Added",
+    ADD_CONFLICT_IGNORE_ERROR: "Ignore Conflict Failed",
+
     // Social Links Errors
     TWITTER_ID_INVALID_MSG: "Twitter ID is not in a valid format",
     FACEBOOK_ID_INVALID_MSG: "Facebook ID is not in a valid format",
@@ -241,4 +244,25 @@ module.exports = {
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
     SURVEY_PUBLIC_NO_DELETE: "You cannot delete a published survey. Close the survey to enable deletion.",
+    SESSION_ENVIRONMENT: {
+        unknown: "Unknown",
+        in_person: "In Person",
+        hybrid: "Hybrid",
+        virtual: "Virtual"
+    },
+    SESSION_STATUS: {
+        draft: "Draft",
+        reviewed: "Reviewed",
+        revised: "Revised",
+        dropped: "Dropped",
+    },
+    SESSION_MUST_UNSCHEDULE: "You must unschedule a session before dropping it",
+    SESSION_MUST_UNDROP: "You must un-drop the session to be able to schedule it.",
+    SESSION_MINORS_PARTICIPATION: {
+        kids_observe: "Kids welcome to observe",
+        kids_supervision: "Kids welcome to participate with supervision",
+        kids_participate: "Kids welcome to participate",
+        geared_families: "Geared towards families",
+        geared_kids: "Geared towards kids",
+    },
 }

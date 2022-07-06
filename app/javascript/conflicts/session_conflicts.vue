@@ -11,12 +11,14 @@
           v-for="conflict in conflicts" :key="conflict.id"
         >
           <div  v-html="conflict_type_string(conflict)"></div>
+          <ignore-button @click="ignore(conflict)"></ignore-button>
         </div>
         <div
           class="session-conflict mb-1"
           v-for="conflict in conflicts_with" :key="conflict.id"
         >
           <div  v-html="conflict_type_string(conflict, true)"></div>
+          <ignore-button @click="ignore(conflict)"></ignore-button>
         </div>
       </div>
       <div class="ml-2 text-muted font-italic" v-else-if="sessionId && conflicts.length === 0 && conflicts_with.length === 0">
@@ -32,6 +34,7 @@ import modelMixin from '../store/model.mixin';
 import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
 import dateTimeMixin from '../components/date_time.mixin'
+import IgnoreButton from './ignore_button.vue';
 
 export default {
   name: "SessionConflicts",
@@ -52,6 +55,9 @@ export default {
     conflicts: [],
     conflicts_with: []
   }),
+  components: {
+    IgnoreButton
+  },
   computed: {
     selectedSession() {
       return this.get_model(sessionModel, this.sessionId)
@@ -80,6 +86,13 @@ export default {
     }
   },
   methods: {
+    ignore(conflict) {
+      this.ignore_conflict({conflict_id: conflict.id, conflict_type: conflict.conflict_type}).then(
+        () => {
+          this.getConflicts(this.sessionId)
+        }
+      )
+    },
     getConflicts(sessionId) {
       this.conflicts = []
       this.conflicts_with = []

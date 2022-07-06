@@ -47,7 +47,9 @@ Vue.config.errorHandler = (err, vm, info) => {
   }
 }
 
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue, {
+  BSkeleton: { animation: 'fade' }
+});
 Vue.use(BootstrapVueIcons);
 Vue.use(CustomIconsPlugin);
 Vue.use(AsyncComputed);
