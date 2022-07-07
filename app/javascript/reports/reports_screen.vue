@@ -56,7 +56,6 @@
         <li>
           <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
         </li>
-      </li>
     </ul>
 
     <p><b>Conflicts</b></p>
@@ -92,6 +91,12 @@
       <li>
         <a href="/report/schedule_by_person" target="_blank">Schedule by Participant</a>
       </li>
+      <!--li>
+        <a href="/report/participants_with_approved_draft_schedule" target="_blank">Participants with approved draft schedule</a>
+      </li-->
+      <!--li>
+        <a href="/report/participants_with_approved_final_schedule" target="_blank">Participants with approved final schedule</a>
+      </li-->
     </ul>
 
   </div>
