@@ -23,16 +23,27 @@ export const scheduledMixin = {
   }
 }
 
-export const startTimeMixin = {
+export const startTimeMixinNoSelected = {
   mixins: [
     conventionTimezoneMixin
   ],
-  computed: {
-    formattedStartTime() {
-      if(this.selected?.start_time) {
-        return DateTime.fromISO(this.selected.start_time, {zone: 'utc'}).setZone(this.conventionTimezone).toFormat('DDDD, t ZZZZ');
+  methods: {
+    formatStartTime(session) {
+      if(session.start_time) {
+        return DateTime.fromISO(session.start_time, {zone: 'utc'}).setZone(this.conventionTimezone).toFormat('DDDD, t ZZZZ');
       }
       return '';
+    },
+  }
+}
+
+export const startTimeMixin = {
+  mixins: [
+    startTimeMixinNoSelected
+  ],
+  computed: {
+    formattedStartTime() {
+      this.formatStartTime(this.selected);
     },
   }
 }

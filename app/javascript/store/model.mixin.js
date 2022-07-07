@@ -88,7 +88,7 @@ export const modelMixin = {
  */
 export const makeSelectedFieldMixin = (field) => ({
   mixins: [
-    modelMixin
+    modelMixinNoProp
   ],
   data: () => ({
     [field]: null
