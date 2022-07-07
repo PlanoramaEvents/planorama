@@ -18,7 +18,6 @@
       <li>
         <a href="/report/participant_do_not_assign_with" target="_blank">Participants and Do Not Assign With</a>
       </li>
-
       <li>
         <a href="/report/session_reports/participants_over_session_limits" target="_blank">Participants over Daily Limits</a>
       </li>
@@ -50,12 +49,13 @@
       </li>
       <li>
         <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>
-        <li>
-          <a href="/report/session_reports/panels_with_too_few_people" target="_blank">Panels with too few Participants</a>
-        </li>
-        <li>
-          <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
-        </li>
+      </li>
+      <li>
+        <a href="/report/session_reports/panels_with_too_few_people" target="_blank">Panels with too few Participants</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
+      </li>
     </ul>
 
     <p><b>Conflicts</b></p>
@@ -91,12 +91,12 @@
       <li>
         <a href="/report/schedule_by_person" target="_blank">Schedule by Participant</a>
       </li>
-      <!--li>
+      <!-- <li>
         <a href="/report/participants_with_approved_draft_schedule" target="_blank">Participants with approved draft schedule</a>
-      </li-->
-      <!--li>
+      </li> -->
+      <!-- <li>
         <a href="/report/participants_with_approved_final_schedule" target="_blank">Participants with approved final schedule</a>
-      </li-->
+      </li> -->
     </ul>
 
   </div>
