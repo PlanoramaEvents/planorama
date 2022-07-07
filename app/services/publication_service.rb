@@ -5,7 +5,7 @@ module PublicationService
     # We only want the public participant roles
     Session.Transaction do
       # Get the session elligible for publication, not draft or dropped and must be public
-      sessions = Session.where("status != 'draft' and status != 'dropped' and is_public = 'public'")
+      sessions = Session.where("status != 'draft' and status != 'dropped' and visibility = 'public'")
 
       # published_sessions
       sessions.each do |session|
