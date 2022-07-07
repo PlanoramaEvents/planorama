@@ -165,4 +165,19 @@ module AccessControlService
 
     res
   end
+
+  def self.shared_attribute_access?(instance:, person:)
+    return true if person.convention_roles.collect(&:role).include?('admin')
+
+    if instance.is_a?(Person)
+      return true if instance.id == person.id
+
+      return true if instance.can_share
+    end
+
+    return false if person.convention_roles.count == 0
+    return false if (person.convention_roles.count == 1) && person.convention_roles.collect(&:role).include?('participant')
+
+    true
+  end
 end

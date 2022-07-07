@@ -2,7 +2,7 @@ class PersonSerializer #< ActiveModel::Serializer
   include JSONAPI::Serializer
   include ::Plano::Serializer
 
-  attributes :primary_email, :contact_email
+  shareable_attributes :primary_email, :contact_email
 
   protected_attributes :id, :lock_version,
               :name, :name_sort_by, :name_sort_by_confirmed,
@@ -55,7 +55,8 @@ class PersonSerializer #< ActiveModel::Serializer
     person.base_tags.collect(&:name)
   end
 
-  has_many  :email_addresses, lazy_load_data: true, serializer: EmailAddressSerializer,
+  has_many  :email_addresses, if: Proc.new { |record, params| AccessControlService.shared_attribute_access?(instance: record, person: params[:current_person]) },
+              lazy_load_data: true, serializer: EmailAddressSerializer,
               links: {
                 self: -> (object, params) {
                   "#{params[:domain]}/person/#{object.id}"
