@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12">
         <div class="d-flex">
-          <h2>Draft Schedule</h2>
+          <h2>Live Schedule</h2>
           <b-button variant="link" @click="allButton()">{{ anyOpen ? 'Collapse all' : 'Show all'}}</b-button>
         </div>
       </div>
@@ -16,8 +16,8 @@
             <dt>Title</dt>
             <dd>{{session.title}}</dd>
             <dt>Participants (with contact information where allowed)</dt>
-            <dd v-for="sa in session.session_assignments" :key="sa.id">{{sa.person.publication_name}}{{ isModerator(sa) ? " (m)" : ""}} {{sa.person.pronouns}} - {{ sa.person.contact_email ? sa.person.contact_email : 'permission not given'}}</dd>
-            <dd class="text-muted" v-if="!session.session_assignments.length">None Assigned</dd>
+            <dd v-for="sa in session.participant_assignments" :key="sa.id">{{sa.person.published_name}}{{ isModerator(sa) ? " (m)" : ""}} {{sa.person.pronouns}} - {{ sa.person.contact_email ? sa.person.contact_email.email : 'permission not given'}}</dd>
+            <dd class="text-muted" v-if="!Object.keys(session.participant_assignments).length">None Assigned</dd>
             <dt>Description</dt>
             <dd v-html="session.description"></dd>
             <dt>Space/Time</dt>
@@ -80,8 +80,9 @@ export default {
     allButton() {
       const newDir = !this.anyOpen;
       Object.keys(this.open).forEach((id) => {
-        this.open[id] = newDir;
-        console.log(`changed ${id} to ${this.open[id]}`)
+        if (this.open[id] !== newDir) {
+          this.$root.$emit('bv::toggle::collapse', id)
+        }
       })
     }
   },
