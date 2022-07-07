@@ -1,14 +1,5 @@
 <template>
   <div class="survey">
-    <b-form-group
-      class="mx-3"
-      v-if="survey"
-      id="survey-description-group"
-      label="Survey Description"
-      label-for="survey-description"
-    >
-      <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey()"></b-form-textarea>
-    </b-form-group>
     <edit-survey-controls></edit-survey-controls>
     <edit-survey-page
       v-for="(p, i) in selectedSurveyPages"

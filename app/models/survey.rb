@@ -48,6 +48,8 @@ class Survey < ApplicationRecord
     return if self.new_record?
 
     return if self.public && self.public_changed? # to allow for changing to "published"
+    return if self.public && self.name_changed?
+    return if self.public && self.description_changed?
 
     raise 'can not delete or update a survey that is public' if self.public
   end
