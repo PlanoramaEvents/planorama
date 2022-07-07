@@ -11,6 +11,15 @@
     >
       <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()"></b-form-input>
     </b-form-group>
+    <b-form-group
+      class="mx-3"
+      v-if="survey"
+      id="survey-description-group"
+      label="Survey Description"
+      label-for="survey-description"
+    >
+      <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey()"></b-form-textarea>
+    </b-form-group>
     <b-alert :show="survey.public" variant="warning" class="alert-bright mx-3">{{SURVEY_PUBLIC_NO_EDIT}}</b-alert>
     <b-tabs>
       <b-tab button-id="questionTab" title="Question" :active="!responses && !survey.public" lazy :disabled="survey.public">
