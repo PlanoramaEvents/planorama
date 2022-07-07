@@ -27,7 +27,7 @@
 
       <div class="d-flex justify-content-end">
         <div class="d-inline mx-1" title="clone" v-if="showClone">
-          <b-button @click="$emit('clone')" variant="primary" title="clone">
+          <b-button @click="$emit('clone')" variant="primary" title="clone" :disabled='selected_items.length===0' >
             <b-icon-files></b-icon-files>
           </b-button>
         </div>
