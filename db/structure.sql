@@ -343,7 +343,7 @@ CREATE TABLE public.areas (
 CREATE TABLE public.audit_people_versions (
     id bigint NOT NULL,
     item_type character varying NOT NULL,
-    item_id bigint NOT NULL,
+    item_id uuid NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
     object json,
@@ -378,7 +378,7 @@ ALTER SEQUENCE public.audit_people_versions_id_seq OWNED BY public.audit_people_
 CREATE TABLE public.audit_published_session_versions (
     id bigint NOT NULL,
     item_type character varying NOT NULL,
-    item_id bigint NOT NULL,
+    item_id uuid NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
     object json,
@@ -413,7 +413,7 @@ ALTER SEQUENCE public.audit_published_session_versions_id_seq OWNED BY public.au
 CREATE TABLE public.audit_session_versions (
     id bigint NOT NULL,
     item_type character varying NOT NULL,
-    item_id bigint NOT NULL,
+    item_id uuid NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
     object json,
@@ -448,7 +448,7 @@ ALTER SEQUENCE public.audit_session_versions_id_seq OWNED BY public.audit_sessio
 CREATE TABLE public.audit_survey_versions (
     id bigint NOT NULL,
     item_type character varying NOT NULL,
-    item_id bigint NOT NULL,
+    item_id uuid NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
     object json,
@@ -1205,7 +1205,7 @@ CREATE VIEW public.person_exclusion_conflicts AS
      LEFT JOIN public.person_exclusions pe ON ((pe.person_id = person_schedules.person_id)))
      JOIN public.exclusions_sessions es ON ((es.exclusion_id = pe.exclusion_id)))
      LEFT JOIN public.sessions s ON ((s.id = es.session_id)))
-  WHERE ((person_schedules.session_id <> s.id) AND (person_schedules.start_time >= s.start_time) AND ((person_schedules.start_time < (s.start_time + ((s.duration || ' minute'::text))::interval)) OR ((person_schedules.end_time > s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
+  WHERE ((person_schedules.session_id <> s.id) AND (((person_schedules.start_time >= s.start_time) AND (person_schedules.start_time < (s.start_time + ((s.duration || ' minute'::text))::interval))) OR ((person_schedules.end_time > s.start_time) AND (person_schedules.end_time <= (s.start_time + ((s.duration || ' minute'::text))::interval)))));
 
 
 --
@@ -1252,7 +1252,7 @@ CREATE VIEW public.person_schedule_conflicts AS
     ps2.session_assignment_name AS conflict_session_assignment_name,
     ps2.room_id AS conflict_room_id
    FROM (public.person_schedules ps1
-     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time <= ps1.end_time) OR ((ps2.end_time >= ps1.start_time) AND (ps2.end_time <= ps1.end_time))))));
+     JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time < ps1.end_time) OR ((ps2.end_time > ps1.start_time) AND (ps2.end_time <= ps1.end_time))))));
 
 
 --
@@ -3146,6 +3146,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220628121934'),
 ('20220629132145'),
 ('20220630032544'),
-('20220704121816');
+('20220704121816'),
+('20220707124302');
 
 
