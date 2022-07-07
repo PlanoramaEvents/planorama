@@ -27,9 +27,10 @@ class PeopleController < ResourceController
     person = Person.find params[:person_id]
 
     if person
-      reserved = SessionAssignmentRoleType.find_by(name: 'Reserve')
       sessions = person.sessions
                   .eager_load({participant_assignments: :person}, :format, :session_areas)
+                  .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
+                  .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
                   .where("sessions.start_time is not null AND sessions.room_id is not null")
                   .order("sessions.start_time asc, sessions.title asc")
 

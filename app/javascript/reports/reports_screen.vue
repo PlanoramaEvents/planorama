@@ -18,7 +18,6 @@
       <li>
         <a href="/report/participant_do_not_assign_with" target="_blank">Participants and Do Not Assign With</a>
       </li>
-
       <li>
         <a href="/report/session_reports/participants_over_session_limits" target="_blank">Participants over Daily Limits</a>
       </li>
@@ -92,6 +91,12 @@
       <li>
         <a href="/report/schedule_by_person" target="_blank">Schedule by Participant</a>
       </li>
+      <!-- <li>
+        <a href="/report/participants_with_approved_draft_schedule" target="_blank">Participants with approved draft schedule</a>
+      </li> -->
+      <!-- <li>
+        <a href="/report/participants_with_approved_final_schedule" target="_blank">Participants with approved final schedule</a>
+      </li> -->
     </ul>
 
   </div>
