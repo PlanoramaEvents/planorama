@@ -58,7 +58,8 @@
               <dd v-if="selected.area_list.length" class="ml-2 font-italic">{{formattedAreaList}}</dd>
               <dd v-if="!selected.area_list.length" class="ml-2 font-italic text-muted">None Selected</dd>
               <dt>Format</dt>
-              <dd class="ml-2 font-italic">{{selected.format.name}}</dd>
+              <dd class="ml-2 font-italic" v-if="selected.format">{{selected.format.name}}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.format">None Selected</dd>
               <dt>Session Environment</dt>
               <dd class="ml-2 font-italic">{{SESSION_ENVIRONMENT[selected.environment]}}</dd>
               <dt>Attendee Signup Required</dt>

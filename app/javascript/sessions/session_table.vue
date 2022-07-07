@@ -1,7 +1,7 @@
 <template>
   <div>
     <table-vue
-      @new="onNew"
+      @new="openNewModal"
       defaultSortBy='sessions.title'
       :model="model"
       :columns="columns"
@@ -43,6 +43,11 @@
         <div class="text-center text-muted">&mdash;</div>
       </template>
     </table-vue>
+    <plano-modal id="add-session" title="Add Session" @ok="onNew">
+      <b-form-group label="Session Title">
+        <b-form-input type="text" v-model="newSessionTitle"></b-form-input>
+      </b-form-group>
+    </plano-modal>
   </div>
 </template>
 
@@ -51,16 +56,19 @@ import TableVue from '../components/table_vue';
 import ModalForm from '../components/modal_form';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import { session_columns as columns } from './session';
-import { sessionModel as model } from '@/store/session.store'
+import { NEW_SESSION, sessionModel as model } from '@/store/session.store'
 import dateTimeMixin from '../components/date_time.mixin'
 import { areaMixin } from './session_fields.mixin';
+import PlanoModal from '@/components/plano_modal.vue';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'SessionTable',
   components: {
     TableVue,
     TooltipOverflow,
-    ModalForm
+    ModalForm,
+    PlanoModal,
   },
   mixins: [
     dateTimeMixin,
@@ -68,10 +76,21 @@ export default {
   ],
   data: () => ({
     columns,
-    model
+    model,
+    newSessionTitle: null
   }),
   methods: {
+    ...mapActions({
+      newSession: NEW_SESSION
+    }),
+    openNewModal() {
+      this.newSessionTitle = null;
+      this.$root.$emit('bv::show::modal', 'add-session');
+    },
     onNew() {
+      this.newSession({title: this.newSessionTitle}).then((data) => {
+        this.$router.push(`/sessions/edit/${data.id}`)
+      })
     },
     onSave() {
     }
