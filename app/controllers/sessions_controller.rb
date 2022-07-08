@@ -156,6 +156,7 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
+      :room_set,
       :session_areas,
       :'session_areas.area'
       # Do not include assignment in the JSON by default as that can slow client down,
