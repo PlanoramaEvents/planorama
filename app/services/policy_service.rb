@@ -60,7 +60,13 @@ module PolicyService
   def self.merge_permissions(to:, from:)
     from.each do |p|
       if to[p.mdl_name]
-        to[p.mdl_name] = to[p.mdl_name].merge p.actions
+        p.actions.each do |action_name, action_allowed|
+          if to[p.mdl_name][action_name]
+            to[p.mdl_name][action_name] = to[p.mdl_name][action_name] || action_allowed
+          else
+            to[p.mdl_name][action_name] = action_allowed
+          end
+        end
       else
         to[p.mdl_name] = p.actions
       end
