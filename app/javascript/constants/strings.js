@@ -240,8 +240,30 @@ module.exports = {
         languages_fluent_in: "Languages spoken"
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
+    PERSON_NEVER_LOGGED_IN: "Never logged in",
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
     SURVEY_PUBLIC_NO_DELETE: "You cannot delete a published survey. Close the survey to enable deletion.",
+    SESSION_ENVIRONMENT: {
+        unknown: "Unknown",
+        in_person: "In Person",
+        hybrid: "Hybrid",
+        virtual: "Virtual"
+    },
+    SESSION_STATUS: {
+        draft: "Draft",
+        reviewed: "Reviewed",
+        revised: "Revised",
+        dropped: "Dropped",
+    },
+    SESSION_MUST_UNSCHEDULE: "You must unschedule a session before dropping it",
+    SESSION_MUST_UNDROP: "You must un-drop the session to be able to schedule it.",
+    SESSION_MINORS_PARTICIPATION: {
+        kids_observe: "Kids welcome to observe",
+        kids_supervision: "Kids welcome to participate with supervision",
+        kids_participate: "Kids welcome to participate",
+        geared_families: "Geared towards families",
+        geared_kids: "Geared towards kids",
+    },
 }

@@ -21,6 +21,12 @@ class PersonPolicy < PlannerPolicy
     allowed?(action: :import)
   end
 
+  def draft_sessions?
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    allowed?(action: :draft_sessions)
+  end
+
   def assigned_surveys?
     return true if @record.class != Symbol && @record.id == @person.id
 

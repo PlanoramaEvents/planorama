@@ -1,5 +1,35 @@
 module ReportsService
 
+  def self.all_conflicts(ignored: false)
+    conflicts_table = ::Conflicts::SessionConflict.arel_table
+    subquery = Session.area_list.as('areas_list')
+
+    joins = [
+      conflicts_table.create_join(
+        subquery,
+        conflicts_table.create_on(
+          subquery[:session_id].eq(conflicts_table[:session_id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    where_clause = if ignored
+                     "session_conflicts.conflict_id in (select conflict_id from ignored_conflicts)"
+                   else
+                     "session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)"
+                   end
+
+    Conflicts::SessionConflict.select(
+      ::Conflicts::SessionConflict.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .joins(joins)
+      .includes(:room, :session)
+      .where(where_clause)
+      .order(:session_title)
+  end
+
   def self.assigned_sessions_not_scheduled
     active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and name != 'Reserve'")
 
@@ -18,16 +48,28 @@ module ReportsService
   def self.scheduled_session_no_people
     active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
 
+    # Get all sessions that are scheduled with people in role
+    session_with_people = PersonSchedule.where("session_assignment_role_type_id in (?)", active_roles.collect{|a| a.id})
+    # Then get all scheduled sessions not in the above
     Session.select(
       ::Session.arel_table[Arel.star],
       'areas_list.area_list'
     )
       .joins(self.area_subquery)
-      .joins(:session_assignments)
-      .eager_load(:areas, :room)
-      .where("session_assignments.session_assignment_role_type_id not in (?)", active_roles.collect{|a| a.id})
       .where("start_time is not null and room_id is not null")
+      .where("sessions.id not in (?)", session_with_people.collect{|a| a.session_id})
       .order(:start_time)
+
+
+    # Session.select(
+    #   ::Session.arel_table[Arel.star],
+    #   'areas_list.area_list'
+    # )
+    #   .joins(:session_assignments)
+    #   .eager_load(:areas, :room)
+    #   .where("session_assignments.session_assignment_role_type_id not in (?)", active_roles.collect{|a| a.id})
+    #   .where("start_time is not null and room_id is not null")
+    #   .order(:start_time)
   end
 
 

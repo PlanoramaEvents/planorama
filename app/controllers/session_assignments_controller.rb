@@ -28,6 +28,36 @@ class SessionAssignmentsController < ResourceController
     [:update, :unexpress_interest]
   end
 
+  def after_update_tx
+    # if unassigning and they are not selected then we delete ....
+    if @object.state == 'proposed' && !@object.interested && !@object.session_assignment_role_type_id
+      # Get rid of the assignment
+      @object.destroy
+
+      # tell the client to refetch so it updates data correctly
+      # we may need to revist cause this is not good either
+      redirect_to(action: :destroy, id: @object.id, status: 303)
+
+      return true
+    else
+      return false
+    end
+  end
+
+  def order_string(order_by: nil)
+    return super(order_by: order_by) if order_by
+
+    order_str = %(session_assignment_role_type.sort_order asc NULLS LAST,
+      CASE WHEN session_assignments.state = 'accepted' THEN 1
+      WHEN session_assignments.state = 'proposed' THEN 2
+      WHEN session_assignments.state = 'rejected' THEN 3
+      else 4
+      end
+    )
+
+    Arel.sql(order_str.squish)
+  end
+
   def serializer_includes
     if params[:session_id]
       # remove included data for now to speed up loads
@@ -47,7 +77,8 @@ class SessionAssignmentsController < ResourceController
   def includes
     [
       :person,
-      :session
+      :session,
+      :session_assignment_role_type
     ]
   end
 

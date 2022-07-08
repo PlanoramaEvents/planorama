@@ -40,7 +40,7 @@ export const survey_columns = [
     sortable: false
   },
   'preview',
-  'surveyLink',
+  //'surveyLink',
   // welcome
   // thank_you
   // submit_string

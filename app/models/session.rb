@@ -20,12 +20,32 @@ class Session < ApplicationRecord
 
 
   has_many :session_conflicts,
-    -> { where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)") },
+    -> {
+      where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
+      .where("session_assignment_name is null or session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
+      .where("conflict_session_assignment_name is null or conflict_session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
+    },
     class_name: 'Conflicts::SessionConflict'
 
   # Get where this session is on the other side of the conflict relationship
   has_many :conflict_sessions,
-    -> { where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)") },
+    -> {
+      where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
+      .where("session_assignment_name is null or session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
+      .where("conflict_session_assignment_name is null or conflict_session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
+    },
+    foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
+
+  has_many :ignored_session_conflicts,
+    -> {
+      where("session_conflicts.conflict_id in (select conflict_id from ignored_conflicts)")
+    },
+    class_name: 'Conflicts::SessionConflict'
+
+  has_many :ignored_conflict_sessions,
+    -> {
+      where("session_conflicts.conflict_id in (select conflict_id from ignored_conflicts)")
+    },
     foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
 
   has_and_belongs_to_many :room_services
@@ -53,6 +73,16 @@ class Session < ApplicationRecord
     end
   end
   has_many :people, through: :session_assignments
+
+  has_many :participant_assignments,
+    -> {
+      joins("JOIN session_assignment_role_type as sart ON sart.id = session_assignments.session_assignment_role_type_id")
+      .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
+      .order("sart.sort_order")
+    },
+    class_name: 'SessionAssignment'
+  has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
 
   # TODO: Will also need a published versioon of the relationship
   has_many :session_areas, inverse_of: :session

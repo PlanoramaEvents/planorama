@@ -1,30 +1,32 @@
 <template>
   <div class="session-conflicts">
-    <div class="session-conflicts-list">
-      <div v-if="displaySessionInfo && sessionId">
-        <strong>{{sessionTitle}}</strong><br />
-        {{sessionTime}}
-      </div>
-      <div class="ml-2" v-if="(conflicts.length > 0) || (conflicts_with.length > 0)">
-        <div
-          class="session-conflict mb-1"
-          v-for="conflict in conflicts" :key="conflict.id"
-        >
-          <div  v-html="conflict_type_string(conflict)"></div>
-          <button @click="ignore(conflict)" class="btn btn-primary mb-2 btn-sm">Ignore</button>
+    <b-overlay :show="loading" rounded="sm">
+      <div class="session-conflicts-list">
+        <div v-if="displaySessionInfo && sessionId">
+          <strong>{{sessionTitle}}</strong><br />
+          {{sessionTime}}
         </div>
-        <div
-          class="session-conflict mb-1"
-          v-for="conflict in conflicts_with" :key="conflict.id"
-        >
-          <div  v-html="conflict_type_string(conflict, true)"></div>
-          <button @click="ignore(conflict)" class="btn btn-primary mb-2 btn-sm">Ignore</button>
+        <div class="ml-2" v-if="(conflicts.length > 0) || (conflicts_with.length > 0)">
+          <div
+            class="session-conflict mb-1"
+            v-for="conflict in conflicts" :key="conflict.id"
+          >
+            <div  v-html="conflict_type_string(conflict)"></div>
+            <ignore-button @click="ignore(conflict)"></ignore-button>
+          </div>
+          <div
+            class="session-conflict mb-1"
+            v-for="conflict in conflicts_with" :key="conflict.id"
+          >
+            <div  v-html="conflict_type_string(conflict, true)"></div>
+            <ignore-button @click="ignore(conflict)"></ignore-button>
+          </div>
+        </div>
+        <div class="ml-2 text-muted font-italic" v-else-if="sessionId && conflicts.length === 0 && conflicts_with.length === 0">
+          There are no conflicts for this session
         </div>
       </div>
-      <div class="ml-2 text-muted font-italic" v-else-if="sessionId && conflicts.length === 0 && conflicts_with.length === 0">
-        There are no conflicts for this session
-      </div>
-    </div>
+    </b-overlay>
   </div>
 </template>
 
@@ -34,6 +36,7 @@ import modelMixin from '../store/model.mixin';
 import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
 import dateTimeMixin from '../components/date_time.mixin'
+import IgnoreButton from './ignore_button.vue';
 
 export default {
   name: "SessionConflicts",
@@ -52,8 +55,12 @@ export default {
   },
   data: () =>  ({
     conflicts: [],
-    conflicts_with: []
+    conflicts_with: [],
+    loading: false
   }),
+  components: {
+    IgnoreButton
+  },
   computed: {
     selectedSession() {
       return this.get_model(sessionModel, this.sessionId)
@@ -89,24 +96,33 @@ export default {
         }
       )
     },
+    refreshConflicts() {
+      this.getConflicts(this.sessionId)
+    },
     getConflicts(sessionId) {
+      this.loading = true
       this.conflicts = []
       this.conflicts_with = []
       this.clear()
-      this.get_conflicts({session_id: sessionId}).then(
+      let p1 = this.get_conflicts({session_id: sessionId});
+      p1.then(
         (conflicts) => {
           this.conflicts = Object.values(conflicts).filter(
             obj => (typeof obj.json === 'undefined')
           )
         }
       )
-      this.get_conflicts_with({session_id: sessionId}).then(
+      let p2 = this.get_conflicts_with({session_id: sessionId});
+      p2.then(
         (conflicts) => {
           this.conflicts_with = Object.values(conflicts).filter(
             obj => (typeof obj.json === 'undefined')
           )
         }
       )
+      Promise.all([p1, p2]).then((values) => {
+        this.loading = false
+      });
     },
     // TODO template these
     conflict_type_string(conflict, conflict_with=false) {
@@ -133,10 +149,12 @@ export default {
         case 'person_schedule_conflict':
           if (conflict_with) {
             return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
-                   "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
+                   "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
+                   and "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
           } else {
             return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
-                   "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+                   "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"
+                   and "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
         case 'person_back_to_back':
           if (conflict_with) {

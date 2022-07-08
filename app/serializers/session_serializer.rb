@@ -12,8 +12,8 @@ class SessionSerializer
              :updated_by, :interest_opened_by, :interest_opened_at,
              :room_id, :proofed, :format_id, :room_set_id,
              :status, :environment,
-             :tech_notes,
-             :minors_participation
+             :tech_notes, :room_notes,
+             :minors_participation, :age_restriction_id
 
   # tag_list
   attribute :tag_list do |session|
@@ -64,6 +64,8 @@ class SessionSerializer
                "#{params[:domain]}/session/#{object.id}/session_assignments"
              }
            }
+
+  has_many :participant_assignments, lazy_load_data: true, serializer: SessionAssignmentSerializer
 
   has_one :format, lazy_load_data: true,
           if: Proc.new { |record| record.format },

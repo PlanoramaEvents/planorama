@@ -28,7 +28,9 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/rake views:recreate
   bin/rake db:migrate
   bin/rake parameters:seed_names
+  bin/rake role_types:seed_role_types
   bin/rake chicon:seed_exclusions
+  bin/rake chicon:seed_room_sets
   bin/rake chicon:seed_rooms
   bin/rake chicon:fix_formats
   bin/rake chicon:init_age_restrictions
@@ -46,6 +48,7 @@ elif [[ $RAILS_ENV = "staging" ]]; then
   bin/rake parameters:seed_names
   bin/rake role_types:seed_role_types
   bin/rake chicon:seed_exclusions
+  bin/rake chicon:seed_room_sets
   bin/rake chicon:seed_rooms
   bin/rake chicon:fix_formats
   bin/rake chicon:init_age_restrictions
@@ -66,6 +69,7 @@ else
   bin/rake parameters:seed_names
   bin/rake role_types:seed_role_types
   bin/rake chicon:seed_exclusions
+  bin/rake chicon:seed_room_sets
   bin/rake chicon:seed_rooms
   bin/rake chicon:fix_formats
   bin/rake chicon:init_age_restrictions

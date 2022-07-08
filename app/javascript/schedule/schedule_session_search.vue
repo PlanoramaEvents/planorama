@@ -29,6 +29,16 @@
         <b-button variant="primary" @click="onSearch" size="sm">Search</b-button>
       </div>
     </div>
+    <!-- radio for none, time only, space only -->
+    <div class="row">
+      <div class="col-12">
+        <b-form-radio-group v-model="schedFilter">
+          <b-form-radio value="all">All</b-form-radio>
+          <b-form-radio value="time">Time</b-form-radio>
+          <b-form-radio value="room">Room</b-form-radio>
+        </b-form-radio-group>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -56,7 +66,15 @@ export default {
       title_desc: null,
       area_id: null,
       tags: null,
-      match: 'any'
+      match: 'any',
+      schedFilter: 'all'
+    }
+  },
+  watch: {
+    schedFilter(newVal, oldVal) {
+      if (newVal != oldVal) {
+        this.onSearch()
+      }
     }
   },
   methods: {
@@ -90,6 +108,41 @@ export default {
         )
       }
 
+      if (this.schedFilter != 'all') {
+        if (this.schedFilter == 'time') {
+          queries = {
+            "op": 'all',
+            "queries": [
+              ["start_time","is not null",null],
+              ["room_id", "is null"],
+              queries
+            ]
+          }
+        } else {
+          queries = {
+            "op": 'all',
+            "queries": [
+              ["start_time","is null"],
+              ["room_id", "is not null"],
+              queries
+            ]
+          }
+        }
+      } else {
+        queries = {
+          "op": 'all',
+          "queries": [
+            {
+              "op": "any",
+              "queries":[
+                ["start_time", "is null"],
+                ["room_id", "is null"]
+              ]
+            },
+            queries
+          ]
+        }
+      }
       return queries
     },
     onSearch: function (event) {
@@ -99,22 +152,23 @@ export default {
           title_desc: this.title_desc,
           area_id: this.area_id,
           tags: this.tags,
-          match: this.match
+          match: this.match,
+          schedFilter: this.schedFilter
         }
       })
       this.$emit('change', this.fields_to_query())
     },
     init() {
-
       let saved = this.getSearchState()(SAVED_SEARCH_STATE)
-      // console.debug("**** INIT ", saved)
       if (saved) {
         this.title_desc = saved.title_desc
         this.area_id = saved.area_id
         this.tags = saved.tags
         this.match = saved.match
-        this.$emit('change', this.fields_to_query())
+        this.schedFilter = saved.schedFilter
       }
+
+      this.$emit('change', this.fields_to_query())
     }
   },
   mounted() {

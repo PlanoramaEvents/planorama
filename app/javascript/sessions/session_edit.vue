@@ -60,15 +60,79 @@
         </b-form-group>
       </div>
     </div>
-    <!-- <div class="row">
-      <div class="col-12">
-        <b-form-group label="Attendee Signup Required">
-          <span>No</span>
-          <b-form-checkbox inline switch v-model="session.require_signup" @change="saveSession()">Yes</b-form-checkbox>
-          <label :class="{'text-muted': !session.require_signup}">If yes, max openings: <b-form-input inline type="number" min="1" :disabled="!session.require_signup" v-model="session.max_people"></b-form-input></label>
+    <div class="row">
+      <div class="col-6">
+        <b-form-group label="Session Environment">
+          <b-form-radio-group
+            stacked
+            v-model="session.environment"
+            @change="saveSession()"
+          >
+            <b-form-radio value="unknown">{{SESSION_ENVIRONMENT.unknown}}</b-form-radio>
+            <b-form-radio value="in_person">{{SESSION_ENVIRONMENT.in_person}}</b-form-radio>
+            <b-form-radio value="hybrid">{{SESSION_ENVIRONMENT.hybrid}}</b-form-radio>
+            <b-form-radio value="virtual">{{SESSION_ENVIRONMENT.virtual}}</b-form-radio>
+          </b-form-radio-group>
         </b-form-group>
       </div>
-    </div> -->
+      <div class="col-6">
+        <b-form-group
+          label="Room Setup"
+        >
+          <model-select
+            v-model="session.room_set_id"
+            model="room_set"
+            field="name"
+            :multiple="false"
+            @change="saveSession()"
+            :selectSize="4"
+          ></model-select>
+        </b-form-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <b-form-group label="Attendee Signup Required" class="form-inline my-4">
+          <span>No</span>
+          <b-form-checkbox inline switch v-model="session.require_signup" @change="saveSession()">Yes</b-form-checkbox>
+          <label :class="['ml-2', {'text-muted': !session.require_signup}]">If yes, max openings:
+            <ValidationProvider v-slot="validationCtx" rules="min_value:1">
+              <b-form-input
+                type="number"
+                class="ml-1"
+                :disabled="!session.require_signup"
+                v-model="session.maximum_people"
+                @blur="saveValidatedSession(validationCtx)"
+                :state="getValidationState(validationCtx)"
+                ></b-form-input>
+              <b-form-invalid-feedback>{{ validationCtx.errors[0] }}</b-form-invalid-feedback>
+            </ValidationProvider>
+          </label>
+        </b-form-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <b-form-group label="Attendee Age Restrictions">
+          <b-form-radio-group stacked name="age_restriction" :options="ageRestrictionOptions" v-model="session.age_restriction_id" @change="saveSession()"></b-form-radio-group>
+        </b-form-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <b-form-group label="Minors Participation">
+          <b-form-checkbox-group stacked :options="minorsParticipationOptions" v-model="minors_participation" @change="saveSession()" name="minors_participation">
+          </b-form-checkbox-group>
+        </b-form-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <b-form-group label="Required Room Features/Services">
+          <b-textarea v-model="session.room_notes" @blur="saveSession()"></b-textarea>
+        </b-form-group>
+      </div>
+    </div>
     <div class="row">
       <div class="col-12">
         <b-form-group
@@ -99,20 +163,34 @@ import modelUtilsMixin from '@/store/model_utils.mixin';
 import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
 import PlanoEditor from '@/components/plano_editor';
+import { ValidationProvider, extend } from 'vee-validate';
+import { min_value } from 'vee-validate/dist/rules'
+import { SESSION_ENVIRONMENT } from '@/constants/strings'
+import {minorsParticipationMixin} from './minors_participation.mixin';
+import { ageRestrictionMixin } from './age_restriction.mixin';
+
+extend('min_value', {
+  ...min_value,
+  message: "This value can't be less than 1"
+  })
 
 export default {
   name: "SessionEdit",
   components: {
     ModelSelect,
     ModelTags,
-    PlanoEditor
+    PlanoEditor,
+    ValidationProvider
   },
   mixins: [
-    modelUtilsMixin
+    modelUtilsMixin,
+    minorsParticipationMixin,
+    ageRestrictionMixin
   ],
   data: () => ({
     editable: false,
-    saving: false
+    saving: false,
+    SESSION_ENVIRONMENT,
   }),
   computed: {
     session() {
@@ -158,7 +236,7 @@ export default {
 
         this.session.session_areas_attributes = areasForSaving
       }
-    }
+    },
   },
   methods: {
     edit() {
@@ -172,7 +250,15 @@ export default {
     },
     saveSession() {
       this.save_model(sessionModel, this.session)
-    }
+    },
+    saveValidatedSession({dirty, valid=null}) {
+      if(dirty && valid) {
+        this.save_model(sessionModel, this.session)
+      }
+    },
+    getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null;
+    },
   }
 }
 </script>

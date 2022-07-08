@@ -41,7 +41,11 @@
             :person_id="person.id"
           ></session-ranker>
         </b-tab>
-        <b-tab title="Admin" disabled lazy v-if="currentUserIsAdmin">
+        <b-tab title="Live Schedule" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'schedule'">
+          <person-schedule></person-schedule>
+        </b-tab>
+        <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
+          <people-admin-tab></people-admin-tab>
         </b-tab>
         <b-tab title="Surveys" disabled lazy>
         </b-tab>
@@ -59,6 +63,8 @@ import AvailabilityAndInterests from '../profile/availability_and_interests.vue'
 import PersonDetails from '../profile/person_details.vue'
 import PersonSummary from '../profile/person_summary.vue';
 import PersonDemographics from '../profile/person_demographics.vue';
+import PersonSchedule from '@/profile/person_schedule.vue';
+import PeopleAdminTab from './people_admin_tab.vue';
 import ModelLoadingOverlay from '@/components/model_loading_overlay.vue';
 
 import { personModel } from '@/store/person.store'
@@ -83,7 +89,9 @@ export default {
     AvailabilityAndInterests,
     PersonDetails,
     PersonDemographics,
-    ModelLoadingOverlay
+    ModelLoadingOverlay,
+    PersonSchedule,
+    PeopleAdminTab,
   },
   mixins: [
     personSessionMixin,
@@ -145,6 +153,12 @@ export default {
           break;
         case 4:
           path = `session-ranking`;
+          break;
+        case 5:
+          path = `schedule`;
+          break;
+        case 6:
+          path = `admin`;
           break;
       }
       // change the router path to match the current tab
