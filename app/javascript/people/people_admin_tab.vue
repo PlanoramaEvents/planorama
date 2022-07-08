@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-fluid">
     <dl class="row">
       <dt class="col-sm-4">Convention Class:</dt>
       <dd class="col-sm-8">
@@ -17,15 +17,20 @@
 </template>
 
 <script>
-import { modelMixin, makeSelectedFieldMixin } from '@/mixins'
+import { makeSelectedFieldMixin } from '@/mixins'
+import { modelMixinNoProp } from '@/store/model.mixin';
+import { personModel as model } from '@/store/person.store';
 const commentsMixin = makeSelectedFieldMixin('comments');
 
 export default {
   name: 'PeopleAdminTab',
   mixins: [
-    modelMixin,
+    modelMixinNoProp,
     commentsMixin
-  ]
+  ],
+  data: () => ({
+    model
+  })
 }
 </script>
 
