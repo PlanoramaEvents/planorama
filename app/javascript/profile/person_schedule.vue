@@ -108,7 +108,6 @@ export default {
         } else {
           const nameA = a.person.published_name_sort_by || a.person.published_name
           const nameB = b.person.published_name_sort_by || a.person.published_name
-          console.log(`${nameA} vs ${nameB}`)
           if (nameA < nameB) {
             return -1;
           } else if (nameB < nameA) {
