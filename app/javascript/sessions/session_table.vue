@@ -39,9 +39,6 @@
       <template #cell(publish)>
         <div class="text-center text-muted">&mdash;</div>
       </template>
-      <template #cell(visibility)>
-        <div class="text-center text-muted">&mdash;</div>
-      </template>
     </table-vue>
     <plano-modal id="add-session" title="Add Session" @ok="onNew">
       <b-form-group label="Session Title">
