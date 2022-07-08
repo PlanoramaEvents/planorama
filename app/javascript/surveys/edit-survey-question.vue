@@ -233,7 +233,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../stylesheets/style.scss';
 .custom-control-label {
   width: 100%;

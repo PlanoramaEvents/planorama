@@ -24,6 +24,7 @@ class Conflicts::SessionConflictsController < ApplicationController
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
+                  .where("session_conflicts.conflict_type != 'person_schedule_conflict' and session_conflicts.conflict_type != 'person_back_to_back'")
                   .distinct
 
     meta = {}

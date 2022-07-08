@@ -106,7 +106,9 @@ export default {
     submit_disabled_tooltip() {
       return this.preview
           ? "This is a preview of the survey. You cannot submit it."
-          : "You cannot submit an unpublished survey. Publish the survey to enable."
+          : this.submit_disabled
+          ? "You cannot submit an unpublished survey. Publish the survey to enable."
+          : '';
     }
   },
   methods: {

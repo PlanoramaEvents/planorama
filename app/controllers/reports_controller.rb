@@ -1,4 +1,5 @@
 class ReportsController < ApplicationController
+  around_action :set_timezone
 
   #
   # Name
@@ -90,10 +91,12 @@ class ReportsController < ApplicationController
     worksheet.append_row(
       [
         'Session',
+        'Session Type/Format',
         'Areas',
         'Moderators',
         'Participants',
-        'Reserves'
+        'Reserves',
+        'Scehduled'
       ]
     )
 
@@ -104,10 +107,12 @@ class ReportsController < ApplicationController
       worksheet.append_row(
         [
           session.title,
+          session.format.name,
           session.area_list.sort.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.published_name}.join(';'),
+          session.start_time && session.room_id ? 'Y' : 'N'
         ]
       )
     end
@@ -129,72 +134,72 @@ class ReportsController < ApplicationController
   #  sort by room then time then session title
   #
   def schedule_by_room_then_time
-    # TZ
-    timezone = ConfigService.value('convention_timezone')
-    # We want the times to be in the TZ of the con for the report
-    Time.use_zone(timezone) do
-      authorize SessionAssignment, policy_class: ReportPolicy
+    authorize SessionAssignment, policy_class: ReportPolicy
 
-      session_table = Arel::Table.new(Session.table_name)
-      subquery = Session.area_list.as('areas_list')
-      joins = [
-        session_table.create_join(
-          subquery,
-          session_table.create_on(
-            subquery[:session_id].eq(session_table[:id])
-          ),
-          Arel::Nodes::OuterJoin
-        )
+    session_table = Arel::Table.new(Session.table_name)
+    subquery = Session.area_list.as('areas_list')
+    joins = [
+      session_table.create_join(
+        subquery,
+        session_table.create_on(
+          subquery[:session_id].eq(session_table[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    # array aggregate ...
+    sessions = Session.select(
+                  ::Session.arel_table[Arel.star],
+                  'areas_list.area_list'
+                )
+                .joins(joins)
+                .references(:room)
+                .eager_load(:areas, :room, {session_assignments: [:person]})
+                .where("sessions.room_id is not null and sessions.start_time is not null")
+                .order('rooms.sort_order', 'sessions.start_time', 'sessions.title')
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Schedule by Room then Time")
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Area',
+        'Start Time',
+        'Duration',
+        'Room',
+        'Moderator',
+        'Assigned'
       ]
-
-      # array aggregate ...
-      sessions = Session.select(
-                    ::Session.arel_table[Arel.star],
-                    'areas_list.area_list'
-                  )
-                  .joins(joins)
-                  .references(:room)
-                  .eager_load(:areas, :room, {session_assignments: [:person]})
-                  .where("sessions.room_id is not null and sessions.start_time is not null")
-                  .order('rooms.sort_order', 'sessions.start_time', 'sessions.title')
-
-      workbook = FastExcel.open(constant_memory: true)
-      worksheet = workbook.add_worksheet("Schedule by Room then Time")
-
+    )
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [nil, nil, date_time_style, nil, nil, nil, nil]
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    invisible = SessionAssignmentRoleType.find_by(name: 'Invisible')
+    sessions.each do |session|
       worksheet.append_row(
         [
-          'Room',
-          'Start Time',
-          'Session',
-          'Area',
-          'Assigned'
-        ]
+          session.title,
+          session.area_list.sort.join(';'),
+          FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
+          session.duration,
+          session.room.name,
+          session.session_assignments.
+            select{|a| [moderator.id].include?(a.session_assignment_role_type_id)}.
+            collect{|s| s.person.published_name}.join('; '),
+          session.session_assignments.
+            select{|a| [participant.id, invisible.id].include?(a.session_assignment_role_type_id)}.
+            collect{|s| s.person.published_name}.join('; ')
+        ],
+        styles
       )
-      date_time_style = workbook.number_format("d mmm yyyy h:mm")
-      styles = [nil, date_time_style, nil, nil, nil]
-      moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
-      participant = SessionAssignmentRoleType.find_by(name: 'Participant')
-      invisible = SessionAssignmentRoleType.find_by(name: 'Invisible')
-      sessions.each do |session|
-        worksheet.append_row(
-          [
-            session.room.name,
-            FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
-            session.title,
-            session.area_list.sort.join(';'),
-            session.session_assignments.
-              select{|a| [participant.id, moderator.id, invisible.id].include?(a.session_assignment_role_type_id)}.
-              collect{|s| s.person.published_name}.join('; ')
-          ],
-          styles
-        )
-      end
-
-      send_data workbook.read_string,
-                filename: "ScheduleByRoomThenTime#{Time.now.strftime('%m-%d-%Y')}.xlsx",
-                disposition: 'attachment'
-
     end
+
+    send_data workbook.read_string,
+              filename: "ScheduleByRoomThenTime#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
   end
 
 
@@ -213,74 +218,69 @@ class ReportsController < ApplicationController
   #  sort by person (alpha asc) then by start time (asc) then by session title
   #
   def schedule_by_person
-    # TZ
-    timezone = ConfigService.value('convention_timezone')
-    # We want the times to be in the TZ of the con for the report
-    Time.use_zone(timezone) do
-      authorize SessionAssignment, policy_class: ReportPolicy
+    authorize SessionAssignment, policy_class: ReportPolicy
 
-      conflicts_table = ::PersonSchedule.arel_table
-      subquery = Session.area_list.as('areas_list')
+    conflicts_table = ::PersonSchedule.arel_table
+    subquery = Session.area_list.as('areas_list')
 
-      joins = [
-        conflicts_table.create_join(
-          subquery,
-          conflicts_table.create_on(
-            subquery[:session_id].eq(conflicts_table[:session_id])
-          ),
-          Arel::Nodes::OuterJoin
-        )
-      ]
-
-      people_sessions = PersonSchedule.select(
-          ::PersonSchedule.arel_table[Arel.star],
-          'areas_list.area_list'
-        )
-        .includes(:room).references(:room)
-        .joins(joins)
-        .where("session_assignment_name in (?)", ['Moderator', 'Participant', "Invisible"])
-        .where("start_time is not null and room_id is not null")
-        .order('person_schedules.name', 'start_time', 'title')
-
-      workbook = FastExcel.open(constant_memory: true)
-      worksheet = workbook.add_worksheet("Schedule by Participant")
-
-      worksheet.append_row(
-        [
-          'Name',
-          'Published Name',
-          'Participant Status',
-          'Session',
-          'Area',
-          'Start Time',
-          'Room',
-          'Moderator',
-          'Invisible',
-        ]
+    joins = [
+      conflicts_table.create_join(
+        subquery,
+        conflicts_table.create_on(
+          subquery[:session_id].eq(conflicts_table[:session_id])
+        ),
+        Arel::Nodes::OuterJoin
       )
+    ]
 
-      date_time_style = workbook.number_format("d mmm yyyy h:mm")
-      styles = [nil, nil, nil, nil, nil, date_time_style, nil, nil, nil]
-      people_sessions.each do |sa|
-        worksheet.append_row(
-          [ sa.name,
-            sa.published_name,
-            sa.con_state,
-            sa.title,
-            sa.area_list.join('; '),
-            FastExcel.date_num(sa.start_time, sa.start_time.in_time_zone.utc_offset),
-            sa.room.name,
-            if sa.session_assignment_name == 'Moderator' then 'Y' else 'N' end,
-            if sa.session_assignment_name == 'Invisible' then 'Y' else 'N' end
-          ],
-          styles
-        )
-      end
+    people_sessions = PersonSchedule.select(
+        ::PersonSchedule.arel_table[Arel.star],
+        'areas_list.area_list'
+      )
+      .includes(:room).references(:room)
+      .joins(joins)
+      .where("session_assignment_name in (?)", ['Moderator', 'Participant', "Invisible"])
+      .where("start_time is not null and room_id is not null")
+      .order('person_schedules.name', 'start_time', 'title')
 
-      send_data workbook.read_string,
-                filename: "ScheduleByParticipant#{Time.now.strftime('%m-%d-%Y')}.xlsx",
-                disposition: 'attachment'
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Schedule by Participant")
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Published Name',
+        'Participant Status',
+        'Session',
+        'Area',
+        'Start Time',
+        'Room',
+        'Moderator',
+        'Invisible',
+      ]
+    )
+
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [nil, nil, nil, nil, nil, date_time_style, nil, nil, nil]
+    people_sessions.each do |sa|
+      worksheet.append_row(
+        [ sa.name,
+          sa.published_name,
+          sa.con_state,
+          sa.title,
+          sa.area_list.join('; '),
+          FastExcel.date_num(sa.start_time, sa.start_time.in_time_zone.utc_offset),
+          sa.room.name,
+          if sa.session_assignment_name == 'Moderator' then 'Y' else 'N' end,
+          if sa.session_assignment_name == 'Invisible' then 'Y' else 'N' end
+        ],
+        styles
+      )
     end
+
+    send_data workbook.read_string,
+              filename: "ScheduleByParticipant#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
   end
 
   # Assigned session by participant - this should only return if the person is assigned as a moderator or a participant
@@ -306,8 +306,10 @@ class ReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Participant Status',
         'Session',
-        'Role'
+        'Role',
+        'Scheduled'
       ]
     )
 
@@ -317,8 +319,10 @@ class ReportsController < ApplicationController
           [
             person.name,
             person.published_name,
+            person.con_state,
             assignment.session.title,
-            assignment.session_assignment_role_type.name
+            assignment.session_assignment_role_type.name,
+            assignment.session.start_time && assignment.session.room_id ? 'Y' : 'N'
           ]
         )
       end
@@ -333,57 +337,54 @@ class ReportsController < ApplicationController
   #
   #
   def participant_availabilities
-    # TZ
-    timezone = ConfigService.value('convention_timezone')
-    # We want the times to be in the TZ of the con for the report
-    Time.use_zone(timezone) do
-      people = Person.includes(
-        :availabilities,
-        :session_limits,
-        :person_exclusions,
-        :exclusions
-      ).references(
-        :availabilities,
-        :session_limits,
-        :person_exclusions
-      ).where(
-        "availabilities.person_id is not null OR session_limits.person_id is not null OR person_exclusions.person_id is not null"
-      )
+    people = Person.includes(
+      :availabilities,
+      :session_limits,
+      :person_exclusions,
+      :exclusions
+    ).references(
+      :availabilities,
+      :session_limits,
+      :person_exclusions
+    ).where(
+      "availabilities.person_id is not null OR session_limits.person_id is not null OR person_exclusions.person_id is not null"
+    )
 
-      workbook = FastExcel.open(constant_memory: true)
-      worksheet = workbook.add_worksheet("Participant Availability")
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Participant Availability")
 
+    worksheet.append_row(
+      [
+        'Name',
+        'Published Name',
+        'Participant Status',
+        'Attendance Type',
+        'Availabilities',
+        'Limits',
+        'Exclusions',
+        'Availability Notes'
+      ]
+    )
+
+    people.each do |person|
       worksheet.append_row(
         [
-          'Name',
-          'Published Name',
-          'Attendance Type',
-          'Availabilities',
-          'Limits',
-          'Exclusions',
-          'Availability Notes'
+          person.name,
+          person.published_name,
+          person.con_state,
+          person.attendance_type,
+          person.availabilities.order('start_time').collect{|av| "#{av.start_time} to #{av.end_time}" }.join(";\n"),
+          person.session_limits.order('day').collect{|l| "#{l.day ? l.day : 'Global'}: #{l.max_sessions}" }.join(";\n"),
+          person.exclusions.collect{|e| "#{e.title}"}.join(";\n"),
+          person.availability_notes
         ]
       )
 
-      people.each do |person|
-        worksheet.append_row(
-          [
-            person.name,
-            person.published_name,
-            person.attendance_type,
-            person.availabilities.order('start_time').collect{|av| "#{av.start_time} to #{av.end_time}" }.join(";\n"),
-            person.session_limits.order('day').collect{|l| "#{l.day ? l.day : 'Global'}: #{l.max_sessions}" }.join(";\n"),
-            person.exclusions.collect{|e| "#{e.title}"}.join(";\n"),
-            person.availability_notes
-          ]
-        )
-
-      end
-
-      send_data workbook.read_string,
-                filename: "ParticipantAvailabilities_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
-                disposition: 'attachment'
     end
+
+    send_data workbook.read_string,
+              filename: "ParticipantAvailabilities_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
   end
 
   # By participant
@@ -397,7 +398,7 @@ class ReportsController < ApplicationController
 
     assignments = SessionAssignment
                     .joins(:person)
-                    .includes([{session: :areas}, :person])
+                    .includes([{session: :areas}, :person, :session_assignment_role_type])
                     .where(interested: true).order("people.name")
 
     workbook = FastExcel.open(constant_memory: true)
@@ -407,10 +408,13 @@ class ReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Participant Status',
         'Session',
         'Ranking',
         'Ranking Notes',
-        'Areas'
+        'Areas',
+        'Assigned',
+        'Scheduled'
       ]
     )
     assignments.each do |assignment|
@@ -418,10 +422,13 @@ class ReportsController < ApplicationController
         [
           assignment.person.name,
           assignment.person.published_name,
+          assignment.person.con_state,
           assignment.session.title,
           assignment.interest_ranking,
           assignment.interest_notes,
-          assignment.session.areas.collect(&:name).join("; ")
+          assignment.session.areas.collect(&:name).join("; "),
+          assignment.session_assignment_role_type && assignment.session_assignment_role_type.role_type == 'participant' &&  ['Moderator', 'Participant'].include?(assignment.session_assignment_role_type.name) ? 'Y' : 'N',
+          assignment.session.start_time && assignment.session.room_id ? 'Y' : 'N'
         ]
       )
     end
@@ -453,6 +460,7 @@ class ReportsController < ApplicationController
         'Title',
         'Who is Interested',
         'Who is Interested (Pub Name)',
+        'Participant Status',
         'Ranking',
         'Notes',
         'Areas'
@@ -466,6 +474,7 @@ class ReportsController < ApplicationController
             session.title,
             assignment.person.name,
             assignment.person.published_name,
+            assignment.person.con_state,
             assignment.interest_ranking,
             assignment.interest_notes,
             session.areas.collect(&:name).join("; ")
@@ -562,5 +571,10 @@ class ReportsController < ApplicationController
     send_data workbook.read_string,
               filename: "ParticipantDoNotAssignWith#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
+  end
+
+  def set_timezone(&block)
+    timezone = ConfigService.value('convention_timezone')
+    Time.use_zone(timezone, &block)
   end
 end

@@ -1,15 +1,8 @@
-## schema
-# CREATE TABLE public.session_assignment_role_type (
-#     id integer NOT NULL,
-#     lock_version integer DEFAULT 0,
-#     created_at timestamp without time zone,
-#     updated_at timestamp without time zone,
-#     name character varying(100) NOT NULL,
-#     role_type public.assignment_role_enum,
-#     default_visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
-# );
 class SessionAssignmentRoleType < ApplicationRecord
   self.table_name = "session_assignment_role_type"
+  include RankedModel
+  ranks :sort_order
+
   has_many :session_assignments
   has_many :published_session_assignments
 

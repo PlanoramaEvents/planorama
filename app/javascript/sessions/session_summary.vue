@@ -66,6 +66,15 @@
             :checked="scheduled"
           >Scheduled</b-form-checkbox>
         </b-form-group>
+        <b-form-group label="Public Schedule Visibility" class="mb-3">
+          <span>Not Visible</span>
+          <b-form-checkbox
+            switch
+            v-model="visibility"
+            @change="saveSession()"
+            class="d-inline-block"
+          >Visible</b-form-checkbox>
+        </b-form-group>
         <b-form-group label="Status" label-cols="auto">
           <b-form-select v-model="session.status" @change="saveSession()">
             <b-form-select-option value="draft">{{SESSION_STATUS.draft}}</b-form-select-option>
@@ -104,6 +113,18 @@ export default {
     session() {
       return this.selected_model(sessionModel);
     },
+    visibility: {
+      get() {
+        return this.session.visibility === 'is_public'
+      },
+      set(val) {
+        if (val) {
+          this.session.visibility = 'is_public'
+        } else {
+          this.session.visibility = 'is_private'
+        }
+      }
+    }
   },
   methods: {
     saveSession() {

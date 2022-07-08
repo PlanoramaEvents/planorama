@@ -21,6 +21,41 @@ class PeopleController < ResourceController
     )
   end
 
+  def draft_sessions
+    authorize current_person, policy_class: policy_class
+
+    person = Person.find params[:person_id]
+
+    if person
+      sessions = person.sessions
+                  .eager_load({participant_assignments: :person}, :format, :session_areas)
+                  .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
+                  .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
+                  .where("sessions.start_time is not null AND sessions.room_id is not null")
+                  .order("sessions.start_time asc, sessions.title asc")
+
+      render json: SessionSerializer.new(
+               sessions,
+               {
+                 # need assgnments and rooms etc
+                 include: [
+                   :format,
+                   :room,
+                   :session_areas,
+                   :'session_areas.area',
+                   :participant_assignments,
+                   :'participant_assignments.person'
+                 ],
+                 params: {
+                   domain: "#{request.base_url}",
+                   current_person: current_person
+                 }
+               }
+             ).serializable_hash(),
+             content_type: 'application/json'
+    end
+  end
+
   # Get all the session names for the people ids passed in
   def session_names
     authorize current_person, policy_class: policy_class

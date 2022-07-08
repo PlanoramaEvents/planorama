@@ -1,6 +1,88 @@
 class Reports::ConflictReportsController < ApplicationController
   around_action :set_timezone
 
+  def all_ignored_conflicts
+    authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
+
+    conflicts = ReportsService::all_conflicts(ignored: true)
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("All Conflicts")
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Areas',
+        'Start Time',
+        'Duration',
+        'Room',
+        'Person',
+        'Conflict Type'
+      ]
+    )
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil, nil
+    ]
+    conflicts.each do |conflict|
+      worksheet.append_row(
+        [
+          conflict.session_title,
+          conflict.area_list.join('; '),
+          FastExcel.date_num(conflict.session_start_time, conflict.session_start_time.in_time_zone.utc_offset),
+          conflict.session&.duration,
+          conflict.room&.name,
+          conflict.person_published_name,
+          conflict.conflict_type,
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "all_ignored_conflicts#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
+  def all_conflicts
+    authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
+
+    conflicts = ReportsService::all_conflicts
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("All Conflicts")
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Areas',
+        'Start Time',
+        'Room',
+        'Conflict Type'
+      ]
+    )
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil, nil
+    ]
+    conflicts.each do |conflict|
+      worksheet.append_row(
+        [
+          conflict.session_title,
+          conflict.area_list.join('; '),
+          FastExcel.date_num(conflict.session_start_time, conflict.session_start_time.in_time_zone.utc_offset),
+          conflict.room&.name,
+          conflict.conflict_type
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "all_conflicts#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def multiple_sessions_in_room
     authorize SessionAssignment, policy_class: Reports::ConflictReportPolicy
 
@@ -9,6 +91,7 @@ class Reports::ConflictReportsController < ApplicationController
                       .includes(:room)
                       .references(:room)
                       .where("room_conflicts.back_to_back = false")
+                      .where("room_conflicts.id not in (select conflict_id from ignored_conflicts)")
                       .order('rooms.name, start_time')
 
     workbook = FastExcel.open(constant_memory: true)
@@ -69,6 +152,7 @@ class Reports::ConflictReportsController < ApplicationController
                   :person, :session, :exclusion, :excluded_session
                 )
                 .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+                .where("person_exclusion_conflicts.id not in (select conflict_id from ignored_conflicts)")
                 .order('people.published_name asc')
 
     workbook = FastExcel.open(constant_memory: true)
@@ -255,16 +339,17 @@ class Reports::ConflictReportsController < ApplicationController
     ]
 
     conflicts = Conflicts::PersonBackToBack.select(
-      Conflicts::PersonBackToBack.arel_table[Arel.star],
-                  'areas_list.area_list as area_list',
-                  'conflict_areas_list.area_list as conflict_area_list'
-    )
-    .includes(:room, :conflict_room)
-    .references(:room, :conflict_room)
-    .joins(joins)
-                  .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                  .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                  .order('published_name asc, conflict_start_time asc')
+        Conflicts::PersonBackToBack.arel_table[Arel.star],
+                    'areas_list.area_list as area_list',
+                    'conflict_areas_list.area_list as conflict_area_list'
+      )
+      .includes(:room, :conflict_room)
+      .references(:room, :conflict_room)
+      .joins(joins)
+      .where("person_back_to_back.id not in (select conflict_id from ignored_conflicts)")
+      .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .order('published_name asc, conflict_start_time asc')
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("People Scheduled Back to Back")
@@ -346,6 +431,7 @@ class Reports::ConflictReportsController < ApplicationController
                   )
                   .includes(:person, :session, :conflict_session, :room, :conflict_room)
                   .joins(joins)
+                  .where("person_schedule_conflicts.id not in (select conflict_id from ignored_conflicts)")
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .order('people.published_name asc, start_time asc')
@@ -357,6 +443,7 @@ class Reports::ConflictReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Status',
         'Time',
         'Session',
         'Area',
@@ -368,13 +455,14 @@ class Reports::ConflictReportsController < ApplicationController
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
-    styles = [nil, nil, date_time_style, nil, nil, nil, nil, nil]
+    styles = [nil, nil, nil, date_time_style, nil, nil, nil, nil, nil]
 
     conflicts.each do |conflict|
       worksheet.append_row(
         [
           conflict.person.name,
           conflict.person.published_name,
+          conflict.person.con_state,
           FastExcel.date_num(conflict.session.start_time, conflict.session.start_time.in_time_zone.utc_offset),
           conflict.session.title,
           conflict.area_list.join('; '),
@@ -413,7 +501,9 @@ class Reports::ConflictReportsController < ApplicationController
                     'areas_list.area_list'
                   )
                   .includes(:session, :person)
+                  .eager_load(person: :availabilities)
                   .joins(joins)
+                  .where("availability_conflicts.id not in (select conflict_id from ignored_conflicts)")
                   .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                   .order('people.published_name')
 
@@ -425,24 +515,28 @@ class Reports::ConflictReportsController < ApplicationController
       [
         'Name',
         'Pub Name',
+        'Status',
         'Session',
         'Area',
-        'Start Time'
-
+        'Start Time',
+        'Duration',
+        'Availability'
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
-    styles = [nil, nil, nil, nil, date_time_style, nil]
+    styles = [nil, nil, nil, nil, nil, date_time_style, nil, nil]
 
     conflicts.each do |conflict|
       worksheet.append_row(
         [
           conflict.person.name,
           conflict.person.published_name,
+          conflict.person.con_state,
           conflict.session.title,
           conflict.area_list.join('; '),
-          FastExcel.date_num(conflict.session.start_time, conflict.session.start_time.in_time_zone.utc_offset)
-
+          FastExcel.date_num(conflict.session.start_time, conflict.session.start_time.in_time_zone.utc_offset),
+          conflict.session.duration,
+          conflict.person.availabilities.order('start_time').collect{|av| "#{av.start_time} to #{av.end_time}" }.join(";\n"),
         ],
         styles
       )

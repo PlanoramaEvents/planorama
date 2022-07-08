@@ -5,17 +5,22 @@
   -->
   <!-- Eeach schedule day has an eid for the event etc, which we can map to the actual session ... -->
   <div>
-    <schedule-day
-      v-for="day in days" :key="day"
-      :ref="'day-'+day"
-      :rooms="rooms"
-      :selected-date="day"
-      :selectedRooms="selectedRooms"
-      :timezone="timezone"
-      @schedule-changed="onScheduleChanged"
-      :model="sessionModel"
-      @show-conflicts="onShowConflicts"
-    ></schedule-day>
+    <b-overlay :show="loading" rounded="sm" no-center>
+      <template #overlay>
+        <b-spinner label="Spinning" class="position-relative" style="top: 200px; left: 50%;"></b-spinner>
+      </template>
+      <schedule-day
+        v-for="day in days" :key="day"
+        :ref="'day-'+day"
+        :rooms="rooms"
+        :selected-date="day"
+        :selectedRooms="selectedRooms"
+        :timezone="timezone"
+        @schedule-changed="onScheduleChanged"
+        :model="sessionModel"
+        @show-conflicts="onShowConflicts"
+      ></schedule-day>
+    </b-overlay>
   </div>
 </template>
 
@@ -50,22 +55,25 @@ export default {
     }
   },
   data: () =>  ({
-    sessionModel
+    sessionModel,
+    loading: false
   }),
   methods: {
-    onScheduleChanged: function() {
-      this.$emit("schedule-changed");
+    onScheduleChanged: function(id) {
+      this.$emit("schedule-changed", id);
     },
     onShowConflicts: function(session_id) {
       this.$emit("show-conflicts", session_id);
     },
     init: function() {
+      this.loading = true
       this.fetch({}).then(
         () => {
           // $nextTick ensures that the DOM is rendered... which is usefull
           // when we want to do DOM type functions...
           this.$nextTick(
             () => {
+              this.loading = false
               for (const day of this.days) {
                 let component = this.$refs[`day-${day}`][0].scrollBarElement()
                 let targets = this.days.filter(d => d != day)
