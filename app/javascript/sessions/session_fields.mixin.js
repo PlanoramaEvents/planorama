@@ -1,4 +1,4 @@
-import { conventionTimezoneMixin } from '@/mixins';
+import { conventionTimezoneMixin, settingsMixin } from '@/mixins';
 import { DateTime } from 'luxon';
 
 export const areaMixin = {

@@ -160,6 +160,31 @@ namespace :chicon do
     end
   end
 
+  desc "Seed Chicon Roomsets"
+  task seed_room_sets: :environment do
+    room_set_names = [
+      'Head table w/ Theater Seating',
+      '60" Round Tables (seats 8)',
+      '72" Round Tables (seats 10)',
+      'Boardroom Table',
+      'Circle of Chairs',
+      'Classroom',
+      'Clear Floor',
+      'Hollow Square',
+      'U Shape Table',
+      'Reception (highboys)',
+      'Other'
+    ]
+    room_set_names.each do |rs_name|
+      rs = RoomSet.find_by name: rs_name
+      next if rs
+
+      RoomSet.create!(
+        name: rs_name
+      )
+    end
+  end
+
   desc "Seed Chicon Venue/Room Data"
   task seed_rooms: :environment do
     hyatt = Venue.find_by name: "Hyatt Regency Chicago"
