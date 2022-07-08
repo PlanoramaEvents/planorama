@@ -44,7 +44,7 @@
         <b-tab title="Live Schedule" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'schedule'">
           <person-schedule></person-schedule>
         </b-tab>
-        <b-tab title="Admin" lazy v-if="currentUserIsAdmin" :active="tab === 'admin'">
+        <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
           <people-admin-tab></people-admin-tab>
         </b-tab>
         <b-tab title="Surveys" disabled lazy>
