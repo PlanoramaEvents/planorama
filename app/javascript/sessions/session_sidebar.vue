@@ -47,6 +47,19 @@
             </b-form-group>
           </div>
         </b-row>
+        <div class="row">
+          <div class="col-12">
+            <b-form-group label="Public Schedule Visibility">
+              <span class="text-muted ml-2">Not Visible</span>
+              <b-form-checkbox
+                switch
+                disabled
+                :checked="selected.visibility === 'is_public'"
+                class="d-inline-block"
+              >Visible</b-form-checkbox>
+        </b-form-group>
+          </div>
+        </div>
         <div class="float-right d-flex justify-content-end">
           <b-button title="Edit Session" variant="primary" :to="editLink"><b-icon-pencil variant="white"></b-icon-pencil></b-button>
         </div>
@@ -62,6 +75,9 @@
               <dd class="ml-2 font-italic text-muted" v-if="!selected.format">None Selected</dd>
               <dt>Session Environment</dt>
               <dd class="ml-2 font-italic">{{SESSION_ENVIRONMENT[selected.environment]}}</dd>
+              <dt>Room Setup</dt>
+              <dd class="ml-2 font-italic" v-if="selected.room_set">{{selected.room_set.name}}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.room_set">None Selected</dd>
               <dt>Attendee Signup Required</dt>
               <dd class="ml-2 font-italic">{{selected.require_signup ? 'Yes' : 'No'}}</dd>
               <dt class="ml-2">If "Yes", max openings</dt>
