@@ -22,7 +22,7 @@
           label="Areas"
         >
           <model-select
-           id="session-areas"
+            id="session-areas"
             v-model="session_areas"
             model="area"
             field="name"
@@ -66,7 +66,7 @@
       <div class="col-6">
         <b-form-group label="Session Environment">
           <b-form-radio-group
-           id="session-environment"
+            id="session-environment"
             stacked
             v-model="session.environment"
             @change="saveSession()"

@@ -72,7 +72,7 @@
         <b-form-group label="Public Schedule Visibility" class="mb-3">
           <span>Not Visible</span>
           <b-form-checkbox
-           id="session-public-schedule-visibility"
+            id="session-public-schedule-visibility"
             switch
             v-model="visibility"
             @change="saveSession()"
