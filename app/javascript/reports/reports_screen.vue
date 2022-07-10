@@ -61,13 +61,13 @@
     <p><b>Conflicts</b></p>
     <ul>
       <li>
-        <a href="/report/conflict_reports/person_exclusion_conflicts" target="_blank">Person scheduled against a conflict item</a>
-      </li>
-      <li>
         <a href="/report/conflict_reports/people_outside_availability" target="_blank">People outside of Availability</a>
       </li>
       <li>
         <a href="/report/conflict_reports/people_double_booked" target="_blank">People double booked</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/person_exclusion_conflicts" target="_blank">Person scheduled against a conflict item</a>
       </li>
       <li>
         <a href="/report/conflict_reports/back_to_back" target="_blank">Back to Back</a>
@@ -76,10 +76,13 @@
         <a href="/report/conflict_reports/back_to_back_to_back" target="_blank">Back to Back to Back</a>
       </li>
       <li>
-        <a href="/report/conflict_reports/all_conflicts" target="_blank">All Conflicts</a>
+        <a href="report/conflict_reports/multiple_sessions_in_room" target="_blank">Multiple Sessions in a Room</a>
       </li>
       <li>
-        <a href="/report/conflict_reports/all_ignored_conflicts" target="_blank">All Ignored Conflicts</a>
+        <a href="/report/conflict_reports/all_ignored_conflicts" target="_blank">Ignored Person Conflicts</a>
+      </li>
+      <li>
+        <a href="/report/conflict_reports/all_conflicts" target="_blank">All Conflicts</a>
       </li>
     </ul>
 
