@@ -64,6 +64,13 @@ namespace :rbac do
           "show": true,
           "update": false
       },
+      "room_set": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false
+      },
       "tag": {
           "create": false,
           "destroy": false,
@@ -286,6 +293,13 @@ namespace :rbac do
           "index": true,
           "show": true,
           "update": true
+      },
+      "room_set": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false
       },
       "tag": {
           "create": false,
@@ -540,6 +554,13 @@ namespace :rbac do
           "update": true
       },
       "room": {
+          "create": true,
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true
+      },
+      "room_set": {
           "create": true,
           "destroy": true,
           "index": true,
