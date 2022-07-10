@@ -47,6 +47,10 @@ Vue.config.errorHandler = (err, vm, info) => {
   }
 }
 
+import VueClipboard from 'vue-clipboard2'
+// VueClipboard.config.autoSetContainer = true
+Vue.use(VueClipboard)
+
 Vue.use(BootstrapVue, {
   BSkeleton: { animation: 'fade' }
 });
