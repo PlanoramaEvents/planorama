@@ -27,6 +27,7 @@
     "vue": "^2.6.12",
     "vue-async-computed": "^3.9.0",
     "vue-cal": "^3.10.1",
+    "vue-clipboard2": "^0.3.3",
     "vue-pluralize": "^0.0.2",
     "vue-query-builder": "^0.8",
     "vue-router": "^3.5.1",

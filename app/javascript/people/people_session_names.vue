@@ -36,10 +36,13 @@ export default {
   }),
   methods: {
     copy() {
-      const blobInput = new Blob([this.$refs.copybox.innerHTML], { type: 'text/html' })
-      navigator.clipboard.write([new ClipboardItem({ 'text/html': blobInput })]).then((_) => {
-        this.copySuccess = true;
-      })
+      let container = this.$refs.copybox
+      let copyStuff = this.$refs.copybox.innerHTML
+      this.$copyText(copyStuff, container).then(
+        () => {
+          this.copySuccess = true;
+        }
+      )
     }
   },
   mounted() {
