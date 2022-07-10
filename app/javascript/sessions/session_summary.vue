@@ -31,6 +31,7 @@
         </b-form-group>
         <b-form-group class="mx-3">
           <b-form-checkbox
+            id="session-open-for-interest"
             switch
             v-model="session.open_for_interest"
             @change="saveSession()"
@@ -54,6 +55,7 @@
         </small>
         <b-form-group class="mt-5">
           <b-form-checkbox
+            id="session-proofed"
             switch
             v-model="session.proofed"
             @change="saveSession()"
@@ -61,6 +63,7 @@
         </b-form-group>
         <b-form-group>
           <b-form-checkbox
+            id="session-scheduled"
             switch
             disabled
             :checked="scheduled"
@@ -69,6 +72,7 @@
         <b-form-group label="Public Schedule Visibility" class="mb-3">
           <span>Not Visible</span>
           <b-form-checkbox
+            id="session-public-schedule-visibility"
             switch
             v-model="visibility"
             @change="saveSession()"
@@ -76,7 +80,7 @@
           >Visible</b-form-checkbox>
         </b-form-group>
         <b-form-group label="Status" label-cols="auto">
-          <b-form-select v-model="session.status" @change="saveSession()">
+          <b-form-select  id="session-status" v-model="session.status" @change="saveSession()">
             <b-form-select-option value="draft">{{SESSION_STATUS.draft}}</b-form-select-option>
             <b-form-select-option value="reviewed">{{SESSION_STATUS.reviewed}}</b-form-select-option>
             <b-form-select-option value="revised">{{SESSION_STATUS.revised}}</b-form-select-option>

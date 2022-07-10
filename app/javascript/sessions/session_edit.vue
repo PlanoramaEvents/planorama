@@ -22,6 +22,7 @@
           label="Areas"
         >
           <model-select
+            id="session-areas"
             v-model="session_areas"
             model="area"
             field="name"
@@ -50,6 +51,7 @@
           label="Format"
         >
           <model-select
+            id="session-format"
             v-model="session.format_id"
             model="format"
             field="name"
@@ -64,6 +66,7 @@
       <div class="col-6">
         <b-form-group label="Session Environment">
           <b-form-radio-group
+            id="session-environment"
             stacked
             v-model="session.environment"
             @change="saveSession()"
@@ -80,6 +83,7 @@
           label="Room Setup"
         >
           <model-select
+            id="session-room-setup"
             v-model="session.room_set_id"
             model="room_set"
             field="name"
@@ -94,10 +98,11 @@
       <div class="col-12">
         <b-form-group label="Attendee Signup Required" class="form-inline my-4">
           <span>No</span>
-          <b-form-checkbox inline switch v-model="session.require_signup" @change="saveSession()">Yes</b-form-checkbox>
+          <b-form-checkbox  id="session-attendee-signup-req" inline switch v-model="session.require_signup" @change="saveSession()">Yes</b-form-checkbox>
           <label :class="['ml-2', {'text-muted': !session.require_signup}]">If yes, max openings:
             <ValidationProvider v-slot="validationCtx" rules="min_value:1">
               <b-form-input
+                id="session-max-signups"
                 type="number"
                 class="ml-1"
                 :disabled="!session.require_signup"
@@ -114,14 +119,14 @@
     <div class="row">
       <div class="col-12">
         <b-form-group label="Attendee Age Restrictions">
-          <b-form-radio-group stacked name="age_restriction" :options="ageRestrictionOptions" v-model="session.age_restriction_id" @change="saveSession()"></b-form-radio-group>
+          <b-form-radio-group id="session-age-restriction" stacked name="age_restriction" :options="ageRestrictionOptions" v-model="session.age_restriction_id" @change="saveSession()"></b-form-radio-group>
         </b-form-group>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
         <b-form-group label="Minors Participation">
-          <b-form-checkbox-group stacked :options="minorsParticipationOptions" v-model="minors_participation" @change="saveSession()" name="minors_participation">
+          <b-form-checkbox-group id="session-minor-participation" stacked :options="minorsParticipationOptions" v-model="minors_participation" @change="saveSession()" name="minors_participation">
           </b-form-checkbox-group>
         </b-form-group>
       </div>
@@ -129,7 +134,7 @@
     <div class="row">
       <div class="col-12">
         <b-form-group label="Required Room Features/Services">
-          <b-textarea v-model="session.room_notes" @blur="saveSession()"></b-textarea>
+          <b-textarea id="session-room-feature" v-model="session.room_notes" @blur="saveSession()"></b-textarea>
         </b-form-group>
       </div>
     </div>
@@ -150,7 +155,7 @@
     <div class="row">
       <div class="col-12">
         <b-form-group label="Tech/Hotel Notes">
-          <b-textarea v-model="session.tech_notes" @blur="saveSession()"></b-textarea>
+          <b-textarea id="session-tech-notes" v-model="session.tech_notes" @blur="saveSession()"></b-textarea>
         </b-form-group>
       </div>
     </div>
