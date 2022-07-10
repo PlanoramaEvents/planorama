@@ -5,7 +5,7 @@ class Session < ApplicationRecord
   validates_numericality_of :maximum_people, allow_nil: true
 
   # NOTE: when we have a config for default duration change to use a lambda
-  attribute :duration, default: 0
+  attribute :duration, default: 60
 
   has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
 
