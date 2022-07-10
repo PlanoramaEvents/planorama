@@ -72,6 +72,19 @@ module ReportsService
     #   .order(:start_time)
   end
 
+  # Get all the schedule sessions
+  def self.scheduled_sessions
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .eager_load(:format, :room, {participant_assignments: :person})
+      .joins(self.area_subquery)
+      .where("start_time is not null and room_id is not null")
+      .where("status != 'dropped' and status != 'draft'")
+      .order(:start_time)
+  end
+
 
   def self.sessions_with_no_moderator
     sched_table = PersonSchedule.arel_table

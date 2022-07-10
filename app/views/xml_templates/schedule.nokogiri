@@ -1,0 +1,26 @@
+#
+# XML template for a collection of sessions
+#
+xml.scehdule {
+  @instance.each do |session|
+    xml.session {
+      xml.title session.title
+      xml.description session.description
+      xml.start_time session.start_time
+      xml.duration session.duration
+      xml.areas session.area_list.join(", ")
+      xml.format session.format.name
+      xml.room session.room.name
+      xml.participants {
+        session.participant_assignments.each do |assignment|
+          next if assignment.session_assignment_role_type.name == 'Invisible'
+
+          xml.person {
+            xml.name assignment.person.published_name
+            xml.role assignment.session_assignment_role_type.name
+          }
+        end
+      }
+    }
+  end
+}
