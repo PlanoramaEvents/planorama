@@ -96,7 +96,7 @@ namespace :rbac do
           "update": true,
           "update_all": false,
           "session_names": false,
-          "draft_sessions": false,
+          "live_sessions": false,
           "create": false,
           "destroy": false
       },
@@ -326,7 +326,7 @@ namespace :rbac do
           "update": true,
           "update_all": true,
           "session_names": true,
-          "draft_sessions": true,
+          "live_sessions": true,
           "create": true,
           "destroy": true
       },
@@ -592,7 +592,7 @@ namespace :rbac do
           "update": true,
           "update_all": true,
           "session_names": true,
-          "draft_sessions": true,
+          "live_sessions": true,
           "create": true,
           "destroy": true
       },
