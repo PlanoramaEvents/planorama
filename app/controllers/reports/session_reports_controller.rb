@@ -234,6 +234,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Participant Status',
         'Day',
         'Session Count',
         "Person's Limit"
@@ -245,6 +246,7 @@ class Reports::SessionReportsController < ApplicationController
         [
           person.name,
           person.published_name,
+          person.con_state,
           person.day ? person.day : 'All',
           person.session_count,
           person.max_sessions
