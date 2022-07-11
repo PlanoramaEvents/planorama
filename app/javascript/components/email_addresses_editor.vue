@@ -15,6 +15,7 @@
         :can-delete="false"
         @input="onInput"
         :disabled="disabled"
+        :radioGroup="radioGroup"
       ></email-address-editor>
     </div>
     <div class="mt-3">
@@ -25,6 +26,7 @@
           @delete="onDelete(email)"
           @input="onInput(email)"
           :disabled="disabled"
+          :radioGroup="radioGroup"
         ></email-address-editor>
       </div>
     </div>
@@ -60,7 +62,11 @@ export default {
       type: Boolean,
       default: false
     },
-    disabled: false
+    disabled: false,
+    id: {
+      type: String,
+      default: 'email-addresses-editor'
+    }
   },
   data() {
     return {
@@ -81,6 +87,9 @@ export default {
       set: function(val) {
         // console.debug("****** SET", val)
       }
+    },
+    radioGroup() {
+      return `${this.id}-make-primary`;
     }
   },
   methods: {
@@ -99,7 +108,10 @@ export default {
           () => {
             this.setLists()
           }
-        )
+        ).catch((err) => {
+          console.log("i caught an error", err)
+          this.setLists()
+        })
       } else {
         this.addEmail(arg).then(
           () => {
@@ -115,7 +127,7 @@ export default {
       ).then(data => {
         this.emails = Object.values(data.email_addresses)
         this.additional = this.emails.filter(em => !em.isdefault)
-        this.$emit('input', data)
+        // this.$emit('input', data)
       })
     },
     onNew() {
