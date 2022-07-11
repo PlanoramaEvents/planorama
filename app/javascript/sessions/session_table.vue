@@ -42,7 +42,7 @@
     </table-vue>
     <plano-modal id="add-session" title="Add Session" @ok="onNew">
       <b-form-group label="Session Title">
-        <b-form-input type="text" v-model="newSessionTitle"></b-form-input>
+        <b-form-input id="session-new-session-title" type="text" v-model="newSessionTitle"></b-form-input>
       </b-form-group>
     </plano-modal>
   </div>
