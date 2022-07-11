@@ -71,10 +71,7 @@
             v-model="session.environment"
             @change="saveSession()"
           >
-            <b-form-radio value="unknown">{{SESSION_ENVIRONMENT.unknown}}</b-form-radio>
-            <b-form-radio value="in_person">{{SESSION_ENVIRONMENT.in_person}}</b-form-radio>
-            <b-form-radio value="hybrid">{{SESSION_ENVIRONMENT.hybrid}}</b-form-radio>
-            <b-form-radio value="virtual">{{SESSION_ENVIRONMENT.virtual}}</b-form-radio>
+            <b-form-radio v-for="env in currentSettings.enums.Session.environment" :value="env"  v-bind:key="env">{{SESSION_ENVIRONMENT[env]}}</b-form-radio>
           </b-form-radio-group>
         </b-form-group>
       </div>
