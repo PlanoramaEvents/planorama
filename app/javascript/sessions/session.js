@@ -94,7 +94,7 @@ export const session_columns = [
     label: 'Visibility',
     formatter: (value) => value === 'is_public' ? 'Visible' : 'Not Visible',
     type: "select",
-    choices: [{label: 'Visible', value: 'is_public'}, {label: 'Not Visible', value: 'is_private'}],
+    choices: [{label: 'Visible', value: 'public'}, {label: 'Not Visible', value: 'private'}],
     sortable: true,
     sortKey: 'visibility'
   }
