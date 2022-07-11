@@ -4,25 +4,12 @@ import axios from 'axios';
 // here
 export const http = axios.create({})
 
-// http.interceptors.request.use(
-//   request => {
-//     let token = jwtToken()
-//     if (token) {
-//       request.headers['Authorization'] = token
-//     }
-//     return request;
-//   },
-//   error => Promise.reject(error)
-// );
-//
-// http.interceptors.response.use(
-//   response => {
-//     // TODO: should intercept the not auth here ???
-//     let token = response.headers['authorization']
-//     if (token) {
-//       setJWTToken(token)
-//     }
-//     return response;
-//   },
-//   error => Promise.reject(error)
-// );
+http.interceptors.response.use(
+  response => {
+    if (response.status == 503) {
+      // window.location = "/503"
+    }
+    return response;
+  },
+  error => Promise.reject(error)
+);
