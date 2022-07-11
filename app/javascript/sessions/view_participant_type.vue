@@ -36,9 +36,11 @@ export default {
     },
     myAssignments() {
       // Using the fetch collection instead of relationship now
-      return this.collection.filter(
-        sa => (sa.session_assignment_role_type_id === this.sessionRole?.id && sa.session_id == this.session.id)
+      const coll = this.collection.filter(
+        sa => (sa.session_assignment_role_type_id === this.sessionRole?.id && sa.session_id === this.session.id)
       );
+      coll.sort((a, b) => a.published_name < b.published_name ? -1 : a.published_name > b.published_name ? 1 : 0)
+      return coll;
     }
   }
 }
