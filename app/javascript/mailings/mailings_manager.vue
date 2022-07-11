@@ -19,8 +19,12 @@
             <b-button variant="primary" class="m-1" @click="onNewView">
               <b-icon-plus scale="2"></b-icon-plus>
             </b-button>
-            <b-button variant="primary" class="m-1" @click="onView" :disabled="!selectedId">View</b-button>
-            <b-button variant="primary" class="m-1" @click="onDelete" :disabled="!selectedId">Delete</b-button>
+            <b-button variant="primary" class="m-1" @click="onView" :disabled="!selectedId" title="View">
+              <b-icon-eye></b-icon-eye>
+            </b-button>
+            <b-button variant="primary" class="m-1" @click="onDelete" :disabled="!selectedId" title="Delete">
+              <b-icon-trash></b-icon-trash>
+            </b-button>
           </div>
 
         </div>
