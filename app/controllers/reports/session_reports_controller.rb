@@ -268,7 +268,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Name',
         'Published Name',
-        'Statue',
+        'Participant Status',
         'Session Count',
         'Con Limit'
       ]
