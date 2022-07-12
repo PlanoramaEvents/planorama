@@ -296,6 +296,8 @@ module ReportsService
           session_assignments[:session_assignment_role_type_id].not_eq(nil).and(
             session_assignments[:session_assignment_role_type_id].in(active_roles.collect{|a| a.id})
           )
+        ).and(
+          sessions[:status].not_eq('dropped')
         )
       )
       .group('sessions.id')
