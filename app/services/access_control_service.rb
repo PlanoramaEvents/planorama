@@ -18,7 +18,7 @@ module AccessControlService
         gender: { sensitive: true, linkable: true, type: :string},
         ethnicity: { sensitive: true, linkable: true, type: :string},
         opted_in: { sensitive: true, linkable: false, type: :boolean},
-        comments: { sensitive: true, linkable: false, type: :text},
+        comments: { sensitive: false, linkable: false, type: :text},
         can_share: { sensitive: false, linkable: true, type: :boolean, values: [true, false]}, # PROB???
         con_state: { sensitive: false, linkable: false, type: :enum},
         registered: { sensitive: false, linkable: false, type: :boolean},
