@@ -112,7 +112,7 @@ export default {
             return -1;
           } else if (nameB < nameA) {
             return 1;
-          } 
+          }
           return 0;
         }
       })
@@ -122,7 +122,7 @@ export default {
   mounted() {
     if(this.selected) {
       this.loading = true;
-      this.get(`/person/${this.selected.id}/draft_sessions`).then(data => {
+      this.get(`/person/${this.selected.id}/live_sessions`).then(data => {
         console.log(data);
         const {_jv, ...filtered_data} = data;
         this.sessions = filtered_data;
