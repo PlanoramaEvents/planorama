@@ -22,7 +22,7 @@ class CreateScheduleSnapshots < ActiveRecord::Migration[6.1]
       end
       change.up do
         execute <<-SQL
-          CREATE TYPE snapshot_status_enum AS ENUM ('not_set', 'in_progress', 'done');
+          CREATE TYPE snapshot_status_enum AS ENUM ('not_set', 'in_progress', 'done', 'failed');
         SQL
 
         add_column :schedule_snapshots, :status, :snapshot_status_enum, default: 'not_set'

@@ -211,7 +211,8 @@ CREATE TYPE public.session_status_enum AS ENUM (
 CREATE TYPE public.snapshot_status_enum AS ENUM (
     'not_set',
     'in_progress',
-    'done'
+    'done',
+    'failed'
 );
 
 
@@ -1079,8 +1080,6 @@ CREATE VIEW public.person_schedules AS
     p.name,
     p.published_name,
     p.con_state,
-    p.can_share,
-    em.email,
     sa.id AS session_assignment_id,
     sart.id AS session_assignment_role_type_id,
     sart.name AS session_assignment_name,
@@ -1092,16 +1091,12 @@ CREATE VIEW public.person_schedules AS
     (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
     sessions.duration,
     sessions.room_id,
-    sessions.format_id,
-    sessions.participant_notes,
-    sessions.description,
-    sessions.environment
-   FROM ((((public.session_assignments sa
+    sessions.format_id
+   FROM (((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
      JOIN public.people p ON ((p.id = sa.person_id)))
-     JOIN public.email_addresses em ON (((em.person_id = p.id) AND em.isdefault)))
      LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
-  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL) AND ((sa.state)::text <> 'rejected'::text));
+  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL));
 
 
 --
@@ -1518,6 +1513,7 @@ CREATE VIEW public.session_conflicts AS
     person_exclusion_conflicts.session_assignment_name,
     person_exclusion_conflicts.excluded_session_id AS conflict_session_id,
     person_exclusion_conflicts.excluded_session_title AS conflict_session_title,
+    NULL::timestamp without time zone AS conflict_session_start_time,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     person_exclusion_conflicts.id AS conflict_id,
@@ -1536,6 +1532,7 @@ UNION
     availability_conflicts.session_assignment_name,
     NULL::uuid AS conflict_session_id,
     NULL::character varying AS conflict_session_title,
+    NULL::timestamp without time zone AS conflict_session_start_time,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     availability_conflicts.id AS conflict_id,
@@ -1554,6 +1551,7 @@ UNION
     NULL::character varying AS session_assignment_name,
     room_conflicts.conflicting_session_id AS conflict_session_id,
     room_conflicts.conflicting_session_title AS conflict_session_title,
+    room_conflicts.conflicting_session_start_time AS conflict_session_start_time,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     room_conflicts.id AS conflict_id,
@@ -1573,6 +1571,7 @@ UNION
     person_schedule_conflicts.session_assignment_name,
     person_schedule_conflicts.conflict_session_id,
     person_schedule_conflicts.conflict_session_title,
+    NULL::timestamp without time zone AS conflict_session_start_time,
     person_schedule_conflicts.conflict_session_assignment_role_type_id,
     person_schedule_conflicts.conflict_session_assignment_name,
     person_schedule_conflicts.id AS conflict_id,
@@ -1591,6 +1590,7 @@ UNION
     person_back_to_back.session_assignment_name,
     person_back_to_back.conflict_session_id,
     person_back_to_back.conflict_session_title,
+    NULL::timestamp without time zone AS conflict_session_start_time,
     person_back_to_back.conflict_session_assignment_role_type_id,
     person_back_to_back.conflict_session_assignment_name,
     person_back_to_back.id AS conflict_id,

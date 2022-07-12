@@ -6,6 +6,7 @@ class ScheduleSnapshot < ApplicationRecord
   enum status: {
     not_set: 'not_set',
     in_progress: 'in_progress',
-    done: 'done'
+    done: 'done',
+    failed: 'failed'
   }
 end
