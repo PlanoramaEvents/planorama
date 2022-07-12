@@ -28,6 +28,7 @@
           :checked="isdefault"
           class="mt-2 pt-1"
           :disabled='disabled'
+          :name="radioGroup"
         >
         </b-form-radio>
         <b-button v-if="canDelete" @click="onDelete" size="sm" title="Delete" class="mt-2" variant="primary">
@@ -56,6 +57,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    radioGroup: {
+      type: String,
+      default: 'email-address-make-primary'
     }
   },
   data: () =>  ({
