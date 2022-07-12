@@ -14,7 +14,7 @@
         <b-tab title="Summary">
           <detail :model="model"></detail>
         </b-tab>
-        <b-tab title="Admin" v-if="currentUserIsAdmin">
+        <b-tab title="Admin" v-if="currentUserIsAdmin || currentUserIsStaff">
          <people-admin-tab></people-admin-tab>
         </b-tab>
         <!-- Need notes and a state change drop down -->
