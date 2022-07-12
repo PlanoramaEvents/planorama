@@ -348,6 +348,8 @@ class ReportsController < ApplicationController
       :person_exclusions
     ).where(
       "availabilities.person_id is not null OR session_limits.person_id is not null OR person_exclusions.person_id is not null"
+    ).where(
+      "people.con_state not in (?)", ['declined','rejected']
     )
 
     workbook = FastExcel.open(constant_memory: true)
