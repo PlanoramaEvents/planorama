@@ -514,12 +514,12 @@ class Reports::ConflictReportsController < ApplicationController
     worksheet.append_row(
       [
         'Name',
-        'Pub Name',
-        'Status',
+        'Published Name',
+        'Participant Status',
         'Session',
         'Area',
         'Start Time',
-        'Duration',
+        'Session Duration',
         'Availability'
       ]
     )
