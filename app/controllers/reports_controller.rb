@@ -169,7 +169,7 @@ class ReportsController < ApplicationController
         'Session',
         'Area',
         'Start Time',
-        'Duration',
+        'Session Duration',
         'Room',
         'Moderator',
         'Assigned'
