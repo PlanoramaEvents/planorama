@@ -119,7 +119,7 @@ module ReportsService
   def self.participant_and_con_session_limits(con_limit: 6)
     person_schedules = Arel::Table.new("person_schedules")
     active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
-    excluded_formats = Format.where("name in (?)",['Table Talk', 'Reading', 'Autographing'])
+    excluded_formats = Format.where("name in (?)",['Table Talk', 'Reading', 'Autographing', 'Meeting', 'Rehearsal'])
 
     Person
       .select(

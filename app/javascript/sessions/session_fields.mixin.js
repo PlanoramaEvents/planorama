@@ -43,7 +43,7 @@ export const startTimeMixin = {
   ],
   computed: {
     formattedStartTime() {
-      this.formatStartTime(this.selected);
+      return this.formatStartTime(this.selected);
     },
   }
 }

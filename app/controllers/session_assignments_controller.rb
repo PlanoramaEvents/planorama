@@ -47,12 +47,17 @@ class SessionAssignmentsController < ResourceController
   def order_string(order_by: nil)
     return super(order_by: order_by) if order_by
 
+    # sort by pub name within role
+    # except for unassigned where they are ordered by rank and then name inside each rank.
     order_str = %(session_assignment_role_type.sort_order asc NULLS LAST,
       CASE WHEN session_assignments.state = 'accepted' THEN 1
       WHEN session_assignments.state = 'proposed' THEN 2
       WHEN session_assignments.state = 'rejected' THEN 3
       else 4
-      end
+      end,
+      case when (session_assignment_role_type is null AND session_assignments.interested) then session_assignments.interest_ranking
+      end asc,
+      people.published_name asc
     )
 
     Arel.sql(order_str.squish)
