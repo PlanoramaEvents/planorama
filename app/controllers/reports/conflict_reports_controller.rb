@@ -57,13 +57,15 @@ class Reports::ConflictReportsController < ApplicationController
         'Session',
         'Areas',
         'Start Time',
+        'Session Duration',
         'Room',
+        'Person',
         'Conflict Type'
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
-      nil, nil, date_time_style, nil, nil
+      nil, nil, date_time_style, nil, nil, nil, nil
     ]
     conflicts.each do |conflict|
       worksheet.append_row(
@@ -71,7 +73,9 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.session_title,
           conflict.area_list.join('; '),
           FastExcel.date_num(conflict.session_start_time, conflict.session_start_time.in_time_zone.utc_offset),
+          conflict.session_duration,
           conflict.room&.name,
+          conflict.person_published_name,
           conflict.conflict_type
         ],
         styles

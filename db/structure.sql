@@ -205,6 +205,18 @@ CREATE TYPE public.session_status_enum AS ENUM (
 
 
 --
+-- Name: snapshot_status_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.snapshot_status_enum AS ENUM (
+    'not_set',
+    'in_progress',
+    'done',
+    'failed'
+);
+
+
+--
 -- Name: submission_state_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -679,6 +691,7 @@ CREATE VIEW public.availability_conflicts AS
     sessions.id AS session_id,
     sessions.title AS session_title,
     sessions.start_time AS session_start_time,
+    sessions.duration AS session_duration,
     session_assignments.session_assignment_role_type_id,
     sart.role_type AS session_assignment_role_type,
     sart.name AS session_assignment_name
@@ -1256,6 +1269,21 @@ CREATE VIEW public.person_schedule_conflicts AS
 
 
 --
+-- Name: person_schedule_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_schedule_snapshots (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    schedule_snapshot_id uuid,
+    snapshot jsonb,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: publication_dates; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1361,6 +1389,7 @@ CREATE VIEW public.room_allocations AS
     s.title AS session_title,
     s.start_time,
     (s.start_time + ((s.duration || ' minute'::text))::interval) AS end_time,
+    s.duration,
     s.id AS session_id
    FROM (public.sessions s
      JOIN public.rooms r ON (((r.id = s.room_id) AND (s.start_time IS NOT NULL))));
@@ -1377,9 +1406,11 @@ CREATE VIEW public.room_conflicts AS
     b1.session_id,
     b1.start_time,
     b1.end_time,
+    b1.duration,
     b2.session_id AS conflicting_session_id,
     b2.session_title AS conflicting_session_title,
     b2.start_time AS conflicting_session_start_time,
+    b2.duration AS conflicting_session_duration,
     b2.end_time AS conflicting_session_end_time,
         CASE
             WHEN ((b1.start_time = b2.end_time) OR (b2.start_time = b1.end_time)) THEN true
@@ -1429,6 +1460,23 @@ CREATE TABLE public.room_sets (
 
 
 --
+-- Name: schedule_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.schedule_snapshots (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    label character varying,
+    created_by character varying,
+    started_at timestamp without time zone,
+    completed_at timestamp without time zone,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    status public.snapshot_status_enum DEFAULT 'not_set'::public.snapshot_status_enum
+);
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1460,6 +1508,7 @@ CREATE VIEW public.session_conflicts AS
  SELECT person_exclusion_conflicts.session_id,
     person_exclusion_conflicts.title AS session_title,
     person_exclusion_conflicts.start_time AS session_start_time,
+    person_exclusion_conflicts.duration AS session_duration,
     NULL::uuid AS room_id,
     person_exclusion_conflicts.person_id,
     person_exclusion_conflicts.name AS person_name,
@@ -1469,6 +1518,8 @@ CREATE VIEW public.session_conflicts AS
     person_exclusion_conflicts.session_assignment_name,
     person_exclusion_conflicts.excluded_session_id AS conflict_session_id,
     person_exclusion_conflicts.excluded_session_title AS conflict_session_title,
+    NULL::timestamp without time zone AS conflict_session_start_time,
+    NULL::integer AS conflict_session_duration,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     person_exclusion_conflicts.id AS conflict_id,
@@ -1478,6 +1529,7 @@ UNION
  SELECT availability_conflicts.session_id,
     availability_conflicts.session_title,
     availability_conflicts.session_start_time,
+    availability_conflicts.session_duration,
     NULL::uuid AS room_id,
     availability_conflicts.person_id,
     availability_conflicts.person_name,
@@ -1487,6 +1539,8 @@ UNION
     availability_conflicts.session_assignment_name,
     NULL::uuid AS conflict_session_id,
     NULL::character varying AS conflict_session_title,
+    NULL::timestamp without time zone AS conflict_session_start_time,
+    NULL::integer AS conflict_session_duration,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     availability_conflicts.id AS conflict_id,
@@ -1496,6 +1550,7 @@ UNION
  SELECT room_conflicts.session_id,
     room_conflicts.session_title,
     room_conflicts.start_time AS session_start_time,
+    room_conflicts.duration AS session_duration,
     room_conflicts.room_id,
     NULL::uuid AS person_id,
     NULL::character varying AS person_name,
@@ -1505,6 +1560,8 @@ UNION
     NULL::character varying AS session_assignment_name,
     room_conflicts.conflicting_session_id AS conflict_session_id,
     room_conflicts.conflicting_session_title AS conflict_session_title,
+    room_conflicts.conflicting_session_start_time AS conflict_session_start_time,
+    room_conflicts.conflicting_session_duration AS conflict_session_duration,
     NULL::uuid AS conflict_session_assignment_role_type_id,
     NULL::text AS conflict_session_assignment_name,
     room_conflicts.id AS conflict_id,
@@ -1515,6 +1572,7 @@ UNION
  SELECT person_schedule_conflicts.session_id,
     person_schedule_conflicts.title AS session_title,
     person_schedule_conflicts.start_time AS session_start_time,
+    person_schedule_conflicts.duration AS session_duration,
     person_schedule_conflicts.room_id,
     person_schedule_conflicts.person_id,
     person_schedule_conflicts.name AS person_name,
@@ -1524,6 +1582,8 @@ UNION
     person_schedule_conflicts.session_assignment_name,
     person_schedule_conflicts.conflict_session_id,
     person_schedule_conflicts.conflict_session_title,
+    NULL::timestamp without time zone AS conflict_session_start_time,
+    NULL::integer AS conflict_session_duration,
     person_schedule_conflicts.conflict_session_assignment_role_type_id,
     person_schedule_conflicts.conflict_session_assignment_name,
     person_schedule_conflicts.id AS conflict_id,
@@ -1533,6 +1593,7 @@ UNION
  SELECT person_back_to_back.session_id,
     person_back_to_back.title AS session_title,
     person_back_to_back.start_time AS session_start_time,
+    person_back_to_back.duration AS session_duration,
     person_back_to_back.room_id,
     person_back_to_back.person_id,
     person_back_to_back.name AS person_name,
@@ -1542,6 +1603,8 @@ UNION
     person_back_to_back.session_assignment_name,
     person_back_to_back.conflict_session_id,
     person_back_to_back.conflict_session_title,
+    NULL::timestamp without time zone AS conflict_session_start_time,
+    NULL::integer AS conflict_session_duration,
     person_back_to_back.conflict_session_assignment_role_type_id,
     person_back_to_back.conflict_session_assignment_name,
     person_back_to_back.id AS conflict_id,
@@ -2161,6 +2224,14 @@ ALTER TABLE ONLY public.application_roles
 
 
 --
+-- Name: person_schedule_snapshots person_schedule_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_schedule_snapshots
+    ADD CONSTRAINT person_schedule_snapshots_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: session_assignment_role_type programme_assignment_role_type_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2238,6 +2309,14 @@ ALTER TABLE ONLY public.room_sets
 
 ALTER TABLE ONLY public.rooms
     ADD CONSTRAINT rooms_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedule_snapshots schedule_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedule_snapshots
+    ADD CONSTRAINT schedule_snapshots_pkey PRIMARY KEY (id);
 
 
 --
@@ -2706,6 +2785,13 @@ CREATE INDEX index_rooms_on_room_set_id ON public.rooms USING btree (room_set_id
 
 
 --
+-- Name: index_schedule_snapshots_on_label; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_schedule_snapshots_on_label ON public.schedule_snapshots USING btree (label);
+
+
+--
 -- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3147,6 +3233,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220629132145'),
 ('20220630032544'),
 ('20220704121816'),
-('20220707124302');
+('20220707124302'),
+('20220712153111'),
+('20220712153128');
 
 
