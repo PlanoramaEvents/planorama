@@ -169,7 +169,7 @@ class ReportsController < ApplicationController
         'Session',
         'Area',
         'Start Time',
-        'Duration',
+        'Session Duration',
         'Room',
         'Moderator',
         'Assigned'
@@ -192,7 +192,7 @@ class ReportsController < ApplicationController
             select{|a| [moderator.id].include?(a.session_assignment_role_type_id)}.
             collect{|s| s.person.published_name}.join('; '),
           session.session_assignments.
-            select{|a| [participant.id, invisible.id].include?(a.session_assignment_role_type_id)}.
+            select{|a| [participant.id].include?(a.session_assignment_role_type_id)}.
             collect{|s| s.person.published_name}.join('; ')
         ],
         styles

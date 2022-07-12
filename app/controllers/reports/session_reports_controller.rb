@@ -324,7 +324,7 @@ class Reports::SessionReportsController < ApplicationController
         [
           session.title,
           session.area_list.sort.join(';'),
-          FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
+          session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : '',
           session.nbr_assignments,
           3,
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
