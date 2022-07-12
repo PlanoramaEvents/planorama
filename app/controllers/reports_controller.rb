@@ -15,7 +15,9 @@ class ReportsController < ApplicationController
     people = Person.includes(
       {submissions: :survey},
       :primary_email
-    ).references(
+    )
+    .where("people.con_state not in (?)", ['declined', 'rejected'])
+    .references(
       :submissions
     ).order("people.name")
 
@@ -241,6 +243,7 @@ class ReportsController < ApplicationController
       .joins(joins)
       .where("session_assignment_name in (?)", ['Moderator', 'Participant', "Invisible"])
       .where("start_time is not null and room_id is not null")
+      .where("person_schedules.con_state not in (?)", ['declined', 'rejected'])
       .order('person_schedules.name', 'start_time', 'title')
 
     workbook = FastExcel.open(constant_memory: true)
@@ -297,7 +300,7 @@ class ReportsController < ApplicationController
       {session_assignments: :session}
     ).where(
       "session_assignments.session_assignment_role_type_id is not null"
-    ).order("people.name")
+    ).where("people.con_state not in (?)", ['declined', 'rejected']).order("people.name")
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Assigned Sessions")
@@ -351,6 +354,7 @@ class ReportsController < ApplicationController
     ).where(
       "people.con_state not in (?)", ['declined','rejected']
     )
+    .where("people.con_state not in (?)", ['declined', 'rejected'])
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Participant Availability")
@@ -401,7 +405,9 @@ class ReportsController < ApplicationController
     assignments = SessionAssignment
                     .joins(:person)
                     .includes([{session: :areas}, :person, :session_assignment_role_type])
-                    .where(interested: true).order("people.name")
+                    .where(interested: true)
+                    .where("people.con_state not in (?)", ['declined', 'rejected'])
+                    .order("people.name")
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Participant Selections")
@@ -452,6 +458,7 @@ class ReportsController < ApplicationController
     sessions = Session
                 .eager_load(:areas, {session_assignments: [:person]})
                 .where('session_assignments.interested': true)
+                .where("people.con_state not in (?)", ['declined', 'rejected'])
                 .order('sessions.title')
 
     workbook = FastExcel.open(constant_memory: true)
@@ -536,6 +543,7 @@ class ReportsController < ApplicationController
               )
               .where("people.do_not_assign_with is not null and people.do_not_assign_with <> ''")
               .where("session_assignment_role_type.name in (?)", ['Moderator', 'Participant', "Invisible"])
+              .where("people.con_state not in (?)", ['declined', 'rejected'])
               .order("people.published_name asc")
 
     workbook = FastExcel.open(constant_memory: true)
