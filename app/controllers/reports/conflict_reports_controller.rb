@@ -14,7 +14,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Session',
         'Areas',
         'Start Time',
-        'Duration',
+        'Session Duration',
         'Room',
         'Person',
         'Conflict Type'
@@ -443,7 +443,7 @@ class Reports::ConflictReportsController < ApplicationController
       [
         'Name',
         'Published Name',
-        'Status',
+        'Participant Status',
         'Time',
         'Session',
         'Area',
