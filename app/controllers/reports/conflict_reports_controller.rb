@@ -241,13 +241,14 @@ class Reports::ConflictReportsController < ApplicationController
       'middle_areas_list.area_list as middle_area_list',
       'conflict_areas_list.area_list as conflict_area_list'
     )
-                .includes(:room, :middle_room, :conflict_room)
-                .references(:room, :middle_room, :conflict_room)
-                .joins(joins)
-                .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                .where("middle_session_assignment_name is null or middle_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                .order('published_name asc, start_time asc')
+      .includes(:room, :middle_room, :conflict_room)
+      .references(:room, :middle_room, :conflict_room)
+      .joins(joins)
+      .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .where("middle_session_assignment_name is null or middle_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .where("(b2b_id not in (select conflict_id from ignored_conflicts)) OR (conflict_b2b_id not in (select conflict_id from ignored_conflicts))")
+      .order('published_name asc, start_time asc')
 
     #
     workbook = FastExcel.open(constant_memory: true)

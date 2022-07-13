@@ -294,6 +294,7 @@ module MigrationHelpers
             psc1.session_assignment_name as session_assignment_name,
             psc1.session_assignment_role_type,
             psc1.room_id,
+            psc1.id as b2b_id,
             psc2.session_id as middle_session_id,
             psc2.title as middle_title,
             psc2.start_time as middle_start_time,
@@ -312,7 +313,8 @@ module MigrationHelpers
             psc2.conflict_session_assignment_role_type_id,
             psc2.conflict_session_assignment_role_type,
             psc2.conflict_session_assignment_name,
-            psc2.conflict_room_id
+            psc2.conflict_room_id,
+            psc2.id as conflict_b2b_id
           from
             person_back_to_back psc1
           inner join person_back_to_back psc2 on
