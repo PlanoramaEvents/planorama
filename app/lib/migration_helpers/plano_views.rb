@@ -75,6 +75,7 @@ module MigrationHelpers
           s.title as session_title,
         	s.start_time,
         	(s.start_time + (s.duration || ' minute')::interval) as end_time,
+          s.duration,
         	s.id as session_id
         from
         	sessions s
@@ -96,9 +97,11 @@ module MigrationHelpers
           	b1.session_id,
           	b1.start_time,
           	b1.end_time,
+            b1.duration,
           	b2.session_id as conflicting_session_id,
             b2.session_title as conflicting_session_title,
           	b2.start_time as conflicting_session_start_time,
+            b2.duration as conflicting_session_duration,
           	b2.end_time as conflicting_session_end_time,
           	case
           		when b1.start_time = b2.end_time or b2.start_time = b1.end_time
@@ -247,6 +250,7 @@ module MigrationHelpers
         	person_schedules.title,
         	person_schedules.start_time,
         	person_schedules.end_time,
+          person_schedules.room_id,
         	person_schedules.duration,
         	person_schedules.session_assignment_role_type_id,
         	person_schedules.session_assignment_id,
@@ -280,7 +284,7 @@ module MigrationHelpers
     end
 
     def self.create_person_back_to_back_to_back
-      # TODO: change new view
+      # ????
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW person_back_to_back_to_back AS
           select
@@ -299,6 +303,7 @@ module MigrationHelpers
             psc1.session_assignment_name as session_assignment_name,
             psc1.session_assignment_role_type,
             psc1.room_id,
+            psc1.id as b2b_id,
             psc2.session_id as middle_session_id,
             psc2.title as middle_title,
             psc2.start_time as middle_start_time,
@@ -317,7 +322,8 @@ module MigrationHelpers
             psc2.conflict_session_assignment_role_type_id,
             psc2.conflict_session_assignment_role_type,
             psc2.conflict_session_assignment_name,
-            psc2.conflict_room_id
+            psc2.conflict_room_id,
+            psc2.id as conflict_b2b_id
           from
             person_back_to_back psc1
           inner join person_back_to_back psc2 on
@@ -338,6 +344,8 @@ module MigrationHelpers
             sessions.id as session_id,
             sessions.title as session_title,
             sessions.start_time as session_start_time,
+            sessions.room_id as session_room_id,
+            sessions.duration as session_duration,
             session_assignments.session_assignment_role_type_id as session_assignment_role_type_id,
             sart.role_type as session_assignment_role_type,
             sart.name as session_assignment_name
@@ -394,7 +402,8 @@ module MigrationHelpers
               session_id,
               title as session_title,
               start_time as session_start_time,
-              CAST(NULL as uuid) as room_id,
+              duration as session_duration,
+              room_id,
               person_id,
               name as person_name,
               published_name as person_published_name,
@@ -404,6 +413,7 @@ module MigrationHelpers
               excluded_session_id as conflict_session_id,
               excluded_session_title as conflict_session_title,
               CAST(NULL as timestamp) as conflict_session_start_time,
+              CAST(NULL as integer) as conflict_session_duration,
               CAST(NULL as uuid) as conflict_session_assignment_role_type_id,
               null as conflict_session_assignment_name,
               id as conflict_id,
@@ -414,7 +424,8 @@ module MigrationHelpers
             session_id,
             session_title,
             session_start_time,
-            CAST(NULL as uuid) as room_id,
+            session_duration as session_duration,
+            session_room_id as room_id,
             person_id,
             person_name,
             person_published_name,
@@ -424,6 +435,7 @@ module MigrationHelpers
             CAST(NULL as uuid) as conflict_session_id,
             NULL as conflict_session_title,
             CAST(NULL as timestamp) as conflict_session_start_time,
+            CAST(NULL as integer) as conflict_session_duration,
             CAST(NULL as uuid) as conflict_session_assignment_role_type_id,
             null as conflict_session_assignment_name,
             id as conflict_id,
@@ -434,6 +446,7 @@ module MigrationHelpers
             session_id,
             session_title,
             start_time as session_start_time,
+            duration as session_duration,
             room_id,
             CAST(NULL as uuid) as person_id,
             NULL as person_name,
@@ -444,6 +457,7 @@ module MigrationHelpers
             conflicting_session_id as conflict_session_id,
             conflicting_session_title as conflict_session_title,
             conflicting_session_start_time as conflict_session_start_time,
+            conflicting_session_duration as conflict_session_duration,
             CAST(NULL as uuid) as conflict_session_assignment_role_type_id,
             null as conflict_session_assignment_name,
             id as conflict_id,
@@ -455,6 +469,7 @@ module MigrationHelpers
             session_id,
             title as session_title,
             start_time as session_start_time,
+            duration as session_duration,
             room_id,
             person_id,
             name as person_name,
@@ -465,6 +480,7 @@ module MigrationHelpers
             conflict_session_id,
             conflict_session_title,
             CAST(NULL as timestamp) as conflict_session_start_time,
+            CAST(NULL as integer) as conflict_session_duration,
             conflict_session_assignment_role_type_id,
             conflict_session_assignment_name,
             id as conflict_id,
@@ -475,6 +491,7 @@ module MigrationHelpers
             session_id,
             title as session_title,
             start_time as session_start_time,
+            duration as session_duration,
             room_id,
             person_id,
             name person_name,
@@ -485,6 +502,7 @@ module MigrationHelpers
             conflict_session_id,
             conflict_session_title,
             CAST(NULL as timestamp) as conflict_session_start_time,
+            CAST(NULL as integer) as conflict_session_duration,
             conflict_session_assignment_role_type_id,
             conflict_session_assignment_name,
             id as conflict_id,
