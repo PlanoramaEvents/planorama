@@ -1143,6 +1143,7 @@ CREATE VIEW public.person_back_to_back_to_back AS
     psc1.session_assignment_name,
     psc1.session_assignment_role_type,
     psc1.room_id,
+    psc1.id AS b2b_id,
     psc2.session_id AS middle_session_id,
     psc2.title AS middle_title,
     psc2.start_time AS middle_start_time,
@@ -1161,7 +1162,8 @@ CREATE VIEW public.person_back_to_back_to_back AS
     psc2.conflict_session_assignment_role_type_id,
     psc2.conflict_session_assignment_role_type,
     psc2.conflict_session_assignment_name,
-    psc2.conflict_room_id
+    psc2.conflict_room_id,
+    psc2.id AS conflict_b2b_id
    FROM (public.person_back_to_back psc1
      JOIN public.person_back_to_back psc2 ON ((psc2.session_id = psc1.conflict_session_id)));
 
