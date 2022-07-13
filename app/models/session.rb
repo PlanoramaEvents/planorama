@@ -32,7 +32,7 @@ class Session < ApplicationRecord
       where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
       .where("session_assignment_name is null or session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
       .where("conflict_session_assignment_name is null or conflict_session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
-      .where("(session_conflicts.conflict_type = 'room_conflict' AND session_conflicts.session_start_time != session_conflicts.conflict_session_start_time)")
+      .where("session_conflicts.conflict_type != 'room_conflict' OR (session_conflicts.conflict_type = 'room_conflict' AND session_conflicts.session_start_time != session_conflicts.conflict_session_start_time)")
       # .where("session_conflicts.conflict_type != 'person_schedule_conflict' and session_conflicts.conflict_type != 'person_back_to_back'")
     },
     foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
@@ -164,15 +164,17 @@ class Session < ApplicationRecord
       .or(
         sessions[:id].eq(conflicts[:conflict_session_id])
         .and(
-          conflicts[:conflict_type].eq('room_conflict')
-          .and(
-            conflicts[:session_start_time].not_eq(conflicts[:conflict_session_start_time])
+          conflicts[:conflict_type].not_eq('room_conflict')
+          .or(
+            conflicts[:conflict_type].eq('room_conflict')
+            .and(
+              conflicts[:session_start_time].not_eq(conflicts[:conflict_session_start_time])
+            )
           )
-        #   conflicts[:conflict_type].not_eq('person_schedule_conflict')
-        #   .and(conflicts[:conflict_type].not_eq('person_back_to_back'))
-        #   .and(
-        #     )
-        #   )
+          # .and(
+          #   conflicts[:conflict_type].not_eq('person_schedule_conflict')
+          #   .and(conflicts[:conflict_type].not_eq('person_back_to_back'))
+          # )
         )
       )
       .and(

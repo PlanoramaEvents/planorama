@@ -275,7 +275,7 @@ module MigrationHelpers
     end
 
     def self.create_person_back_to_back_to_back
-      # TODO: change new view
+      # ????
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW person_back_to_back_to_back AS
           select
