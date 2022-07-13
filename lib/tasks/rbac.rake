@@ -147,6 +147,7 @@ namespace :rbac do
           "update": false
       },
       "session": {
+          "take_snapshot": false,
           "express_interest": true,
           "create": false,
           "destroy": false,
@@ -378,6 +379,7 @@ namespace :rbac do
           "update": true
       },
       "session": {
+          "take_snapshot": false,
           "express_interest": true,
           "create": true,
           "destroy": true,
@@ -645,6 +647,7 @@ namespace :rbac do
           "update": true
       },
       "session": {
+          "take_snapshot": true,
           "express_interest": true,
           "create": true,
           "destroy": true,

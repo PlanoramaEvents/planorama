@@ -1,21 +1,20 @@
 module SnapshotService
-  # Kick off a sidekiq job to process the snapshot
-
-  # TODO
-  # SnapshotService.startDraftProcess(label: 'test')
-  def self.startDraftProcess(label:)
+  # Start
+  def self.startSnapshot(label:, author:)
     # Create schedule SnapShot
     snapshot = ScheduleSnapshot.create!(
       label: label,
-      status: 'in_progress'
+      status: 'in_progress',
+      created_by: author,
+      started_at: Time.now
     )
 
     self.takeSnapshots(schedule_snapshot: snapshot)
 
-    snapshot.update(status: 'done')
+    snapshot.update(status: 'done', completed_at: Time.now)
   rescue => e
     Rails.logger.error("Snapshot Failed: #{e}")
-    snapshot.update(status: 'failed')
+    snapshot.update(status: 'failed', completed_at: Time.now)
   end
 
   # Take snapshot

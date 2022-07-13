@@ -128,6 +128,8 @@ Rails.application.routes.draw do
   resources :formats, path: 'format'
   resources :areas, path: 'area'
   resources :tags, path: 'tag'
+
+  get 'session/take_snapshot/:label', to: 'sessions#take_snapshot'
   get 'session/tags', to: 'sessions#tags'
   post 'session/import', to: 'sessions#import'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id
