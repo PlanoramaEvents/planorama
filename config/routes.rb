@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     get 'email_addresses', to: 'email_addresses#index'
     get 'sessions', to: 'sessions#index'
     get 'live_sessions', to: 'people#live_sessions'
+    get 'snapshot_schedule(/:label)', to: 'people#snapshot_schedule'
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
