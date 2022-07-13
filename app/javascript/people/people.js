@@ -58,7 +58,7 @@ export const people_columns = [
   },
   {
     key: 'job_title',
-    label: 'Job Ttile',
+    label: 'Job Title',
     type: "text",
     sortable: false
   },
