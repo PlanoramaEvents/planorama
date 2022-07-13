@@ -1,6 +1,23 @@
 module SnapshotService
   # Kick off a sidekiq job to process the snapshot
 
+  # TODO
+  # SnapshotService.startDraftProcess(label: 'test')
+  def self.startDraftProcess(label:)
+    # Create schedule SnapShot
+    snapshot = ScheduleSnapshot.create!(
+      label: label,
+      status: 'in_progress'
+    )
+
+    self.takeSnapshots(schedule_snapshot: snapshot)
+
+    snapshot.update(status: 'done')
+  rescue => e
+    Rails.logger.error("Snapshot Failed: #{e}")
+    snapshot.update(status: 'failed')
+  end
+
   # Take snapshot
   # For each participant got through and snapshot their schedule
   # SessionService.draft_schedule_for(person:)
@@ -14,12 +31,12 @@ module SnapshotService
 
       participants.each do |participant|
         # Generate the snapshot
-        snapshot = SessionService.draft_schedule_for(person: participant)
+        draft_snapshot = SessionService.draft_schedule_for(person: participant)
         # save the snapshot
         PersonScheduleSnapshot.create!(
           schedule_snapshot: schedule_snapshot,
           person: participant,
-          snapshot: snapshot.to_json
+          snapshot: draft_snapshot.to_json
         )
       end
     end
