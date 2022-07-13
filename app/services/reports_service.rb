@@ -26,6 +26,7 @@ module ReportsService
     )
       .joins(joins)
       .includes(:room, :session)
+      .where("session_conflicts.conflict_type != 'room_conflict'")
       .where(where_clause)
       .order(:session_title)
   end
