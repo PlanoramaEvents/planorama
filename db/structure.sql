@@ -158,6 +158,7 @@ CREATE TYPE public.person_status_enum AS ENUM (
     'not_set',
     'applied',
     'vetted',
+    'wait_list',
     'invite_pending',
     'invited',
     'probable',
@@ -1070,6 +1071,8 @@ CREATE VIEW public.person_schedules AS
     p.name,
     p.published_name,
     p.con_state,
+    p.can_share,
+    em.email,
     sa.id AS session_assignment_id,
     sart.id AS session_assignment_role_type_id,
     sart.name AS session_assignment_name,
@@ -1081,12 +1084,16 @@ CREATE VIEW public.person_schedules AS
     (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
     sessions.duration,
     sessions.room_id,
-    sessions.format_id
-   FROM (((public.session_assignments sa
+    sessions.format_id,
+    sessions.participant_notes,
+    sessions.description,
+    sessions.environment
+   FROM ((((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
      JOIN public.people p ON ((p.id = sa.person_id)))
+     JOIN public.email_addresses em ON (((em.person_id = p.id) AND em.isdefault)))
      LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
-  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL));
+  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL) AND ((sa.state)::text <> 'rejected'::text));
 
 
 --
@@ -3170,6 +3177,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220629132145'),
 ('20220630032544'),
 ('20220704121816'),
-('20220707124302');
+('20220707124302'),
+('20220713185329');
 
 
