@@ -57,13 +57,15 @@ class Reports::ConflictReportsController < ApplicationController
         'Session',
         'Areas',
         'Start Time',
+        'Session Duration',
         'Room',
+        'Person',
         'Conflict Type'
       ]
     )
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
-      nil, nil, date_time_style, nil, nil
+      nil, nil, date_time_style, nil, nil, nil, nil
     ]
     conflicts.each do |conflict|
       worksheet.append_row(
@@ -71,7 +73,9 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.session_title,
           conflict.area_list.join('; '),
           FastExcel.date_num(conflict.session_start_time, conflict.session_start_time.in_time_zone.utc_offset),
+          conflict.session_duration,
           conflict.room&.name,
+          conflict.person_published_name,
           conflict.conflict_type
         ],
         styles
@@ -237,13 +241,14 @@ class Reports::ConflictReportsController < ApplicationController
       'middle_areas_list.area_list as middle_area_list',
       'conflict_areas_list.area_list as conflict_area_list'
     )
-                .includes(:room, :middle_room, :conflict_room)
-                .references(:room, :middle_room, :conflict_room)
-                .joins(joins)
-                .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                .where("middle_session_assignment_name is null or middle_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                .order('published_name asc, start_time asc')
+      .includes(:room, :middle_room, :conflict_room)
+      .references(:room, :middle_room, :conflict_room)
+      .joins(joins)
+      .where("session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .where("middle_session_assignment_name is null or middle_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .where("conflict_session_assignment_name is null or conflict_session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
+      .where("(b2b_id not in (select conflict_id from ignored_conflicts)) OR (conflict_b2b_id not in (select conflict_id from ignored_conflicts))")
+      .order('published_name asc, start_time asc')
 
     #
     workbook = FastExcel.open(constant_memory: true)
