@@ -31,7 +31,9 @@ class ApplicationController < ActionController::Base
   end
 
   def check_up
-    # redirect_to '/503.html', status: 503
+    if ScheduleSnapshot.where("status = 'in_progress'").count > 0
+      redirect_to '/maintenance.html', status: 503
+    end
   end
 
   def prevent_cache
