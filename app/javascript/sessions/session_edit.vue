@@ -61,7 +61,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12">
+      <div class="col-6">
         <b-form-group label="Session Environment">
           <b-form-radio-group
             stacked
@@ -73,6 +73,20 @@
             <b-form-radio value="hybrid">{{SESSION_ENVIRONMENT.hybrid}}</b-form-radio>
             <b-form-radio value="virtual">{{SESSION_ENVIRONMENT.virtual}}</b-form-radio>
           </b-form-radio-group>
+        </b-form-group>
+      </div>
+      <div class="col-6">
+        <b-form-group
+          label="Room Setup"
+        >
+          <model-select
+            v-model="session.room_set_id"
+            model="room_set"
+            field="name"
+            :multiple="false"
+            @change="saveSession()"
+            :selectSize="4"
+          ></model-select>
         </b-form-group>
       </div>
     </div>

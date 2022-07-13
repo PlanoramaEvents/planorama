@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
     get 'sessions', to: 'sessions#index'
+    get 'draft_sessions', to: 'people#draft_sessions'
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
@@ -71,6 +72,8 @@ Rails.application.routes.draw do
   get 'report/conflict_reports/back_to_back_to_back', to: 'reports/conflict_reports#back_to_back_to_back'
   get 'report/conflict_reports/person_exclusion_conflicts', to: 'reports/conflict_reports#person_exclusion_conflicts'
   get 'report/conflict_reports/multiple_sessions_in_room', to: 'reports/conflict_reports#multiple_sessions_in_room'
+  get 'report/conflict_reports/all_conflicts', to: 'reports/conflict_reports#all_conflicts'
+  get 'report/conflict_reports/all_ignored_conflicts', to: 'reports/conflict_reports#all_ignored_conflicts'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]

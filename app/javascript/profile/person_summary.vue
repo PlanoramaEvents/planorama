@@ -44,6 +44,7 @@ import EditButton from '@/components/edit_button';
 import PersonEditModal from './person_edit_modal';
 import { modelMixinNoProp } from '@/store/model.mixin';
 import { personModel } from '@/store/person.store';
+import {PERSON_NEVER_LOGGED_IN} from "@/constants/strings";
 
 export default {
   name: "PersonSummary",
@@ -70,6 +71,8 @@ export default {
   },
   methods: {
     formatLocaleDate(date, config=DateTime.DATETIME_FULL) {
+      if(!date)
+        return PERSON_NEVER_LOGGED_IN;
       let d = new Date(date)
       return DateTime.fromJSDate(d).toLocaleString(config)
     },

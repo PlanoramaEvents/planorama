@@ -64,6 +64,13 @@ namespace :rbac do
           "show": true,
           "update": false
       },
+      "room_set": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false
+      },
       "tag": {
           "create": false,
           "destroy": false,
@@ -89,6 +96,7 @@ namespace :rbac do
           "update": true,
           "update_all": false,
           "session_names": false,
+          "draft_sessions": false,
           "create": false,
           "destroy": false
       },
@@ -286,6 +294,13 @@ namespace :rbac do
           "show": true,
           "update": true
       },
+      "room_set": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false
+      },
       "tag": {
           "create": false,
           "destroy": false,
@@ -311,6 +326,7 @@ namespace :rbac do
           "update": true,
           "update_all": true,
           "session_names": true,
+          "draft_sessions": true,
           "create": true,
           "destroy": true
       },
@@ -493,7 +509,9 @@ namespace :rbac do
         "back_to_back": true,
         "back_to_back_to_back": true,
         "person_exclusion_conflicts": true,
-        "multiple_sessions_in_room": true
+        "multiple_sessions_in_room": true,
+        "all_conflicts": true,
+        "all_ignored_conflicts": true
       },
       "session_conflict": {
         "conflicts_with": true,
@@ -542,6 +560,13 @@ namespace :rbac do
           "show": true,
           "update": true
       },
+      "room_set": {
+          "create": true,
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true
+      },
       "tag": {
           "create": true,
           "destroy": true,
@@ -567,6 +592,7 @@ namespace :rbac do
           "update": true,
           "update_all": true,
           "session_names": true,
+          "draft_sessions": true,
           "create": true,
           "destroy": true
       },
@@ -749,7 +775,9 @@ namespace :rbac do
         "back_to_back": true,
         "back_to_back_to_back": true,
         "person_exclusion_conflicts": true,
-        "multiple_sessions_in_room": true
+        "multiple_sessions_in_room": true,
+        "all_conflicts": true,
+        "all_ignored_conflicts": true
       },
       "session_conflict": {
         "conflicts_with": true,

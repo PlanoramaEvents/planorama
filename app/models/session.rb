@@ -5,7 +5,7 @@ class Session < ApplicationRecord
   validates_numericality_of :maximum_people, allow_nil: true
 
   # NOTE: when we have a config for default duration change to use a lambda
-  attribute :duration, default: 0
+  attribute :duration, default: 60
 
   has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
 
@@ -32,6 +32,20 @@ class Session < ApplicationRecord
       where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
       .where("session_assignment_name is null or session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
       .where("conflict_session_assignment_name is null or conflict_session_assignment_name in (?)", ['Moderator', 'Participant', 'Invisible'])
+      .where("session_conflicts.conflict_type != 'room_conflict' OR (session_conflicts.conflict_type = 'room_conflict' AND session_conflicts.session_start_time != session_conflicts.conflict_session_start_time)")
+      # .where("session_conflicts.conflict_type != 'person_schedule_conflict' and session_conflicts.conflict_type != 'person_back_to_back'")
+    },
+    foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
+
+  has_many :ignored_session_conflicts,
+    -> {
+      where("session_conflicts.conflict_id in (select conflict_id from ignored_conflicts)")
+    },
+    class_name: 'Conflicts::SessionConflict'
+
+  has_many :ignored_conflict_sessions,
+    -> {
+      where("session_conflicts.conflict_id in (select conflict_id from ignored_conflicts)")
     },
     foreign_key: :conflict_session_id, class_name: 'Conflicts::SessionConflict'
 
@@ -60,6 +74,16 @@ class Session < ApplicationRecord
     end
   end
   has_many :people, through: :session_assignments
+
+  has_many :participant_assignments,
+    -> {
+      joins("JOIN session_assignment_role_type as sart ON sart.id = session_assignments.session_assignment_role_type_id")
+      .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
+      .order("sart.sort_order")
+    },
+    class_name: 'SessionAssignment'
+  has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
 
   # TODO: Will also need a published versioon of the relationship
   has_many :session_areas, inverse_of: :session
@@ -137,7 +161,22 @@ class Session < ApplicationRecord
     .join(conflicts, Arel::Nodes::OuterJoin)
     .on(
       sessions[:id].eq(conflicts[:session_id])
-      .or(sessions[:id].eq(conflicts[:conflict_session_id]))
+      .or(
+        sessions[:id].eq(conflicts[:conflict_session_id])
+        .and(
+          conflicts[:conflict_type].not_eq('room_conflict')
+          .or(
+            conflicts[:conflict_type].eq('room_conflict')
+            .and(
+              conflicts[:session_start_time].not_eq(conflicts[:conflict_session_start_time])
+            )
+          )
+          # .and(
+          #   conflicts[:conflict_type].not_eq('person_schedule_conflict')
+          #   .and(conflicts[:conflict_type].not_eq('person_back_to_back'))
+          # )
+        )
+      )
       .and(
         conflicts[:session_assignment_name].eq(nil).or(conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])).and(
           conflicts[:conflict_session_assignment_name].eq(nil).or(conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible']))

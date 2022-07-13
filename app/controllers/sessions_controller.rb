@@ -139,10 +139,24 @@ class SessionsController < ResourceController
            content_type: 'application/json'
   end
 
+  def before_update
+    # if time or room have changed removed ignored conflicts
+    p = _permitted_params(model: object_name, instance: @object)
+    if (@object.start_time || @object.room_id)
+      if p[:start_time] != @object.start_time || p[:room_id] != @object.room_id
+        # so we remove any ignore conflicts for this session
+        cids = @object.ignored_session_conflicts.pluck(:conflict_id)
+        cids += @object.ignored_conflict_sessions.pluck(:conflict_id)
+        IgnoredConflict.where(conflict_id: cids).delete_all
+      end
+    end
+  end
+
   def serializer_includes
     [
       :format,
       :room,
+      :room_set,
       :session_areas,
       :'session_areas.area'
       # Do not include assignment in the JSON by default as that can slow client down,

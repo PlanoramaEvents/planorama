@@ -29,12 +29,14 @@
         {{ formatDate(view.selectedDate, { day: 'numeric', month: 'short' }) }}
       </template>
       <template v-slot:event="{ event, view }">
-        <div class="d-flex flex-row">
-          <small class="vuecal__event-time">
-            <span>{{ formatLocaleJsDate(event.start) }} - </span><br/>
-            <span>{{ formatLocaleJsDate(event.end) }}</span>
-          </small>
-          <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
+        <div v-b-popover.hover.top="hoverText(event)" >
+          <div class="d-flex flex-row">
+            <small class="vuecal__event-time">
+              <span>{{ formatLocaleJsDate(event.start) }} - </span><br/>
+              <span>{{ formatLocaleJsDate(event.end) }}</span>
+            </small>
+            <b-icon-trash @click="onDelete(event)" class="ml-auto mt-1"></b-icon-trash>
+          </div>
         </div>
       </template>
     </vue-cal>
@@ -85,17 +87,7 @@ export default {
     }
   },
   data: () =>  ({
-    dayEvents: {},
-    // TODO: we need to pass this in based on TZ
-    // conventionHours: {
-    //   1: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
-    //   2: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
-    //   3: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
-    //   4: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
-    //   5: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
-    //   6: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
-    //   7: { from: 8.5 * 60, to: 24 * 60, class: 'convention-hours' },
-    // }
+    dayEvents: {}
   }),
   computed: {
     dayColClass() {
@@ -108,6 +100,9 @@ export default {
     }
   },
   methods: {
+    hoverText(event) {
+      return this.formatLocaleJsDate(event.start) + ' - ' + this.formatLocaleJsDate(event.end)
+    },
     scrollBarElement: function() {
       return this.$refs['dayColumn'].$el.getElementsByClassName('vuecal__bg')[0]
     },

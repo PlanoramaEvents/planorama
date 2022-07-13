@@ -47,6 +47,10 @@ export const people_columns = [
     sortable: false
   },
   {
+    key: 'attendance_type',
+    label: 'Attendance Type'
+  },
+  {
     key: 'organization',
     label: 'Organization',
     type: "text",

@@ -234,6 +234,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Participant Status',
         'Day',
         'Session Count',
         "Person's Limit"
@@ -245,6 +246,7 @@ class Reports::SessionReportsController < ApplicationController
         [
           person.name,
           person.published_name,
+          person.con_state,
           person.day ? person.day : 'All',
           person.session_count,
           person.max_sessions
@@ -268,6 +270,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Name',
         'Published Name',
+        'Participant Status',
         'Session Count',
         'Con Limit'
       ]
@@ -278,6 +281,7 @@ class Reports::SessionReportsController < ApplicationController
         [
           person.name,
           person.published_name,
+          person.con_state,
           person.session_count,
           6
         ]
@@ -294,27 +298,39 @@ class Reports::SessionReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Panels with too Few People")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil, nil, nil, nil
+    ]
     sessions = ::ReportsService.panels_with_too_few_people
 
     # Session name, Area, session start, participant count, participant count lower bound, list of participants
     worksheet.append_row(
       [
-        'Title',
+        'Session',
         'Areas',
+        'Start Time',
         'Participant Count',
-        'List of Participants'
+        'Participant Count Lower Bound',
+        'Participants',
+        'Moderators'
       ]
     )
 
-    # has_many :submissions
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
     sessions.each do |session|
       worksheet.append_row(
         [
           session.title,
           session.area_list.sort.join(';'),
+          session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : '',
           session.nbr_assignments,
-          session.session_assignments.collect{|a| a.person.published_name}.join(';')
-        ]
+          3,
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';')
+        ],
+        styles
       )
     end
 
@@ -328,6 +344,11 @@ class Reports::SessionReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Panels with too Many People")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, date_time_style, nil, nil, nil
+    ]
+
     sessions = ::ReportsService.panels_with_too_many_people
 
     # Session name, Area, session start, participant count, participant count lower bound, list of participants
@@ -335,20 +356,29 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Areas',
+        'Start Time',
         'Participant Count',
-        'List of Participants'
+        'Participant Count Upper Bound',
+        'Participants',
+        'Moderators'
       ]
     )
 
     # has_many :submissions
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
     sessions.each do |session|
       worksheet.append_row(
         [
           session.title,
           session.area_list.sort.join(';'),
+          FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
           session.nbr_assignments,
-          session.session_assignments.collect{|a| a.person.published_name}.join(';')
-        ]
+          6,
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
+          session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';')
+        ],
+        styles
       )
     end
 

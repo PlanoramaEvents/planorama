@@ -1,5 +1,36 @@
 module ReportsService
 
+  def self.all_conflicts(ignored: false)
+    conflicts_table = ::Conflicts::SessionConflict.arel_table
+    subquery = Session.area_list.as('areas_list')
+
+    joins = [
+      conflicts_table.create_join(
+        subquery,
+        conflicts_table.create_on(
+          subquery[:session_id].eq(conflicts_table[:session_id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    where_clause = if ignored
+                     "session_conflicts.conflict_id in (select conflict_id from ignored_conflicts)"
+                   else
+                     "session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)"
+                   end
+
+    Conflicts::SessionConflict.select(
+      ::Conflicts::SessionConflict.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .joins(joins)
+      .includes(:room, :session)
+      .where("session_conflicts.conflict_type != 'room_conflict'")
+      .where(where_clause)
+      .order(:session_title)
+  end
+
   def self.assigned_sessions_not_scheduled
     active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and name != 'Reserve'")
 
@@ -76,7 +107,7 @@ module ReportsService
   def self.participant_and_con_session_limits(con_limit: 6)
     person_schedules = Arel::Table.new("person_schedules")
     active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
-    excluded_formats = Format.where("name in (?)",['Table Talk', 'Reading', 'Autographing'])
+    excluded_formats = Format.where("name in (?)",['Table Talk', 'Reading', 'Autographing', 'Meeting', 'Rehearsal'])
 
     Person
       .select(
@@ -253,6 +284,8 @@ module ReportsService
           session_assignments[:session_assignment_role_type_id].not_eq(nil).and(
             session_assignments[:session_assignment_role_type_id].in(active_roles.collect{|a| a.id})
           )
+        ).and(
+          sessions[:status].not_eq('dropped')
         )
       )
       .group('sessions.id')

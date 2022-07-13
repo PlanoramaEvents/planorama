@@ -6,10 +6,13 @@
       </div>
     </div>
     <div class='row mb-4' v-if="sortedCollection.length > 0">
-      <div class="col-2">
-        Assignment State
+      <div class="col-3">
+        <span>
+          Assignment State
+          <button @click="reorder" class="btn btn-primary btn-sm">Re-order</button>
+        </span>
       </div>
-      <div class="col-10">
+      <div class="col-9">
         Potential Participants
       </div>
     </div>
@@ -72,6 +75,7 @@ export default {
       return this.selected_model(sessionModel);
     },
     peopleFilter() {
+      // NOTE: sessionAssignmentModel
       let filter = {
         "op": "all",
         "queries":[
@@ -85,10 +89,20 @@ export default {
     }
   },
   methods: {
+    reorder() {
+      this.fetchPaged(false)
+    },
     saveAssignment(assignment) {
       this.save(assignment).then(
         () => {
-          this.refreshSession()
+          // TODO?
+          // this.refreshSession()
+          this.fetchPaged(false)
+        }
+      ).catch(
+        () => {
+          // this.refreshSession()
+          this.fetchPaged(false)
         }
       )
     },

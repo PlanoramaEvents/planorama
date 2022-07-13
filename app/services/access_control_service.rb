@@ -18,7 +18,7 @@ module AccessControlService
         gender: { sensitive: true, linkable: true, type: :string},
         ethnicity: { sensitive: true, linkable: true, type: :string},
         opted_in: { sensitive: true, linkable: false, type: :boolean},
-        comments: { sensitive: true, linkable: false, type: :text},
+        comments: { sensitive: false, linkable: false, type: :text},
         can_share: { sensitive: false, linkable: true, type: :boolean, values: [true, false]}, # PROB???
         con_state: { sensitive: false, linkable: false, type: :enum},
         registered: { sensitive: false, linkable: false, type: :boolean},
@@ -164,5 +164,20 @@ module AccessControlService
     end
 
     res
+  end
+
+  def self.shared_attribute_access?(instance:, person:)
+    return true if person.convention_roles.collect(&:role).include?('admin')
+
+    if instance.is_a?(Person)
+      return true if instance.id == person.id
+
+      return true if instance.can_share
+    end
+
+    return false if person.convention_roles.count == 0
+    return false if (person.convention_roles.count == 1) && person.convention_roles.collect(&:role).include?('participant')
+
+    true
   end
 end

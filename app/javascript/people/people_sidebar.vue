@@ -14,8 +14,8 @@
         <b-tab title="Summary">
           <detail :model="model"></detail>
         </b-tab>
-        <b-tab title="Admin" v-if="currentUserIsAdmin">
-         <people-admin-tab :model="model"></people-admin-tab>
+        <b-tab title="Admin" v-if="currentUserIsAdmin || currentUserIsStaff">
+         <people-admin-tab></people-admin-tab>
         </b-tab>
         <!-- Need notes and a state change drop down -->
         <!-- These need to be done and move to the people edit/tabs screen
