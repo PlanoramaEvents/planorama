@@ -2,9 +2,9 @@ class CreatePersonScheduleApprovals < ActiveRecord::Migration[6.1]
   def change
     create_table :person_schedule_approvals do |t|
       # Person
-      t.uuid :person
+      t.uuid :person_id
       # Schedule workflow
-      t.uuid :schedule_workflow
+      t.uuid :schedule_workflow_id
       # Approval
 
       # Comments
@@ -13,6 +13,8 @@ class CreatePersonScheduleApprovals < ActiveRecord::Migration[6.1]
       t.integer :lock_version
       t.timestamps
     end
+
+    add_index :person_schedule_approvals, [:person_id, :schedule_workflow_id], name: 'psa_person_wrkflw_idx', unique: true
 
     reversible do |change|
       change.down do

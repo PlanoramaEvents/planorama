@@ -1274,8 +1274,8 @@ CREATE TABLE public.person_mailing_assignments (
 
 CREATE TABLE public.person_schedule_approvals (
     id bigint NOT NULL,
-    person uuid,
-    schedule_workflow uuid,
+    person_id uuid,
+    schedule_workflow_id uuid,
     comments text,
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
@@ -1552,7 +1552,7 @@ CREATE TABLE public.schedule_workflows (
     id bigint NOT NULL,
     created_by character varying,
     set_at timestamp without time zone,
-    schedule_snapshot uuid,
+    schedule_snapshot_id uuid,
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -2925,6 +2925,13 @@ CREATE UNIQUE INDEX index_schedule_snapshots_on_label ON public.schedule_snapsho
 
 
 --
+-- Name: index_schedule_workflows_on_schedule_snapshot_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_schedule_workflows_on_schedule_snapshot_id ON public.schedule_workflows USING btree (schedule_snapshot_id);
+
+
+--
 -- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3111,6 +3118,13 @@ CREATE INDEX pia_person_index ON public.session_assignments USING btree (person_
 --
 
 CREATE INDEX pis_prog_item_id_index ON public.session_assignments USING btree (session_id);
+
+
+--
+-- Name: psa_person_wrkflw_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX psa_person_wrkflw_idx ON public.person_schedule_approvals USING btree (person_id, schedule_workflow_id);
 
 
 --

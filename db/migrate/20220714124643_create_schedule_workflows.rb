@@ -7,13 +7,11 @@ class CreateScheduleWorkflows < ActiveRecord::Migration[6.1]
       # When state is set
       t.datetime :set_at
       # reference to snapshot if applicable
-      t.uuid :schedule_snapshot
+      t.uuid :schedule_snapshot_id, index: { unique: true }
 
       t.integer :lock_version
       t.timestamps
     end
-
-    # add_index :schedule_snapshots, :label, unique: true
 
     reversible do |change|
       change.down do
