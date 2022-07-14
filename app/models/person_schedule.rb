@@ -11,8 +11,7 @@ class PersonSchedule < ApplicationRecord
 
   # has_many :participant_assignments, class_name: 'SessionAssignment', primary_key: 'session_id', foreign_key: 'session_id'
   has_many :moderators, -> (object) {
-             where('person_schedules.person_id != ?', object.person_id)
-             .where("session_assignment_name in (?)",['Moderator'])
+             where("session_assignment_name in (?)",['Moderator'])
              .order('published_name')
            },
            class_name: 'PersonSchedule',
@@ -20,8 +19,7 @@ class PersonSchedule < ApplicationRecord
            foreign_key: 'session_id'
 
   has_many :participants, -> (object) {
-            where('person_schedules.person_id != ?', object.person_id)
-            .where("session_assignment_name in (?)",['Participant'])
+            where("session_assignment_name in (?)",['Participant'])
             .order('published_name')
           },
           class_name: 'PersonSchedule',
@@ -29,8 +27,7 @@ class PersonSchedule < ApplicationRecord
           foreign_key: 'session_id'
 
   has_many :invisibles, -> (object) {
-            where('person_schedules.person_id != ?', object.person_id)
-            .where("session_assignment_name in (?)",['Invisible'])
+            where("session_assignment_name in (?)",['Invisible'])
             .order('published_name')
           },
           class_name: 'PersonSchedule',
