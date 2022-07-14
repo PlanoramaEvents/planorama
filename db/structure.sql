@@ -182,6 +182,28 @@ CREATE TYPE public.phone_type_enum AS ENUM (
 
 
 --
+-- Name: schedule_approval_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.schedule_approval_enum AS ENUM (
+    'not_set',
+    'yes',
+    'no'
+);
+
+
+--
+-- Name: schedule_workflow_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.schedule_workflow_enum AS ENUM (
+    'not_set',
+    'draft',
+    'firm'
+);
+
+
+--
 -- Name: session_environments_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1084,7 +1106,6 @@ CREATE VIEW public.person_schedules AS
     p.published_name,
     p.con_state,
     p.can_share,
-    p.pronouns,
     em.email,
     sa.id AS session_assignment_id,
     sart.id AS session_assignment_role_type_id,
@@ -1245,6 +1266,41 @@ CREATE TABLE public.person_mailing_assignments (
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
 );
+
+
+--
+-- Name: person_schedule_approvals; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_schedule_approvals (
+    id bigint NOT NULL,
+    person uuid,
+    schedule_workflow uuid,
+    comments text,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    approved public.schedule_approval_enum DEFAULT 'not_set'::public.schedule_approval_enum
+);
+
+
+--
+-- Name: person_schedule_approvals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.person_schedule_approvals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: person_schedule_approvals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.person_schedule_approvals_id_seq OWNED BY public.person_schedule_approvals.id;
 
 
 --
@@ -1486,6 +1542,41 @@ CREATE TABLE public.schedule_snapshots (
     updated_at timestamp(6) without time zone NOT NULL,
     status public.snapshot_status_enum DEFAULT 'not_set'::public.snapshot_status_enum
 );
+
+
+--
+-- Name: schedule_workflows; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.schedule_workflows (
+    id bigint NOT NULL,
+    created_by character varying,
+    set_at timestamp without time zone,
+    schedule_snapshot uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    state public.schedule_workflow_enum DEFAULT 'not_set'::public.schedule_workflow_enum
+);
+
+
+--
+-- Name: schedule_workflows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.schedule_workflows_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: schedule_workflows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.schedule_workflows_id_seq OWNED BY public.schedule_workflows.id;
 
 
 --
@@ -1966,6 +2057,20 @@ ALTER TABLE ONLY public.categorizations ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: person_schedule_approvals id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_schedule_approvals ALTER COLUMN id SET DEFAULT nextval('public.person_schedule_approvals_id_seq'::regclass);
+
+
+--
+-- Name: schedule_workflows id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedule_workflows ALTER COLUMN id SET DEFAULT nextval('public.schedule_workflows_id_seq'::regclass);
+
+
+--
 -- Name: survey_formats id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2236,6 +2341,14 @@ ALTER TABLE ONLY public.application_roles
 
 
 --
+-- Name: person_schedule_approvals person_schedule_approvals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_schedule_approvals
+    ADD CONSTRAINT person_schedule_approvals_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: person_schedule_snapshots person_schedule_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2329,6 +2442,14 @@ ALTER TABLE ONLY public.rooms
 
 ALTER TABLE ONLY public.schedule_snapshots
     ADD CONSTRAINT schedule_snapshots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedule_workflows schedule_workflows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedule_workflows
+    ADD CONSTRAINT schedule_workflows_pkey PRIMARY KEY (id);
 
 
 --
@@ -3248,6 +3369,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220707124302'),
 ('20220712153111'),
 ('20220712153128'),
-('20220713185329');
+('20220713185329'),
+('20220714124643'),
+('20220714124706');
 
 
