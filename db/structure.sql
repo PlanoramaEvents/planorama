@@ -158,6 +158,7 @@ CREATE TYPE public.person_status_enum AS ENUM (
     'not_set',
     'applied',
     'vetted',
+    'wait_list',
     'invite_pending',
     'invited',
     'probable',
@@ -1083,6 +1084,7 @@ CREATE VIEW public.person_schedules AS
     p.published_name,
     p.con_state,
     p.can_share,
+    p.pronouns,
     em.email,
     sa.id AS session_assignment_id,
     sart.id AS session_assignment_role_type_id,
@@ -3245,6 +3247,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220704121816'),
 ('20220707124302'),
 ('20220712153111'),
-('20220712153128');
+('20220712153128'),
+('20220713185329');
 
 
