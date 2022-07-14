@@ -2,7 +2,7 @@ class PersonScheduleSerializer
 
   include JSONAPI::Serializer
 
-  attributes :id, :name, :published_name, :con_state,
+  attributes :id, :name, :published_name, :con_state, :pronouns,
              :session_assignment_name,
              :title, :start_time, :end_time, :duration,
              :participant_notes, :description, :environment
@@ -19,15 +19,16 @@ class PersonScheduleSerializer
     object.room ? object.room.name : nil
   end
 
+  # Check if person is included in here
   attribute :moderators do |object|
-    object.moderators.collect{|p| {published_name: p.published_name, email: p.can_share ? p.email: nil}}
+    object.moderators.collect{|p| {published_name: p.published_name, email: p.can_share ? p.email: nil, pronouns: p.pronouns}}
   end
 
   attribute :participants do |object|
-    object.participants.collect{|p| {published_name: p.published_name, email: p.can_share ? p.email: nil}}
+    object.participants.collect{|p| {published_name: p.published_name, email: p.can_share ? p.email: nil, pronouns: p.pronouns}}
   end
 
   attribute :invisibles do |object|
-    object.invisibles.collect{|p| {published_name: p.published_name, email: p.can_share ? p.email: nil}}
+    object.invisibles.collect{|p| {published_name: p.published_name, email: p.can_share ? p.email: nil, pronouns: p.pronouns}}
   end
 end

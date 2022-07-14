@@ -11,27 +11,29 @@
     <div class="row">
       <div class="col-8" :style="heightHelper">
         <b-overlay :show="loading" spinner-variant="primary" variant="white" opacity="1">
-          <schedule-collapse v-for="(session, id) in sessions" :key="id" :id="id" v-model="open[id]">
-            <template #title><span class="larger-text"><strong class="larger-text">{{session.title}}</strong>, {{session.room.name || "Room Name Here"}}, {{formatStartTime(session)}}</span></template>
+          <schedule-collapse v-for="(session) in orderedSessions" :key="session.id" :id="session.id" v-model="open[session.id]">
+            <template #title><span class="larger-text"><strong class="larger-text">{{session.title}}</strong>, {{session.room}}, {{formatStartTime(session)}}</span></template>
             <dl class="indented-dl">
               <dt>Title</dt>
               <dd>{{session.title}}</dd>
               <dt>Participants (with contact information where allowed)</dt>
-              <dd v-for="sa in orderedParticipants(session)" :key="sa.id">{{sa.person.published_name}}{{ isModerator(sa) ? " (m)" : isInvisible(sa) ? " (i)" : ""}} {{sa.person.pronouns}} - {{ sa.person.contact_email ? sa.person.contact_email.email : 'permission not given'}}</dd>
-              <dd class="text-muted" v-if="!Object.keys(session.participant_assignments).length">None Assigned</dd>
+              <dd v-for="p in session.moderators" :key="p.published_name">{{p.published_name}} (m) {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
+              <dd v-for="p in session.participants" :key="p.published_name">{{p.published_name}} {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
+              <dd v-for="p in session.invisibles" :key="p.published_name">{{p.published_name}} (i) {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
+              <!--<dd class="text-muted" v-if="!Object.keys(session.participant_assignments).length">None Assigned</dd>-->
               <dt>Description</dt>
               <dd v-html="session.description"></dd>
               <dt>Space/Time</dt>
-              <dd>{{session.room.name || "Room Name Here"}} {{formatStartTime(session)}}</dd>
+              <dd>{{session.room}} {{formatStartTime(session)}}</dd>
               <dt>Duration</dt>
               <dd>{{session.duration}} minutes</dd>
               <dt>Session Environment</dt>
               <dd>{{SESSION_ENVIRONMENT[session.environment]}}</dd>
               <dt>Session Format</dt>
-              <dd class="not-italic"><span class="badge badge-pill badge-info">{{session.format.name || session.format_id}}</span></dd>
+              <dd class="not-italic"><span class="badge badge-pill badge-info">{{session.format}}</span></dd>
               <dt>Session Area(s)</dt>
-              <dd v-if="session.area_list.length" class="not-italic"><span v-for="area in session.area_list" class="badge badge-pill badge-primary" :key="area">{{area}}</span></dd>
-              <dd v-if="!session.area_list.length" class="text-muted">None Selected</dd>
+              <dd v-if="session.areas.length" class="not-italic"><span v-for="area in session.areas" class="badge badge-pill badge-primary" :key="area">{{area}}</span></dd>
+              <dd v-if="!session.areas.length" class="text-muted">None Selected</dd>
               <dt>Schedule Notes</dt>
               <dd v-html="session.participant_notes"></dd>
             </dl>
@@ -77,6 +79,12 @@ export default {
         return {height: '200px', padding: "5rem"}
       }
       return {};
+    },
+    orderedSessions() {
+      const sessions = Object.values(this.sessions);
+      sessions.sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+      console.log("sorted?", sessions)
+      return sessions;
     }
   },
   methods: {
