@@ -44,6 +44,7 @@ end
 # p.name,
 # p.published_name,
 # p.con_state,
+# p.pronouns
 # sa.id as session_assignment_id,
 # sart.id as session_assignment_role_type_id,
 # sart.name as session_assignment_name,
