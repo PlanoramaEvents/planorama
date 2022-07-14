@@ -27,6 +27,7 @@ module MigrationHelpers
             p.published_name,
             p.con_state,
             p.can_share,
+            p.pronouns,
             em.email,
             sa.id as session_assignment_id,
             sart.id as session_assignment_role_type_id,
