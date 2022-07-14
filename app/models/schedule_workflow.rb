@@ -5,6 +5,7 @@ class ScheduleWorkflow < ApplicationRecord
   has_many  :person_schedule_approvals, dependent: :destroy
 
   enum state: {
+    not_set: 'not_set',
     draft: 'draft',
     firm: 'firm'
   }
