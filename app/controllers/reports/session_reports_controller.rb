@@ -109,7 +109,7 @@ class Reports::SessionReportsController < ApplicationController
           session.title,
           session.area_list.sort.join(';'),
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
-          session.format.name,
+          session.format&.name,
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.published_name}.join(';')
         ],
