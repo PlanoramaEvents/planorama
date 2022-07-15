@@ -19,7 +19,7 @@ module SessionService
         'areas_list.area_list'
       )
       .joins(joins)
-      .eager_load(:room, :format)
+      .eager_load(:room, :format, :primary_email)
       .where(person_id: person.id)
       .where("start_time is not null and room_id is not null")
       .where("con_state != 'declined' AND con_state != 'rejected'")
