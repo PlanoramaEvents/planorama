@@ -140,16 +140,6 @@ class PersonSerializer #< ActiveModel::Serializer
             }
 
   # sessions
-  has_many :draft_sessions, lazy_load_data: true, serializer: SessionSerializer,
-             links: {
-               self: -> (object, params) {
-                 "#{params[:domain]}/person/#{object.id}"
-               },
-               related: -> (object, params) {
-                 "#{params[:domain]}/person/#{object.id}/draft_sessions"
-               }
-             }
-  # sessions
   has_many :sessions, lazy_load_data: true, serializer: SessionSerializer,
              links: {
                self: -> (object, params) {

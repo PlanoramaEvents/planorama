@@ -31,7 +31,7 @@ Rails.application.routes.draw do
     get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
     get 'sessions', to: 'sessions#index'
-    get 'draft_sessions', to: 'people#draft_sessions'
+    get 'live_sessions', to: 'people#live_sessions'
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
