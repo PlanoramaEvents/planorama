@@ -9,6 +9,14 @@ class PersonSchedule < ApplicationRecord
   belongs_to :room
   belongs_to :format
 
+  # has_many  :email_addresses, dependent: :destroy, foreign_key: :conflict_session_id
+  has_one :primary_email,
+          -> { where(['email_addresses.isdefault = true']) },
+          class_name: 'EmailAddress',
+          primary_key: 'person_id',
+          foreign_key: 'person_id'
+
+
   # has_many :participant_assignments, class_name: 'SessionAssignment', primary_key: 'session_id', foreign_key: 'session_id'
   has_many :moderators, -> (object) {
              where("session_assignment_name in (?)",['Moderator'])
