@@ -28,7 +28,6 @@ module MigrationHelpers
             p.con_state,
             p.can_share,
             p.pronouns,
-            em.email,
             sa.id as session_assignment_id,
             sart.id as session_assignment_role_type_id,
             sart.name as session_assignment_name,
@@ -53,9 +52,6 @@ module MigrationHelpers
           join
             people p on
             p.id = sa.person_id
-          join
-            email_addresses em on
-            em.person_id = p.id and em.isdefault
           left join
             sessions
             on sessions.id = sa.session_id
