@@ -26,6 +26,8 @@ module MigrationHelpers
             p.name,
             p.published_name,
             p.con_state,
+            p.can_share,
+            p.pronouns,
             sa.id as session_assignment_id,
             sart.id as session_assignment_role_type_id,
             sart.name as session_assignment_name,
@@ -37,7 +39,10 @@ module MigrationHelpers
             (sessions.start_time + (sessions.duration || ' minute')::interval) as end_time,
             sessions.duration,
             sessions.room_id,
-            sessions.format_id
+            sessions.format_id,
+            sessions.participant_notes,
+            sessions.description,
+            sessions.environment
           from
             session_assignments sa
           join
@@ -54,6 +59,7 @@ module MigrationHelpers
             sa.session_assignment_role_type_id is not null
             and sessions.room_id is not null
             and sessions.start_time is not null
+            and sa.state != 'rejected';
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
