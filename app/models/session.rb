@@ -150,44 +150,26 @@ class Session < ApplicationRecord
   end
 
   def self.conflict_counts
-    sessions = Session.arel_table
     conflicts = Conflicts::SessionConflict.arel_table
     ignored_conflicts = ::IgnoredConflict.arel_table
 
-    sessions.project(
-      sessions[:id].as('session_id'),
+    conflicts.project(
+      conflicts[:session_id].as('session_id'),
       conflicts[:session_id].count.as('conflict_count')
     )
-    .join(conflicts, Arel::Nodes::OuterJoin)
-    .on(
-      sessions[:id].eq(conflicts[:session_id])
-      .or(
-        sessions[:id].eq(conflicts[:conflict_session_id])
-        .and(
-          conflicts[:conflict_type].not_eq('room_conflict')
-          .or(
-            conflicts[:conflict_type].eq('room_conflict')
-            .and(
-              conflicts[:session_start_time].not_eq(conflicts[:conflict_session_start_time])
-            )
-          )
-          # .and(
-          #   conflicts[:conflict_type].not_eq('person_schedule_conflict')
-          #   .and(conflicts[:conflict_type].not_eq('person_back_to_back'))
-          # )
-        )
-      )
+    .where(
+      conflicts[:session_assignment_name].eq(nil)
+      .or(conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible']))
       .and(
-        conflicts[:session_assignment_name].eq(nil).or(conflicts[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible'])).and(
-          conflicts[:conflict_session_assignment_name].eq(nil).or(conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible']))
-        ).and(
-          conflicts[:conflict_id].not_in(
-            ignored_conflicts.project(ignored_conflicts[:conflict_id])
-          )
+        conflicts[:conflict_session_assignment_name].eq(nil)
+        .or(conflicts[:conflict_session_assignment_name].in(['Moderator', 'Participant', 'Invisible']))
+      ).and(
+        conflicts[:conflict_id].not_in(
+          ignored_conflicts.project(ignored_conflicts[:conflict_id])
         )
       )
     )
-    .group('sessions.id')
+    .group(conflicts[:session_id])
   end
 
   def self.area_aggregate_fn(col)
