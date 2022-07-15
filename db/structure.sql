@@ -1072,6 +1072,7 @@ CREATE VIEW public.person_schedules AS
     p.published_name,
     p.con_state,
     p.can_share,
+    p.pronouns,
     em.email,
     sa.id AS session_assignment_id,
     sart.id AS session_assignment_role_type_id,
@@ -3179,5 +3180,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220704121816'),
 ('20220707124302'),
 ('20220713185329');
-
-

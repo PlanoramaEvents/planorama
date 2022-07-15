@@ -41,7 +41,7 @@
             :person_id="person.id"
           ></session-ranker>
         </b-tab>
-        <b-tab title="Live Schedule" lazy disabled v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'schedule'">
+        <b-tab title="Live Schedule" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'schedule'">
           <person-schedule></person-schedule>
         </b-tab>
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">

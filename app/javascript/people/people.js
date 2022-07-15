@@ -45,6 +45,7 @@ export const people_columns = [
       {label: "declined", value: "declined"},
       {label: "rejected", value: "rejected"}
     ],
+    operators: ["=", "!="],
     sortable: false
   },
   {
@@ -59,7 +60,7 @@ export const people_columns = [
   },
   {
     key: 'job_title',
-    label: 'Job Ttile',
+    label: 'Job Title',
     type: "text",
     sortable: false
   },
