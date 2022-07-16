@@ -37,16 +37,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.larger-text {
-  font-size: 16px;
-}
-
-.indented-dl {
-  dd {
-    margin-left: 0.5rem;
-    &:not(.not-italic) {
-      font-style: italic;
-    }
-  }
-}
 </style>
