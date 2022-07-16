@@ -241,6 +241,18 @@ module.exports = {
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
+    PERSON_CON_STATE: {
+        not_set: "Not Set",
+        applied: "Applied",
+        vetted: "Vetted",
+        wait_list: "Wait List",
+        invite_pending: "Invite Pending",
+        invited: "Invited",
+        probable: "Probable",
+        accepted: "Accepted",
+        declined: "Declined",
+        rejected: "Rejected"
+    },
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
