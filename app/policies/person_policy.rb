@@ -27,6 +27,12 @@ class PersonPolicy < PlannerPolicy
     allowed?(action: :live_sessions)
   end
 
+  def snapshot_schedule?
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    allowed?(action: :snapshot_schedule)
+  end
+
   def assigned_surveys?
     return true if @record.class != Symbol && @record.id == @person.id
 

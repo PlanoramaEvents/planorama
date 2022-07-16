@@ -21,6 +21,27 @@ class PeopleController < ResourceController
     )
   end
 
+  def snapshot_schedule
+    authorize current_person, policy_class: policy_class
+
+    person = Person.find params[:person_id]
+
+    if person
+      label = params[:label]
+      # We get the latest snapshot unless  a label was pass in
+      sched = if !label.blank?
+                PersonScheduleSnapshot
+                  .join(:schedule_snapshot)
+                  .where( person: person.id)
+                  .where('schedule_snapshots.label': label)
+                  .order('updated_at desc').first
+              else
+                PersonScheduleSnapshot.where( person: person.id).order('updated_at desc').first
+              end
+      render json: sched.snapshot, content_type: 'application/json'
+    end
+  end
+
   def live_sessions
     authorize current_person, policy_class: policy_class
 

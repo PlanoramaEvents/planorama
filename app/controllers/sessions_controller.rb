@@ -4,6 +4,19 @@ class SessionsController < ResourceController
   POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
+  def take_snapshot
+    authorize current_person, policy_class: policy_class
+
+    label = params[:label]
+    label = 'draft' if label.blank?
+
+    SnapshotWorker.perform_async(label, current_person.name)
+
+    render status: :ok,
+           json: { message: 'snapshot scheduled' }.to_json,
+           content_type: 'application/json'
+  end
+
   def express_interest
     # create a session assignment if there is not already one
     model_class.transaction do
