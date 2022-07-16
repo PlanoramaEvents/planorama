@@ -1,5 +1,5 @@
 <template>
-  <person-schedule-display :sessions="sessions" title="Live Schedule"></person-schedule-display>
+  <person-schedule-display :sessions="sessions" :title="liveScheduleTitle" :approvalType="firmSchedule ? 'firm' : null"></person-schedule-display>
 </template>
 
 <script>
@@ -7,6 +7,7 @@ import { mapActions } from 'vuex';
 import PersonScheduleDisplay from './person_schedule_display.vue';
 import { personModel as model } from '@/store/person.store';
 import { modelMixinNoProp } from '@/mixins';
+import { scheduleStatusMixin } from '@/store/schedule_status.mixin';
 
 export default {
   name: "PersonLiveSchedule",
@@ -15,6 +16,7 @@ export default {
   },
   mixins: [
     modelMixinNoProp,
+    scheduleStatusMixin,
   ],
   data: () => ({
     sessions: {},

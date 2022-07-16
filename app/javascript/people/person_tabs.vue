@@ -41,10 +41,10 @@
             :person_id="person.id"
           ></session-ranker>
         </b-tab>
-        <b-tab title="Draft Schedule" lazy v-if="draftPublished" :active="tab === 'draft-schedule'">
+        <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
           <person-draft-schedule></person-draft-schedule>
         </b-tab>
-        <b-tab title="Live Schedule" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'schedule'">
+        <b-tab :title="liveScheduleTitle" lazy v-if="currentUserIsAdmin || currentUserIsStaff || firmSchedule" :active="tab === 'schedule'">
           <person-live-schedule></person-live-schedule>
         </b-tab>
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
@@ -77,6 +77,7 @@ import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import personSessionMixin from '@/auth/person_session.mixin';
 import settingsMixin from "@/store/settings.mixin";
 import modelUtilsMixin from '@/store/model_utils.mixin';
+import { scheduleStatusMixin } from '@/store/schedule_status.mixin';
 
 const { DateTime } = require("luxon");
 
@@ -113,10 +114,10 @@ export default {
   mixins: [
     personSessionMixin,
     settingsMixin,
-    modelUtilsMixin
+    modelUtilsMixin,
+    scheduleStatusMixin,
   ],
   data: () => ({
-    draftPublished: true, // TODO get me from a mixin
     personModel,
     sessionModel,
     sessionAssignmentModel,

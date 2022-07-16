@@ -41,8 +41,8 @@
           <div v-if="noSessions" class="p-5 text-muted font-italic">There are not currently any sessions for this participant.</div>
         </b-overlay>
       </div>
-      <div class="col-4" v-if="approvalType">
-        TODO approval here
+      <div class="col-4">
+        <person-schedule-approval :approvalType="approvalType"></person-schedule-approval>
       </div>
     </div>
   </div>
@@ -50,13 +50,15 @@
 
 <script>
 import ScheduleCollapse from './schedule_collapse.vue';
+import PersonScheduleApproval from './person_schedule_approval.vue';
 import { startTimeMixinNoSelected } from '@/sessions/session_fields.mixin';
 import { SESSION_ENVIRONMENT } from '@/constants/strings';
 
 export default {
   name: "PersonScheduleDisplay",
   components: {
-    ScheduleCollapse
+    ScheduleCollapse,
+    PersonScheduleApproval
   },
   mixins: [
     startTimeMixinNoSelected,

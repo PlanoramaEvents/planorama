@@ -4,12 +4,12 @@
       <div class="col-12">
         <b-form-group label-cols="auto" class="align-items-center">
           <template #label>Release <strong>Draft</strong> Schedule to Participants</template>
-          <b-form-checkbox switch v-model="draftSchedule" :disabled="draftSchedule" @change="openDraftConfirm" id="draft-schedule-checkbox" aria-describedby="draft-schedule-date"></b-form-checkbox>
-          <span class="small text-muted" id="draft-schedule-date" v-if="draftSchedule">{{draftScheduledAt}}</span>
+          <b-form-checkbox switch v-model="localDraftSchedule" :disabled="localDraftSchedule" @change="openDraftConfirm" id="draft-schedule-checkbox" aria-describedby="draft-schedule-date"></b-form-checkbox>
+          <span class="small text-muted" id="draft-schedule-date" v-if="localDraftSchedule">{{draftScheduledAtText}}</span>
         </b-form-group>
         <b-form-group label-cols="auto" class="align-items-center" label="Release Firm Schedule to Participants">
-          <b-form-checkbox id="firm-schedule-checkbox" switch v-model="firmSchedule" @change="openFirmConfirm" :disabled="!draftSchedule || firmSchedule" inline aria-describedby="firm-schedule-date"></b-form-checkbox>
-          <span class="small text-muted" id="firm-schedule-date" v-if="firmSchedule">{{firmScheduledAt}}</span>
+          <b-form-checkbox id="firm-schedule-checkbox" switch v-model="localFirmSchedule" @change="openFirmConfirm" :disabled="!localDraftSchedule || localFirmSchedule" inline aria-describedby="firm-schedule-date"></b-form-checkbox>
+          <span class="small text-muted" id="firm-schedule-date" v-if="localFirmSchedule">{{firmScheduledAtText}}</span>
         </b-form-group>
         <h2>REMOVE ME BEFORE PRODUCTION</h2>
         <b-button variant="primary" @click="reset()">Reset for Testing</b-button>
@@ -37,32 +37,33 @@ import { http } from '@/http';
 import { 
   SCHEDULE_DRAFT_CONFIRM_MESSAGE, 
   SCHEDULE_FIRM_CONFIRM_MESSAGE,
-  SCHEDULE_DRAFT_SUCCESS_MESSAGE,
-  SCHEDULE_FIRM_SUCCESS_MESSAGE
 } from '@/constants/strings';
+
+import { scheduleStatusMixin } from '@/store/schedule_status.mixin'
 
 export default {
   name: "ScheduleSettings",
   mixins: [
-    toastMixin
+    toastMixin,
+    scheduleStatusMixin,
   ],
   components: {
     PlanoModal
   },
   data: () => ({
-    draftSchedule: false,
+    localDraftSchedule: false,
     draftScheduleConfirmed: false,
-    firmSchedule: false,
+    localFirmSchedule: false,
     firmScheduleConfirmed: false,
     SCHEDULE_DRAFT_CONFIRM_MESSAGE,
     SCHEDULE_FIRM_CONFIRM_MESSAGE
   }),
   computed: {
-    draftScheduledAt() {
-      return this.draftScheduleConfirmed ? "Whatever date this happened at will be here." : "Pending";
+    draftScheduledAtText() {
+      return this.draftScheduleConfirmed ? this.draftScheduledAt : "Pending";
     },
-    firmScheduledAt() {
-      return this.firmScheduleConfirmed ? "Whatever date this happened at will be here." : "Pending";
+    firmScheduledAtText() {
+      return this.firmScheduleConfirmed ? this.firmScheduledAt : "Pending";
     }
   },
   methods: {
@@ -77,26 +78,49 @@ export default {
       }
     },
     cancelDraft() {
-      this.draftSchedule = false;
+      this.localDraftSchedule = false;
     },
     cancelFirm() {
-      this.firmSchedule = false;
+      this.localFirmSchedule = false;
     },
     confirmDraft() {
       this.draftScheduleConfirmed = true;
-      this.toastPromise(http.get('/session/take_snapshot/draft'), SCHEDULE_DRAFT_SUCCESS_MESSAGE)
+      this.draftSchedule = true;
+      this.toastPromise(http.get('/session/take_snapshot/draft'), "succesfully scheduled snapshot")
     },
     confirmFirm() {
       this.firmScheduleConfirmed = true;
-      alert("this doesn't do anything yet");
+      this.firmSchedule = true;
     },
     reset() {
+      this.localDraftSchedule = false;
+      this.localFirmSchedule = false;
       this.draftSchedule = false;
       this.firmSchedule = false;
       this.toastPromise(http.delete('/session/delete_snapshot/draft'), "Draft snapshot deleted")
     }
-  }
+  },
+  watch: {
+    draftSchedule(newVal, oldVal) {
+      if (newVal != oldVal) {
+        this.localDraftSchedule = newVal;
+        this.draftScheduleConfirmed = newVal;
+      }
+    },
+    firmSchedule(newVal, oldVal) {
+      if (newVal != oldVal) {
+        this.localFirmSchedule = newVal;
+        this.firmScheduleConfirmed = newVal;
+      }
+    }
+  },
+  mounted() {
+    this.localDraftSchedule = this.draftSchedule;
+    this.draftScheduleConfirmed = this.draftSchedule;
+    this.localFirmSchedule = this.firmSchedule;
+    this.firmScheduleConfirmed = this.firmSchedule;
 
+  }
 }
 </script>
 
