@@ -266,4 +266,8 @@ module.exports = {
         geared_families: "Geared towards families",
         geared_kids: "Geared towards kids",
     },
+    SCHEDULE_DRAFT_CONFIRM_MESSAGE: "YOU WIN A MODAL! You can't undo this.",
+    SCHEDULE_FIRM_CONFIRM_MESSAGE: "YOU WIN A SECOND MODAL. You can't undo this one either.",
+    SCHEDULE_DRAFT_SUCCESS_MESSAGE: "You scheduled a draft snapshot!!!!!!!!!1!",
+    SCHEDULE_FIRM_SUCCESS_MESSAGE: "You firmed!",
 }

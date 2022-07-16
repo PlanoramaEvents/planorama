@@ -41,6 +41,9 @@
           ref="mailing-manager"
         ></mailings-manager>
       </admin-accordion>
+      <admin-accordion id="schedule-settings-accordion" title="Schedule Settings">
+        <schedule-settings></schedule-settings>
+      </admin-accordion>
       <admin-accordion id="event-settings-accordion" title="Event Settings" @show="showConfigs">
         <configurations-manager
           model="parameter_name"
@@ -65,6 +68,7 @@ import MailingsManager from '../mailings/mailings_manager';
 import ConfigurationsManager from '../configurations/configurations_manager';
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
 import AgreementManager from "@/agreements/agreement_manager";
+import ScheduleSettings from "@/schedule/schedule_settings.vue";
 
 export default {
   components: {
@@ -75,6 +79,7 @@ export default {
     SheetImporterVue,
     MailingsManager,
     ConfigurationsManager,
+    ScheduleSettings
   },
   name: 'AdminComponent',
   data: () => ({

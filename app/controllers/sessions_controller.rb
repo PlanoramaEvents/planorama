@@ -10,10 +10,32 @@ class SessionsController < ResourceController
     label = params[:label]
     label = 'draft' if label.blank?
 
-    SnapshotWorker.perform_async(label, current_person.name)
+    if ScheduleSnapshot.find_by({label: label})
+      render status: :unprocessable_entity,
+             json: { errors: [{title: "Validation failed: you already have a snapshot called #{label}"}]}.to_json,
+             content_type: 'application/json'
+    else
+      SnapshotWorker.perform_async(label, current_person.name)
+
+      render status: :ok,
+            json: { message: 'snapshot scheduled' }.to_json,
+            content_type: 'application/json'
+    end
+  end
+
+  def delete_snapshot
+    authorize current_person, policy_class: policy_class
+
+    label = params[:label]
+    label = 'draft' if label.blank?
+
+    snapshot = ScheduleSnapshot.find_by({label: label})
+    if snapshot
+      snapshot.delete
+    end
 
     render status: :ok,
-           json: { message: 'snapshot scheduled' }.to_json,
+           json: { message: 'snapshot deleted' }.to_json,
            content_type: 'application/json'
   end
 
