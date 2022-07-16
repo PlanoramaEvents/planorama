@@ -1,4 +1,8 @@
 class SessionPolicy < PlannerPolicy
+  def take_snapshot?
+    allowed?(action: :take_snapshot)
+  end
+
   def import?
     # @person.convention_roles.inject(false) { |res, grp| res || grp.admin? }
     allowed?(action: :import)

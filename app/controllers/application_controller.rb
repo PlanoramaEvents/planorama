@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   # before_action :remove_cookies_action
 
   # Secure the application
-  before_action :authenticate_person!
+  before_action :check_up, :authenticate_person!
 
   #  based on current_user
   before_action :set_paper_trail_whodunnit
@@ -28,6 +28,12 @@ class ApplicationController < ActionController::Base
     app_time_zone = ENV['TIME_ZONE'] || 'UTC'
 
     Time.use_zone(app_time_zone, &block)
+  end
+
+  def check_up
+    if ScheduleSnapshot.where("status = 'in_progress'").count > 0
+      redirect_to '/maintenance.html', status: 503
+    end
   end
 
   def prevent_cache
