@@ -131,6 +131,7 @@ Rails.application.routes.draw do
   resources :tags, path: 'tag'
 
   get 'session/take_snapshot/:label', to: 'sessions#take_snapshot'
+  delete 'session/delete_snapshot/:label', to: 'sessions#delete_snapshot' # for testing purposes
   get 'session/tags', to: 'sessions#tags'
   post 'session/import', to: 'sessions#import'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id

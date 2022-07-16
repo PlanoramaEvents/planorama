@@ -41,8 +41,11 @@
             :person_id="person.id"
           ></session-ranker>
         </b-tab>
-        <b-tab title="Live Schedule" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'schedule'">
-          <person-schedule></person-schedule>
+        <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
+          <person-draft-schedule></person-draft-schedule>
+        </b-tab>
+        <b-tab :title="liveScheduleTitle" lazy v-if="currentUserIsAdmin || currentUserIsStaff || firmSchedule" :active="tab === 'schedule'">
+          <person-live-schedule></person-live-schedule>
         </b-tab>
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
           <people-admin-tab></people-admin-tab>
@@ -63,7 +66,8 @@ import AvailabilityAndInterests from '../profile/availability_and_interests.vue'
 import PersonDetails from '../profile/person_details.vue'
 import PersonSummary from '../profile/person_summary.vue';
 import PersonDemographics from '../profile/person_demographics.vue';
-import PersonSchedule from '@/profile/person_schedule.vue';
+import PersonLiveSchedule from '@/profile/person_live_schedule.vue';
+import PersonDraftSchedule from '@/profile/person_draft_schedule.vue';
 import PeopleAdminTab from './people_admin_tab.vue';
 import ModelLoadingOverlay from '@/components/model_loading_overlay.vue';
 
@@ -73,11 +77,24 @@ import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import personSessionMixin from '@/auth/person_session.mixin';
 import settingsMixin from "@/store/settings.mixin";
 import modelUtilsMixin from '@/store/model_utils.mixin';
+import { scheduleStatusMixin } from '@/store/schedule_status.mixin';
 
 const { DateTime } = require("luxon");
 
 import VueRouter from 'vue-router';
 const { isNavigationFailure, NavigationFailureType } = VueRouter;
+
+// This needs to be kept in sync with the tab order above
+const tabsArray = [
+  'edit',
+  'other',
+  'availability',
+  'session-selection',
+  'session-ranking',
+  'draft-schedule',
+  'schedule',
+  'admin'
+]
 
 export default {
   name: "PeopleTabs",
@@ -90,13 +107,15 @@ export default {
     PersonDetails,
     PersonDemographics,
     ModelLoadingOverlay,
-    PersonSchedule,
+    PersonLiveSchedule,
+    PersonDraftSchedule,
     PeopleAdminTab,
   },
   mixins: [
     personSessionMixin,
     settingsMixin,
-    modelUtilsMixin
+    modelUtilsMixin,
+    scheduleStatusMixin,
   ],
   data: () => ({
     personModel,
@@ -136,33 +155,14 @@ export default {
       this.$router.push('/people')
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
-      let path = '';
-      const pathStart = this.$route.path.split('/')[1];
-      switch(newTab) {
-        case 0:
-          path = pathStart === 'people' ? 'edit' : '';
-          break;
-        case 1:
-          path = `other`;
-          break;
-        case 2:
-          path = `availability`;
-          break;
-        case 3:
-          path = `session-selection`;
-          break;
-        case 4:
-          path = `session-ranking`;
-          break;
-        case 5:
-          path = `schedule`;
-          break;
-        case 6:
-          path = `admin`;
-          break;
-      }
       // change the router path to match the current tab
       // so that reloads work right
+      // IF YOU ADD A TAB make sure you update the tabsArray or badness will happen
+      let path = tabsArray[newTab];
+      const pathStart = this.$route.path.split('/')[1];
+      if (newTab === '0' && pathStart !== 'people') {
+        path = '';
+      }
       if(pathStart === 'people') {
         path += `/${this.person.id}`
       }
