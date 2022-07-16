@@ -31,14 +31,18 @@ class PeopleController < ResourceController
       # We get the latest snapshot unless  a label was pass in
       sched = if !label.blank?
                 PersonScheduleSnapshot
-                  .join(:schedule_snapshot)
+                  .joins(:schedule_snapshot)
                   .where( person: person.id)
                   .where('schedule_snapshots.label': label)
                   .order('updated_at desc').first
               else
                 PersonScheduleSnapshot.where( person: person.id).order('updated_at desc').first
               end
-      render json: sched.snapshot, content_type: 'application/json'
+      if !sched
+        render json: {}, content_type: 'application/json'
+      else
+        render json: sched.snapshot, content_type: 'application/json'
+      end
     end
   end
 

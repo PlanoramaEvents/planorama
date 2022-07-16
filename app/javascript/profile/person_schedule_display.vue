@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-12">
         <div class="d-flex">
-          <h2>Live Schedule</h2>
-          <b-button variant="link" @click="allButton()">{{ anyOpen ? 'Collapse all' : 'Show all'}}</b-button>
+          <h2>{{title}}</h2>
+          <b-button class="ml-2" variant="link" @click="allButton()">{{ anyOpen ? 'Collapse all' : 'Show all'}}</b-button>
         </div>
       </div>
     </div>
@@ -38,37 +38,47 @@
               <dd v-html="session.participant_notes"></dd>
             </dl>
           </schedule-collapse>
+          <div v-if="noSessions" class="p-5 text-muted font-italic">There are not currently any sessions for this participant.</div>
         </b-overlay>
+      </div>
+      <div class="col-4" v-if="approvalType">
+        TODO approval here
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import ScheduleCollapse from './schedule_collapse.vue';
-import { personModel as model } from '@/store/person.store';
-import { modelMixinNoProp } from '@/mixins';
 import { startTimeMixinNoSelected } from '@/sessions/session_fields.mixin';
 import { SESSION_ENVIRONMENT } from '@/constants/strings';
-import { sessionRoleMixin } from '@/sessions/session_role.mixin';
 
 export default {
-  name: "PersonSchedule",
+  name: "PersonScheduleDisplay",
   components: {
     ScheduleCollapse
   },
   mixins: [
-    modelMixinNoProp,
     startTimeMixinNoSelected,
-    sessionRoleMixin
   ],
+  props: {
+    sessions: {
+      type: Object,
+      default: {}
+    },
+    title: {
+      type: String,
+      default: "Schedule"
+    },
+    approvalType: {
+      type: String,
+      default: null
+    }
+  },
   data: () => ({
-    sessions: {},
     open: {},
-    model,
     SESSION_ENVIRONMENT,
-    loading: false
+    loading: true
   }),
   computed: {
     anyOpen() {
@@ -85,12 +95,12 @@ export default {
       sessions.sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
       console.log("sorted?", sessions)
       return sessions;
+    },
+    noSessions() {
+      return this.sessions && !Object.keys(this.sessions).length;
     }
   },
   methods: {
-    ...mapActions({
-      get: 'jv/get'
-    }),
     allButton() {
       const newDir = !this.anyOpen;
       Object.keys(this.open).forEach((id) => {
@@ -99,46 +109,18 @@ export default {
         }
       })
     },
-    orderedParticipants(session) {
-      const sas = Object.values(session.participant_assignments);
-      sas.sort((a, b) => {
-        if (a.session_assignment_role_type_id !== b.session_assignment_role_type_id) {
-          if (this.isModerator(a)) {
-            return -1;
-          } else if (this.isModerator(b)) {
-            return 1;
-          } else if (this.isParticipant(a)) {
-            return -1;
-          } else if (this.isParticipant(b)) {
-            return 1;
-          }
-          return 1;
-        } else {
-          const nameA = a.person.published_name_sort_by || a.person.published_name
-          const nameB = b.person.published_name_sort_by || a.person.published_name
-          if (nameA < nameB) {
-            return -1;
-          } else if (nameB < nameA) {
-            return 1;
-          }
-          return 0;
+  },
+  watch: {
+    sessions(newVal, oldVal) {
+      // if newVal exists and has data and isn't the same as oldVal with loose comparison
+      if (newVal && newVal != oldVal) {
+        if (Object.keys(newVal).length) {
+          this.open = Object.keys(newVal).reduce((p, c) => ({...p, [c]: false }), {});
         }
-      })
-      return sas;
+        this.loading = false;
+      }
     }
   },
-  mounted() {
-    if(this.selected) {
-      this.loading = true;
-      this.get(`/person/${this.selected.id}/live_sessions`).then(data => {
-        console.log(data);
-        const {_jv, ...filtered_data} = data;
-        this.sessions = filtered_data;
-        this.open = Object.keys(this.sessions).reduce((p, c) => ({...p, [c]: false }), {});
-        this.loading = false;
-      })
-    }
-  }
 }
 </script>
 
