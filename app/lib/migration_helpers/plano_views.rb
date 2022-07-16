@@ -88,7 +88,7 @@ module MigrationHelpers
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW room_conflicts AS
           select
-            CONCAT(b1.room_id, ':', b1.session_id) as id,
+            CONCAT(b1.room_id, ':', b1.session_id, ':', b2.session_id) as id,
           	b1.room_id,
             b1.session_title,
           	b1.session_id,
