@@ -77,7 +77,7 @@ namespace :chicon do
   task map_session_to_exclusion: :environment do
     mapping = {
       'Hugo Award Ceremony' => ['Hugo Award Ceremony'],
-      'Hugo Award Ceremony rehearsal' => ['Hugo Award Ceremony Rehersal'],
+      # 'Hugo Award Ceremony rehearsal' => ['Hugo Award Ceremony Rehersal'],
       'Masquerade' => ['Masquerade'],
       'Masquerade rehearsal' => ['Masquerade Rehersal'],
       'Opening Ceremony' => ['Opening Ceremony'],
