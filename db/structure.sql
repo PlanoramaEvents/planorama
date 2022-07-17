@@ -1107,6 +1107,7 @@ CREATE VIEW public.person_schedules AS
     p.con_state,
     p.can_share,
     p.pronouns,
+    em.email,
     sa.id AS session_assignment_id,
     sart.id AS session_assignment_role_type_id,
     sart.name AS session_assignment_name,
@@ -1122,9 +1123,10 @@ CREATE VIEW public.person_schedules AS
     sessions.participant_notes,
     sessions.description,
     sessions.environment
-   FROM (((public.session_assignments sa
+   FROM ((((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
      JOIN public.people p ON ((p.id = sa.person_id)))
+     JOIN public.email_addresses em ON (((em.person_id = p.id) AND em.isdefault)))
      LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
   WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL) AND ((sa.state)::text <> 'rejected'::text));
 
@@ -1467,7 +1469,7 @@ CREATE VIEW public.room_allocations AS
 --
 
 CREATE VIEW public.room_conflicts AS
- SELECT concat(b1.room_id, ':', b1.session_id, ':', b2.session_id) AS id,
+ SELECT concat(b1.room_id, ':', b1.session_id) AS id,
     b1.room_id,
     b1.session_title,
     b1.session_id,

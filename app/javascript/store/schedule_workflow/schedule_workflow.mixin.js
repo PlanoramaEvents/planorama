@@ -1,26 +1,21 @@
-import { mapState, mapActions } from 'vuex';
-import { RESET_DRAFT_SCHEDULE, RESET_FIRM_SCHEDULE, SET_DRAFT_SCHEDULE, SET_FIRM_SCHEDULE } from './schedule.store';
+import { mapGetters, mapActions } from 'vuex';
+import { FETCH_WORKFLOWS, RESET_DRAFT_SCHEDULE, RESET_FIRM_SCHEDULE, SET_DRAFT_SCHEDULE, SET_FIRM_SCHEDULE } from './schedule_workflow.actions';
 import { DateTime } from 'luxon';
 import { toastMixin } from '@/mixins';
 import { SCHEDULE_DRAFT_SUCCESS_MESSAGE, SCHEDULE_FIRM_SUCCESS_MESSAGE } from '@/constants/strings';
 
-export const scheduleStatusMixin = {
+export const scheduleWorkflowMixin = {
   mixins: [
     toastMixin
   ],
   computed: {
-    ...mapState({
-      realDraftSchedule: 'draftSchedule',
-      realFirmSchedule: 'firmSchedule',
-      realDraftScheduledAt: 'draftScheduledAt',
-      realFirmScheduledAt: 'firmScheduledAt'
-    }),
+    ...mapGetters(['draftScheduleWorkflow', 'firmScheduleWorkflow']),
     liveScheduleTitle() {
       return this.firmSchedule ? 'Firm Schedule' : 'Live Schedule';
     },
     draftSchedule: {
       get() {
-        return this.realDraftSchedule;
+        return !!this.draftScheduleWorkflow
       },
       set(val) {
         if (val) {
@@ -32,7 +27,7 @@ export const scheduleStatusMixin = {
     },
     firmSchedule: {
       get() {
-        return this.realFirmSchedule;
+        return !!this.firmScheduleWorkflow
       },
       set(val) {
         if (val) {
@@ -47,10 +42,10 @@ export const scheduleStatusMixin = {
       return this.draftSchedule && !this.firmSchedule;
     },
     draftScheduledAt() {
-      return DateTime.fromISO(this.realDraftScheduledAt).toLocaleString();
+      return DateTime.fromISO(this.draftScheduleWorkflow?.set_at).toLocaleString();
     },
     firmScheduledAt() {
-      return DateTime.fromISO(this.realFirmScheduledAt).toLocaleString();
+      return DateTime.fromISO(this.firmScheduleWorkflow?.set_at).toLocaleString();
     }
   },
   methods: {
@@ -58,7 +53,8 @@ export const scheduleStatusMixin = {
       setDraftScheduleAction: SET_DRAFT_SCHEDULE,
       setFirmScheduleAction: SET_FIRM_SCHEDULE,
       resetDraftScheduleAction: RESET_DRAFT_SCHEDULE,
-      resetFirmScheduleAction: RESET_FIRM_SCHEDULE
+      resetFirmScheduleAction: RESET_FIRM_SCHEDULE,
+      fetchScheduleWorkflows: FETCH_WORKFLOWS
     }),
     setDraftSchedule() {
       this.toastPromise(this.setDraftScheduleAction(), SCHEDULE_DRAFT_SUCCESS_MESSAGE);
@@ -75,4 +71,4 @@ export const scheduleStatusMixin = {
   }
 }
 
-export default scheduleStatusMixin;
+export default scheduleWorkflowMixin;

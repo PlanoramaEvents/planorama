@@ -95,7 +95,6 @@ export default {
     orderedSessions() {
       const sessions = Object.values(this.sessions);
       sessions.sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
-      console.log("sorted?", sessions)
       return sessions;
     },
     noSessions() {

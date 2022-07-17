@@ -77,7 +77,7 @@ import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import personSessionMixin from '@/auth/person_session.mixin';
 import settingsMixin from "@/store/settings.mixin";
 import modelUtilsMixin from '@/store/model_utils.mixin';
-import { scheduleStatusMixin } from '@/store/schedule_status.mixin';
+import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 
 const { DateTime } = require("luxon");
 
@@ -115,7 +115,7 @@ export default {
     personSessionMixin,
     settingsMixin,
     modelUtilsMixin,
-    scheduleStatusMixin,
+    scheduleWorkflowMixin,
   ],
   data: () => ({
     personModel,

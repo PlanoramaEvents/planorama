@@ -1,23 +1,28 @@
 <template>
   <div v-if="approvalType">
-    <b-form-group>
-      <template #label>Do you approve this <strong>{{approvalType}}</strong> schedule?</template>
-      <b-form-radio-group stacked :options="approvalOptions" v-model="approved" @change="saveApproval()"></b-form-radio-group>
-    </b-form-group>
-    <b-form-group label="If no, what changes would you like to have?">
-      <b-textarea v-model="approvalComment" :disabled="approved !== false" @blur="saveApprovalComments()"></b-textarea>
-    </b-form-group>
+    <model-loading-overlay model="model" v-if="!failedToLoad">
+      <b-form-group v-if="selected">
+        <template #label>Do you approve this <strong>{{approvalType}}</strong> schedule?</template>
+        <b-form-radio-group stacked :options="approvalOptions" v-model="selected.approved" @change="patchSingleField('approved')"></b-form-radio-group>
+      </b-form-group>
+      <b-form-group label="If no, what changes would you like to have?" v-if="selected">
+        <b-textarea v-model="selected.comments" :disabled="approved !== false" @blur="patchSingleField('comments')"></b-textarea>
+      </b-form-group>
+    </model-loading-overlay>
+    <div v-if="failedToLoad">
+      <span class="text-muted font-italic">{{SCHEDULE_APPROVAL_FAIL_TO_LOAD}}</span>
+    </div>
   </div>
 </template>
 
 <script>
-import { toastMixin } from '@/mixins'
+import { personScheduleApprovalMixin, personScheduleApprovalModel, personScheduleApprovalStateOptions } from '@/store/person_schedule_approval';
 import {
-  SCHEDULE_APPROVAL_COMMENT_SAVE_ERROR,
-  SCHEDULE_APPROVAL_COMMENT_SAVE_SUCCESS,
-  SCHEDULE_APPROVAL_SAVE_ERROR,
-  SCHEDULE_APPROVAL_SAVE_SUCCESS,
+  SPECIFIC_MODEL_SAVE_ERROR,
+  SPECIFIC_MODEL_SAVE_SUCCESS,
+  SCHEDULE_APPROVAL_FAIL_TO_LOAD,
 } from '@/constants/strings'
+import ModelLoadingOverlay from '@/components/model_loading_overlay.vue';
 
 export default {
   name: 'PersonScheduleApproval',
@@ -27,23 +32,38 @@ export default {
       default: null
     }
   },
+  components: {
+    ModelLoadingOverlay
+  },
   mixins: [
-    toastMixin
+    personScheduleApprovalMixin
   ],
   data: () => ({
-    approvalOptions: [{text: 'Not Set', value: null}, {text: 'Yes', value: true}, {text: 'No', value: false}],
-    approved: null,
-    approvalComment: null,
+    approvalOptions: personScheduleApprovalStateOptions,
+    SCHEDULE_APPROVAL_FAIL_TO_LOAD,
+    failedToLoad: false,
   }),
   methods: {
-    saveApproval() {
-      //TODO save the value of this.approval
-      this.toastPromise(Promise.resolve("Replace me"), SCHEDULE_APPROVAL_SAVE_SUCCESS(this.approvalType), SCHEDULE_APPROVAL_SAVE_ERROR(this.approvalType))
-    },
-    saveApprovalComments() {
-      //TODO save the value of this.approvalComment 
-      this.toastPromise(Promise.resolve("Replace me"), SCHEDULE_APPROVAL_COMMENT_SAVE_SUCCESS(this.approvalType), SCHEDULE_APPROVAL_COMMENT_SAVE_ERROR(this.approvalType))
+    patchSingleField(fieldName) {
+      this.patchSelected(
+        { [fieldName]: selected[fieldName]}, 
+        true, 
+        SPECIFIC_MODEL_SAVE_SUCCESS[personScheduleApprovalModel][fieldName](this.approvalType),
+        SPECIFIC_MODEL_SAVE_ERROR[personScheduleApprovalModel][fieldName](this.approvalType)
+      )
     }
+  },
+  mounted() {
+    this.fetchSelectedPersonApprovalForState(this.approvalType).then((psa) => {
+      if (!psa) {
+        console.log("no psa fetched")
+        // create a new one? or should this be henry?
+        this.failedToLoad = true;
+      }
+    }).catch((err) => {
+      console.log("error fetching person approval", err)
+      this.failedToLoad = true;
+    });
   }
 }
 </script>
