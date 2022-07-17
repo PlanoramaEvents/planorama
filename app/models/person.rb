@@ -73,6 +73,7 @@ class Person < ApplicationRecord
     not_set: 'not_set',
     applied: 'applied',
     vetted: 'vetted',
+    wait_list: 'wait_list',
     invite_pending: 'invite_pending',
     invited: 'invited',
     probable: 'probable',

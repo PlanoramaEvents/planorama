@@ -380,6 +380,10 @@ module ResourceMethods
                       ::Arel.sql("(cardinality(#{table}.#{column}) = 0)")
                     when 'is not empty'
                       ::Arel.sql("(cardinality(#{table}.#{column}) > 0)")
+                    when 'is only'
+                      ::Arel.sql("('#{value}' = ALL(#{table}.#{column}) AND cardinality(#{table}.#{column}) != 0)")
+                    when 'is not only'
+                      ::Arel.sql("('#{value}' = ANY(#{table}.#{column}) AND cardinality(#{table}.#{column}) > 1)")
                     end
 
       # This is crappy, but I do not see a way round it. If the first query part is a array literal one

@@ -2,6 +2,7 @@
   <div class="container">
     <h5>Additional Participants</h5>
     <search-vue
+      id="session-search-field" 
       class="w-75 mt-3"
       :value="filter"
       @change="onSearchChanged"
