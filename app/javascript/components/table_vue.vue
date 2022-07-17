@@ -43,7 +43,7 @@
         </div>
         <div class="d-inline mx-1" title="show" v-if="showView">
           <b-button @click="$emit('view')" variant="primary" title="View">
-            View
+            <b-icon-eye></b-icon-eye>
           </b-button>
         </div>
         <div class="d-inline" title="Settings" v-if="showSettings">

@@ -148,6 +148,7 @@ namespace :rbac do
       },
       "session": {
           "take_snapshot": false,
+          "delete_snapshot": false,
           "express_interest": true,
           "create": false,
           "destroy": false,
@@ -380,6 +381,7 @@ namespace :rbac do
       },
       "session": {
           "take_snapshot": false,
+          "delete_snapshot": false,
           "express_interest": true,
           "create": true,
           "destroy": true,
@@ -505,7 +507,8 @@ namespace :rbac do
         "invited_accepted_not_scheduled": true,
         "session_with_no_moderator": true,
         "scheduled_session_no_people": true,
-        "assigned_sessions_not_scheduled": true
+        "assigned_sessions_not_scheduled": true,
+        "session_copy_edit_status": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -647,6 +650,7 @@ namespace :rbac do
           "update": true
       },
       "session": {
+          "delete_snapshot": true,
           "take_snapshot": true,
           "express_interest": true,
           "create": true,
@@ -773,7 +777,8 @@ namespace :rbac do
         "invited_accepted_not_scheduled": true,
         "session_with_no_moderator": true,
         "scheduled_session_no_people": true,
-        "assigned_sessions_not_scheduled": true
+        "assigned_sessions_not_scheduled": true,
+        "session_copy_edit_status": true
       },
       "conflict_report": {
         "people_outside_availability": true,

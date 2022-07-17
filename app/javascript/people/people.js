@@ -37,6 +37,7 @@ export const people_columns = [
       {label: "not_set", value: "not_set"},
       {label: "applied", value: "applied"},
       {label: "vetted", value: "vetted"},
+      {label: "wait_list", value: "wait_list"},
       {label: "invite_pending", value: "invite_pending"},
       {label: "invited", value: "invited"},
       {label: "probable", value: "probable"},

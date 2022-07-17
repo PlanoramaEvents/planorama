@@ -1,4 +1,8 @@
 class SessionPolicy < PlannerPolicy
+  def delete_snapshot?
+    !Rails.env.production? && allowed?(action: :delete_snapshot)
+  end
+
   def take_snapshot?
     allowed?(action: :take_snapshot)
   end

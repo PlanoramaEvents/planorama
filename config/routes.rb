@@ -62,6 +62,7 @@ Rails.application.routes.draw do
   get 'report/session_reports/invited_accepted_not_scheduled', to: 'reports/session_reports#invited_accepted_not_scheduled'
   get 'report/session_reports/session_with_no_moderator', to: 'reports/session_reports#session_with_no_moderator'
   get 'report/session_reports/assigned_sessions_not_scheduled', to: 'reports/session_reports#assigned_sessions_not_scheduled'
+  get 'report/session_reports/session_copy_edit_status', to: 'reports/session_reports#session_copy_edit_status'  
   get 'report/session_reports/scheduled_session_no_people', to: 'reports/session_reports#scheduled_session_no_people'
   get 'report/session_reports/non_accepted_on_schedule', to: 'reports/session_reports#non_accepted_on_schedule'
   get 'report/session_reports/participants_over_session_limits', to: 'reports/session_reports#participants_over_session_limits'
@@ -130,6 +131,7 @@ Rails.application.routes.draw do
   resources :tags, path: 'tag'
 
   get 'session/take_snapshot/:label', to: 'sessions#take_snapshot'
+  delete 'session/delete_snapshot/:label', to: 'sessions#delete_snapshot' # for testing purposes
   get 'session/tags', to: 'sessions#tags'
   post 'session/import', to: 'sessions#import'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id
