@@ -281,6 +281,9 @@ namespace :rbac do
       },
       "publication_date": {
           "index": false
+      },
+      "integration": {
+          "publish": false
       }
     })
   end
@@ -590,6 +593,9 @@ namespace :rbac do
       },
       "publication_date": {
           "index": true
+      },
+      "integration": {
+          "publish": false
       }
     })
   end
@@ -899,6 +905,9 @@ namespace :rbac do
       },
       "publication_date": {
           "index": true
+      },
+      "integration": {
+          "publish": true
       }
     })
   end

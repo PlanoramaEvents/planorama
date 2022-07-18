@@ -616,7 +616,8 @@ END) STORED,
     attendance_type character varying(200) DEFAULT NULL::character varying,
     twelve_hour boolean DEFAULT true,
     timezone character varying(500) DEFAULT NULL::character varying,
-    availability_notes character varying
+    availability_notes character varying,
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -655,7 +656,8 @@ CREATE TABLE public.session_assignments (
     interest_notes text,
     state character varying,
     planner_notes text,
-    interest_role public.interest_role_enum DEFAULT 'no_preference'::public.interest_role_enum
+    interest_role public.interest_role_enum DEFAULT 'no_preference'::public.interest_role_enum,
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -699,7 +701,8 @@ CREATE TABLE public.sessions (
     room_set_id uuid,
     room_notes text,
     recorded boolean DEFAULT false NOT NULL,
-    streamed boolean DEFAULT false NOT NULL
+    streamed boolean DEFAULT false NOT NULL,
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -921,6 +924,19 @@ CREATE TABLE public.ignored_conflicts (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     conflict_id character varying(2048),
     conflict_type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: integrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.integrations (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    config jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1290,6 +1306,25 @@ CREATE TABLE public.person_schedule_approvals (
 
 
 --
+-- Name: person_schedule_approvals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.person_schedule_approvals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: person_schedule_approvals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.person_schedule_approvals_id_seq OWNED BY public.person_schedule_approvals.id;
+
+
+--
 -- Name: person_schedule_conflicts; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -1451,7 +1486,8 @@ CREATE TABLE public.rooms (
     room_set_id uuid,
     length numeric,
     width numeric,
-    height numeric
+    height numeric,
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -1565,6 +1601,25 @@ CREATE TABLE public.schedule_workflows (
     updated_at timestamp(6) without time zone NOT NULL,
     state public.schedule_workflow_enum DEFAULT 'not_set'::public.schedule_workflow_enum
 );
+
+
+--
+-- Name: schedule_workflows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.schedule_workflows_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: schedule_workflows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.schedule_workflows_id_seq OWNED BY public.schedule_workflows.id;
 
 
 --
@@ -2045,6 +2100,20 @@ ALTER TABLE ONLY public.categorizations ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: person_schedule_approvals id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_schedule_approvals ALTER COLUMN id SET DEFAULT nextval('public.person_schedule_approvals_id_seq'::regclass);
+
+
+--
+-- Name: schedule_workflows id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedule_workflows ALTER COLUMN id SET DEFAULT nextval('public.schedule_workflows_id_seq'::regclass);
+
+
+--
 -- Name: survey_formats id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2208,6 +2277,14 @@ ALTER TABLE ONLY public.formats
 
 ALTER TABLE ONLY public.ignored_conflicts
     ADD CONSTRAINT ignored_conflicts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: integrations integrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.integrations
+    ADD CONSTRAINT integrations_pkey PRIMARY KEY (id);
 
 
 --
