@@ -79,7 +79,7 @@ module ReportsService
       ::Session.arel_table[Arel.star],
       'areas_list.area_list'
     )
-      .eager_load(:format, :room, {participant_assignments: :person})
+      .includes(:format, :room, {participant_assignments: :person})
       .joins(self.area_subquery)
       .where("start_time is not null and room_id is not null")
       .where("status != 'dropped' and status != 'draft'")
