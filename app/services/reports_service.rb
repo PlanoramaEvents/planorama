@@ -1,5 +1,27 @@
 module ReportsService
 
+  def self.all_sessions
+    sessions_table = Session.arel_table
+    subquery = Session.area_list.as('areas_list')
+
+    joins = [
+      sessions_table.create_join(
+        subquery,
+        sessions_table.create_on(
+          subquery[:session_id].eq(sessions_table[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .joins(joins)
+      .order('title')
+  end
+
   def self.all_conflicts(ignored: false)
     conflicts_table = ::Conflicts::SessionConflict.arel_table
     subquery = Session.area_list.as('areas_list')

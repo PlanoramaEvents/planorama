@@ -34,4 +34,8 @@ class Reports::SessionReportPolicy < BasePolicy
   def assigned_sessions_not_scheduled?
     allowed?(action: :assigned_sessions_not_scheduled)
   end
+
+  def session_copy_edit_status?
+    allowed?(action: :session_copy_edit_status)
+  end
 end
