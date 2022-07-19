@@ -1,6 +1,5 @@
 <template>
   <div v-if="approvalType">
-    <!-- HAVE: {{selected}} -->
     <model-loading-overlay model="model" v-if="!failedToLoad && loading">
       <b-form-group v-if="selected">
         <template #label>Do you approve this <strong>{{approvalType}}</strong> schedule?</template>
