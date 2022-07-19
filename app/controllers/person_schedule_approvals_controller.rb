@@ -3,6 +3,18 @@ class PersonScheduleApprovalsController < ResourceController
   POLICY_CLASS = 'PersonScheduleApprovalPolicy'.freeze
   POLICY_SCOPE_CLASS = 'PersonScheduleApprovalPolicy::Scope'.freeze
 
+  def belongs_to_param_id
+    params[:person_id]
+  end
+
+  def belong_to_class
+    Person
+  end
+
+  def belongs_to_relationship
+    'person_schedule_approvals'
+  end
+
   # we need a fetch that does it by person and workflow
   def fetch
     model_class.transaction do

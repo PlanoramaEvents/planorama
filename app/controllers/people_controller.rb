@@ -357,7 +357,8 @@ class PeopleController < ResourceController
     [
       :email_addresses,
       :convention_roles,
-      :session_limits
+      :session_limits,
+      :person_schedule_approvals
     ]
   end
 
@@ -366,7 +367,8 @@ class PeopleController < ResourceController
       :email_addresses,
       :convention_roles,
       :availabilities,
-      :session_limits
+      :session_limits,
+      {person_schedule_approvals: {schedule_workflow: :schedule_snapshot}}
     ]
   end
 
@@ -382,18 +384,27 @@ class PeopleController < ResourceController
       people = Arel::Table.new(Person.table_name)
       assignments = Arel::Table.new(SessionAssignment.table_name)
 
-      # planner_reg_tickets = Arel::Table.new(::PlannerReg::Ticket.table_name)
-      # people.project(people[:id]).where(
-        people[:id].not_in(
-          assignments.project(assignments[:person_id]).where(
-            assignments[:session_id].eq(value)
-          )
+      people[:id].not_in(
+        assignments.project(assignments[:person_id]).where(
+          assignments[:session_id].eq(value)
         )
-      # ).distinct
+      )
     else
       nil
     end
   end
+
+  def get_table(column:)
+    if column.include?('draft_person_schedule_approvals')
+      return PersonScheduleApproval.arel_table
+    end
+    if column.include?('firm_person_schedule_approvals')
+      return PersonScheduleApproval.arel_table
+    end
+
+    return super(column: column)
+  end
+
 
   # TODO: on create must have at least one email_addresses_attributes
   # def join_tables
