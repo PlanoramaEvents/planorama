@@ -1,6 +1,7 @@
 <template>
   <div v-if="approvalType">
-    <model-loading-overlay model="model" v-if="!failedToLoad">
+    <!-- HAVE: {{selected}} -->
+    <model-loading-overlay model="model" v-if="!failedToLoad && loading">
       <b-form-group v-if="selected">
         <template #label>Do you approve this <strong>{{approvalType}}</strong> schedule?</template>
         <b-form-radio-group stacked :options="approvalOptions" v-model="selected.approved" @change="patchSingleField('approved')"></b-form-radio-group>
@@ -42,6 +43,7 @@ export default {
     approvalOptions: personScheduleApprovalStateOptions,
     SCHEDULE_APPROVAL_FAIL_TO_LOAD,
     failedToLoad: false,
+    loading: true
   }),
   methods: {
     patchSingleField(fieldName) {
@@ -56,12 +58,12 @@ export default {
   mounted() {
     this.fetchSelectedPersonApprovalForState(this.approvalType).then((psa) => {
       if (!psa) {
-        console.log("no psa fetched")
         // create a new one? or should this be henry?
         this.failedToLoad = true;
+      } else {
+        this.loading = false
       }
     }).catch((err) => {
-      console.log("error fetching person approval", err)
       this.failedToLoad = true;
     });
   }
