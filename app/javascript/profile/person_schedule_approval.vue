@@ -46,8 +46,8 @@ export default {
   methods: {
     patchSingleField(fieldName) {
       this.patchSelected(
-        { [fieldName]: selected[fieldName]}, 
-        true, 
+        { [fieldName]: selected[fieldName]},
+        true,
         SPECIFIC_MODEL_SAVE_SUCCESS[personScheduleApprovalModel][fieldName](this.approvalType),
         SPECIFIC_MODEL_SAVE_ERROR[personScheduleApprovalModel][fieldName](this.approvalType)
       )

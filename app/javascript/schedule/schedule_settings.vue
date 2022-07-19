@@ -34,8 +34,8 @@
 import PlanoModal from '@/components/plano_modal.vue';
 import { toastMixin } from '@/mixins';
 import { http } from '@/http';
-import { 
-  SCHEDULE_DRAFT_CONFIRM_MESSAGE, 
+import {
+  SCHEDULE_DRAFT_CONFIRM_MESSAGE,
   SCHEDULE_FIRM_CONFIRM_MESSAGE,
 } from '@/constants/strings';
 
@@ -86,7 +86,6 @@ export default {
     confirmDraft() {
       this.draftScheduleConfirmed = true;
       this.draftSchedule = true;
-      this.toastPromise(http.get('/session/take_snapshot/draft'), "succesfully scheduled snapshot")
     },
     confirmFirm() {
       this.firmScheduleConfirmed = true;
@@ -97,7 +96,7 @@ export default {
       this.localFirmSchedule = false;
       this.draftSchedule = false;
       this.firmSchedule = false;
-      this.toastPromise(http.delete('/session/delete_snapshot/draft'), "Draft snapshot deleted")
+      this.toastPromise(http.get('/schedule_workflow/reset'), "succesfully reset workflows")
     }
   },
   watch: {
@@ -116,6 +115,7 @@ export default {
   },
   mounted() {
     this.fetchScheduleWorkflows().then(() => {
+      // TODO: this does not look right, what is done with the workflow return data?
       this.localDraftSchedule = this.draftSchedule;
       this.draftScheduleConfirmed = this.draftSchedule;
       this.localFirmSchedule = this.firmSchedule;

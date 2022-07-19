@@ -1,4 +1,4 @@
-import { FETCH } from '../model.store';
+import { FETCH, NEW } from '../model.store';
 import {
   SET_DRAFT_SCHEDULE,
   RESET_DRAFT_SCHEDULE,
@@ -13,30 +13,18 @@ export const scheduleWorkflowEndpoints = {
 }
 
 export const scheduleWorkflowStore = {
-  // state: {
-  //   draftSchedule: false,
-  //   draftScheduledAt: null,
-  //   firmSchedule: false,
-  //   firmScheduledAt: null
-  // },
   actions: {
-    // TODO HENRY WIRE ME TO BACKEND
-    [SET_DRAFT_SCHEDULE]: ({state}) => {
-      // TODO create the draft workflow on the backend
-      // note: request for snapshot will happen separately?
-      return Promise.resolve({status: 200});
+    [SET_DRAFT_SCHEDULE]: ({dispatch}) => {
+      let workflow = {
+        state: 'draft'
+      }
+      return dispatch(NEW, {model: scheduleWorkflowModel, selected: false, ...workflow});
     },
-    [RESET_DRAFT_SCHEDULE]: ({state}) => {
-      // TODO delete the draft workflow on the backend
-      return Promise.resolve({status: 200});
-    },
-    [SET_FIRM_SCHEDULE]: ({state}) => {
-      // TODO create the firm workflow on the backend
-      return Promise.resolve({status: 200});
-    },
-    [RESET_FIRM_SCHEDULE]: ({state}) => {
-      // TODO delete the firm workflow from the backend
-      return Promise.resolve({status: 200});
+    [SET_FIRM_SCHEDULE]: ({dispatch}) => {
+      let workflow = {
+        state: 'firm'
+      }
+      return dispatch(NEW, {model: scheduleWorkflowModel, selected: false, ...workflow});
     },
     [FETCH_WORKFLOWS]: ({dispatch}) => {
       return dispatch(FETCH, {model: scheduleWorkflowModel});
