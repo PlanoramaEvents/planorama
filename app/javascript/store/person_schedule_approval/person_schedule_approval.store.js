@@ -20,7 +20,6 @@ export const personScheduleApprovalStore = {
 
       return new Promise((res, rej) => {
         dispatch('jv/get', [data, {url: url}]).then((approval) => {
-          console.debug('******** AP', approval)
           if (selected) {
             commit(SELECT, {personScheduleApprovalModel, itemOrId: approval});
           }
