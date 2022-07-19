@@ -152,6 +152,10 @@ Rails.application.routes.draw do
   resources :configurations, path: 'configuration'
   resources :parameter_names, path: 'parameter_name'
 
+  get 'person_schedule_approval/fetch/:person_id/:workflow_id', to: 'person_schedule_approvals#fetch'
+  post 'person_schedule_approval/approve/:person_id/:workflow_id', to: 'person_schedule_approvals#approve'
+  resources :person_schedule_approvals, path: 'person_schedule_approval'
+
   get 'schedule_workflow/reset', to: 'schedule_workflows#reset'
   resources :schedule_workflows, path: 'schedule_workflow'
   resources :mailings, path: 'mailing'

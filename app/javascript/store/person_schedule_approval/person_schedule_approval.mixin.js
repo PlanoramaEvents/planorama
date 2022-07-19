@@ -43,7 +43,7 @@ export const personScheduleApprovalMixin = {
         // abort fetch
         return Promise.reject({status: 422, errors: [{title: 'Validation error: no workflow state provided'}]});
       }
-      
+
       const person = this.selected_model(personModel)
       if (!person) {
         // no point in continuing
@@ -51,7 +51,7 @@ export const personScheduleApprovalMixin = {
       }
 
       // this will also select it for us :) how handy
-      return this.fetchApprovalFor({personOrId: person, workflowOrId: workflow})
+      return this.fetchApprovalFor({person_id: person.id, workflow_id: workflow.id})
     },
   },
   watch: {

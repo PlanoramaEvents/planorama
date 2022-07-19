@@ -9,7 +9,6 @@ export const UNSELECT = 'UNSELECT';
 
 export const SELECTED = 'SELECTED';
 export const FETCH_SELECTED = 'FETCH SELECTED';
-export const FETCH_BY_RELATIONSHIPS = 'FETCH BY RELATIONSHIPS';
 export const FETCH_BY_ID = 'FETCH BY ID'
 export const FETCH = 'FETCH';
 export const NEW = 'NEW';
@@ -328,16 +327,6 @@ export const store = new Vuex.Store({
     // [CLEAR] ({dispatch}, {model}) {
     //   this.commit('jv/clearRecords', { _jv: { type: model } })
     // },
-    [FETCH_BY_RELATIONSHIPS] ({dispatch}, {model, relationships, params, selected = false}) {
-      return new Promise((res, rej) => {
-        dispatch('jv/get', [{_jv: { type: model, relationships, }}, params]).then((fetchedModel) => {
-          if (selected) {
-            commit(SELECT, {model, itemOrId: fetchedModel});
-          }
-          res(fetchedModel);
-        }).catch(rej)
-      })
-    },
     [FETCH_SELECTED] ({state, dispatch}, {model}) {
       if (!state.selected[model]) {
         return Promise.reject(`No ${model} selected`)

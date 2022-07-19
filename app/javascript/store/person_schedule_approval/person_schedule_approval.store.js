@@ -1,4 +1,3 @@
-import { FETCH_BY_RELATIONSHIPS } from "@/store/model.store"
 import { personModel } from "@/store/person.store"
 import { scheduleWorkflowModel } from "@/store/schedule_workflow";
 import { getId } from '@/utils/jsonapi_utils';
@@ -15,22 +14,18 @@ export const personScheduleApprovalStore = {
     [personScheduleApprovalModel]: undefined
   },
   actions: {
-    [FETCH_APPROVAL_FOR] ({dispatch}, {personOrId, workflowOrId, selected = true}) {
-      const relationships = {
-        [personModel]: {
-          data: {
-            type: personModel,
-            id: getId(personOrId)
+    [FETCH_APPROVAL_FOR] ({dispatch}, {person_id, workflow_id, selected = true}) {
+      let url = `/person_schedule_approval/fetch/${person_id}/${workflow_id}`
+      let data = { _jv: { type: personScheduleApprovalModel } }
+
+      return new Promise((res, rej) => {
+        dispatch('jv/get', [data, {url: url}]).then((approval) => {
+          if (selected) {
+            commit(SELECT, {personScheduleApprovalModel, itemOrId: approval});
           }
-        },
-        [scheduleWorkflowModel]: {
-          data: {
-            type: scheduleWorkflowModel,
-            id: getId(workflowOrId)
-          }
-        }
-      }
-      return dispatch(FETCH_BY_RELATIONSHIPS, {model: personScheduleApprovalModel, relationships, selected})
+          res(approval);
+        }).catch(rej)
+      });
     }
   }
 }
