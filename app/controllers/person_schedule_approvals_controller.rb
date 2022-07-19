@@ -18,8 +18,6 @@ class PersonScheduleApprovalsController < ResourceController
   # we need a fetch that does it by person and workflow
   def fetch
     model_class.transaction do
-      authorize model_class, policy_class: policy_class
-
       person = Person.find params[:person_id] if params[:person_id]
       workflow = ScheduleWorkflow.find params[:workflow_id]
       person ||= current_person
@@ -30,6 +28,8 @@ class PersonScheduleApprovalsController < ResourceController
         person_id: person.id,
         schedule_workflow_id: workflow.id
       )
+
+      authorize approval, policy_class: policy_class
 
       render_object(
         approval,

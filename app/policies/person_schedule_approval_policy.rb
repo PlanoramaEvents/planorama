@@ -1,12 +1,20 @@
 class PersonScheduleApprovalPolicy < PlannerPolicy
-  # def index?
-  #   true
-  # end
-  #
   def fetch?
-    # return true if @record.class != Symbol && @record.person_id == @person.id
+    return true if @record.class != Symbol && @record.person_id == @person.id
 
     allowed?(action: :fetch)
+  end
+
+  def update?
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    allowed?(action: :update)
+  end
+
+  def show?
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    allowed?(action: :show)
   end
 
   class Scope < PlannerPolicy::Scope

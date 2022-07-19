@@ -254,6 +254,28 @@ namespace :rbac do
           "index": false,
           "show": false,
           "update": false
+      },
+      "schedule_snapshot": {
+          "create": false,
+          "destroy": false,
+          "index": false,
+          "show": false,
+          "update": false
+      },
+      "schedule_workflow": {
+          "create": false,
+          "destroy": false,
+          "index": false,
+          "show": false,
+          "update": false
+      },
+      "person_schedule_approval": {
+          "create": false,
+          "destroy": false,
+          "index": false,
+          "show": false,
+          "update": false,
+          "fetch": false
       }
     })
   end
@@ -524,7 +546,29 @@ namespace :rbac do
         "conflicts_with": true,
         "conflicts_for": true,
         "ignore": true
-      }
+      },
+      "schedule_snapshot": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false
+      },
+      "schedule_workflow": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false
+      },
+      "person_schedule_approval": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": true,
+          "fetch": true
+      },
     })
   end
 
@@ -794,7 +838,29 @@ namespace :rbac do
         "conflicts_with": true,
         "conflicts_for": true,
         "ignore": true
-      }
+      },
+      "schedule_snapshot": {
+          "create": true,
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true
+      },
+      "schedule_workflow": {
+          "create": true,
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true
+      },
+      "person_schedule_approval": {
+          "create": true,
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true,
+          "fetch": true
+      },
     })
   end
 end
