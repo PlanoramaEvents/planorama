@@ -1,14 +1,14 @@
 <template>
   <div v-if="approvalType">
-    <model-loading-overlay model="model" v-if="!failedToLoad && loading">
+    <b-overlay :show="loading" v-if="!failedToLoad">
       <b-form-group v-if="selected">
         <template #label>Do you approve this <strong>{{approvalType}}</strong> schedule?</template>
         <b-form-radio-group stacked :options="approvalOptions" v-model="selected.approved" @change="patchSingleField('approved')"></b-form-radio-group>
       </b-form-group>
       <b-form-group label="If no, what changes would you like to have?" v-if="selected">
-        <b-textarea v-model="selected.comments" :disabled="approved !== false" @blur="patchSingleField('comments')"></b-textarea>
+        <b-textarea v-model="selected.comments" :disabled="selected.approved !== 'yes'" @blur="patchSingleField('comments')"></b-textarea>
       </b-form-group>
-    </model-loading-overlay>
+    </b-overlay>
     <div v-if="failedToLoad">
       <span class="text-muted font-italic">{{SCHEDULE_APPROVAL_FAIL_TO_LOAD}}</span>
     </div>
