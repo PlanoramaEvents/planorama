@@ -45,7 +45,7 @@ export const people_columns = [
       {label: "declined", value: "declined"},
       {label: "rejected", value: "rejected"}
     ],
-    operators: ["=", "!="],
+    operators: ["equal", "does not equal"],
     sortable: false
   },
   {
