@@ -1,6 +1,6 @@
 class CreateScheduleWorkflows < ActiveRecord::Migration[6.1]
   def change
-    create_table :schedule_workflows do |t|
+    create_table :schedule_workflows, id: :uuid do |t|
       # State (none, draft, firm)
       # Who set it
       t.string   :created_by

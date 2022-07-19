@@ -1,6 +1,6 @@
 class CreatePersonScheduleApprovals < ActiveRecord::Migration[6.1]
   def change
-    create_table :person_schedule_approvals do |t|
+    create_table :person_schedule_approvals, id: :uuid do |t|
       # Person
       t.uuid :person_id
       # Schedule workflow

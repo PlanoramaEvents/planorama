@@ -1272,7 +1272,7 @@ CREATE TABLE public.person_mailing_assignments (
 --
 
 CREATE TABLE public.person_schedule_approvals (
-    id bigint NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     person_id uuid,
     schedule_workflow_id uuid,
     comments text,
@@ -1281,25 +1281,6 @@ CREATE TABLE public.person_schedule_approvals (
     updated_at timestamp(6) without time zone NOT NULL,
     approved public.schedule_approval_enum DEFAULT 'not_set'::public.schedule_approval_enum
 );
-
-
---
--- Name: person_schedule_approvals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.person_schedule_approvals_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: person_schedule_approvals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.person_schedule_approvals_id_seq OWNED BY public.person_schedule_approvals.id;
 
 
 --
@@ -1548,7 +1529,7 @@ CREATE TABLE public.schedule_snapshots (
 --
 
 CREATE TABLE public.schedule_workflows (
-    id bigint NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_by character varying,
     set_at timestamp without time zone,
     schedule_snapshot_id uuid,
@@ -1557,25 +1538,6 @@ CREATE TABLE public.schedule_workflows (
     updated_at timestamp(6) without time zone NOT NULL,
     state public.schedule_workflow_enum DEFAULT 'not_set'::public.schedule_workflow_enum
 );
-
-
---
--- Name: schedule_workflows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_workflows_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_workflows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_workflows_id_seq OWNED BY public.schedule_workflows.id;
 
 
 --
@@ -2053,20 +2015,6 @@ ALTER TABLE ONLY public.audit_survey_versions ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.categorizations ALTER COLUMN id SET DEFAULT nextval('public.categorizations_id_seq'::regclass);
-
-
---
--- Name: person_schedule_approvals id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_schedule_approvals ALTER COLUMN id SET DEFAULT nextval('public.person_schedule_approvals_id_seq'::regclass);
-
-
---
--- Name: schedule_workflows id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_workflows ALTER COLUMN id SET DEFAULT nextval('public.schedule_workflows_id_seq'::regclass);
 
 
 --
