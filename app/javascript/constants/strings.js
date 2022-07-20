@@ -266,4 +266,12 @@ module.exports = {
         geared_families: "Geared towards families",
         geared_kids: "Geared towards kids",
     },
+    SCHEDULE_DRAFT_CONFIRM_MESSAGE: "YOU WIN A MODAL! You can't undo this.",
+    SCHEDULE_FIRM_CONFIRM_MESSAGE: "YOU WIN A SECOND MODAL. You can't undo this one either.",
+    SCHEDULE_DRAFT_SUCCESS_MESSAGE: "You drafted!!!!!!!!!1!",
+    SCHEDULE_FIRM_SUCCESS_MESSAGE: "You firmed!",
+    SCHEDULE_APPROVAL_SAVE_SUCCESS: (approvalType) => `Success - ${approvalType} schedule approval ANNA TEXT.`,
+    SCHEDULE_APPROVAL_SAVE_ERROR: (approvalType) => errorMessage(`Error - ${approvalType} schedule approval ANNA TEXT`),
+    SCHEDULE_APPROVAL_COMMENT_SAVE_SUCCESS: (approvalType) => `Success - ${approvalType} schedule approval comment ANNA TEXT.`,
+    SCHEDULE_APPROVAL_COMMENT_SAVE_ERROR: (approvalType) => errorMessage(`Error - ${approvalType} schedule approval comment ANNA TEXT`),
 }

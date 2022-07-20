@@ -80,6 +80,9 @@ import { sessionAssignmentStore, sessionAssignmentEndpoints } from './session_as
 // global app things
 import { appStore } from './app.store';
 
+// schedule things
+import { scheduleStore } from './schedule.store';
+
 import merge from 'lodash.merge'
 
 const endpoints = {
@@ -146,6 +149,7 @@ export const store = new Vuex.Store({
     ...emailAddressStore.state,
     ...roomStore.state,
     ...appStore.state,
+    ...scheduleStore.state,
     // ...mailingStore.state
   },
   getters: {
@@ -184,6 +188,7 @@ export const store = new Vuex.Store({
     ...emailAddressStore.getters,
     ...settingsStore.getters,
     ...formatStore.getters,
+    ...scheduleStore.getters,
   },
   plugins: [
     ...surveyStore.plugins
@@ -376,6 +381,7 @@ export const store = new Vuex.Store({
     ...personExclusionStore.actions,
     ...sessionLimitStore.actions,
     ...emailAddressStore.actions,
-    ...sessionConflictStore.actions
+    ...sessionConflictStore.actions,
+    ...scheduleStore.actions,
   }
 })
