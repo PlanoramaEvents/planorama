@@ -104,6 +104,12 @@
           </tooltip-overflow>
         </span>
       </template>
+      <template #cell(draft_approval)="{ item }">
+        {{ approved(item.person_schedule_approvals, 'draft') }}
+      </template>
+      <template #cell(firm_approval)="{ item }">
+        {{ approved(item.person_schedule_approvals, 'firm') }}
+      </template>
     </table-vue>
   </div>
 </template>
@@ -148,6 +154,10 @@ export default {
     }
   },
   methods: {
+    approved(approvals, state) {
+      let v = Object.values(approvals).find( o => o.workflow_state == state);
+      return v ? v.approved : '';
+    },
     queries(searchEmails) {
       let queries = {
         "op": 'any',

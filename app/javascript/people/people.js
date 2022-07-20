@@ -52,6 +52,23 @@ export const people_columns = [
     key: 'attendance_type',
     label: 'Attendance Type'
   },
+  // TODO: derived cols
+  {
+    key: 'draft_approval',
+    label: 'Draft Approved',
+    search_key: 'draft_person_schedule_approvals.approved',
+    type: "radio",
+    choices: [{label: "Yes", value: "yes"}, {label: "No", value: "no"}],
+    sortable: false
+  },
+  {
+    key: 'firm_approval',
+    label: 'Firm Approved',
+    search_key: 'firm_person_schedule_approvals.approved',
+    type: "radio",
+    choices: [{label: "Yes", value: "yes"}, {label: "No", value: "no"}],
+    sortable: false
+  },
   {
     key: 'organization',
     label: 'Organization',

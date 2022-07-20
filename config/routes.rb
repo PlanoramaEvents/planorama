@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     get 'sessions', to: 'sessions#index'
     get 'live_sessions', to: 'people#live_sessions'
     get 'snapshot_schedule(/:label)', to: 'people#snapshot_schedule'
+    get 'person_schedule_approvals', to: 'person_schedule_approvals#index'
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
@@ -158,7 +159,8 @@ Rails.application.routes.draw do
 
   get 'schedule_workflow/reset', to: 'schedule_workflows#reset'
   resources :schedule_workflows, path: 'schedule_workflow'
-  resources :mailings, path: 'mailing'
+  resources :schedule_snapshots, path: 'schedule_snapshot'
+  resources :mailings, path: 'mailing'  
 
   get 'mailing/preview/:id/:email', to: 'mailings#preview', constraints: { email: /[^\/]+/ }
   get 'mailing/schedule/:id(/:email)(/:test)', to: 'mailings#schedule', constraints: { email: /[^\/]+/ }
