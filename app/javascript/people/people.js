@@ -1,3 +1,5 @@
+import { personScheduleApprovalStateOptionsForSearch } from "@/store/person_schedule_approval";
+
 export const people_columns = [
   {
     key: 'published_name',
@@ -57,30 +59,30 @@ export const people_columns = [
     key: 'draft_approval',
     label: 'Draft Approved',
     search_key: 'draft_person_schedule_approvals.approved',
-    type: "radio",
-    choices: [{label: "Yes", value: "yes"}, {label: "No", value: "no"}],
+    type: "select",
+    choices: personScheduleApprovalStateOptionsForSearch,
     sortable: false
   },
   {
     key: 'firm_approval',
     label: 'Firm Approved',
     search_key: 'firm_person_schedule_approvals.approved',
-    type: "radio",
-    choices: [{label: "Yes", value: "yes"}, {label: "No", value: "no"}],
+    type: "select",
+    choices: personScheduleApprovalStateOptionsForSearch,
     sortable: false
   },
-  {
-    key: 'organization',
-    label: 'Organization',
-    type: "text",
-    sortable: true
-  },
-  {
-    key: 'job_title',
-    label: 'Job Title',
-    type: "text",
-    sortable: false
-  },
+  // {
+  //   key: 'organization',
+  //   label: 'Organization',
+  //   type: "text",
+  //   sortable: true
+  // },
+  // {
+  //   key: 'job_title',
+  //   label: 'Job Title',
+  //   type: "text",
+  //   sortable: false
+  // },
   // {
   //   key: 'registered',
   //   label: 'Registered',

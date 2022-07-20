@@ -6,7 +6,7 @@
         <b-form-radio-group stacked :options="approvalOptions" v-model="selected.approved" @change="patchSingleField('approved')"></b-form-radio-group>
       </b-form-group>
       <b-form-group label="If no, what changes would you like to have?" v-if="selected">
-        <b-textarea v-model="selected.comments" :disabled="selected.approved !== 'yes'" @blur="patchSingleField('comments')"></b-textarea>
+        <b-textarea v-model="selected.comments" :disabled="selected.approved !== 'no'" @blur="patchSingleField('comments')"></b-textarea>
       </b-form-group>
     </b-overlay>
     <div v-if="failedToLoad">
@@ -49,9 +49,8 @@ export default {
       this.patchSelected(
         { [fieldName]: this.selected[fieldName]},
         true,
-        // TODO: Gail - the SPECIFIC_MODEL_SAVE_SUCCESS etc does not work
-        "PASS", //SPECIFIC_MODEL_SAVE_SUCCESS[personScheduleApprovalModel][fieldName](this.approvalType),
-        "FAIL" //SPECIFIC_MODEL_SAVE_ERROR[personScheduleApprovalModel][fieldName](this.approvalType)
+        SPECIFIC_MODEL_SAVE_SUCCESS[personScheduleApprovalModel][fieldName](this.approvalType),
+        SPECIFIC_MODEL_SAVE_ERROR[personScheduleApprovalModel][fieldName](this.approvalType)
       )
     }
   },

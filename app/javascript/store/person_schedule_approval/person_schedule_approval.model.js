@@ -14,7 +14,13 @@ export const personScheduleApprovalStateOptions = [
   {text: 'No', value: PersonScheduleApprovalState.NO},
 ];
 
+export const personScheduleApprovalStateOptionsForSearch = 
+  personScheduleApprovalStateOptions.map(i => ({...i, label: i.text}))
+
 export const formatPersonScheduleApprovalState = (psa) => {
+  if (!psa) {
+    return 'Not Set';
+  }
   return personScheduleApprovalStateOptions.find(({value}) => value === psa)?.text || psa;
 }
 

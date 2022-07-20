@@ -275,15 +275,15 @@ module.exports = {
     SPECIFIC_MODEL_SAVE_SUCCESS: {
         person_schedule_approval: {
             person_schedule_approval: "Schedule approval saved.",
-            approval: (approvalType) => `${titleCase(approvalType)} approval was successfully saved.`,
+            approved: (approvalType) => `${titleCase(approvalType)} approval was successfully saved.`,
             comments: (approvalType) => `${titleCase(approvalType)} approval comment was successfully saved.`,
         },
     },
     SPECIFIC_MODEL_SAVE_ERROR: {
         person_schedule_approval: {
             person_schedule_approval: errorMessage("Schedule approval was not saved."),
-            approval: (approvalType) => errorMessage(`${titleCase(approvalType)} approval was not saved.`),
+            approved: (approvalType) => errorMessage(`${titleCase(approvalType)} approval was not saved.`),
             comments: (approvalType) => errorMessage(`${titleCase(approvalType)} approval comment was not saved.`),
         },
-    }
+    },
 }

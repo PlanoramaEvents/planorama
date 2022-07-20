@@ -126,6 +126,7 @@ import PersonConStateSelector from '../components/person_con_state_selector'
 import PeopleSessionNames from './people_session_names';
 
 import searchStateMixin from '../store/search_state.mixin'
+import { formatPersonScheduleApprovalState } from '@/store/person_schedule_approval';
 
 export default {
   name: 'PeopleTable',
@@ -156,7 +157,7 @@ export default {
   methods: {
     approved(approvals, state) {
       let v = Object.values(approvals).find( o => o.workflow_state == state);
-      return v ? v.approved : '';
+      return formatPersonScheduleApprovalState(v?.approved)
     },
     queries(searchEmails) {
       let queries = {
