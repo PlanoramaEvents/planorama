@@ -70,7 +70,8 @@
             stacked
             v-model="session.environment"
             @change="saveSession()"
-          >
+            v-if="currentSettings && currentSettings.enums"
+          >          
             <b-form-radio v-for="env in currentSettings.enums.Session.environment" :value="env"  v-bind:key="env">{{SESSION_ENVIRONMENT[env]}}</b-form-radio>
           </b-form-radio-group>
         </b-form-group>
