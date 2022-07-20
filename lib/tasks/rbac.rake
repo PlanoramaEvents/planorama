@@ -265,8 +265,8 @@ namespace :rbac do
       "schedule_workflow": {
           "create": false,
           "destroy": false,
-          "index": false,
-          "show": false,
+          "index": true,
+          "show": true,
           "update": false
       },
       "person_schedule_approval": {
