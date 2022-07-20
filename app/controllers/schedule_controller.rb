@@ -15,7 +15,7 @@ class ScheduleController < ApplicationController
   def participants
     participants = ReportsService.scheduled_people
 
-    render json: ActiveModel::Serializer::CollectionSerializer.new(
+    render plain: "var people = " + ActiveModel::Serializer::CollectionSerializer.new(
               participants,
               serializer: Conclar::ParticipantSerializer
             ).to_json
