@@ -38,16 +38,24 @@ xml.schedule {
         xml.format(session.format.name)
       }
       xml.description(session.description)
-      xml.participants {
-        session.participant_assignments.each do |assignment|
-          next if assignment.session_assignment_role_type.name == 'Invisible'
-
-          xml.person {
-            xml.name(assignment.person.published_name)
-            xml.role(assignment.session_assignment_role_type.name)
-          }
-        end
+      # If there are no visible participants, do not create an empty
+      # <participants> element, because InDesign would render that
+      # as an empty space.
+      non_invisible = session.participant_assignments.map {
+        |assignment| assignment.session_assignment_role_type.name != 'Invisible'
       }
+      if non_invisible.length > 0
+        xml.participants {
+          session.participant_assignments.each do |assignment|
+            xml.person {
+              xml.name(assignment.person.published_name)
+              if assignment.session_assignment_role_type.name == 'Moderator'
+                xml.role(assignment.session_assignment_role_type.name)
+              end
+            }
+          end
+        }
+      end
     }
   end
 }
