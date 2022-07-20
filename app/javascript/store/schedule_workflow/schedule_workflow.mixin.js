@@ -21,7 +21,7 @@ export const scheduleWorkflowMixin = {
         if (val) {
           this.setDraftSchedule();
         } else {
-          this.resetDraftSchedule();
+          // do nothing! reset handled elsewhere
         }
       }
     },
@@ -33,7 +33,7 @@ export const scheduleWorkflowMixin = {
         if (val) {
           this.setFirmSchedule();
         } else {
-          this.resetFirmSchedule();
+          // do nothing! reset handled elsewhere
         }
       }
     },
@@ -52,22 +52,14 @@ export const scheduleWorkflowMixin = {
     ...mapActions({
       setDraftScheduleAction: SET_DRAFT_SCHEDULE,
       setFirmScheduleAction: SET_FIRM_SCHEDULE,
-      resetDraftScheduleAction: RESET_DRAFT_SCHEDULE,
-      resetFirmScheduleAction: RESET_FIRM_SCHEDULE,
       fetchScheduleWorkflows: FETCH_WORKFLOWS
     }),
     setDraftSchedule() {
       this.toastPromise(this.setDraftScheduleAction(), SCHEDULE_DRAFT_SUCCESS_MESSAGE);
     },
-    resetDraftSchedule() {
-      this.toastPromise(this.resetDraftScheduleAction(), "Draft schedule status reset");
-    },
     setFirmSchedule() {
       this.toastPromise(this.setFirmScheduleAction(), SCHEDULE_FIRM_SUCCESS_MESSAGE);
     },
-    resetFirmSchedule() {
-      this.toastPromise(this.resetFirmScheduleAction(), "Firm schedule status reset");
-    }
   }
 }
 
