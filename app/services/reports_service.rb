@@ -1,27 +1,5 @@
 module ReportsService
 
-  def self.all_sessions
-    sessions_table = Session.arel_table
-    subquery = Session.area_list.as('areas_list')
-
-    joins = [
-      sessions_table.create_join(
-        subquery,
-        sessions_table.create_on(
-          subquery[:session_id].eq(sessions_table[:id])
-        ),
-        Arel::Nodes::OuterJoin
-      )
-    ]
-
-    Session.select(
-      ::Session.arel_table[Arel.star],
-      'areas_list.area_list'
-    )
-      .joins(joins)
-      .order('title')
-  end
-
   def self.all_conflicts(ignored: false)
     conflicts_table = ::Conflicts::SessionConflict.arel_table
     subquery = Session.area_list.as('areas_list')
@@ -93,6 +71,19 @@ module ReportsService
     #   .where("session_assignments.session_assignment_role_type_id not in (?)", active_roles.collect{|a| a.id})
     #   .where("start_time is not null and room_id is not null")
     #   .order(:start_time)
+  end
+
+  # Get all the schedule sessions  
+  def self.scheduled_sessions
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .includes(:format, :room, {participant_assignments: :person})
+      .joins(self.area_subquery)
+      .where("start_time is not null and room_id is not null")
+      .where("status != 'dropped' and status != 'draft'")
+      .order(:start_time)
   end
 
 
