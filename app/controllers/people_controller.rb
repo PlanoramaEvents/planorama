@@ -430,7 +430,12 @@ class PeopleController < ResourceController
         )
         .on(table[:schedule_workflow_id].eq(schedule_workflows[:id]))
         .where(
-          schedule_workflows[:state].eq(label).and(table[:approved].eq('yes')).or(table[:approved].eq('no'))
+          schedule_workflows[:state].eq(label)
+            .and(
+              table.grouping(
+                table[:approved].eq('yes')).or(table[:approved].eq('no')
+              )
+            )
         )
       )
     else
