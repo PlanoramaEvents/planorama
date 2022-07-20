@@ -109,7 +109,7 @@ class ReportsController < ApplicationController
       worksheet.append_row(
         [
           session.title,
-          session.format.name,
+          session.format&.name,
           session.area_list.sort.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),

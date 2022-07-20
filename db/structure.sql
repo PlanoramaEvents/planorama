@@ -158,6 +158,7 @@ CREATE TYPE public.person_status_enum AS ENUM (
     'not_set',
     'applied',
     'vetted',
+    'wait_list',
     'invite_pending',
     'invited',
     'probable',
@@ -201,6 +202,18 @@ CREATE TYPE public.session_status_enum AS ENUM (
     'reviewed',
     'revised',
     'dropped'
+);
+
+
+--
+-- Name: snapshot_status_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.snapshot_status_enum AS ENUM (
+    'not_set',
+    'in_progress',
+    'done',
+    'failed'
 );
 
 
@@ -1070,6 +1083,9 @@ CREATE VIEW public.person_schedules AS
     p.name,
     p.published_name,
     p.con_state,
+    p.can_share,
+    p.pronouns,
+    em.email,
     sa.id AS session_assignment_id,
     sart.id AS session_assignment_role_type_id,
     sart.name AS session_assignment_name,
@@ -1081,12 +1097,16 @@ CREATE VIEW public.person_schedules AS
     (sessions.start_time + ((sessions.duration || ' minute'::text))::interval) AS end_time,
     sessions.duration,
     sessions.room_id,
-    sessions.format_id
-   FROM (((public.session_assignments sa
+    sessions.format_id,
+    sessions.participant_notes,
+    sessions.description,
+    sessions.environment
+   FROM ((((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
      JOIN public.people p ON ((p.id = sa.person_id)))
+     JOIN public.email_addresses em ON (((em.person_id = p.id) AND em.isdefault)))
      LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
-  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL));
+  WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL) AND ((sa.state)::text <> 'rejected'::text));
 
 
 --
@@ -1258,6 +1278,21 @@ CREATE VIEW public.person_schedule_conflicts AS
     ps2.room_id AS conflict_room_id
    FROM (public.person_schedules ps1
      JOIN public.person_schedules ps2 ON (((ps2.person_id = ps1.person_id) AND (ps2.session_id <> ps1.session_id) AND (ps2.start_time >= ps1.start_time) AND ((ps2.start_time < ps1.end_time) OR ((ps2.end_time > ps1.start_time) AND (ps2.end_time <= ps1.end_time))))));
+
+
+--
+-- Name: person_schedule_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_schedule_snapshots (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    schedule_snapshot_id uuid,
+    snapshot jsonb,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
 
 
 --
@@ -1433,6 +1468,23 @@ CREATE TABLE public.room_sets (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: schedule_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.schedule_snapshots (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    label character varying,
+    created_by character varying,
+    started_at timestamp without time zone,
+    completed_at timestamp without time zone,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    status public.snapshot_status_enum DEFAULT 'not_set'::public.snapshot_status_enum
 );
 
 
@@ -2184,6 +2236,14 @@ ALTER TABLE ONLY public.application_roles
 
 
 --
+-- Name: person_schedule_snapshots person_schedule_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_schedule_snapshots
+    ADD CONSTRAINT person_schedule_snapshots_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: session_assignment_role_type programme_assignment_role_type_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2261,6 +2321,14 @@ ALTER TABLE ONLY public.room_sets
 
 ALTER TABLE ONLY public.rooms
     ADD CONSTRAINT rooms_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedule_snapshots schedule_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedule_snapshots
+    ADD CONSTRAINT schedule_snapshots_pkey PRIMARY KEY (id);
 
 
 --
@@ -2729,6 +2797,13 @@ CREATE INDEX index_rooms_on_room_set_id ON public.rooms USING btree (room_set_id
 
 
 --
+-- Name: index_schedule_snapshots_on_label; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_schedule_snapshots_on_label ON public.schedule_snapshots USING btree (label);
+
+
+--
 -- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3170,6 +3245,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220629132145'),
 ('20220630032544'),
 ('20220704121816'),
-('20220707124302');
+('20220707124302'),
+('20220712153111'),
+('20220712153128'),
+('20220713185329');
 
 

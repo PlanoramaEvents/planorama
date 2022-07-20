@@ -21,10 +21,16 @@ class PersonPolicy < PlannerPolicy
     allowed?(action: :import)
   end
 
-  def draft_sessions?
+  def live_sessions?
     return true if @record.class != Symbol && @record.id == @person.id
 
-    allowed?(action: :draft_sessions)
+    allowed?(action: :live_sessions)
+  end
+
+  def snapshot_schedule?
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    allowed?(action: :snapshot_schedule)
   end
 
   def assigned_surveys?

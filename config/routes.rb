@@ -20,6 +20,9 @@ Rails.application.routes.draw do
 
   get '/settings', to: 'settings#index'
 
+  get '/conclar/schedule', to: 'schedule#index'
+  get '/conclar/participants', to: 'schedule#participants'
+
   # REST based resources
   get 'person/session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
@@ -31,7 +34,8 @@ Rails.application.routes.draw do
     get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
     get 'sessions', to: 'sessions#index'
-    get 'draft_sessions', to: 'people#draft_sessions'
+    get 'live_sessions', to: 'people#live_sessions'
+    get 'snapshot_schedule(/:label)', to: 'people#snapshot_schedule'
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
@@ -63,6 +67,7 @@ Rails.application.routes.draw do
   get 'report/session_reports/invited_accepted_not_scheduled', to: 'reports/session_reports#invited_accepted_not_scheduled'
   get 'report/session_reports/session_with_no_moderator', to: 'reports/session_reports#session_with_no_moderator'
   get 'report/session_reports/assigned_sessions_not_scheduled', to: 'reports/session_reports#assigned_sessions_not_scheduled'
+  get 'report/session_reports/session_copy_edit_status', to: 'reports/session_reports#session_copy_edit_status'
   get 'report/session_reports/scheduled_session_no_people', to: 'reports/session_reports#scheduled_session_no_people'
   get 'report/session_reports/non_accepted_on_schedule', to: 'reports/session_reports#non_accepted_on_schedule'
   get 'report/session_reports/participants_over_session_limits', to: 'reports/session_reports#participants_over_session_limits'
@@ -129,6 +134,9 @@ Rails.application.routes.draw do
   resources :formats, path: 'format'
   resources :areas, path: 'area'
   resources :tags, path: 'tag'
+
+  get 'session/take_snapshot/:label', to: 'sessions#take_snapshot'
+  delete 'session/delete_snapshot/:label', to: 'sessions#delete_snapshot' # for testing purposes
   get 'session/tags', to: 'sessions#tags'
   post 'session/import', to: 'sessions#import'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id

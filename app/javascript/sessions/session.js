@@ -27,7 +27,7 @@ export const session_columns = [
     label: 'Area',
     component: AreaSelectForSearch,
     type: 'custom-component',
-    operators: ['is','is not','is empty','is not empty'], // 'is only', 'is not only' (same as is)
+    operators: ['is','is not', 'is only', 'is not only', 'is empty','is not empty'],
     sortable: true,
     formatter: (value) => value && value.length ? value.join(", ") : value
   },
