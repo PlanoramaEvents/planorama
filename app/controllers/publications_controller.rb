@@ -5,7 +5,7 @@ class PublicationsController < ApplicationController
     sessions = ReportsService.scheduled_sessions
 
     send_data XmlFormatter.new(sessions).render('schedule', sessions)
-    .gsub(/\<?xml version="1.0"?\>\n/, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>')
+    .gsub(/\<\?xml version="1\.0"\?\>\n/, '<?xml version="2.0" encoding="UTF-8" standalone="yes"?><!-- Formatted for the special requirements of importing to Adobe InDesign. -->')
     .gsub(/\<schedule\>\n  /, '<schedule>')
     .gsub(/\<session\>\n    /, '<session>')
     .gsub(/      \</, '<')
@@ -26,7 +26,7 @@ class PublicationsController < ApplicationController
     .gsub(/\<role\>Participant\<\/role>/, '')
     .gsub(/\<\/person\>\<role\>/, '</person> <role>')
     .gsub(/\<\/person\>\<person\>/, '</person>, <person>')
-    .gsub(/\<participants\>\n/, '</participants>')
+    .gsub(/\<\/participants\>\n/, '</participants>')
     .gsub(/\<\/name\>\n/, '</name>')
     .gsub(/\n\<\/person\>/, '</person>')
     .gsub(/\n\<\/participants\>/, '</participants>')
