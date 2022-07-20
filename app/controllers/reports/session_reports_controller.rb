@@ -28,7 +28,7 @@ class Reports::SessionReportsController < ApplicationController
           session.status,
           session.proofed ? 'Y' : 'N',
           session.start_time && session.room_id ? 'Y' : 'N',
-          session.visibility
+          session.is_public? ? 'Visible' : 'Not Visible'
         ]
       )
     end
