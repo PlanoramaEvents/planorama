@@ -375,8 +375,8 @@ class PeopleController < ResourceController
   def references
     [
       :email_addresses,
-      :convention_roles,
-      {person_schedule_approvals: {schedule_workflow: :schedule_snapshot}}
+      :convention_roles
+      # {person_schedule_approvals: {schedule_workflow: :schedule_snapshot}}
     ]
   end
 
@@ -397,10 +397,10 @@ class PeopleController < ResourceController
 
   def get_table(column:)
     if column.include?('draft_person_schedule_approvals')
-      return PersonScheduleApproval.arel_table
+      return PersonScheduleApproval.arel_table #.alias('draft_approvals')
     end
     if column.include?('firm_person_schedule_approvals')
-      return PersonScheduleApproval.arel_table
+      return PersonScheduleApproval.arel_table #.alias('firm_approvals')
     end
 
     return super(column: column)
@@ -418,14 +418,34 @@ class PeopleController < ResourceController
   end
 
   def approval_query(table:, column:, operation:, value:, label:)
-    op = translate_operator(operation: operation)
+    people = Person.arel_table
     schedule_snapshots = ScheduleSnapshot.arel_table
-    part = table[column.to_sym].send(op, value).and(schedule_snapshots[:label].eq(label))
+    schedule_workflows = ScheduleWorkflow.arel_table
     if value == 'not_set'
-      part = part.or(table[column.to_sym].eq(nil))
+      people[:id].not_in(
+        table.project(:person_id)
+        .join(
+          schedule_workflows,
+          Arel::Nodes::OuterJoin
+        )
+        .on(table[:schedule_workflow_id].eq(schedule_workflows[:id]))
+        .where(
+          schedule_workflows[:state].eq(label).and(table[:approved].eq('yes')).or(table[:approved].eq('no'))
+        )
+      )
+    else
+      people[:id].in(
+        table.project(:person_id)
+        .join(
+          schedule_workflows,
+          Arel::Nodes::OuterJoin
+        )
+        .on(table[:schedule_workflow_id].eq(schedule_workflows[:id]))
+        .where(
+          schedule_workflows[:state].eq(label).and(table[:approved].eq(value))
+        )
+      )
     end
-
-    return part
   end
 
 
