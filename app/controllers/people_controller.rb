@@ -375,7 +375,8 @@ class PeopleController < ResourceController
   def references
     [
       :email_addresses,
-      :convention_roles
+      :convention_roles,
+      {person_schedule_approvals: {schedule_workflow: :schedule_snapshot}}
     ]
   end
 
@@ -403,6 +404,28 @@ class PeopleController < ResourceController
     end
 
     return super(column: column)
+  end
+
+  def get_query_part(table:, column:, operation:, value:, top: false, key: nil)
+    if key.include?('draft_person_schedule_approvals')
+      return approval_query(table: table, column: column, operation: operation, value: value, label: 'draft')
+    end
+    if key.include?('firm_person_schedule_approvals')
+      return approval_query(table: table, column: column, operation: operation, value: value, label: 'firm')
+    end
+
+    return super(table: table, column: column, operation: operation, value: value, top: top, key: key)
+  end
+
+  def approval_query(table:, column:, operation:, value:, label:)
+    op = translate_operator(operation: operation)
+    schedule_snapshots = ScheduleSnapshot.arel_table
+    part = table[column.to_sym].send(op, value).and(schedule_snapshots[:label].eq(label))
+    if value == 'not_set'
+      part = part.or(table[column.to_sym].eq(nil))
+    end
+
+    return part
   end
 
 
