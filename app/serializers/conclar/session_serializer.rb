@@ -1,8 +1,12 @@
 class Conclar::SessionSerializer < ActiveModel::Serializer
-  attributes :id, :title, :start_time
+  attributes :id, :title
 
   attribute :desc do
     object.description
+  end
+
+  attribute :datetime do
+    object.start_time
   end
 
   # TODO: change for when we do have tags
