@@ -27,9 +27,11 @@
       <li>
         <a href="/report/session_reports/non_accepted_on_schedule" target="_blank">Non-Accepted Participants on Scheduled Sessions</a>
       </li>
-
       <li>
         <a href="/report/session_reports/invited_accepted_not_scheduled" target="_blank">Invited and Accepted not on Schedule</a>
+      </li>
+      <li>
+        <a href="/report/schedule_accpetance" target="_blank">Draft and Firm Schedule Acceptance</a>
       </li>
     </ul>
 
@@ -58,7 +60,7 @@
       </li>
       <li>
         <a href="/report/session_reports/session_copy_edit_status" target="_blank">Session Copy-Edit Status</a>
-      </li>      
+      </li>
     </ul>
 
     <p><b>Conflicts</b></p>
