@@ -2,23 +2,38 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet"
-          href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-          crossorigin="anonymous"
-    >
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
-
-    <script src="//cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
-
     <title>Planorama Maintenance</title>
+    <style type="text/css">
+      body {
+        background-color: white;
+        color: #2c37a1;
+        width: 100%;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+      }
+
+      .container {
+        margin: 0 auto;
+        max-width: 600px;
+      }
+
+      .logo {
+        margin-bottom: 2.5rem;
+      }
+
+      .warning-icon {
+        float: left;
+        margin-right: 1rem;
+      }
+    </style>
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row">
-        TODO: we some text in here for maintance and the page need some work UI wise.
-      </div>
+    <div class="container">
+      <img src="./planorama_logo_transparent.png" alt="A green and purple circus tent with the words Planorama: Convention Planning"  width="600px" class="logo" />
+      <h1 class="header">Down for Maintenance</h1>
+      <img src="./warning_triangle.png" height="34" alt="triangle with exclamation point inside" class="warning-icon"/>
+      <p class="text">We apologize for any inconvenience. Rest assured, your data is all safe. We'll be done soon; please check back in a few minutes.</p>
+      <p>To return to the site, click <a href="/">here</a>. Reloading the page won't tell you if the site is back up yet.</p>
     </div>
   </body>
 </html>

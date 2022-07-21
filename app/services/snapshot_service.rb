@@ -1,13 +1,8 @@
 module SnapshotService
   # Start
-  def self.startSnapshot(label:, author:)
-    # Create schedule SnapShot
-    snapshot = ScheduleSnapshot.create!(
-      label: label,
-      status: 'in_progress',
-      created_by: author,
-      started_at: Time.now
-    )
+  def self.startSnapshot(id:)
+    snapshot = ScheduleSnapshot.find id
+    snapshot.update(status: 'in_progress')
 
     self.takeSnapshots(schedule_snapshot: snapshot)
 

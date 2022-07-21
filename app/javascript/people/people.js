@@ -1,4 +1,5 @@
 import {PERSON_CON_STATE, SESSION_STATUS} from "@/constants/strings";
+import { personScheduleApprovalStateOptionsForSearch } from "@/store/person_schedule_approval";
 
 export const people_columns = [
   {
@@ -35,30 +36,56 @@ export const people_columns = [
     label: 'Status',
     type: "select",
     formatter: (value) => PERSON_CON_STATE[value] || value,
-    // TODO: needs to be driven by settings enums
     choices: [
       "not_set", "applied", "vetted", "wait_list", "invite_pending",
       "invited", "probable", "accepted", "declined", "rejected"
     ].map(value => ({label: PERSON_CON_STATE[value], value})),
-    operators: ["=", "!="],
+    operators: ["equal", "does not equal"],
     sortable: false
   },
   {
     key: 'attendance_type',
     label: 'Attendance Type'
   },
+  // TODO: derived cols
   {
-    key: 'organization',
-    label: 'Organization',
-    type: "text",
-    sortable: true
-  },
-  {
-    key: 'job_title',
-    label: 'Job Title',
-    type: "text",
+    key: 'draft_approval',
+    label: 'Draft Approved',
+    search_key: 'draft_person_schedule_approvals.approved',
+    type: "select",
+    choices: personScheduleApprovalStateOptionsForSearch,
     sortable: false
   },
+  {
+    key: 'draft_comments',
+    label: 'Draft Comments',
+    sortable: false
+  },
+  {
+    key: 'firm_approval',
+    label: 'Firm Approved',
+    search_key: 'firm_person_schedule_approvals.approved',
+    type: "select",
+    choices: personScheduleApprovalStateOptionsForSearch,
+    sortable: false
+  },
+  {
+    key: 'firm_comments',
+    label: 'Firm Comments',
+    sortable: false
+  },
+  // {
+  //   key: 'organization',
+  //   label: 'Organization',
+  //   type: "text",
+  //   sortable: true
+  // },
+  // {
+  //   key: 'job_title',
+  //   label: 'Job Title',
+  //   type: "text",
+  //   sortable: false
+  // },
   // {
   //   key: 'registered',
   //   label: 'Registered',
@@ -86,21 +113,14 @@ export const people_columns = [
     sortable: false
   },
   {
-    key: 'opted_in',
-    label: 'Opted In',
-    type: "radio",
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
-  },
-  {
     key: 'comments',
-    label: 'Comments',
+    label: 'Notes',
     type: "text",
     sortable: false
   },
   {
     key: 'current_sign_in_at',
-    label: 'Signed In At',
+    label: 'Last Logged In',
     sortable: false
   }
 ];

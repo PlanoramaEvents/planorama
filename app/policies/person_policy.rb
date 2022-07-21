@@ -48,7 +48,7 @@ class PersonPolicy < PlannerPolicy
   def update?
     return true if @record.class != Symbol && @record.id == @person.id
 
-    allowed?(action: :submissions)
+    allowed?(action: :update)
   end
 
   def show?

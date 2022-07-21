@@ -30,7 +30,8 @@ import { required, email, numeric, digits, regex } from 'vee-validate/dist/rules
 
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
+import { FETCH_WORKFLOWS } from '@/store/schedule_workflow';
 
 extend('email', email);
 extend('numeric', numeric);
@@ -63,6 +64,9 @@ export default  {
     ...mapState(['magicalReload'])
   },
   methods: {
+    ...mapActions({
+      fetchScheduleWorkflows: FETCH_WORKFLOWS,
+    }),
     check_signatures() {
       // TODO: @RALPH - this passes along the check signatures to the agreement signer ...
       this.$refs['agreement-signer'].check_signatures()
@@ -77,6 +81,8 @@ export default  {
   mounted() {
     // fetch the current settings on mount !!!
     this.fetchSettings();
+    // fetch the schedule state too
+    this.fetchScheduleWorkflows();
   }
 }
 </script>
