@@ -11,11 +11,13 @@
           <b-form-checkbox id="firm-schedule-checkbox" switch v-model="localFirmSchedule" @change="openFirmConfirm" :disabled="!localDraftSchedule || localFirmSchedule" inline aria-describedby="firm-schedule-date"></b-form-checkbox>
           <span class="small text-muted" id="firm-schedule-date" v-if="localFirmSchedule">{{firmScheduledAtText}}</span>
         </b-form-group>
-        <h2>REMOVE ME BEFORE PRODUCTION</h2>
-        <b-button variant="primary" @click="reset()">Reset for Testing</b-button>
-        <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
-        <div class="mt-3">Note: this minecart isn't actually hooked up to any status yet. So while it does actually produce a snapshot, the toggle won't
-        reflect reality if you reload. There's some TODOs in here. If you try to snapshot and get an error, reset first.
+        <div v-if="NODE_ENV && NODE_ENV !== 'production'">
+          <h2>REMOVE ME BEFORE PRODUCTION</h2>
+          <b-button variant="primary" @click="reset()">Reset for Testing</b-button>
+          <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
+          <div class="mt-3">Note: this minecart isn't actually hooked up to any status yet. So while it does actually produce a snapshot, the toggle won't
+          reflect reality if you reload. There's some TODOs in here. If you try to snapshot and get an error, reset first.
+          </div>
         </div>
       </div>
     </div>
@@ -56,7 +58,8 @@ export default {
     localFirmSchedule: false,
     firmScheduleConfirmed: false,
     SCHEDULE_DRAFT_CONFIRM_MESSAGE,
-    SCHEDULE_FIRM_CONFIRM_MESSAGE
+    SCHEDULE_FIRM_CONFIRM_MESSAGE,
+    NODE_ENV
   }),
   computed: {
     draftScheduledAtText() {

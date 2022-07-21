@@ -41,11 +41,11 @@
             :person_id="person.id"
           ></session-ranker>
         </b-tab>
-        <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
-          <person-draft-schedule></person-draft-schedule>
-        </b-tab>
         <b-tab :title="liveScheduleTitle" lazy v-if="currentUserIsAdmin || currentUserIsStaff || firmSchedule" :active="tab === 'schedule'">
           <person-live-schedule></person-live-schedule>
+        </b-tab>
+        <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
+          <person-draft-schedule></person-draft-schedule>
         </b-tab>
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
           <people-admin-tab></people-admin-tab>
@@ -77,11 +77,12 @@ import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import personSessionMixin from '@/auth/person_session.mixin';
 import settingsMixin from "@/store/settings.mixin";
 import modelUtilsMixin from '@/store/model_utils.mixin';
-import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
+import { scheduleWorkflowMixin, FETCH_WORKFLOWS } from '@/store/schedule_workflow';
 
 const { DateTime } = require("luxon");
 
 import VueRouter from 'vue-router';
+import { mapActions } from 'vuex';
 const { isNavigationFailure, NavigationFailureType } = VueRouter;
 
 // This needs to be kept in sync with the tab order above
@@ -91,8 +92,8 @@ const tabsArray = [
   'availability',
   'session-selection',
   'session-ranking',
-  'draft-schedule',
   'schedule',
+  'draft-schedule',
   'admin'
 ]
 
@@ -151,6 +152,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      fetchScheduleWorkflows: FETCH_WORKFLOWS
+    }),
     back() {
       this.$router.push('/people')
     },
@@ -191,6 +195,7 @@ export default {
         }
       }
     )
+    this.fetchScheduleWorkflows();
   },
   beforeRouteLeave(to, from, next) {
     if (from.path.match(/.*profile.*/) && to.path === '/people') {

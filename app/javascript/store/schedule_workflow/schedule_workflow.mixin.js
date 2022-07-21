@@ -1,5 +1,5 @@
 import { mapGetters, mapActions } from 'vuex';
-import { FETCH_WORKFLOWS, RESET_DRAFT_SCHEDULE, RESET_FIRM_SCHEDULE, SET_DRAFT_SCHEDULE, SET_FIRM_SCHEDULE } from './schedule_workflow.actions';
+import { FETCH_WORKFLOWS, SET_DRAFT_SCHEDULE, SET_FIRM_SCHEDULE } from './schedule_workflow.actions';
 import { DateTime } from 'luxon';
 import { toastMixin } from '@/mixins';
 import { SCHEDULE_DRAFT_SUCCESS_MESSAGE, SCHEDULE_FIRM_SUCCESS_MESSAGE } from '@/constants/strings';
@@ -42,10 +42,10 @@ export const scheduleWorkflowMixin = {
       return this.draftSchedule && !this.firmSchedule;
     },
     draftScheduledAt() {
-      return DateTime.fromISO(this.draftScheduleWorkflow?.set_at).toLocaleString();
+      return DateTime.fromISO(this.draftScheduleWorkflow?.set_at).toFormat('D, t ZZZZ');
     },
     firmScheduledAt() {
-      return DateTime.fromISO(this.firmScheduleWorkflow?.set_at).toLocaleString();
+      return DateTime.fromISO(this.firmScheduleWorkflow?.set_at).toFormat('D, t ZZZZ');
     }
   },
   methods: {

@@ -9,13 +9,16 @@ export const PersonScheduleApprovalState = {
 }
 
 export const personScheduleApprovalStateOptions = [
-  {text: 'Not Set', value: PersonScheduleApprovalState.NOT_SET},
+  {text: 'Not Set', value: PersonScheduleApprovalState.NOT_SET, disabled: true},
   {text: 'Yes', value: PersonScheduleApprovalState.YES},
   {text: 'No', value: PersonScheduleApprovalState.NO},
 ];
 
-export const personScheduleApprovalStateOptionsForSearch = 
-  personScheduleApprovalStateOptions.map(i => ({...i, label: i.text}))
+export const personScheduleApprovalStateOptionsForSearch = [
+  {label: 'Not Set', value: PersonScheduleApprovalState.NOT_SET},
+  {label: 'Yes', value: PersonScheduleApprovalState.YES},
+  {label: 'No', value: PersonScheduleApprovalState.NO},
+];
 
 export const formatPersonScheduleApprovalState = (psa) => {
   if (!psa) {

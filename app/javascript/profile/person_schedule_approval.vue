@@ -1,14 +1,15 @@
 <template>
   <div v-if="approvalType">
-    <b-overlay :show="loading" v-if="!failedToLoad">
+    <model-loading-overlay :model="model" v-if="!failedToLoad">
       <b-form-group v-if="selected">
         <template #label>Do you approve this <strong>{{approvalType}}</strong> schedule?</template>
         <b-form-radio-group stacked :options="approvalOptions" v-model="selected.approved" @change="patchSingleField('approved')"></b-form-radio-group>
       </b-form-group>
       <b-form-group label="If no, what changes would you like to have?" v-if="selected">
-        <b-textarea v-model="selected.comments" :disabled="selected.approved !== 'no'" @blur="patchSingleField('comments')"></b-textarea>
+        <b-textarea v-model="comments" :disabled="selected.approved !== 'no'" @blur="patchSingleField('comments')"></b-textarea>
       </b-form-group>
-    </b-overlay>
+      <span class="small text-muted">Last edited: {{lastEdited}}</span>
+    </model-loading-overlay>
     <div v-if="failedToLoad">
       <span class="text-muted font-italic">{{SCHEDULE_APPROVAL_FAIL_TO_LOAD}}</span>
     </div>
@@ -23,6 +24,7 @@ import {
   SCHEDULE_APPROVAL_FAIL_TO_LOAD,
 } from '@/constants/strings'
 import ModelLoadingOverlay from '@/components/model_loading_overlay.vue';
+import { DateTime } from 'luxon';
 
 export default {
   name: 'PersonScheduleApproval',
@@ -42,8 +44,31 @@ export default {
     approvalOptions: personScheduleApprovalStateOptions,
     SCHEDULE_APPROVAL_FAIL_TO_LOAD,
     failedToLoad: false,
-    loading: true
+    model: personScheduleApprovalModel,
   }),
+  computed: {
+    lastEdited() {
+      if (this.selected && this.selected.updated_at !== this.selected.created_at) {
+        return DateTime.fromISO(this.selected.updated_at).toFormat('DDDD, t ZZZZ');
+      } else {
+        return 'never';
+      }
+
+    },
+    comments: {
+      get() {
+        if (this.selected.approved === 'no') {
+          return this.selected.comments;
+        }
+        return '';
+      },
+      set(val) {
+        if (this.selected.approved === 'no') {
+          this.selected.comments = val;
+        }
+      }
+    }
+  },
   methods: {
     patchSingleField(fieldName) {
       this.patchSelected(
@@ -59,8 +84,6 @@ export default {
       if (!psa) {
         // create a new one? or should this be henry?
         this.failedToLoad = true;
-      } else {
-        this.loading = false
       }
     }).catch((err) => {
       this.failedToLoad = true;
