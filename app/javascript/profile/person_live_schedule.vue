@@ -7,7 +7,7 @@ import { mapActions } from 'vuex';
 import PersonScheduleDisplay from './person_schedule_display.vue';
 import { personModel as model } from '@/store/person.store';
 import { modelMixinNoProp } from '@/mixins';
-import { scheduleStatusMixin } from '@/store/schedule_status.mixin';
+import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 
 export default {
   name: "PersonLiveSchedule",
@@ -16,7 +16,7 @@ export default {
   },
   mixins: [
     modelMixinNoProp,
-    scheduleStatusMixin,
+    scheduleWorkflowMixin,
   ],
   data: () => ({
     sessions: {},

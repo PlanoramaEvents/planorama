@@ -1,5 +1,38 @@
 module ReportsService
 
+  # Person published names, primary email, attendance type, participant status,
+  # draft approval (yes/no), draft comment IF no, draft last edited timestamp (like on profile tab),
+  # firm approval yes/no, firm comment IF no, firm last edited timestamp (like on profile tab)
+  def self.approvals
+    # People: all participants who are not rejected and not declined and not ‘not-set’ (the person status). 
+    # Any participants who have NO sessions SHOULD be in this report
+    Person
+      .includes(:primary_email, {person_schedule_approvals: :schedule_workflow})
+      .where('people.con_state not in (?)', ['not_set', 'declined', 'rejected'])
+  end
+
+  def self.all_sessions
+    sessions_table = Session.arel_table
+    subquery = Session.area_list.as('areas_list')
+
+    joins = [
+      sessions_table.create_join(
+        subquery,
+        sessions_table.create_on(
+          subquery[:session_id].eq(sessions_table[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .joins(joins)
+      .order('title')
+  end
+
   def self.all_conflicts(ignored: false)
     conflicts_table = ::Conflicts::SessionConflict.arel_table
     subquery = Session.area_list.as('areas_list')

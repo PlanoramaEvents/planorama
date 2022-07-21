@@ -1,7 +1,7 @@
 import { SELECTED, SELECT, UNSELECT, FETCH, FETCH_BY_ID, CLEAR, SEARCH, PATCH_FIELDS, SAVE, DELETE } from "./model.store";
 import { mapActions } from 'vuex';
 import { toastMixin } from "@/mixins";
-import { MODEL_SAVE_ERROR, MODEL_SAVE_SUCCESS, MODEL_DELETE_SUCCESS, MODEL_DELETE_ERROR } from "@/constants/strings";
+import { MODEL_SAVE_ERROR, MODEL_SAVE_SUCCESS, MODEL_DELETE_SUCCESS, MODEL_DELETE_ERROR, SPECIFIC_MODEL_SAVE_ERROR, SPECIFIC_MODEL_SAVE_SUCCESS } from "@/constants/strings";
 
 export const modelMixinNoProp = {
   mixins: [
@@ -44,8 +44,14 @@ export const modelMixinNoProp = {
     saveSelected() {
       return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, item: this.selected}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
     },
-    patchSelected(data, selected = false) {
-      return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model: this.model, item: {...this.selected, ...data}, fields: Object.keys(data), selected}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
+    patchSelected(data, selected = false, success_text = undefined, error_text = undefined) {
+      if (!success_text) {
+        success_text = MODEL_SAVE_SUCCESS(this.model)
+      }
+      if (!error_text) {
+        error_text = MODEL_SAVE_ERROR(this.model)
+      }
+      return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model: this.model, item: {...this.selected, ...data}, fields: Object.keys(data), selected}), success_text, error_text);
     },
     // need a save instance
     save(instance) {

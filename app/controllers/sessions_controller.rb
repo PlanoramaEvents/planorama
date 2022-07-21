@@ -4,41 +4,6 @@ class SessionsController < ResourceController
   POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
-  def take_snapshot
-    authorize current_person, policy_class: policy_class
-
-    label = params[:label]
-    label = 'draft' if label.blank?
-
-    if ScheduleSnapshot.find_by({label: label})
-      render status: :unprocessable_entity,
-             json: { errors: [{title: "Validation failed: you already have a snapshot called #{label}"}]}.to_json,
-             content_type: 'application/json'
-    else
-      SnapshotWorker.perform_async(label, current_person.name)
-
-      render status: :ok,
-            json: { message: 'snapshot scheduled' }.to_json,
-            content_type: 'application/json'
-    end
-  end
-
-  def delete_snapshot
-    authorize current_person, policy_class: policy_class
-
-    label = params[:label]
-    label = 'draft' if label.blank?
-
-    snapshot = ScheduleSnapshot.find_by({label: label})
-    if snapshot
-      snapshot.delete
-    end
-
-    render status: :ok,
-           json: { message: 'snapshot deleted' }.to_json,
-           content_type: 'application/json'
-  end
-
   def express_interest
     # create a session assignment if there is not already one
     model_class.transaction do
