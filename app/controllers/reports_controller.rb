@@ -46,10 +46,10 @@ class ReportsController < ApplicationController
           person.con_state,
           draft_approval ? draft_approval.approved : 'not_set',
           draft_approval && draft_approval.approved == 'no' ? draft_approval&.comments : '',
-          draft_approval&.updated_at,
+          draft_approval && draft_approval.approved != 'not_set' ? draft_approval&.updated_at : '',
           firm_approval ? firm_approval.approved : 'not_set',
           firm_approval && firm_approval.approved == 'no' ? firm_approval&.comments : '',
-          firm_approval&.updated_at
+          firm_approval && firm_approval.approved != 'not_set' ? firm_approval&.updated_at : ''
         ],
         styles
       )
