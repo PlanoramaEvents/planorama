@@ -1,3 +1,5 @@
+import { personScheduleApprovalStateOptionsForSearch } from "@/store/person_schedule_approval";
+
 export const people_columns = [
   {
     key: 'published_name',
@@ -37,6 +39,7 @@ export const people_columns = [
       {label: "not_set", value: "not_set"},
       {label: "applied", value: "applied"},
       {label: "vetted", value: "vetted"},
+      {label: "wait_list", value: "wait_list"},
       {label: "invite_pending", value: "invite_pending"},
       {label: "invited", value: "invited"},
       {label: "probable", value: "probable"},
@@ -44,24 +47,52 @@ export const people_columns = [
       {label: "declined", value: "declined"},
       {label: "rejected", value: "rejected"}
     ],
+    operators: ["equal", "does not equal"],
     sortable: false
   },
   {
     key: 'attendance_type',
     label: 'Attendance Type'
   },
+  // TODO: derived cols
   {
-    key: 'organization',
-    label: 'Organization',
-    type: "text",
-    sortable: true
-  },
-  {
-    key: 'job_title',
-    label: 'Job Ttile',
-    type: "text",
+    key: 'draft_approval',
+    label: 'Draft Approved',
+    search_key: 'draft_person_schedule_approvals.approved',
+    type: "select",
+    choices: personScheduleApprovalStateOptionsForSearch,
     sortable: false
   },
+  {
+    key: 'draft_comments',
+    label: 'Draft Comments',
+    sortable: false
+  },
+  {
+    key: 'firm_approval',
+    label: 'Firm Approved',
+    search_key: 'firm_person_schedule_approvals.approved',
+    type: "select",
+    choices: personScheduleApprovalStateOptionsForSearch,
+    sortable: false
+  },
+  {
+    key: 'firm_comments',
+    label: 'Firm Comments',
+    sortable: false
+  },
+  // {
+  //   key: 'organization',
+  //   label: 'Organization',
+  //   type: "text",
+  //   sortable: true
+  // },
+  // {
+  //   key: 'job_title',
+  //   label: 'Job Title',
+  //   type: "text",
+  //   sortable: false
+  // },
   // {
   //   key: 'registered',
   //   label: 'Registered',
@@ -89,21 +120,14 @@ export const people_columns = [
     sortable: false
   },
   {
-    key: 'opted_in',
-    label: 'Opted In',
-    type: "radio",
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
-  },
-  {
     key: 'comments',
-    label: 'Comments',
+    label: 'Notes',
     type: "text",
     sortable: false
   },
   {
     key: 'current_sign_in_at',
-    label: 'Signed In At',
+    label: 'Last Logged In',
     sortable: false
   }
 ];

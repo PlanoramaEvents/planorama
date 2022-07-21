@@ -1,6 +1,65 @@
 class ReportsController < ApplicationController
   around_action :set_timezone
 
+  def schedule_accpetance
+    authorize SessionAssignment, policy_class: ReportPolicy
+
+    people = ReportsService.approvals
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Approvals")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+              nil, nil, nil, nil, nil,
+              nil, nil, date_time_style,
+              nil, nil, date_time_style
+            ]
+
+    worksheet.append_row(
+      [
+        'Name',
+        'Published Name',
+        'Primary Email',
+        'Attendance Type',
+        'Participant Status',
+        "Draft Approval",
+        "Draft Comments",
+        "Draft Edited Time",
+        "Firm Approval",
+        "Firm Comments",
+        "Firm Edited Time"
+      ]
+    )
+
+    # has_many :submissions
+    people.each do |person|
+      # where workflow state = 'draft'
+      draft_approval = person.person_schedule_approvals.find{|a| a.schedule_workflow.state == 'draft'}
+      # where workflow state = 'firm'
+      firm_approval = person.person_schedule_approvals.find{|a| a.schedule_workflow.state == 'firm'}
+      worksheet.append_row(
+        [
+          person.name,
+          person.published_name,
+          person.primary_email&.email,
+          person.attendance_type,
+          person.con_state,
+          draft_approval ? draft_approval.approved : 'not_set',
+          draft_approval && draft_approval.approved == 'no' ? draft_approval&.comments : '',
+          draft_approval && draft_approval.approved != 'not_set' ? draft_approval&.updated_at : '',
+          firm_approval ? firm_approval.approved : 'not_set',
+          firm_approval && firm_approval.approved == 'no' ? firm_approval&.comments : '',
+          firm_approval && firm_approval.approved != 'not_set' ? firm_approval&.updated_at : ''
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "DraftAndScheduleAccpetance#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   #
   # Name
   # Published Name (i.e. Pseudonym)

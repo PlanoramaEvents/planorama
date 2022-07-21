@@ -119,11 +119,17 @@
 <script>
 import {http} from '@/http';
 import { personSessionMixin, toastMixin } from '@/mixins';
+import { mapActions } from 'vuex'; 
+import { FETCH_WORKFLOWS } from '@/store/schedule_workflow';
+
 
 export default {
   name: "Dashboard",
   mixins: [personSessionMixin, toastMixin],
   methods: {
+    ...mapActions({
+      fetchScheduleWorkflows: FETCH_WORKFLOWS
+    }),
     makeError(event) {
       throw new Error("look an error")
     },
@@ -136,6 +142,10 @@ export default {
     makeGenericError() {
       this.toastPromise(http.post("/does-not-exist"))
     }
+  },
+  mounted() {
+    // stopgap for not loading the session workflows earlier when logged in 
+    this.fetchScheduleWorkflows();
   }
 }
 </script>

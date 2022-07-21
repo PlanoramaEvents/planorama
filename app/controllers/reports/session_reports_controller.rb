@@ -1,6 +1,43 @@
 class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
+  def session_copy_edit_status
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    sessions = ReportsService.all_sessions
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Assigned Session not Sched")
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Areas',
+        'Status',
+        'Copy Edited',
+        'Scheduled',
+        'Visibility'
+      ]
+    )
+
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          session.status,
+          session.proofed ? 'Y' : 'N',
+          session.start_time && session.room_id ? 'Y' : 'N',
+          session.is_public? ? 'Visible' : 'Not Visible'
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "SessionCopyEditStatue#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def assigned_sessions_not_scheduled
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 

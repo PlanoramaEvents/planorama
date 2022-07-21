@@ -31,6 +31,7 @@
         </b-form-group>
         <b-form-group class="mx-3">
           <b-form-checkbox
+            id="session-open-for-interest"
             switch
             v-model="session.open_for_interest"
             @change="saveSession()"
@@ -54,6 +55,7 @@
         </small>
         <b-form-group class="mt-5">
           <b-form-checkbox
+            id="session-proofed"
             switch
             v-model="session.proofed"
             @change="saveSession()"
@@ -61,6 +63,7 @@
         </b-form-group>
         <b-form-group>
           <b-form-checkbox
+            id="session-scheduled"
             switch
             disabled
             :checked="scheduled"
@@ -69,6 +72,7 @@
         <b-form-group label="Public Schedule Visibility" class="mb-3">
           <span>Not Visible</span>
           <b-form-checkbox
+            id="session-public-schedule-visibility"
             switch
             v-model="visibility"
             @change="saveSession()"
@@ -76,11 +80,14 @@
           >Visible</b-form-checkbox>
         </b-form-group>
         <b-form-group label="Status" label-cols="auto">
-          <b-form-select v-model="session.status" @change="saveSession()">
-            <b-form-select-option value="draft">{{SESSION_STATUS.draft}}</b-form-select-option>
-            <b-form-select-option value="reviewed">{{SESSION_STATUS.reviewed}}</b-form-select-option>
-            <b-form-select-option value="revised">{{SESSION_STATUS.revised}}</b-form-select-option>
-            <b-form-select-option :title="scheduled ? SESSION_MUST_UNSCHEDULE : ''" value="dropped" :disabled="scheduled">{{SESSION_STATUS.dropped}}</b-form-select-option>
+          <b-form-select  id="session-status" v-model="session.status" @change="saveSession()">
+            <b-form-select-option
+                v-for="status in currentSettings.enums.Session.status"
+                :value="status"  v-bind:key="status"
+                :title="scheduled && status==='dropped' ? SESSION_MUST_UNSCHEDULE : ''"
+                :disabled="scheduled && status==='dropped'">
+              {{SESSION_STATUS[status]}}
+            </b-form-select-option>
           </b-form-select>
         </b-form-group>
       </div>
@@ -93,6 +100,7 @@ import { sessionModel } from '@/store/session.store'
 import modelUtilsMixin from '@/store/model_utils.mixin';
 import { scheduledMixin } from './session_fields.mixin';
 import { SESSION_STATUS, SESSION_MUST_UNSCHEDULE } from '@/constants/strings';
+import settingsMixin from "@/store/settings.mixin";
 
 import PlanoEditor from '../components/plano_editor';
 
@@ -103,7 +111,8 @@ export default {
   },
   mixins: [
     modelUtilsMixin,
-    scheduledMixin
+    scheduledMixin,
+    settingsMixin
   ],
   data: () => ({
     SESSION_STATUS,

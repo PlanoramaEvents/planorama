@@ -28,7 +28,8 @@ class Person < ApplicationRecord
 
   has_many  :session_limits
 
-  has_many  :person_schedules
+  has_many  :person_schedules, dependent: :destroy
+  has_many  :person_schedule_approvals, dependent: :destroy
 
   # We let the publish mechanism do the destroy so that the update service knows what is happening
   # has_many  :published_session_assignments
@@ -73,6 +74,7 @@ class Person < ApplicationRecord
     not_set: 'not_set',
     applied: 'applied',
     vetted: 'vetted',
+    wait_list: 'wait_list',
     invite_pending: 'invite_pending',
     invited: 'invited',
     probable: 'probable',

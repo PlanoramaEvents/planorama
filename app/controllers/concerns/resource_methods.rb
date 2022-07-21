@@ -296,14 +296,14 @@ module ResourceMethods
           # change to allowd limiting to named cols?, pass in list of cols to include based in what is displayed ...
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)
-            query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value)
+            query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value, key: key)
             part = part ? part.or(query_part) : query_part
           end
           # This for survey submissions ....
           if model_class == Survey::Submission
             Survey::Response.columns.each do |col|
               next unless [:text, :string].include?(col.type)
-              query_part = get_query_part(table: Arel::Table.new('survey_responses'), column: col.name, operation: 'like', value: value)
+              query_part = get_query_part(table: Arel::Table.new('survey_responses'), column: col.name, operation: 'like', value: value, key: key)
               part = part ? part.or(query_part) : query_part
             end
           end
@@ -320,7 +320,7 @@ module ResourceMethods
             if array_col?(col_name: col)
               col_table = array_table(col_name: col)
             end
-            part = get_query_part(table: col_table, column: col, operation: operation, value: value, top: true)
+            part = get_query_part(table: col_table, column: col, operation: operation, value: value, top: true, key: key)
 
             if (key.include?('responses.'))
               key.slice! "responses."
@@ -365,7 +365,7 @@ module ResourceMethods
     return col
   end
 
-  def get_query_part(table:, column:, operation:, value:, top: false)
+  def get_query_part(table:, column:, operation:, value:, top: false, key: nil)
     op = translate_operator(operation: operation)
 
     return nil if value.kind_of?(String) && value.blank?
@@ -380,6 +380,10 @@ module ResourceMethods
                       ::Arel.sql("(cardinality(#{table}.#{column}) = 0)")
                     when 'is not empty'
                       ::Arel.sql("(cardinality(#{table}.#{column}) > 0)")
+                    when 'is only'
+                      ::Arel.sql("('#{value}' = ALL(#{table}.#{column}) AND cardinality(#{table}.#{column}) != 0)")
+                    when 'is not only'
+                      ::Arel.sql("('#{value}' = ANY(#{table}.#{column}) AND cardinality(#{table}.#{column}) > 1)")
                     end
 
       # This is crappy, but I do not see a way round it. If the first query part is a array literal one

@@ -9,7 +9,6 @@ export const UNSELECT = 'UNSELECT';
 
 export const SELECTED = 'SELECTED';
 export const FETCH_SELECTED = 'FETCH SELECTED';
-export const FETCH_BY_RELATIONSHIPS = 'FETCH BY RELATIONSHIPS';
 export const FETCH_BY_ID = 'FETCH BY ID'
 export const FETCH = 'FETCH';
 export const NEW = 'NEW';
@@ -80,6 +79,10 @@ import { sessionAssignmentStore, sessionAssignmentEndpoints } from './session_as
 // global app things
 import { appStore } from './app.store';
 
+// schedule workflow
+import { scheduleWorkflowStore, scheduleWorkflowEndpoints } from './schedule_workflow/schedule_workflow.store';
+import { personScheduleApprovalStore, personScheduleApprovalEndpoints } from './person_schedule_approval/person_schedule_approval.store';
+
 import merge from 'lodash.merge'
 
 const endpoints = {
@@ -100,7 +103,9 @@ const endpoints = {
   ...sessionConflictEndpoints,
   ...formatEndpoints,
   // ...availabilityEndpoints,
-  // ...personExclusionEndpoints
+  // ...personExclusionEndpoints,
+  ...scheduleWorkflowEndpoints,
+  ...personScheduleApprovalEndpoints,
 }
 
 // NOTE: this is really the store
@@ -135,7 +140,8 @@ export const store = new Vuex.Store({
       ...parameterNameStore.selected,
       ...configurationStore.selected,
       ...sessionConflictStore.selected,
-      ...formatStore.selected
+      ...formatStore.selected,
+      ...personScheduleApprovalStore.selected,
     },
     ...personSessionStore.state,
     ...settingsStore.state,
@@ -146,6 +152,7 @@ export const store = new Vuex.Store({
     ...emailAddressStore.state,
     ...roomStore.state,
     ...appStore.state,
+    ...scheduleWorkflowStore.state,
     // ...mailingStore.state
   },
   getters: {
@@ -184,6 +191,7 @@ export const store = new Vuex.Store({
     ...emailAddressStore.getters,
     ...settingsStore.getters,
     ...formatStore.getters,
+    ...scheduleWorkflowStore.getters,
   },
   plugins: [
     ...surveyStore.plugins
@@ -319,12 +327,6 @@ export const store = new Vuex.Store({
     // [CLEAR] ({dispatch}, {model}) {
     //   this.commit('jv/clearRecords', { _jv: { type: model } })
     // },
-    [FETCH_BY_RELATIONSHIPS] ({dispatch}, {model, relationships, params}) {
-      return dispatch('jv/get', [{_jv: {
-        type: model,
-        relationships,
-      }}, params])
-    },
     [FETCH_SELECTED] ({state, dispatch}, {model}) {
       if (!state.selected[model]) {
         return Promise.reject(`No ${model} selected`)
@@ -376,6 +378,8 @@ export const store = new Vuex.Store({
     ...personExclusionStore.actions,
     ...sessionLimitStore.actions,
     ...emailAddressStore.actions,
-    ...sessionConflictStore.actions
+    ...sessionConflictStore.actions,
+    ...scheduleWorkflowStore.actions,
+    ...personScheduleApprovalStore.actions,
   }
 })
