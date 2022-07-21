@@ -20,6 +20,9 @@ Rails.application.routes.draw do
 
   get '/settings', to: 'settings#index'
 
+  get '/conclar/schedule', to: 'schedule#index'
+  get '/conclar/participants', to: 'schedule#participants'
+
   # REST based resources
   get 'person/session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
