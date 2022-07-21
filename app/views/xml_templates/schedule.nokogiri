@@ -23,7 +23,8 @@ xml.schedule {
       xml.timeslot(session.start_time.strftime("%-l:%M"))
     end
     xml.session {
-      xml.title(session.title)
+      session_id = session.pub_reference_number ? "#{xml.id(session.pub_reference_number)} | " : ""
+      xml.title("#{session_id}#{session.title}")
       # timeduration, roomareasformat, and participants will each be a 
       # block-level paragraph with span-level elements. The line 
       # breaks & spacing will be removed in publications_controller.rb. 
@@ -50,7 +51,7 @@ xml.schedule {
             xml.person {
               xml.name(assignment.person.published_name)
               if assignment.session_assignment_role_type.name == 'Moderator'
-                xml.role(assignment.session_assignment_role_type.name)
+                xml.role("(#{assignment.session_assignment_role_type.name})")
               end
             }
           end

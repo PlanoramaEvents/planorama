@@ -31,7 +31,6 @@ class PublicationsController < ApplicationController
     .gsub(/\n\<\/person\>/, '</person>')
     .gsub(/\n\<\/participants\>/, '</participants>')
     .gsub(/\<role\>Participant\<\/role>/, '')
-    .gsub(/\<role\>Moderator\<\/role>/, ' <role>(Moderator)</role>')
     .gsub(/\n\<\/session\>/, '</session>')
     .gsub(/\n\<\/schedule\>\n/, '</schedule>'),
               filename: "schedule.xml",
