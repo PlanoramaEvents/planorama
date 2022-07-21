@@ -64,11 +64,21 @@ export const people_columns = [
     sortable: false
   },
   {
+    key: 'draft_comments',
+    label: 'Draft Comments',
+    sortable: false
+  },
+  {
     key: 'firm_approval',
     label: 'Firm Approved',
     search_key: 'firm_person_schedule_approvals.approved',
     type: "select",
     choices: personScheduleApprovalStateOptionsForSearch,
+    sortable: false
+  },
+  {
+    key: 'firm_comments',
+    label: 'Firm Comments',
     sortable: false
   },
   // {
@@ -110,21 +120,14 @@ export const people_columns = [
     sortable: false
   },
   {
-    key: 'opted_in',
-    label: 'Opted In',
-    type: "radio",
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
-  },
-  {
     key: 'comments',
-    label: 'Comments',
+    label: 'Notes',
     type: "text",
     sortable: false
   },
   {
     key: 'current_sign_in_at',
-    label: 'Signed In At',
+    label: 'Last Logged In',
     sortable: false
   }
 ];
