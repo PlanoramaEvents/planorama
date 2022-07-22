@@ -11,6 +11,7 @@ class PublicationsController < ApplicationController
     .gsub(/      \</, '<')
     .gsub(/    \</, '<')
     .gsub(/  \</, '<')
+    .gsub(/\<id\>(\d+)\<\/id\>\n\<title>/, '<title><id>\1</id> | ')
     .gsub(/\n\<start_time\>/, '<start_time>')
     .gsub(/\n\<duration\>/, ' - <duration>')
     .gsub(/\<\/duration\>/, ' minutes</duration>')
