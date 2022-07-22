@@ -55,9 +55,21 @@
       </li>
       <li>
         <a href="/report/session_reports/participants_over_session_limits" target="_blank">Participants over Daily Limits</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People scheduled for more sessions than they specified in their daily and/or con limit, one line per person and daily/con limit exceeded<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, day (including individual days and &quot;All&quot; for con limit), session count (number of assigned sessions), person’s limit (as specified in &quot;Availabilities &amp; Interests&quot;)<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants exceeding specified daily or con limit
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/participants_over_con_session_limits" target="_blank">Participants over Con Limit</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People scheduled for more sessions than the con allows, with some session format exceptions, one line per person<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session count (number of assigned sessions), con limit (maximum number of sessions allowed by con of 6)<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions except those with format of autographing, meetings, readings, rehearsals, and table talks<br />
+          <strong><em>Person data included</em></strong>: moderators, participants exceeding con limit of 6 sessions, not including the format exceptions
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/non_accepted_on_schedule" target="_blank">Non-Accepted Participants on Scheduled Sessions</a>
