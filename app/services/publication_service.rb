@@ -1,11 +1,30 @@
 module PublicationService
+
+  def self.gen_pub_numbers
+    Session.Transaction do
+      # Get the session elligible for publication, not draft or dropped and must be public
+      sessions = Session
+                   .where("status != 'draft' and status != 'dropped' and visibility = 'public'")
+                   .where("room_id is not null and start_time is not null")
+
+      current_ref = 0
+      sessions.each do |session|
+        current_ref += 1
+        session.pub_reference_number = current_ref
+        session.save!
+      end
+    end
+  end
+
   # Publish the schedule
   # Copy Sessions, and Assignments to Published versions
   def self.publish
     # We only want the public participant roles
     Session.Transaction do
       # Get the session elligible for publication, not draft or dropped and must be public
-      sessions = Session.where("status != 'draft' and status != 'dropped' and visibility = 'public'")
+      sessions = Session
+                   .where("status != 'draft' and status != 'dropped' and visibility = 'public'")
+                   .where("room_id is not null and start_time is not null")
 
       # published_sessions
       sessions.each do |session|
