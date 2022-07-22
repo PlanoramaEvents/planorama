@@ -95,15 +95,38 @@
     <ul>
       <li>
         <a href="/report/session_selections" target="_blank">Session Selections</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Sessions and rankings selected by people, one line per session and person<br />
+          <strong><em>Fields</em></strong>: Session title, person name, person published name, participant status, ranking, ranking notes, area(s) of session<br />
+          <strong><em>Session data included</em></strong>: all sessions that at least one person selected<br />
+          <strong><em>Person data included</em></strong>: participant status of applied, probable, vetted, invite_pending, invited, accepted
+        </p>
       </li>
       <li>
         <a href="/report/sessions_with_participants" target="_blank">Sessions with Participants</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Sessions with people already assigned, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, session format, area(s) of session, moderators, participants, reserves, has session been scheduled (y/n)<br />
+          <strong><em>Session data included</em></strong>: all sessions with at least one person assigned<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, reserved
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/session_with_no_moderator" target="_blank">Sessions with no Moderator</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Scheduled sessions with no moderator assigned, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session format, people assigned (participants, invisible participants), reserved people<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: participants, invisible participants, reserved
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/scheduled_session_no_people" target="_blank">Scheduled Sessions with no Participants</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Scheduled sessions with no assigned moderators or participants, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, room<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions
+        </p>  
       </li>
       <li>
         <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>
