@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     get 'sessions', to: 'sessions#index'
     get 'live_sessions', to: 'people#live_sessions'
     get 'snapshot_schedule(/:label)', to: 'people#snapshot_schedule'
+    get 'person_schedule_approvals', to: 'person_schedule_approvals#index'
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
@@ -60,6 +61,7 @@ Rails.application.routes.draw do
   get 'report/schedule_by_person', to: 'reports#schedule_by_person'
   get 'report/schedule_by_room_then_time', to: 'reports#schedule_by_room_then_time'
   get 'report/people_and_submissions', to: 'reports#people_and_submissions'
+  get 'report/schedule_accpetance', to: 'reports#schedule_accpetance'
   get 'report/participant_do_not_assign_with', to: 'reports#participant_do_not_assign_with'
   get 'report/session_reports/panels_with_too_few_people', to: 'reports/session_reports#panels_with_too_few_people'
   get 'report/session_reports/panels_with_too_many_people', to: 'reports/session_reports#panels_with_too_many_people'
@@ -135,8 +137,6 @@ Rails.application.routes.draw do
   resources :areas, path: 'area'
   resources :tags, path: 'tag'
 
-  get 'session/take_snapshot/:label', to: 'sessions#take_snapshot'
-  delete 'session/delete_snapshot/:label', to: 'sessions#delete_snapshot' # for testing purposes
   get 'session/tags', to: 'sessions#tags'
   post 'session/import', to: 'sessions#import'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id
@@ -159,6 +159,13 @@ Rails.application.routes.draw do
   resources :configurations, path: 'configuration'
   resources :parameter_names, path: 'parameter_name'
 
+  get 'person_schedule_approval/fetch/:person_id/:workflow_id', to: 'person_schedule_approvals#fetch'
+  post 'person_schedule_approval/approve/:person_id/:workflow_id', to: 'person_schedule_approvals#approve'
+  resources :person_schedule_approvals, path: 'person_schedule_approval'
+
+  get 'schedule_workflow/reset', to: 'schedule_workflows#reset'
+  resources :schedule_workflows, path: 'schedule_workflow'
+  resources :schedule_snapshots, path: 'schedule_snapshot'
   resources :mailings, path: 'mailing'
 
   get 'mailing/preview/:id/:email', to: 'mailings#preview', constraints: { email: /[^\/]+/ }

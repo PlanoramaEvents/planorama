@@ -21,6 +21,26 @@
       "note": ""
     },
     {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "2fdbc83c6946288e3e691a4ead690583e2128e3fa12431539d5c2b33363dc068",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ScheduleWorkflow#find`",
+      "file": "app/controllers/person_schedule_approvals_controller.rb",
+      "line": 22,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ScheduleWorkflow.find(params[:workflow_id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "PersonScheduleApprovalsController",
+        "method": "fetch"
+      },
+      "user_input": "params[:workflow_id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 70,
       "fingerprint": "378bf7ce34e373a7114f1ceb3b6287e988ebadd3bcb934ac4a042f52fb90afd7",
@@ -67,7 +87,7 @@
       "check_name": "MassAssignment",
       "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
       "file": "app/controllers/concerns/resource_methods.rb",
-      "line": 733,
+      "line": 746,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.require(model).permit!",
       "render_path": null,
@@ -119,8 +139,28 @@
       "user_input": "params[:survey_id]",
       "confidence": "Weak",
       "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "f6bef175b5dfe9ffd5ae8aa3fcd8145be67a282e27b3fe9b4f0aa0bb461af8d2",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ScheduleWorkflow#find`",
+      "file": "app/controllers/person_schedule_approvals_controller.rb",
+      "line": 48,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ScheduleWorkflow.find(params[:workflow_id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "PersonScheduleApprovalsController",
+        "method": "approve"
+      },
+      "user_input": "params[:workflow_id]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2022-06-19 15:32:55 -0400",
+  "updated": "2022-07-21 20:13:36 -0400",
   "brakeman_version": "5.2.3"
 }

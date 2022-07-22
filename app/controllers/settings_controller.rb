@@ -26,7 +26,6 @@ class SettingsController < ApplicationController
       zones[zone.tzinfo.canonical_zone.name] = "(UTC#{zone.at(con_time).formatted_offset}) #{zone.name}"
     end
 
-
     settings = {
       # 1. model information
       enums: enums,

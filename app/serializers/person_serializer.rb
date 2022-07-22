@@ -161,6 +161,16 @@ class PersonSerializer #< ActiveModel::Serializer
   #              }
   #            }
 
+  has_many :person_schedule_approvals, lazy_load_data: true, serializer: PersonScheduleApprovalSerializer,
+            links: {
+             self: -> (object, params) {
+               "#{params[:domain]}/person/#{object.id}"
+             },
+             related: -> (object, params) {
+               "#{params[:domain]}/person/#{object.id}/person_schedule_approvals"
+             }
+           }
+
   has_many :mail_histories, lazy_load_data: true, serializer: MailHistorySerializer,
              links: {
               self: -> (object, params) {

@@ -11,20 +11,22 @@
           <b-form-checkbox id="firm-schedule-checkbox" switch v-model="localFirmSchedule" @change="openFirmConfirm" :disabled="!localDraftSchedule || localFirmSchedule" inline aria-describedby="firm-schedule-date"></b-form-checkbox>
           <span class="small text-muted" id="firm-schedule-date" v-if="localFirmSchedule">{{firmScheduledAtText}}</span>
         </b-form-group>
-        <h2>REMOVE ME BEFORE PRODUCTION</h2>
-        <b-button variant="primary" @click="reset()">Reset for Testing</b-button>
-        <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
-        <div class="mt-3">Note: this minecart isn't actually hooked up to any status yet. So while it does actually produce a snapshot, the toggle won't
-        reflect reality if you reload. There's some TODOs in here. If you try to snapshot and get an error, reset first.
+        <div v-if="NODE_ENV && NODE_ENV !== 'production'">
+          <h2>REMOVE ME BEFORE PRODUCTION</h2>
+          <b-button variant="primary" @click="reset()">Reset for Testing</b-button>
+          <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
+          <div class="mt-3">Note: this minecart isn't actually hooked up to any status yet. So while it does actually produce a snapshot, the toggle won't
+          reflect reality if you reload. There's some TODOs in here. If you try to snapshot and get an error, reset first.
+          </div>
         </div>
       </div>
     </div>
     <plano-modal id="confirm-draft-modal" @cancel="cancelDraft()" @close="cancelDraft()" no-close-on-backdrop @ok="confirmDraft()">
-      <template #modal-title>Confirm Draft Publish</template>
+      <template #modal-title>Publish Draft Schedule Confirmation</template>
       {{SCHEDULE_DRAFT_CONFIRM_MESSAGE}}
     </plano-modal>
     <plano-modal id="confirm-firm-modal" @cancel="cancelFirm()" @close="cancelFirm()" no-close-on-backdrop @ok="confirmFirm()">
-      <template #modal-title>Confirm Firm Publish</template>
+      <template #modal-title>Publish Firm Schedule Confirmation</template>
       {{SCHEDULE_FIRM_CONFIRM_MESSAGE}}
     </plano-modal>
   </div>
@@ -34,18 +36,18 @@
 import PlanoModal from '@/components/plano_modal.vue';
 import { toastMixin } from '@/mixins';
 import { http } from '@/http';
-import { 
-  SCHEDULE_DRAFT_CONFIRM_MESSAGE, 
+import {
+  SCHEDULE_DRAFT_CONFIRM_MESSAGE,
   SCHEDULE_FIRM_CONFIRM_MESSAGE,
 } from '@/constants/strings';
 
-import { scheduleStatusMixin } from '@/store/schedule_status.mixin'
+import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 
 export default {
   name: "ScheduleSettings",
   mixins: [
     toastMixin,
-    scheduleStatusMixin,
+    scheduleWorkflowMixin,
   ],
   components: {
     PlanoModal
@@ -56,7 +58,8 @@ export default {
     localFirmSchedule: false,
     firmScheduleConfirmed: false,
     SCHEDULE_DRAFT_CONFIRM_MESSAGE,
-    SCHEDULE_FIRM_CONFIRM_MESSAGE
+    SCHEDULE_FIRM_CONFIRM_MESSAGE,
+    NODE_ENV
   }),
   computed: {
     draftScheduledAtText() {
@@ -86,7 +89,6 @@ export default {
     confirmDraft() {
       this.draftScheduleConfirmed = true;
       this.draftSchedule = true;
-      this.toastPromise(http.get('/session/take_snapshot/draft'), "succesfully scheduled snapshot")
     },
     confirmFirm() {
       this.firmScheduleConfirmed = true;
@@ -97,7 +99,7 @@ export default {
       this.localFirmSchedule = false;
       this.draftSchedule = false;
       this.firmSchedule = false;
-      this.toastPromise(http.delete('/session/delete_snapshot/draft'), "Draft snapshot deleted")
+      this.toastPromise(http.get('/schedule_workflow/reset'), "succesfully reset workflows")
     }
   },
   watch: {
@@ -115,11 +117,13 @@ export default {
     }
   },
   mounted() {
-    this.localDraftSchedule = this.draftSchedule;
-    this.draftScheduleConfirmed = this.draftSchedule;
-    this.localFirmSchedule = this.firmSchedule;
-    this.firmScheduleConfirmed = this.firmSchedule;
-
+    this.fetchScheduleWorkflows().then(() => {
+      // TODO: this does not look right, what is done with the workflow return data?
+      this.localDraftSchedule = this.draftSchedule;
+      this.draftScheduleConfirmed = this.draftSchedule;
+      this.localFirmSchedule = this.firmSchedule;
+      this.firmScheduleConfirmed = this.firmSchedule;
+    })
   }
 }
 </script>
