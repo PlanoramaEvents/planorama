@@ -242,9 +242,20 @@
     <ul>
       <li>
         <a href="/report/schedule_by_room_then_time" target="_blank">Schedule by Room then Time</a>
+        <p class="ml-2">
+          <strong><em>Description: All scheduled sessions, one line per room and day/time<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, assigned participants, moderators<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants
+        </p>
       </li>
       <li>
         <a href="/report/schedule_by_person" target="_blank">Schedule by Participant</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Schedule for each participant, one line per person and session<br />
+          <strong><em>Fields</em></strong>: Person name, publishes name, participant status, session title, area(s) of session, session start time, room, moderator (y/n), invisible participant (y/n)<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
+        </p>
       </li>
       <!-- <li>
         <a href="/report/participants_with_approved_draft_schedule" target="_blank">Participants with approved draft schedule</a>
