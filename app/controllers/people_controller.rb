@@ -357,7 +357,8 @@ class PeopleController < ResourceController
     [
       :email_addresses,
       :convention_roles,
-      :session_limits
+      :session_limits,
+      :person_schedule_approvals
     ]
   end
 
@@ -366,7 +367,8 @@ class PeopleController < ResourceController
       :email_addresses,
       :convention_roles,
       :availabilities,
-      :session_limits
+      :session_limits,
+      {person_schedule_approvals: {schedule_workflow: :schedule_snapshot}}
     ]
   end
 
@@ -374,6 +376,7 @@ class PeopleController < ResourceController
     [
       :email_addresses,
       :convention_roles
+      # {person_schedule_approvals: {schedule_workflow: :schedule_snapshot}}
     ]
   end
 
@@ -382,18 +385,74 @@ class PeopleController < ResourceController
       people = Arel::Table.new(Person.table_name)
       assignments = Arel::Table.new(SessionAssignment.table_name)
 
-      # planner_reg_tickets = Arel::Table.new(::PlannerReg::Ticket.table_name)
-      # people.project(people[:id]).where(
-        people[:id].not_in(
-          assignments.project(assignments[:person_id]).where(
-            assignments[:session_id].eq(value)
-          )
+      people[:id].not_in(
+        assignments.project(assignments[:person_id]).where(
+          assignments[:session_id].eq(value)
         )
-      # ).distinct
+      )
     else
       nil
     end
   end
+
+  def get_table(column:)
+    if column.include?('draft_person_schedule_approvals')
+      return PersonScheduleApproval.arel_table #.alias('draft_approvals')
+    end
+    if column.include?('firm_person_schedule_approvals')
+      return PersonScheduleApproval.arel_table #.alias('firm_approvals')
+    end
+
+    return super(column: column)
+  end
+
+  def get_query_part(table:, column:, operation:, value:, top: false, key: nil)
+    if key.include?('draft_person_schedule_approvals')
+      return approval_query(table: table, column: column, operation: operation, value: value, label: 'draft')
+    end
+    if key.include?('firm_person_schedule_approvals')
+      return approval_query(table: table, column: column, operation: operation, value: value, label: 'firm')
+    end
+
+    return super(table: table, column: column, operation: operation, value: value, top: top, key: key)
+  end
+
+  def approval_query(table:, column:, operation:, value:, label:)
+    people = Person.arel_table
+    schedule_snapshots = ScheduleSnapshot.arel_table
+    schedule_workflows = ScheduleWorkflow.arel_table
+    if value == 'not_set'
+      people[:id].not_in(
+        table.project(:person_id)
+        .join(
+          schedule_workflows,
+          Arel::Nodes::OuterJoin
+        )
+        .on(table[:schedule_workflow_id].eq(schedule_workflows[:id]))
+        .where(
+          schedule_workflows[:state].eq(label)
+            .and(
+              table.grouping(
+                table[:approved].eq('yes')).or(table[:approved].eq('no')
+              )
+            )
+        )
+      )
+    else
+      people[:id].in(
+        table.project(:person_id)
+        .join(
+          schedule_workflows,
+          Arel::Nodes::OuterJoin
+        )
+        .on(table[:schedule_workflow_id].eq(schedule_workflows[:id]))
+        .where(
+          schedule_workflows[:state].eq(label).and(table[:approved].eq(value))
+        )
+      )
+    end
+  end
+
 
   # TODO: on create must have at least one email_addresses_attributes
   # def join_tables

@@ -254,6 +254,28 @@ namespace :rbac do
           "index": false,
           "show": false,
           "update": false
+      },
+      "schedule_snapshot": {
+          "create": false,
+          "destroy": false,
+          "index": false,
+          "show": false,
+          "update": false
+      },
+      "schedule_workflow": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false
+      },
+      "person_schedule_approval": {
+          "create": false,
+          "destroy": false,
+          "index": false,
+          "show": false,
+          "update": false,
+          "fetch": false
       }
     })
   end
@@ -493,6 +515,7 @@ namespace :rbac do
         "participant_do_not_assign_with": false,
         "participant_selections": true,
         "people_and_submissions": true,
+        "schedule_accpetance": true,
         "schedule_by_person": true,
         "schedule_by_room_then_time": true,
         "session_selections": true,
@@ -524,7 +547,29 @@ namespace :rbac do
         "conflicts_with": true,
         "conflicts_for": true,
         "ignore": true
-      }
+      },
+      "schedule_snapshot": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false
+      },
+      "schedule_workflow": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false
+      },
+      "person_schedule_approval": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": true,
+          "fetch": true
+      },
     })
   end
 
@@ -763,6 +808,7 @@ namespace :rbac do
         "participant_do_not_assign_with": true,
         "participant_selections": true,
         "people_and_submissions": true,
+        "schedule_accpetance": true,
         "schedule_by_person": true,
         "schedule_by_room_then_time": true,
         "session_selections": true,
@@ -794,7 +840,29 @@ namespace :rbac do
         "conflicts_with": true,
         "conflicts_for": true,
         "ignore": true
-      }
+      },
+      "schedule_snapshot": {
+          "create": true,
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true
+      },
+      "schedule_workflow": {
+          "create": true,
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true
+      },
+      "person_schedule_approval": {
+          "create": true,
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true,
+          "fetch": true
+      },
     })
   end
 end
