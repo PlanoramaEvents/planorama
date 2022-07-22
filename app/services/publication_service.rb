@@ -1,7 +1,7 @@
 module PublicationService
 
   def self.gen_pub_numbers
-    Session.Transaction do
+    Session.transaction do
       # Get the session elligible for publication, not draft or dropped and must be public
       sessions = Session
                    .where("status != 'draft' and status != 'dropped' and visibility = 'public'")
@@ -20,7 +20,7 @@ module PublicationService
   # Copy Sessions, and Assignments to Published versions
   def self.publish
     # We only want the public participant roles
-    Session.Transaction do
+    Session.transaction do
       # Get the session elligible for publication, not draft or dropped and must be public
       sessions = Session
                    .where("status != 'draft' and status != 'dropped' and visibility = 'public'")
