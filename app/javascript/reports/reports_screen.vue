@@ -169,15 +169,39 @@
     <ul>
       <li>
         <a href="/report/conflict_reports/people_outside_availability" target="_blank">People outside of Availability</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People scheduled on days/times that they did not mark as available, one line per person and session, except where conflict has been marked ignored<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session, session start time, session duration, participant availability (days/times)<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
+        </p>
       </li>
       <li>
         <a href="/report/conflict_reports/people_double_booked" target="_blank">People double booked</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People assigned to more than one scheduled session at the same time, one line per person and double booking occurrence, except where conflict has been marked ignored<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, time, session title, area(s) of session, room, conflict session title, conflict session area, conflict room<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
+        </p>
       </li>
       <li>
         <a href="/report/conflict_reports/person_exclusion_conflicts" target="_blank">Person scheduled against a conflict item</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People assigned to a session that occurs at the same time as a special event they want to attend, one line per conflict occurrence, except where conflict has been marked ignored<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session, session start time, session duration, conflict session (special event), conflict session (special event) start time<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
+        </p>
       </li>
       <li>
         <a href="/report/conflict_reports/back_to_back" target="_blank">Back to Back</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People assigned to two sessions in a row (where the second session begins less than 40 minutes after the first ends), one line per session pair, except where conflict has been marked ignored<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session 1 title, area(s) of session, session start time, session duration, room, session 2 title, area(s) of session, session start time, session duration, room<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
+        </p>
       </li>
       <li>
         <a href="/report/conflict_reports/back_to_back_to_back" target="_blank">Back to Back to Back</a>
