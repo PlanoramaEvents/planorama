@@ -157,6 +157,11 @@
       </li>
       <li>
         <a href="/report/session_reports/session_copy_edit_status" target="_blank">Session Copy-Edit Status</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: The copy-edited status of each session, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session status, has session been copy edited (y/n), has session been scheduled (y/n), visibility (visible, not visible)<br />
+          <strong><em>Session data included</em></strong>: all sessions
+        </p>
       </li>      
     </ul>
 
