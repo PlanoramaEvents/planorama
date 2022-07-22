@@ -73,10 +73,21 @@
       </li>
       <li>
         <a href="/report/session_reports/non_accepted_on_schedule" target="_blank">Non-Accepted Participants on Scheduled Sessions</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People with participant status other than &quot;accepted&quot; or &quot;not_set&quot; assigned to scheduled sessions, one line per person and session<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants with a participant status that is not &quot;accepted&quot; or &quot;not_set&quot;
+        </p>
       </li>
-
       <li>
         <a href="/report/session_reports/invited_accepted_not_scheduled" target="_blank">Invited and Accepted not on Schedule</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People with a participant status of accepted, invited, or invite_pending who are not assigned to any sessions, one line per person<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, attendance type (in-person, virtual, hybrid), person’s bio<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: people with a participant status of accepted, invited, or invite_pending who are assigned to no sessions, or who are assigned as invisible participants or reserved on one or more sessions
+        </p>  
       </li>
     </ul>
 
