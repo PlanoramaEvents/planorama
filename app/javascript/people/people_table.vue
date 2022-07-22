@@ -105,10 +105,32 @@
         </span>
       </template>
       <template #cell(draft_approval)="{ item }">
-        {{ approved(item.person_schedule_approvals, 'draft') }}
+        <div v-if="draftSchedule">
+          {{ approved(item.person_schedule_approvals, 'draft') }}
+        </div>
+        <div v-else class="text-muted text-center"> &mdash; </div>
+      </template>
+      <template #cell(draft_comments)="{ item }">
+        <div v-if="draftSchedule">
+          <tooltip-overflow :title="comments(item.person_schedule_approvals, 'draft')">
+            {{ comments(item.person_schedule_approvals, 'draft') }}
+          </tooltip-overflow>
+        </div>
+        <div v-else class="text-muted text-center"> &mdash; </div>
       </template>
       <template #cell(firm_approval)="{ item }">
-        {{ approved(item.person_schedule_approvals, 'firm') }}
+        <div v-if="firmSchedule">
+          {{ approved(item.person_schedule_approvals, 'firm') }}
+        </div>
+        <div v-else class="text-muted text-center">&mdash;</div>
+      </template>
+      <template #cell(firm_comments)="{ item }">
+        <div v-if="firmSchedule">
+          <tooltip-overflow :title="comments(item.person_schedule_approvals, 'firm')">
+            {{ comments(item.person_schedule_approvals, 'firm') }}
+          </tooltip-overflow>
+        </div>
+        <div v-else class="text-muted text-center"> &mdash; </div>
       </template>
     </table-vue>
   </div>
@@ -127,6 +149,8 @@ import PeopleSessionNames from './people_session_names';
 
 import searchStateMixin from '../store/search_state.mixin'
 import { formatPersonScheduleApprovalState } from '@/store/person_schedule_approval';
+import { FETCH_WORKFLOWS, scheduleWorkflowMixin } from '@/store/schedule_workflow';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'PeopleTable',
@@ -136,11 +160,12 @@ export default {
     ModalForm,
     PersonAdd,
     PersonConStateSelector,
-    PeopleSessionNames
+    PeopleSessionNames,
   },
   mixins: [
     modelUtilsMixin,
-    searchStateMixin
+    searchStateMixin,
+    scheduleWorkflowMixin,
   ],
   data: () => ({
     columns,
@@ -155,9 +180,16 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      fetchScheduleWorkflows: FETCH_WORKFLOWS,
+    }),
     approved(approvals, state) {
       let v = Object.values(approvals).find( o => o.workflow_state == state);
       return formatPersonScheduleApprovalState(v?.approved)
+    },
+    comments(approvals, state) {
+      let v = Object.values(approvals).find( o => o.workflow_state == state);
+      return v?.approved === 'no' ? v.comments : '';
     },
     queries(searchEmails) {
       let queries = {
@@ -227,6 +259,7 @@ export default {
     })
 
     this.$refs['people-table'].fetchPaged()
+    this.fetchScheduleWorkflows();
   }
 }
 </script>

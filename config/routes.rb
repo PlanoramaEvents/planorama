@@ -20,6 +20,9 @@ Rails.application.routes.draw do
 
   get '/settings', to: 'settings#index'
 
+  get '/conclar/schedule', to: 'schedule#index'
+  get '/conclar/participants', to: 'schedule#participants'
+
   # REST based resources
   get 'person/session/me', to: 'people#me'
   get 'person/me', to: 'people#me'
@@ -56,6 +59,7 @@ Rails.application.routes.draw do
   get 'report/schedule_by_person', to: 'reports#schedule_by_person'
   get 'report/schedule_by_room_then_time', to: 'reports#schedule_by_room_then_time'
   get 'report/people_and_submissions', to: 'reports#people_and_submissions'
+  get 'report/schedule_accpetance', to: 'reports#schedule_accpetance'
   get 'report/participant_do_not_assign_with', to: 'reports#participant_do_not_assign_with'
   get 'report/session_reports/panels_with_too_few_people', to: 'reports/session_reports#panels_with_too_few_people'
   get 'report/session_reports/panels_with_too_many_people', to: 'reports/session_reports#panels_with_too_many_people'
@@ -160,7 +164,7 @@ Rails.application.routes.draw do
   get 'schedule_workflow/reset', to: 'schedule_workflows#reset'
   resources :schedule_workflows, path: 'schedule_workflow'
   resources :schedule_snapshots, path: 'schedule_snapshot'
-  resources :mailings, path: 'mailing'  
+  resources :mailings, path: 'mailing'
 
   get 'mailing/preview/:id/:email', to: 'mailings#preview', constraints: { email: /[^\/]+/ }
   get 'mailing/schedule/:id(/:email)(/:test)', to: 'mailings#schedule', constraints: { email: /[^\/]+/ }
