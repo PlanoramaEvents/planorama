@@ -205,15 +205,36 @@
       </li>
       <li>
         <a href="/report/conflict_reports/back_to_back_to_back" target="_blank">Back to Back to Back</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People assigned to three sessions in a row (where one session begins less than 40 minutes after the previous one), one line per set of 3 sessions<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session 1 title, area(s) of session, session start time, session duration, room, session 2 title, area(s) of session, session start time, session duration, room, session 3 title, area(s) of session, session start time, session duration, room<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
+        </p>
       </li>
       <li>
         <a href="report/conflict_reports/multiple_sessions_in_room" target="_blank">Multiple Sessions in a Room</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Two or more sessions scheduled for the same room at the same day/time, one line per occurrence, except where conflict has been marked ignored<br />
+          <strong><em>Fields</em></strong>: Room, session title, conflict session title, start time<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions
+        </p>
       </li>
       <li>
         <a href="/report/conflict_reports/all_ignored_conflicts" target="_blank">Ignored Person Conflicts</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Ignored conflicts in these categories: people outside of availability, people double booked, person scheduled against a conflict item, back to back), one line per ignored conflict<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, person name, conflict type<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions
+        </p>
       </li>
       <li>
         <a href="/report/conflict_reports/all_conflicts" target="_blank">All Conflicts</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: All conflicts in these categories: people outside of availability, people double booked, person scheduled against a conflict item, back to back), one line per conflict<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, person name, conflict type<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions
+        </p>
       </li>
     </ul>
 
