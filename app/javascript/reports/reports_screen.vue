@@ -130,12 +130,30 @@
       </li>
       <li>
         <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Sessions that are not scheduled but have assigned people, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, moderators, participants, invisible participants<br />
+          <strong><em>Session data included</em></strong>: all unscheduled sessions with at least one person assigned as moderator, participant, and/or invisible participant<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/panels_with_too_few_people" target="_blank">Panels with too few Participants</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Scheduled sessions (panel format only) with 3 or fewer assigned people (moderators, participants), one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, participant count, participant count lower bound (3), assigned participants, moderators<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Scheduled sessions (panel format only) with 6 or more assigned people (moderators, participants), one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, participant count, participant count upper bound (6), assigned participants, moderators<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/session_copy_edit_status" target="_blank">Session Copy-Edit Status</a>
