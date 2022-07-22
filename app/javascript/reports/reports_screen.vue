@@ -28,12 +28,29 @@
       </li>
       <li>
         <a href="/report/assigned_sessions_by_participant" target="_blank">Assigned Sessions by Participant</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People assigned to sessions, one line per person and session<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, person’s role in the session, has session been scheduled (y/n)<br />
+          <strong><em>Session data included</em></strong>: any session with at least one person assigned as moderator, participant, invisible participant, or reserved<br />
+          <strong><em>Person data included</em></strong>: session role of moderator, participant, invisible participant, or reserved
+        </p>
       </li>
       <li>
         <a href="/report/people_and_submissions" target="_blank">People and Survey Submissions</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: List of surveys taken, including day/time submitted, one line per person<br />
+          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type, participant status, surveys taken<br />
+          <strong><em>Person data included</em></strong>: participant status of applied, probable, vetted, invite_pending, invited, accepted
+        </p>      
       </li>
       <li>
         <a href="/report/participant_do_not_assign_with" target="_blank" v-if="currentUserIsAdmin">Participants and Do Not Assign With</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People who should not be assigned to the same session, one line per person and session; available only to users with permission to view sensitive data<br />
+          <strong><em>Fields</em></strong>: Person name, published name, session title, area(s) of session, names of other people assigned to the session, names of people not to assign to the same session<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants who listed information about who not to assign with
+        </p>  
         <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
       </li>
       <li>
