@@ -1,4 +1,4 @@
-import { SESSION_STATUS } from '@/constants/strings';
+import { SESSION_STATUS, SESSION_ENVIRONMENT } from '@/constants/strings';
 import AreaSelectForSearch from './area_select_for_search'
 
 export const session_columns = [
@@ -63,6 +63,20 @@ export const session_columns = [
     sortKey: 'status',
     choices: ['draft', 'reviewed', 'revised', 'dropped'].map(value => ({label: SESSION_STATUS[value], value})),
     type: "select"
+  },
+  {
+    key: 'proofed',
+    label: 'Copy Edited/Proofed',
+    type: "select",
+    choices: [{label: "Yes", value: true}, {label: "No", value: false}],
+    formatter: (value) => value ? "Yes" : "No"
+  },
+  {
+    key: 'environment',
+    label: 'Environment',
+    type: "select",
+    choices: [{label: "unknown", value: "Unknown"}, {label: "In Person", value: "in_person"}, {label: "Hybrid", value: "hybrid"}, {label: "Virtual", value: "virtual"}],
+    formatter: (value) => SESSION_ENVIRONMENT[value] || value,
   },
   {
     key: 'open_for_interest',

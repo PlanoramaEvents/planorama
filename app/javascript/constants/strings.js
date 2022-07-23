@@ -269,6 +269,12 @@ module.exports = {
         revised: "Revised",
         dropped: "Dropped",
     },
+    SESSION_ENVIRONMENT: {
+      unknown: 'Unknown',
+      in_person: 'In Person',
+      hybrid: 'Hybrid',
+      virtual: 'Virtual'
+    },
     SESSION_MUST_UNSCHEDULE: "You must unschedule a session before dropping it",
     SESSION_MUST_UNDROP: "You must un-drop the session to be able to schedule it.",
     SESSION_MINORS_PARTICIPATION: {
@@ -281,7 +287,7 @@ module.exports = {
     SCHEDULE_DRAFT_CONFIRM_MESSAGE: "This will publish a Draft Schedule to all participants, who will see their own sessions.  This action is irreversible and will bring the server down for a short time. Please double check that you wish to perform this action.",
     SCHEDULE_FIRM_CONFIRM_MESSAGE: "This will publish a Firm Schedule to all participants, who will see their own sessions - live.  This action is irreversible. Please double check that you wish to perform this action.",
     SCHEDULE_DRAFT_SUCCESS_MESSAGE: "Draft schedule has been published successfully",
-    SCHEDULE_FIRM_SUCCESS_MESSAGE: "Firm schedule has been published successfully", 
+    SCHEDULE_FIRM_SUCCESS_MESSAGE: "Firm schedule has been published successfully",
     SCHEDULE_APPROVAL_FAIL_TO_LOAD: "Couldn't load the approval form. Try again soon.",
     // The below is intended to become a way to override defaults in the model mixin easily. Hasn't happened yet though.
     SPECIFIC_MODEL_SAVE_SUCCESS: {
