@@ -29,10 +29,10 @@ export default {
   }),
   computed: {
     day() {
-      return this.value ? DateTime.fromISO(this.value, {zone: 'utc'}).setZone(this.conventionTimezone).toFormat('D') : null;
+      return this.value ? DateTime.fromISO(this.value, {zone: 'utc'}).setZone(this.conventionTimezone).toFormat('D', {locale: "en-US"}) : null;
     },
     time() {
-      return this.value ? DateTime.fromISO(this.value, {zone: 'utc'}).setZone(this.conventionTimezone).toFormat('HH:mm:ss') : null;
+      return this.value ? DateTime.fromISO(this.value, {zone: 'utc'}).setZone(this.conventionTimezone).toFormat('HH:mm:ss', {locale: "en-US"}) : null;
     },
     conventionTimezone() {
       return this.currentSettings?.configs?.find(c => c.parameter === 'convention_timezone')?.parameter_value || 'UTC'
@@ -51,7 +51,7 @@ export default {
       for (let i = 0; i < numDays; i++) {
         daysArray.push(this.conventionStart.plus({days: i}))
       }
-      const ret =  daysArray.map(d => ({text: d.toFormat('DDDD'), value: d.toFormat('D')}))
+      const ret =  daysArray.map(d => ({text: d.toFormat('DDDD'), value: d.toFormat('D', {locale: "en-US" })}))
       console.log('options', ret)
       return [{text: "No day selected", value: null}, ...ret];
     }
@@ -60,14 +60,14 @@ export default {
     changeDay(newDay) {
       let retDate = this.value ? DateTime.fromISO(this.value, {zone: 'utc'}).setZone(this.conventionTimezone) : DateTime.fromObject({hour: 0, minute: 0}, {zone: this.conventionTimezone});
       if (newDay) {
-        let date = DateTime.fromFormat(newDay, 'D', {zone: this.conventionTimezone});
+        let date = DateTime.fromFormat(newDay, 'D', {locale: "en-US" }); //, {zone: this.conventionTimezone});
         retDate = retDate.set({
           year: date.year,
           month: date.month,
           day: date.day,
         })
         retDate = retDate.toUTC();
-        console.log('retDate', retDate);
+        console.log('***** retDate', retDate.toISO());
         this.$emit('input', retDate.toISO());
       }
     },
