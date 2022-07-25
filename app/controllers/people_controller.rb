@@ -453,28 +453,38 @@ class PeopleController < ResourceController
     end
   end
 
+  def derived_col?(col_name:)
+    return true if col_name == 'session_count'
+    false
+  end
 
-  # TODO: on create must have at least one email_addresses_attributes
-  # def join_tables
-  #   joins = nil
-  #
-  #   # TODO: check if the filter references to session_assignments.person_id
-  #   if @filters
-  #     people = Arel::Table.new(Person.table_name)
-  #     assignments = Arel::Table.new(SessionAssignment.table_name)
-  #     joins = [
-  #       people.create_join(
-  #         assignments,
-  #         people.create_on(
-  #           people[:id].eq(assignments[:person_id])
-  #         ),
-  #         Arel::Nodes::OuterJoin
-  #       )
-  #     ]
-  #   end
-  #
-  #   joins
-  # end
+  def derived_table(col_name:)
+    return Arel::Table.new('session_counts') if col_name == 'session_count'
+    false
+  end
+
+  def select_fields
+    Person.select(
+      ::Person.arel_table[Arel.star],
+      'session_counts.session_count'
+    )
+  end
+
+  def join_tables
+    people = Person.arel_table #Arel::Table.new(Session.table_name)
+
+    session_counts = Person.session_counts.as('session_counts')
+    joins = [
+      people.create_join(
+        session_counts,
+        people.create_on(
+          session_counts[:person_id].eq(people[:id])
+        )
+      )
+    ]
+
+    joins
+  end
 
   def allowed_params
     %i[
