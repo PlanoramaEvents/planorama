@@ -11,8 +11,7 @@
           <b-form-checkbox id="firm-schedule-checkbox" switch v-model="localFirmSchedule" @change="openFirmConfirm" :disabled="!localDraftSchedule || localFirmSchedule" inline aria-describedby="firm-schedule-date"></b-form-checkbox>
           <span class="small text-muted" id="firm-schedule-date" v-if="localFirmSchedule">{{firmScheduledAtText}}</span>
         </b-form-group>
-        <div v-if="NODE_ENV && NODE_ENV !== 'production'">
-          <h2>REMOVE ME BEFORE PRODUCTION</h2>
+        <div v-if="currentSettings.env !== 'production'">
           <b-button variant="primary" @click="reset()">Reset for Testing</b-button>
           <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
           <div class="mt-3">Note: this minecart isn't actually hooked up to any status yet. So while it does actually produce a snapshot, the toggle won't
@@ -42,12 +41,14 @@ import {
 } from '@/constants/strings';
 
 import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
+import settingsMixin from "@/store/settings.mixin";
 
 export default {
   name: "ScheduleSettings",
   mixins: [
     toastMixin,
     scheduleWorkflowMixin,
+    settingsMixin
   ],
   components: {
     PlanoModal

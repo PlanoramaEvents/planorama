@@ -27,6 +27,8 @@ class SettingsController < ApplicationController
     end
 
     settings = {
+      #
+      env: Rails.env,
       # 1. model information
       enums: enums,
       # 2. con wide role types for assignments
