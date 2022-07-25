@@ -4,10 +4,10 @@ class PublishedSessionAssignment < ApplicationRecord
   has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' }, ignore: [:updated_at, :created_at]
 
   include RankedModel
-  ranks :sort_order, with_same: [:session_id]
+  ranks :sort_order, with_same: [:published_session_id]
   belongs_to  :person
-  belongs_to  :published_session,
-              foreign_key: 'session_id'
+  belongs_to  :published_session
+              # foreign_key: 'session_id'
   belongs_to  :session_assignment
 
   has_one :session_assignment_role_type
