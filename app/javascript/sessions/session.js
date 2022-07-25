@@ -53,7 +53,11 @@ export const session_columns = [
     key: 'room.name',
     label: 'Room',
     sortKey: 'rooms.name',
-    sortable: true
+    sortable: true,
+    type: "text"
+    // TODO: how would we create a select drop down for room to be fetched from server????
+    // type: "select",
+    // choices: roomOptionsForSearch,
   },
   {
     key: 'status',
