@@ -108,15 +108,24 @@ module ReportsService
 
   # Get all the schedule sessions
   def self.scheduled_sessions
-    Session.select(
-      ::Session.arel_table[Arel.star],
+    PublishedSession.select(
+      ::PublishedSession.arel_table[Arel.star],
       'areas_list.area_list'
     )
       .includes(:format, :room, {participant_assignments: :person})
-      .joins(self.area_subquery)
-      .where("start_time is not null and room_id is not null")
-      .where("status != 'dropped' and status != 'draft'")
+      .joins(self.published_area_subquery)
       .order(:start_time)
+      # .where("start_time is not null and room_id is not null")
+      # .where("status != 'dropped' and status != 'draft'")
+    # Session.select(
+    #   ::Session.arel_table[Arel.star],
+    #   'areas_list.area_list'
+    # )
+    #   .includes(:format, :room, {participant_assignments: :person})
+    #   .joins(self.area_subquery)
+    #   .where("start_time is not null and room_id is not null")
+    #   .where("status != 'dropped' and status != 'draft'")
+    #   .order(:start_time)
   end
 
   def self.scheduled_people
@@ -326,6 +335,20 @@ module ReportsService
         areas_list,
         session_table.create_on(
           areas_list[:session_id].eq(session_table[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+  end
+
+  def self.published_area_subquery
+    session_table = PublishedSession.arel_table
+    areas_list = PublishedSession.area_list.as('areas_list')
+    [
+      session_table.create_join(
+        areas_list,
+        session_table.create_on(
+          areas_list[:session_id].eq(session_table[:session_id])
         ),
         Arel::Nodes::OuterJoin
       )

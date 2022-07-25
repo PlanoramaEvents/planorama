@@ -8,6 +8,7 @@ class PublishedSession < ApplicationRecord
 
   belongs_to :format
   belongs_to :session
+  belongs_to :room, required: false
 
   has_many :published_session_assignments, dependent: :destroy do
     # get the people with the given role
@@ -23,6 +24,15 @@ class PublishedSession < ApplicationRecord
     end
   end
   has_many :people, through: :published_session_assignments
+
+  has_many :participant_assignments,
+    -> {
+      joins("JOIN session_assignment_role_type as sart ON sart.id = published_session_assignments.session_assignment_role_type_id")
+      .where("published_session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
+      .order("sart.sort_order")
+    },
+    class_name: 'PublishedSessionAssignment'
+  has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
 
   enum visibility: {
     is_public: 'public',
@@ -46,5 +56,20 @@ class PublishedSession < ApplicationRecord
 
   def private?
     visibility == 'public'
+  end
+
+  def self.area_list
+    sessions = PublishedSession.arel_table
+    session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
+    areas = Arel::Table.new(Area.table_name)
+
+    sessions.project(sessions[:session_id].as('session_id'), area_aggregate_fn( areas[:name] ).as('area_list'))
+      .join(session_areas, Arel::Nodes::OuterJoin).on(sessions[:session_id].eq(session_areas[:session_id]))
+      .join(areas, Arel::Nodes::OuterJoin).on(session_areas[:area_id].eq(areas[:id]))
+      .group('published_sessions.session_id')
+  end
+
+  def self.area_aggregate_fn(col)
+    Arel::Nodes::NamedFunction.new('array_remove',[Arel::Nodes::NamedFunction.new('array_agg',[col]), Arel::Nodes::SqlLiteral.new("NULL")])
   end
 end
