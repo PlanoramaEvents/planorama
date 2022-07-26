@@ -1,5 +1,6 @@
 import { SESSION_STATUS, SESSION_ENVIRONMENT } from '@/constants/strings';
 import AreaSelectForSearch from './area_select_for_search'
+import RoomSelectForSearch from './room_select_for_search'
 
 export const session_columns = [
   // {
@@ -53,7 +54,14 @@ export const session_columns = [
     key: 'room.name',
     label: 'Room',
     sortKey: 'rooms.name',
-    sortable: true
+    sortable: true,
+    // type: "text"
+    component: RoomSelectForSearch,
+    type: 'custom-component',
+    operators: ['is','is not', 'is empty','is not empty'],
+    // TODO: how would we create a select drop down for room to be fetched from server????
+    // type: "select",
+    // choices: roomOptionsForSearch,
   },
   {
     key: 'status',
