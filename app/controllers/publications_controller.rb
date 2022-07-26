@@ -2,7 +2,7 @@ class PublicationsController < ApplicationController
   around_action :set_timezone
 
   def schedule
-    sessions = ReportsService.scheduled_sessions
+    sessions = SessionService.live_sessions
 
     send_data XmlFormatter.new(sessions).render('schedule', sessions)
     .gsub(/\<\?xml version="1\.0"\?\>\n/, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!-- Formatted for the special requirements of importing to Adobe InDesign. -->')
