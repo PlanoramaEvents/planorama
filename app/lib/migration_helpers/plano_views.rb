@@ -48,7 +48,7 @@ module MigrationHelpers
           join
             session_assignment_role_type sart on
             sart.id = sa.session_assignment_role_type_id
-            and sart.role_type = 'participant'
+            and sart.role_type = 'participant' AND sart.name != 'Reserve'
           join
             people p on
             p.id = sa.person_id
