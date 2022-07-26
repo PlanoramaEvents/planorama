@@ -325,6 +325,7 @@ module MigrationHelpers
             person_back_to_back psc1
           inner join person_back_to_back psc2 on
             psc2.session_id = psc1.conflict_session_id
+            and psc2.person_id = psc1.person_id
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
