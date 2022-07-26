@@ -36,7 +36,7 @@ module SessionService
   #         )
   def self.scheduled_sessions
     # TODO: when publish process done change condition
-    if PublishedSession.count > 0
+    if PublishedSession.count > 0 || Rails.env.production?
       self.published_sessions
     else
       self.live_sessions
@@ -49,7 +49,7 @@ module SessionService
   #         ),
   def self.scheduled_people
     # TODO: when publish process done change condition
-    if PublishedSession.count > 0
+    if PublishedSession.count > 0 || Rails.env.production?
       self.published_people
     else
       self.live_people
