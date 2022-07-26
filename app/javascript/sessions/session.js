@@ -1,5 +1,6 @@
 import { SESSION_STATUS } from '@/constants/strings';
 import AreaSelectForSearch from './area_select_for_search'
+import FormatSelectForSearch from './format_select_for_search'
 
 export const session_columns = [
   // {
@@ -35,7 +36,10 @@ export const session_columns = [
     key: 'format.name',
     label: 'Format',
     sortKey: 'formats.name',
-    sortable: true
+    sortable: true,
+    component: FormatSelectForSearch,
+    type: 'custom-component',
+    operators: ['is','is not', 'is empty','is not empty'],
   },
   {
     key: 'start_time',
