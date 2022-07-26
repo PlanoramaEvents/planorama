@@ -269,12 +269,6 @@ module.exports = {
         revised: "Revised",
         dropped: "Dropped",
     },
-    SESSION_ENVIRONMENT: {
-      unknown: 'Unknown',
-      in_person: 'In Person',
-      hybrid: 'Hybrid',
-      virtual: 'Virtual'
-    },
     SESSION_MUST_UNSCHEDULE: "You must unschedule a session before dropping it",
     SESSION_MUST_UNDROP: "You must un-drop the session to be able to schedule it.",
     SESSION_MINORS_PARTICIPATION: {

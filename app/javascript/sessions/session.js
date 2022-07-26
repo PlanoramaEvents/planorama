@@ -61,7 +61,7 @@ export const session_columns = [
     formatter: (value) => SESSION_STATUS[value] || value,
     sortable: true,
     sortKey: 'status',
-    choices: ['draft', 'reviewed', 'revised', 'dropped'].map(value => ({label: SESSION_STATUS[value], value})),
+    choices: Object.entries(SESSION_STATUS).map(([value, label]) => ({label, value})),
     type: "select"
   },
   {
@@ -75,7 +75,7 @@ export const session_columns = [
     key: 'environment',
     label: 'Environment',
     type: "select",
-    choices: [{label: "unknown", value: "Unknown"}, {label: "In Person", value: "in_person"}, {label: "Hybrid", value: "hybrid"}, {label: "Virtual", value: "virtual"}],
+    choices: Object.entries(SESSION_ENVIRONMENT).map(([value, label]) => ({label, value})),
     formatter: (value) => SESSION_ENVIRONMENT[value] || value,
   },
   {
