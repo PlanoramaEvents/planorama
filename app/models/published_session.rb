@@ -10,6 +10,15 @@ class PublishedSession < ApplicationRecord
   belongs_to :session
   belongs_to :room, required: false
 
+  belongs_to :age_restriction, required: false
+
+  enum environment: {
+    unknown: 'unknown',
+    in_person: 'in_person',
+    hybrid: 'hybrid',
+    virtual: 'virtual'
+  }
+
   has_many :published_session_assignments, dependent: :destroy do
     # get the people with the given role
     def role(role)

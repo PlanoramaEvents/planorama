@@ -5,12 +5,11 @@ class PublishedSessionAssignment < ApplicationRecord
 
   include RankedModel
   ranks :sort_order, with_same: [:published_session_id]
+
   belongs_to  :person
   belongs_to  :published_session
-              # foreign_key: 'session_id'
+  belongs_to  :session_assignment_role_type, required: false
   belongs_to  :session_assignment
-
-  has_one :session_assignment_role_type
 
   enum visibility: {
     is_public: 'public',
