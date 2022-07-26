@@ -1,6 +1,7 @@
-import { SESSION_STATUS } from '@/constants/strings';
+import { SESSION_STATUS, SESSION_ENVIRONMENT } from '@/constants/strings';
 import AreaSelectForSearch from './area_select_for_search'
 import FormatSelectForSearch from './format_select_for_search'
+import RoomSelectForSearch from './room_select_for_search'
 
 export const session_columns = [
   // {
@@ -57,7 +58,14 @@ export const session_columns = [
     key: 'room.name',
     label: 'Room',
     sortKey: 'rooms.name',
-    sortable: true
+    sortable: true,
+    // type: "text"
+    component: RoomSelectForSearch,
+    type: 'custom-component',
+    operators: ['is','is not', 'is empty','is not empty'],
+    // TODO: how would we create a select drop down for room to be fetched from server????
+    // type: "select",
+    // choices: roomOptionsForSearch,
   },
   {
     key: 'status',
@@ -65,8 +73,22 @@ export const session_columns = [
     formatter: (value) => SESSION_STATUS[value] || value,
     sortable: true,
     sortKey: 'status',
-    choices: ['draft', 'reviewed', 'revised', 'dropped'].map(value => ({label: SESSION_STATUS[value], value})),
+    choices: Object.entries(SESSION_STATUS).map(([value, label]) => ({label, value})),
     type: "select"
+  },
+  {
+    key: 'proofed',
+    label: 'Copy Edited/Proofed',
+    type: "select",
+    choices: [{label: "Yes", value: true}, {label: "No", value: false}],
+    formatter: (value) => value ? "Yes" : "No"
+  },
+  {
+    key: 'environment',
+    label: 'Environment',
+    type: "select",
+    choices: Object.entries(SESSION_ENVIRONMENT).map(([value, label]) => ({label, value})),
+    formatter: (value) => SESSION_ENVIRONMENT[value] || value,
   },
   {
     key: 'open_for_interest',
