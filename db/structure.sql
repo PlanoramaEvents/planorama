@@ -690,7 +690,7 @@ CREATE TABLE public.sessions (
     updated_by character varying,
     interest_opened_by character varying,
     interest_opened_at timestamp without time zone,
-    proofed boolean,
+    proofed boolean DEFAULT false NOT NULL,
     status public.session_status_enum DEFAULT 'draft'::public.session_status_enum,
     environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
     tech_notes text,
@@ -3333,6 +3333,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220713185329'),
 ('20220714124643'),
 ('20220714124706'),
-('20220719000644');
+('20220719000644'),
+('20220723213605');
 
 
