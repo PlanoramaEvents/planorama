@@ -42,7 +42,12 @@ module MigrationHelpers
             sessions.format_id,
             sessions.participant_notes,
             sessions.description,
-            sessions.environment
+            sessions.environment,
+            case
+            when sa.updated_at > sessions.updated_at
+          		then sa.updated_at
+          		else sessions.updated_at
+          	end as updated_at
           from
             session_assignments sa
           join

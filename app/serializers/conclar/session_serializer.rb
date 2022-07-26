@@ -1,5 +1,13 @@
 class Conclar::SessionSerializer < ActiveModel::Serializer
-  attributes :id, :title
+  attributes :title
+
+  attribute :id do
+    if object.has_attribute?(:id)
+      object.id
+    else
+      object.session_id
+    end
+  end
 
   attribute :desc do
     object.description
@@ -13,15 +21,17 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   attribute :tags do
     res = []
 
-    # TODO: optimize
-    res.concat object.areas.collect(&:name)
+    res.concat object.area_list #.collect(&:name)
 
     res.concat [object.age_restriction.name] if object.age_restriction
-    res.concat [object.environment] if object.environment != 'unknown'
+    res.concat [object.environment] if object.environment != 'unknown' # virtual hybrid etc
 
     if object.minors_participation && object.minors_participation.class == Array
       res.concat object.minors_participation
     end
+
+    # require_signup ????
+    # recordrd ???
 
     res
   end
