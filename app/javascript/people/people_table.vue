@@ -98,11 +98,9 @@
         </tooltip-overflow>
       </template>
       <template #cell(current_sign_in_at)="{ item }">
-        <span v-if="item.public">
-          <tooltip-overflow :title="item.current_sign_in_at">
-            {{new Date(item.current_sign_in_at).toLocaleString()}}
-          </tooltip-overflow>
-        </span>
+        <tooltip-overflow :title="item.current_sign_in_at">
+          {{new Date(item.current_sign_in_at).toLocaleString()}}
+        </tooltip-overflow>
       </template>
       <template #cell(draft_approval)="{ item }">
         <div v-if="draftSchedule">
