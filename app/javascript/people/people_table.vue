@@ -98,8 +98,8 @@
         </tooltip-overflow>
       </template>
       <template #cell(current_sign_in_at)="{ item }">
-        <tooltip-overflow :title="item.current_sign_in_at">
-          {{new Date(item.current_sign_in_at).toLocaleString()}}
+        <tooltip-overflow :title="item.current_sign_in_at" v-if="item.current_sign_in_at">
+          {{new Date(item.current_sign_in_at).toLocaleString('en', {dateStyle:'medium', timeStyle: "short", hour12: false})}}
         </tooltip-overflow>
       </template>
       <template #cell(draft_approval)="{ item }">
