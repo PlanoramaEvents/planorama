@@ -4,6 +4,29 @@ class SessionsController < ResourceController
   POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
+  # Mass update for the sessions (given ids and params)
+  def update_all
+    authorize current_person, policy_class: policy_class
+    ids = params[:ids]
+    attrs = params.permit(attrs: {})[:attrs].to_h #permit(:attrs)
+
+    Session.transaction do
+      # Get all the people with given set of ids and update them
+      people = Session.where(id: ids).update(attrs)
+
+      # return the updated people back to the caller
+      options = {
+        params: {
+          domain: "#{request.base_url}",
+          current_person: current_person
+        }
+      }
+
+      render json: serializer_class.new(people,options).serializable_hash(),
+             content_type: 'application/json'
+    end
+  end
+
   def express_interest
     # create a session assignment if there is not already one
     model_class.transaction do

@@ -154,7 +154,8 @@ namespace :rbac do
           "destroy": false,
           "index": true,
           "show": true,
-          "update": false
+          "update": false,
+          "update_all": false
       },
       "format": {
           "create": false,
@@ -409,7 +410,8 @@ namespace :rbac do
           "destroy": true,
           "index": true,
           "show": true,
-          "update": true
+          "update": true,
+          "update_all": true
       },
       "format": {
           "create": true,
@@ -702,7 +704,8 @@ namespace :rbac do
           "destroy": true,
           "index": true,
           "show": true,
-          "update": true
+          "update": true,
+          "update_all": true
       },
       "format": {
           "create": true,
