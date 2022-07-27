@@ -116,7 +116,7 @@ module SessionService
       session_table.create_join(
         areas_list,
         session_table.create_on(
-          areas_list[id].eq(session_table[id])
+          areas_list[:session_id].eq(session_table[id])
         ),
         Arel::Nodes::OuterJoin
       )
