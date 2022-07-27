@@ -162,7 +162,7 @@
           <strong><em>Fields</em></strong>: Session title, area(s) of session, session status, has session been copy edited (y/n), has session been scheduled (y/n), visibility (visible, not visible)<br />
           <strong><em>Session data included</em></strong>: all sessions
         </p>
-      </li>      
+      </li>
     </ul>
 
     <h5><a id="conflicts"></a>Conflicts</h5>
@@ -233,7 +233,8 @@
         <p class="ml-2">
           <strong><em>Description</em></strong>: All conflicts in these categories: people outside of availability, people double booked, person scheduled against a conflict item, back to back), one line per conflict<br />
           <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, person name, conflict type<br />
-          <strong><em>Session data included</em></strong>: all scheduled sessions
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
       </li>
     </ul>
@@ -259,6 +260,11 @@
       </li>
       <li>
         <a href="/report/schedule_accpetance" target="_blank">Participants with Approved Draft and Firm Schedules</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People with a participant status that is not rejected, declined, or not_set, with indication whether and when they have approved their draft and firm schedules, with comments if not approved, one line per person<br />
+          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type (in-person, virtual, hybrid), participant status, draft approval, draft comments, draft edited time, firm approval, firm comments, firm edited time<br />
+          <strong><em>Person data included</em></strong>: people with a participant status that is not rejected, declined, or not_set, including those who are not assigned to any sessions
+        </p>
       </li>
     </ul>
   </div>
