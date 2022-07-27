@@ -690,7 +690,7 @@ CREATE TABLE public.sessions (
     updated_by character varying,
     interest_opened_by character varying,
     interest_opened_at timestamp without time zone,
-    proofed boolean,
+    proofed boolean DEFAULT false NOT NULL,
     status public.session_status_enum DEFAULT 'draft'::public.session_status_enum,
     environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
     tech_notes text,
@@ -1123,7 +1123,7 @@ CREATE VIEW public.person_schedules AS
     sessions.description,
     sessions.environment
    FROM (((public.session_assignments sa
-     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
+     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum) AND ((sart.name)::text <> 'Reserve'::text))))
      JOIN public.people p ON ((p.id = sa.person_id)))
      LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
   WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL) AND ((sa.state)::text <> 'rejected'::text));
@@ -3336,6 +3336,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220714124643'),
 ('20220714124706'),
 ('20220719000644'),
+('20220723213605'),
 ('20220726130346');
-
 

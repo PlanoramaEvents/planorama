@@ -47,7 +47,12 @@ export const people_columns = [
     key: 'attendance_type',
     label: 'Attendance Type'
   },
-  // TODO: derived cols
+  {
+    key: 'session_count',
+    search_key: 'session_count',
+    label: 'Session Count',
+    type: "numeric"
+  },
   {
     key: 'draft_approval',
     label: 'Draft Approved',
@@ -74,38 +79,6 @@ export const people_columns = [
     label: 'Firm Comments',
     sortable: false
   },
-  // {
-  //   key: 'organization',
-  //   label: 'Organization',
-  //   type: "text",
-  //   sortable: true
-  // },
-  // {
-  //   key: 'job_title',
-  //   label: 'Job Title',
-  //   type: "text",
-  //   sortable: false
-  // },
-  // {
-  //   key: 'registered',
-  //   label: 'Registered',
-  //   type: "radio",
-  //   // TODO: how do we add dynamic choices???
-  //   choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-  //   sortable: true
-  // },
-  // {
-  //   key: 'registration_type',
-  //   label: 'Registration Type',
-  //   type: "text",
-  //   sortable: true
-  // },
-  // {
-  //   key: 'registration_number',
-  //   label: 'Registration Number',
-  //   type: "text",
-  //   sortable: true
-  // },
   {
     key: 'gender',
     label: 'Gender',
