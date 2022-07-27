@@ -16,6 +16,7 @@ class SessionsController < ResourceController
 
       # return the updated people back to the caller
       options = {
+        include: serializer_includes,
         params: {
           domain: "#{request.base_url}",
           current_person: current_person
