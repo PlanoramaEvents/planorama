@@ -1205,7 +1205,7 @@ CREATE VIEW public.person_back_to_back_to_back AS
     psc2.conflict_room_id,
     psc2.id AS conflict_b2b_id
    FROM (public.person_back_to_back psc1
-     JOIN public.person_back_to_back psc2 ON ((psc2.session_id = psc1.conflict_session_id)));
+     JOIN public.person_back_to_back psc2 ON (((psc2.session_id = psc1.conflict_session_id) AND (psc2.person_id = psc1.person_id))));
 
 
 --
@@ -1398,7 +1398,9 @@ CREATE TABLE public.published_sessions (
     room_id uuid,
     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
     require_signup boolean DEFAULT false,
-    waiting_list_size integer DEFAULT 0
+    waiting_list_size integer DEFAULT 0,
+    environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
+    minors_participation jsonb
 );
 
 
@@ -3334,6 +3336,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220714124643'),
 ('20220714124706'),
 ('20220719000644'),
-('20220723213605');
-
+('20220723213605'),
+('20220726130346');
 
