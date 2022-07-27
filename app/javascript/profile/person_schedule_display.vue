@@ -42,6 +42,7 @@
         </b-overlay>
       </div>
       <div class="col-4">
+        <slot name="message"></slot>
         <person-schedule-approval :approvalType="approvalType"></person-schedule-approval>
       </div>
     </div>
