@@ -320,6 +320,9 @@ module ResourceMethods
             if array_col?(col_name: col)
               col_table = array_table(col_name: col)
             end
+            if derived_col?(col_name: col)
+              col_table = derived_table(col_name: col)
+            end
             part = get_query_part(table: col_table, column: col, operation: operation, value: value, top: true, key: key)
 
             if (key.include?('responses.'))
