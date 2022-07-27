@@ -1,3 +1,4 @@
+import {PERSON_CON_STATE, SESSION_STATUS} from "@/constants/strings";
 import { personScheduleApprovalStateOptionsForSearch } from "@/store/person_schedule_approval";
 
 export const people_columns = [
@@ -34,19 +35,11 @@ export const people_columns = [
     search_key: 'con_state',
     label: 'Status',
     type: "select",
-    // TODO: needs to be driven by settings enums
+    formatter: (value) => PERSON_CON_STATE[value] || value,
     choices: [
-      {label: "not_set", value: "not_set"},
-      {label: "applied", value: "applied"},
-      {label: "vetted", value: "vetted"},
-      {label: "wait_list", value: "wait_list"},
-      {label: "invite_pending", value: "invite_pending"},
-      {label: "invited", value: "invited"},
-      {label: "probable", value: "probable"},
-      {label: "accepted", value: "accepted"},
-      {label: "declined", value: "declined"},
-      {label: "rejected", value: "rejected"}
-    ],
+      "not_set", "applied", "vetted", "wait_list", "invite_pending",
+      "invited", "probable", "accepted", "declined", "rejected"
+    ].map(value => ({label: PERSON_CON_STATE[value], value})),
     operators: ["equal", "does not equal"],
     sortable: false
   },

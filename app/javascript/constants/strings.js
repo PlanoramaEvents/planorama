@@ -241,6 +241,18 @@ module.exports = {
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
+    PERSON_CON_STATE: {
+        not_set: "Not Set",
+        applied: "Applied",
+        vetted: "Vetted",
+        wait_list: "Wait List",
+        invite_pending: "Invite Pending",
+        invited: "Invited",
+        probable: "Probable",
+        accepted: "Accepted",
+        declined: "Declined",
+        rejected: "Rejected"
+    },
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
@@ -269,7 +281,7 @@ module.exports = {
     SCHEDULE_DRAFT_CONFIRM_MESSAGE: "This will publish a Draft Schedule to all participants, who will see their own sessions.  This action is irreversible and will bring the server down for a short time. Please double check that you wish to perform this action.",
     SCHEDULE_FIRM_CONFIRM_MESSAGE: "This will publish a Firm Schedule to all participants, who will see their own sessions - live.  This action is irreversible. Please double check that you wish to perform this action.",
     SCHEDULE_DRAFT_SUCCESS_MESSAGE: "Draft schedule has been published successfully",
-    SCHEDULE_FIRM_SUCCESS_MESSAGE: "Firm schedule has been published successfully", 
+    SCHEDULE_FIRM_SUCCESS_MESSAGE: "Firm schedule has been published successfully",
     SCHEDULE_APPROVAL_FAIL_TO_LOAD: "Couldn't load the approval form. Try again soon.",
     // The below is intended to become a way to override defaults in the model mixin easily. Hasn't happened yet though.
     SPECIFIC_MODEL_SAVE_SUCCESS: {
