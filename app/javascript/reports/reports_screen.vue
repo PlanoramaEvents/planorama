@@ -89,9 +89,6 @@
           <strong><em>Person data included</em></strong>: people with a participant status of accepted, invited, or invite_pending who are assigned to no sessions, or who are assigned as invisible participants or reserved on one or more sessions
         </p>  
       </li>
-      <li>
-        <a href="/report/schedule_accpetance" target="_blank">Draft and Firm Schedule Acceptance</a>
-      </li>
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>
@@ -260,14 +257,10 @@
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
       </li>
-      <!-- <li>
-        <a href="/report/participants_with_approved_draft_schedule" target="_blank">Participants with approved draft schedule</a>
-      </li> -->
-      <!-- <li>
-        <a href="/report/participants_with_approved_final_schedule" target="_blank">Participants with approved final schedule</a>
-      </li> -->
+      <li>
+        <a href="/report/schedule_accpetance" target="_blank">Participants with Approved Draft and Firm Schedules</a>
+      </li>
     </ul>
-
   </div>
 </template>
 
