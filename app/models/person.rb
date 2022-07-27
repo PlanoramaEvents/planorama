@@ -33,7 +33,7 @@ class Person < ApplicationRecord
   has_many  :scheduled_sessions,
             -> {
               where("person_schedules.start_time is not null and person_schedules.room_id is not null")
-              .where("person_schedules.session_assignment_name in (?)",['Moderator', 'Participant']) #, 'Invisible'
+              .where("person_schedules.session_assignment_name in (?)",['Moderator', 'Participant', 'Invisible'])
             },
             class_name: 'PersonSchedule'
 
