@@ -85,17 +85,6 @@ import VueRouter from 'vue-router';
 import { mapActions } from 'vuex';
 const { isNavigationFailure, NavigationFailureType } = VueRouter;
 
-// This needs to be kept in sync with the tab order above
-const tabsArray = [
-  'edit',
-  'other',
-  'availability',
-  'session-selection',
-  'session-ranking',
-  'schedule',
-  'draft-schedule',
-  'admin'
-]
 
 export default {
   name: "PeopleTabs",
@@ -124,6 +113,23 @@ export default {
     sessionAssignmentModel,
   }),
   computed: {
+    tabsArray() {
+      const baseTabs = [
+        'edit',
+        'other',
+        'availability',
+        'session-selection',
+        'session-ranking',
+        'admin'
+      ]
+      if (this.displayDraftSchedule) {
+        baseTabs.splice(5, 0, 'draft_schedule')
+      }
+      if (this.currentUserIsAdmin || this.currentUserIsStaff || this.firmSchedule) {
+        baseTabs.splice(5, 0, 'schedule')
+      }
+      return baseTabs;
+    },
     person() {
       return this.selected_model(personModel);
     },
@@ -162,7 +168,7 @@ export default {
       // change the router path to match the current tab
       // so that reloads work right
       // IF YOU ADD A TAB make sure you update the tabsArray or badness will happen
-      let path = tabsArray[newTab];
+      let path = this.tabsArray[newTab];
       const pathStart = this.$route.path.split('/')[1];
       if (newTab === '0' && pathStart !== 'people') {
         path = '';
