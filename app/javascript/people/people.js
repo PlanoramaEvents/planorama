@@ -51,7 +51,8 @@ export const people_columns = [
     key: 'session_count',
     search_key: 'session_count',
     label: 'Session Count',
-    type: "numeric"
+    type: "numeric",
+    operators: ["equal", "does not equal", "is less than", "is less than or equal", "is greater than", "is greater than or equal"]
   },
   {
     key: 'draft_approval',

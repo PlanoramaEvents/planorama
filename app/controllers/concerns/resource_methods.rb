@@ -462,12 +462,20 @@ module ResourceMethods
       :not_eq
     when '!='
       :not_eq
+    when 'is less than'
+      :lt
     when '<'
       :lt
+    when 'is greater than'
+      :gt
     when '>'
       :gt
+    when 'is less than or equal'
+      :lteq
     when '<='
       :lteq
+    when 'is greater than or equal'
+      :gteq
     when '>='
       :gteq
     when 'is'
