@@ -44,6 +44,7 @@
         </p>      
       </li>
       <li>
+        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
         <a href="/report/participant_do_not_assign_with" target="_blank" v-if="currentUserIsAdmin">Participants and Do Not Assign With</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: People who should not be assigned to the same session, one line per person and session; available only to users with permission to view sensitive data<br />
@@ -51,7 +52,6 @@
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants who listed information about who not to assign with
         </p>  
-        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
       </li>
       <li>
         <a href="/report/session_reports/participants_over_session_limits" target="_blank">Participants over Daily Limits</a>
@@ -243,7 +243,7 @@
       <li>
         <a href="/report/schedule_by_room_then_time" target="_blank">Schedule by Room then Time</a>
         <p class="ml-2">
-          <strong><em>Description: All scheduled sessions, one line per room and day/time<br />
+          <strong><em>Description</em></strong>: All scheduled sessions, one line per room and day/time<br />
           <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, assigned participants, moderators<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants
