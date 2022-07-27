@@ -1,7 +1,7 @@
 module PublicationService
 
   def self.gen_pub_numbers
-    Session.Transaction do
+    Session.transaction do
       # Get the session elligible for publication, not draft or dropped and must be public
       # TODO: if the timestamp of session or assignment is newer then before
       sessions = Session
