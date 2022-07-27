@@ -243,7 +243,7 @@ class Person < ApplicationRecord
     .join(schedule, Arel::Nodes::OuterJoin)
     .on(
       schedule[:person_id].eq(people_table[:id])
-      .and(schedule[:session_assignment_name].in(['Moderator', 'Participant']))
+      .and(schedule[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible']))
       .and(schedule[:start_time].not_eq(nil))
       .and(schedule[:room_id].not_eq(nil))
     )
