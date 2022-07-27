@@ -1,3 +1,6 @@
+import {PERSON_CON_STATE, SESSION_STATUS} from "@/constants/strings";
+import { personScheduleApprovalStateOptionsForSearch } from "@/store/person_schedule_approval";
+
 export const people_columns = [
   {
     key: 'published_name',
@@ -32,20 +35,12 @@ export const people_columns = [
     search_key: 'con_state',
     label: 'Status',
     type: "select",
-    // TODO: needs to be driven by settings enums
+    formatter: (value) => PERSON_CON_STATE[value] || value,
     choices: [
-      {label: "not_set", value: "not_set"},
-      {label: "applied", value: "applied"},
-      {label: "vetted", value: "vetted"},
-      {label: "wait_list", value: "wait_list"},
-      {label: "invite_pending", value: "invite_pending"},
-      {label: "invited", value: "invited"},
-      {label: "probable", value: "probable"},
-      {label: "accepted", value: "accepted"},
-      {label: "declined", value: "declined"},
-      {label: "rejected", value: "rejected"}
-    ],
-    operators: ["=", "!="],
+      "not_set", "applied", "vetted", "wait_list", "invite_pending",
+      "invited", "probable", "accepted", "declined", "rejected"
+    ].map(value => ({label: PERSON_CON_STATE[value], value})),
+    operators: ["equal", "does not equal"],
     sortable: false
   },
   {
@@ -53,37 +48,37 @@ export const people_columns = [
     label: 'Attendance Type'
   },
   {
-    key: 'organization',
-    label: 'Organization',
-    type: "text",
-    sortable: true
+    key: 'session_count',
+    search_key: 'session_count',
+    label: 'Session Count',
+    type: "numeric"
   },
   {
-    key: 'job_title',
-    label: 'Job Title',
-    type: "text",
+    key: 'draft_approval',
+    label: 'Draft Approved',
+    search_key: 'draft_person_schedule_approvals.approved',
+    type: "select",
+    choices: personScheduleApprovalStateOptionsForSearch,
     sortable: false
   },
-  // {
-  //   key: 'registered',
-  //   label: 'Registered',
-  //   type: "radio",
-  //   // TODO: how do we add dynamic choices???
-  //   choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-  //   sortable: true
-  // },
-  // {
-  //   key: 'registration_type',
-  //   label: 'Registration Type',
-  //   type: "text",
-  //   sortable: true
-  // },
-  // {
-  //   key: 'registration_number',
-  //   label: 'Registration Number',
-  //   type: "text",
-  //   sortable: true
-  // },
+  {
+    key: 'draft_comments',
+    label: 'Draft Comments',
+    sortable: false
+  },
+  {
+    key: 'firm_approval',
+    label: 'Firm Approved',
+    search_key: 'firm_person_schedule_approvals.approved',
+    type: "select",
+    choices: personScheduleApprovalStateOptionsForSearch,
+    sortable: false
+  },
+  {
+    key: 'firm_comments',
+    label: 'Firm Comments',
+    sortable: false
+  },
   {
     key: 'gender',
     label: 'Gender',
@@ -91,21 +86,14 @@ export const people_columns = [
     sortable: false
   },
   {
-    key: 'opted_in',
-    label: 'Opted In',
-    type: "radio",
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    sortable: false
-  },
-  {
     key: 'comments',
-    label: 'Comments',
+    label: 'Notes',
     type: "text",
     sortable: false
   },
   {
     key: 'current_sign_in_at',
-    label: 'Signed In At',
+    label: 'Last Logged In',
     sortable: false
   }
 ];

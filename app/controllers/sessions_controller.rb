@@ -4,41 +4,6 @@ class SessionsController < ResourceController
   POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
-  def take_snapshot
-    authorize current_person, policy_class: policy_class
-
-    label = params[:label]
-    label = 'draft' if label.blank?
-
-    if ScheduleSnapshot.find_by({label: label})
-      render status: :unprocessable_entity,
-             json: { errors: [{title: "Validation failed: you already have a snapshot called #{label}"}]}.to_json,
-             content_type: 'application/json'
-    else
-      SnapshotWorker.perform_async(label, current_person.name)
-
-      render status: :ok,
-            json: { message: 'snapshot scheduled' }.to_json,
-            content_type: 'application/json'
-    end
-  end
-
-  def delete_snapshot
-    authorize current_person, policy_class: policy_class
-
-    label = params[:label]
-    label = 'draft' if label.blank?
-
-    snapshot = ScheduleSnapshot.find_by({label: label})
-    if snapshot
-      snapshot.delete
-    end
-
-    render status: :ok,
-           json: { message: 'snapshot deleted' }.to_json,
-           content_type: 'application/json'
-  end
-
   def express_interest
     # create a session assignment if there is not already one
     model_class.transaction do
@@ -178,7 +143,8 @@ class SessionsController < ResourceController
     # if time or room have changed removed ignored conflicts
     p = _permitted_params(model: object_name, instance: @object)
     if (@object.start_time || @object.room_id)
-      if p[:start_time] != @object.start_time || p[:room_id] != @object.room_id
+      if (p.has_key?(:start_time) && p[:start_time] != @object.start_time) ||
+          (p.has_key?(:room_id) && p[:room_id] != @object.room_id)
         # so we remove any ignore conflicts for this session
         cids = @object.ignored_session_conflicts.pluck(:conflict_id)
         cids += @object.ignored_conflict_sessions.pluck(:conflict_id)

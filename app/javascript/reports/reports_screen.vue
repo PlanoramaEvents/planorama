@@ -89,6 +89,9 @@
           <strong><em>Person data included</em></strong>: people with a participant status of accepted, invited, or invite_pending who are assigned to no sessions, or who are assigned as invisible participants or reserved on one or more sessions
         </p>  
       </li>
+      <li>
+        <a href="/report/schedule_accpetance" target="_blank">Draft and Firm Schedule Acceptance</a>
+      </li>
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>

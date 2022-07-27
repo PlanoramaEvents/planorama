@@ -241,6 +241,18 @@ module.exports = {
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
+    PERSON_CON_STATE: {
+        not_set: "Not Set",
+        applied: "Applied",
+        vetted: "Vetted",
+        wait_list: "Wait List",
+        invite_pending: "Invite Pending",
+        invited: "Invited",
+        probable: "Probable",
+        accepted: "Accepted",
+        declined: "Declined",
+        rejected: "Rejected"
+    },
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
@@ -266,12 +278,24 @@ module.exports = {
         geared_families: "Geared towards families",
         geared_kids: "Geared towards kids",
     },
-    SCHEDULE_DRAFT_CONFIRM_MESSAGE: "YOU WIN A MODAL! You can't undo this.",
-    SCHEDULE_FIRM_CONFIRM_MESSAGE: "YOU WIN A SECOND MODAL. You can't undo this one either.",
-    SCHEDULE_DRAFT_SUCCESS_MESSAGE: "You drafted!!!!!!!!!1!",
-    SCHEDULE_FIRM_SUCCESS_MESSAGE: "You firmed!",
-    SCHEDULE_APPROVAL_SAVE_SUCCESS: (approvalType) => `Success - ${approvalType} schedule approval ANNA TEXT.`,
-    SCHEDULE_APPROVAL_SAVE_ERROR: (approvalType) => errorMessage(`Error - ${approvalType} schedule approval ANNA TEXT`),
-    SCHEDULE_APPROVAL_COMMENT_SAVE_SUCCESS: (approvalType) => `Success - ${approvalType} schedule approval comment ANNA TEXT.`,
-    SCHEDULE_APPROVAL_COMMENT_SAVE_ERROR: (approvalType) => errorMessage(`Error - ${approvalType} schedule approval comment ANNA TEXT`),
+    SCHEDULE_DRAFT_CONFIRM_MESSAGE: "This will publish a Draft Schedule to all participants, who will see their own sessions.  This action is irreversible and will bring the server down for a short time. Please double check that you wish to perform this action.",
+    SCHEDULE_FIRM_CONFIRM_MESSAGE: "This will publish a Firm Schedule to all participants, who will see their own sessions - live.  This action is irreversible. Please double check that you wish to perform this action.",
+    SCHEDULE_DRAFT_SUCCESS_MESSAGE: "Draft schedule has been published successfully",
+    SCHEDULE_FIRM_SUCCESS_MESSAGE: "Firm schedule has been published successfully",
+    SCHEDULE_APPROVAL_FAIL_TO_LOAD: "Couldn't load the approval form. Try again soon.",
+    // The below is intended to become a way to override defaults in the model mixin easily. Hasn't happened yet though.
+    SPECIFIC_MODEL_SAVE_SUCCESS: {
+        person_schedule_approval: {
+            person_schedule_approval: "Schedule approval saved.",
+            approved: (approvalType) => `${titleCase(approvalType)} approval was successfully saved.`,
+            comments: (approvalType) => `${titleCase(approvalType)} approval comment was successfully saved.`,
+        },
+    },
+    SPECIFIC_MODEL_SAVE_ERROR: {
+        person_schedule_approval: {
+            person_schedule_approval: errorMessage("Schedule approval was not saved."),
+            approved: (approvalType) => errorMessage(`${titleCase(approvalType)} approval was not saved.`),
+            comments: (approvalType) => errorMessage(`${titleCase(approvalType)} approval comment was not saved.`),
+        },
+    },
 }

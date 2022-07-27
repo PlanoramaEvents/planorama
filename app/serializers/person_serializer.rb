@@ -55,6 +55,14 @@ class PersonSerializer #< ActiveModel::Serializer
     person.base_tags.collect(&:name)
   end
 
+  attribute :session_count do |person|
+    if person.has_attribute?(:session_count)
+      person.session_count
+    else
+      person.scheduled_sessions.count
+    end
+  end
+
   has_many  :email_addresses, if: Proc.new { |record, params| AccessControlService.shared_attribute_access?(instance: record, person: params[:current_person]) },
               lazy_load_data: true, serializer: EmailAddressSerializer,
               links: {
@@ -160,6 +168,16 @@ class PersonSerializer #< ActiveModel::Serializer
   #                "#{params[:domain]}/person/#{object.id}/published_sessions"
   #              }
   #            }
+
+  has_many :person_schedule_approvals, lazy_load_data: true, serializer: PersonScheduleApprovalSerializer,
+            links: {
+             self: -> (object, params) {
+               "#{params[:domain]}/person/#{object.id}"
+             },
+             related: -> (object, params) {
+               "#{params[:domain]}/person/#{object.id}/person_schedule_approvals"
+             }
+           }
 
   has_many :mail_histories, lazy_load_data: true, serializer: MailHistorySerializer,
              links: {

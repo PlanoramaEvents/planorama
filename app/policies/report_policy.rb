@@ -1,4 +1,9 @@
 class ReportPolicy < BasePolicy
+
+  def schedule_accpetance?
+    allowed?(action: :schedule_accpetance)
+  end
+
   def people_and_submissions?
     allowed?(action: :people_and_submissions)
   end

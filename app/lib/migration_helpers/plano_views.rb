@@ -48,7 +48,7 @@ module MigrationHelpers
           join
             session_assignment_role_type sart on
             sart.id = sa.session_assignment_role_type_id
-            and sart.role_type = 'participant'
+            and sart.role_type = 'participant' AND sart.name != 'Reserve'
           join
             people p on
             p.id = sa.person_id
@@ -325,6 +325,7 @@ module MigrationHelpers
             person_back_to_back psc1
           inner join person_back_to_back psc2 on
             psc2.session_id = psc1.conflict_session_id
+            and psc2.person_id = psc1.person_id
       SQL
       ActiveRecord::Base.connection.execute(query)
     end

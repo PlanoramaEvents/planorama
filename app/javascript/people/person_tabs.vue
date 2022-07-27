@@ -41,11 +41,11 @@
             :person_id="person.id"
           ></session-ranker>
         </b-tab>
-        <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
-          <person-draft-schedule></person-draft-schedule>
-        </b-tab>
         <b-tab :title="liveScheduleTitle" lazy v-if="currentUserIsAdmin || currentUserIsStaff || firmSchedule" :active="tab === 'schedule'">
           <person-live-schedule></person-live-schedule>
+        </b-tab>
+        <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
+          <person-draft-schedule></person-draft-schedule>
         </b-tab>
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
           <people-admin-tab></people-admin-tab>
@@ -77,24 +77,14 @@ import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import personSessionMixin from '@/auth/person_session.mixin';
 import settingsMixin from "@/store/settings.mixin";
 import modelUtilsMixin from '@/store/model_utils.mixin';
-import { scheduleStatusMixin } from '@/store/schedule_status.mixin';
+import { scheduleWorkflowMixin, FETCH_WORKFLOWS } from '@/store/schedule_workflow';
 
 const { DateTime } = require("luxon");
 
 import VueRouter from 'vue-router';
+import { mapActions } from 'vuex';
 const { isNavigationFailure, NavigationFailureType } = VueRouter;
 
-// This needs to be kept in sync with the tab order above
-const tabsArray = [
-  'edit',
-  'other',
-  'availability',
-  'session-selection',
-  'session-ranking',
-  'draft-schedule',
-  'schedule',
-  'admin'
-]
 
 export default {
   name: "PeopleTabs",
@@ -115,7 +105,7 @@ export default {
     personSessionMixin,
     settingsMixin,
     modelUtilsMixin,
-    scheduleStatusMixin,
+    scheduleWorkflowMixin,
   ],
   data: () => ({
     personModel,
@@ -123,6 +113,23 @@ export default {
     sessionAssignmentModel,
   }),
   computed: {
+    tabsArray() {
+      const baseTabs = [
+        'edit',
+        'other',
+        'availability',
+        'session-selection',
+        'session-ranking',
+        'admin'
+      ]
+      if (this.displayDraftSchedule) {
+        baseTabs.splice(5, 0, 'draft_schedule')
+      }
+      if (this.currentUserIsAdmin || this.currentUserIsStaff || this.firmSchedule) {
+        baseTabs.splice(5, 0, 'schedule')
+      }
+      return baseTabs;
+    },
     person() {
       return this.selected_model(personModel);
     },
@@ -151,6 +158,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      fetchScheduleWorkflows: FETCH_WORKFLOWS
+    }),
     back() {
       this.$router.push('/people')
     },
@@ -158,7 +168,7 @@ export default {
       // change the router path to match the current tab
       // so that reloads work right
       // IF YOU ADD A TAB make sure you update the tabsArray or badness will happen
-      let path = tabsArray[newTab];
+      let path = this.tabsArray[newTab];
       const pathStart = this.$route.path.split('/')[1];
       if (newTab === '0' && pathStart !== 'people') {
         path = '';
@@ -191,6 +201,7 @@ export default {
         }
       }
     )
+    this.fetchScheduleWorkflows();
   },
   beforeRouteLeave(to, from, next) {
     if (from.path.match(/.*profile.*/) && to.path === '/people') {

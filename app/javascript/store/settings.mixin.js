@@ -38,7 +38,6 @@ export const settingsMixin = {
       }
     },
     fetchSettings() {
-      console.log('feetching settings');
       this.fetchSettingsInternal();
     }
   }

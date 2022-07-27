@@ -42,6 +42,7 @@
         </b-overlay>
       </div>
       <div class="col-4">
+        <slot name="message"></slot>
         <person-schedule-approval :approvalType="approvalType"></person-schedule-approval>
       </div>
     </div>
@@ -95,7 +96,6 @@ export default {
     orderedSessions() {
       const sessions = Object.values(this.sessions);
       sessions.sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
-      console.log("sorted?", sessions)
       return sessions;
     },
     noSessions() {

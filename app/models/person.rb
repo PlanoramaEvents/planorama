@@ -29,6 +29,13 @@ class Person < ApplicationRecord
   has_many  :session_limits
 
   has_many  :person_schedules
+  has_many  :person_schedule_approvals, dependent: :destroy
+  has_many  :scheduled_sessions,
+            -> {
+              where("person_schedules.start_time is not null and person_schedules.room_id is not null")
+              .where("person_schedules.session_assignment_name in (?)",['Moderator', 'Participant', 'Invisible'])
+            },
+            class_name: 'PersonSchedule'
 
   # We let the publish mechanism do the destroy so that the update service knows what is happening
   # has_many  :published_session_assignments
@@ -223,6 +230,24 @@ class Person < ApplicationRecord
         state: :rejected
       )
     end
+  end
+
+  def self.session_counts
+    people_table = Person.arel_table
+    schedule = PersonSchedule.arel_table
+
+    people_table.project(
+      people_table[:id].as('person_id'),
+      schedule[:person_id].count.as('session_count')
+    )
+    .join(schedule, Arel::Nodes::OuterJoin)
+    .on(
+      schedule[:person_id].eq(people_table[:id])
+      .and(schedule[:session_assignment_name].in(['Moderator', 'Participant', 'Invisible']))
+      .and(schedule[:start_time].not_eq(nil))
+      .and(schedule[:room_id].not_eq(nil))
+    )
+    .group('people.id')
   end
 
   # These are here so we can edit and update a person without having

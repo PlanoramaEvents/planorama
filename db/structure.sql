@@ -182,6 +182,28 @@ CREATE TYPE public.phone_type_enum AS ENUM (
 
 
 --
+-- Name: schedule_approval_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.schedule_approval_enum AS ENUM (
+    'not_set',
+    'yes',
+    'no'
+);
+
+
+--
+-- Name: schedule_workflow_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.schedule_workflow_enum AS ENUM (
+    'not_set',
+    'draft',
+    'firm'
+);
+
+
+--
 -- Name: session_environments_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -668,7 +690,7 @@ CREATE TABLE public.sessions (
     updated_by character varying,
     interest_opened_by character varying,
     interest_opened_at timestamp without time zone,
-    proofed boolean,
+    proofed boolean DEFAULT false NOT NULL,
     status public.session_status_enum DEFAULT 'draft'::public.session_status_enum,
     environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
     tech_notes text,
@@ -1085,7 +1107,6 @@ CREATE VIEW public.person_schedules AS
     p.con_state,
     p.can_share,
     p.pronouns,
-    em.email,
     sa.id AS session_assignment_id,
     sart.id AS session_assignment_role_type_id,
     sart.name AS session_assignment_name,
@@ -1101,10 +1122,9 @@ CREATE VIEW public.person_schedules AS
     sessions.participant_notes,
     sessions.description,
     sessions.environment
-   FROM ((((public.session_assignments sa
-     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
+   FROM (((public.session_assignments sa
+     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum) AND ((sart.name)::text <> 'Reserve'::text))))
      JOIN public.people p ON ((p.id = sa.person_id)))
-     JOIN public.email_addresses em ON (((em.person_id = p.id) AND em.isdefault)))
      LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
   WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL) AND ((sa.state)::text <> 'rejected'::text));
 
@@ -1244,6 +1264,22 @@ CREATE TABLE public.person_mailing_assignments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: person_schedule_approvals; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_schedule_approvals (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid,
+    schedule_workflow_id uuid,
+    comments text,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    approved public.schedule_approval_enum DEFAULT 'not_set'::public.schedule_approval_enum
 );
 
 
@@ -1412,7 +1448,7 @@ CREATE VIEW public.room_allocations AS
 --
 
 CREATE VIEW public.room_conflicts AS
- SELECT concat(b1.room_id, ':', b1.session_id) AS id,
+ SELECT concat(b1.room_id, ':', b1.session_id, ':', b2.session_id) AS id,
     b1.room_id,
     b1.session_title,
     b1.session_id,
@@ -1485,6 +1521,22 @@ CREATE TABLE public.schedule_snapshots (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     status public.snapshot_status_enum DEFAULT 'not_set'::public.snapshot_status_enum
+);
+
+
+--
+-- Name: schedule_workflows; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.schedule_workflows (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    created_by character varying,
+    set_at timestamp without time zone,
+    schedule_snapshot_id uuid,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    state public.schedule_workflow_enum DEFAULT 'not_set'::public.schedule_workflow_enum
 );
 
 
@@ -2236,6 +2288,14 @@ ALTER TABLE ONLY public.application_roles
 
 
 --
+-- Name: person_schedule_approvals person_schedule_approvals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_schedule_approvals
+    ADD CONSTRAINT person_schedule_approvals_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: person_schedule_snapshots person_schedule_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2329,6 +2389,14 @@ ALTER TABLE ONLY public.rooms
 
 ALTER TABLE ONLY public.schedule_snapshots
     ADD CONSTRAINT schedule_snapshots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedule_workflows schedule_workflows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedule_workflows
+    ADD CONSTRAINT schedule_workflows_pkey PRIMARY KEY (id);
 
 
 --
@@ -2804,6 +2872,13 @@ CREATE UNIQUE INDEX index_schedule_snapshots_on_label ON public.schedule_snapsho
 
 
 --
+-- Name: index_schedule_workflows_on_schedule_snapshot_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_schedule_workflows_on_schedule_snapshot_id ON public.schedule_workflows USING btree (schedule_snapshot_id);
+
+
+--
 -- Name: index_session_areas_on_session_id_and_area_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2990,6 +3065,13 @@ CREATE INDEX pia_person_index ON public.session_assignments USING btree (person_
 --
 
 CREATE INDEX pis_prog_item_id_index ON public.session_assignments USING btree (session_id);
+
+
+--
+-- Name: psa_person_wrkflw_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX psa_person_wrkflw_idx ON public.person_schedule_approvals USING btree (person_id, schedule_workflow_id);
 
 
 --
@@ -3248,6 +3330,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220707124302'),
 ('20220712153111'),
 ('20220712153128'),
-('20220713185329');
+('20220713185329'),
+('20220714124643'),
+('20220714124706'),
+('20220719000644'),
+('20220723213605');
 
 
