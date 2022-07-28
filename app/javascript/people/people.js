@@ -40,7 +40,7 @@ export const people_columns = [
       "not_set", "applied", "vetted", "wait_list", "invite_pending",
       "invited", "probable", "accepted", "declined", "rejected"
     ].map(value => ({label: PERSON_CON_STATE[value], value})),
-    operators: ["equal", "does not equal"],
+    operators: ["equals", "does not equal"],
     sortable: false
   },
   {
@@ -51,7 +51,8 @@ export const people_columns = [
     key: 'session_count',
     search_key: 'session_count',
     label: 'Session Count',
-    type: "numeric"
+    type: "numeric",
+    operators: ["equals", "does not equal", "is less than", "is less than or equal to", "is greater than", "is greater than or equal to"]
   },
   {
     key: 'draft_approval',

@@ -167,8 +167,8 @@ class SessionsController < ResourceController
     # if time or room have changed removed ignored conflicts
     p = _permitted_params(model: object_name, instance: @object)
     if (@object.start_time || @object.room_id)
-      if (p.has_key?(:start_time) && p[:start_time] != @object.start_time) ||
-          (p.has_key?(:room_id) && p[:room_id] != @object.room_id)
+      if (p.has_key?('start_time') && p['start_time'] != @object.start_time) ||
+          (p.has_key?('room_id') && p['room_id'] != @object.room_id)
         # so we remove any ignore conflicts for this session
         cids = @object.ignored_session_conflicts.pluck(:conflict_id)
         cids += @object.ignored_conflict_sessions.pluck(:conflict_id)

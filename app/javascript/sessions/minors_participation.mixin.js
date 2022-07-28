@@ -12,7 +12,7 @@ export const minorsParticipationMixin = {
       get() {
         const session = this.session || this.selected;
         try {
-          const existing = JSON.parse(session.minors_participation)
+          const existing = session.minors_participation
           return Array.isArray(existing) ? existing : existing ? [existing] : []
         } catch {
           return []
@@ -20,8 +20,8 @@ export const minorsParticipationMixin = {
       },
       set(val) {
         if(this.session) {
-          this.session.minors_participation = JSON.stringify(val);
-        }       
+          this.session.minors_participation = val;
+        }
       }
     }
   }
