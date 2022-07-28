@@ -20,7 +20,9 @@ module MailService
       subject:        mailing.subject,
       title:          mailing.title,
       content:        content,
-      is_test:        tester != nil
+      is_test:        tester != nil,
+      person:         person,
+      mailing:        mailing
     )
 
     self.post_mail_transition(person: person, mailing: mailing) unless tester
