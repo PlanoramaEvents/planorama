@@ -70,6 +70,17 @@
           <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
         </b-form-group>
 
+        <!-- HERE -->
+        <b-form-group label="Permission to share email with other Participants">
+            <b-form-radio-group
+              stacked
+              v-model="fields.can_share"
+            >
+              <b-form-radio :value="true">{{yesLabel.label}}</b-form-radio>
+              <b-form-radio :value="false">{{noLabel.label}}</b-form-radio>
+            </b-form-radio-group>
+        </b-form-group>
+
         <b-form-group label="Permission to be included in a livestreamed program">
             <b-form-radio-group
               stacked
@@ -239,6 +250,7 @@ export default {
     model,
     miscData: {
       do_not_assign_with: null,
+      can_share: null,
       can_stream: null,
       can_stream_exceptions: null,
       can_record: null,

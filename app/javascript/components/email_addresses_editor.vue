@@ -33,6 +33,10 @@
     <b-button ref="add_email_button" @click="onNew" variant="primary" title="New" class="mt-2" size="sm">
       <b-icon-plus></b-icon-plus>
     </b-button>
+    <plano-modal id="primaryEmailConfirm" title="Primary Email Confirmation" @ok="onConfirmOk()" @cancel="onConfirmCancel()" @close="onConfirmCancel()">
+      <p>You are about to change the primary email address associated with this profile. <strong>This will change the login email used for this account.</strong></p>
+      <p>Are you sure you wish to make this change?</p>
+    </plano-modal>
   </div>
 </template>
 
@@ -42,11 +46,13 @@ import EmailAddressEditor from './email_address_editor.vue'
 import emailAddressMixin from '../store/email_address.mixin'
 import {personSessionMixin} from '@/mixins';
 import modelUtilsMixin from "@/store/model_utils.mixin";
+import PlanoModal from './plano_modal.vue';
 
 export default {
   name: 'EmailAddressesEditor',
   components: {
-    EmailAddressEditor
+    EmailAddressEditor,
+    PlanoModal
   },
   mixins: [
     modelUtilsMixin,
@@ -68,12 +74,11 @@ export default {
       default: 'email-addresses-editor'
     }
   },
-  data() {
-    return {
-      emails: [],
-      additional: []
-    }
-  },
+  data: () => ({
+    emails: [],
+    additional: [],
+    pendingPrimaryChange: null
+  }),
   computed: {
     primary: {
       get: function() {
@@ -102,7 +107,27 @@ export default {
         )
       }
     },
+    onConfirmCancel() {
+      this.setLists()
+      this.pendingPrimaryChange = null;
+    },
+    onConfirmOk() {
+      this.saveEmail(this.pendingPrimaryChange).then(
+        () => {
+          this.setLists()
+        }
+      ).catch((err) => {
+        console.log("i caught an error", err)
+        this.setLists()
+      });
+      this.pendingPrimaryChange = null;
+    },
     onInput(arg) {
+      if(arg.isdefault) {
+        this.$bvModal.show('primaryEmailConfirm')
+        this.pendingPrimaryChange = arg;
+        return;
+      }
       if (arg.id) {
         this.saveEmail(arg).then(
           () => {

@@ -438,7 +438,8 @@ class ReportsController < ApplicationController
           person.published_name,
           person.con_state,
           person.attendance_type,
-          person.availabilities.order('start_time').collect{|av| "#{av.start_time} to #{av.end_time}" }.join(";\n"),
+          # TODO: format time ....
+          person.availabilities.order('start_time').collect{|av| "#{av.start_time.strftime('%Y-%m-%d %H:%M %Z')} to #{av.end_time.strftime('%Y-%m-%d %H:%M %Z')}" }.join(";\n"),
           person.session_limits.order('day').collect{|l| "#{l.day ? l.day : 'Global'}: #{l.max_sessions}" }.join(";\n"),
           person.exclusions.collect{|e| "#{e.title}"}.join(";\n"),
           person.availability_notes

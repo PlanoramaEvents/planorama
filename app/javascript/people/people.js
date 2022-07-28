@@ -1,3 +1,4 @@
+import {PERSON_CON_STATE, SESSION_STATUS} from "@/constants/strings";
 import { personScheduleApprovalStateOptionsForSearch } from "@/store/person_schedule_approval";
 
 export const people_columns = [
@@ -34,27 +35,25 @@ export const people_columns = [
     search_key: 'con_state',
     label: 'Status',
     type: "select",
-    // TODO: needs to be driven by settings enums
+    formatter: (value) => PERSON_CON_STATE[value] || value,
     choices: [
-      {label: "not_set", value: "not_set"},
-      {label: "applied", value: "applied"},
-      {label: "vetted", value: "vetted"},
-      {label: "wait_list", value: "wait_list"},
-      {label: "invite_pending", value: "invite_pending"},
-      {label: "invited", value: "invited"},
-      {label: "probable", value: "probable"},
-      {label: "accepted", value: "accepted"},
-      {label: "declined", value: "declined"},
-      {label: "rejected", value: "rejected"}
-    ],
-    operators: ["equal", "does not equal"],
+      "not_set", "applied", "vetted", "wait_list", "invite_pending",
+      "invited", "probable", "accepted", "declined", "rejected"
+    ].map(value => ({label: PERSON_CON_STATE[value], value})),
+    operators: ["equals", "does not equal"],
     sortable: false
   },
   {
     key: 'attendance_type',
     label: 'Attendance Type'
   },
-  // TODO: derived cols
+  {
+    key: 'session_count',
+    search_key: 'session_count',
+    label: 'Session Count',
+    type: "numeric",
+    operators: ["equals", "does not equal", "is less than", "is less than or equal to", "is greater than", "is greater than or equal to"]
+  },
   {
     key: 'draft_approval',
     label: 'Draft Approved',
@@ -81,38 +80,6 @@ export const people_columns = [
     label: 'Firm Comments',
     sortable: false
   },
-  // {
-  //   key: 'organization',
-  //   label: 'Organization',
-  //   type: "text",
-  //   sortable: true
-  // },
-  // {
-  //   key: 'job_title',
-  //   label: 'Job Title',
-  //   type: "text",
-  //   sortable: false
-  // },
-  // {
-  //   key: 'registered',
-  //   label: 'Registered',
-  //   type: "radio",
-  //   // TODO: how do we add dynamic choices???
-  //   choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-  //   sortable: true
-  // },
-  // {
-  //   key: 'registration_type',
-  //   label: 'Registration Type',
-  //   type: "text",
-  //   sortable: true
-  // },
-  // {
-  //   key: 'registration_number',
-  //   label: 'Registration Number',
-  //   type: "text",
-  //   sortable: true
-  // },
   {
     key: 'gender',
     label: 'Gender',

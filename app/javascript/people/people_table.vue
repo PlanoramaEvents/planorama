@@ -98,11 +98,10 @@
         </tooltip-overflow>
       </template>
       <template #cell(current_sign_in_at)="{ item }">
-        <span v-if="item.public">
-          <tooltip-overflow :title="item.current_sign_in_at">
-            {{new Date(item.current_sign_in_at).toLocaleString()}}
-          </tooltip-overflow>
+        <span v-if="item.current_sign_in_at">
+          {{DateTime.fromISO(item.current_sign_in_at).toFormat("DDD, t ZZZZ")}}
         </span>
+        <span v-if="!item.current_sign_in_at" class="font-italic text-muted">{{PERSON_NEVER_LOGGED_IN}}</span>
       </template>
       <template #cell(draft_approval)="{ item }">
         <div v-if="draftSchedule">
@@ -151,6 +150,8 @@ import searchStateMixin from '../store/search_state.mixin'
 import { formatPersonScheduleApprovalState } from '@/store/person_schedule_approval';
 import { FETCH_WORKFLOWS, scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import { mapActions } from 'vuex';
+import { PERSON_NEVER_LOGGED_IN } from '@/constants/strings';
+import { DateTime } from 'luxon';
 
 export default {
   name: 'PeopleTable',
@@ -173,6 +174,8 @@ export default {
     editableIds: [],
     selectedConState: null,
     searchEmails: null,
+    PERSON_NEVER_LOGGED_IN,
+    DateTime
   }),
   computed: {
     declinedRejected() {
