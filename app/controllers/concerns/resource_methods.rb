@@ -453,6 +453,8 @@ module ResourceMethods
       :not_in
     when 'equals'
       :eq
+    when 'equal'
+      :eq
     when '='
       :eq
     when 'does not equal'
@@ -470,11 +472,11 @@ module ResourceMethods
       :gt
     when '>'
       :gt
-    when 'is less than or equal'
+    when 'is less than or equal to'
       :lteq
     when '<='
       :lteq
-    when 'is greater than or equal'
+    when 'is greater than or equal to'
       :gteq
     when '>='
       :gteq
