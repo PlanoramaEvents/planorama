@@ -237,7 +237,8 @@ module.exports = {
         can_record_exceptions: "Recordings excluded topics",
         name: "Name",
         pseudonym: "Pseudonym",
-        languages_fluent_in: "Languages spoken"
+        languages_fluent_in: "Languages spoken",
+        can_share: "Permission to share email with other Participants"
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
