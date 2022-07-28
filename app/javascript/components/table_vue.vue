@@ -27,12 +27,12 @@
 
       <div class="d-flex justify-content-end">
         <div class="d-inline mx-1" title="clone" v-if="showClone">
-          <b-button @click="$emit('clone')" variant="primary" title="clone" :disabled='selected_items.length===0' >
+          <b-button @click="$emit('clone')" variant="primary" title="Duplicate" :disabled='selected_items.length===0' >
             <b-icon-files></b-icon-files>
           </b-button>
         </div>
         <div class="d-inline mx-1" title="refresh" v-if="showRefresh">
-          <b-button @click="onRefresh" variant="primary" title="refresh">
+          <b-button @click="onRefresh" variant="primary" title="Refresh">
             <b-icon-arrow-repeat></b-icon-arrow-repeat>
           </b-button>
         </div>
