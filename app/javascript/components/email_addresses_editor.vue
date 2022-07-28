@@ -13,7 +13,7 @@
       <email-address-editor
         v-bind:value="primary"
         :can-delete="false"
-        @input="onInput($event, true)"
+        @input="onInput"
         :disabled="disabled"
         :radioGroup="radioGroup"
       ></email-address-editor>
@@ -122,8 +122,8 @@ export default {
       });
       this.pendingPrimaryChange = null;
     },
-    onInput(arg, isPrimary = false) {
-      if(isPrimary) {
+    onInput(arg) {
+      if(arg.isdefault) {
         this.$bvModal.show('primaryEmailConfirm')
         this.pendingPrimaryChange = arg;
         return;
