@@ -22,6 +22,8 @@ class MailingWorker
     # TODO - if test run then send to the requestor
     return unless mailing.mailing_state == Mailing.mailing_states[:submitted] # Check just in case this is a dup
 
+    participant_schedule_url = SessionService.participant_schedule_url
+
     last_person_index = mailing.last_person_idx
     mailing.people.each_with_index do |person, idx|
       next unless (last_person_index == -1) || (idx > last_person_index)
@@ -29,7 +31,8 @@ class MailingWorker
       begin
         MailService.send_mailing(
           person: person,
-          mailing: mailing
+          mailing: mailing,
+          participant_schedule_url: participant_schedule_url
         )
 
         # note the last person processes so we can continue from there if job stopped and restarted
@@ -59,10 +62,12 @@ class MailingWorker
     addr = EmailAddress.find_by(email: test_address)
     if addr
       tester = Person.find tester_id
+      participant_schedule_url = SessionService.participant_schedule_url
 
       MailService.send_mailing(
         person: addr.person,
         mailing: mailing,
+        participant_schedule_url: participant_schedule_url,
         tester: tester
       )
     end
