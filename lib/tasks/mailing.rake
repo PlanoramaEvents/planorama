@@ -9,8 +9,10 @@ namespace :mail do
       puts "** No person for email: #{email}" unless addr
       next unless addr
 
-      history.person_id = addr.person_id unless history.person_id
-      history.save!(touch: false)
+      if !history.person_id
+        history.person_id = addr.person_id
+        history.save!(touch: false)
+      end
       # break
     end
   end
