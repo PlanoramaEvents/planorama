@@ -106,35 +106,6 @@ module ReportsService
     #   .order(:start_time)
   end
 
-  # Get all the schedule sessions
-  def self.scheduled_sessions
-    Session.select(
-      ::Session.arel_table[Arel.star],
-      'areas_list.area_list'
-    )
-      .includes(:format, :room, {participant_assignments: :person})
-      .joins(self.area_subquery)
-      .where("start_time is not null and room_id is not null")
-      .where("status != 'dropped' and status != 'draft'")
-      .order(:start_time)
-  end
-
-  def self.scheduled_people
-    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
-    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
-
-    people = Person.includes(
-      {session_assignments: [:session, :session_assignment_role_type]}
-    ).references(
-      {session_assignments: :session}
-    )
-    .where("session_assignments.session_assignment_role_type_id in (?)", [moderator.id, participant.id])
-    .where("sessions.start_time is not null and sessions.room_id is not null")
-    .where("sessions.status != 'dropped' and sessions.status != 'draft'")
-    .where("people.con_state not in (?)", ['declined', 'rejected']) #.distinct
-    .order("people.published_name")
-  end
-
   def self.sessions_with_no_moderator
     sched_table = PersonSchedule.arel_table
     session_and_roles = sched_table.project(

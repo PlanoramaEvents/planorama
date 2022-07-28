@@ -51,6 +51,8 @@ Rails.application.routes.draw do
   get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
   get 'person/:person_id/assigned_surveys', to: 'people#assigned_surveys'
 
+  get 'publications/schedule', to: 'publications#schedule'
+
   get 'report/participant_selections', to: 'reports#participant_selections'
   get 'report/session_selections', to: 'reports#session_selections'
   get 'report/participant_availabilities', to: 'reports#participant_availabilities'

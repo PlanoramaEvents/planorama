@@ -1,4 +1,6 @@
 class Session < ApplicationRecord
+  include XmlFormattable
+
   validates_presence_of :title
   validates_numericality_of :duration, allow_nil: true
   validates_numericality_of :minimum_people, allow_nil: true
