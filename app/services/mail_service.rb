@@ -2,6 +2,7 @@ module MailService
   def self.send_mailing(
     person:,
     mailing:,
+    participant_schedule_url:,
     tester: nil
   )
     survey = mailing.survey
@@ -10,6 +11,7 @@ module MailService
       {
         person: person,
         survey: survey,
+        participant_schedule_url: participant_schedule_url,
         survey_url: self.generate_survey_url(survey: survey, person: person),
         login_url: self.generate_login_url(person: person)
       }
@@ -29,12 +31,13 @@ module MailService
     self.post_mail_assign_survey(person: person, survey: survey) unless tester
   end
 
-  def self.preview_email_content(person:, mailing:)
+  def self.preview_email_content(person:, mailing:, participant_schedule_url:)
     self.generate_email_content(
       mailing.content,
       {
         person: person,
         survey: mailing.survey,
+        participant_schedule_url: participant_schedule_url,
         survey_url: self.generate_survey_url(survey: mailing.survey, person: person),
         login_url: self.generate_login_url(person: person)
       }

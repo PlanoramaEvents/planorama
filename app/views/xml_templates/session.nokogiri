@@ -1,0 +1,15 @@
+#
+# This is an XML template for Session
+# TODO: tweak for InDesign
+#
+xml.session {
+  xml.title @instance.title
+  xml.description @instance.description
+  # Start time is in convention Timezone (TODO)
+  xml.start_time @instance.start_time
+  xml.duration @instance.duration
+  xml.areas @instance.areas
+  xml.format @instance.format.name
+  xml.room @instance.room.name
+  xml.participants @instance.participants
+}

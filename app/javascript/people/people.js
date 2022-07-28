@@ -51,6 +51,7 @@ export const people_columns = [
     key: 'session_count',
     search_key: 'session_count',
     label: 'Session Count',
+    sortable: true,
     type: "numeric",
     operators: ["equals", "does not equal", "is less than", "is less than or equal to", "is greater than", "is greater than or equal to"]
   },

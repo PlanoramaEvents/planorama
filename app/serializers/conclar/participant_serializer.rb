@@ -11,45 +11,40 @@ class Conclar::ParticipantSerializer < ActiveModel::Serializer
 
   attribute :prog do
     res = []
-    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
-    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    # TODO: change when we have publish process ???
+    if object.published_session_assignments.count > 0
+      moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+      participant = SessionAssignmentRoleType.find_by(name: 'Participant')
 
-    object.session_assignments.each do |assignment|
-      next if assignment.session_assignment_role_type_id != moderator.id and assignment.session_assignment_role_type_id != participant.id
+      object.published_session_assignments.each do |assignment|
+        next if assignment.session_assignment_role_type_id != moderator.id and assignment.session_assignment_role_type_id != participant.id
 
-      res << assignment.session_id
+        res << assignment.published_session_id
+      end
+    else
+      object.sessions.publishable.each do |session|
+        res << session.id
+      end
     end
 
     res
   end
 
-  # links ????
-  # what about social media URLs?
+  attribute :links do
+    res = {}
+
+    res['twitter'] = "https://twitter.com/#{object.twitter}" unless object.twitter.blank?
+    res['facebook'] = "https://facebook.com/#{object.facebook}" unless object.facebook.blank?
+    res['website'] = object.website unless object.website.blank?
+    res['instagram'] = "https://instagram.com/#{object.instagram}" unless object.instagram.blank?
+    res['twitch'] = "https://twitch.tv/#{object.twitch}" unless object.twitch.blank?
+    res['youtube'] = "https://youtube.com/#{object.youtube}" unless object.youtube.blank?
+    res['tiktok'] = "https://www.tiktok.com/@#{object.tiktok}" unless object.tiktok.blank?
+    res['linkedin'] = "https://linkedin.com/in/#{object.linkedin}" unless object.linkedin.blank?
+    res['othersocialmedia'] = object.othersocialmedia unless object.othersocialmedia.blank?
+
+    res
+  end
+
   # tags - not supported yet
 end
-
-# All participants on the schedule ...
-#   var people = [
-# {
-# 	"id": "4567",
-# 	"name": [ "Friend Andhis Jr." ],
-# 	"sortname" : "Andhis Jr., Friend",
-# 	"tags": [],
-# 	"prog": [ "1234", "614", "801" ],
-# 	"links": [],
-# 	"bio": "Prior art for Adams's satirical point – that humans attach such importance to their automobiles that a visiting extraterrestrial might reasonably mistake them for the planet's dominant life form – can be found in a widely reprinted article from <i>The Rockefeller Institute Review</i> titled <i>Life on Earth (by a Martian)</i> by Paul Weiss. The idea was also expounded by Carl Sagan, though this may have postdated Adams's creation of the character of Ford. The 1967 Oscar-nominated animated film <i>What on Earth!</i> from the National Film Board of Canada is also based on this premise."
-# },
-# {
-# 	"id": "1234",
-# 	"name": [ "Galahad", "", "Sir" ],
-# 	"sortname": "Sir Galahad",
-# 	"tags": [ "GoH" ],
-# 	"prog": [ "416" ],
-# 	"links": {
-# 		"img": "/images/galahad.jpg",
-# 		"photo": "/images/galahad.jpg",
-# 		"img_256_url": "/images/galahad.jpg",
-# 		"url": "http://en.wikipedia.org/wiki/Galahad"
-# 	},
-# 	"bio": "Sir Galahad (/ˈɡæləhæd/; Middle Welsh: Gwalchavad, sometimes referred to as Galeas /ɡəˈliːəs/ or Galath /ˈɡæləθ/), in Arthurian legend, is a knight of King Arthur's Round Table and one of the three achievers of the Holy Grail."
-# },
