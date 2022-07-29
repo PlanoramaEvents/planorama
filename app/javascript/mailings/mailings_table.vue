@@ -1,7 +1,8 @@
 <template>
   <div>
     <table-vue
-      defaultSortBy='title'
+      defaultSortBy='updated_at'
+      defaultSortDesc="true"
       :model="model"
       :columns="columns"
       :defaultFilter="defaultFilter"

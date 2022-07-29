@@ -2,8 +2,8 @@ module SessionService
   def self.participant_schedule_url
     workflow = ScheduleWorkflow.order("updated_at desc").first
 
-    return UrlService.url_for(path: "/#/profile/draft-schedule") if workflow.state == ScheduleWorkflow.states[:draft]
-    return UrlService.url_for(path: "/#/profile/schedule") if workflow.state == ScheduleWorkflow.states[:firm]
+    return UrlService.url_for(path: "/#/profile/draft-schedule") if workflow && workflow.state == ScheduleWorkflow.states[:draft]
+    return UrlService.url_for(path: "/#/profile/schedule") if workflow && workflow.state == ScheduleWorkflow.states[:firm]
 
     return UrlService.url_for(path: '/')
   end

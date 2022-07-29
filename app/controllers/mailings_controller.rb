@@ -1,7 +1,8 @@
 class MailingsController < ResourceController
   SERIALIZER_CLASS = 'MailingSerializer'.freeze
   POLICY_CLASS = 'MailingPolicy'.freeze
-  DEFAULT_SORTBY = 'updated_at desc'.freeze
+  DEFAULT_SORTBY = 'updated_at'.freeze
+  DEFAULT_ORDER = 'desc'.freeze
 
   def serializer_includes
     [
