@@ -79,7 +79,6 @@
 
 <script>
 import TableVue from '../components/table_vue';
-import ModalForm from '../components/modal_form';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import { session_columns as columns } from './session';
 import { NEW_SESSION, sessionModel as model } from '@/store/session.store'
@@ -91,16 +90,12 @@ import { SESSION_STATUS, SESSION_MUST_UNSCHEDULE } from '@/constants/strings';
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import BulkEditModal from '@/components/bulk_edit_modal.vue';
 
-import SessionStateSelector from '../components/session_state_selector'
-
 export default {
   name: 'SessionTable',
   components: {
     TableVue,
     TooltipOverflow,
-    ModalForm,
     PlanoModal,
-    SessionStateSelector,
     BulkEditModal
   },
   mixins: [
