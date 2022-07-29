@@ -19,7 +19,7 @@
           </b-col>
         </b-row>
         <div class="float-right d-flex justify-content-end">
-          <icon-button title="Survey Link" :href="surveyLink" target="_blank" icon="link45deg"></icon-button>
+          <icon-button title="Survey Link" :href="surveyLink" target="_blank" icon="globe2"></icon-button>
           <icon-button title="Preview Survey" :href="previewLink" target="_blank" icon="eye-fill"></icon-button>
           <icon-button title="Edit Survey" :to="editLink" :disabled="survey.public" :disabledTooltip="SURVEY_PUBLIC_NO_EDIT" icon="pencil"></icon-button>
           <icon-button icon="envelope" disabled disabledTooltip="Send Survey"></icon-button>
