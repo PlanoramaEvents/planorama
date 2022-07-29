@@ -188,11 +188,6 @@ class SessionsController < ResourceController
     ]
   end
 
-  def derived_col?(col_name:)
-    return true if col_name == 'area_list'
-    false
-  end
-
   def array_col?(col_name:)
     return true if col_name == 'area_list'
     false
