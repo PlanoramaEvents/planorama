@@ -1,35 +1,21 @@
 <template>
   <div>
-    <modal-form
-      title="Bulk Edit Status"
-      ref="mass-edit-state"
-      @save="onConfirmMassEdit"
-    >
-      <b-form>
-        <session-state-selector
+    <bulk-edit-modal id="bulk-edit-status" title="Bulk Edit Status(es)" @ok="onSaveMassEdit">
+      <template #default>
+        <b-form-select :options="sessionStatusOptions"
           v-model="selectedSessionState"
-        ></session-state-selector>
-      </b-form>
-      <template #footer="{ ok, cancel }">
-        <b-button variant="link" @click="cancel()">Cancel</b-button>
-        <b-button variant="primary" @click="ok()">Save</b-button>
+        ></b-form-select>
       </template>
-    </modal-form>
-
-    <modal-form
-      title="Bulk Edit Status Confirmation"
-      ref="mass-edit-confirm"
-      @save="onSaveMassEdit"
-    >
-      <p>
-        Please confirm that you want to change the
-        status of {{editableIds.length}} {{editableIds.length == 1 ? 'session' : 'sessions'}} to '{{selectedSessionState}}'
-      </p>
-      <template #footer="{ ok, cancel }">
-        <b-button variant="link" @click="cancel()">Cancel</b-button>
-        <b-button variant="primary" @click="ok()">Save</b-button>
+      <template #confirm-default>
+        <p>
+          Please confirm that you want to change the
+          status of {{editableIds.length}} {{editableIds.length == 1 ? 'session' : 'sessions'}} to '{{SESSION_STATUS[selectedSessionState]}}'
+        </p>
+        <p v-if="selectedSessionState === 'dropped'">
+          If any of these sessions are scheduled, this action will unschedule them.
+        </p>
       </template>
-    </modal-form>
+    </bulk-edit-modal>
 
     <table-vue
       @new="openNewModal"
@@ -98,11 +84,12 @@ import TooltipOverflow from '../shared/tooltip-overflow';
 import { session_columns as columns } from './session';
 import { NEW_SESSION, sessionModel as model } from '@/store/session.store'
 import dateTimeMixin from '../components/date_time.mixin'
-import { areaMixin } from './session_fields.mixin';
+import { areaMixin, sessionStatusMixin } from './session_fields.mixin';
 import PlanoModal from '@/components/plano_modal.vue';
 import { mapActions } from 'vuex';
 import { SESSION_STATUS, SESSION_MUST_UNSCHEDULE } from '@/constants/strings';
 import modelUtilsMixin from "@/store/model_utils.mixin";
+import BulkEditModal from '@/components/bulk_edit_modal.vue';
 
 import SessionStateSelector from '../components/session_state_selector'
 
@@ -113,12 +100,14 @@ export default {
     TooltipOverflow,
     ModalForm,
     PlanoModal,
-    SessionStateSelector
+    SessionStateSelector,
+    BulkEditModal
   },
   mixins: [
     dateTimeMixin,
     modelUtilsMixin,
-    areaMixin
+    areaMixin,
+    sessionStatusMixin,
   ],
   data: () => ({
     SESSION_STATUS,
@@ -134,7 +123,7 @@ export default {
     }),
     openNewModal() {
       this.newSessionTitle = null;
-      this.$root.$emit('bv::show::modal', 'add-session');
+      this.$bvModal.show('add-session');
     },
     onNew() {
       this.newSession({title: this.newSessionTitle}).then((data) => {
@@ -146,15 +135,10 @@ export default {
         this.update_all('session', this.editableIds, {status: this.selectedSessionState})
       }
     },
-    onConfirmMassEdit() {
-      this.$refs['mass-edit-confirm'].showModal()
-    },
     onEditStates(ids) {
       this.editableIds = ids
-      this.$refs['mass-edit-state'].showModal()
+      this.$bvModal.show('bulk-edit-status')
     },
-    onSave() {
-    }
   },
   mounted() {
     this.$refs['sessions-table'].fetchPaged()
