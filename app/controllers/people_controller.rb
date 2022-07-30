@@ -16,7 +16,8 @@ class PeopleController < ResourceController
         :email_addresses,
         :convention_roles,
         :unsigned_agreements,
-        :session_limits
+        :session_limits,
+        :assigned_surveys
       ]
     )
   end
