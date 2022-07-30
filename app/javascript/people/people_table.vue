@@ -111,9 +111,9 @@
       </template>
       <template #cell(draft_comments)="{ item }">
         <div v-if="draftSchedule">
-          <tooltip-overflow :title="comments(item.person_schedule_approvals, 'draft')">
+          <tooltip-overflow-keep-newlines :title="comments(item.person_schedule_approvals, 'draft')">
             {{ comments(item.person_schedule_approvals, 'draft') }}
-          </tooltip-overflow>
+          </tooltip-overflow-keep-newlines>
         </div>
         <div v-else class="text-muted text-center"> &mdash; </div>
       </template>
@@ -125,9 +125,9 @@
       </template>
       <template #cell(firm_comments)="{ item }">
         <div v-if="firmSchedule">
-          <tooltip-overflow :title="comments(item.person_schedule_approvals, 'firm')">
+          <tooltip-overflow-keep-newlines :title="comments(item.person_schedule_approvals, 'firm')">
             {{ comments(item.person_schedule_approvals, 'firm') }}
-          </tooltip-overflow>
+          </tooltip-overflow-keep-newlines>
         </div>
         <div v-else class="text-muted text-center"> &mdash; </div>
       </template>
@@ -139,6 +139,7 @@
 import TableVue from '../components/table_vue';
 import ModalForm from '../components/modal_form';
 import TooltipOverflow from '../shared/tooltip-overflow';
+import TooltipOverflowKeepNewlines from "@/shared/tooltip-overflow-keep-newlines";
 import PersonAdd from '../people/person_add.vue';
 import { people_columns as columns } from './people';
 import { personModel as model } from '@/store/person.store'
@@ -156,6 +157,7 @@ import { DateTime } from 'luxon';
 export default {
   name: 'PeopleTable',
   components: {
+    TooltipOverflowKeepNewlines,
     TableVue,
     TooltipOverflow,
     ModalForm,
@@ -267,7 +269,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .col-name-field div {
   width: 8rem;
 }
