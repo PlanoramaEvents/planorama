@@ -2,7 +2,7 @@
   <div>
     <bulk-edit-modal id="bulk-edit-status" title="Bulk Edit Status(es)" @ok="onSaveMassEdit">
       <template #default>
-        <b-form-select :options="sessionStatusOptions"
+        <b-form-select :options="sessionStatusOptionsNoDropped"
           v-model="selectedSessionState"
         ></b-form-select>
       </template>
@@ -10,9 +10,6 @@
         <p>
           Please confirm that you want to change the
           status of {{editableIds.length}} {{editableIds.length == 1 ? 'session' : 'sessions'}} to '{{SESSION_STATUS[selectedSessionState]}}'
-        </p>
-        <p v-if="selectedSessionState === 'dropped'">
-          If any of these sessions are scheduled, this action will unschedule them.
         </p>
       </template>
     </bulk-edit-modal>

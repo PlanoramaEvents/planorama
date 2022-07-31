@@ -56,6 +56,9 @@ export const sessionStatusMixin = {
   computed: {
     sessionStatusOptions() {
       return this.currentSettings?.enums?.Session?.status?.map(value => ({text: SESSION_STATUS[value], value}))
+    },
+    sessionStatusOptionsNoDropped() {
+      return this.sessionStatusOptions.filter(({value}) => value !== 'dropped')
     }
   }
 }
