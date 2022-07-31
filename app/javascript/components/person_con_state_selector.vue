@@ -1,15 +1,14 @@
 <template>
   <b-form-select
-    v-model="selectedValue"
-    @change="onChange"
-    v-bind:options="currentSettings.enums.Person.con_state"
-    :disabled='disabled'
+    :options="options"
+    v-bind="$attrs"
+    v-on="$listeners"
   ></b-form-select>
-  <!-- :multiple="multiple" -->
 </template>
 
 <script>
 import settingsMixin from "@/store/settings.mixin";
+import { PERSON_CON_STATE } from '@/constants/strings';
 
 export default {
   name: 'PersonConStateSelector',
@@ -18,22 +17,11 @@ export default {
   mixins: [
     settingsMixin
   ],
-  props: {
-    value: null,
-    disabled: false
-  },
-  data: () =>  ({
-    selectedValue: null
-    // options: []
-  }),
-  methods: {
-    onChange(arg) {
-      this.$emit('input', arg)
+  computed: {
+    options() {
+      return this.currentSettings.enums.Person.con_state.map(value => ({text: PERSON_CON_STATE[value], value}))
     }
   },
-  mounted() {
-    this.selectedValue = this.value
-  }
 }
 </script>
 

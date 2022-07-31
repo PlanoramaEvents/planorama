@@ -139,6 +139,7 @@ Rails.application.routes.draw do
 
   get 'session/tags', to: 'sessions#tags'
   post 'session/import', to: 'sessions#import'
+  post 'session/update_all', to: 'sessions#update_all'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id
   resources :sessions, path: 'session' do
     get 'session_assignments', to: 'session_assignments#index'
