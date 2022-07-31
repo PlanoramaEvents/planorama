@@ -1,4 +1,6 @@
 import modelMixin from "./model.mixin";
+import { mapState, mapMutations } from 'vuex';
+import { SET_PER_PAGE } from "./app.store";
 
 export const tableMixin = {
   mixins: [modelMixin],
@@ -10,10 +12,6 @@ export const tableMixin = {
     defaultSortDesc: {
       type: Boolean,
       default: false
-    },
-    perPage: {
-      type: Number,
-      default: 20
     },
     defaultFilter: {
       type: String,
@@ -37,9 +35,22 @@ export const tableMixin = {
     fullTotalRows: 0,
     correctOrder: [],
     url: null,
-    shall_clear: true
+    shall_clear: true,
+    tempCurrentPage: 1,
+    tableBusy: false,
   }),
   computed: {
+    ...mapState({
+      storedPerPage: 'perPage'
+    }),
+    perPage: {
+      get() {
+        return this.storedPerPage;
+      },
+      set(val) {
+        this.setPerPage(val);
+      }
+    },
     sortedCollection() {
       // if we modify a single member of the collection, we no longer necessarily return the right order
       // therefore, use the order we captured at ingestion to restore the right order
@@ -52,6 +63,9 @@ export const tableMixin = {
     }
   },
   methods: {
+    ...mapMutations({
+      setPerPage: SET_PER_PAGE
+    }),
     removeFromCollection(id) {
       this.correctOrder = this.correctOrder.filter( el => el != id)
     },
@@ -64,7 +78,17 @@ export const tableMixin = {
         ]
       }
     },
+    setCurrentPage() {
+      const maxPage = Math.ceil(this.totalRows / this.perPage);
+      const oldCurrentPage = this.currentPage;
+      this.currentPage = Math.max(Math.min(this.tempCurrentPage, maxPage), 1);
+      if(oldCurrentPage === this.currentPage) {
+        // make sure it updates an illegal value if there's one in the ui still
+        this.tempCurrentPage = this.currentPage;
+      }
+    },
     fetchPaged(clear=true) {
+      this.tableBusy = true;
       this.shall_clear = clear
       let _filter = JSON.stringify(this.filter)
 
@@ -101,7 +125,7 @@ export const tableMixin = {
             this.fullTotalRows = data._jv.json.meta.full_total;
           }
           res(data);
-        }).catch(rej); // TODO maybe actually handle it here??
+        }).catch(rej).finally(() => this.tableBusy = false); // TODO maybe actually handle it here??
       })
     }
   },
@@ -109,11 +133,21 @@ export const tableMixin = {
     this.sortBy = this.defaultSortBy;
     this.sortDesc = this.defaultSortDesc
     this.url = this.defaultUrl
+    this.tempCurrentPage = this.currentPage;
     // NOTE: if we do fatch paged here it will ignore any filters etc that are setup
     // and will cause some weird behavious if we have initial filters
     // this.fetchPaged();
   },
   watch: {
+    perPage(newVal, oldVal) {
+      if (newVal != oldVal) {
+        if (this.currentPage === 1) {
+          this.fetchPaged(this.shall_clear);
+        } else {
+          this.currentPage = 1;
+        }
+      }
+    },
     currentPage(newVal, oldVal) {
       // console.debug("currentpage changed:", newVal, oldVal)
       // when we change the desired page to a new one, fetch again
@@ -122,6 +156,7 @@ export const tableMixin = {
         // have to pass anything in here, it should just work
         this.fetchPaged(this.shall_clear);
       }
+      this.tempCurrentPage = this.currentPage;
     },
     filter(newVal, oldVal) {
       // console.debug("filter changed:", newVal, oldVal)

@@ -54,18 +54,25 @@
       </div>
     </div>
 
-    <div class="d-flex">
+    <div class="d-flex align-items-center">
       <slot name="left-controls" v-bind:editableIds="editableIds"></slot>
-      <b-pagination class="ml-auto"
-        v-model="currentPage"
-        :total-rows="totalRows"
-        :per-page="perPage"
-        first-text="First"
-        last-text="Last"
-        prev-text="Prev"
-        next-text="Next"
-      ></b-pagination>
-    </div>
+        <b-pagination
+          class="mb-0 mr-3 ml-auto"
+          v-model="currentPage"
+          :total-rows="totalRows"
+          :per-page="perPage"
+          first-text="First"
+          last-text="Last"
+          prev-text="Prev"
+          next-text="Next"
+        ></b-pagination>
+        <b-form @submit="setCurrentPage()" inline>
+          <b-form-group label="Go to page" label-cols="auto">
+            <b-input type="number" v-model="tempCurrentPage" style="width: 5.5rem;"></b-input>
+          </b-form-group>
+            <b-button type="submit" variant="primary" class="ml-1">Go</b-button>
+        </b-form>
+      </div>
     <div class="d-flex mb-1">
       <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
       <span class="ml-auto">{{countCaption}}</span>
@@ -86,8 +93,14 @@
 
       @row-selected="onRowSelected"
       @sort-changed="onSortChanged"
+      :busy="tableBusy"
     >
-      <template #head(selected)="selected">
+      <template #table-busy>
+        <div class="d-flex justify-content-center">
+          <b-spinner variant="primary"></b-spinner>
+        </div>
+      </template>
+      <template #head(selected)>
         <b-form-checkbox
           name="select-all-checkbox"
           value="select_all"
@@ -129,6 +142,11 @@
       prev-text="Prev"
       next-text="Next"
     ></b-pagination>
+    <div class="d-flex justify-content-end">
+      <b-form-group label="Number of Records" label-cols="auto" class="mb-0">
+        <b-form-select :options="[10, 20, 50]" v-model="perPage"></b-form-select>
+      </b-form-group>
+    </div>
   </div>
 </template>
 
@@ -190,7 +208,7 @@ export default {
       selected_items: [],
       editable_ids: [],
       keep: false, // semaphore to catch "false" unselect
-      selecedRowNbr: -1 // keep track of selected row to keep display
+      selecedRowNbr: -1, // keep track of selected row to keep display
     }
   },
   computed: {
