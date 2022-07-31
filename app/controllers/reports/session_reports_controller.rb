@@ -12,6 +12,7 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Session',
+        'Description',
         'Areas',
         'Status',
         'Copy Edited',
@@ -24,6 +25,7 @@ class Reports::SessionReportsController < ApplicationController
       worksheet.append_row(
         [
           session.title,
+          session.description, # NOTE: there is no mechanism for format HTML for excel so put the desc in and see what happens
           session.area_list.sort.join(';'),
           session.status,
           session.proofed ? 'Y' : 'N',
