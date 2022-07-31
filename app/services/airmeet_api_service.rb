@@ -76,14 +76,19 @@ module AirmeetApiService
   end
 
   def self.person_to_airmeet(person)
-    if person.integrations["airmeet"]
-      return person.integrations["airmeet"]["speaker_email"]
-    else
-      result = create_speaker({name: person.published_name, email: person.primary_email.email, bio: person.bio})
-      puts result
-      person.update({integrations: person.integrations.merge({airmeet: {speaker_email: result["email"]}})})
-      result["email"]
+    speaker_email = person.primary_email.email
+    if person.integrations["airmeet"] 
+      speaker_email = person.integrations["airmeet"]["speaker_email"]
+      if person.integrations["airmeet"]["synced"]
+        return speaker_email
+      end
     end
+    name = person.published_name
+    bio = person.bio
+    result = create_speaker({name: name, email: speaker_email, bio: bio})
+    puts result
+    person.update({integrations: person.integrations.merge({airmeet: {speaker_email: result["email"], synced: true, name: name, bio: bio, synced_at: Time.now.iso8601}})})
+    result["email"]
   end
 
   def self.session_to_airmeet(session)
