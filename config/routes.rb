@@ -138,6 +138,7 @@ Rails.application.routes.draw do
   resources :tags, path: 'tag'
 
   get 'session/tags', to: 'sessions#tags'
+  get 'session/schedule_publish', to: 'sessions#schedule_publish'
   post 'session/import', to: 'sessions#import'
   post 'session/update_all', to: 'sessions#update_all'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id

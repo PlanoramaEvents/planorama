@@ -27,10 +27,12 @@ class PublicationWorker
       pstatus.save!
     end
 
-    # populate caches
+    # populate basic caches
     if pub_date
-      SessionService.cache_published_sessions(publication_date: pub_date)
-      SessionService.cache_published_participants(publication_date: pub_date)
+      PublishedSession.transaction do
+        SessionService.cache_published_sessions(publication_date: pub_date)
+        SessionService.cache_published_participants(publication_date: pub_date)
+      end
     end
   end
 end

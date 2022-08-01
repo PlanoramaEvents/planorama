@@ -44,7 +44,6 @@ module SessionService
   #           serializer: Conclar::SessionSerializer
   #         )
   def self.scheduled_sessions
-    # TODO: when publish process done change condition
     if PublishedSession.count > 0 || Rails.env.production?
       self.published_sessions
     else
