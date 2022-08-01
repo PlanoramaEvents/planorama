@@ -697,7 +697,9 @@ CREATE TABLE public.sessions (
     age_restriction_id uuid,
     minors_participation jsonb,
     room_set_id uuid,
-    room_notes text
+    room_notes text,
+    recorded boolean DEFAULT false NOT NULL,
+    streamed boolean DEFAULT false NOT NULL
 );
 
 
@@ -1340,9 +1342,9 @@ CREATE TABLE public.publication_dates (
     "timestamp" timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    newitems integer DEFAULT 0,
-    modifieditems integer DEFAULT 0,
-    removeditems integer DEFAULT 0
+    removeditems integer,
+    modifieditems integer,
+    newitems integer
 );
 
 
@@ -1400,7 +1402,9 @@ CREATE TABLE public.published_sessions (
     require_signup boolean DEFAULT false,
     waiting_list_size integer DEFAULT 0,
     environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
-    minors_participation jsonb
+    minors_participation jsonb,
+    recorded boolean DEFAULT false NOT NULL,
+    streamed boolean DEFAULT false NOT NULL
 );
 
 
@@ -3337,7 +3341,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220714124706'),
 ('20220719000644'),
 ('20220723213605'),
-('20220726130346');
-
+('20220726130346'),
+('20220801195644');
 
 
