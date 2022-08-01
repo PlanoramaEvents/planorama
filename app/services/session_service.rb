@@ -52,6 +52,36 @@ module SessionService
     end
   end
 
+  def self.cache_published_sessions(publication_date:)
+    sessions = self.published_sessions
+
+    snapshot = ActiveModel::Serializer::CollectionSerializer.new(
+                  sessions,
+                  serializer: Conclar::SessionSerializer
+                ) #.serializable_hash
+
+    PublishSnapshot.create!(
+      snapshot: snapshot,
+      label: 'schedule',
+      publication_date: publication_date
+    )
+  end
+
+  def self.cache_published_participants(publication_date:)
+    participants = self.scheduled_people
+
+    snapshot = ActiveModel::Serializer::CollectionSerializer.new(
+              participants,
+              serializer: Conclar::ParticipantSerializer
+            ) #.serializable_hash
+
+    PublishSnapshot.create!(
+      snapshot: snapshot,
+      label: 'participants',
+      publication_date: publication_date
+    )
+  end
+
   # ActiveModel::Serializer::CollectionSerializer.new(
   #           participants,
   #           serializer: Conclar::ParticipantSerializer
