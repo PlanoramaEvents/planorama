@@ -205,7 +205,7 @@ module PublicationService
   def self.publishable_assignments(sessions:)
     SessionAssignment
       .where("session_assignments.session_id in (?)", sessions.collect(&:id))
-      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisble' or session_assignment_role_type.name = 'Reserve')")
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisible' or session_assignment_role_type.name = 'Reserve')")
       .where("session_assignments.visibility = 'public'")
   end
 end
