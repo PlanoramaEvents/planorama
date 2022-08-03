@@ -47,12 +47,13 @@
         <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
           <person-draft-schedule></person-draft-schedule>
         </b-tab>
+        <b-tab title="Emails" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'email'">
+          <people-email-tab></people-email-tab>
+        </b-tab>
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
           <people-admin-tab></people-admin-tab>
         </b-tab>
         <b-tab title="Surveys" disabled lazy>
-        </b-tab>
-        <b-tab title="Emails" disabled lazy>
         </b-tab>
       </b-tabs>
     </model-loading-overlay>
@@ -69,6 +70,7 @@ import PersonDemographics from '../profile/person_demographics.vue';
 import PersonLiveSchedule from '@/profile/person_live_schedule.vue';
 import PersonDraftSchedule from '@/profile/person_draft_schedule.vue';
 import PeopleAdminTab from './people_admin_tab.vue';
+import PeopleEmailTab from '@/profile/person_email_tab.vue';
 import ModelLoadingOverlay from '@/components/model_loading_overlay.vue';
 
 import { personModel } from '@/store/person.store'
@@ -100,6 +102,7 @@ export default {
     PersonLiveSchedule,
     PersonDraftSchedule,
     PeopleAdminTab,
+    PeopleEmailTab,
   },
   mixins: [
     personSessionMixin,
@@ -120,13 +123,14 @@ export default {
         'availability',
         'session-selection',
         'session-ranking',
-        'admin'
       ]
       if (this.displayDraftSchedule) {
         baseTabs.splice(5, 0, 'draft-schedule')
       }
       if (this.currentUserIsAdmin || this.currentUserIsStaff || this.firmSchedule) {
-        baseTabs.splice(5, 0, 'schedule')
+        baseTabs.splice(5, 0, 'schedule');
+        baseTabs.push('email');
+        baseTabs.push('admin');
       }
       return baseTabs;
     },
