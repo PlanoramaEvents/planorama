@@ -30,8 +30,9 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       res.concat object.minors_participation
     end
 
-    # require_signup ????
-    # recordrd ???
+    res.concat ['Require Signup'] if object.require_signup
+    res.concat ['Recorded'] if object.recorded
+    res.concat ['Streamed'] if object.streamed
 
     res
   end

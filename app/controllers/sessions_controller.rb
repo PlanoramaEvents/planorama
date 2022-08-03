@@ -322,6 +322,8 @@ class SessionsController < ResourceController
       require_signup
       age_restriction_id
       room_notes
+      recorded
+      streamed
     ]
     # Tags
     # format

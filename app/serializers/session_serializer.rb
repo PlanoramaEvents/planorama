@@ -13,7 +13,8 @@ class SessionSerializer
              :room_id, :proofed, :format_id, :room_set_id,
              :status, :environment,
              :tech_notes, :room_notes,
-             :minors_participation, :age_restriction_id
+             :minors_participation, :age_restriction_id,
+             :recorded, :streamed
 
   # tag_list
   attribute :tag_list do |session|
