@@ -6,7 +6,7 @@
     scrollable
     v-on="$listeners"
     v-bind="$attrs"
-    ref="plano-modal"
+    :id="id"
   >
     <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
     <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData"><slot :name="name" v-bind="slotData" /></template>
@@ -16,12 +16,18 @@
 <script>
 export default {
   name: "PlanoModal",
+  props: {
+    id: {
+      type: String,
+      default: 'plano-modal'
+    }
+  },
   methods: {
     show() {
-      this.$refs['plano-modal'].show()
+      this.$bvModal.show(this.id)
     },
     hide() {
-      this.$refs['plano-modal'].hide()
+      this.$bvModal.show(this.id)
     }
   }
 }

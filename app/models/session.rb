@@ -1,4 +1,6 @@
 class Session < ApplicationRecord
+  include XmlFormattable
+
   validates_presence_of :title
   validates_numericality_of :duration, allow_nil: true
   validates_numericality_of :minimum_people, allow_nil: true
@@ -7,7 +9,7 @@ class Session < ApplicationRecord
   # NOTE: when we have a config for default duration change to use a lambda
   attribute :duration, default: 60
 
-  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
+  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at, :updated_by, :lock_version, :interest_opened_by, :interest_opened_at]
 
   belongs_to :format, required: false
   has_one :published_session, dependent: :destroy

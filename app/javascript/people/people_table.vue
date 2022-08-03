@@ -1,38 +1,22 @@
 <template>
   <div>
-    <modal-form
-      title="Bulk Edit Status"
-      ref="mass-edit-state"
-      @save="onConfirmMassEdit"
-    >
-      <b-form>
-        <person-con-state-selector
-          v-model="selectedConState"
-        ></person-con-state-selector>
-      </b-form>
-      <template #footer="{ ok, cancel }">
-        <b-button variant="link" @click="cancel()">Cancel</b-button>
-        <b-button variant="primary" @click="ok()">Save</b-button>
+    <bulk-edit-modal title="Bulk Edit Status" id="bulk-edit-status" @ok="onSaveMassEdit">
+      <template #default>
+        <b-form>
+          <person-con-state-selector
+            v-model="selectedConState"
+          ></person-con-state-selector>
+        </b-form>
       </template>
-    </modal-form>
-
-    <modal-form
-      title="Bulk Edit Status Confirmation"
-      ref="mass-edit-confirm"
-      @save="onSaveMassEdit"
-    >
-      <p>
-        Please confirm that you want to change the
-        status of {{editableIds.length}} {{editableIds.length == 1 ? 'person' : 'people'}} to '{{selectedConState}}'
-        <span v-if="declinedRejected">and they will be removed from the below sessions.</span>
-      </p>
-      <people-session-names :declinedRejected="declinedRejected" :ids="editableIds"></people-session-names>
-      <template #footer="{ ok, cancel }">
-        <b-button variant="link" @click="cancel()">Cancel</b-button>
-        <b-button variant="primary" @click="ok()">Save</b-button>
+      <template #confirm-default>
+        <p>
+          Please confirm that you want to change the
+          status of {{editableIds.length}} {{editableIds.length == 1 ? 'person' : 'people'}} to '{{PERSON_CON_STATE[selectedConState]}}'
+          <span v-if="declinedRejected">and they will be removed from the below sessions.</span>
+        </p>
+        <people-session-names :declinedRejected="declinedRejected" :ids="editableIds"></people-session-names>
       </template>
-    </modal-form>
-
+    </bulk-edit-modal>
 
     <modal-form
       title="Add Person"
@@ -111,9 +95,9 @@
       </template>
       <template #cell(draft_comments)="{ item }">
         <div v-if="draftSchedule">
-          <tooltip-overflow :title="comments(item.person_schedule_approvals, 'draft')">
+          <tooltip-overflow-keep-newlines :title="comments(item.person_schedule_approvals, 'draft')">
             {{ comments(item.person_schedule_approvals, 'draft') }}
-          </tooltip-overflow>
+          </tooltip-overflow-keep-newlines>
         </div>
         <div v-else class="text-muted text-center"> &mdash; </div>
       </template>
@@ -125,9 +109,9 @@
       </template>
       <template #cell(firm_comments)="{ item }">
         <div v-if="firmSchedule">
-          <tooltip-overflow :title="comments(item.person_schedule_approvals, 'firm')">
+          <tooltip-overflow-keep-newlines :title="comments(item.person_schedule_approvals, 'firm')">
             {{ comments(item.person_schedule_approvals, 'firm') }}
-          </tooltip-overflow>
+          </tooltip-overflow-keep-newlines>
         </div>
         <div v-else class="text-muted text-center"> &mdash; </div>
       </template>
@@ -139,6 +123,7 @@
 import TableVue from '../components/table_vue';
 import ModalForm from '../components/modal_form';
 import TooltipOverflow from '../shared/tooltip-overflow';
+import TooltipOverflowKeepNewlines from "@/shared/tooltip-overflow-keep-newlines";
 import PersonAdd from '../people/person_add.vue';
 import { people_columns as columns } from './people';
 import { personModel as model } from '@/store/person.store'
@@ -150,18 +135,21 @@ import searchStateMixin from '../store/search_state.mixin'
 import { formatPersonScheduleApprovalState } from '@/store/person_schedule_approval';
 import { FETCH_WORKFLOWS, scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import { mapActions } from 'vuex';
-import { PERSON_NEVER_LOGGED_IN } from '@/constants/strings';
+import { PERSON_NEVER_LOGGED_IN, PERSON_CON_STATE } from '@/constants/strings';
 import { DateTime } from 'luxon';
+import BulkEditModal from '@/components/bulk_edit_modal.vue'
 
 export default {
   name: 'PeopleTable',
   components: {
+    TooltipOverflowKeepNewlines,
     TableVue,
     TooltipOverflow,
     ModalForm,
     PersonAdd,
     PersonConStateSelector,
     PeopleSessionNames,
+    BulkEditModal,
   },
   mixins: [
     modelUtilsMixin,
@@ -175,6 +163,7 @@ export default {
     selectedConState: null,
     searchEmails: null,
     PERSON_NEVER_LOGGED_IN,
+    PERSON_CON_STATE,
     DateTime
   }),
   computed: {
@@ -230,12 +219,9 @@ export default {
         this.update_all('person', this.editableIds, {con_state: this.selectedConState})
       }
     },
-    onConfirmMassEdit() {
-      this.$refs['mass-edit-confirm'].showModal()
-    },
     onEditStates(ids) {
       this.editableIds = ids
-      this.$refs['mass-edit-state'].showModal()
+      this.$bvModal.show('bulk-edit-status')
     },
     onNew() {
       this.$refs['add-person-modal'].showModal()
@@ -267,7 +253,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .col-name-field div {
   width: 8rem;
 }

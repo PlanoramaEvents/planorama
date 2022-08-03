@@ -1,7 +1,8 @@
 class MailingsController < ResourceController
   SERIALIZER_CLASS = 'MailingSerializer'.freeze
   POLICY_CLASS = 'MailingPolicy'.freeze
-  DEFAULT_SORTBY = 'title'.freeze
+  DEFAULT_SORTBY = 'updated_at'.freeze
+  DEFAULT_ORDER = 'desc'.freeze
 
   def serializer_includes
     [
@@ -136,10 +137,12 @@ class MailingsController < ResourceController
 
     recipient_address = params[:email]
     addr = EmailAddress.find_by(email: recipient_address)
+    participant_schedule_url = SessionService.participant_schedule_url
 
     content = MailService.preview_email_content(
                 person: addr.person,
-                mailing: mailing
+                mailing: mailing,
+                participant_schedule_url: participant_schedule_url
               )
 
     # render_object(content) # TODO: verify ok for content

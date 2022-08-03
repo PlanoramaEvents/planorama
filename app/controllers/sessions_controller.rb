@@ -4,6 +4,38 @@ class SessionsController < ResourceController
   POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
+  def schedule_publish
+    authorize current_person, policy_class: policy_class
+
+    PublicationService.start_publish_job
+
+    render status: :ok, json: {}.to_json, content_type: 'application/json'
+  end
+
+  # Mass update for the sessions (given ids and params)
+  def update_all
+    authorize current_person, policy_class: policy_class
+    ids = params[:ids]
+    attrs = params.permit(attrs: {})[:attrs].to_h #permit(:attrs)
+
+    Session.transaction do
+      # Get all the people with given set of ids and update them
+      people = Session.where(id: ids).update(attrs)
+
+      # return the updated people back to the caller
+      options = {
+        include: serializer_includes,
+        params: {
+          domain: "#{request.base_url}",
+          current_person: current_person
+        }
+      }
+
+      render json: serializer_class.new(people,options).serializable_hash(),
+             content_type: 'application/json'
+    end
+  end
+
   def express_interest
     # create a session assignment if there is not already one
     model_class.transaction do
@@ -290,6 +322,8 @@ class SessionsController < ResourceController
       require_signup
       age_restriction_id
       room_notes
+      recorded
+      streamed
     ]
     # Tags
     # format

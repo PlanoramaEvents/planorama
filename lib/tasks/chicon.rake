@@ -206,6 +206,21 @@ namespace :chicon do
 
     hyatt_rooms
     airmeet_rooms
+    rooms_no_venue
+  end
+
+  def rooms_no_venue
+    # as requested by business
+    candidates = [
+      {name: "Offsite", purpose: "Programming", sort_order: 601},
+    ]
+
+    candidates.each do |candidate|
+      room = Room.find_by name: candidate[:name]
+      next if room
+
+      Room.create!(candidate)
+    end
   end
 
   def airmeet_rooms
@@ -215,8 +230,9 @@ namespace :chicon do
       {venue_id: airmeet.id, name: "Airmeet 2", floor: "Virtual", purpose: "Programming", sort_order: 502},
       {venue_id: airmeet.id, name: "Airmeet 3", floor: "Virtual", purpose: "Programming", sort_order: 503},
       {venue_id: airmeet.id, name: "Airmeet 4", floor: "Virtual", purpose: "Programming", sort_order: 504},
-      {venue_id: airmeet.id, name: "Airmeet Readings", floor: "Virtual", purpose: "Programming", sort_order: 505},
-      {venue_id: airmeet.id, name: "Airmeet Table Talks", floor: "Virtual", purpose: "Programming", sort_order: 506}
+      {venue_id: airmeet.id, name: "Airmeet 5", floor: "Virtual", purpose: "Programming", sort_order: 505},
+      {venue_id: airmeet.id, name: "Airmeet Readings", floor: "Virtual", purpose: "Programming", sort_order: 506},
+      {venue_id: airmeet.id, name: "Airmeet Table Talks", floor: "Virtual", purpose: "Programming", sort_order: 507}
     ]
 
     candidates.each do |candidate|

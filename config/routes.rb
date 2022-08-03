@@ -51,6 +51,8 @@ Rails.application.routes.draw do
   get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
   get 'person/:person_id/assigned_surveys', to: 'people#assigned_surveys'
 
+  get 'publications/schedule', to: 'publications#schedule'
+
   get 'report/participant_selections', to: 'reports#participant_selections'
   get 'report/session_selections', to: 'reports#session_selections'
   get 'report/participant_availabilities', to: 'reports#participant_availabilities'
@@ -81,6 +83,8 @@ Rails.application.routes.draw do
   get 'report/conflict_reports/multiple_sessions_in_room', to: 'reports/conflict_reports#multiple_sessions_in_room'
   get 'report/conflict_reports/all_conflicts', to: 'reports/conflict_reports#all_conflicts'
   get 'report/conflict_reports/all_ignored_conflicts', to: 'reports/conflict_reports#all_ignored_conflicts'
+
+  get 'report/people_reports/record_stream_permissions', to: 'reports/people_reports#record_stream_permissions'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
@@ -136,7 +140,9 @@ Rails.application.routes.draw do
   resources :tags, path: 'tag'
 
   get 'session/tags', to: 'sessions#tags'
+  get 'session/schedule_publish', to: 'sessions#schedule_publish'
   post 'session/import', to: 'sessions#import'
+  post 'session/update_all', to: 'sessions#update_all'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id
   resources :sessions, path: 'session' do
     get 'session_assignments', to: 'session_assignments#index'
