@@ -123,7 +123,7 @@ export default {
         'admin'
       ]
       if (this.displayDraftSchedule) {
-        baseTabs.splice(5, 0, 'draft_schedule')
+        baseTabs.splice(5, 0, 'draft-schedule')
       }
       if (this.currentUserIsAdmin || this.currentUserIsStaff || this.firmSchedule) {
         baseTabs.splice(5, 0, 'schedule')
