@@ -697,7 +697,9 @@ CREATE TABLE public.sessions (
     age_restriction_id uuid,
     minors_participation jsonb,
     room_set_id uuid,
-    room_notes text
+    room_notes text,
+    recorded boolean DEFAULT false NOT NULL,
+    streamed boolean DEFAULT false NOT NULL
 );
 
 
@@ -1123,7 +1125,7 @@ CREATE VIEW public.person_schedules AS
     sessions.description,
     sessions.environment
    FROM (((public.session_assignments sa
-     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum))))
+     JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum) AND ((sart.name)::text <> 'Reserve'::text))))
      JOIN public.people p ON ((p.id = sa.person_id)))
      LEFT JOIN public.sessions ON ((sessions.id = sa.session_id)))
   WHERE ((sa.session_assignment_role_type_id IS NOT NULL) AND (sessions.room_id IS NOT NULL) AND (sessions.start_time IS NOT NULL) AND ((sa.state)::text <> 'rejected'::text));
@@ -1340,9 +1342,12 @@ CREATE TABLE public.publication_dates (
     "timestamp" timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    newitems integer DEFAULT 0,
-    modifieditems integer DEFAULT 0,
-    removeditems integer DEFAULT 0
+    new_sessions integer DEFAULT 0,
+    updated_sessions integer DEFAULT 0,
+    dropped_sessions integer DEFAULT 0,
+    new_assignments integer DEFAULT 0,
+    updated_assignments integer DEFAULT 0,
+    dropped_assignments integer DEFAULT 0
 );
 
 
@@ -1357,6 +1362,20 @@ CREATE TABLE public.publication_statuses (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: publish_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.publish_snapshots (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    publication_date_id uuid,
+    label character varying,
+    snapshot jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1400,7 +1419,9 @@ CREATE TABLE public.published_sessions (
     require_signup boolean DEFAULT false,
     waiting_list_size integer DEFAULT 0,
     environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
-    minors_participation jsonb
+    minors_participation jsonb,
+    recorded boolean DEFAULT false NOT NULL,
+    streamed boolean DEFAULT false NOT NULL
 );
 
 
@@ -2343,6 +2364,14 @@ ALTER TABLE ONLY public.publication_dates
 
 ALTER TABLE ONLY public.publication_statuses
     ADD CONSTRAINT publication_statuses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: publish_snapshots publish_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.publish_snapshots
+    ADD CONSTRAINT publish_snapshots_pkey PRIMARY KEY (id);
 
 
 --
@@ -3337,7 +3366,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220714124706'),
 ('20220719000644'),
 ('20220723213605'),
-('20220726130346');
-
+('20220726130346'),
+('20220801152151'),
+('20220801173704'),
+('20220801195644');
 
 

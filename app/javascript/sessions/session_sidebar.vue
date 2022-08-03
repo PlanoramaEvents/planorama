@@ -48,7 +48,7 @@
           </div>
         </b-row>
         <div class="row">
-          <div class="col-12">
+          <div class="col-12 col-md-6 col-lg-4">
             <b-form-group label="Public Schedule Visibility">
               <span class="text-muted ml-2">Not Visible</span>
               <b-form-checkbox
@@ -57,7 +57,27 @@
                 :checked="selected.visibility === 'is_public'"
                 class="d-inline-block"
               >Visible</b-form-checkbox>
-        </b-form-group>
+            </b-form-group>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <b-form-group>
+              <b-form-checkbox
+                id="session-recorded"
+                switch
+                v-model="selected.recorded"
+                disabled
+              >Will be recorded</b-form-checkbox>
+            </b-form-group>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <b-form-group>
+              <b-form-checkbox
+                id="session-streamed"
+                switch
+                v-model="selected.streamed"
+                disabled
+              >Will be live-streamed</b-form-checkbox>
+            </b-form-group>
           </div>
         </div>
         <div class="float-right d-flex justify-content-end">

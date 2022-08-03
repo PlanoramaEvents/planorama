@@ -125,7 +125,7 @@ export default {
         'session-ranking',
       ]
       if (this.displayDraftSchedule) {
-        baseTabs.push('draft_schedule');
+        baseTabs.splice(5, 0, 'draft-schedule')
       }
       if (this.currentUserIsAdmin || this.currentUserIsStaff || this.firmSchedule) {
         baseTabs.splice(5, 0, 'schedule');

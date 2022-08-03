@@ -13,7 +13,7 @@ class Person < ApplicationRecord
   # acts_as_taggable
   acts_as_taggable_on :tags
 
-  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at]
+  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at, :lock_version]
 
   before_destroy :check_if_assigned
   before_save :check_primary_email
@@ -23,18 +23,27 @@ class Person < ApplicationRecord
   has_many  :session_assignments, dependent: :destroy do
     def publishable
       # get the people with the given role
-      where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisble')")
+      where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisible')")
       .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
       .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
     end
   end
 
   has_many  :sessions, through: :session_assignments do
+    def scheduled
+      # get the people with the given role
+      where("sessions.status != 'dropped'")
+      .where("sessions.start_time is not null and sessions.room_id is not null")
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisible')")
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
+      .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
+    end
+
     def publishable
       # get the people with the given role
       where("sessions.status != 'draft' and sessions.status != 'dropped' and sessions.visibility = 'public'")
       .where("sessions.start_time is not null and sessions.room_id is not null")
-      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisble')")
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisible')")
       .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
       .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
     end

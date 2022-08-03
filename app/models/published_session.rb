@@ -4,7 +4,7 @@
 class PublishedSession < ApplicationRecord
   self.primary_key = :session_id
 
-  has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' }, ignore: [:updated_at, :created_at]
+  has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' }, ignore: [:updated_at, :created_at, :lock_version]
 
   belongs_to :format
   belongs_to :session
