@@ -4,7 +4,7 @@ class Survey::Page < ApplicationRecord
 
   default_scope { order(['survey_pages.sort_order asc'])}
 
-  has_paper_trail versions: { class_name: 'Audit::SurveyVersion' }, ignore: [:updated_at, :created_at]
+  has_paper_trail versions: { class_name: 'Audit::SurveyVersion' }, ignore: [:updated_at, :created_at, :lock_version, :sort_order]
 
   # scope the questions so we do not include those that were deleted
   has_many :questions,

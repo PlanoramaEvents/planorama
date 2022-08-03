@@ -10,4 +10,11 @@ namespace :pubs do
 
     Audit::PublishedSessionVersion.delete_all
   end
+
+  task clear_audit: :environment do
+    Audit::PublishedSessionVersion.delete_all
+    Audit::SessionVersion.delete_all
+    Audit::PersonVersion.delete_all
+    Audit::SurveyVersion.delete_all
+  end
 end

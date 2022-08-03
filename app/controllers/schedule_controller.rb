@@ -6,7 +6,7 @@ class ScheduleController < ApplicationController
   # 2. If staging or dev use published - if no published then use the live for testing
   # 3. cache mechanism (cache can be popultaed as part of the publish)
   def index
-    snapshot = PublicationDate.order('created_at desc').first.publish_snapshots.schedules.first
+    snapshot = PublicationDate.order('created_at desc').first&.publish_snapshots&.schedules&.first
 
     if snapshot
       render json: snapshot, content_type: 'application/json'
@@ -21,7 +21,7 @@ class ScheduleController < ApplicationController
   end
 
   def participants
-    snapshot = PublicationDate.order('created_at desc').first.publish_snapshots.participants.first
+    snapshot = PublicationDate.order('created_at desc').first&.publish_snapshots&.participants&.first
 
     if snapshot
       render json: snapshot, content_type: 'application/json'

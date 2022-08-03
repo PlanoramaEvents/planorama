@@ -29,7 +29,7 @@
                 <b-button variant="primary" size="sm" :disabled="!canDiff">Show difference</b-button>
               </b-td>
               <b-td colspan="3">
-                <b-button variant="primary" size="sm">Create a publish snapshot</b-button>
+                <b-button variant="primary" size="sm" @click="publishdSchedule()">Create a publish snapshot</b-button>
               </b-td>
             </b-tr>
           </b-thead>
@@ -95,8 +95,8 @@ export default {
     SCHEDULE_FIRM_CONFIRM_MESSAGE,
     NODE_ENV,
     mockSnapshots: [
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-04T00:24:00Z', id:'67890'}
+      // {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      // {timestamp: '2022-08-04T00:24:00Z', id:'67890'}
     ],
     pubsDiff: [false, false, false],
   }),
@@ -148,6 +148,9 @@ export default {
       this.draftSchedule = false;
       this.firmSchedule = false;
       this.toastPromise(http.get('/schedule_workflow/reset'), "succesfully reset workflows")
+    },
+    publishdSchedule() {
+      this.toastPromise(http.get('/session/schedule_publish'), "Succesfully requested publish")
     }
   },
   watch: {

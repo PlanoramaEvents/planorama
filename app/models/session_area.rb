@@ -7,5 +7,5 @@ class SessionArea < ApplicationRecord
 
   accepts_nested_attributes_for :area
 
-  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
+  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at, :lock_version]
 end
