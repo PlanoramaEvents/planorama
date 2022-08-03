@@ -1,12 +1,19 @@
 module PublicationService
 
+  def self.start_publish_job
+    pstatus = PublicationStatus.order('created_at desc').first
+    pstatus = PublicationStatus.new if pstatus == nil
+    if pstatus.status != 'inprogress'
+      pstatus.status = 'inprogress'
+      pstatus.save!
+
+      PublicationWorker.perform_async
+    end
+  end
+
   def self.gen_pub_numbers
-    Session.transaction do
-      # Get the session elligible for publication, not draft or dropped and must be public
-      # TODO: if the timestamp of session or assignment is newer then before
-      sessions = Session
-                   .where("status != 'draft' and status != 'dropped' and visibility = 'public'")
-                   .where("room_id is not null and start_time is not null")
+    Session.transaction(joinable: false, requires_new: true) do
+      sessions = publishable_sessions
 
       current_ref = 0
       sessions.each do |session|
@@ -19,75 +26,97 @@ module PublicationService
 
   # Publish the schedule
   # Copy Sessions, and Assignments to Published versions
-  # PublicationDate, timestamp, newitems, modifieditems, removeditems
-  # PublicationStatus, status, submit_time
-  def self.publish
-    # We only want the public participant roles
-    Session.transaction do
-      # Get the session elligible for publication, not draft or dropped and must be public
-      sessions = Session
-                   .where("status != 'draft' and status != 'dropped' and visibility = 'public'")
-                   .where("room_id is not null and start_time is not null")
+  # only deal with sessions and assignments chances since
+  def self.publish(since: nil)
+    res = {}
+    Session.transaction(joinable: false, requires_new: true) do
+      session_results = self.publish_sessions(sessions: self.publishable_sessions, since: since)
+      assignment_results = self.publish_assignments(sessions: self.publishable_sessions, since: since)
 
-      # updated
-      publish_updated(sessions)
-      # new
-      publish_new(sessions)
-      # dropped
-      remove_dropped(sessions)
+      res = session_results.merge(assignment_results)
     end
+    res
   end
+
   #  POST published - create a cache for the published schedule
 
-  def self.publish_new(sessions)
-    candidates = PublishedSession.where("session_id in (?)", sessions.collect(&:id))
+  def self.publish_sessions(sessions:, since:)
+    candidates = if since
+                    sessions.where("sessions.updated_at >= ?", since)
+                  else
+                    sessions
+                  end
+
+    # updated
+    updated_sessions = self.publish_updated_sessions(candidates)
+    # new
+    new_sessions = self.publish_new_sessions(candidates)
+    # dropped
+    dropped_sessions = self.remove_dropped_sessions(sessions)
+
+    {
+      new_sessions: new_sessions,
+      updated_sessions: updated_sessions,
+      dropped_sessions: dropped_sessions
+    }
+  end
+
+  def self.publish_assignments(sessions:, since:)
+    candidates = if since
+                    self.publishable_assignments(sessions: sessions).where("session_assignments.updated_at >= ?", since)
+                  else
+                    self.publishable_assignments(sessions: sessions)
+                  end
+
+    # updated
+    updated_assignments = self.publish_updated_assignments(candidates)
+    # new
+    new_assignments = self.publish_new_assignments(candidates)
+    # dropped
+    dropped_assignments = self.remove_dropped_assignments(self.publishable_assignments(sessions: sessions))
+
+    {
+      new_assignments: new_assignments,
+      updated_assignments: updated_assignments,
+      dropped_assignments: dropped_assignments
+    }
+  end
+
+  def self.publish_new_sessions(sessions)
+    candidates = if PublishedSession.count > 0
+      sessions.where("id not in (?)", PublishedSession.all.collect(&:session_id))
+    else
+      sessions
+    end
     count = candidates.count
 
-    sessions.each do |session|
+    candidates.each do |session|
       pub_session = self.publish_session(session: session, update: false)
       pub_session.save!
-
-      assignments = session.participant_assignments
-                      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisble')")
-                      .where("session_assignments.visibility = 'public'")
-      assignments.each do |assignment|
-        pub_assignment = self.publish_assignment(assignment: assignment, update: false)
-        pub_assignment.save!
-      end
     end
     count
   end
 
-  def self.publish_updated(sessions)
+  def self.publish_updated_sessions(sessions)
+    candidates = sessions.where("id in (?)", PublishedSession.all.collect(&:session_id))
+    count = candidates.count
+
+    candidates.each do |session|
+      pub_session = self.publish_session(session: session)
+      pub_session.save!
+    end
+
+    count
   end
 
-  # def self.publish_new(sessions)
-  #   sessions.each do |session|
-  #     pub_session = self.publish_session(session: session)
-  #     pub_session.save!
-  #
-  #     # And for assignments
-  #     assignments = session.participant_assignments
-  #                     .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisble')")
-  #                     .where("session_assignments.visibility = 'public'")
-  #     assignments.each do |assignment|
-  #       # new, update
-  #       pub_assignment = self.publish_assignment(assignment: assignment, published_session: pub_session)
-  #       pub_assignment.save!
-  #     end
-  #   end
-  # end
-
-  def self.remove_dropped(sessions)
+  def self.remove_dropped_sessions(sessions)
     candidates = PublishedSession.where("session_id not in (?)", sessions.collect(&:id))
     count = candidates.count
     candidates.destroy_all
     count
   end
 
-  # pub_session = PublicationService.publish_session(session: session)
-  #
-  # Published the requested session, if the session already has a published
+  # Published (create or update) the requested session, if the session already has a published
   # version then we update that otherwise we create one
   def self.publish_session(session:, update: true)
     pub_session = PublishedSession.find_by session_id: session.id
@@ -106,6 +135,43 @@ module PublicationService
     pub_session.session_id = session.id unless pub_session.session_id # point published to source session
 
     pub_session
+  end
+
+  #
+  def self.publish_new_assignments(assignments)
+    candidates = if PublishedSessionAssignment.count > 0
+      assignments.where("id not in (?)", PublishedSessionAssignment.all.collect(&:session_assignment_id))
+    else
+      assignments
+    end
+
+    count = candidates.count
+
+    candidates.each do |assignment|
+      pub_assignment = self.publish_assignment(assignment: assignment, update: false)
+      pub_assignment.save!
+    end
+
+    count
+  end
+
+  def self.publish_updated_assignments(assignments)
+    candidates = assignments.where("id not in (?)", PublishedSessionAssignment.all.collect(&:session_assignment_id))
+    count = candidates.count
+
+    candidates.each do |assignment|
+      pub_assignment = self.publish_assignment(assignment: assignment)
+      pub_assignment.save!
+    end
+
+    count
+  end
+
+  def self.remove_dropped_assignments(assignments)
+    candidates = PublishedSessionAssignment.where("session_assignment_id not in (?)", assignments.collect(&:id))
+    count = candidates.count
+    candidates.destroy_all
+    count
   end
 
   # Create published versions of the assignments
@@ -127,5 +193,19 @@ module PublicationService
     pub_assignment.published_session_id = assignment.session_id unless pub_assignment.published_session_id
 
     pub_assignment
+  end
+
+  # Get the session elligible for publication, not draft or dropped and must be public
+  def self.publishable_sessions
+    Session
+      .where("status != 'draft' and status != 'dropped' and visibility = 'public'")
+      .where("room_id is not null and start_time is not null")
+  end
+
+  def self.publishable_assignments(sessions:)
+    SessionAssignment
+      .where("session_assignments.session_id in (?)", sessions.collect(&:id))
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisible' or session_assignment_role_type.name = 'Reserve')")
+      .where("session_assignments.visibility = 'public'")
   end
 end

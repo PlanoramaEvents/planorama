@@ -1342,9 +1342,12 @@ CREATE TABLE public.publication_dates (
     "timestamp" timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    removeditems integer,
-    modifieditems integer,
-    newitems integer
+    new_sessions integer DEFAULT 0,
+    updated_sessions integer DEFAULT 0,
+    dropped_sessions integer DEFAULT 0,
+    new_assignments integer DEFAULT 0,
+    updated_assignments integer DEFAULT 0,
+    dropped_assignments integer DEFAULT 0
 );
 
 
@@ -1359,6 +1362,20 @@ CREATE TABLE public.publication_statuses (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
+);
+
+
+--
+-- Name: publish_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.publish_snapshots (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    publication_date_id uuid,
+    label character varying,
+    snapshot jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -2347,6 +2364,14 @@ ALTER TABLE ONLY public.publication_dates
 
 ALTER TABLE ONLY public.publication_statuses
     ADD CONSTRAINT publication_statuses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: publish_snapshots publish_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.publish_snapshots
+    ADD CONSTRAINT publish_snapshots_pkey PRIMARY KEY (id);
 
 
 --
@@ -3342,6 +3367,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220719000644'),
 ('20220723213605'),
 ('20220726130346'),
+('20220801152151'),
+('20220801173704'),
 ('20220801195644');
+
 
 

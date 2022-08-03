@@ -4,6 +4,14 @@ class SessionsController < ResourceController
   POLICY_SCOPE_CLASS = 'SessionPolicy::Scope'.freeze
   # DEFAULT_SORTBY = 'name_sort_by'
 
+  def schedule_publish
+    authorize current_person, policy_class: policy_class
+
+    PublicationService.start_publish_job
+
+    render status: :ok, json: {}.to_json, content_type: 'application/json'
+  end
+
   # Mass update for the sessions (given ids and params)
   def update_all
     authorize current_person, policy_class: policy_class

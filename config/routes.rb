@@ -84,6 +84,8 @@ Rails.application.routes.draw do
   get 'report/conflict_reports/all_conflicts', to: 'reports/conflict_reports#all_conflicts'
   get 'report/conflict_reports/all_ignored_conflicts', to: 'reports/conflict_reports#all_ignored_conflicts'
 
+  get 'report/people_reports/record_stream_permissions', to: 'reports/people_reports#record_stream_permissions'
+
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
   resources :session_limits, path: 'session_limit', except: [:index]
@@ -138,6 +140,7 @@ Rails.application.routes.draw do
   resources :tags, path: 'tag'
 
   get 'session/tags', to: 'sessions#tags'
+  get 'session/schedule_publish', to: 'sessions#schedule_publish'
   post 'session/import', to: 'sessions#import'
   post 'session/update_all', to: 'sessions#update_all'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id

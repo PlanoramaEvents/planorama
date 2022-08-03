@@ -34,6 +34,10 @@ class ApplicationController < ActionController::Base
     if ScheduleSnapshot.where("status = 'in_progress'").count > 0
       redirect_to '/maintenance.html', status: 503
     end
+    # Stop people from making changes if we are publishing
+    if PublicationStatus.where("status = 'inprogress'").count > 0
+      redirect_to '/maintenance.html', status: 503
+    end
   end
 
   def prevent_cache
