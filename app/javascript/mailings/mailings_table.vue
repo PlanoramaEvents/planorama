@@ -2,7 +2,7 @@
   <div>
     <table-vue
       defaultSortBy='updated_at'
-      defaultSortDesc="true"
+      :defaultSortDesc="true"
       :model="model"
       :columns="columns"
       :defaultFilter="defaultFilter"

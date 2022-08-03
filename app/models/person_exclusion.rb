@@ -5,5 +5,5 @@ class PersonExclusion < ApplicationRecord
   validates :person_id, presence: true
   validates :exclusion_id, presence: true
 
-  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at]
+  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at, :lock_version]
 end

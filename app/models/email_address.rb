@@ -17,7 +17,7 @@ class EmailAddress < ApplicationRecord
   before_save :strip_spaces
   after_save  :check_default, :check_contact
 
-  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at]
+  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at, :lock_version]
 
   validates_with SinglePrimaryEmail
 
