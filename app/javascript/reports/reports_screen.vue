@@ -10,9 +10,6 @@
     <h5><a id="participants"></a>Participants</h5>
     <ul>
       <li>
-        <a href="/report/people_reports/record_stream_permissions" target="_blank">Participant Recorsing and Streaming Permissions</a>
-      </li>
-      <li>
         <a href="/report/participant_selections" target="_blank">Participant Selections</a><br />
         <p class="ml-2">
           <strong><em>Description</em></strong>: Sessions and rankings selected by people, one line per person and session<br />
@@ -90,6 +87,14 @@
           <strong><em>Fields</em></strong>: Person name, published name, participant status, attendance type (in-person, virtual, hybrid), person’s bio<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: people with a participant status of accepted, invited, or invite_pending who are assigned to no sessions, or who are assigned as invisible participants or reserved on one or more sessions
+        </p>
+      </li>
+      <li>
+        <a href="/report/people_reports/record_stream_permissions" target="_blank">Participant Recording and Streaming Permissions</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: List of participants with their recording and streaming permissions and exclusions.<br />
+          <strong><em>Fields</em></strong>: Person published names, primary email, attendance type, participant status, permission to stream, exclusions for streaming, permission to record, exclusions to recording, and their schedule.<br />
+          <strong><em>Person data included</em></strong>: Moderators and participants on scheduled sessions.
         </p>
       </li>
     </ul>
