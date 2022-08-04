@@ -39,8 +39,9 @@ class PublishedSession < ApplicationRecord
   has_many :participant_assignments,
     -> {
       joins("JOIN session_assignment_role_type as sart ON sart.id = published_session_assignments.session_assignment_role_type_id")
-      .where("published_session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
-      .order("sart.sort_order")
+      .joins("JOIN people on people.id = published_session_assignments.person_id")
+      .where("published_session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve' OR session_assignment_role_type.name = 'Invisible')")
+      .order("sart.sort_order, people.published_name asc")
     },
     class_name: 'PublishedSessionAssignment'
   has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'

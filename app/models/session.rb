@@ -82,9 +82,10 @@ class Session < ApplicationRecord
   has_many :participant_assignments,
     -> {
       joins("JOIN session_assignment_role_type as sart ON sart.id = session_assignments.session_assignment_role_type_id")
+      .joins("JOIN people on people.id = session_assignments.person_id")
       .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
-      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
-      .order("sart.sort_order")
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve' OR session_assignment_role_type.name = 'Invisible')")
+      .order("sart.sort_order, people.published_name asc")
     },
     class_name: 'SessionAssignment'
   has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
