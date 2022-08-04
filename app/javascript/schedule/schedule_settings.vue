@@ -17,22 +17,22 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row">
+    <div class="row" v-if="currentSettings.env !== 'production'">
       <div class="col-12">
         <h5>Publish schedule to public</h5>
         <b-table-simple borderless fixed small>
           <b-thead>
             <b-tr>
-              <b-td class="text-center">
+              <!-- <b-td class="text-center">
                 <b-button variant="primary" size="sm" :disabled="!canDiff">Show difference</b-button>
-              </b-td>
+              </b-td> -->
               <b-td colspan="3">
                 <b-button variant="primary" size="sm" @click="publishdSchedule()">Create a publish snapshot</b-button>
               </b-td>
             </b-tr>
           </b-thead>
         </b-table-simple>
-        <b-table-simple bordered fixed small>
+        <!-- <b-table-simple bordered fixed small>
           <b-thead class="text-center">
             <b-tr>
               <b-td class="text-center">Select 2</b-td>
@@ -47,9 +47,9 @@
               <b-td colspan="3">{{snap.timestamp}}</b-td>
             </b-tr>
           </b-tbody>
-        </b-table-simple>
+        </b-table-simple> -->
       </div>
-    </div> -->
+    </div>
     <plano-modal id="confirm-draft-modal" @cancel="cancelDraft()" @close="cancelDraft()" no-close-on-backdrop @ok="confirmDraft()">
       <template #modal-title>Publish Draft Schedule Confirmation</template>
       {{SCHEDULE_DRAFT_CONFIRM_MESSAGE}}
