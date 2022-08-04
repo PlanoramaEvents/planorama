@@ -1,6 +1,10 @@
 class Conclar::SessionSerializer < ActiveModel::Serializer
   attributes :title
 
+  attribute :format do    
+    object.format.name if object.format
+  end
+
   attribute :id do
     if object.has_attribute?(:id)
       object.id
