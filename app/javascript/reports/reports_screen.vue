@@ -92,9 +92,10 @@
       <li>
         <a href="/report/people_reports/record_stream_permissions" target="_blank">Participant Recording and Streaming Permissions</a>
         <p class="ml-2">
-          <strong><em>Description</em></strong>: List of participants with their recording and streaming permissions and exclusions.<br />
-          <strong><em>Fields</em></strong>: Person published names, primary email, attendance type, participant status, permission to stream, exclusions for streaming, permission to record, exclusions to recording, and their schedule.<br />
-          <strong><em>Person data included</em></strong>: Moderators and participants on scheduled sessions.
+          <strong><em>Description</em></strong>: List of participants with their recording and streaming permissions and exclusions, one line per person<br />
+          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type, participant status, permission to stream, exclusions for streaming, permission to record, exclusions to recording, schedule<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants
         </p>
       </li>
     </ul>

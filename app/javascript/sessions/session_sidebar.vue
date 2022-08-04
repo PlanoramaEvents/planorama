@@ -76,7 +76,7 @@
                 switch
                 v-model="selected.streamed"
                 disabled
-              >Will be live-streamed</b-form-checkbox>
+              >Will be livestreamed</b-form-checkbox>
             </b-form-group>
           </div>
         </div>
