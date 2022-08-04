@@ -35,7 +35,6 @@ xml.schedule {
       }
       xml.roomareasformat{
         session.environment == 'virtual' ? xml.virtual(session.room.name) : xml.room(session.room.name)
-        xml.areas(session.area_list.join(", "))
         # Areas are for internal use only, not for the public
         # xml.areas(session.area_list.join(", "))
         xml.format(session.format.name)
