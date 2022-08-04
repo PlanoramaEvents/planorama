@@ -5,6 +5,9 @@ class PublicationsController < ApplicationController
     sessions = SessionService.live_sessions
 
     send_data XmlFormatter.new(sessions).render('schedule', sessions)
+    .gsub(/&#39;/, '&#8217;')
+    .gsub(/&lt;em&gt;/, '<em>')
+    .gsub(/&lt;\/em&gt;/, '</em>')
     .gsub(/\<\?xml version="1\.0"\?\>\n/, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!-- Formatted for the special requirements of importing to Adobe InDesign. -->')
     .gsub(/\<schedule\>\n  /, '<schedule>')
     .gsub(/\<session\>\n    /, '<session>')
