@@ -1,7 +1,9 @@
 class PublishedSessionAssignment < ApplicationRecord
   self.primary_key = :session_assignment_id
 
-  has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' }, ignore: [:updated_at, :created_at, :lock_version, :sort_order]
+  has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' },
+                  ignore: [:updated_at, :created_at, :lock_version, :sort_order],
+                  limit: nil
 
   include RankedModel
   ranks :sort_order, with_same: [:published_session_id]

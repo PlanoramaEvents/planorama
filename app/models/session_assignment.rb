@@ -20,7 +20,9 @@ class SessionAssignment < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: [:session_id]
 
-  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at, :lock_version, :sort_order, :interested, :interest_ranking, :interest_notes, :planner_notes, :interest_role]
+  has_paper_trail versions: { class_name: 'Audit::SessionVersion' },
+                  ignore: [:updated_at, :created_at, :lock_version, :sort_order, :interested, :interest_ranking, :interest_notes, :planner_notes, :interest_role],
+                  limit: nil
 
   belongs_to  :person
   belongs_to  :session
