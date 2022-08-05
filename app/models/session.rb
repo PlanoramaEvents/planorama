@@ -1,4 +1,6 @@
 class Session < ApplicationRecord
+  include XmlFormattable
+
   validates_presence_of :title
   validates_numericality_of :duration, allow_nil: true
   validates_numericality_of :minimum_people, allow_nil: true
@@ -7,7 +9,7 @@ class Session < ApplicationRecord
   # NOTE: when we have a config for default duration change to use a lambda
   attribute :duration, default: 60
 
-  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at]
+  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at, :updated_by, :lock_version, :interest_opened_by, :interest_opened_at]
 
   belongs_to :format, required: false
   has_one :published_session, dependent: :destroy
@@ -78,9 +80,10 @@ class Session < ApplicationRecord
   has_many :participant_assignments,
     -> {
       joins("JOIN session_assignment_role_type as sart ON sart.id = session_assignments.session_assignment_role_type_id")
+      .joins("JOIN people on people.id = session_assignments.person_id")
       .where("session_assignments.session_assignment_role_type_id is not null AND session_assignments.state != 'rejected'")
-      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
-      .order("sart.sort_order")
+      .where("session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve' OR session_assignment_role_type.name = 'Invisible')")
+      .order("sart.sort_order, people.published_name asc")
     },
     class_name: 'SessionAssignment'
   has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'

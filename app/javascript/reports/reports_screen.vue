@@ -41,7 +41,7 @@
           <strong><em>Description</em></strong>: List of surveys taken, including day/time submitted, one line per person<br />
           <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type, participant status, surveys taken<br />
           <strong><em>Person data included</em></strong>: participant status of applied, probable, vetted, invite_pending, invited, accepted
-        </p>      
+        </p>
       </li>
       <li>
         <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
@@ -51,7 +51,7 @@
           <strong><em>Fields</em></strong>: Person name, published name, session title, area(s) of session, names of other people assigned to the session, names of people not to assign to the same session<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants who listed information about who not to assign with
-        </p>  
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/participants_over_session_limits" target="_blank">Participants over Daily Limits</a>
@@ -87,7 +87,16 @@
           <strong><em>Fields</em></strong>: Person name, published name, participant status, attendance type (in-person, virtual, hybrid), person’s bio<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: people with a participant status of accepted, invited, or invite_pending who are assigned to no sessions, or who are assigned as invisible participants or reserved on one or more sessions
-        </p>  
+        </p>
+      </li>
+      <li>
+        <a href="/report/people_reports/record_stream_permissions" target="_blank">Participant Recording and Streaming Permissions</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: List of participants with their recording and streaming permissions and exclusions, one line per person<br />
+          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type, participant status, permission to stream, exclusions for streaming, permission to record, exclusions to recording, schedule<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants
+        </p>
       </li>
     </ul>
 
@@ -126,7 +135,7 @@
           <strong><em>Description</em></strong>: Scheduled sessions with no assigned moderators or participants, one line per session<br />
           <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, room<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions
-        </p>  
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>

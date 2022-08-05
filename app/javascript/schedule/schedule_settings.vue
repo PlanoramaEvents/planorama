@@ -14,10 +14,40 @@
         <div v-if="currentSettings.env !== 'production'">
           <b-button variant="primary" @click="reset()">Reset for Testing</b-button>
           <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
-          <div class="mt-3">Note: this minecart isn't actually hooked up to any status yet. So while it does actually produce a snapshot, the toggle won't
-          reflect reality if you reload. There's some TODOs in here. If you try to snapshot and get an error, reset first.
-          </div>
         </div>
+      </div>
+    </div>
+    <div class="row" v-if="currentSettings.env !== 'production'">
+      <div class="col-12">
+        <h5>Publish schedule to public</h5>
+        <b-table-simple borderless fixed small>
+          <b-thead>
+            <b-tr>
+              <!-- <b-td class="text-center">
+                <b-button variant="primary" size="sm" :disabled="!canDiff">Show difference</b-button>
+              </b-td> -->
+              <b-td colspan="3">
+                <b-button variant="primary" size="sm" @click="publishdSchedule()">Create a publish snapshot</b-button>
+              </b-td>
+            </b-tr>
+          </b-thead>
+        </b-table-simple>
+        <!-- <b-table-simple bordered fixed small>
+          <b-thead class="text-center">
+            <b-tr>
+              <b-td class="text-center">Select 2</b-td>
+              <b-td colspan="3">Timestamp</b-td>
+            </b-tr>
+          </b-thead>
+          <b-tbody>
+            <b-tr v-for="(snap, i) in pubSnapshots" :key="snap.id">
+              <b-td class="text-center">
+                <b-form-checkbox name="pubs-diff" v-model="pubsDiff[i]" :disabled="pubsDiffCount >= 2 && !pubsDiff[i]"></b-form-checkbox>
+              </b-td>
+              <b-td colspan="3">{{snap.timestamp}}</b-td>
+            </b-tr>
+          </b-tbody>
+        </b-table-simple> -->
       </div>
     </div>
     <plano-modal id="confirm-draft-modal" @cancel="cancelDraft()" @close="cancelDraft()" no-close-on-backdrop @ok="confirmDraft()">
@@ -42,6 +72,7 @@ import {
 
 import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import settingsMixin from "@/store/settings.mixin";
+import { DateTime } from 'luxon';
 
 export default {
   name: "ScheduleSettings",
@@ -60,9 +91,23 @@ export default {
     firmScheduleConfirmed: false,
     SCHEDULE_DRAFT_CONFIRM_MESSAGE,
     SCHEDULE_FIRM_CONFIRM_MESSAGE,
-    NODE_ENV
+    NODE_ENV,
+    mockSnapshots: [
+      // {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      // {timestamp: '2022-08-04T00:24:00Z', id:'67890'}
+    ],
+    pubsDiff: [false, false, false],
   }),
   computed: {
+    pubSnapshots() {
+      return [{timestamp: "Current state", id: null}, ...this.mockSnapshots.map(snap => ({...snap, timestamp: DateTime.fromISO(snap.timestamp).toFormat("DDDD, t ZZZZ")}))]
+    },
+    pubsDiffCount() {
+      return this.pubsDiff.filter(pd => pd).length
+    },
+    canDiff() {
+      return this.pubsDiffCount === 2;
+    },
     draftScheduledAtText() {
       return this.draftScheduleConfirmed ? this.draftScheduledAt : "Pending";
     },
@@ -101,6 +146,9 @@ export default {
       this.draftSchedule = false;
       this.firmSchedule = false;
       this.toastPromise(http.get('/schedule_workflow/reset'), "succesfully reset workflows")
+    },
+    publishdSchedule() {
+      this.toastPromise(http.get('/session/schedule_publish'), "Succesfully requested publish")
     }
   },
   watch: {

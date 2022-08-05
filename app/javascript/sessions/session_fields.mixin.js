@@ -1,5 +1,6 @@
 import { conventionTimezoneMixin, settingsMixin } from '@/mixins';
 import { DateTime } from 'luxon';
+import {SESSION_STATUS} from '@/constants/strings'
 
 export const areaMixin = {
   computed: {
@@ -45,5 +46,19 @@ export const startTimeMixin = {
     formattedStartTime() {
       return this.formatStartTime(this.selected);
     },
+  }
+}
+
+export const sessionStatusMixin = {
+  mixins: [
+    settingsMixin
+  ],
+  computed: {
+    sessionStatusOptions() {
+      return this.currentSettings?.enums?.Session?.status?.map(value => ({text: SESSION_STATUS[value], value}))
+    },
+    sessionStatusOptionsNoDropped() {
+      return this.sessionStatusOptions.filter(({value}) => value !== 'dropped')
+    }
   }
 }

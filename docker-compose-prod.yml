@@ -38,6 +38,7 @@ services:
       - NODE_ENV=production
     command: /opt/planorama/script/planorama_start.sh
     volumes:
+      - /var/log/planorama/web:/opt/planorama/log
       - type: tmpfs
         target: /opt/planorama/tmp
     ports:
@@ -60,6 +61,7 @@ services:
       - NODE_ENV=production
     command: /opt/planorama/script/planorama_sidekiq.sh
     volumes:
+      - /var/log/planorama/sidekiq:/opt/planorama/log
       - type: tmpfs
         target: /opt/planorama/tmp
     depends_on:

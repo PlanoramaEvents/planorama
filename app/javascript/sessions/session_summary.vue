@@ -79,6 +79,22 @@
             class="d-inline-block"
           >Visible</b-form-checkbox>
         </b-form-group>
+        <b-form-group>
+          <b-form-checkbox
+            id="session-recorded"
+            switch
+            v-model="session.recorded"
+            @change="saveSession()"
+          >Will be recorded</b-form-checkbox>
+        </b-form-group>
+        <b-form-group>
+          <b-form-checkbox
+            id="session-streamed"
+            switch
+            v-model="session.streamed"
+            @change="saveSession()"
+          >Will be livestreamed</b-form-checkbox>
+        </b-form-group>
         <b-form-group label="Status" label-cols="auto">
           <b-form-select  id="session-status" v-model="session.status" @change="saveSession()">
             <b-form-select-option

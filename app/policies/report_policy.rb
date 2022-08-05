@@ -1,5 +1,9 @@
 class ReportPolicy < BasePolicy
 
+  def record_stream_permissions?
+    allowed?(action: :record_stream_permissions)
+  end
+
   def schedule_accpetance?
     allowed?(action: :schedule_accpetance)
   end

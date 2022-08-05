@@ -12,7 +12,7 @@
       <div class="col-8" :style="heightHelper">
         <b-overlay :show="loading" spinner-variant="primary" variant="white" opacity="1">
           <schedule-collapse v-for="(session) in orderedSessions" :key="session.id" :id="session.id" v-model="open[session.id]">
-            <template #title><span class="larger-text"><strong class="larger-text">{{session.title}}</strong>, {{session.room}}, {{formatStartTime(session)}}</span></template>
+            <template #title><span class="larger-text"><strong class="larger-text">{{session.title}}</strong>, {{formatStartTime(session)}}, {{session.room}}</span></template>
             <dl class="indented-dl">
               <dt>Title</dt>
               <dd>{{session.title}}</dd>

@@ -154,7 +154,9 @@ namespace :rbac do
           "destroy": false,
           "index": true,
           "show": true,
-          "update": false
+          "update": false,
+          "update_all": false,
+          "schedule_publish": false
       },
       "format": {
           "create": false,
@@ -409,7 +411,9 @@ namespace :rbac do
           "destroy": true,
           "index": true,
           "show": true,
-          "update": true
+          "update": true,
+          "update_all": true,
+          "schedule_publish": false
       },
       "format": {
           "create": true,
@@ -519,7 +523,8 @@ namespace :rbac do
         "schedule_by_person": true,
         "schedule_by_room_then_time": true,
         "session_selections": true,
-        "sessions_with_participants": true
+        "sessions_with_participants": true,
+        "record_stream_permissions": true
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -702,7 +707,9 @@ namespace :rbac do
           "destroy": true,
           "index": true,
           "show": true,
-          "update": true
+          "update": true,
+          "update_all": true,
+          "schedule_publish": false
       },
       "format": {
           "create": true,
@@ -812,7 +819,8 @@ namespace :rbac do
         "schedule_by_person": true,
         "schedule_by_room_then_time": true,
         "session_selections": true,
-        "sessions_with_participants": true
+        "sessions_with_participants": true,
+        "record_stream_permissions": true
       },
       "session_report": {
         "panels_with_too_few_people": true,

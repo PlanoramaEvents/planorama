@@ -81,7 +81,24 @@ export const session_columns = [
     label: 'Copy Edited/Proofed',
     type: "select",
     choices: [{label: "Yes", value: true}, {label: "No", value: false}],
-    formatter: (value) => value ? "Yes" : "No"
+    formatter: (value) => value ? "Yes" : "No",
+    sortable: true,
+  },
+  {
+    key: 'recorded',
+    label: 'Recorded',
+    type: "select",
+    choices: [{label: "Yes", value: true}, {label: "No", value: false}],
+    formatter: (value) => value ? "Yes" : "No",
+    sortable: true
+  },
+  {
+    key: 'streamed',
+    label: 'Livestreamed',
+    type: "select",
+    choices: [{label: "Yes", value: true}, {label: "No", value: false}],
+    formatter: (value) => value ? "Yes" : "No",
+    sortable: true
   },
   {
     key: 'environment',

@@ -1,7 +1,7 @@
 <template>
   <plano-modal
     no-close-on-backdrop
-    ok-title="Save"
+    :ok-title="okTitle"
     v-on="$listeners"
     v-bind="$attrs"
   >
@@ -15,6 +15,12 @@ import PlanoModal from './plano_modal';
 
 export default {
   name: "EditModal",
+  props: {
+    okTitle: {
+      type: String,
+      default: 'Save'
+    }
+  },
   components: {
     PlanoModal
   },

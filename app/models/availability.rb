@@ -4,5 +4,5 @@ class Availability < ApplicationRecord
   validates :start_time, presence: true
   validates :end_time, presence: true
 
-  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at]
+  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at, :lock_version]
 end
