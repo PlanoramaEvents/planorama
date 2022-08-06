@@ -50,7 +50,7 @@ class Conclar::ParticipantSerializer < ActiveModel::Serializer
   attribute :tags do
     res = []
 
-    res.concat [object.attendance_type]    # in person, virtual, hybrid
+    res.concat ["Attendance: ".concat( object.attendance_type )]    # in person, virtual, hybrid
 
     res
   end
