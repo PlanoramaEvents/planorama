@@ -87,7 +87,7 @@ export const tableMixin = {
         this.tempCurrentPage = this.currentPage;
       }
     },
-    fetchPaged(clear=true) {
+    fetchAll(clear=true, perPage=null) {
       this.tableBusy = true;
       this.shall_clear = clear
       let _filter = JSON.stringify(this.filter)
@@ -108,7 +108,8 @@ export const tableMixin = {
         // What URL does this use
         this.fetch(
           {
-            perPage: this.perPage,
+            // THIS IS THE PROBLEM
+            perPage: perPage,
             sortOrder: this.sortDesc ? 'desc' : 'asc',
             sortBy: this.sortBy,
             filter: _filter,
@@ -127,6 +128,9 @@ export const tableMixin = {
           res(data);
         }).catch(rej).finally(() => this.tableBusy = false); // TODO maybe actually handle it here??
       })
+    },
+    fetchPaged(clear=true) {
+      this.fetchAll(clear, this.perPage);
     }
   },
   mounted() {
