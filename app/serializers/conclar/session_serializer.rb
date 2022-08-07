@@ -25,22 +25,21 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   attribute :tags do
     res = []
 
-    res.concat object.area_list #.collect(&:name)
+    res.concat object.area_list.collect { |x| "Area: " + x }
+    res.concat ["Environment: ".concat( object.environment )] if object.environment != 'unknown' # virtual hybrid etc
 
-    res.concat [object.age_restriction.name] if object.age_restriction
-    res.concat [object.environment] if object.environment != 'unknown' # virtual hybrid etc
+    #if object.minors_participation && object.minors_participation.class == Array
+    #  res.concat object.minors_participation.collect { |x| "Minors Participation: " + x }
+    #end
 
-    if object.minors_participation && object.minors_participation.class == Array
-      res.concat object.minors_participation
-    end
-
-    res.concat ['Require Signup'] if object.require_signup
-    res.concat ['Recorded'] if object.recorded
-    res.concat ['Streamed'] if object.streamed
+    res.concat ["Note: ".concat( object.age_restriction.name )] if object.age_restriction
+    res.concat ['Note: Require Signup'] if object.require_signup
+    res.concat ['Note: Recorded'] if object.recorded
+    res.concat ['Note: Streamed'] if object.streamed
 
     res
   end
-
+  
   attribute :mins do
     object.duration
   end
