@@ -616,8 +616,7 @@ END) STORED,
     attendance_type character varying(200) DEFAULT NULL::character varying,
     twelve_hour boolean DEFAULT true,
     timezone character varying(500) DEFAULT NULL::character varying,
-    availability_notes character varying,
-    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
+    availability_notes character varying
 );
 
 
@@ -656,8 +655,7 @@ CREATE TABLE public.session_assignments (
     interest_notes text,
     state character varying,
     planner_notes text,
-    interest_role public.interest_role_enum DEFAULT 'no_preference'::public.interest_role_enum,
-    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
+    interest_role public.interest_role_enum DEFAULT 'no_preference'::public.interest_role_enum
 );
 
 
@@ -924,19 +922,6 @@ CREATE TABLE public.ignored_conflicts (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     conflict_id character varying(2048),
     conflict_type character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: integrations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.integrations (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    name character varying,
-    config jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1486,8 +1471,7 @@ CREATE TABLE public.rooms (
     room_set_id uuid,
     length numeric,
     width numeric,
-    height numeric,
-    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
+    height numeric
 );
 
 
@@ -2100,20 +2084,6 @@ ALTER TABLE ONLY public.categorizations ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
--- Name: person_schedule_approvals id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_schedule_approvals ALTER COLUMN id SET DEFAULT nextval('public.person_schedule_approvals_id_seq'::regclass);
-
-
---
--- Name: schedule_workflows id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_workflows ALTER COLUMN id SET DEFAULT nextval('public.schedule_workflows_id_seq'::regclass);
-
-
---
 -- Name: survey_formats id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2277,14 +2247,6 @@ ALTER TABLE ONLY public.formats
 
 ALTER TABLE ONLY public.ignored_conflicts
     ADD CONSTRAINT ignored_conflicts_pkey PRIMARY KEY (id);
-
-
---
--- Name: integrations integrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.integrations
-    ADD CONSTRAINT integrations_pkey PRIMARY KEY (id);
 
 
 --
