@@ -184,7 +184,7 @@ export default {
         this.removeInterest(this.assignment, this.person_id).then(
           (res) => {
             this.assignment = null
-            this.fetchPaged()
+            this.fetchAll()
           }
         )
       }
@@ -222,7 +222,7 @@ export default {
     // If there is no pager we need to get the initial collection somehow
     // Order should be by created_at date and ranking ...
     this.assignment = null
-    this.fetchPaged();
+    this.fetchAll();
   }
 }
 </script>
