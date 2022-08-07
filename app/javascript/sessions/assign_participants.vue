@@ -90,19 +90,19 @@ export default {
   },
   methods: {
     reorder() {
-      this.fetchPaged(false)
+      this.fetchAll(false)
     },
     saveAssignment(assignment) {
       this.save(assignment).then(
         () => {
           // TODO?
           // this.refreshSession()
-          this.fetchPaged(false)
+          this.fetchAll(false)
         }
       ).catch(
         () => {
           // this.refreshSession()
-          this.fetchPaged(false)
+          this.fetchAll(false)
         }
       )
     },
@@ -120,7 +120,7 @@ export default {
   mounted() {
     // If there is no pager we need to get the initial collection somehow
     // Order should be by created_at date and ranking ...
-    this.fetchPaged(false); // false to not clear store of existing models
+    this.fetchAll(false); // false to not clear store of existing models
     this.select_model('session_assignment', null)
     this.select_model('person', null);
   }
