@@ -13,6 +13,8 @@ class PublishedSessionAssignment < ApplicationRecord
   belongs_to  :session_assignment_role_type, required: false
   belongs_to  :session_assignment
 
+  alias :session :published_session
+
   enum visibility: {
     is_public: 'public',
     is_private: 'private'

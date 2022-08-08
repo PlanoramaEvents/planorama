@@ -51,6 +51,9 @@ class PublishedSession < ApplicationRecord
     is_private: 'private'
   }
 
+  has_many :session_areas, inverse_of: :session, foreign_key: 'session_id'
+  has_many :areas, through: :session_areas
+
   # acts_as_taggable
   acts_as_taggable_on :tags
 

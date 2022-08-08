@@ -92,7 +92,7 @@ module PublicationService
 
     candidates.each do |session|
       pub_session = self.publish_session(session: session, update: false)
-      pub_session.save!
+      pub_session.save! if pub_session
     end
     count
   end
@@ -127,7 +127,7 @@ module PublicationService
     session.attributes.each do |attr, val|
       next if val.nil? # if there is nothing to copy skip
       next if !pub_session.attributes.key?(attr) # if the published version does not support the attr skip
-      next if [:lock_version, :created_at, :updated_at, :id].include?(attr) # skip lock and dates
+      next if ['lock_version', 'created_at', 'updated_at', 'id'].include?(attr) # skip lock and dates
       next if pub_session.attributes[attr] == val # skip if the value will not change
 
       pub_session.send("#{attr}=", val) # the the attr in the publihsed instance
@@ -161,7 +161,7 @@ module PublicationService
 
     candidates.each do |assignment|
       pub_assignment = self.publish_assignment(assignment: assignment)
-      pub_assignment.save!
+      pub_assignment.save! if pub_assignment
     end
 
     count
@@ -184,7 +184,7 @@ module PublicationService
     assignment.attributes.each do |attr, val|
       next if val.nil? # if there is nothing to copy skip
       next if !pub_assignment.attributes.key?(attr) # if the published version does not support the attr skip
-      next if [:lock_version, :created_at, :updated_at, :id, :session_id].include?(attr) # skip lock and dates
+      next if ['lock_version', 'created_at', 'updated_at', 'id', 'session_id'].include?(attr) # skip lock and dates
       next if pub_assignment.attributes[attr] == val # skip if the value will not change
 
       pub_assignment.send("#{attr}=", val) # the the attr in the publihsed instance

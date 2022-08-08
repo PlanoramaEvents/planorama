@@ -4,7 +4,7 @@ module ChangeService
   def self.session_changes(from:, to: nil)
     {
       sessions: self.sessions_changed(from: from, to: to),
-      assignments: self.sessions_changed(from: from, to: to)
+      assignments: self.session_assignments_changed(from: from, to: to)
     }
   end
 
@@ -17,19 +17,19 @@ module ChangeService
   end
 
   def self.sessions_changed(from:, to: nil)
-    get_changes(clazz: Audit::SessionVersion, type: 'Session', from: from, to: to)
+    get_changes(clazz: Audit::SessionVersion, type: Session, from: from, to: to)
   end
 
   def self.published_sessions_changed(from:, to: nil)
-    get_changes(clazz: Audit::PublishedSessionVersion, type: 'PublishedSession', from: from, to: to)
+    get_changes(clazz: Audit::PublishedSessionVersion, type: PublishedSession, from: from, to: to)
   end
 
   def self.session_assignments_changed(from:, to: nil)
-    get_changes(clazz: Audit::SessionVersion, type: 'SessionAssignment', from: from, to: to)
+    get_changes(clazz: Audit::SessionVersion, type: SessionAssignment, from: from, to: to)
   end
 
   def self.published_session_assignments_changed(from:, to: nil)
-    get_changes(clazz: Audit::PublishedSessionVersion, type: 'PublishedSessionAssignment', from: from, to: to)
+    get_changes(clazz: Audit::PublishedSessionVersion, type: PublishedSessionAssignment, from: from, to: to)
   end
 
   # get the paper trail verions from: to:
@@ -40,7 +40,7 @@ module ChangeService
   def self.get_changes(clazz:, type:, from:, to:)
     changes = {}
 
-    audits = clazz.where("item_type = ?", type).order("item_id, created_at asc")
+    audits = clazz.where("item_type = ?", type.name).order("item_id, created_at asc")
 
     audits = audits.where("created_at >= ?", from) if from
     audits = audits.where("created_at <= ?", to) if to
@@ -51,8 +51,12 @@ module ChangeService
       # just in case we sort by date
       item_audits.sort{|a,b| a.created_at <=> b.created_at}.each do |audit|
         # merge the change history
-        changes[key] = audit.object_changes unless changes[key]
-        changes[key] = self.merge_change_set(to: changes[key], from: audit.object_changes) if changes[key]
+        if changes[key]
+          changes[key][:changes] = self.merge_change_set(to: changes[key][:changes], from: audit.object_changes)
+        else
+          obj = audit.event != 'destroy' ? type.find(audit.item_id) : nil
+          changes[key] = {event: audit.event, object: obj, changes: audit.object_changes}
+        end
       end
     end
 
