@@ -20,34 +20,31 @@
     <div class="row" v-if="currentSettings.env !== 'production'">
       <div class="col-12">
         <h5>Publish schedule to public</h5>
-        <b-table-simple borderless fixed small>
+        <b-table-simple borderless fixed small style="width: 35rem;">
           <b-thead>
             <b-tr>
-              <!-- <b-td class="text-center">
+              <b-td class="text-center">
                 <b-button variant="primary" size="sm" :disabled="!canDiff">Show difference</b-button>
-              </b-td> -->
-              <b-td colspan="3">
+              </b-td>
+              <b-td colspan="3" class="text-right">
                 <b-button variant="primary" size="sm" @click="publishdSchedule()">Create a publish snapshot</b-button>
               </b-td>
             </b-tr>
           </b-thead>
         </b-table-simple>
-        <!-- <b-table-simple bordered fixed small>
-          <b-thead class="text-center">
-            <b-tr>
-              <b-td class="text-center">Select 2</b-td>
-              <b-td colspan="3">Timestamp</b-td>
-            </b-tr>
-          </b-thead>
-          <b-tbody>
-            <b-tr v-for="(snap, i) in pubSnapshots" :key="snap.id">
-              <b-td class="text-center">
-                <b-form-checkbox name="pubs-diff" v-model="pubsDiff[i]" :disabled="pubsDiffCount >= 2 && !pubsDiff[i]"></b-form-checkbox>
-              </b-td>
-              <b-td colspan="3">{{snap.timestamp}}</b-td>
-            </b-tr>
-          </b-tbody>
-        </b-table-simple> -->
+        <b-table
+          :fields="[{key: 'select_2', tdClass: 'text-center', thClass: 'text-center' }, {key: 'timestamp', tdClass: 'text-right', thClass: 'text-right', thAttr: {'colspan': 2}, tdAttr: {'colspan': 2}}]" 
+          bordered
+          fixed
+          small
+          sticky-header
+          :items="pubSnapshots"
+          style="width: 35rem;"
+        >
+          <template #cell(select_2)="{ index }">
+            <b-form-checkbox name="pubs-diff" v-model="pubsDiff[index]" :disabled="pubsDiffCount >= 2 && !pubsDiff[index]"></b-form-checkbox>
+          </template>
+        </b-table>
       </div>
     </div>
     <plano-modal id="confirm-draft-modal" @cancel="cancelDraft()" @close="cancelDraft()" no-close-on-backdrop @ok="confirmDraft()">
@@ -93,8 +90,26 @@ export default {
     SCHEDULE_FIRM_CONFIRM_MESSAGE,
     NODE_ENV,
     mockSnapshots: [
-      // {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      // {timestamp: '2022-08-04T00:24:00Z', id:'67890'}
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-04T00:24:00Z', id:'67890'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
+      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
     ],
     pubsDiff: [false, false, false],
   }),
@@ -183,4 +198,6 @@ export default {
   display: flex;
   align-items: center;
 }
+
+
 </style>
