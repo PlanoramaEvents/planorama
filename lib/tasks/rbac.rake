@@ -278,6 +278,9 @@ namespace :rbac do
           "show": false,
           "update": false,
           "fetch": false
+      },
+      "publication_date": {
+          "index": false
       }
     })
   end
@@ -578,6 +581,9 @@ namespace :rbac do
           "update": true,
           "fetch": true
       },
+      "publication_date": {
+          "index": true
+      }
     })
   end
 
@@ -877,6 +883,9 @@ namespace :rbac do
           "update": true,
           "fetch": true
       },
+      "publication_date": {
+          "index": true
+      }
     })
   end
 end
