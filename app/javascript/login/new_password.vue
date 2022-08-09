@@ -125,7 +125,9 @@ export default {
           })
           .catch((error, result) => {
             const errors = error.response.data.errors;
-            if (errors && errors.reset_password_token[0] === "is invalid") {
+            if (errors && errors.reset_password_token[0] === "has expired, please request a new one") {
+              this.error.text = LOGIN_TOKEN_EXPIRED(this.resetPasswordLink);
+            } else if (errors && errors.reset_password_token[0] === "is invalid") {
               this.error.text = LOGIN_TOKEN_EXPIRED(this.resetPasswordLink);
             } else {
               this.error.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
