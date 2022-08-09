@@ -146,6 +146,21 @@ module SessionService
     .order("people.published_name")
   end
 
+  def self.live_moderators
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+
+    people = Person.includes(
+      {session_assignments: [:session, :session_assignment_role_type]}
+    ).references(
+      {session_assignments: :session}
+    )
+    .where("session_assignments.session_assignment_role_type_id in (?)", [moderator.id])
+    .where("sessions.start_time is not null and sessions.room_id is not null")
+    .where("sessions.status != 'dropped' and sessions.status != 'draft'")
+    .where("people.con_state not in (?)", ['declined', 'rejected']) #.distinct
+    .order("people.published_name")
+  end
+
   def self.area_subquery(clazz: Session)
     session_table = clazz.arel_table
     areas_list = clazz.area_list.as('areas_list')

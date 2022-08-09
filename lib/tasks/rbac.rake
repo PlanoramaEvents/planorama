@@ -524,7 +524,8 @@ namespace :rbac do
         "schedule_by_room_then_time": true,
         "session_selections": true,
         "sessions_with_participants": true,
-        "record_stream_permissions": true
+        "record_stream_permissions": true,
+        "moderators": true
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -820,7 +821,8 @@ namespace :rbac do
         "schedule_by_room_then_time": true,
         "session_selections": true,
         "sessions_with_participants": true,
-        "record_stream_permissions": true
+        "record_stream_permissions": true,
+        "moderators": true
       },
       "session_report": {
         "panels_with_too_few_people": true,

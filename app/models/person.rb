@@ -30,6 +30,13 @@ class Person < ApplicationRecord
   end
 
   has_many  :sessions, through: :session_assignments do
+    def moderating
+      where("sessions.status != 'dropped'")
+      .where("sessions.start_time is not null and sessions.room_id is not null")
+      .where("session_assignments.session_assignment_role_type_id in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Moderator')")
+      .where("session_assignments.state != 'rejected'")
+    end
+
     def scheduled
       # get the people with the given role
       where("sessions.status != 'dropped'")
