@@ -93,7 +93,7 @@
             switch
             v-model="session.streamed"
             @change="saveSession()"
-          >Will be live-streamed</b-form-checkbox>
+          >Will be livestreamed</b-form-checkbox>
         </b-form-group>
         <b-form-group label="Status" label-cols="auto">
           <b-form-select  id="session-status" v-model="session.status" @change="saveSession()">
