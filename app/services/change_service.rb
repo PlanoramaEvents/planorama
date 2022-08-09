@@ -54,7 +54,8 @@ module ChangeService
         if changes[key]
           changes[key][:changes] = self.merge_change_set(to: changes[key][:changes], from: audit.object_changes)
         else
-          obj = audit.event != 'destroy' ? type.find(audit.item_id) : nil
+          obj = type.find(audit.item_id) if audit.event != 'destroy' && type.exists?(audit.item_id)
+          obj ||= audit.reify
           changes[key] = {event: audit.event, object: obj, changes: audit.object_changes}
         end
       end

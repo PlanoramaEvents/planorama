@@ -14,6 +14,7 @@ class PublishedSessionAssignment < ApplicationRecord
   belongs_to  :session_assignment
 
   alias :session :published_session
+  alias_attribute :session_id, :published_session_id
 
   enum visibility: {
     is_public: 'public',

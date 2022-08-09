@@ -38,6 +38,8 @@ class Reports::ScheduleReportsController < ApplicationController
     tab_headers(session_time_changed, session_room_changed, session_title_changed, session_description_changed, session_added, session_removed, participants_add_drop, participants_fully_dropped)
 
     changes[:sessions].values.sort{|a,b| (a[:object] ? a[:object].title : '') <=> (b[:object] ? b[:object].title : '')}.each do |change|
+      next unless change[:object]
+
       if change[:changes]['room_id'] || change[:changes]['start_time']
         if change[:changes]['room_id'] && change[:changes]['start_time'] &&
           ((!change[:changes]['room_id'][0] && change[:changes]['room_id'][1]) ||
@@ -73,12 +75,16 @@ class Reports::ScheduleReportsController < ApplicationController
     # TODO: sort .... ??? how
     fully_dropped = []
     changes[:assignments].each do |id, change|
+      next unless change[:object]
+
       # Participants add/drop
       if change[:changes]['session_assignment_role_type_id']
+        session = change[:object].session if change[:object].session
+        session ||= Session.find change[:object].session_id
         if (roles.include?(change[:changes]['session_assignment_role_type_id'][1]))
           participants_add_drop.append_row(
             [
-              change[:object].session.title,
+              session.title,
               '',
               change[:object].person.published_name
             ]
@@ -86,7 +92,7 @@ class Reports::ScheduleReportsController < ApplicationController
         elsif (roles.include?(change[:changes]['session_assignment_role_type_id'][0]))
           participants_add_drop.append_row(
             [
-              change[:object].session.title,
+              session.title,
               change[:object].person.published_name,
             ]
           )
