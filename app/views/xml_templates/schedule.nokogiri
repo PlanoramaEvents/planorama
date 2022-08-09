@@ -36,7 +36,7 @@ xml.schedule {
       xml.roomareasformat{
         session.environment == 'virtual' ? xml.virtual(session.room.name) : xml.room(session.room.name)
         xml.areas(session.area_list.join(", "))
-        session.area_list.include?(session.format.name) ? xml.format(session.format.name) : ""
+        !session.area_list.include?(session.format.name) ? xml.format(session.format.name) : ""
         session.streamed ? xml.streamed("- Livestream") : ""
         session.recorded ? xml.recorded("- Recorded") : ""
       }
