@@ -2,21 +2,21 @@
 # XML template for a collection of sessions
 #
 xml.schedule {
-  # We need a <day> header at the start of the document, so 
-  # before_1st_session needs to be at least 86400 seconds (the 
+  # We need a <day> header at the start of the document, so
+  # before_1st_session needs to be at least 86400 seconds (the
   # number of seconds in a day) earlier than the 1st session
   before_1st_session = @instance.first.start_time - 86401
   day = Date.parse(before_1st_session.strftime("%Y-%m-%d"))
   timeslot = Time.parse(before_1st_session.strftime("%Y-%m-%d %l:%M"))
-  @instance.each do |session|  
-    # Check if this is the 1st session of the day, in which case, 
+  @instance.each do |session|
+    # Check if this is the 1st session of the day, in which case,
     # create a <day> heading.
     this_day = Date.parse(session.start_time.strftime("%Y-%m-%d"))
     if this_day > day
       day = this_day
       xml.day(session.start_time.strftime("%A"))
     end
-    # Check if this is the 1st session at this time, in which case, 
+    # Check if this is the 1st session at this time, in which case,
     # create a <timeslot> subheading.
     if session.start_time.utc > timeslot.utc
       timeslot = session.start_time.utc
@@ -25,9 +25,9 @@ xml.schedule {
     xml.session {
       xml.id(session.pub_reference_number)
       xml.title(session.title)
-      # timeduration, roomareasformat, and participants will each be a 
-      # block-level paragraph with span-level elements. The line 
-      # breaks & spacing will be removed in publications_controller.rb. 
+      # timeduration, roomareasformat, and participants will each be a
+      # block-level paragraph with span-level elements. The line
+      # breaks & spacing will be removed in publications_controller.rb.
       # Otherwise InDesign would render the white space in print.
       xml.timeduration{
         xml.start_time(session.start_time.strftime("%-l:%M"))
