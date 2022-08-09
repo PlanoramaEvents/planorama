@@ -62,11 +62,8 @@ module PublicationService
   end
 
   def self.publish_assignments(sessions:, since:)
-    candidates = if since
-                    self.publishable_assignments(sessions: sessions).where("session_assignments.updated_at >= ?", since)
-                  else
-                    self.publishable_assignments(sessions: sessions)
-                  end
+    # ensure we get assignments added before the session was made publishable ....
+    candidates = self.publishable_assignments(sessions: sessions)
 
     # updated
     updated_assignments = self.publish_updated_assignments(candidates)

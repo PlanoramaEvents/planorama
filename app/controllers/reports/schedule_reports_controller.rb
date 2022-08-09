@@ -37,7 +37,10 @@ class Reports::ScheduleReportsController < ApplicationController
 
     tab_headers(session_time_changed, session_room_changed, session_title_changed, session_description_changed, session_added, session_removed, participants_add_drop, participants_fully_dropped)
 
+    # Rails.logger.debug "******** CHANGES: #{changes[:sessions]}"
+
     changes[:sessions].values.sort{|a,b| (a[:object] ? a[:object].title : '') <=> (b[:object] ? b[:object].title : '')}.each do |change|
+      # Rails.logger.debug "******** CHANGE: #{change}"
       next unless change[:object]
 
       if change[:changes]['room_id'] || change[:changes]['start_time']
