@@ -86,7 +86,7 @@ Rails.application.routes.draw do
 
   get 'report/people_reports/record_stream_permissions', to: 'reports/people_reports#record_stream_permissions'
 
-  get 'report/schedule_reports/schedule_diff', to: 'reports/schedule_reports#schedule_diff'
+  get 'report/schedule_reports/schedule_diff(/:from)(/:to)', to: 'reports/schedule_reports#schedule_diff'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
