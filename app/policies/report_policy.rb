@@ -1,5 +1,9 @@
 class ReportPolicy < BasePolicy
 
+  def moderators?
+    allowed?(action: :moderators)
+  end
+
   def record_stream_permissions?
     allowed?(action: :record_stream_permissions)
   end

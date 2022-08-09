@@ -20,7 +20,9 @@ class SessionAssignment < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: [:session_id]
 
-  has_paper_trail versions: { class_name: 'Audit::SessionVersion' }, ignore: [:updated_at, :created_at, :lock_version, :sort_order, :interested, :interest_ranking, :interest_notes, :planner_notes, :interest_role]
+  has_paper_trail versions: { class_name: 'Audit::SessionVersion' },
+                  ignore: [:updated_at, :created_at, :lock_version, :sort_order, :interested, :interest_ranking, :interest_notes, :planner_notes, :interest_role],
+                  limit: nil
 
   belongs_to  :person
   belongs_to  :session
@@ -77,6 +79,8 @@ class SessionAssignment < ApplicationRecord
   # Ensure that we are not assigning a declined ot rejected person
   def check_person_state
     return if self.interested == false
+    return unless self.session_assignment_role_type_id
+    return if self.state == 'rejected'
 
     p = Person.find self.person_id
     if p.con_state == Person.con_states[:declined] || p.con_state == Person.con_states[:rejected]

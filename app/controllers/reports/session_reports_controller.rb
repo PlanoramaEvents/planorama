@@ -1,6 +1,46 @@
 class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
+  def daily_grid
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    sessions = SessionService.published_sessions
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Assigned Session not Sched")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, nil, nil, date_time_style, nil
+    ]
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Areas',
+        'Format',
+        'Time',
+        'Room'
+      ]
+    )
+
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.area_list.sort.join(';'),
+          session.format&.name,
+          session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+          session.room&.name
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "DailyGrid#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def session_copy_edit_status
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
@@ -424,10 +464,5 @@ class Reports::SessionReportsController < ApplicationController
     send_data workbook.read_string,
               filename: "Panels_With_Too_Many_People_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
-  end
-
-  def set_timezone(&block)
-    timezone = ConfigService.value('convention_timezone')
-    Time.use_zone(timezone, &block)
   end
 end

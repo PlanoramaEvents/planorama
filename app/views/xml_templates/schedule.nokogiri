@@ -35,9 +35,10 @@ xml.schedule {
       }
       xml.roomareasformat{
         session.environment == 'virtual' ? xml.virtual(session.room.name) : xml.room(session.room.name)
-        # Areas are for internal use only, not for the public
-        # xml.areas(session.area_list.join(", "))
-        xml.format(session.format.name)
+        xml.areas(session.area_list.join(", "))
+        !session.area_list.include?(session.format.name) ? xml.format(session.format.name) : ""
+        session.streamed ? xml.streamed("- Livestream") : ""
+        session.recorded ? xml.recorded("- Recorded") : ""
       }
       xml.description(session.description)
       # If there are no visible participants, do not create an empty

@@ -98,6 +98,9 @@
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
       </li>
+      <li>
+        <a href="/report/people_reports/moderators" target="_blank">Participants Moderating at least one session</a>
+      </li>
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>
@@ -171,6 +174,9 @@
           <strong><em>Fields</em></strong>: Session title, area(s) of session, session status, has session been copy edited (y/n), has session been scheduled (y/n), visibility (visible, not visible)<br />
           <strong><em>Session data included</em></strong>: all sessions
         </p>
+      </li>
+      <li>
+        <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
       </li>
     </ul>
 
