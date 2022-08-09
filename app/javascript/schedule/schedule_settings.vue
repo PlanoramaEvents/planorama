@@ -27,7 +27,7 @@
                 <b-button variant="primary" size="sm" :disabled="!canDiff">Show difference</b-button>
               </b-td>
               <b-td colspan="3" class="text-right">
-                <b-button variant="primary" size="sm" @click="publishdSchedule()">Create a publish snapshot</b-button>
+                <b-button variant="primary" size="sm" v-b-modal.confirm-publish>Create a publish snapshot</b-button>
               </b-td>
             </b-tr>
           </b-thead>
@@ -54,6 +54,11 @@
     <plano-modal id="confirm-firm-modal" @cancel="cancelFirm()" @close="cancelFirm()" no-close-on-backdrop @ok="confirmFirm()">
       <template #modal-title>Publish Firm Schedule Confirmation</template>
       {{SCHEDULE_FIRM_CONFIRM_MESSAGE}}
+    </plano-modal>
+    <plano-modal id="confirm-publish" @ok="publishdSchedule()">
+      <template #modal-title>Publish Schedule To Public Confirmation</template>
+      This will publish the schedule and make the current version of it available to external sources. This action is
+      irreversible and will bring the server down for a short time. Please double check that you wish to perform this action.
     </plano-modal>
   </div>
 </template>
