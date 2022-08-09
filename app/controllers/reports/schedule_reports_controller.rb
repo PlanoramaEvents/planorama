@@ -2,7 +2,7 @@ class Reports::ScheduleReportsController < ApplicationController
   around_action :set_timezone
 
   def schedule_diff
-    # authorize Person, policy_class: ReportPolicy
+    authorize Person, policy_class: Reports::ScheduleReportPolicy
 
     # TODO: base the from and to on the publish ids and this will be ok as a get
     pd_from = PublicationDate.find params[:from] if params[:from]

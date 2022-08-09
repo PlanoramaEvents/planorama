@@ -538,6 +538,9 @@ namespace :rbac do
         "assigned_sessions_not_scheduled": true,
         "session_copy_edit_status": true
       },
+      "schedule_report": {
+        "schedule_diff": true
+      },
       "conflict_report": {
         "people_outside_availability": true,
         "people_double_booked": true,
@@ -843,6 +846,9 @@ namespace :rbac do
         "multiple_sessions_in_room": true,
         "all_conflicts": true,
         "all_ignored_conflicts": true
+      },
+      "schedule_report": {
+        "schedule_diff": true
       },
       "session_conflict": {
         "conflicts_with": true,
