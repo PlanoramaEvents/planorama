@@ -98,6 +98,9 @@
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
       </li>
+      <li>
+        <a href="/report/people_reports/moderators" target="_blank">Participants Moderating at least one session</a>
+      </li>
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>
