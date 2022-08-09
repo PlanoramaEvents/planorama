@@ -95,4 +95,9 @@ class ApplicationController < ActionController::Base
     # NOTE: if we have a central log put it in here
     super(exception)
   end
+
+  def set_timezone(&block)
+    timezone = ConfigService.value('convention_timezone')
+    Time.use_zone(timezone, &block)
+  end
 end

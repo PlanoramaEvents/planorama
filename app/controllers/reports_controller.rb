@@ -642,9 +642,4 @@ class ReportsController < ApplicationController
               filename: "ParticipantDoNotAssignWith#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
-
-  def set_timezone(&block)
-    timezone = ConfigService.value('convention_timezone')
-    Time.use_zone(timezone, &block)
-  end
 end

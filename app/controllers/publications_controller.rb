@@ -2,7 +2,12 @@ class PublicationsController < ApplicationController
   around_action :set_timezone
 
   def schedule
-    sessions = SessionService.live_sessions
+    # use published if any otherwise use live
+    sessions = if PublishedSession.count > 0
+                  SessionService.published_sessions
+                else
+                  SessionService.live_sessions
+                end
 
     send_data XmlFormatter.new(sessions).render('schedule', sessions)
     .gsub(/&#39;/, '&#8217;')
