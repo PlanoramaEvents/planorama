@@ -79,6 +79,8 @@ class SessionAssignment < ApplicationRecord
   # Ensure that we are not assigning a declined ot rejected person
   def check_person_state
     return if self.interested == false
+    return unless self.session_assignment_role_type_id
+    return if self.state == 'rejected'
 
     p = Person.find self.person_id
     if p.con_state == Person.con_states[:declined] || p.con_state == Person.con_states[:rejected]

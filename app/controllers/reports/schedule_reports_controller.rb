@@ -5,16 +5,21 @@ class Reports::ScheduleReportsController < ApplicationController
     # authorize Person, policy_class: ReportPolicy
 
     # TODO: base the from and to on the publish ids and this will be ok as a get
-    from = params[:from]
-    from ||= Time.now - 14.day
-    to = params[:to]
+    pd_from = PublicationDate.find params[:from] if params[:from]
 
-    changes = ChangeService.published_changes(from: from)
-    # if to
-    #             ChangeService.published_changes(from: from, to: to)
-    #           else
-    #             ChangeService.session_changes(from: from)
-    #           end
+    from = pd_from.timestamp if pd_from
+    from ||= PublicationDate.order('created_at desc').first&.timestamp
+    from ||= Time.now - 2.year # TODO: for testing
+
+    pd_to = PublicationDate.find params[:to] if params[:to]
+    to = pd_to.timestamp if pd_to
+
+    # changes = ChangeService.published_changes(from: from, to: to)
+    changes = if to
+                ChangeService.published_changes(from: from, to: to)
+              else
+                ChangeService.session_changes(from: from)
+              end
 
     to ||= Time.now
     workbook = FastExcel.open(constant_memory: true)
@@ -30,15 +35,16 @@ class Reports::ScheduleReportsController < ApplicationController
     participants_fully_dropped = workbook.add_worksheet("Participants Dropped")
     participants_add_drop = workbook.add_worksheet("Participants Add Drop")
 
-    tab_headers(session_time_changed, session_room_changed, session_title_changed, session_description_changed, session_added, session_removed, participants_add_drop)
+    tab_headers(session_time_changed, session_room_changed, session_title_changed, session_description_changed, session_added, session_removed, participants_add_drop, participants_fully_dropped)
 
-    changes[:sessions].each do |id, change|
+    changes[:sessions].values.sort{|a,b| (a[:object] ? a[:object].title : '') <=> (b[:object] ? b[:object].title : '')}.each do |change|
       if change[:changes]['room_id'] || change[:changes]['start_time']
-        if (!change[:changes]['room_id'][0] && change[:changes]['room_id'][1]) &&
-          (!change[:changes]['room_id'][0] && change[:changes]['start_time'][1])
+        if change[:changes]['room_id'] && change[:changes]['start_time'] &&
+          ((!change[:changes]['room_id'][0] && change[:changes]['room_id'][1]) ||
+          (!change[:changes]['start_time'][0] && change[:changes]['start_time'][1]))
           session_added_row(session_added, change, date_time_style)
         else
-          if !change[:changes]['room_id'][1] || !change[:changes]['start_time'][1] || change[:event] == 'destroy'
+          if (change[:changes]['room_id'] && !change[:changes]['room_id'][1]) || (change[:changes]['start_time'] && !change[:changes]['start_time'][1])|| change[:event] == 'destroy'
             session_removed_row(session_removed, change)
           else
             if change[:changes]['room_id']
@@ -64,18 +70,12 @@ class Reports::ScheduleReportsController < ApplicationController
     roles = [moderator.id, participant.id]
     # Rails.logger.debug "******** ROLES #{roles}"
 
+    # TODO: sort .... ??? how
+    fully_dropped = []
     changes[:assignments].each do |id, change|
-      # Rails.logger.debug "***** ASSIGNMENTS #{change}"
       # Participants add/drop
-      # if change[:changes]['visibility'] || change[:changes]['state'] || change[:changes]['session_assignment_role_type_id']
       if change[:changes]['session_assignment_role_type_id']
-        # Rails.logger.debug "********** ADD/DROP? #{change}"
-        # next unless change[:changes]['session_assignment_role_type_id']
-        # next unless (roles.include?(change[:changes]['session_assignment_role_type_id'][0]) || roles.include?(change[:changes]['session_assignment_role_type_id'][1]))
-
-        # Rails.logger.debug "********** ADD/DROP? #{change}"
         if (roles.include?(change[:changes]['session_assignment_role_type_id'][1]))
-          # Rails.logger.debug "********** ADDDED"
           participants_add_drop.append_row(
             [
               change[:object].session.title,
@@ -83,17 +83,22 @@ class Reports::ScheduleReportsController < ApplicationController
               change[:object].person.published_name
             ]
           )
-          # || change[:changes]['state'][1] == 'rejected' || change[:changes]['visibility'][1] == 'private'
         elsif (roles.include?(change[:changes]['session_assignment_role_type_id'][0]))
-          # Rails.logger.debug "********** DROPPPED #{change}"
           participants_add_drop.append_row(
             [
               change[:object].session.title,
               change[:object].person.published_name,
             ]
           )
+          if change[:object].person.sessions.scheduled.count == 0
+            fully_dropped.append [change[:object].person.published_name]
+          end
         end
       end
+    end
+
+    fully_dropped.uniq.each do |name|
+      participants_fully_dropped.append_row(name)
     end
 
     send_data workbook.read_string,
@@ -101,7 +106,7 @@ class Reports::ScheduleReportsController < ApplicationController
               disposition: 'attachment'
   end
 
-  def tab_headers(session_time_changed, session_room_changed, session_title_changed, session_description_changed, session_added, session_removed, participants_add_drop)
+  def tab_headers(session_time_changed, session_room_changed, session_title_changed, session_description_changed, session_added, session_removed, participants_add_drop, participants_fully_dropped)
     session_time_changed.append_row(['Session Title','Original Start Time', 'New Start Time'])
     session_room_changed.append_row(['Session Title','Original Room', 'New Room'])
     session_title_changed.append_row(['Original Session Title', 'New Session Title'])
@@ -110,6 +115,7 @@ class Reports::ScheduleReportsController < ApplicationController
     session_removed.append_row(['Session Title'])
 
     participants_add_drop.append_row(['Session Title', 'Participant Dropped', 'Participant Added'])
+    participants_fully_dropped.append_row(['Participant Dropped'])
   end
 
   def session_description_change_row(sheet, change)

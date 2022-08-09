@@ -60,6 +60,7 @@ module ChangeService
       end
     end
 
+    # TODO: any way we can order by the session title ???
     changes
   end
 

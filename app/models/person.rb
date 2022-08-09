@@ -65,7 +65,15 @@ class Person < ApplicationRecord
 
   # We let the publish mechanism do the destroy so that the update service knows what is happening
   has_many  :published_session_assignments
-  has_many  :published_sessions, through: :published_session_assignments
+  has_many  :published_sessions, through: :published_session_assignments do
+    def scheduled
+      # get the people with the given role
+      where("published_sessions.start_time is not null and published_sessions.room_id is not null")
+      .where("published_session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Invisible')")
+      .where("published_session_assignments.session_assignment_role_type_id not in (select id from session_assignment_role_type where session_assignment_role_type.name = 'Reserve')")
+      .where("published_session_assignments.session_assignment_role_type_id is not null")
+    end
+  end
 
   has_many  :person_mailing_assignments
   has_many  :mailings, through: :person_mailing_assignments
@@ -247,11 +255,11 @@ class Person < ApplicationRecord
   def assigment_consistency
     # unassign when declined or rejected (or should we delete?)
     if con_state == Person.con_states[:declined]
-      self.session_assignments.update_all(
+      self.session_assignments.update(
         session_assignment_role_type_id: nil
       )
     elsif con_state == Person.con_states[:rejected]
-      self.session_assignments.update_all(
+      self.session_assignments.update(
         session_assignment_role_type_id: nil,
         state: :rejected
       )
