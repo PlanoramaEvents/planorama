@@ -172,6 +172,9 @@
           <strong><em>Session data included</em></strong>: all sessions
         </p>
       </li>
+      <li>
+        <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
+      </li>
     </ul>
 
     <h5><a id="conflicts"></a>Conflicts</h5>

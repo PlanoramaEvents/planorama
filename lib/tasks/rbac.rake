@@ -536,7 +536,8 @@ namespace :rbac do
         "session_with_no_moderator": true,
         "scheduled_session_no_people": true,
         "assigned_sessions_not_scheduled": true,
-        "session_copy_edit_status": true
+        "session_copy_edit_status": true,
+        "daily_grid": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -832,7 +833,8 @@ namespace :rbac do
         "session_with_no_moderator": true,
         "scheduled_session_no_people": true,
         "assigned_sessions_not_scheduled": true,
-        "session_copy_edit_status": true
+        "session_copy_edit_status": true,
+        "daily_grid": true
       },
       "conflict_report": {
         "people_outside_availability": true,

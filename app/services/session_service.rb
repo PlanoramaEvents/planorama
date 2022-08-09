@@ -101,6 +101,7 @@ module SessionService
     )
       .includes(:format, :room, {participant_assignments: :person})
       .joins(self.area_subquery(clazz: PublishedSession))
+      .order(:start_time)
   end
 
   def self.live_sessions
