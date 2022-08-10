@@ -46,7 +46,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
     worksheet.write_row(0, header)
 
     send_data workbook.read_string,
-              filename: "NackOfBadge-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "BackOfBadge-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 end
