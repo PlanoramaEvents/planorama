@@ -1,5 +1,5 @@
 <template>
-  <footer class="d-flex justify-content-center">
+  <footer :class="['d-flex', 'justify-content-center', {'not-production': currentSettings.env !== 'production'}]">
     <terms-of-use-link></terms-of-use-link>
     <div class="silly-spacer"></div>
     <privacy-policy-link></privacy-policy-link>
@@ -9,13 +9,17 @@
 <script>
 import TermsOfUseLink from '../administration/terms_of_use_link.vue';
 import PrivacyPolicyLink from '../administration/privacy_policy_link.vue';
+import { settingsMixin } from '@/mixins';
 
 export default {
   name: 'BottomNavbar',
   components: {
     PrivacyPolicyLink,
     TermsOfUseLink,
-  }
+  },
+  mixins: [
+    settingsMixin
+  ]
 }
 </script>
 
