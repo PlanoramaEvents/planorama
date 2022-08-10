@@ -24,7 +24,7 @@
           <b-thead>
             <b-tr>
               <b-td class="text-center">
-                <b-button variant="primary" size="sm" :disabled="!canDiff">Show difference</b-button>
+                <b-button variant="primary" size="sm" :disabled="!canDiff" @click="diff">Show difference</b-button>
               </b-td>
               <b-td colspan="3" class="text-right">
                 <b-button variant="primary" size="sm" v-b-modal.confirm-publish>Create a publish snapshot</b-button>
@@ -94,33 +94,12 @@ export default {
     SCHEDULE_DRAFT_CONFIRM_MESSAGE,
     SCHEDULE_FIRM_CONFIRM_MESSAGE,
     NODE_ENV,
-    mockSnapshots: [
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-04T00:24:00Z', id:'67890'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-    ],
-    pubsDiff: [false, false, false],
+    snapshots: [ ],
+    pubsDiff: [],
   }),
   computed: {
     pubSnapshots() {
-      return [{timestamp: "Current state", id: null}, ...this.mockSnapshots.map(snap => ({...snap, timestamp: DateTime.fromISO(snap.timestamp).toFormat("DDDD, t ZZZZ")}))]
+      return [{timestamp: "Current state", id: null}, ...this.snapshots.map(snap => ({...snap, timestamp: DateTime.fromISO(snap.timestamp).toFormat("DDDD, t ZZZZ")}))]
     },
     pubsDiffCount() {
       return this.pubsDiff.filter(pd => pd).length
@@ -169,6 +148,19 @@ export default {
     },
     publishdSchedule() {
       this.toastPromise(http.get('/session/schedule_publish'), "Succesfully requested publish")
+    },
+    diff() {
+      console.log('clicked diff');
+      const ids = this.snapshots.filter((s, i) => this.pubsDiff[i+1]).map(s => s.id)
+      // these will be in reverse time order because magic!
+      let url = '/report/schedule_reports/schedule_diff'
+      if(ids.length > 1) {
+        url += `/${ids[1]}/${ids[0]}`
+      } else {
+        url += `/${ids[0]}`
+      }
+      console.log('going to url', url)
+      window.open(url, '_blank');
     }
   },
   watch: {
@@ -192,6 +184,12 @@ export default {
       this.draftScheduleConfirmed = this.draftSchedule;
       this.localFirmSchedule = this.firmSchedule;
       this.firmScheduleConfirmed = this.firmSchedule;
+    })
+    this.$store.dispatch('jv/get', '/publication_date').then((data) => {
+      const {_jv, ...filteredData} = data;
+      this.snapshots = Object.values(filteredData).map(s => ({timestamp: s.timestamp, id: s.id}))
+      this.snapshots.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
+      this.pubsDiff = [false, ...Object.keys(filteredData).map(s => false)];
     })
   }
 }
