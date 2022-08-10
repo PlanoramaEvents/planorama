@@ -178,6 +178,9 @@
       <li>
         <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
       </li>
+      <li>
+        <a href="/report/session_reports/streamed_and_recorded" target="_blank">Scheduled Sessions Streamed and/or Recorded</a>
+      </li>
     </ul>
 
     <h5><a id="conflicts"></a>Conflicts</h5>

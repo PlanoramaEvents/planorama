@@ -541,7 +541,8 @@ namespace :rbac do
         "scheduled_session_no_people": true,
         "assigned_sessions_not_scheduled": true,
         "session_copy_edit_status": true,
-        "daily_grid": true
+        "daily_grid": true,
+        "streamed_and_recorded": true
       },
       "schedule_report": {
         "schedule_diff": true
@@ -845,7 +846,8 @@ namespace :rbac do
         "scheduled_session_no_people": true,
         "assigned_sessions_not_scheduled": true,
         "session_copy_edit_status": true,
-        "daily_grid": true
+        "daily_grid": true,
+        "streamed_and_recorded": true
       },
       "conflict_report": {
         "people_outside_availability": true,
