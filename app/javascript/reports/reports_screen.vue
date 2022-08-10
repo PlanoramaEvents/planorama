@@ -6,6 +6,7 @@
       <li><a href="#sessions">Sessions</a></li>
       <li><a href="#conflicts">Conflicts</a></li>
       <li><a href="#schedule">Schedule</a></li>
+      <li><a href="#prog-ops">Program Ops</a></li>
     </ul>
     <h5><a id="participants"></a>Participants</h5>
     <ul>
@@ -282,6 +283,14 @@
         </p>
       </li>
     </ul>
+
+    <h5><a id="prog-ops"></a>Program Ops</h5>
+    <ul>
+      <li>
+        <a href="/report/program_ops_reports/back_of_badge" target="_blank">Back of Badge</a>
+      </li>
+    </ul>
+
   </div>
 </template>
 

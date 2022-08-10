@@ -546,6 +546,9 @@ namespace :rbac do
       "schedule_report": {
         "schedule_diff": true
       },
+      "program_ops_report": {
+        "back_of_badge": true
+      },
       "conflict_report": {
         "people_outside_availability": true,
         "people_double_booked": true,
@@ -859,6 +862,9 @@ namespace :rbac do
       },
       "schedule_report": {
         "schedule_diff": true
+      },
+      "program_ops_report": {
+        "back_of_badge": true
       },
       "session_conflict": {
         "conflicts_with": true,
