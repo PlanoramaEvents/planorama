@@ -1,7 +1,7 @@
 <template>
   <div class="col-12 px-0">
-    <b-navbar toggleable="lg" type="light" class="justify-content-between">
-      <b-navbar-brand to="/">Planorama</b-navbar-brand>
+    <b-navbar toggleable="lg" type="light" :class="['justify-content-between', {'not-production': currentSettings.env !== 'production'}]">
+      <b-navbar-brand to="/" :class="{ 'text-warning': currentSettings.env !== 'production'}">Planorama<span v-if="currentSettings.env !== 'production'" class="h1"> - {{currentSettings.env}}</span></b-navbar-brand>
       <div class="d-flex flex-column h-100">
         <div class="text-light mb-2">Logged in as: {{currentUser.primary_email ? currentUser.primary_email.email : ''}}</div>
         <b-navbar-nav class="ml-auto">
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { settingsMixin } from '@/mixins';
 import HelpLink from '../administration/help_link.vue';
 import authMixin from '../auth/auth.mixin';
 import personSessionMixin from '../auth/person_session.mixin';
@@ -31,7 +32,8 @@ export default {
   },
   mixins: [
     authMixin,
-    personSessionMixin
+    personSessionMixin,
+    settingsMixin
   ],
   methods: {
     logout() {
