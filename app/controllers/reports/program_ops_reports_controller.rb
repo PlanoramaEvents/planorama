@@ -10,43 +10,46 @@ class Reports::ProgramOpsReportsController < ApplicationController
                  # .order("rooms.name asc, start_time asc")
 
     # Room name, Day of week, sessions (title, start time, description, participant list with moderator marker).
-    grouped_sessions = sessions.group_by {|s| s.room}
+    grouped_sessions = sessions.group_by {|s| [s.room, s.start_time.strftime('%A'), s.start_time.strftime('%Y%j')]}
     moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+    max_sessions = 0
 
-    workbook = FastExcel.open(constant_memory: true)
+    workbook = FastExcel.open #(constant_memory: true)
     worksheet = workbook.add_worksheet("Room Signs")
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [nil, nil, nil, date_time_style]
 
-    worksheet.append_row(
-      [
-        'Room',
-        'Day',
-        'Session',
-        'Time',
-        'Description',
-        'Moderators',
-        'Participants'
-      ]
-    )
+    worksheet.append_row([]) # For the header
 
-    grouped_sessions.each do |room, sessions|
+    # one line per room per day
+    grouped_sessions.sort{|a,b| (a[0][0].name + a[0][2]) <=> (b[0][0].name + b[0][2]) }.each do |grp, sessions|
+      row = [grp[0].name, grp[1]]
+      styles = [nil, nil]
+
       sessions.sort{|a,b| a.start_time <=> b.start_time}.each do |session|
-        worksheet.append_row(
-          [
-            room.name,
-            session.start_time.strftime('%A'),
-            session.title,
-            session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
-            session.description,
-            session.published_session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(";\n"),
-            session.published_session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(";\n"),
-          ],
-          styles
-        )
+        row.concat [
+              # session.start_time.strftime('%A'),
+              session.title,
+              session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+              session.description,
+              session.published_session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join("; "),
+              session.published_session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join("; "),
+        ]
+        styles.concat [
+          nil, date_time_style, nil, nil, nil
+        ]
       end
+      max_sessions = sessions.size if sessions.size > max_sessions
+
+      worksheet.append_row(row, styles)
     end
+
+    header = ['Room', 'Day']
+    (0..max_sessions).each do |n|
+      header.concat ["Title #{n+1}", "Start Time #{n+1}", "Description #{n+1}", "Moderators #{n+1}", "Participants #{n+1}"]
+    end
+    worksheet.write_row(0, header)
 
     send_data workbook.read_string,
               filename: "RoomSigns#{Time.now.strftime('%m-%d-%Y')}.xlsx",
