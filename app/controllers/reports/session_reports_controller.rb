@@ -1,6 +1,50 @@
 class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
+  def streamed_and_recorded
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    sessions = SessionService.live_sessions
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Sessions streamed and recorded")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, date_time_style, nil, nil, nil, nil, nil
+    ]
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Time',
+        'Room',
+        'Format',
+        'Environment',
+        'Live-Streamed',
+        'Recorded'
+      ]
+    )
+
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+          session.room&.name,
+          session.format&.name,
+          session.environment,
+          session.streamed ? 'Yes' : 'No',
+          session.recorded ? 'Yes' : 'No'
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "SessionsStreamedRecorded#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def daily_grid
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
