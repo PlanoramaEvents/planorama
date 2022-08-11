@@ -306,6 +306,9 @@
       <li>
         <a href="/report/program_ops_reports/back_of_badge" target="_blank">Back of Badge</a>
       </li>
+      <li>
+        <a href="/report/session_reports/session_needs" target="_blank">Session Needs</a>
+      </li>
     </ul>
     <ul>
       <li>

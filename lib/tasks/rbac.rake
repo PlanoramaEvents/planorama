@@ -543,7 +543,8 @@ namespace :rbac do
         "assigned_sessions_not_scheduled": true,
         "session_copy_edit_status": true,
         "daily_grid": true,
-        "streamed_and_recorded": true
+        "streamed_and_recorded": true,
+        "session_needs": true
       },
       "schedule_report": {
         "schedule_diff": true
@@ -853,7 +854,8 @@ namespace :rbac do
         "assigned_sessions_not_scheduled": true,
         "session_copy_edit_status": true,
         "daily_grid": true,
-        "streamed_and_recorded": true
+        "streamed_and_recorded": true,
+        "session_needs": true
       },
       "conflict_report": {
         "people_outside_availability": true,
