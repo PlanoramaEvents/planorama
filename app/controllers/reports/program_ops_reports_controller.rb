@@ -4,18 +4,53 @@ class Reports::ProgramOpsReportsController < ApplicationController
   def room_signs
     authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
 
-    workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Room Signs")
-    date_time_style = workbook.number_format("d mmm yyyy h:mm")
-
     # Need by room and time
     sessions = SessionService
                  .published_sessions_unordered
-                 .order("rooms.name asc, start_time asc")
+                 # .order("rooms.name asc, start_time asc")
 
     # Room name, Day of week, sessions (title, start time, description, participant list with moderator marker).
-    sessions.each do |session|
+    grouped_sessions = sessions.group_by {|s| s.room}
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Room Signs")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [nil, nil, nil, date_time_style]
+
+    worksheet.append_row(
+      [
+        'Room',
+        'Day',
+        'Session',
+        'Time',
+        'Description',
+        'Moderators',
+        'Participants'
+      ]
+    )
+
+    grouped_sessions.each do |room, sessions|
+      sessions.sort{|a,b| a.start_time <=> b.start_time}.each do |session|
+        worksheet.append_row(
+          [
+            room.name,
+            session.start_time.strftime('%A'),
+            session.title,
+            session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+            session.description,
+            session.published_session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(";\n"),
+            session.published_session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(";\n"),
+          ],
+          styles
+        )
+      end
     end
+
+    send_data workbook.read_string,
+              filename: "RoomSigns#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
   end
 
   def back_of_badge
