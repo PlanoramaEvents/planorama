@@ -548,7 +548,8 @@ namespace :rbac do
         "schedule_diff": true
       },
       "program_ops_report": {
-        "back_of_badge": true
+        "back_of_badge": true,
+        "room_signs": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -866,7 +867,8 @@ namespace :rbac do
         "schedule_diff": true
       },
       "program_ops_report": {
-        "back_of_badge": true
+        "back_of_badge": true,
+        "room_signs": true
       },
       "session_conflict": {
         "conflicts_with": true,

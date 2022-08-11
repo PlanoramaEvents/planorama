@@ -304,7 +304,11 @@
         <a href="/report/program_ops_reports/back_of_badge" target="_blank">Back of Badge</a>
       </li>
     </ul>
-
+    <ul>
+      <li>
+        <a href="/report/program_ops_reports/room_signs" target="_blank">Room Signs</a>
+      </li>
+    </ul>
   </div>
 </template>
 
