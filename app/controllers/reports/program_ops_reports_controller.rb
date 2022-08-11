@@ -1,6 +1,23 @@
 class Reports::ProgramOpsReportsController < ApplicationController
   around_action :set_timezone
 
+  def room_signs
+    authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Room Signs")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+
+    # Need by room and time
+    sessions = SessionService
+                 .published_sessions_unordered
+                 .order("rooms.name asc, start_time asc")
+
+    # Room name, Day of week, sessions (title, start time, description, participant list with moderator marker).
+    sessions.each do |session|
+    end
+  end
+
   def back_of_badge
     authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
 
