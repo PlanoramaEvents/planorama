@@ -99,7 +99,13 @@
         </p>
       </li>
       <li>
-        <a href="/report/people_reports/moderators" target="_blank">Participants Moderating at least one session</a>
+        <a href="/report/people_reports/moderators" target="_blank">Participants Moderating at least One Session</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People serving as moderator for at least one session, and the session information, one line per person and session<br />
+          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type (in-person, virtual, hybrid), participant status, session title, session environment<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators
+        </p>
       </li>
     </ul>
 
@@ -177,6 +183,11 @@
       </li>
       <li>
         <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session room<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
+        </p>
       </li>
     </ul>
 
