@@ -4,7 +4,7 @@ class Reports::SessionReportsController < ApplicationController
   def session_needs
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
-    sessions = SessionService.live_sessions
+    sessions = SessionService.draft_sessions
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Session Needs")
