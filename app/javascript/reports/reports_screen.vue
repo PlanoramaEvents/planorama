@@ -6,6 +6,7 @@
       <li><a href="#sessions">Sessions</a></li>
       <li><a href="#conflicts">Conflicts</a></li>
       <li><a href="#schedule">Schedule</a></li>
+      <li><a href="#prog-ops">Program Ops</a></li>
     </ul>
     <h5><a id="participants"></a>Participants</h5>
     <ul>
@@ -99,7 +100,13 @@
         </p>
       </li>
       <li>
-        <a href="/report/people_reports/moderators" target="_blank">Participants Moderating at least one session</a>
+        <a href="/report/people_reports/moderators" target="_blank">Participants Moderating at least One Session</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People serving as moderator for at least one session, and the session information, one line per person and session<br />
+          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type (in-person, virtual, hybrid), participant status, session title, session environment<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators
+        </p>
       </li>
       <li>
         <a href="/report/people_reports/social_media" target="_blank">Participants and Social Media</a>
@@ -180,6 +187,14 @@
       </li>
       <li>
         <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session room<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
+        </p>
+      </li>
+      <li>
+        <a href="/report/session_reports/streamed_and_recorded" target="_blank">Scheduled Sessions Streamed and/or Recorded</a>
       </li>
     </ul>
 
@@ -285,6 +300,14 @@
         </p>
       </li>
     </ul>
+
+    <h5><a id="prog-ops"></a>Program Ops</h5>
+    <ul>
+      <li>
+        <a href="/report/program_ops_reports/back_of_badge" target="_blank">Back of Badge</a>
+      </li>
+    </ul>
+
   </div>
 </template>
 

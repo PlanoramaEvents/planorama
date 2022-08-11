@@ -42,4 +42,8 @@ class Reports::SessionReportPolicy < BasePolicy
   def daily_grid?
     allowed?(action: :daily_grid)
   end
+
+  def streamed_and_recorded?
+    allowed?(action: :streamed_and_recorded)
+  end
 end
