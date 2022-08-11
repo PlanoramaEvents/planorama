@@ -20,34 +20,31 @@
     <div class="row" v-if="currentSettings.env !== 'production'">
       <div class="col-12">
         <h5>Publish schedule to public</h5>
-        <b-table-simple borderless fixed small>
+        <b-table-simple borderless fixed small style="width: 35rem;">
           <b-thead>
             <b-tr>
-              <!-- <b-td class="text-center">
-                <b-button variant="primary" size="sm" :disabled="!canDiff">Show difference</b-button>
-              </b-td> -->
-              <b-td colspan="3">
-                <b-button variant="primary" size="sm" @click="publishdSchedule()">Create a publish snapshot</b-button>
+              <b-td class="text-center">
+                <b-button variant="primary" size="sm" :disabled="!canDiff" @click="diff">Show difference</b-button>
+              </b-td>
+              <b-td colspan="3" class="text-right">
+                <b-button variant="primary" size="sm" v-b-modal.confirm-publish>Create a publish snapshot</b-button>
               </b-td>
             </b-tr>
           </b-thead>
         </b-table-simple>
-        <!-- <b-table-simple bordered fixed small>
-          <b-thead class="text-center">
-            <b-tr>
-              <b-td class="text-center">Select 2</b-td>
-              <b-td colspan="3">Timestamp</b-td>
-            </b-tr>
-          </b-thead>
-          <b-tbody>
-            <b-tr v-for="(snap, i) in pubSnapshots" :key="snap.id">
-              <b-td class="text-center">
-                <b-form-checkbox name="pubs-diff" v-model="pubsDiff[i]" :disabled="pubsDiffCount >= 2 && !pubsDiff[i]"></b-form-checkbox>
-              </b-td>
-              <b-td colspan="3">{{snap.timestamp}}</b-td>
-            </b-tr>
-          </b-tbody>
-        </b-table-simple> -->
+        <b-table
+          :fields="[{key: 'select_2', tdClass: 'text-center', thClass: 'text-center' }, {key: 'timestamp', tdClass: 'text-right', thClass: 'text-right', thAttr: {'colspan': 2}, tdAttr: {'colspan': 2}}]" 
+          bordered
+          fixed
+          small
+          sticky-header
+          :items="pubSnapshots"
+          style="width: 35rem;"
+        >
+          <template #cell(select_2)="{ index }">
+            <b-form-checkbox name="pubs-diff" v-model="pubsDiff[index]" :disabled="pubsDiffCount >= 2 && !pubsDiff[index]"></b-form-checkbox>
+          </template>
+        </b-table>
       </div>
     </div>
     <plano-modal id="confirm-draft-modal" @cancel="cancelDraft()" @close="cancelDraft()" no-close-on-backdrop @ok="confirmDraft()">
@@ -57,6 +54,11 @@
     <plano-modal id="confirm-firm-modal" @cancel="cancelFirm()" @close="cancelFirm()" no-close-on-backdrop @ok="confirmFirm()">
       <template #modal-title>Publish Firm Schedule Confirmation</template>
       {{SCHEDULE_FIRM_CONFIRM_MESSAGE}}
+    </plano-modal>
+    <plano-modal id="confirm-publish" @ok="publishdSchedule()">
+      <template #modal-title>Publish Schedule To Public Confirmation</template>
+      This will publish the schedule and make the current version of it available to external sources. This action is
+      irreversible and will bring the server down for a short time. Please double check that you wish to perform this action.
     </plano-modal>
   </div>
 </template>
@@ -92,15 +94,12 @@ export default {
     SCHEDULE_DRAFT_CONFIRM_MESSAGE,
     SCHEDULE_FIRM_CONFIRM_MESSAGE,
     NODE_ENV,
-    mockSnapshots: [
-      // {timestamp: '2022-08-01T09:58:00Z', id: '12345'},
-      // {timestamp: '2022-08-04T00:24:00Z', id:'67890'}
-    ],
-    pubsDiff: [false, false, false],
+    snapshots: [ ],
+    pubsDiff: [],
   }),
   computed: {
     pubSnapshots() {
-      return [{timestamp: "Current state", id: null}, ...this.mockSnapshots.map(snap => ({...snap, timestamp: DateTime.fromISO(snap.timestamp).toFormat("DDDD, t ZZZZ")}))]
+      return [{timestamp: "Current state", id: null}, ...this.snapshots.map(snap => ({...snap, timestamp: DateTime.fromISO(snap.timestamp).toFormat("DDDD, t ZZZZ")}))]
     },
     pubsDiffCount() {
       return this.pubsDiff.filter(pd => pd).length
@@ -149,6 +148,19 @@ export default {
     },
     publishdSchedule() {
       this.toastPromise(http.get('/session/schedule_publish'), "Succesfully requested publish")
+    },
+    diff() {
+      console.log('clicked diff');
+      const ids = this.snapshots.filter((s, i) => this.pubsDiff[i+1]).map(s => s.id)
+      // these will be in reverse time order because magic!
+      let url = '/report/schedule_reports/schedule_diff'
+      if(ids.length > 1) {
+        url += `/${ids[1]}/${ids[0]}`
+      } else {
+        url += `/${ids[0]}`
+      }
+      console.log('going to url', url)
+      window.open(url, '_blank');
     }
   },
   watch: {
@@ -173,6 +185,12 @@ export default {
       this.localFirmSchedule = this.firmSchedule;
       this.firmScheduleConfirmed = this.firmSchedule;
     })
+    this.$store.dispatch('jv/get', '/publication_date').then((data) => {
+      const {_jv, ...filteredData} = data;
+      this.snapshots = Object.values(filteredData).map(s => ({timestamp: s.timestamp, id: s.id}))
+      this.snapshots.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
+      this.pubsDiff = [false, ...Object.keys(filteredData).map(s => false)];
+    })
   }
 }
 </script>
@@ -183,4 +201,6 @@ export default {
   display: flex;
   align-items: center;
 }
+
+
 </style>

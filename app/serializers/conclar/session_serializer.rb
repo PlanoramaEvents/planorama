@@ -25,22 +25,70 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   attribute :tags do
     res = []
 
-    res.concat object.area_list #.collect(&:name)
-
-    res.concat [object.age_restriction.name] if object.age_restriction
-    res.concat [object.environment] if object.environment != 'unknown' # virtual hybrid etc
-
-    if object.minors_participation && object.minors_participation.class == Array
-      res.concat object.minors_participation
+    object.area_list.each do |area|
+      a = {
+        value: "session_".concat(area),
+        category: "Area",
+        label: area
+      }
+      res << a
     end
 
-    res.concat ['Require Signup'] if object.require_signup
-    res.concat ['Recorded'] if object.recorded
-    res.concat ['Streamed'] if object.streamed
+
+    #res.concat ["Environment: ".concat( object.environment )] if object.environment != 'unknown' # virtual hybrid etc
+    if object.environment != 'unknown'    # virtual hybrid etc
+      t = {
+        value: "session_".concat(object.environment),
+        category: "Environment",
+        label: object.environment
+      }
+      res << t
+    end
+
+    #if object.minors_participation && object.minors_participation.class == Array
+    #  res.concat object.minors_participation.collect { |x| "Minors Participation: " + x }
+    #end
+
+    #res.concat ["Note: ".concat( object.age_restriction.name )] if object.age_restriction
+    if object.age_restriction
+      t = {
+        value: "session_".concat(object.age_restriction.name),
+        category: "Note",
+        label: object.age_restriction.name
+      }
+      res << t
+    end
+    #res.concat ['Note: Require Signup'] if object.require_signup
+    if object.require_signup
+      t = {
+        value: "session_require_signup",
+        category: "Note",
+        label: "Require Signup"
+      }
+      res << t
+    end
+    #res.concat ['Note: Recorded'] if object.recorded
+    if object.recorded
+      t = {
+        value: "session_recorded",
+        category: "Note",
+        label: "Recorded"
+      }
+      res << t
+    end
+    #res.concat ['Note: Streamed'] if object.streamed
+    if object.streamed
+      t = {
+        value: "session_streamed",
+        category: "Note",
+        label: "Streamed"
+      }
+      res << t
+    end
 
     res
   end
-
+  
   attribute :mins do
     object.duration
   end

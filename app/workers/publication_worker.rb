@@ -7,15 +7,14 @@ class PublicationWorker
     # 3. Popultaed any caches that we need
     pub_date = nil
     PublishedSession.transaction do
-      pub_date = PublicationDate.new
-
-      pub_date.timestamp = DateTime.current
       last_pub = PublicationDate.order('timestamp desc').first
       last_time = last_pub&.timestamp
 
       # DO WORK
       result = PublicationService.publish(since: last_time)
 
+      pub_date = PublicationDate.new
+      pub_date.timestamp = DateTime.current
       pub_date.update(result)
       pub_date.save!
 

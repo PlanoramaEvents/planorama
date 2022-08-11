@@ -1,6 +1,47 @@
 class Reports::PeopleReportsController < ApplicationController
   around_action :set_timezone
 
+  def moderators
+    authorize Person, policy_class: ReportPolicy
+
+    people = SessionService.live_moderators
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Moderators and Sessions")
+
+    worksheet.append_row(
+      [
+        'Published Name',
+        'Primary Email',
+        'Attendance Type',
+        'Participant Status',
+        'Session Name',
+        'Session Format',
+        'Session Environment'
+      ]
+    )
+
+    people.each do |person|
+      person.sessions.moderating.each do |session|
+        worksheet.append_row(
+          [
+            person.published_name,
+            person.primary_email&.email,
+            person.attendance_type,
+            person.con_state,
+            session.title,
+            session.format&.name,
+            session.environment
+          ]
+        )
+      end
+    end
+
+    send_data workbook.read_string,
+              filename: "ParticipantsModeratingSessions-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def record_stream_permissions
     authorize Person, policy_class: ReportPolicy
 
@@ -58,10 +99,5 @@ class Reports::PeopleReportsController < ApplicationController
     send_data workbook.read_string,
               filename: "PeopleRecordStream-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
-  end
-
-  def set_timezone(&block)
-    timezone = ConfigService.value('convention_timezone')
-    Time.use_zone(timezone, &block)
   end
 end

@@ -101,6 +101,7 @@ module SessionService
     )
       .includes(:format, :room, {participant_assignments: :person})
       .joins(self.area_subquery(clazz: PublishedSession))
+      .order(:start_time)
   end
 
   def self.live_sessions
@@ -140,6 +141,21 @@ module SessionService
       {session_assignments: :session}
     )
     .where("session_assignments.session_assignment_role_type_id in (?)", [moderator.id, participant.id])
+    .where("sessions.start_time is not null and sessions.room_id is not null")
+    .where("sessions.status != 'dropped' and sessions.status != 'draft'")
+    .where("people.con_state not in (?)", ['declined', 'rejected']) #.distinct
+    .order("people.published_name")
+  end
+
+  def self.live_moderators
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+
+    people = Person.includes(
+      {session_assignments: [:session, :session_assignment_role_type]}
+    ).references(
+      {session_assignments: :session}
+    )
+    .where("session_assignments.session_assignment_role_type_id in (?)", [moderator.id])
     .where("sessions.start_time is not null and sessions.room_id is not null")
     .where("sessions.status != 'dropped' and sessions.status != 'draft'")
     .where("people.con_state not in (?)", ['declined', 'rejected']) #.distinct
