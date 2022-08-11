@@ -44,7 +44,7 @@ class PublishedSession < ApplicationRecord
       .order("sart.sort_order, people.published_name asc")
     },
     class_name: 'PublishedSessionAssignment'
-  has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
+  # has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
 
   enum visibility: {
     is_public: 'public',
