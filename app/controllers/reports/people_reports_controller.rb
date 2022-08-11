@@ -4,7 +4,7 @@ class Reports::PeopleReportsController < ApplicationController
   def social_media
     authorize Person, policy_class: ReportPolicy
 
-    people = SessionService.live_people
+    people = SessionService.draft_people
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Participant and Social Media")
