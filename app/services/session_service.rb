@@ -133,7 +133,7 @@ module SessionService
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
 
     people = Person.includes(
-      {published_session_assignments: [:published_session, :session_assignment_role_type]}
+      {published_session_assignments: [:published_session, :session_assignment_role_type, :person]}
     ).references(
       {published_session_assignments: :published_session}
     )
