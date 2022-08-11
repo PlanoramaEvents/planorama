@@ -101,8 +101,8 @@
               <dt>Attendee Signup Required</dt>
               <dd class="ml-2 font-italic">{{selected.require_signup ? 'Yes' : 'No'}}</dd>
               <dt class="ml-2">If "Yes", max openings</dt>
-              <dd class="ml-3 font-italic">{{selected.maximum_people}}</dd>
-              <dd class="ml-3 font-italic text-muted" v-if="!selected.maximum_people">None Set</dd>
+              <dd class="ml-3 font-italic">{{selected.audience_size}}</dd>
+              <dd class="ml-3 font-italic text-muted" v-if="!selected.audience_size">None Set</dd>
               <dt>Attendee Age Restrictions</dt>
               <dd class="ml-2 font-italic" v-if="selected.age_restriction_id">{{ ageRestrictionName(selected.age_restriction_id)}}</dd>
               <dd class="ml-2 font-italic text-muted" v-if="!selected.age_restriction_id">None</dd>
