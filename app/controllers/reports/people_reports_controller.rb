@@ -4,7 +4,7 @@ class Reports::PeopleReportsController < ApplicationController
   def moderators
     authorize Person, policy_class: ReportPolicy
 
-    people = SessionService.live_moderators
+    people = SessionService.draft_moderators
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Moderators and Sessions")

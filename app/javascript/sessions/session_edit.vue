@@ -71,7 +71,7 @@
             v-model="session.environment"
             @change="saveSession()"
             v-if="currentSettings && currentSettings.enums"
-          >          
+          >
             <b-form-radio v-for="env in currentSettings.enums.Session.environment" :value="env"  v-bind:key="env">{{SESSION_ENVIRONMENT[env]}}</b-form-radio>
           </b-form-radio-group>
         </b-form-group>
@@ -104,7 +104,7 @@
                 type="number"
                 class="ml-1"
                 :disabled="!session.require_signup"
-                v-model="session.maximum_people"
+                v-model="session.audience_size"
                 @blur="saveValidatedSession(validationCtx)"
                 :state="getValidationState(validationCtx)"
                 ></b-form-input>
