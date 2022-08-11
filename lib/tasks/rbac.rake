@@ -528,7 +528,8 @@ namespace :rbac do
         "session_selections": true,
         "sessions_with_participants": true,
         "record_stream_permissions": true,
-        "moderators": true
+        "moderators": true,
+        "social_media": true
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -832,7 +833,8 @@ namespace :rbac do
         "session_selections": true,
         "sessions_with_participants": true,
         "record_stream_permissions": true,
-        "moderators": true
+        "moderators": true,
+        "social_media": true
       },
       "session_report": {
         "panels_with_too_few_people": true,

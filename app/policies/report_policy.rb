@@ -1,5 +1,9 @@
 class ReportPolicy < BasePolicy
 
+  def social_media?
+    allowed?(action: :social_media)
+  end
+
   def moderators?
     allowed?(action: :moderators)
   end

@@ -101,6 +101,9 @@
       <li>
         <a href="/report/people_reports/moderators" target="_blank">Participants Moderating at least one session</a>
       </li>
+      <li>
+        <a href="/report/people_reports/social_media" target="_blank">Participants and Social Media</a>
+      </li>
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>

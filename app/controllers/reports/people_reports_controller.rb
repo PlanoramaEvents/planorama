@@ -1,6 +1,52 @@
 class Reports::PeopleReportsController < ApplicationController
   around_action :set_timezone
 
+  def social_media
+    authorize Person, policy_class: ReportPolicy
+
+    people = SessionService.live_people
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Participant and Social Media")
+
+    worksheet.append_row(
+      [
+        'Published Name',
+        'Attendance Type',
+        'Participant Status',
+        'Bio',
+        'Social Media'
+      ]
+    )
+
+    people.each do |person|
+      social = []
+      social << "Twitter: https://twitter.com/#{person.twitter}" unless person.twitter.blank?
+      social <<  "Facebook: https://facebook.com/#{person.facebook}" unless person.facebook.blank?
+      social <<  "Website: #{person.website}" unless person.website.blank?
+      social <<  "Instagram: https://instagram.com/#{person.instagram}" unless person.instagram.blank?
+      social <<  "Twitch: https://twitch.tv/#{person.twitch}" unless person.twitch.blank?
+      social <<  "Youtube: https://youtube.com/#{person.youtube}" unless person.youtube.blank?
+      social <<  "TikTok: https://www.tiktok.com/@#{person.tiktok}" unless person.tiktok.blank?
+      social <<  "LinkedIn: https://linkedin.com/in/#{person.linkedin}" unless person.linkedin.blank?
+      social <<  "Other Social Media: #{person.othersocialmedia}"  unless person.othersocialmedia.blank?
+
+      worksheet.append_row(
+        [
+          person.published_name,
+          person.attendance_type,
+          person.con_state,
+          person.bio,
+          social.join(",\n")
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "ParticipantsSocialMedia-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def moderators
     authorize Person, policy_class: ReportPolicy
 
