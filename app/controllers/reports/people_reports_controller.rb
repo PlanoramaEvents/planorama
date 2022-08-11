@@ -2,7 +2,7 @@ class Reports::PeopleReportsController < ApplicationController
   around_action :set_timezone
 
   def mis_matched_envs
-    # authorize Person, policy_class: ReportPolicy
+    authorize Person, policy_class: ReportPolicy
 
     results = PersonSchedule
                 .joins(:person)

@@ -1,5 +1,9 @@
 class ReportPolicy < BasePolicy
 
+  def mis_matched_envs?
+    allowed?(action: :mis_matched_envs)
+  end
+
   def moderators?
     allowed?(action: :moderators)
   end
