@@ -4,7 +4,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
   def sign_up_sessions
     authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
 
-    sessions = SessionService.live_sessions.where('require_signup = true')
+    sessions = SessionService.draft_sessions.where('require_signup = true')
 
     workbook = FastExcel.open #(constant_memory: true)
     worksheet = workbook.add_worksheet("Sessions requiring Signups")
