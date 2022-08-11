@@ -108,6 +108,9 @@
           <strong><em>Person data included</em></strong>: moderators
         </p>
       </li>
+      <li>
+        <a href="/report/people_reports/social_media" target="_blank">Participants and Social Media</a>
+      </li>
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>

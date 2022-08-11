@@ -88,6 +88,7 @@ Rails.application.routes.draw do
 
   get 'report/people_reports/record_stream_permissions', to: 'reports/people_reports#record_stream_permissions'
   get 'report/people_reports/moderators', to: 'reports/people_reports#moderators'
+  get 'report/people_reports/social_media', to: 'reports/people_reports#social_media'
 
   get 'report/program_ops_reports/back_of_badge', to: 'reports/program_ops_reports#back_of_badge'
   get 'report/program_ops_reports/table_tents', to: 'reports/program_ops_reports#table_tents'  
