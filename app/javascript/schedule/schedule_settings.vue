@@ -27,6 +27,7 @@
                 <b-button variant="primary" size="sm" :disabled="!canDiff" @click="diff">Show difference</b-button>
               </b-td>
               <b-td colspan="3" class="text-right">
+                <icon-button icon="arrow-repeat" class="mr-2" @click="fetchPublicationDates()"></icon-button>
                 <b-button variant="primary" size="sm" v-b-modal.confirm-publish>Create a publish snapshot</b-button>
               </b-td>
             </b-tr>
@@ -40,7 +41,13 @@
           sticky-header
           :items="pubSnapshots"
           style="width: 35rem;"
+          :busy="pubsLoading"
         >
+          <template #table-busy>
+            <div class="d-flex justify-content-center">
+              <b-spinner variant="primary"></b-spinner>
+            </div>
+          </template>
           <template #cell(select_2)="{ index }">
             <b-form-checkbox name="pubs-diff" v-model="pubsDiff[index]" :disabled="pubsDiffCount >= 2 && !pubsDiff[index]"></b-form-checkbox>
           </template>
@@ -75,6 +82,7 @@ import {
 import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import settingsMixin from "@/store/settings.mixin";
 import { DateTime } from 'luxon';
+import IconButton from '@/components/icon_button.vue';
 
 export default {
   name: "ScheduleSettings",
@@ -84,7 +92,8 @@ export default {
     settingsMixin
   ],
   components: {
-    PlanoModal
+    PlanoModal,
+    IconButton
   },
   data: () => ({
     localDraftSchedule: false,
@@ -96,6 +105,7 @@ export default {
     NODE_ENV,
     snapshots: [ ],
     pubsDiff: [],
+    pubsLoading: false,
   }),
   computed: {
     pubSnapshots() {
@@ -161,6 +171,16 @@ export default {
       }
       console.log('going to url', url)
       window.open(url, '_blank');
+    },
+    fetchPublicationDates() {
+      this.pubsLoading = true;
+      this.$store.dispatch('jv/get', '/publication_date').then((data) => {
+        const {_jv, ...filteredData} = data;
+        this.snapshots = Object.values(filteredData).map(s => ({timestamp: s.timestamp, id: s.id}))
+        this.snapshots.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
+        this.pubsDiff = [false, ...Object.keys(filteredData).map(s => false)];
+        this.pubsLoading = false;
+      })
     }
   },
   watch: {
@@ -185,12 +205,7 @@ export default {
       this.localFirmSchedule = this.firmSchedule;
       this.firmScheduleConfirmed = this.firmSchedule;
     })
-    this.$store.dispatch('jv/get', '/publication_date').then((data) => {
-      const {_jv, ...filteredData} = data;
-      this.snapshots = Object.values(filteredData).map(s => ({timestamp: s.timestamp, id: s.id}))
-      this.snapshots.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
-      this.pubsDiff = [false, ...Object.keys(filteredData).map(s => false)];
-    })
+    this.fetchPublicationDates();
   }
 }
 </script>
