@@ -108,6 +108,9 @@
           <strong><em>Person data included</em></strong>: moderators
         </p>
       </li>
+      <li>
+        <a href="/report/people_reports/mis_matched_envs" target="_blank">Participants with Mis-Matching Sessions</a>
+      </li>
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>
