@@ -189,6 +189,9 @@
           <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
         </p>
       </li>
+      <li>
+        <a href="/report/session_reports/streamed_and_recorded" target="_blank">Scheduled Sessions Streamed and/or Recorded</a>
+      </li>
     </ul>
 
     <h5><a id="conflicts"></a>Conflicts</h5>
