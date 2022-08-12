@@ -56,6 +56,92 @@ class Reports::ProgramOpsReportsController < ApplicationController
               disposition: 'attachment'
   end
 
+  def sign_up_sessions
+    authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
+
+    sessions = SessionService.draft_sessions.where('require_signup = true')
+
+    workbook = FastExcel.open #(constant_memory: true)
+    worksheet = workbook.add_worksheet("Sessions requiring Signups")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+
+    styles = [nil, nil, nil, date_time_style ]
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Description',
+        'Room',
+        'Time',
+        'Duration',
+        'Format',
+        'Participants',
+        'Environment',
+        'Max Signups'
+      ]
+    )
+
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.description,
+          session.room&.name,
+          session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+          session.duration,
+          session.format&.name,
+          session.participant_assignments.collect{|pa| pa.person.published_name}.join(";\n"),
+          session.environment,
+          session.audience_size
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "SessionRequoringSignup-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
+  def table_tents
+    authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
+
+    sessions = SessionService.published_sessions
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+
+    workbook = FastExcel.open #(constant_memory: true)
+    worksheet = workbook.add_worksheet("Table Tents")
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Published Name',
+        'Description',
+        'Participant Notes',
+        'Moderators',
+        'Participants'
+      ]
+    )
+
+    sessions.each do |session|
+      session.published_session_assignments.each do |pa|
+        worksheet.append_row [
+          session.title,
+          pa.person.published_name,
+          session.description,
+          session.participant_notes,
+          session.published_session_assignments.role(moderator).collect{|p| "#{p.person.published_name} (#{p.person.pronouns})" }.join(",\n"),
+          session.published_session_assignments.role(participant).collect{|p| "#{p.person.published_name} (#{p.person.pronouns})" }.join(",\n")
+        ]
+      end
+    end
+
+    send_data workbook.read_string,
+              filename: "TableTents-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def back_of_badge
     authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
 

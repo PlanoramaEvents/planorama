@@ -5,7 +5,7 @@ class PublishedSession < ApplicationRecord
   self.primary_key = :session_id
 
   has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' },
-                  ignore: [:updated_at, :created_at, :lock_version],
+                  ignore: [:updated_at, :created_at, :lock_version, :integrations],
                   limit: nil
 
   belongs_to :format
@@ -44,7 +44,7 @@ class PublishedSession < ApplicationRecord
       .order("sart.sort_order, people.published_name asc")
     },
     class_name: 'PublishedSessionAssignment'
-  has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
+  # has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
 
   enum visibility: {
     is_public: 'public',
