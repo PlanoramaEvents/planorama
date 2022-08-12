@@ -529,6 +529,7 @@ namespace :rbac do
         "sessions_with_participants": true,
         "record_stream_permissions": true,
         "moderators": true,
+        "mis_matched_envs": true,
         "social_media": true
       },
       "session_report": {
@@ -840,6 +841,7 @@ namespace :rbac do
         "sessions_with_participants": true,
         "record_stream_permissions": true,
         "moderators": true,
+        "mis_matched_envs": true,
         "social_media": true
       },
       "session_report": {
