@@ -8,7 +8,7 @@ class PublishedSession < ApplicationRecord
                   ignore: [:updated_at, :created_at, :lock_version, :integrations],
                   limit: nil
 
-  belongs_to :format
+  belongs_to :format, required: false
   belongs_to :session
   belongs_to :room, required: false
 
