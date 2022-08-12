@@ -108,6 +108,12 @@
           <strong><em>Person data included</em></strong>: moderators
         </p>
       </li>
+      <li>
+        <a href="/report/people_reports/mis_matched_envs" target="_blank">Participants with Mis-Matching Sessions</a>
+      </li>
+      <li>
+        <a href="/report/people_reports/social_media" target="_blank">Participants and Social Media</a>
+      </li>
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>
@@ -305,6 +311,12 @@
       </li>
       <li>
         <a href="/report/program_ops_reports/sign_up_sessions" target="_blank">Sessions Requiring Signup</a>
+      </li>
+      <li>
+        <a href="/report/session_reports/session_needs" target="_blank">Session Needs</a>
+      </li>
+      <li>
+        <a href="/report/program_ops_reports/table_tents" target="_blank">Table Tents</a>
       </li>
     </ul>
 

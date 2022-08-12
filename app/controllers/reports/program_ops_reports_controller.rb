@@ -48,6 +48,45 @@ class Reports::ProgramOpsReportsController < ApplicationController
               disposition: 'attachment'
   end
 
+  def table_tents
+    authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
+
+    sessions = SessionService.published_sessions
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+
+    workbook = FastExcel.open #(constant_memory: true)
+    worksheet = workbook.add_worksheet("Table Tents")
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Published Name',
+        'Description',
+        'Participant Notes',
+        'Moderators',
+        'Participants'
+      ]
+    )
+
+    sessions.each do |session|
+      session.published_session_assignments.each do |pa|
+        worksheet.append_row [
+          session.title,
+          pa.person.published_name,
+          session.description,
+          session.participant_notes,
+          session.published_session_assignments.role(moderator).collect{|p| "#{p.person.published_name} (#{p.person.pronouns})" }.join(",\n"),
+          session.published_session_assignments.role(participant).collect{|p| "#{p.person.published_name} (#{p.person.pronouns})" }.join(",\n")
+        ]
+      end
+    end
+
+    send_data workbook.read_string,
+              filename: "TableTents-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def back_of_badge
     authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
 
