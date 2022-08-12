@@ -1,6 +1,49 @@
 class Reports::ProgramOpsReportsController < ApplicationController
   around_action :set_timezone
 
+  def session_minors
+    authorize Session, policy_class: Reports::ProgramOpsReportPolicy
+
+    sessions = SessionService
+                 .draft_sessions
+                 .includes(:age_restriction)
+
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Session and Minor Info")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [nil, nil, date_time_style]
+
+    worksheet.append_row(
+      [
+        'Session Title',
+        'Description',
+        'Time',
+        'Room',
+        'Age Restriction',
+        'Minor Participant'
+      ]
+    )
+
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.description,
+          session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+          session.room&.name,
+          session.age_restriction&.name,
+          (session.minors_participation && session.minors_participation.size > 0) ? session.minors_participation.join(', ') : nil
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "SessionAndMinors-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def room_signs
     authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
 

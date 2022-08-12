@@ -14,4 +14,8 @@ class Reports::ProgramOpsReportPolicy < BasePolicy
   def table_tents?
     allowed?(action: :table_tents)
   end
+
+  def session_minors?
+    allowed?(action: :session_minors)
+  end
 end
