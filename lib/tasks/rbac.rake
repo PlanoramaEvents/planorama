@@ -529,7 +529,8 @@ namespace :rbac do
         "sessions_with_participants": true,
         "record_stream_permissions": true,
         "moderators": true,
-        "mis_matched_envs": true
+        "mis_matched_envs": true,
+        "social_media": true
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -543,13 +544,15 @@ namespace :rbac do
         "assigned_sessions_not_scheduled": true,
         "session_copy_edit_status": true,
         "daily_grid": true,
-        "streamed_and_recorded": true
+        "streamed_and_recorded": true,
+        "session_needs": true
       },
       "schedule_report": {
         "schedule_diff": true
       },
       "program_ops_report": {
-        "back_of_badge": true
+        "back_of_badge": true,
+        "table_tents": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -838,7 +841,8 @@ namespace :rbac do
         "sessions_with_participants": true,
         "record_stream_permissions": true,
         "moderators": true,
-        "mis_matched_envs": true
+        "mis_matched_envs": true,
+        "social_media": true
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -852,7 +856,8 @@ namespace :rbac do
         "assigned_sessions_not_scheduled": true,
         "session_copy_edit_status": true,
         "daily_grid": true,
-        "streamed_and_recorded": true
+        "streamed_and_recorded": true,
+        "session_needs": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -868,7 +873,8 @@ namespace :rbac do
         "schedule_diff": true
       },
       "program_ops_report": {
-        "back_of_badge": true
+        "back_of_badge": true,
+        "table_tents": true
       },
       "session_conflict": {
         "conflicts_with": true,

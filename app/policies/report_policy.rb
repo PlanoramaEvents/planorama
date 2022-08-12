@@ -4,6 +4,10 @@ class ReportPolicy < BasePolicy
     allowed?(action: :mis_matched_envs)
   end
 
+  def social_media?
+    allowed?(action: :social_media)
+  end
+
   def moderators?
     allowed?(action: :moderators)
   end
