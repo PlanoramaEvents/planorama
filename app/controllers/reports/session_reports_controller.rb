@@ -63,6 +63,7 @@ class Reports::SessionReportsController < ApplicationController
         'Areas',
         'Format',
         'Start Time',
+        'Duration',
         'Room'
       ]
     )
@@ -74,6 +75,7 @@ class Reports::SessionReportsController < ApplicationController
           session.area_list.sort.join(';'),
           session.format&.name,
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+          session.duration,
           session.room&.name
         ],
         styles
