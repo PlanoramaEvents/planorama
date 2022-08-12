@@ -93,6 +93,7 @@ Rails.application.routes.draw do
   get 'report/people_reports/social_media', to: 'reports/people_reports#social_media'
 
   get 'report/program_ops_reports/back_of_badge', to: 'reports/program_ops_reports#back_of_badge'
+  get 'report/program_ops_reports/sign_up_sessions', to: 'reports/program_ops_reports#sign_up_sessions'  
   get 'report/program_ops_reports/table_tents', to: 'reports/program_ops_reports#table_tents'  
 
   get 'report/schedule_reports/schedule_diff(/:from)(/:to)', to: 'reports/schedule_reports#schedule_diff'

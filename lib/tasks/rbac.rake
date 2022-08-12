@@ -552,6 +552,7 @@ namespace :rbac do
       },
       "program_ops_report": {
         "back_of_badge": true,
+        "sign_up_sessions": true,
         "table_tents": true
       },
       "conflict_report": {
@@ -874,6 +875,7 @@ namespace :rbac do
       },
       "program_ops_report": {
         "back_of_badge": true,
+        "sign_up_sessions": true,
         "table_tents": true
       },
       "session_conflict": {
