@@ -23,7 +23,7 @@ class Reports::ScheduleReportsController < ApplicationController
 
     to ||= Time.now
     workbook = FastExcel.open(constant_memory: true)
-    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
 
     session_time_changed = workbook.add_worksheet("Session Time Changed")
     session_room_changed = workbook.add_worksheet("Session Room Changed")

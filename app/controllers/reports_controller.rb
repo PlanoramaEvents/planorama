@@ -8,7 +8,7 @@ class ReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Approvals")
-    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
     styles = [
               nil, nil, nil, nil, nil,
               nil, nil, date_time_style,
@@ -234,7 +234,7 @@ class ReportsController < ApplicationController
         'Assigned'
       ]
     )
-    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
     styles = [nil, nil, date_time_style, nil, nil, nil, nil]
     moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
@@ -322,7 +322,7 @@ class ReportsController < ApplicationController
       ]
     )
 
-    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
     styles = [nil, nil, nil, nil, nil, date_time_style, nil, nil, nil]
     people_sessions.each do |sa|
       worksheet.append_row(

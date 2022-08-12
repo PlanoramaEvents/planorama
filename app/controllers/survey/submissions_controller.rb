@@ -106,7 +106,7 @@ class Survey::SubmissionsController < ResourceController
   def collection_to_xls
     workbook = FastExcel.open(constant_memory: true) # creates tmp file
     worksheet = workbook.add_worksheet("Export")
-    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
     styles = [date_time_style,date_time_style]
     # Get the survey questions
     submission = @collection.first
