@@ -48,9 +48,11 @@ class Reports::ScheduleReportsController < ApplicationController
           ((!change[:changes]['room_id'][0] && change[:changes]['room_id'][1]) ||
           (!change[:changes]['start_time'][0] && change[:changes]['start_time'][1]))
           session_added_row(session_added, change, date_time_style)
+          next
         else
           if (change[:changes]['room_id'] && !change[:changes]['room_id'][1]) || (change[:changes]['start_time'] && !change[:changes]['start_time'][1])|| change[:event] == 'destroy'
             session_removed_row(session_removed, change)
+            next
           else
             if change[:changes]['room_id']
               session_room_change_row(session_room_changed, change)
