@@ -16,11 +16,11 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Session',
-        'Time',
+        'Start Time',
         'Room',
         'Format',
         'Environment',
-        'Live-Streamed',
+        'Livestreamed',
         'Recorded'
       ]
     )
@@ -62,7 +62,7 @@ class Reports::SessionReportsController < ApplicationController
         'Session',
         'Areas',
         'Format',
-        'Time',
+        'Start Time',
         'Room'
       ]
     )
