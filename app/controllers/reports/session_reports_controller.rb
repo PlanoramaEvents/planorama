@@ -52,7 +52,7 @@ class Reports::SessionReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Assigned Session not Sched")
-    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
     styles = [
       nil, nil, nil, date_time_style, nil
     ]
