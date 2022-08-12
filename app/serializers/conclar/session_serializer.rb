@@ -105,7 +105,8 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   attribute :loc do
      # [ "Some Room", "Some Area" ],
     if object.room
-      [object.room.name, object.room.venue.name]
+      # [object.room.name, object.room.venue.name]
+      [object.room.name]
     else
       []
     end
