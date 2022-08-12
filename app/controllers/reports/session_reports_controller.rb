@@ -8,7 +8,7 @@ class Reports::SessionReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Sessions streamed and recorded")
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, date_time_style, nil, nil, nil, nil, nil
     ]
@@ -171,7 +171,7 @@ class Reports::SessionReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Sched Sessions no Participants")
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, date_time_style, nil
     ]
@@ -209,7 +209,7 @@ class Reports::SessionReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Sessions no Moderator")
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, date_time_style, nil, nil, nil
     ]
@@ -423,7 +423,7 @@ class Reports::SessionReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Panels with too Few People")
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, date_time_style, nil, nil, nil, nil
     ]
@@ -469,7 +469,7 @@ class Reports::SessionReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Panels with too Many People")
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, date_time_style, nil, nil, nil
     ]

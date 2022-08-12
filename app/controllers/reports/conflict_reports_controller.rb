@@ -20,7 +20,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Conflict Type'
       ]
     )
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, date_time_style, nil, nil
     ]
@@ -63,7 +63,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Conflict Type'
       ]
     )
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, date_time_style, nil, nil, nil, nil
     ]
@@ -109,7 +109,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Start Time'
       ]
     )
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, nil, date_time_style,
     ]
@@ -175,7 +175,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Conflict Session Start Time'
       ]
     )
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, nil, nil, nil, date_time_style,
       nil, nil, date_time_style
@@ -278,7 +278,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Conflict 2 Room'
       ]
     )
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [
       nil, nil, nil, nil, nil, date_time_style, nil, nil,
       nil, nil, date_time_style, nil, nil,
@@ -376,7 +376,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Conflict Room'
       ]
     )
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [nil, nil, nil, nil, nil, date_time_style, nil, nil, nil, nil, date_time_style, nil, nil]
 
     conflicts.each do |conflict|
@@ -459,7 +459,7 @@ class Reports::ConflictReportsController < ApplicationController
 
       ]
     )
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [nil, nil, nil, date_time_style, nil, nil, nil, nil, nil]
 
     conflicts.each do |conflict|
@@ -528,7 +528,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Availability'
       ]
     )
-    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
     styles = [nil, nil, nil, nil, nil, date_time_style, nil, nil]
 
     conflicts.each do |conflict|
