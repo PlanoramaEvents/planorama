@@ -14,4 +14,8 @@ class Reports::ProgramOpsReportPolicy < BasePolicy
   def table_tents?
     allowed?(action: :table_tents)
   end
+
+  def user_privileges?
+    allowed?(action: :user_privileges)
+  end
 end
