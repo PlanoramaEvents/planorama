@@ -319,7 +319,11 @@
         <a href="/report/program_ops_reports/table_tents" target="_blank">Table Tents</a>
       </li>
     </ul>
-
+    <ul>
+      <li>
+        <a href="/report/program_ops_reports/room_signs" target="_blank">Room Signs</a>
+      </li>
+    </ul>
   </div>
 </template>
 

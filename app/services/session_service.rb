@@ -94,14 +94,17 @@ module SessionService
     end
   end
 
-  def self.published_sessions
+  def self.published_sessions_unordered
     PublishedSession.select(
       ::PublishedSession.arel_table[Arel.star],
       'areas_list.area_list'
     )
       .includes(:format, :room, {participant_assignments: :person})
       .joins(self.area_subquery(clazz: PublishedSession))
-      .order(:start_time)
+  end
+
+  def self.published_sessions
+    self.published_sessions_unordered.order(:start_time)
   end
 
   def self.draft_sessions

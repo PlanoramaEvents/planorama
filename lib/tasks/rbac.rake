@@ -552,6 +552,7 @@ namespace :rbac do
       },
       "program_ops_report": {
         "back_of_badge": true,
+        "room_signs": true,
         "sign_up_sessions": true,
         "table_tents": true
       },
@@ -875,6 +876,7 @@ namespace :rbac do
       },
       "program_ops_report": {
         "back_of_badge": true,
+        "room_signs": true,
         "sign_up_sessions": true,
         "table_tents": true
       },
