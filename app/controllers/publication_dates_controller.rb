@@ -12,6 +12,10 @@ class PublicationDatesController < ResourceController
     PublicationStatus.delete_all
 
     Audit::PublishedSessionVersion.delete_all
+
+    render status: :ok,
+          json: { message: 'publication reset' }.to_json,
+          content_type: 'application/json'
   end
 
   def paginate

@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="row" v-if="currentSettings.env !== 'production'">
+    <div class="row">
       <div class="col-12">
         <h5>Publish schedule to public</h5>
         <b-table-simple borderless fixed small style="width: 35rem;">
@@ -45,6 +45,10 @@
             <b-form-checkbox name="pubs-diff" v-model="pubsDiff[index]" :disabled="pubsDiffCount >= 2 && !pubsDiff[index]"></b-form-checkbox>
           </template>
         </b-table>
+        <div v-if="currentSettings.env !== 'production'">
+          <b-button variant="primary" @click="resetPubs()">Reset Publish for Testing</b-button>
+          <span>THIS DELETES ALL THE PUBLISHED DATA AND YOU CAN'T EVER GET IT BACK</span>
+        </div>
       </div>
     </div>
     <plano-modal id="confirm-draft-modal" @cancel="cancelDraft()" @close="cancelDraft()" no-close-on-backdrop @ok="confirmDraft()">
@@ -145,6 +149,9 @@ export default {
       this.draftSchedule = false;
       this.firmSchedule = false;
       this.toastPromise(http.get('/schedule_workflow/reset'), "succesfully reset workflows")
+    },
+    resetPubs() {
+      this.toastPromise(http.get('/publication_date/reset'), "succesfully reset publication data")
     },
     publishdSchedule() {
       this.toastPromise(http.get('/session/schedule_publish'), "Succesfully requested publish")
