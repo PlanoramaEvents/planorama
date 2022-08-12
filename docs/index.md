@@ -7,8 +7,8 @@ This software is open source! If you'd like to contribute, please email planoram
 
 [Planorama Data Privacy & Protection Policy](/planorama/privacy)
 
-Production version: 2.0.0
+![Production version](https://img.shields.io/github/v/release/ChicagoWorldcon/planorama?label=production)
 
-Staging version: 2.0.0
+![Staging version](https://img.shields.io/github/v/release/ChicagoWorldcon/planorama?include_prereleases&label=staging)
 
 <script type="text/javascript" src="https://chicon-planorama.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/r5gghz/b/3/bc54840da492f9ca037209037ef0522a/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=816c99a7"></script>
