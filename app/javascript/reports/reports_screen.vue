@@ -310,7 +310,7 @@
         <p class="ml-2">
           <strong><em>Description</em></strong>: Participant schedule for mail merge, one line per person, with variable line length based on number of assigned sessions<br />
           <strong><em>Fields</em></strong>: Published name, Session 1 Title, Session 1 Start Time, Session 1 Duration, Session 1 Room, then repeat the 4 session columns as needed<br />
-          <em>Session data included</em></strong>: all published sessions<br />
+          <strong><em>Session data included</em></strong>: all published sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
       </li>
