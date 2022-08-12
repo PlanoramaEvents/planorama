@@ -23,7 +23,7 @@ class Reports::ScheduleReportsController < ApplicationController
 
     to ||= Time.now
     workbook = FastExcel.open(constant_memory: true)
-    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
 
     session_time_changed = workbook.add_worksheet("Session Time Changed")
     session_room_changed = workbook.add_worksheet("Session Room Changed")
@@ -48,9 +48,12 @@ class Reports::ScheduleReportsController < ApplicationController
           ((!change[:changes]['room_id'][0] && change[:changes]['room_id'][1]) ||
           (!change[:changes]['start_time'][0] && change[:changes]['start_time'][1]))
           session_added_row(session_added, change, date_time_style)
+          next
         else
           if (change[:changes]['room_id'] && !change[:changes]['room_id'][1]) || (change[:changes]['start_time'] && !change[:changes]['start_time'][1])|| change[:event] == 'destroy'
+            # Rails.logger.debug "******** removed because room or time"
             session_removed_row(session_removed, change)
+            next
           else
             if change[:changes]['room_id']
               session_room_change_row(session_room_changed, change)
@@ -59,6 +62,18 @@ class Reports::ScheduleReportsController < ApplicationController
               session_time_change_row(session_time_changed, change, date_time_style)
             end
           end
+        end
+      end
+
+      if change[:changes]['status']
+        if change[:changes]['status'][1] == 'draft' || change[:changes]['status'][1] == 'dropped'
+          # Rails.logger.debug "******** removed because draft"
+          session_removed_row(session_removed, change)
+          next
+        elsif change[:changes]['status'][0] == 'draft' || change[:changes]['status'][0] == 'dropped'
+          # Rails.logger.debug "******** added because state change"
+          session_added_row(session_added, change, date_time_style)
+          next
         end
       end
 

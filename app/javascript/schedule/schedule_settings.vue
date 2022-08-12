@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="row" v-if="currentSettings.env !== 'production'">
+    <div class="row">
       <div class="col-12">
         <h5>Publish schedule to public</h5>
         <b-table-simple borderless fixed small style="width: 35rem;">
@@ -27,6 +27,7 @@
                 <b-button variant="primary" size="sm" :disabled="!canDiff" @click="diff">Show difference</b-button>
               </b-td>
               <b-td colspan="3" class="text-right">
+                <icon-button icon="arrow-repeat" class="mr-2" @click="fetchPublicationDates()"></icon-button>
                 <b-button variant="primary" size="sm" v-b-modal.confirm-publish>Create a publish snapshot</b-button>
               </b-td>
             </b-tr>
@@ -40,11 +41,21 @@
           sticky-header
           :items="pubSnapshots"
           style="width: 35rem;"
+          :busy="pubsLoading"
         >
+          <template #table-busy>
+            <div class="d-flex justify-content-center">
+              <b-spinner variant="primary"></b-spinner>
+            </div>
+          </template>
           <template #cell(select_2)="{ index }">
             <b-form-checkbox name="pubs-diff" v-model="pubsDiff[index]" :disabled="pubsDiffCount >= 2 && !pubsDiff[index]"></b-form-checkbox>
           </template>
         </b-table>
+        <div v-if="currentSettings.env !== 'production'">
+          <b-button variant="primary" @click="resetPubs()">Reset Publish for Testing</b-button>
+          <span>THIS DELETES ALL THE PUBLISHED DATA AND YOU CAN'T EVER GET IT BACK</span>
+        </div>
       </div>
     </div>
     <plano-modal id="confirm-draft-modal" @cancel="cancelDraft()" @close="cancelDraft()" no-close-on-backdrop @ok="confirmDraft()">
@@ -75,6 +86,7 @@ import {
 import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import settingsMixin from "@/store/settings.mixin";
 import { DateTime } from 'luxon';
+import IconButton from '@/components/icon_button.vue';
 
 export default {
   name: "ScheduleSettings",
@@ -84,7 +96,8 @@ export default {
     settingsMixin
   ],
   components: {
-    PlanoModal
+    PlanoModal,
+    IconButton
   },
   data: () => ({
     localDraftSchedule: false,
@@ -96,6 +109,7 @@ export default {
     NODE_ENV,
     snapshots: [ ],
     pubsDiff: [],
+    pubsLoading: false,
   }),
   computed: {
     pubSnapshots() {
@@ -146,6 +160,9 @@ export default {
       this.firmSchedule = false;
       this.toastPromise(http.get('/schedule_workflow/reset'), "succesfully reset workflows")
     },
+    resetPubs() {
+      this.toastPromise(http.get('/publication_date/reset'), "succesfully reset publication data")
+    },
     publishdSchedule() {
       this.toastPromise(http.get('/session/schedule_publish'), "Succesfully requested publish")
     },
@@ -161,6 +178,16 @@ export default {
       }
       console.log('going to url', url)
       window.open(url, '_blank');
+    },
+    fetchPublicationDates() {
+      this.pubsLoading = true;
+      this.$store.dispatch('jv/get', '/publication_date').then((data) => {
+        const {_jv, ...filteredData} = data;
+        this.snapshots = Object.values(filteredData).map(s => ({timestamp: s.timestamp, id: s.id}))
+        this.snapshots.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
+        this.pubsDiff = [false, ...Object.keys(filteredData).map(s => false)];
+        this.pubsLoading = false;
+      })
     }
   },
   watch: {
@@ -185,12 +212,7 @@ export default {
       this.localFirmSchedule = this.firmSchedule;
       this.firmScheduleConfirmed = this.firmSchedule;
     })
-    this.$store.dispatch('jv/get', '/publication_date').then((data) => {
-      const {_jv, ...filteredData} = data;
-      this.snapshots = Object.values(filteredData).map(s => ({timestamp: s.timestamp, id: s.id}))
-      this.snapshots.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
-      this.pubsDiff = [false, ...Object.keys(filteredData).map(s => false)];
-    })
+    this.fetchPublicationDates();
   }
 }
 </script>

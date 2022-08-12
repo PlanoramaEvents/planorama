@@ -66,11 +66,11 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Session',
-        'Time',
+        'Start Time',
         'Room',
         'Format',
         'Environment',
-        'Live-Streamed',
+        'Livestreamed',
         'Recorded'
       ]
     )
@@ -102,7 +102,7 @@ class Reports::SessionReportsController < ApplicationController
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Assigned Session not Sched")
-    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
     styles = [
       nil, nil, nil, date_time_style, nil
     ]
@@ -112,7 +112,8 @@ class Reports::SessionReportsController < ApplicationController
         'Session',
         'Areas',
         'Format',
-        'Time',
+        'Start Time',
+        'Duration',
         'Room'
       ]
     )
@@ -124,6 +125,7 @@ class Reports::SessionReportsController < ApplicationController
           session.area_list.sort.join(';'),
           session.format&.name,
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+          session.duration,
           session.room&.name
         ],
         styles
