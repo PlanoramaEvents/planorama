@@ -13,11 +13,13 @@ class Reports::ScheduleReportsController < ApplicationController
 
     pd_to = PublicationDate.find params[:to] if params[:to]
     to = pd_to.timestamp if pd_to
+    live = false
 
     # changes = ChangeService.published_changes(from: from, to: to)
     changes = if to
                 ChangeService.published_changes(from: from, to: to)
               else
+                live = true
                 ChangeService.session_changes(from: from)
               end
 
@@ -37,11 +39,11 @@ class Reports::ScheduleReportsController < ApplicationController
 
     tab_headers(session_time_changed, session_room_changed, session_title_changed, session_description_changed, session_added, session_removed, participants_add_drop, participants_fully_dropped)
 
-    # Rails.logger.debug "******** CHANGES: #{changes[:sessions]}"
+    Rails.logger.debug "******** CHANGES: #{changes[:sessions]}"
 
     # test
     changes[:sessions].values.sort{|a,b| (a[:object] ? a[:object].title : '') <=> (b[:object] ? b[:object].title : '')}.each do |change|
-      # Rails.logger.debug "******** CHANGE: #{change}"
+      Rails.logger.debug "******** CHANGE: #{change}"
       next unless change[:object]
 
       if change[:changes]['room_id'] || change[:changes]['start_time']
@@ -49,11 +51,13 @@ class Reports::ScheduleReportsController < ApplicationController
           ((!change[:changes]['room_id'][0] && change[:changes]['room_id'][1]) ||
           (!change[:changes]['start_time'][0] && change[:changes]['start_time'][1]))
           session_added_row(session_added, change, date_time_style)
+          live_add(session: change[:object], sheet: participants_add_drop) if live
           next
         else
           if (change[:changes]['room_id'] && !change[:changes]['room_id'][1]) || (change[:changes]['start_time'] && !change[:changes]['start_time'][1])|| change[:event] == 'destroy'
             # Rails.logger.debug "******** removed because room or time"
             session_removed_row(session_removed, change)
+            live_drop(session: change[:object], sheet: participants_add_drop) if live
             next
           else
             if change[:changes]['room_id']
@@ -66,26 +70,31 @@ class Reports::ScheduleReportsController < ApplicationController
         end
       end
 
-      if change[:changes]['status']
-        if (change[:changes]['status'][1] == 'draft' || change[:changes]['status'][1] == 'dropped') && change[:object].start_time && change[:object].room_id
-          # Rails.logger.debug "******** removed because draft"
-          session_removed_row(session_removed, change)
-          next
-        elsif (change[:changes]['status'][0] == 'draft' || change[:changes]['status'][0] == 'dropped') && change[:object].start_time && change[:object].room_id
-          # Rails.logger.debug "******** added because state change"
-          session_added_row(session_added, change, date_time_style)
-          next
+      if change[:object].start_time && change[:object].room_id
+        if change[:changes]['status']
+          if (change[:changes]['status'][1] == 'draft' || change[:changes]['status'][1] == 'dropped')
+            # Rails.logger.debug "******** removed because draft"
+            session_removed_row(session_removed, change)
+            live_drop(session: change[:object], sheet: participants_add_drop) if live
+            next
+          elsif (change[:changes]['status'][0] == 'draft' || change[:changes]['status'][0] == 'dropped')
+            # Rails.logger.debug "******** added because state change"
+            session_added_row(session_added, change, date_time_style)
+            live_add(session: change[:object], sheet: participants_add_drop) if live
+            next
+          end
         end
-      end
 
-      if change[:changes]['title']
-        session_title_change_row(session_title_changed, change)
-      end
-      if change[:changes]['description']
-        session_description_change_row(session_description_changed, change)
+        if change[:changes]['title']
+          session_title_change_row(session_title_changed, change)
+        end
+        if change[:changes]['description']
+          session_description_change_row(session_description_changed, change)
+        end
       end
     end
 
+    # Deal with the assignment changes
     moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
     roles = [moderator.id, participant.id]
@@ -100,23 +109,25 @@ class Reports::ScheduleReportsController < ApplicationController
       if change[:changes]['session_assignment_role_type_id']
         session = change[:object].session if change[:object].session
         session ||= Session.find change[:object].session_id
-        if (roles.include?(change[:changes]['session_assignment_role_type_id'][1]))
-          participants_add_drop.append_row(
-            [
-              session.title,
-              '',
-              change[:object].person.published_name
-            ]
-          )
-        elsif (roles.include?(change[:changes]['session_assignment_role_type_id'][0]))
-          participants_add_drop.append_row(
-            [
-              session.title,
-              change[:object].person.published_name,
-            ]
-          )
-          if change[:object].person.sessions.scheduled.count == 0
-            fully_dropped.append [change[:object].person.published_name]
+        if session.start_time && session.room_id
+          if (roles.include?(change[:changes]['session_assignment_role_type_id'][1]))
+            participants_add_drop.append_row(
+              [
+                session.title,
+                '',
+                change[:object].person.published_name
+              ]
+            )
+          elsif (roles.include?(change[:changes]['session_assignment_role_type_id'][0]))
+            participants_add_drop.append_row(
+              [
+                session.title,
+                change[:object].person.published_name,
+              ]
+            )
+            if change[:object].person.sessions.scheduled.count == 0
+              fully_dropped.append [change[:object].person.published_name]
+            end
           end
         end
       end
@@ -141,6 +152,29 @@ class Reports::ScheduleReportsController < ApplicationController
 
     participants_add_drop.append_row(['Session Title', 'Participant Dropped', 'Participant Added'])
     participants_fully_dropped.append_row(['Participant Dropped'])
+  end
+
+  def live_add(session:, sheet:)
+    session.participant_assignments.each do |sa|
+      sheet.append_row(
+        [
+          session.title,
+          '',
+          sa.person.published_name,
+        ]
+      )
+    end
+  end
+
+  def live_drop(session:, sheet:)
+    session.participant_assignments.each do |sa|
+      sheet.append_row(
+        [
+          session.title,
+          sa.person.published_name,
+        ]
+      )
+    end
   end
 
   def session_description_change_row(sheet, change)
@@ -203,6 +237,8 @@ class Reports::ScheduleReportsController < ApplicationController
   def session_added_row(sheet, change, date_time_style)
     moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+
+    # If this is Session and it is added then so are the people
 
     sheet.append_row(
       [
