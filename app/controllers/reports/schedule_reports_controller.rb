@@ -39,6 +39,7 @@ class Reports::ScheduleReportsController < ApplicationController
 
     # Rails.logger.debug "******** CHANGES: #{changes[:sessions]}"
 
+    # test
     changes[:sessions].values.sort{|a,b| (a[:object] ? a[:object].title : '') <=> (b[:object] ? b[:object].title : '')}.each do |change|
       # Rails.logger.debug "******** CHANGE: #{change}"
       next unless change[:object]
@@ -66,11 +67,11 @@ class Reports::ScheduleReportsController < ApplicationController
       end
 
       if change[:changes]['status']
-        if change[:changes]['status'][1] == 'draft' || change[:changes]['status'][1] == 'dropped'
+        if (change[:changes]['status'][1] == 'draft' || change[:changes]['status'][1] == 'dropped') && change[:object].start_time && change[:object].room_id
           # Rails.logger.debug "******** removed because draft"
           session_removed_row(session_removed, change)
           next
-        elsif change[:changes]['status'][0] == 'draft' || change[:changes]['status'][0] == 'dropped'
+        elsif (change[:changes]['status'][0] == 'draft' || change[:changes]['status'][0] == 'dropped') && change[:object].start_time && change[:object].room_id
           # Rails.logger.debug "******** added because state change"
           session_added_row(session_added, change, date_time_style)
           next
