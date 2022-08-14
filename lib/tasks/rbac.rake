@@ -278,6 +278,9 @@ namespace :rbac do
           "show": false,
           "update": false,
           "fetch": false
+      },
+      "publication_date": {
+          "index": false
       }
     })
   end
@@ -524,7 +527,8 @@ namespace :rbac do
         "schedule_by_room_then_time": true,
         "session_selections": true,
         "sessions_with_participants": true,
-        "record_stream_permissions": true
+        "record_stream_permissions": true,
+        "moderators": true
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -536,7 +540,15 @@ namespace :rbac do
         "session_with_no_moderator": true,
         "scheduled_session_no_people": true,
         "assigned_sessions_not_scheduled": true,
-        "session_copy_edit_status": true
+        "session_copy_edit_status": true,
+        "daily_grid": true,
+        "streamed_and_recorded": true
+      },
+      "schedule_report": {
+        "schedule_diff": true
+      },
+      "program_ops_report": {
+        "back_of_badge": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -575,6 +587,9 @@ namespace :rbac do
           "update": true,
           "fetch": true
       },
+      "publication_date": {
+          "index": true
+      }
     })
   end
 
@@ -820,7 +835,8 @@ namespace :rbac do
         "schedule_by_room_then_time": true,
         "session_selections": true,
         "sessions_with_participants": true,
-        "record_stream_permissions": true
+        "record_stream_permissions": true,
+        "moderators": true
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -832,7 +848,9 @@ namespace :rbac do
         "session_with_no_moderator": true,
         "scheduled_session_no_people": true,
         "assigned_sessions_not_scheduled": true,
-        "session_copy_edit_status": true
+        "session_copy_edit_status": true,
+        "daily_grid": true,
+        "streamed_and_recorded": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -843,6 +861,12 @@ namespace :rbac do
         "multiple_sessions_in_room": true,
         "all_conflicts": true,
         "all_ignored_conflicts": true
+      },
+      "schedule_report": {
+        "schedule_diff": true
+      },
+      "program_ops_report": {
+        "back_of_badge": true
       },
       "session_conflict": {
         "conflicts_with": true,
@@ -871,6 +895,9 @@ namespace :rbac do
           "update": true,
           "fetch": true
       },
+      "publication_date": {
+          "index": true
+      }
     })
   end
 end

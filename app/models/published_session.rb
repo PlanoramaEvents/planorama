@@ -4,9 +4,11 @@
 class PublishedSession < ApplicationRecord
   self.primary_key = :session_id
 
-  has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' }, ignore: [:updated_at, :created_at, :lock_version]
+  has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' },
+                  ignore: [:updated_at, :created_at, :lock_version, :integrations],
+                  limit: nil
 
-  belongs_to :format
+  belongs_to :format, required: false
   belongs_to :session
   belongs_to :room, required: false
 
@@ -48,6 +50,9 @@ class PublishedSession < ApplicationRecord
     is_public: 'public',
     is_private: 'private'
   }
+
+  has_many :session_areas, inverse_of: :session, foreign_key: 'session_id'
+  has_many :areas, through: :session_areas
 
   # acts_as_taggable
   acts_as_taggable_on :tags

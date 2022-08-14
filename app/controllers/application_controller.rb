@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   include Pundit::Authorization
   include JSONAPI::Errors
 
+  EXCEL_NBR_FORMAT = "[$-409]d mmm yyyy h:mm AM/PM;@".freeze
+
   skip_before_action :verify_authenticity_token
 
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -94,5 +96,10 @@ class ApplicationController < ActionController::Base
     Rails.logger.error exception.backtrace.join("\n\t") if Rails.env.development?
     # NOTE: if we have a central log put it in here
     super(exception)
+  end
+
+  def set_timezone(&block)
+    timezone = ConfigService.value('convention_timezone')
+    Time.use_zone(timezone, &block)
   end
 end

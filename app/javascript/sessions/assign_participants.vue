@@ -107,7 +107,7 @@ export default {
       )
     },
     refreshAssignments(arg) {
-      this.fetchPaged(false).then(
+      this.fetchAll(false).then(
         () => {
           this.refreshSession()
         }

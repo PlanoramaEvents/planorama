@@ -38,4 +38,12 @@ class Reports::SessionReportPolicy < BasePolicy
   def session_copy_edit_status?
     allowed?(action: :session_copy_edit_status)
   end
+
+  def daily_grid?
+    allowed?(action: :daily_grid)
+  end
+
+  def streamed_and_recorded?
+    allowed?(action: :streamed_and_recorded)
+  end
 end

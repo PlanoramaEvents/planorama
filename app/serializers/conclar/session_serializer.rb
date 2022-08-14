@@ -21,26 +21,83 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     object.start_time
   end
 
-  # TODO: change for when we do have tags
+
   attribute :tags do
     res = []
 
-    res.concat object.area_list #.collect(&:name)
-
-    res.concat [object.age_restriction.name] if object.age_restriction
-    res.concat [object.environment] if object.environment != 'unknown' # virtual hybrid etc
-
-    if object.minors_participation && object.minors_participation.class == Array
-      res.concat object.minors_participation
+    object.area_list.each do |area|
+      a = {
+        value: "session_".concat(area),
+        category: "Area",
+        label: area
+      }
+      res << a
     end
 
-    res.concat ['Require Signup'] if object.require_signup
-    res.concat ['Recorded'] if object.recorded
-    res.concat ['Streamed'] if object.streamed
+    case object.environment
+    when 'in_person'
+      t = {
+        value: "session_".concat(object.environment),
+        category: "Environment",
+        label: 'In Person'
+      }
+      res << t
+    when 'hybrid'
+      t = {
+        value: "session_".concat(object.environment),
+        category: "Environment",
+        label: 'Hybrid'
+      }
+      res << t
+    when 'virtual'
+      t = {
+        value: "session_".concat(object.environment),
+        category: "Environment",
+        label: 'Virtual'
+      }
+      res << t
+    else
+    end
+
+    if object.age_restriction
+      t = {
+        value: "session_".concat(object.age_restriction.name),
+        category: "Note",
+        label: object.age_restriction.name
+      }
+      res << t
+    end
+
+    if object.require_signup
+      t = {
+        value: "session_require_signup",
+        category: "Note",
+        label: "Requires Signup"
+      }
+      res << t
+    end
+
+    if object.recorded
+      t = {
+        value: "session_recorded",
+        category: "Note",
+        label: "Recorded"
+      }
+      res << t
+    end
+
+    if object.streamed
+      t = {
+        value: "session_streamed",
+        category: "Note",
+        label: "Streamed"
+      }
+      res << t
+    end
 
     res
   end
-
+  
   attribute :mins do
     object.duration
   end
@@ -48,7 +105,8 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   attribute :loc do
      # [ "Some Room", "Some Area" ],
     if object.room
-      [object.room.name, object.room.venue.name]
+      # [object.room.name, object.room.venue.name]
+      [object.room.name]
     else
       []
     end

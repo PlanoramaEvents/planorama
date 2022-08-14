@@ -30,6 +30,9 @@ dt {
     color: $color-secondary-2-3;
     font-weight: bolder;
   }
+  &.not-production {
+    background: linear-gradient(to right, #ffffff, #f311d8 67%); 
+  }
 }
 
 #side-navbar .nav {
@@ -40,6 +43,10 @@ dt {
     background: $color-primary-2;
     color: white;
   }
+}
+
+#bottom-navbar footer.not-production {
+  background: #f311d8;
 }
 
 .description-tooltip .tooltip-inner {
