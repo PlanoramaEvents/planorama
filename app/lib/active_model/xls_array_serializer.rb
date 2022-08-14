@@ -19,7 +19,7 @@ module ActiveModel
       workbook = FastExcel.open(constant_memory: true) # creates tmp file
       worksheet = workbook.add_worksheet("Export")
 
-      date_time_style = workbook.number_format("d mmm yyyy h:mm")
+      date_time_style = workbook.number_format("[$-409]d mmm yyyy h:mm AM/PM;@")
       date_style = workbook.number_format("d mmm yyyy")
       time_style = workbook.number_format("h:mm")
 
