@@ -192,7 +192,7 @@
         <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session room<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session duration, session room<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
         </p>
       </li>
