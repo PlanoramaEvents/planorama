@@ -5,6 +5,7 @@ class Session < ApplicationRecord
   validates_numericality_of :duration, allow_nil: true
   validates_numericality_of :minimum_people, allow_nil: true
   validates_numericality_of :maximum_people, allow_nil: true
+  validates_numericality_of :audience_size, allow_nil: true
 
   # NOTE: when we have a config for default duration change to use a lambda
   attribute :duration, default: 60

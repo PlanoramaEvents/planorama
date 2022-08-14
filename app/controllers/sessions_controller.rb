@@ -303,7 +303,7 @@ class SessionsController < ResourceController
       item_notes
       tech_notes
       pub_reference_number
-      audience_size,
+      audience_size
       participant_notes
       is_break
       start_time

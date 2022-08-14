@@ -108,12 +108,12 @@
           <strong><em>Person data included</em></strong>: moderators
         </p>
       </li>
-      <li>
+      <!-- <li>
         <a href="/report/people_reports/mis_matched_envs" target="_blank">Participants with Mis-Matching Sessions</a>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <a href="/report/people_reports/social_media" target="_blank">Participants and Social Media</a>
-      </li>
+      </li> -->
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>
@@ -192,12 +192,17 @@
         <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session room<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session duration, session room<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
         </p>
       </li>
       <li>
         <a href="/report/session_reports/streamed_and_recorded" target="_blank">Scheduled Sessions Streamed and/or Recorded</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Information about livestreaming and recording, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, session start time, session room, session format, session environment, is session livestreamed (y/n), is session recorded (y/n)<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions
+        </p>
       </li>
     </ul>
 
@@ -308,6 +313,12 @@
     <ul>
       <li>
         <a href="/report/program_ops_reports/back_of_badge" target="_blank">Back of Badge</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Participant schedule for mail merge, one line per person, with variable line length based on number of assigned sessions<br />
+          <strong><em>Fields</em></strong>: Published name, Session 1 Title, Session 1 Start Time, Session 1 Duration, Session 1 Room, then repeat the 4 session columns as needed<br />
+          <strong><em>Session data included</em></strong>: all published sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
+        </p>
       </li>
       <li>
         <a href="/report/program_ops_reports/sign_up_sessions" target="_blank">Sessions Requiring Signup</a>
