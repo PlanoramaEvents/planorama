@@ -90,27 +90,6 @@ class Reports::ScheduleReportsController < ApplicationController
             session_description_change_row(@session_description_changed, change)
           end
         end
-
-        # if change[:changes]['status']
-        #   if (change[:changes]['status'][1] == 'draft' || change[:changes]['status'][1] == 'dropped')
-        #     # Rails.logger.debug "******** removed because draft"
-        #     session_removed_row(@session_removed, change)
-        #     if live
-        #       live_drop(session: change[:object], sheet: @participants_add_drop)
-        #       state_change_sessions << change[:object].id
-        #     end
-        #     next
-        #   elsif (change[:changes]['status'][0] == 'draft' || change[:changes]['status'][0] == 'dropped')
-        #     # Rails.logger.debug "******** added because state change"
-        #     session_added_row(@session_added, change)
-        #     if live
-        #       live_add(session: change[:object], sheet: @participants_add_drop)
-        #       state_change_sessions << change[:object].id
-        #     end
-        #     next
-        #   end
-        # end
-
       end
     end
 
@@ -176,16 +155,21 @@ class Reports::ScheduleReportsController < ApplicationController
   end
 
   def check_status_change(change:, live: false)
+    # Rails.logger.debug "********* STATUS CHANGE"
     return unless change[:changes]['status']
     return if ['draft', 'dropped'].include?(change[:changes]['status'][0]) && ['draft', 'dropped'].include?(change[:changes]['status'][1])
 
+    # Rails.logger.debug "********* STATUS CHANGE ....."
     if ['draft', 'dropped'].include?(change[:changes]['status'][1])
-      session_removed_row(@session_removed, change)
-
       if live
+        return unless change[:object].published_session
+
+        session_removed_row(@session_removed, change)
         live_drop(session: change[:object], sheet: @participants_add_drop)
-        # state_change_sessions <<
+
         return change[:object].id
+      else
+        session_removed_row(@session_removed, change)
       end
 
       return
@@ -195,7 +179,7 @@ class Reports::ScheduleReportsController < ApplicationController
       session_added_row(@session_added, change)
       if live
         live_add(session: change[:object], sheet: @participants_add_drop)
-        # state_change_sessions <<
+
         return change[:object].id
       end
 
