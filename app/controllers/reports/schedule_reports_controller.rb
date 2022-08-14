@@ -39,11 +39,11 @@ class Reports::ScheduleReportsController < ApplicationController
 
     tab_headers(session_time_changed, session_room_changed, session_title_changed, session_description_changed, session_added, session_removed, participants_add_drop, participants_fully_dropped)
 
-    Rails.logger.debug "******** CHANGES: #{changes[:sessions]}"
+    # Rails.logger.debug "******** CHANGES: #{changes[:sessions]}"
 
-    # test
+    state_change_sessions = []
     changes[:sessions].values.sort{|a,b| (a[:object] ? a[:object].title : '') <=> (b[:object] ? b[:object].title : '')}.each do |change|
-      Rails.logger.debug "******** CHANGE: #{change}"
+      # Rails.logger.debug "******** CHANGE: #{change}"
       next unless change[:object]
 
       if change[:changes]['room_id'] || change[:changes]['start_time']
@@ -75,12 +75,18 @@ class Reports::ScheduleReportsController < ApplicationController
           if (change[:changes]['status'][1] == 'draft' || change[:changes]['status'][1] == 'dropped')
             # Rails.logger.debug "******** removed because draft"
             session_removed_row(session_removed, change)
-            live_drop(session: change[:object], sheet: participants_add_drop) if live
+            if live
+              live_drop(session: change[:object], sheet: participants_add_drop)
+              state_change_sessions << change[:object].id
+            end
             next
           elsif (change[:changes]['status'][0] == 'draft' || change[:changes]['status'][0] == 'dropped')
             # Rails.logger.debug "******** added because state change"
             session_added_row(session_added, change, date_time_style)
-            live_add(session: change[:object], sheet: participants_add_drop) if live
+            if live
+              live_add(session: change[:object], sheet: participants_add_drop)
+              state_change_sessions << change[:object].id
+            end
             next
           end
         end
@@ -103,31 +109,50 @@ class Reports::ScheduleReportsController < ApplicationController
     # TODO: sort .... ??? how
     fully_dropped = []
     changes[:assignments].each do |id, change|
-      next unless change[:object]
+      # next unless change[:object]
+      changed_assignment = change[:object]
+      changed_assignment ||=  SessionAssignment.find change[:session_assignment_id]
+      next if state_change_sessions.include? change[:object].session_id
+
+      session = changed_assignment.session if changed_assignment.session
+      session ||= Session.find changed_assignment.session_id
+
+      # Rails.logger.debug "******** Assignment changes #{change}"
 
       # Participants add/drop
-      if change[:changes]['session_assignment_role_type_id']
-        session = change[:object].session if change[:object].session
-        session ||= Session.find change[:object].session_id
+      if change[:changes]['session_assignment_role_type_id'] && change[:event] != 'destroy'
         if session.start_time && session.room_id
           if (roles.include?(change[:changes]['session_assignment_role_type_id'][1]))
             participants_add_drop.append_row(
               [
                 session.title,
                 '',
-                change[:object].person.published_name
+                changed_assignment.person.published_name
               ]
             )
           elsif (roles.include?(change[:changes]['session_assignment_role_type_id'][0]))
             participants_add_drop.append_row(
               [
                 session.title,
-                change[:object].person.published_name,
+                changed_assignment.person.published_name,
               ]
             )
-            if change[:object].person.sessions.scheduled.count == 0
+            if changed_assignment.person.sessions.scheduled.count == 0
               fully_dropped.append [change[:object].person.published_name]
             end
+          end
+        end
+      else
+        # Rails.logger.debug "******** Assignment EVENT DROP ????"
+        if change[:event] == 'destroy'
+          participants_add_drop.append_row(
+            [
+              session.title,
+              changed_assignment.person.published_name,
+            ]
+          )
+          if changed_assignment.person.sessions.scheduled.count == 0
+            fully_dropped.append [changed_assignment.person.published_name]
           end
         end
       end
