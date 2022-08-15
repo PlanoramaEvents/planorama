@@ -55,8 +55,10 @@ class Reports::ScheduleReportsController < ApplicationController
     changes.values.sort{|a,b| (a[:object] ? a[:object].title : '') <=> (b[:object] ? b[:object].title : '')}.each do |change|
       next unless change[:object]
 
-      if (change[:changes]['room_id'] || change[:changes]['start_time']) && !change[:changes]['status']
-        # Rails.logger.debug "******** SESSION ADD/REMOVE #{change[:changes]['status']} "
+      if (change[:changes]['room_id'] || change[:changes]['start_time']) #&& !change[:changes]['status']
+        next if ignore_session_status_change?(change: change)
+
+        # Rails.logger.debug "******** SESSION ADD/REMOVE #{change[:changes]} "
         if room_added?(change) || start_time_added?(change)
           session_added_row(@session_added, change)
           live_add(session: change[:object], sheet: @participants_add_drop) if live
@@ -194,7 +196,7 @@ class Reports::ScheduleReportsController < ApplicationController
   def check_status_change(change:, live: false)
     # Rails.logger.debug "********* STATUS CHANGE"
     return unless change[:changes]['status']
-    return if ['draft', 'dropped'].include?(change[:changes]['status'][0]) && ['draft', 'dropped'].include?(change[:changes]['status'][1])
+    return if ignore_session_status_change?(change: change)
 
     # Rails.logger.debug "********* STATUS CHANGE ..... #{change[:changes]['status']}"
     if ['draft', 'dropped'].include?(change[:changes]['status'][1])
@@ -223,6 +225,10 @@ class Reports::ScheduleReportsController < ApplicationController
 
       return
     end
+  end
+
+  def ignore_session_status_change?(change:)
+    ['draft', 'dropped'].include?(change[:changes]['status'][0]) && ['draft', 'dropped'].include?(change[:changes]['status'][1])
   end
 
 
