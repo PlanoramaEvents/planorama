@@ -95,24 +95,32 @@ class Reports::ScheduleReportsController < ApplicationController
       end
     end
 
-    Rails.logger.debug "*********** ST #{state_change_sessions}"
+    # Rails.logger.debug "*********** ST #{state_change_sessions}"
 
     return state_change_sessions
   end
 
   def room_added?(change)
+    return false unless change[:changes] && change[:changes]['room_id']
+
     !change[:changes]['room_id'][0] && change[:changes]['room_id'][1]
   end
 
   def start_time_added?(change)
+    return false unless change[:changes] && change[:changes]['start_time']
+
     !change[:changes]['start_time'][0] && change[:changes]['start_time'][1]
   end
 
   def room_removed?(change)
+    return false unless change[:changes] && change[:changes]['room_id']
+
     change[:changes]['room_id'][0] && !change[:changes]['room_id'][1]
   end
 
   def start_time_removed?(change)
+    return false unless change[:changes] && change[:changes]['start_time']
+
     change[:changes]['start_time'][0] && !change[:changes]['start_time'][1]
   end
 
