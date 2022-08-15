@@ -55,8 +55,10 @@ class Reports::ScheduleReportsController < ApplicationController
     changes.values.sort{|a,b| (a[:object] ? a[:object].title : '') <=> (b[:object] ? b[:object].title : '')}.each do |change|
       next unless change[:object]
 
-      if (change[:changes]['room_id'] || change[:changes]['start_time']) && !change[:changes]['status']
-        # Rails.logger.debug "******** SESSION ADD/REMOVE #{change[:changes]['status']} "
+      if (change[:changes]['room_id'] || change[:changes]['start_time']) #&& !change[:changes]['status']
+        next if change[:changes]['status'] && ignore_session_status_change?(change: change)
+
+        # Rails.logger.debug "******** SESSION ADD/REMOVE #{change[:changes]} "
         if room_added?(change) || start_time_added?(change)
           session_added_row(@session_added, change)
           live_add(session: change[:object], sheet: @participants_add_drop) if live
@@ -132,20 +134,18 @@ class Reports::ScheduleReportsController < ApplicationController
     fully_dropped = []
     changes.each do |id, change|
       changed_assignment = change[:object]
-      changed_assignment ||=  SessionAssignment.find(change[:item_id]) if SessionAssignment.exists?(change[:item_id])
+      changed_assignment ||=  SessionAssignment.find(id) if SessionAssignment.exists?(id)
 
+      next unless changed_assignment
       next if state_change_sessions.include?(changed_assignment.session_id || changed_assignment.published_session_id)
 
-      session =  if changed_assignment
-                   changed_assignment.session
-                 else
-                   session_id = change[:published_session_id] || change[:session_id]
-                   Session.find session_id if Session.exists? session_id
-                 end
+      session = changed_assignment.session
+      session_id = change[:object][:published_session_id] || change[:object][:session_id]
+      session ||= Session.find session_id if Session.exists? session_id
       next unless session
 
-      person = change[:object].person
-      person ||= Session.find change[:person_id] if Session.exists? change[:person_id]
+      person ||= changed_assignment.person
+      # person ||= Person.find change[:object][:person_id] if Person.exists? change[:object][:person_id]
       next unless person
 
       # Participants add/drop
@@ -194,7 +194,7 @@ class Reports::ScheduleReportsController < ApplicationController
   def check_status_change(change:, live: false)
     # Rails.logger.debug "********* STATUS CHANGE"
     return unless change[:changes]['status']
-    return if ['draft', 'dropped'].include?(change[:changes]['status'][0]) && ['draft', 'dropped'].include?(change[:changes]['status'][1])
+    return if ignore_session_status_change?(change: change)
 
     # Rails.logger.debug "********* STATUS CHANGE ..... #{change[:changes]['status']}"
     if ['draft', 'dropped'].include?(change[:changes]['status'][1])
@@ -223,6 +223,10 @@ class Reports::ScheduleReportsController < ApplicationController
 
       return
     end
+  end
+
+  def ignore_session_status_change?(change:)
+    ['draft', 'dropped'].include?(change[:changes]['status'][0]) && ['draft', 'dropped'].include?(change[:changes]['status'][1])
   end
 
 
