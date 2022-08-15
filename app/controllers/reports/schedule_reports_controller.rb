@@ -136,6 +136,7 @@ class Reports::ScheduleReportsController < ApplicationController
       changed_assignment = change[:object]
       changed_assignment ||=  SessionAssignment.find(id) if SessionAssignment.exists?(id)
 
+      next unless changed_assignment
       next if state_change_sessions.include?(changed_assignment.session_id || changed_assignment.published_session_id)
 
       session = changed_assignment.session
@@ -143,8 +144,8 @@ class Reports::ScheduleReportsController < ApplicationController
       session ||= Session.find session_id if Session.exists? session_id
       next unless session
 
-      person = change[:object].person
-      person ||= Person.find change[:object][:person_id] if Person.exists? change[:object][:person_id]
+      person ||= changed_assignment.person
+      # person ||= Person.find change[:object][:person_id] if Person.exists? change[:object][:person_id]
       next unless person
 
       # Participants add/drop
