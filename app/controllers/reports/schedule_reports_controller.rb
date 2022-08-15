@@ -95,6 +95,8 @@ class Reports::ScheduleReportsController < ApplicationController
       end
     end
 
+    Rails.logger.debug "*********** ST #{state_change_sessions}"
+
     return state_change_sessions
   end
 
@@ -121,11 +123,22 @@ class Reports::ScheduleReportsController < ApplicationController
 
     fully_dropped = []
     changes.each do |id, change|
-      next if state_change_sessions.include? change[:item_id]
-
       changed_assignment = change[:object]
       changed_assignment ||=  SessionAssignment.find(change[:item_id]) if SessionAssignment.exists?(change[:item_id])
-      session = changed_assignment.session
+
+      next if state_change_sessions.include?(changed_assignment.session_id || changed_assignment.published_session_id)
+
+      session =  if changed_assignment
+                   changed_assignment.session
+                 else
+                   session_id = change[:published_session_id] || change[:session_id]
+                   Session.find session_id if Session.exists? session_id
+                 end
+      next unless session
+
+      person = change[:object].person
+      person ||= Session.find change[:person_id] if Session.exists? change[:person_id]
+      next unless person
 
       # Participants add/drop
       if change[:changes]['session_assignment_role_type_id'] && change[:event] != 'destroy'
@@ -135,19 +148,19 @@ class Reports::ScheduleReportsController < ApplicationController
               [
                 session.title,
                 '',
-                changed_assignment.person.published_name
+                person.published_name
               ]
             )
           elsif (roles.include?(change[:changes]['session_assignment_role_type_id'][0]))
             @participants_add_drop.append_row(
               [
                 session.title,
-                changed_assignment.person.published_name,
+                person.published_name,
               ]
             )
 
-            if ['declined', 'rejected'].include? changed_assignment.person.con_state
-              fully_dropped.append [change[:object].person.published_name]
+            if ['declined', 'rejected'].include? person.con_state
+              fully_dropped.append [person.published_name]
             end
           end
         end
@@ -157,11 +170,11 @@ class Reports::ScheduleReportsController < ApplicationController
           @participants_add_drop.append_row(
             [
               session.title,
-              changed_assignment.person.published_name,
+              person.published_name,
             ]
           )
-          if ['declined', 'rejected'].include? changed_assignment.person.con_state
-            fully_dropped.append [changed_assignment.person.published_name]
+          if ['declined', 'rejected'].include? person.con_state
+            fully_dropped.append [person.published_name]
           end
         end
       end
