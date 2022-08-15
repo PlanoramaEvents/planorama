@@ -95,7 +95,7 @@ class Reports::ScheduleReportsController < ApplicationController
       end
     end
 
-    Rails.logger.debug "*********** ST #{state_change_sessions}"
+    # Rails.logger.debug "*********** ST #{state_change_sessions}"
 
     return state_change_sessions
   end
