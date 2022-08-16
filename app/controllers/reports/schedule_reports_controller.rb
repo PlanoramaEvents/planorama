@@ -140,8 +140,10 @@ class Reports::ScheduleReportsController < ApplicationController
       next if state_change_sessions.include?(changed_assignment.session_id || changed_assignment.published_session_id)
 
       session = changed_assignment.session
-      session_id = change[:object][:published_session_id] || change[:object][:session_id]
-      session ||= Session.find session_id if Session.exists? session_id
+      if !session && change[:object]
+        session_id = change[:object][:published_session_id] || change[:object][:session_id]
+        session ||= Session.find session_id if Session.exists? session_id
+      end
       next unless session
 
       person ||= changed_assignment.person
