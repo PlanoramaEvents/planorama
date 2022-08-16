@@ -2,11 +2,11 @@
   <div class="mb-3 scrollable">
     <p class="mt-2">These are interim reports.</p>
     <ul>
-      <li><a href="#participants">Participants</a></li>
-      <li><a href="#sessions">Sessions</a></li>
-      <li><a href="#conflicts">Conflicts</a></li>
-      <li><a href="#schedule">Schedule</a></li>
-      <li><a href="#prog-ops">Program Ops</a></li>
+      <li><hash-link to="#participants">Participants</hash-link></li>
+      <li><hash-link to="#sessions">Sessions</hash-link></li>
+      <li><hash-link to="#conflicts">Conflicts</hash-link></li>
+      <li><hash-link to="#schedule">Schedule</hash-link></li>
+      <li><hash-link to="#prog-ops">Program Ops</hash-link></li>
     </ul>
     <h5><a id="participants"></a>Participants</h5>
     <ul>
@@ -183,14 +183,6 @@
         </p>
       </li>
       <li>
-        <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
-        <p class="ml-2">
-          <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session duration, session room<br />
-          <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
-        </p>
-      </li>
-      <li>
         <a href="/report/session_reports/streamed_and_recorded" target="_blank">Scheduled Sessions Streamed and/or Recorded</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Information about livestreaming and recording, one line per session<br />
@@ -289,7 +281,7 @@
         <a href="/report/schedule_by_person" target="_blank">Schedule by Participant</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Schedule for each participant, one line per person and session<br />
-          <strong><em>Fields</em></strong>: Person name, publishes name, participant status, session title, area(s) of session, session start time, room, moderator (y/n), invisible participant (y/n)<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session, session start time, room, moderator (y/n), invisible participant (y/n)<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
       </li>
@@ -314,6 +306,14 @@
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
       </li>
+      <li>
+        <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session duration, session room<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
+        </p>
+      </li>
     </ul>
 
   </div>
@@ -321,9 +321,13 @@
 
 <script>
 import personSessionMixin from '@/auth/person_session.mixin'
+import HashLink from '@/components/hash_link.vue'
 
 export default {
   name: "ReportsScreen",
+  components: {
+    HashLink
+  },
   mixins: [
     personSessionMixin
   ]
