@@ -98,6 +98,15 @@ Vue.use(VueRouter);
 var con_roles=[], isAdmin=false, hasPowers=false;
 
 export const router = new VueRouter({
+  scrollBehavior(to) {
+    console.log(to)
+    if (to.hash) {
+      console.log("there's a hash", to.hash)
+      return {
+        selector: to.hash,
+      }
+    }
+  },
   routes: [
     {
       path: '/login',

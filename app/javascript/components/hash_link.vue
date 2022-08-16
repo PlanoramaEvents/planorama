@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="to" @click.native="scrollFix(to)"><slot></slot></router-link>
+  <router-link :to="base" @click.native="scrollFix(to)"><slot></slot></router-link>
 </template>
 
 <script>
@@ -10,6 +10,9 @@ export default {
   props: {
     to: {
       required: true
+    },
+    base: {
+      default: "/"
     }
   },
   mixins: [hashLinksMixin]

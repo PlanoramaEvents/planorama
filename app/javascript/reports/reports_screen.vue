@@ -2,11 +2,11 @@
   <div class="mb-3 scrollable">
     <p class="mt-2">These are interim reports.</p>
     <ul>
-      <li><hash-link to="#participants">Participants</hash-link></li>
-      <li><hash-link to="#sessions">Sessions</hash-link></li>
-      <li><hash-link to="#conflicts">Conflicts</hash-link></li>
-      <li><hash-link to="#schedule">Schedule</hash-link></li>
-      <li><hash-link to="#prog-ops">Program Ops</hash-link></li>
+      <li><router-link to="#participants">Participants</router-link></li>
+      <li><router-link to="#sessions">Sessions</router-link></li>
+      <li><router-link to="#conflicts">Conflicts</router-link></li>
+      <li><router-link to="#schedule">Schedule</router-link></li>
+      <li><router-link to="#prog-ops">Program Ops</router-link></li>
     </ul>
     <h5><a id="participants"></a>Participants</h5>
     <ul>
@@ -321,13 +321,9 @@
 
 <script>
 import personSessionMixin from '@/auth/person_session.mixin'
-import HashLink from '@/components/hash_link.vue'
 
 export default {
   name: "ReportsScreen",
-  components: {
-    HashLink
-  },
   mixins: [
     personSessionMixin
   ]
