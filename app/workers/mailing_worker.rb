@@ -18,6 +18,7 @@ class MailingWorker
     end
   end
 
+  # TODO: check
   def send_mailing(mailing:)
     # TODO - if test run then send to the requestor
     return unless mailing.mailing_state == Mailing.mailing_states[:submitted] # Check just in case this is a dup

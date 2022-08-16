@@ -1,4 +1,9 @@
 module MailService
+  #
+  # generate email content needs a helper that takes the person and puts in their schedule
+  #
+  # person.
+  # person.scheduled_sessions (type PersonSchedule)
   def self.send_mailing(
     person:,
     mailing:,
