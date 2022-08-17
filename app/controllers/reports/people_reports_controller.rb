@@ -1,5 +1,107 @@
 class Reports::PeopleReportsController < ApplicationController
   around_action :set_timezone
+  def social_media
+    authorize Person, policy_class: ReportPolicy
+
+    people = SessionService.draft_people
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Participant and Social Media")
+
+    worksheet.append_row(
+      [
+        'Published Name',
+        'Attendance Type',
+        'Participant Status',
+        'Bio',
+        'Social Media'
+      ]
+    )
+
+    people.each do |person|
+      social = []
+      social << "Twitter: https://twitter.com/#{person.twitter}" unless person.twitter.blank?
+      social <<  "Facebook: https://facebook.com/#{person.facebook}" unless person.facebook.blank?
+      social <<  "Website: #{person.website}" unless person.website.blank?
+      social <<  "Instagram: https://instagram.com/#{person.instagram}" unless person.instagram.blank?
+      social <<  "Twitch: https://twitch.tv/#{person.twitch}" unless person.twitch.blank?
+      social <<  "Youtube: https://youtube.com/#{person.youtube}" unless person.youtube.blank?
+      social <<  "TikTok: https://www.tiktok.com/@#{person.tiktok}" unless person.tiktok.blank?
+      social <<  "LinkedIn: https://linkedin.com/in/#{person.linkedin}" unless person.linkedin.blank?
+      social <<  "Other Social Media: #{person.othersocialmedia}"  unless person.othersocialmedia.blank?
+
+      worksheet.append_row(
+        [
+          person.published_name,
+          person.attendance_type,
+          person.con_state,
+          person.bio,
+          social.join(",\n")
+        ]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "ParticipantsSocialMedia-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
+  def mis_matched_envs
+    authorize Person, policy_class: ReportPolicy
+
+    results = PersonSchedule
+                .joins(:person)
+                .where(
+                  %q(case
+                  when (person_schedules.environment = 'in_person') then (people.attendance_type != 'in person' and people.attendance_type != 'hybrid')
+                  when (person_schedules.environment = 'hybrid') then (people.attendance_type != 'in person' and people.attendance_type != 'hybrid')
+                  when (person_schedules.environment = 'virtual') then (people.attendance_type != 'virtual' and people.attendance_type != 'hybrid')
+                  end
+                  )
+                )
+                .order("published_name asc, start_time asc")
+
+    # Sessions: only scheduled sessions,
+    #  only when virtual people are on in-person or hybrid sessions, or in-person people are on virtual sessions
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Mis Matched Envs")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+
+    worksheet.append_row(
+      [
+        'Published Name',
+        'Primary Email',
+        'Attendance Type',
+        'Participant Status',
+        'Session Title',
+        'Room',
+        'Time',
+        'Session Environment'
+      ]
+    )
+
+    styles = [nil, nil, nil, nil, nil, nil, date_time_style, nil]
+
+    results.each do |result|
+      worksheet.append_row(
+        [
+          result.published_name,
+          result.person.primary_email&.email,
+          result.person.attendance_type,
+          result.person.con_state,
+          result.title,
+          result.room&.name,
+          result.session.start_time ? FastExcel.date_num(result.session.start_time, result.session.start_time.in_time_zone.utc_offset) : nil,
+          result.environment
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "PeopleOnMismatchedSessions-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
 
   def moderators
     authorize Person, policy_class: ReportPolicy
