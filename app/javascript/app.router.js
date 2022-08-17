@@ -98,6 +98,17 @@ Vue.use(VueRouter);
 var con_roles=[], isAdmin=false, hasPowers=false;
 
 export const router = new VueRouter({
+  scrollBehavior(to) {
+    console.log(to)
+    if (to.hash) {
+      setTimeout(() => {
+        const element = document.getElementById(to.hash.replace(/#/, ''))
+        if (element && element.scrollIntoView) {
+          element.scrollIntoView({block: 'start'})
+        }
+      }, 10)
+    }
+  },
   routes: [
     {
       path: '/login',

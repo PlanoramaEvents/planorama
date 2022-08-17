@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "allowSyntheticDefaultImports": false,
+    "jsx": "preserve",
     "baseUrl": "./",
     "paths": {
       "@/*": ["app/javascript/*"],
