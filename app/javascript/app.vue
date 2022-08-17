@@ -32,7 +32,6 @@ import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 import { mapState, mapActions } from 'vuex';
 import { FETCH_WORKFLOWS } from '@/store/schedule_workflow';
-import { hashLinksMixin } from './shared/hash-links.mixin';
 
 extend('email', email);
 extend('numeric', numeric);
@@ -55,7 +54,7 @@ export default  {
     BottomNavbar,
     SignAgreements
   },
-  mixins: [personSessionMixin, settingsMixin, hashLinksMixin],
+  mixins: [personSessionMixin, settingsMixin],
   data() {
     return {
       showOverlay: false
