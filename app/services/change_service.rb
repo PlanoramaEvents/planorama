@@ -57,8 +57,13 @@ module ChangeService
         if changes[key]
           changes[key][:changes] = self.merge_change_set(to: changes[key][:changes], from: audit.object_changes)
         else
-          obj = type.find(audit.item_id) if audit.event != 'destroy' && type.exists?(audit.item_id)
-          obj ||= audit.reify
+          # Get the old version of the object
+          obj = if audit.event == 'create'
+                  type.find(audit.item_id) if type.exists?(audit.item_id)
+                else
+                  audit.reify
+                end
+          # obj = audit.reify
           if publishable_session_ids
             next unless publishable_session_ids.include?(obj.session_id)
           end
