@@ -1,6 +1,86 @@
 class Reports::ProgramOpsReportsController < ApplicationController
   around_action :set_timezone
 
+
+  def session_minors
+    authorize Session, policy_class: Reports::ProgramOpsReportPolicy
+
+    sessions = SessionService
+                 .draft_sessions
+                 .includes(:age_restriction)
+
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Session and Minor Info")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [nil, nil, date_time_style]
+
+    worksheet.append_row(
+      [
+        'Session Title',
+        'Description',
+        'Time',
+        'Room',
+        'Age Restriction',
+        'Minor Participant'
+      ]
+    )
+
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.description,
+          session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+          session.room&.name,
+          session.age_restriction&.name,
+          (session.minors_participation && session.minors_participation.size > 0) ? session.minors_participation.join(', ') : nil
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "SessionAndMinors-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+  
+  def user_privileges
+    authorize Person, policy_class: Reports::ProgramOpsReportPolicy
+
+    people = Person.includes(:convention_roles, :application_roles, :primary_email).order(:published_name)
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("People and Roles")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+
+    worksheet.append_row(
+      [
+        'Email',
+        'Published Name',
+        'Convention Roles',
+        'Recently Logged In At'
+        # 'Applicaion Roles'
+      ]
+    )
+    people.each do |person|
+      worksheet.append_row(
+        [
+          person.primary_email,
+          person.published_name,
+          person.convention_roles.collect{|r| r.role}.join(', '),
+          person.current_sign_in_at ? FastExcel.date_num(person.current_sign_in_at, person.current_sign_in_at.in_time_zone.utc_offset) : nil,
+          # person.convention_roles.collect{|r| r.application_roles.collect{|r| r.name}}.concat(person.application_roles.collect{|r| r.name}).join(', ')
+        ],
+        [nil, nil, nil, date_time_style]
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "UserPrivlages-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def room_signs
     authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
 

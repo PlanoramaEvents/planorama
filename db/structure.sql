@@ -1123,7 +1123,11 @@ CREATE VIEW public.person_schedules AS
     sessions.format_id,
     sessions.participant_notes,
     sessions.description,
-    sessions.environment
+    sessions.environment,
+        CASE
+            WHEN (sa.updated_at > sessions.updated_at) THEN sa.updated_at
+            ELSE sessions.updated_at
+        END AS updated_at
    FROM (((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum) AND ((sart.name)::text <> 'Reserve'::text))))
      JOIN public.people p ON ((p.id = sa.person_id)))
