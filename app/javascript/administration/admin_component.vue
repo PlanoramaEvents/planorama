@@ -57,7 +57,7 @@
         ></agreement-manager>
       </admin-accordion>
       <admin-accordion id="integration-accordion" title="Integration Settings">
-        <airmeet-settings></airmeet-settings>
+        <integration-settings></integration-settings>
       </admin-accordion>
     </div>
   </div>
@@ -66,13 +66,13 @@
 <script>
 import AdminAccordion from './admin_accordion.vue'
 import PersonAdd from '../people/person_add.vue';
-import ChangeUserConventionRoles from './change-user-con-roles';
-import MailingsManager from '../mailings/mailings_manager';
-import ConfigurationsManager from '../configurations/configurations_manager';
+import ChangeUserConventionRoles from './change-user-con-roles.vue';
+import MailingsManager from '../mailings/mailings_manager.vue';
+import ConfigurationsManager from '../configurations/configurations_manager.vue';
 import SheetImporterVue from '../components/sheet_importer_vue.vue';
-import AgreementManager from "@/agreements/agreement_manager";
+import AgreementManager from "@/agreements/agreement_manager.vue";
 import ScheduleSettings from "@/schedule/schedule_settings.vue";
-import AirmeetSettings from "@/airmeet/airmeet_settings.vue";
+import IntegrationSettings from "@/integrations/integration_settings.vue"
 
 export default {
   components: {
@@ -84,7 +84,7 @@ export default {
     MailingsManager,
     ConfigurationsManager,
     ScheduleSettings,
-    AirmeetSettings
+    IntegrationSettings,
   },
   name: 'AdminComponent',
   data: () => ({
