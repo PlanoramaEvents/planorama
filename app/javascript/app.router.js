@@ -101,10 +101,12 @@ export const router = new VueRouter({
   scrollBehavior(to) {
     console.log(to)
     if (to.hash) {
-      console.log("there's a hash", to.hash)
-      return {
-        selector: to.hash,
-      }
+      setTimeout(() => {
+        const element = document.getElementById(to.hash.replace(/#/, ''))
+        if (element && element.scrollIntoView) {
+          element.scrollIntoView({block: 'start'})
+        }
+      }, 10)
     }
   },
   routes: [
