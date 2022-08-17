@@ -7,18 +7,20 @@ class PublicationDatesController < ResourceController
 
   def reset
     # Make sure that people can not publish etc while we clean up
-    PublicationStatus.last.update(status: 'inprogress')
+    if PublicationStatus.last
+      PublicationStatus.last.update(status: 'inprogress')
 
-    # Get rid of published data first
-    PublishedSession.destroy_all
+      # Get rid of published data first
+      PublishedSession.destroy_all
 
-    # Then get rid of the audit
-    Audit::PublishedSessionVersion.delete_all
+      # Then get rid of the audit
+      Audit::PublishedSessionVersion.delete_all
 
-    # Then remove caches, dates, and status
-    PublishSnapshot.delete_all
-    PublicationDate.delete_all
-    PublicationStatus.delete_all
+      # Then remove caches, dates, and status
+      PublishSnapshot.delete_all
+      PublicationDate.delete_all
+      PublicationStatus.delete_all
+    end
 
     render status: :ok,
           json: { message: 'publication reset' }.to_json,

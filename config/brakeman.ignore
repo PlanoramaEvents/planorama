@@ -87,7 +87,7 @@
       "check_name": "MassAssignment",
       "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
       "file": "app/controllers/concerns/resource_methods.rb",
-      "line": 746,
+      "line": 759,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.require(model).permit!",
       "render_path": null,
@@ -98,6 +98,26 @@
       },
       "user_input": null,
       "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "6febff74984a127219272fbf1045466f8d4580b045abcccb8873a98cfc025ecd",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Session#find`",
+      "file": "app/controllers/reports/schedule_reports_controller.rb",
+      "line": 118,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Session.find(SessionAssignment.find(change[:session_assignment_id]).session_id)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Reports::ScheduleReportsController",
+        "method": "schedule_diff"
+      },
+      "user_input": "SessionAssignment.find(change[:session_assignment_id]).session_id",
+      "confidence": "Weak",
       "note": ""
     },
     {
@@ -161,6 +181,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-07-21 20:13:36 -0400",
+  "updated": "2022-08-14 17:55:37 -0400",
   "brakeman_version": "5.2.3"
 }

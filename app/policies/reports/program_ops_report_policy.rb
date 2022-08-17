@@ -18,4 +18,8 @@ class Reports::ProgramOpsReportPolicy < BasePolicy
   def session_minors?
     allowed?(action: :session_minors)
   end
+
+  def user_privileges?
+    allowed?(action: :user_privileges)
+  end
 end
