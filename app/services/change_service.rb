@@ -47,8 +47,6 @@ module ChangeService
     audits = audits.where("created_at >= ?", from) if from
     audits = audits.where("created_at <= ?", to) if to
 
-    # Rails.logger.debug "**** AUDITS #{audits.count}"
-
     grouped_audits = audits.group_by {|a| a.item_id}
 
     grouped_audits.each do |key, item_audits|
@@ -59,17 +57,21 @@ module ChangeService
         if changes[key]
           changes[key][:changes] = self.merge_change_set(to: changes[key][:changes], from: audit.object_changes)
         else
-          obj = type.find(audit.item_id) if audit.event != 'destroy' && type.exists?(audit.item_id)
-          obj ||= audit.reify
+          # Get the old version of the object
+          obj = if audit.event == 'create'
+                  type.find(audit.item_id) if type.exists?(audit.item_id)
+                else
+                  audit.reify
+                end
+          # obj = audit.reify
           if publishable_session_ids
             next unless publishable_session_ids.include?(obj.session_id)
           end
-          changes[key] = {event: audit.event, object: obj, changes: audit.object_changes}
+          changes[key] = {item_id: audit.item_id, event: audit.event, object: obj, changes: audit.object_changes}
         end
       end
     end
 
-    # TODO: any way we can order by the session title ???
     changes
   end
 

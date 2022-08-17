@@ -92,8 +92,8 @@ class ApplicationController < ActionController::Base
 
   def render_jsonapi_internal_server_error(exception)
     # Rails.logger.error "**** INTERNAL ERROR #{exception.class}"
-    Rails.logger.error exception.message if Rails.env.development?
-    Rails.logger.error exception.backtrace.join("\n\t") if Rails.env.development?
+    Rails.logger.error exception.message #if Rails.env.development?
+    Rails.logger.error exception.backtrace.join("\n\t") #if Rails.env.development?
     # NOTE: if we have a central log put it in here
     super(exception)
   end
