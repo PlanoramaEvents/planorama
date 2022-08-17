@@ -83,7 +83,6 @@ export default  {
     this.fetchSettings();
     // fetch the schedule state too
     this.fetchScheduleWorkflows();
-    setTimeout(() => this.scrollFix(this.$route.hash), 1)
   }
 }
 </script>
