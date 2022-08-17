@@ -55,8 +55,13 @@ class Reports::ScheduleReportsController < ApplicationController
     changes.values.sort{|a,b| (a[:object] ? a[:object].title : '') <=> (b[:object] ? b[:object].title : '')}.each do |change|
       next unless change[:object]
 
+      if change[:object] && session_status_change_to_publishable?(change: change) || session_status_change_to_drop?(change: change)
+        state_change_sessions << change[:object].id
+      end
+
       if (change[:changes]['room_id'] || change[:changes]['start_time']) #&& !change[:changes]['status']
-        next if change[:changes]['status'] && ignore_session_status_change?(change: change)
+        next if ignore_session_status_change?(change: change)
+        next if !change[:changes]['status'] && ['draft', 'dropped'].include?(change[:object].status)
 
         # Rails.logger.debug "******** SESSION ADD/REMOVE #{change[:changes]} "
         if room_added?(change) || start_time_added?(change)
@@ -81,12 +86,7 @@ class Reports::ScheduleReportsController < ApplicationController
       end
 
       if change[:object].start_time && change[:object].room_id
-        session_id = check_status_change(change: change, live: live)
-
-        if session_id
-          state_change_sessions << session_id
-          next
-        end
+        check_status_change(change: change, live: live)
 
         if change[:changes]['title']
           session_title_change_row(@session_title_changed, change)
@@ -98,7 +98,6 @@ class Reports::ScheduleReportsController < ApplicationController
     end
 
     # Rails.logger.debug "*********** ST #{state_change_sessions}"
-
     return state_change_sessions
   end
 
@@ -194,43 +193,41 @@ class Reports::ScheduleReportsController < ApplicationController
   end
 
   def check_status_change(change:, live: false)
-    # Rails.logger.debug "********* STATUS CHANGE"
     return unless change[:changes]['status']
     return if ignore_session_status_change?(change: change)
 
-    # Rails.logger.debug "********* STATUS CHANGE ..... #{change[:changes]['status']}"
-    if ['draft', 'dropped'].include?(change[:changes]['status'][1])
+    if session_status_change_to_drop?(change: change)
       if live
         return unless change[:object].published_session
 
-        session_removed_row(@session_removed, change)
         live_drop(session: change[:object], sheet: @participants_add_drop)
-
-        return change[:object].id
-      else
-        session_removed_row(@session_removed, change)
       end
+
+      session_removed_row(@session_removed, change)
 
       return
     end
 
-    if ['draft', 'dropped'].include?(change[:changes]['status'][0])
+    if session_status_change_to_publishable?(change: change)
       # Rails.logger.debug "********* STATUS CHANGE ..... ADDD #{live}"
       session_added_row(@session_added, change)
-      if live
-        live_add(session: change[:object], sheet: @participants_add_drop)
-
-        return change[:object].id
-      end
+      live_add(session: change[:object], sheet: @participants_add_drop) if live
 
       return
     end
   end
 
   def ignore_session_status_change?(change:)
-    ['draft', 'dropped'].include?(change[:changes]['status'][0]) && ['draft', 'dropped'].include?(change[:changes]['status'][1])
+    change[:changes]['status'] && ['draft', 'dropped'].include?(change[:changes]['status'][0]) && ['draft', 'dropped'].include?(change[:changes]['status'][1])
   end
 
+  def session_status_change_to_publishable?(change:)
+    change[:changes]['status'] && ['draft', 'dropped'].include?(change[:changes]['status'][0]) && ['reviewed', 'revised'].include?(change[:changes]['status'][1])
+  end
+
+  def session_status_change_to_drop?(change:)
+    change[:changes]['status'] && ['draft', 'dropped'].include?(change[:changes]['status'][1]) && ['reviewed', 'revised'].include?(change[:changes]['status'][0])
+  end
 
   def init_sheets(workbook:)
     @session_time_changed = workbook.add_worksheet("Session Time Changed")
