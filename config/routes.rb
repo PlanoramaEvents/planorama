@@ -94,6 +94,7 @@ Rails.application.routes.draw do
 
   get 'report/program_ops_reports/back_of_badge', to: 'reports/program_ops_reports#back_of_badge'
   get 'report/program_ops_reports/room_signs', to: 'reports/program_ops_reports#room_signs'
+  get 'report/program_ops_reports/session_minors', to: 'reports/program_ops_reports#session_minors'
   get 'report/program_ops_reports/sign_up_sessions', to: 'reports/program_ops_reports#sign_up_sessions'
   get 'report/program_ops_reports/table_tents', to: 'reports/program_ops_reports#table_tents'
   get 'report/program_ops_reports/user_privileges', to: 'reports/program_ops_reports#user_privileges'

@@ -320,7 +320,7 @@
           <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
         </p>
       </li>
-      <!-- <li>
+      <li>
         <a href="/report/program_ops_reports/sign_up_sessions" target="_blank">Sessions Requiring Signup</a>
       </li>
       <li>
@@ -331,6 +331,9 @@
       </li>
       <li>
         <a href="/report/program_ops_reports/room_signs" target="_blank">Room Signs</a>
+      </li>
+      <li>
+        <a href="/report/program_ops_reports/session_minors" target="_blank">Session and Minors</a>
       </li>
       <li>
         <a href="/report/program_ops_reports/user_privileges" target="_blank">User Privileges</a>

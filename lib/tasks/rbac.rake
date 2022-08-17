@@ -555,6 +555,7 @@ namespace :rbac do
         "room_signs": true,
         "sign_up_sessions": true,
         "table_tents": true,
+        "session_minors": true,
         "user_privileges": false
       },
       "conflict_report": {
@@ -880,6 +881,7 @@ namespace :rbac do
         "room_signs": true,
         "sign_up_sessions": true,
         "table_tents": true,
+        "session_minors": true,
         "user_privileges": true
       },
       "session_conflict": {
