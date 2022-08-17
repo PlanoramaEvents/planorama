@@ -554,7 +554,8 @@ namespace :rbac do
         "back_of_badge": true,
         "room_signs": true,
         "sign_up_sessions": true,
-        "table_tents": true
+        "table_tents": true,
+        "user_privileges": false
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -878,7 +879,8 @@ namespace :rbac do
         "back_of_badge": true,
         "room_signs": true,
         "sign_up_sessions": true,
-        "table_tents": true
+        "table_tents": true,
+        "user_privileges": true
       },
       "session_conflict": {
         "conflicts_with": true,

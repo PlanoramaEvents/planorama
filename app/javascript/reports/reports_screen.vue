@@ -322,19 +322,20 @@
       </li>
       <!-- <li>
         <a href="/report/program_ops_reports/sign_up_sessions" target="_blank">Sessions Requiring Signup</a>
-      </li> -->
-      <!-- <li>
+      </li>
+      <li>
         <a href="/report/session_reports/session_needs" target="_blank">Session Needs</a>
-      </li> -->
-      <!-- <li>
+      </li>
+      <li>
         <a href="/report/program_ops_reports/table_tents" target="_blank">Table Tents</a>
-      </li> -->
-    </ul>
-    <!-- <ul>
+      </li>
       <li>
         <a href="/report/program_ops_reports/room_signs" target="_blank">Room Signs</a>
       </li>
-    </ul> -->
+      <li>
+        <a href="/report/program_ops_reports/user_privileges" target="_blank">User Privileges</a>
+      </li>
+    </ul>
   </div>
 </template>
 
