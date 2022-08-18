@@ -7,6 +7,7 @@
       <li><router-link to="#conflicts">Conflicts</router-link></li>
       <li><router-link to="#schedule">Schedule</router-link></li>
       <li><router-link to="#prog-ops">Program Ops</router-link></li>
+      <li><router-link to="#admin">Admin</router-link></li>
     </ul>
     <h5><a id="participants"></a>Participants</h5>
     <ul>
@@ -335,8 +336,12 @@
       <li>
         <a href="/report/program_ops_reports/session_minors" target="_blank">Session and Minors</a>
       </li>
+    </ul>
+    <h5><a id="admin"></a>Admin</h5>
+    <ul>
       <li>
-        <a href="/report/program_ops_reports/user_privileges" target="_blank">User Privileges</a>
+        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>User Privileges</span>
+        <a href="/report/program_ops_reports/user_privileges" target="_blank" v-if="currentUserIsAdmin">User Privileges</a>
       </li>
     </ul>
   </div>
