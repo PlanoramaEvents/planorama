@@ -158,7 +158,7 @@ CKEDITOR.config.planobuttons = [
       },
       {
         name:'participant_schedule',
-        html:'<%= schedule_to_html(person: person) %>',
+        html:'<%= schedule_to_html %>',
         title:'Participant Schedule'
       }
     ]

@@ -10,43 +10,49 @@ module MailService
     participant_schedule_url:,
     tester: nil
   )
-    survey = mailing.survey
-    content = self.generate_email_content(
-      mailing.content,
-      {
-        person: person,
-        survey: survey,
-        participant_schedule_url: participant_schedule_url,
-        survey_url: self.generate_survey_url(survey: survey, person: person),
-        login_url: self.generate_login_url(person: person)
-      }
-    )
+    self.set_timezone do
+      survey = mailing.survey
+      content = self.generate_email_content(
+        mailing.content,
+        {
+          person: person,
+          survey: survey,
+          participant_schedule_url: participant_schedule_url,
+          survey_url: self.generate_survey_url(survey: survey, person: person),
+          login_url: self.generate_login_url(person: person),
+          schedule_to_html: self.schedule_to_html(person: person)
+        }
+      )
 
-    self.send_email(
-      to:             tester ? tester.primary_email.email : person.primary_email.email,
-      subject:        mailing.subject,
-      title:          mailing.title,
-      content:        content,
-      is_test:        tester != nil,
-      person:         person,
-      mailing:        mailing
-    )
+      self.send_email(
+        to:             tester ? tester.primary_email.email : person.primary_email.email,
+        subject:        mailing.subject,
+        title:          mailing.title,
+        content:        content,
+        is_test:        tester != nil,
+        person:         person,
+        mailing:        mailing
+      )
 
-    self.post_mail_transition(person: person, mailing: mailing) unless tester
-    self.post_mail_assign_survey(person: person, survey: survey) unless tester
+      self.post_mail_transition(person: person, mailing: mailing) unless tester
+      self.post_mail_assign_survey(person: person, survey: survey) unless tester
+    end
   end
 
   def self.preview_email_content(person:, mailing:, participant_schedule_url:)
-    self.generate_email_content(
-      mailing.content,
-      {
-        person: person,
-        survey: mailing.survey,
-        participant_schedule_url: participant_schedule_url,
-        survey_url: self.generate_survey_url(survey: mailing.survey, person: person),
-        login_url: self.generate_login_url(person: person)
-      }
-    )
+    self.set_timezone do
+      self.generate_email_content(
+        mailing.content,
+        {
+          person: person,
+          survey: mailing.survey,
+          participant_schedule_url: participant_schedule_url,
+          survey_url: self.generate_survey_url(survey: mailing.survey, person: person),
+          login_url: self.generate_login_url(person: person),
+          schedule_to_html: self.schedule_to_html(person: person)
+        }
+      )
+    end
   end
 
   def self.send_email(
@@ -189,5 +195,10 @@ module MailService
       content,
       0, "%<>"
     ).result(namespace.get_binding) # pass in a context with the parameters i.e. ruby binding
+  end
+
+  def self.set_timezone(&block)
+    timezone = ConfigService.value('convention_timezone')
+    Time.use_zone(timezone, &block)
   end
 end
