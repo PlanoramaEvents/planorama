@@ -61,7 +61,7 @@ class Reports::ScheduleReportsController < ApplicationController
 
       if (change[:changes]['room_id'] || change[:changes]['start_time']) #&& !change[:changes]['status']
         next if ignore_session_status_change?(change: change)
-        next if !change[:changes]['status'] && ['draft', 'dropped'].include?(change[:object].status)
+        next if live && !change[:changes]['status'] && ['draft', 'dropped'].include?(change[:object].status)
 
         # Rails.logger.debug "******** SESSION ADD/REMOVE #{change[:changes]} "
         if room_added?(change) || start_time_added?(change)
