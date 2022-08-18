@@ -56,7 +56,7 @@
             <div v-b-tooltip.html.right="`New Sessions: ${item.new_sessions}<br />Dropped Sessions: ${item.dropped_sessions}<br />Updated Sessions: ${item.updated_sessions}<br />New Assignments: ${item.new_assignments}<br />Dropped Assignments: ${item.dropped_assignments}<br />Updated Assignments: ${item.updated_assignments}`" v-if="index">{{item.timestamp}}</div>
           </template>
           <template #cell(sent_external)="{ index, item }">
-            <b-form-checkbox switch v-if="index" v-model="item.sent_external" @change="patchSentExternal(item, $event)"></b-form-checkbox>
+            <b-form-checkbox switch v-if="index" :checked="item.sent_external" @change="patchSentExternal(item, $event)"></b-form-checkbox>
           </template>
         </b-table>
         <div v-if="currentSettings.env !== 'production'">
@@ -197,8 +197,6 @@ export default {
     fetchPublicationDates() {
       this.pubsLoading = true;
       this.fetch().then((_) => {
-        this.snapshots = this.collection;
-        this.snapshots.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
         this.pubsDiff = [false, ...this.collection.map(s => false)];
         this.pubsLoading = false;
       })
