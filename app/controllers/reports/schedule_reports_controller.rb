@@ -342,7 +342,7 @@ class Reports::ScheduleReportsController < ApplicationController
     object = change[:object]
     # If it is an add and we have the reify before the time and room get the latest version of the object
     if !change[:object].start_time || !change[:object].room_id
-      object = change[:item_type].constantize.find change[:item_id].id
+      object = change[:item_type].constantize.find change[:item_id]
     end
 
     sheet.append_row(
