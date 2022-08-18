@@ -56,7 +56,7 @@
             <div v-b-tooltip.html.right="`New Sessions: ${item.new_sessions}<br />Dropped Sessions: ${item.dropped_sessions}<br />Updated Sessions: ${item.updated_sessions}<br />New Assignments: ${item.new_assignments}<br />Dropped Assignments: ${item.dropped_assignments}<br />Updated Assignments: ${item.updated_assignments}`" v-if="index">{{item.timestamp}}</div>
           </template>
           <template #cell(sent_external)="{ index, item }">
-            <b-form-checkbox switch v-if="index" v-model="item.sent_external"></b-form-checkbox>
+            <b-form-checkbox switch v-if="index" v-model="item.sent_external" @change="patchSentExternal(item, $event)"></b-form-checkbox>
           </template>
         </b-table>
         <div v-if="currentSettings.env !== 'production'">
@@ -94,13 +94,16 @@ import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import settingsMixin from "@/store/settings.mixin";
 import { DateTime } from 'luxon';
 import IconButton from '@/components/icon_button.vue';
+import { modelMixinNoProp } from '@/store/model.mixin';
+import { publicationDatesModel as model } from '@/store/publication_dates.store'
 
 export default {
   name: "ScheduleSettings",
   mixins: [
     toastMixin,
     scheduleWorkflowMixin,
-    settingsMixin
+    settingsMixin,
+    modelMixinNoProp
   ],
   components: {
     PlanoModal,
@@ -114,9 +117,9 @@ export default {
     SCHEDULE_DRAFT_CONFIRM_MESSAGE,
     SCHEDULE_FIRM_CONFIRM_MESSAGE,
     NODE_ENV,
-    snapshots: [ ],
     pubsDiff: [],
     pubsLoading: false,
+    model
   }),
   computed: {
     pubSnapshots() {
@@ -133,6 +136,11 @@ export default {
     },
     firmScheduledAtText() {
       return this.firmScheduleConfirmed ? this.firmScheduledAt : "Pending";
+    },
+    snapshots() {
+      const snaps = this.collection;
+      snaps.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
+      return snaps;
     }
   },
   methods: {
@@ -188,13 +196,15 @@ export default {
     },
     fetchPublicationDates() {
       this.pubsLoading = true;
-      this.$store.dispatch('jv/get', '/publication_date').then((data) => {
-        const {_jv, ...filteredData} = data;
-        this.snapshots = Object.values(filteredData);
+      this.fetch().then((_) => {
+        this.snapshots = this.collection;
         this.snapshots.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
-        this.pubsDiff = [false, ...Object.keys(filteredData).map(s => false)];
+        this.pubsDiff = [false, ...this.collection.map(s => false)];
         this.pubsLoading = false;
       })
+    },
+    patchSentExternal(item, sent_external) {
+      this.patch(item, {sent_external}, false, "Successfully updated the publication metadata.", "Failed to update the publication metadata")
     }
   },
   watch: {

@@ -1352,7 +1352,8 @@ CREATE TABLE public.publication_dates (
     new_assignments integer DEFAULT 0,
     updated_assignments integer DEFAULT 0,
     dropped_assignments integer DEFAULT 0,
-    sent_external boolean DEFAULT false NOT NULL
+    sent_external boolean DEFAULT false NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
