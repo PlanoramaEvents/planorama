@@ -339,18 +339,22 @@ class Reports::ScheduleReportsController < ApplicationController
     moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
 
-    # If this is Session and it is added then so are the people
+    object = change[:object]
+    # If it is an add and we have the reify before the time and room get the latest version of the object
+    if !change[:object].start_time || !change[:object].room_id
+      object = change[:item_type].constantize.find change[:item_id]
+    end
 
     sheet.append_row(
       [
-        change[:object].title,
-        change[:object].description,
-        change[:object].format&.name,
-        change[:object].areas.collect(&:name).join("; "),
-        FastExcel.date_num(change[:object].start_time, change[:object].start_time.in_time_zone.utc_offset),
-        change[:object].room&.name,
-        change[:object].participant_assignments.where("session_assignment_role_type_id = ?", moderator).collect{|a| a.person.published_name}.join("; "),
-        change[:object].participant_assignments.where("session_assignment_role_type_id = ?", participant).collect{|a| a.person.published_name}.join("; ")
+        object.title,
+        object.description,
+        object.format&.name,
+        object.areas.collect(&:name).join("; "),
+        FastExcel.date_num(object.start_time, object.start_time.in_time_zone.utc_offset),
+        object.room&.name,
+        object.participant_assignments.where("session_assignment_role_type_id = ?", moderator).collect{|a| a.person.published_name}.join("; "),
+        object.participant_assignments.where("session_assignment_role_type_id = ?", participant).collect{|a| a.person.published_name}.join("; ")
       ],
       [
         nil, nil, nil, nil, @date_time_style, nil, nil, nil
