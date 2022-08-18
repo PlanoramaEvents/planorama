@@ -1123,7 +1123,11 @@ CREATE VIEW public.person_schedules AS
     sessions.format_id,
     sessions.participant_notes,
     sessions.description,
-    sessions.environment
+    sessions.environment,
+        CASE
+            WHEN (sa.updated_at > sessions.updated_at) THEN sa.updated_at
+            ELSE sessions.updated_at
+        END AS updated_at
    FROM (((public.session_assignments sa
      JOIN public.session_assignment_role_type sart ON (((sart.id = sa.session_assignment_role_type_id) AND (sart.role_type = 'participant'::public.assignment_role_enum) AND ((sart.name)::text <> 'Reserve'::text))))
      JOIN public.people p ON ((p.id = sa.person_id)))
@@ -1347,7 +1351,9 @@ CREATE TABLE public.publication_dates (
     dropped_sessions integer DEFAULT 0,
     new_assignments integer DEFAULT 0,
     updated_assignments integer DEFAULT 0,
-    dropped_assignments integer DEFAULT 0
+    dropped_assignments integer DEFAULT 0,
+    sent_external boolean DEFAULT false NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -3369,6 +3375,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220726130346'),
 ('20220801152151'),
 ('20220801173704'),
-('20220801195644');
+('20220801195644'),
+('20220818022629');
 
 

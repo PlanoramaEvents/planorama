@@ -2,11 +2,11 @@
   <div class="mb-3 scrollable">
     <p class="mt-2">These are interim reports.</p>
     <ul>
-      <li><a href="#participants">Participants</a></li>
-      <li><a href="#sessions">Sessions</a></li>
-      <li><a href="#conflicts">Conflicts</a></li>
-      <li><a href="#schedule">Schedule</a></li>
-      <li><a href="#prog-ops">Program Ops</a></li>
+      <li><router-link to="#participants">Participants</router-link></li>
+      <li><router-link to="#sessions">Sessions</router-link></li>
+      <li><router-link to="#conflicts">Conflicts</router-link></li>
+      <li><router-link to="#schedule">Schedule</router-link></li>
+      <li><router-link to="#prog-ops">Program Ops</router-link></li>
     </ul>
     <h5><a id="participants"></a>Participants</h5>
     <ul>
@@ -108,12 +108,12 @@
           <strong><em>Person data included</em></strong>: moderators
         </p>
       </li>
-      <!-- <li>
+      <li>
         <a href="/report/people_reports/mis_matched_envs" target="_blank">Participants with Mis-Matching Sessions</a>
-      </li> -->
-      <!-- <li>
+      </li>
+      <li>
         <a href="/report/people_reports/social_media" target="_blank">Participants and Social Media</a>
-      </li> -->
+      </li>
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>
@@ -186,14 +186,6 @@
           <strong><em>Description</em></strong>: The copy-edited status of each session, one line per session<br />
           <strong><em>Fields</em></strong>: Session title, area(s) of session, session status, has session been copy edited (y/n), has session been scheduled (y/n), visibility (visible, not visible)<br />
           <strong><em>Session data included</em></strong>: all sessions
-        </p>
-      </li>
-      <li>
-        <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
-        <p class="ml-2">
-          <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session duration, session room<br />
-          <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
         </p>
       </li>
       <li>
@@ -295,7 +287,7 @@
         <a href="/report/schedule_by_person" target="_blank">Schedule by Participant</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Schedule for each participant, one line per person and session<br />
-          <strong><em>Fields</em></strong>: Person name, publishes name, participant status, session title, area(s) of session, session start time, room, moderator (y/n), invisible participant (y/n)<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session, session start time, room, moderator (y/n), invisible participant (y/n)<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
       </li>
@@ -320,21 +312,33 @@
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
       </li>
-      <!-- <li>
+      <li>
+        <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session duration, session room<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
+        </p>
+      </li>
+      <li>
         <a href="/report/program_ops_reports/sign_up_sessions" target="_blank">Sessions Requiring Signup</a>
-      </li> -->
-      <!-- <li>
+      </li>
+      <li>
         <a href="/report/session_reports/session_needs" target="_blank">Session Needs</a>
-      </li> -->
-      <!-- <li>
+      </li>
+      <li>
         <a href="/report/program_ops_reports/table_tents" target="_blank">Table Tents</a>
-      </li> -->
-    </ul>
-    <!-- <ul>
+      </li>
       <li>
         <a href="/report/program_ops_reports/room_signs" target="_blank">Room Signs</a>
       </li>
-    </ul> -->
+      <li>
+        <a href="/report/program_ops_reports/session_minors" target="_blank">Session and Minors</a>
+      </li>
+      <li>
+        <a href="/report/program_ops_reports/user_privileges" target="_blank">User Privileges</a>
+      </li>
+    </ul>
   </div>
 </template>
 
