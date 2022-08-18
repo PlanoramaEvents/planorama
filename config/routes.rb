@@ -101,7 +101,7 @@ Rails.application.routes.draw do
 
   get 'report/schedule_reports/schedule_diff(/:from)(/:to)', to: 'reports/schedule_reports#schedule_diff'
   get 'publication_date/reset', to: 'publication_dates#reset'
-  resources :publication_dates, path: 'publication_date', only: [:index]
+  resources :publication_dates, path: 'publication_date', only: [:index, :update]
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]

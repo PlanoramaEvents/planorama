@@ -12,7 +12,7 @@
           <span class="small text-muted" id="firm-schedule-date" v-if="localFirmSchedule">{{firmScheduledAtText}}</span>
         </b-form-group>
         <div v-if="currentSettings.env !== 'production'">
-          <b-button variant="primary" @click="reset()">Reset for Testing</b-button>
+          <b-button variant="danger" @click="reset()">Reset for Testing</b-button>
           <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
         </div>
       </div>
@@ -23,10 +23,10 @@
         <b-table-simple borderless fixed small style="width: 35rem;">
           <b-thead>
             <b-tr>
-              <b-td class="text-center">
+              <b-td colspan="3" class="text-center">
                 <b-button variant="primary" size="sm" :disabled="!canDiff" @click="diff">Show difference</b-button>
               </b-td>
-              <b-td colspan="3" class="text-right">
+              <b-td colspan="13" class="text-right">
                 <icon-button icon="arrow-repeat" class="mr-2" @click="fetchPublicationDates()"></icon-button>
                 <b-button variant="primary" size="sm" v-b-modal.confirm-publish>Create a publish snapshot</b-button>
               </b-td>
@@ -34,7 +34,7 @@
           </b-thead>
         </b-table-simple>
         <b-table
-          :fields="[{key: 'select_2', tdClass: 'text-center', thClass: 'text-center' }, {key: 'timestamp', tdClass: 'text-right', thClass: 'text-right', thAttr: {'colspan': 2}, tdAttr: {'colspan': 2}}]" 
+          :fields="[{key: 'select_2', tdClass: 'text-center', thClass: 'text-center',  thAttr: {'colspan': 3}, tdAttr: {'colspan': 3} }, {key: 'timestamp', tdClass: 'text-right', thClass: 'text-right', thAttr: {'colspan': 10}, tdAttr: {'colspan': 10}}, {key: 'sent_external', tdClass: 'text-center', thClass: 'text-center', thAttr: {'colspan': 3}, tdAttr: {'colspan': 3}, label: 'External'}]" 
           bordered
           fixed
           small
@@ -51,9 +51,16 @@
           <template #cell(select_2)="{ index }">
             <b-form-checkbox name="pubs-diff" v-model="pubsDiff[index]" :disabled="pubsDiffCount >= 2 && !pubsDiff[index]"></b-form-checkbox>
           </template>
+          <template #cell(timestamp)="{ item, index }">
+            <div v-if="!index">{{item.timestamp}}</div>
+            <div v-b-tooltip.html.right="`New Sessions: ${item.new_sessions}<br />Dropped Sessions: ${item.dropped_sessions}<br />Updated Sessions: ${item.updated_sessions}<br />New Assignments: ${item.new_assignments}<br />Dropped Assignments: ${item.dropped_assignments}<br />Updated Assignments: ${item.updated_assignments}`" v-if="index">{{item.timestamp}}</div>
+          </template>
+          <template #cell(sent_external)="{ index, item }">
+            <b-form-checkbox switch v-if="index" v-model="item.sent_external"></b-form-checkbox>
+          </template>
         </b-table>
         <div v-if="currentSettings.env !== 'production'">
-          <b-button variant="primary" @click="resetPubs()">Reset Publish for Testing</b-button>
+          <b-button variant="danger" @click="resetPubs()">Reset Publish for Testing</b-button>
           <span>THIS DELETES ALL THE PUBLISHED DATA AND YOU CAN'T EVER GET IT BACK</span>
         </div>
       </div>
@@ -183,7 +190,7 @@ export default {
       this.pubsLoading = true;
       this.$store.dispatch('jv/get', '/publication_date').then((data) => {
         const {_jv, ...filteredData} = data;
-        this.snapshots = Object.values(filteredData).map(s => ({timestamp: s.timestamp, id: s.id}))
+        this.snapshots = Object.values(filteredData);
         this.snapshots.sort((a, b) => DateTime.fromISO(b.timestamp) - DateTime.fromISO(a.timestamp));
         this.pubsDiff = [false, ...Object.keys(filteredData).map(s => false)];
         this.pubsLoading = false;
