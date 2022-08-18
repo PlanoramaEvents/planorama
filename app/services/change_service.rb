@@ -67,7 +67,7 @@ module ChangeService
           if publishable_session_ids
             next unless publishable_session_ids.include?(obj.session_id)
           end
-          changes[key] = {item_id: audit.item_id, event: audit.event, object: obj, changes: audit.object_changes}
+          changes[key] = {item_id: audit.item_id, item_type: audit.item_type, event: audit.event, object: obj, changes: audit.object_changes}
         end
       end
     end
