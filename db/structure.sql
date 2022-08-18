@@ -1351,7 +1351,9 @@ CREATE TABLE public.publication_dates (
     dropped_sessions integer DEFAULT 0,
     new_assignments integer DEFAULT 0,
     updated_assignments integer DEFAULT 0,
-    dropped_assignments integer DEFAULT 0
+    dropped_assignments integer DEFAULT 0,
+    sent_external boolean DEFAULT false NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -3373,6 +3375,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220726130346'),
 ('20220801152151'),
 ('20220801173704'),
-('20220801195644');
+('20220801195644'),
+('20220818022629');
 
 
