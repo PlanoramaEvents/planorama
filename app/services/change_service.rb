@@ -16,6 +16,30 @@ module ChangeService
     }
   end
 
+  def self.dropped_people(from:, to: nil)
+    res = []
+    changes = get_changes(clazz: Audit::PersonVersion, type: Person, from: from, to: to)
+    changes.each do |id, change|
+      if change[:changes]['con_state'] && ['declined', 'rejected'].include?(change[:changes]['con_state'][1] )
+        # do not count a "dropped" state to another dropped state
+        next if ['declined', 'rejected'].include?(change[:changes]['con_state'][0])
+
+        res.append [change[:object].published_name]
+      end
+    end
+    res.uniq
+  end
+
+  def self.session_as_of(session_id:, to:)
+    session_version = Audit::SessionVersion.where("item_id = ? and created_at <= ?", session_id, to)
+                      .order('created_at desc')
+                      .first
+    return nil unless session_version
+
+    session = session_version.reify
+    return session
+  end
+
   def self.sessions_changed(from:, to: nil)
     get_changes(clazz: Audit::SessionVersion, type: Session, from: from, to: to)
   end

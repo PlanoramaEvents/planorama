@@ -1,31 +1,19 @@
 <template>
   <div>
-    <mailing-preview :mailing="mailing" ref="preview-mailing"></mailing-preview>
-    <modal-form
+    <mailing-preview :mailing="mailing"></mailing-preview>
+    <plano-modal
       title="Save Mailing"
-      ref="save-mailing-modal"
+      id="save-mailing-modal"
       @close="onClose"
+      @cancel="onClose"
+      @ok="onConfirmedSave"
+      ok-title="Save"
     >
-      <b-form
-        v-on:save="onConfirmedSave"
-        ref='add-person-form'
-      >
+      <b-form>
         <model-field label="Name" v-model="mailing.title" type="text" stateless></model-field>
         <model-field label="Description" v-model="mailing.description" type="textarea" stateless></model-field>
       </b-form>
-      <template #footer>
-        <div class="w-100">
-          <b-button
-            variant="primary"
-            size="sm"
-            class="float-right"
-            @click="onConfirmedSave"
-          >
-            Save
-          </b-button>
-        </div>
-      </template>
-    </modal-form>
+    </plano-modal>
     <div class="d-flex ">
       <div class="p-2">{{ mailing.title }}</div>
       <div class="ml-auto p-2">
@@ -103,7 +91,7 @@ import modelMixin from '../store/model.mixin';
 import { mailingModel as model } from '../store/mailing.store'
 import EmailListInput from '../components/email_list_input'
 import PlanoEditor from '@/components/plano_editor';
-import ModalForm from '../components/modal_form';
+import PlanoModal from '@/components/plano_modal.vue';
 import ModelField from '../shared/model-field';
 import ModelSelect from '../components/model_select';
 import toastMixin from '../shared/toast-mixin';
@@ -119,10 +107,10 @@ export default {
   components: {
     EmailListInput,
     PlanoEditor,
-    ModalForm,
     ModelField,
     ModelSelect,
-    MailingPreview
+    MailingPreview,
+    PlanoModal,
   },
   mixins: [
     modelMixin,
@@ -159,7 +147,7 @@ export default {
     onSave() {
       // How to so the show modal with different onConfirmedSave actions
       // Show dialog then save the actual entity
-      this.$refs['save-mailing-modal'].showModal()
+      this.$bvModal.show('save-mailing-modal');
     },
     onClose() {
       this.next_action = null
@@ -181,7 +169,7 @@ export default {
       res.then(
         (data) => {
           this.mailing = data
-          this.$refs['save-mailing-modal'].hideModal()
+          this.$bvModal.hide('save-mailing-modal');
           if (this.next_action) {
             switch(this.next_action) {
               case 'send':
@@ -241,7 +229,7 @@ export default {
       }
     },
     performPreview(res) {
-      this.$refs['preview-mailing'].showModal()
+      this.$bvModal.show('mailing-preview');
     },
     starter_mailing() {
       return {
