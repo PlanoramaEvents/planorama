@@ -89,7 +89,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     if object.streamed
       t = {
         value: "session_streamed",
-        category: "Note",
+        category: "Environment",
         label: "Streamed"
       }
       res << t
