@@ -21,6 +21,9 @@ module ChangeService
     changes = get_changes(clazz: Audit::PersonVersion, type: Person, from: from, to: to)
     changes.each do |id, change|
       if change[:changes]['con_state'] && ['declined', 'rejected'].include?(change[:changes]['con_state'][1] )
+        # do not count a "dropped" state to another dropped state
+        next if ['declined', 'rejected'].include?(change[:changes]['con_state'][0]
+
         res.append [change[:object].published_name]
       end
     end
