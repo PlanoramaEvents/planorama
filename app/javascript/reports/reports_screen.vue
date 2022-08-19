@@ -345,7 +345,7 @@
         <a href="/report/session_reports/session_needs" target="_blank">Session Needs</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Session setup requirements, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, session start time, session room, session environment, session format, session area(s), required room features&#8726;services, tech&#8726;hotel notes, room setup<br />
+          <strong><em>Fields</em></strong>: Session title, session start time, session room, session environment, session format, session area(s), required room features&#8725;services, tech&#8725;hotel notes, room setup<br />
           <strong><em>Session data included</em></strong>: all published sessions<br />
         </p>
       </li>
@@ -361,7 +361,7 @@
         <a href="/report/program_ops_reports/room_signs" target="_blank">Room Sign Data for Mail Merge</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Room sign data for mail merge, one line per room and day of week<br />
-          <strong><em>Fields</em></strong>: Room, day of week, sessions (title, start time, description, participant list with moderator marker)<br />
+          <strong><em>Fields</em></strong>: Room, day of week, sessions (title, start time, description, participant list with moderators)<br />
           <strong><em>Session data included</em></strong>: all published sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
@@ -381,7 +381,7 @@
         <p class="ml-2">
           <strong><em>Description</em></strong>: Login (primary email) listing, one line per person<br />
           <strong><em>Fields</em></strong>: Primary email, published name, list of roles, recently logged in at<br />
-          <strong><em>Person data included</em></strong>: all people with a role or staff and&#8726;or admin
+          <strong><em>Person data included</em></strong>: all people with a role or staff and&#8725;or admin
         </p>
       </li>
     </ul>
