@@ -1124,6 +1124,7 @@ CREATE VIEW public.person_schedules AS
     sessions.participant_notes,
     sessions.description,
     sessions.environment,
+    sessions.status,
         CASE
             WHEN (sa.updated_at > sessions.updated_at) THEN sa.updated_at
             ELSE sessions.updated_at

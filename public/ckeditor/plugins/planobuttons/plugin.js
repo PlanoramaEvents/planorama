@@ -155,6 +155,11 @@ CKEDITOR.config.planobuttons = [
         name:'login_url',
         html:'<%= login_url %>',
         title:'Login URL'
+      },
+      {
+        name:'participant_schedule',
+        html:'<%= schedule_to_html %>',
+        title:'Participant Schedule'
       }
     ]
   }

@@ -68,7 +68,11 @@ class Person < ApplicationRecord
               where("person_schedules.start_time is not null and person_schedules.room_id is not null")
               .where("person_schedules.session_assignment_name in (?)",['Moderator', 'Participant', 'Invisible'])
             },
-            class_name: 'PersonSchedule'
+            class_name: 'PersonSchedule' do
+              def not_draft
+                where("person_schedules.status != 'draft' AND person_schedules.status != 'dropped'")
+              end
+            end
 
   # We let the publish mechanism do the destroy so that the update service knows what is happening
   has_many  :published_session_assignments
