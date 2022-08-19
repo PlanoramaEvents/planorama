@@ -2,45 +2,31 @@
   <b-modal
     size="xl"
     :title="title"
-    ref='mailing-preview'
+    id="mailing-preview"
     scrollable
     @show='onShow'
+    ok-title="Close"
+    ok-only
   >
     <div>
-      <b-button variant="primary" @click="onFirst"><<</b-button>
-      <b-button variant="primary" @click="onPrev"><</b-button>
+      <b-button variant="primary" @click="onFirst" :disabled="!posn">&lt;&lt;</b-button>
+      <b-button variant="primary" @click="onPrev" :disabled="!posn">&lt;</b-button>
       <div class="d-inline" v-if="mailing.emails.length > 0">
         {{ mailing.emails[posn]}}
       </div>
-      <b-button variant="primary" @click="onNext">></b-button>
-      <b-button variant="primary" @click="onLast">>></b-button>
+      <b-button variant="primary" @click="onNext" :disabled="posn === mailing.emails.length - 1">&gt;</b-button>
+      <b-button variant="primary" @click="onLast" :disabled="posn === mailing.emails.length - 1">&gt;&gt;</b-button>
     </div>
-
-    <br />
-    <div v-if="preview">
+    <div v-if="preview" class="mt-3">
       To: {{ preview.to }}<br />
       Subject: {{ preview.subject }}<br />
       <p v-html="preview.content"></p>
     </div>
-
-    <template #modal-footer>
-      <div class="w-100">
-        <b-button
-          variant="primary"
-          size="sm"
-          class="float-right"
-          @click="onClose"
-        >
-          Close
-        </b-button>
-      </div>
-    </template>
   </b-modal>
 </template>
 
 <script>
 import {http as axios} from '../http';
-import { mailingModel as model } from '../store/mailing.store'
 
 export default {
   name: "MailingPreview",
@@ -83,12 +69,6 @@ export default {
     },
     onLast() {
       this.posn = this.mailing.emails.length - 1
-    },
-    onClose() {
-      this.$refs['mailing-preview'].hide()
-    },
-    showModal() {
-      this.$refs['mailing-preview'].show()
     },
     getPreview() {
       if (this.mailing && (this.posn >= 0) && (this.posn < this.mailing.emails.length)) {
