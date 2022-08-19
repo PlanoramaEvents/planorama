@@ -92,9 +92,15 @@ module AirmeetApiService
   end
 
   def self.session_to_airmeet(session)
-    # TODO this is where i left off
-    if session.integrations["airmeet"]
-    end
+    args = {sessionTitle: "#{session.room.name} - #{session.title} - #{session.format.name} - #{session.area_list.join(", ")}",
+    sessionSummary: session.description,
+    sessionDuration: session.duration,
+    sessionStartTime: session.start_time,
+    hostEmail: session.room.integrations["airmeet"]["room_host_email"],
+    speakerEmails: session.session_assignments.map { |sa| sa.person.integrations.airmeet.speaker_email},
+    cohostEmails: session.session_assignments.filter { |sa| sa.session_assignment_role_type_id == moderator_id }.map { |sa| sa.person.integrations.airmeet.speaker_email }}
+    result = create_session(args);
+    session.update({integrations: session.integrations.merge({airmeet: {session_id: result.id, synced: true, synced_at: Time.now()}})})
   end
 
   class Airmeet
