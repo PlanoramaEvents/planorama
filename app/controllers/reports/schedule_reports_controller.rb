@@ -23,6 +23,8 @@ class Reports::ScheduleReportsController < ApplicationController
                 live = true
                 ChangeService.session_changes(from: from)
               end
+    fully_dropped = ChangeService.dropped_people(from: from, to: to)
+
     to ||= Time.now
 
     workbook = FastExcel.open(constant_memory: true)
@@ -33,10 +35,10 @@ class Reports::ScheduleReportsController < ApplicationController
                               changes: changes[:sessions],
                               live: live
                             )
-    fully_dropped = check_assignments_changed(
-                      changes: changes[:assignments],
-                      state_change_sessions: state_change_sessions
-                    )
+    check_assignments_changed(
+      changes: changes[:assignments],
+      state_change_sessions: state_change_sessions
+    )
 
     fully_dropped.uniq.each do |name|
       @participants_fully_dropped.append_row(name)
@@ -135,7 +137,7 @@ class Reports::ScheduleReportsController < ApplicationController
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
     roles = [moderator.id, participant.id]
 
-    fully_dropped = []
+    # fully_dropped = []
     changes.each do |id, change|
       changed_assignment = change[:object]
       changed_assignment ||=  SessionAssignment.find(id) if SessionAssignment.exists?(id)
@@ -172,10 +174,6 @@ class Reports::ScheduleReportsController < ApplicationController
                 person.published_name,
               ]
             )
-
-            if ['declined', 'rejected'].include? person.con_state
-              fully_dropped.append [person.published_name]
-            end
           end
         end
       else
@@ -187,14 +185,9 @@ class Reports::ScheduleReportsController < ApplicationController
               person.published_name,
             ]
           )
-          if ['declined', 'rejected'].include? person.con_state
-            fully_dropped.append [person.published_name]
-          end
         end
       end
     end
-
-    return fully_dropped
   end
 
   def check_status_change(change:, live: false)
@@ -216,7 +209,7 @@ class Reports::ScheduleReportsController < ApplicationController
     if session_status_change_to_publishable?(change: change)
       # Rails.logger.debug "********* STATUS CHANGE ..... ADDD #{live}"
       session_added_row(@session_added, change)
-      live_add(session: change, sheet: @participants_add_drop) if live
+      live_add(change: change, sheet: @participants_add_drop) if live
 
       return
     end

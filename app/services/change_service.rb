@@ -16,6 +16,17 @@ module ChangeService
     }
   end
 
+  def self.dropped_people(from:, to: nil)
+    res = []
+    changes = get_changes(clazz: Audit::PersonVersion, type: Person, from: from, to: to)
+    changes.each do |id, change|
+      if change[:changes]['con_state'] && ['declined', 'rejected'].include?(change[:changes]['con_state'][1] )
+        res.append [change[:object].published_name]
+      end
+    end
+    res.uniq
+  end
+
   def self.sessions_changed(from:, to: nil)
     get_changes(clazz: Audit::SessionVersion, type: Session, from: from, to: to)
   end
