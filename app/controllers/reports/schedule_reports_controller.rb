@@ -340,6 +340,9 @@ class Reports::ScheduleReportsController < ApplicationController
     object = ChangeService.session_as_of(session_id: change[:item_id], to: to)
     return unless object.start_time && object.room_id
 
+    # Get the assignments at the time of change
+    assignments = ChangeService.assignments_as_of(session_id: change[:item_id], to: to)
+
     sheet.append_row(
       [
         object.title,
@@ -348,8 +351,10 @@ class Reports::ScheduleReportsController < ApplicationController
         object.areas.collect(&:name).join("; "),
         FastExcel.date_num(object.start_time, object.start_time.in_time_zone.utc_offset),
         object.room&.name,
-        object.participant_assignments.where("session_assignment_role_type_id = ?", moderator).collect{|a| a.person.published_name}.join("; "),
-        object.participant_assignments.where("session_assignment_role_type_id = ?", participant).collect{|a| a.person.published_name}.join("; ")
+        assignments[:moderators].collect{|a| a.person.published_name}.join("; "),
+        assignments[:participants].collect{|a| a.person.published_name}.join("; ")
+        # object.participant_assignments.where("session_assignment_role_type_id = ?", moderator).collect{|a| a.person.published_name}.join("; "),
+        # object.participant_assignments.where("session_assignment_role_type_id = ?", participant).collect{|a| a.person.published_name}.join("; ")
       ],
       [
         nil, nil, nil, nil, @date_time_style, nil, nil, nil
