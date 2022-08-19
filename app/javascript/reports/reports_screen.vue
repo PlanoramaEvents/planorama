@@ -112,7 +112,7 @@
         <a href="/report/people_reports/social_media" target="_blank">Participants with Social Media</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Social media information for participants, one line per person<br />
-          <strong><em>Fields</em></strong>: Person name, published name, attendance type, participant status, participant bio, participant social media block<br />
+          <strong><em>Fields</em></strong>: Published name, attendance type, participant status, participant bio, participant social media block<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators and participants assigned to at least one scheduled session
         </p>
@@ -121,7 +121,7 @@
         <a href="/report/people_reports/mis_matched_envs" target="_blank">Participants with Mismatching Sessions Session Environments and Attendance Types</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Participants whose attendance type does not match the session environment for sessions they are assigned to, one line per participant and session<br />
-          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type, participant status, session title, session room, session start time, session environment<br />
+          <strong><em>Fields</em></strong>: Published name, primary email, attendance type, participant status, session title, session room, session start time, session environment<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators and participants with attendance type of &quot;virtual&quot; assigned to session with environment of &quot;hybrid&quot; or &quot;in person&quot;, or with attendance type of &quot;in person&quot; assigned to session with environment of &quot;hybrid&quot; or &quot;virtual&quot;
         </p>
@@ -370,7 +370,7 @@
         <a href="/report/program_ops_reports/table_tents" target="_blank">Table Tent Data for Mail Merge</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Table tent data for mail merge, one line per session and participant<br />
-          <strong><em>Fields</em></strong>: Session title, published name, session title, session description, scheduled participant notes, participant names with pronouns appended and (m) for moderator<br />
+          <strong><em>Fields</em></strong>: Session title, published name, session description, scheduled participant notes, moderators, participants<br />
           <strong><em>Session data included</em></strong>: published sessions with environment of &quot;in person&quot; or &quot;hybrid&quot;<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
@@ -379,8 +379,8 @@
         <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
         <a href="/report/program_ops_reports/user_privileges" target="_blank" v-if="currentUserIsAdmin">User Privileges</a>
         <p class="ml-2">
-          <strong><em>Description</em></strong>: Table tent data for mail merge, one line per session and participant<br />
-          <strong><em>Fields</em></strong>: Login (primary email) listing, one line per person<br />
+          <strong><em>Description</em></strong>: Login (primary email) listing, one line per person<br />
+          <strong><em>Fields</em></strong>: Primary email, published name, list of roles, recently logged in at<br />
           <strong><em>Person data included</em></strong>: all people with a role or staff and&#8726;or admin
         </p>
       </li>
