@@ -209,7 +209,7 @@ class Reports::ScheduleReportsController < ApplicationController
     if session_status_change_to_publishable?(change: change)
       # Rails.logger.debug "********* STATUS CHANGE ..... ADDD #{live}"
       session_added_row(@session_added, change)
-      live_add(session: change, sheet: @participants_add_drop) if live
+      live_add(change: change, sheet: @participants_add_drop) if live
 
       return
     end
