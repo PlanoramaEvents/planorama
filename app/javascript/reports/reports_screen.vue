@@ -109,11 +109,24 @@
         </p>
       </li>
       <li>
-        <a href="/report/people_reports/mis_matched_envs" target="_blank">Participants with Mis-Matching Sessions</a>
+        <a href="/report/people_reports/social_media" target="_blank">Participants with Social Media</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Social media information for participants, one line per person<br />
+          <strong><em>Fields</em></strong>: Person name, published name, attendance type, participant status, participant bio, participant social media block<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators and participants assigned to at least one scheduled session
+        </p>
       </li>
       <li>
-        <a href="/report/people_reports/social_media" target="_blank">Participants and Social Media</a>
+        <a href="/report/people_reports/mis_matched_envs" target="_blank">Participants with Mismatching Sessions Session Environments and Attendance Types</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Participants whose attendance type does not match the session environment for sessions they are assigned to, one line per participant and session<br />
+          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type, participant status, session title, session room, session start time, session environment<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+          <strong><em>Person data included</em></strong>: moderators and participants with attendance type of &quot;virtual&quot; assigned to session with environment of &quot;hybrid&quot; or &quot;in person&quot;, or with attendance type of &quot;in person&quot; assigned to session with environment of &quot;hybrid&quot; or &quot;virtual&quot;
+        </p>
       </li>
+      
     </ul>
 
     <h5><a id="sessions"></a>Sessions</h5>
@@ -303,16 +316,7 @@
 
     <h5><a id="prog-ops"></a>Program Ops</h5>
     <ul>
-      <li>
-        <a href="/report/program_ops_reports/back_of_badge" target="_blank">Back of Badge</a>
-        <p class="ml-2">
-          <strong><em>Description</em></strong>: Participant schedule for mail merge, one line per person, with variable line length based on number of assigned sessions<br />
-          <strong><em>Fields</em></strong>: Published name, Session 1 Title, Session 1 Start Time, Session 1 Duration, Session 1 Room, then repeat the 4 session columns as needed<br />
-          <strong><em>Session data included</em></strong>: all published sessions<br />
-          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
-        </p>
-      </li>
-      <li>
+    <li>
         <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
@@ -321,22 +325,64 @@
         </p>
       </li>
       <li>
-        <a href="/report/program_ops_reports/sign_up_sessions" target="_blank">Sessions Requiring Signup</a>
+        <a href="/report/program_ops_reports/back_of_badge" target="_blank">Back of Badge</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Participant schedule for mail merge, one line per person, with variable line length based on number of assigned sessions<br />
+          <strong><em>Fields</em></strong>: Published name, session 1 title, session 1 start time, session 1 duration, session 1 room, then repeat the 4 session columns as needed<br />
+          <strong><em>Session data included</em></strong>: all published sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
+        </p>
+      </li>
+      <li>
+        <a href="/report/program_ops_reports/sign_up_sessions" target="_blank">Sessions Requiring Attendee Signups</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Maximum number of attendees in sessions requiring signup, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, session description, session room, session start time, session duration, session format, participants, session environment, max number of attendees<br />
+          <strong><em>Session data included</em></strong>: all published sessions<br />
+        </p>
       </li>
       <li>
         <a href="/report/session_reports/session_needs" target="_blank">Session Needs</a>
-      </li>
-      <li>
-        <a href="/report/program_ops_reports/table_tents" target="_blank">Table Tents</a>
-      </li>
-      <li>
-        <a href="/report/program_ops_reports/room_signs" target="_blank">Room Signs</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Session setup requirements, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, session start time, session room, session environment, session format, session area(s), required room features&#8726;services, tech&#8726;hotel notes, room setup<br />
+          <strong><em>Session data included</em></strong>: all published sessions<br />
+        </p>
       </li>
       <li>
         <a href="/report/program_ops_reports/session_minors" target="_blank">Session and Minors</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Minors participation and attendee age restrictions, one line per session<br />
+          <strong><em>Fields</em></strong>: Session title, session description, session start time, session room, attendee age restriction, minors participation<br />
+          <strong><em>Session data included</em></strong>: all scheduled sessions<br />
+        </p>
       </li>
       <li>
-        <a href="/report/program_ops_reports/user_privileges" target="_blank">User Privileges</a>
+        <a href="/report/program_ops_reports/room_signs" target="_blank">Room Sign Data for Mail Merge</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Room sign data for mail merge, one line per room and day of week<br />
+          <strong><em>Fields</em></strong>: Room, day of week, sessions (title, start time, description, participant list with moderator marker)<br />
+          <strong><em>Session data included</em></strong>: all published sessions<br />
+          <strong><em>Person data included</em></strong>: moderators, participants
+        </p>
+      </li>
+      <li>
+        <a href="/report/program_ops_reports/table_tents" target="_blank">Table Tent Data for Mail Merge</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Table tent data for mail merge, one line per session and participant<br />
+          <strong><em>Fields</em></strong>: Session title, published name, session title, session description, scheduled participant notes, participant names with pronouns appended and (m) for moderator<br />
+          <strong><em>Session data included</em></strong>: published sessions with environment of &quot;in person&quot; or &quot;hybrid&quot;<br />
+          <strong><em>Person data included</em></strong>: moderators, participants
+        </p>
+      </li>
+      <li>
+        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
+        <a href="/report/program_ops_reports/user_privileges" target="_blank" v-if="currentUserIsAdmin">User Privileges</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Table tent data for mail merge, one line per session and participant<br />
+          <strong><em>Fields</em></strong>: Login (primary email) listing, one line per person<br />
+          <strong><em>Person data included</em></strong>: all people with a role or staff and&#8726;or admin
+        </p>
       </li>
     </ul>
   </div>
