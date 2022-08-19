@@ -370,7 +370,7 @@
         <a href="/report/program_ops_reports/table_tents" target="_blank">Table Tent Data for Mail Merge</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Table tent data for mail merge, one line per session and participant<br />
-          <strong><em>Fields</em></strong>: Session title, published name, session description, scheduled participant notes, moderators, participants<br />
+          <strong><em>Fields</em></strong>: Session title, published name, session description, scheduled participant notes, moderators and their pronouns, participants and their pronouns<br />
           <strong><em>Session data included</em></strong>: published sessions with environment of &quot;in person&quot; or &quot;hybrid&quot;<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
