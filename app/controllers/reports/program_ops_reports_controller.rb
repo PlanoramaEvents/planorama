@@ -17,12 +17,12 @@ class Reports::ProgramOpsReportsController < ApplicationController
 
     worksheet.append_row(
       [
-        'Session Title',
+        'Session',
         'Description',
-        'Time',
+        'Start Time',
         'Room',
         'Age Restriction',
-        'Minor Participant'
+        'Minors Participation'
       ]
     )
 
@@ -56,11 +56,11 @@ class Reports::ProgramOpsReportsController < ApplicationController
 
     worksheet.append_row(
       [
-        'Email',
+        'Primary Email',
         'Published Name',
         'Convention Roles',
         'Recently Logged In At'
-        # 'Applicaion Roles'
+        # 'Application Roles'
       ]
     )
     people.each do |person|
@@ -152,7 +152,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
         'Session',
         'Description',
         'Room',
-        'Time',
+        'Start Time',
         'Duration',
         'Format',
         'Participants',
