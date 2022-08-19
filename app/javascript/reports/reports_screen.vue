@@ -314,6 +314,9 @@
           <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
         </p>
       </li>
+      <li>
+        <a href="/report/program_ops_reports/virtual_people" target="_blank">Virtaul Program Participants</a>
+      </li>
     </ul>
 
   </div>

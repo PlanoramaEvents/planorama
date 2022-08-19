@@ -90,6 +90,7 @@ Rails.application.routes.draw do
   get 'report/people_reports/moderators', to: 'reports/people_reports#moderators'
 
   get 'report/program_ops_reports/back_of_badge', to: 'reports/program_ops_reports#back_of_badge'
+  get 'report/program_ops_reports/virtual_people', to: 'reports/program_ops_reports#virtual_people'
 
   get 'report/schedule_reports/schedule_diff(/:from)(/:to)', to: 'reports/schedule_reports#schedule_diff'
   get 'publication_date/reset', to: 'publication_dates#reset'
