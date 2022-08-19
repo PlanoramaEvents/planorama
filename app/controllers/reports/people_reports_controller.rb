@@ -64,7 +64,7 @@ class Reports::PeopleReportsController < ApplicationController
     # Sessions: only scheduled sessions,
     #  only when virtual people are on in-person or hybrid sessions, or in-person people are on virtual sessions
     workbook = FastExcel.open(constant_memory: true)
-    worksheet = workbook.add_worksheet("Mis Matched Envs")
+    worksheet = workbook.add_worksheet("Mismatched Envs")
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
 
     worksheet.append_row(
@@ -73,9 +73,9 @@ class Reports::PeopleReportsController < ApplicationController
         'Primary Email',
         'Attendance Type',
         'Participant Status',
-        'Session Title',
+        'Session',
         'Room',
-        'Time',
+        'Start Time',
         'Session Environment'
       ]
     )
