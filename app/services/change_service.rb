@@ -30,6 +30,16 @@ module ChangeService
     res.uniq
   end
 
+  def self.session_as_of(session_id:, to:)
+    session_version = Audit::SessionVersion.where("item_id = ? and created_at <= ?", session_id, to)
+                      .order('created_at desc')
+                      .first
+    return nil unless session_version
+
+    session = session_version.reify
+    return session
+  end
+
   def self.sessions_changed(from:, to: nil)
     get_changes(clazz: Audit::SessionVersion, type: Session, from: from, to: to)
   end
