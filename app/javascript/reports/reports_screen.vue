@@ -376,15 +376,6 @@
         </p>
       </li>
       <li>
-        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
-        <a href="/report/program_ops_reports/user_privileges" target="_blank" v-if="currentUserIsAdmin">User Privileges</a>
-        <p class="ml-2">
-          <strong><em>Description</em></strong>: Login (primary email) listing, one line per person<br />
-          <strong><em>Fields</em></strong>: Primary email, published name, list of roles, recently logged in at<br />
-          <strong><em>Person data included</em></strong>: all people with a role or staff and&#8725;or admin
-        </p>
-      </li>
-      <li>
         <a href="/report/program_ops_reports/virtual_people" target="_blank">Participant Emails for Virtual Sessions</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: List of emails for participants attending at least one virtual session, one line per participant<br />
@@ -394,6 +385,14 @@
         </p>
       </li>
     </ul>
+    <div style="clear: both; height: 5rem;">&nbsp;</div>
+        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
+        <a href="/report/program_ops_reports/user_privileges" target="_blank" v-if="currentUserIsAdmin">User Privileges</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Login (primary email) listing, one line per person<br />
+          <strong><em>Fields</em></strong>: Primary email, published name, list of roles, recently logged in at<br />
+          <strong><em>Person data included</em></strong>: all people with a role or staff and&#8725;or admin
+        </p>
   </div>
 </template>
 
