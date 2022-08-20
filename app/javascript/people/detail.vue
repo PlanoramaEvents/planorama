@@ -31,11 +31,11 @@
       <dt>Can Share:</dt>
       <dd class="ml-2">{{ selected.can_share ? 'Y' : 'N' }}</dd>
       <dt>Can Photo:</dt>
-      <dd class="ml-2">{{ selected.can_photo ? 'Y' : 'N' }}</dd>
+      <dd class="ml-2">{{ selected.can_photo === "yes" ? 'Y' : 'N' }}</dd>
       <dt>Can Stream:</dt>
-      <dd class="ml-2">{{ selected.can_stream ? 'Y' : 'N' }}</dd>
+      <dd class="ml-2">{{ selected.can_stream === "yes" ? 'Y' : 'N' }}</dd>
       <dt>Can Record:</dt>
-      <dd class="ml-2">{{ selected.can_stream ? 'Y' : 'N' }}</dd>
+      <dd class="ml-2">{{ selected.can_record === "yes" ? 'Y' : 'N' }}</dd>
     </dl>
   </div>
 </template>
