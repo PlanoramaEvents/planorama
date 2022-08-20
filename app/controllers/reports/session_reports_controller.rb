@@ -16,7 +16,7 @@ class Reports::SessionReportsController < ApplicationController
     worksheet.append_row(
       [
         'Session',
-        'Time',
+        'Start Time',
         'Room',
         'Environment',
         'Format',
