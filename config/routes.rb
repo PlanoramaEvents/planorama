@@ -72,6 +72,7 @@ Rails.application.routes.draw do
   get 'report/session_reports/session_copy_edit_status', to: 'reports/session_reports#session_copy_edit_status'
   get 'report/session_reports/daily_grid', to: 'reports/session_reports#daily_grid'
   get 'report/session_reports/streamed_and_recorded', to: 'reports/session_reports#streamed_and_recorded'
+  get 'report/session_reports/session_needs', to: 'reports/session_reports#session_needs'
   get 'report/session_reports/scheduled_session_no_people', to: 'reports/session_reports#scheduled_session_no_people'
   get 'report/session_reports/non_accepted_on_schedule', to: 'reports/session_reports#non_accepted_on_schedule'
   get 'report/session_reports/participants_over_session_limits', to: 'reports/session_reports#participants_over_session_limits'
@@ -88,13 +89,20 @@ Rails.application.routes.draw do
 
   get 'report/people_reports/record_stream_permissions', to: 'reports/people_reports#record_stream_permissions'
   get 'report/people_reports/moderators', to: 'reports/people_reports#moderators'
+  get 'report/people_reports/mis_matched_envs', to: 'reports/people_reports#mis_matched_envs'
+  get 'report/people_reports/social_media', to: 'reports/people_reports#social_media'
 
   get 'report/program_ops_reports/back_of_badge', to: 'reports/program_ops_reports#back_of_badge'
   get 'report/program_ops_reports/virtual_people', to: 'reports/program_ops_reports#virtual_people'
+  get 'report/program_ops_reports/room_signs', to: 'reports/program_ops_reports#room_signs'
+  get 'report/program_ops_reports/session_minors', to: 'reports/program_ops_reports#session_minors'
+  get 'report/program_ops_reports/sign_up_sessions', to: 'reports/program_ops_reports#sign_up_sessions'
+  get 'report/program_ops_reports/table_tents', to: 'reports/program_ops_reports#table_tents'
+  get 'report/program_ops_reports/user_privileges', to: 'reports/program_ops_reports#user_privileges'
 
   get 'report/schedule_reports/schedule_diff(/:from)(/:to)', to: 'reports/schedule_reports#schedule_diff'
   get 'publication_date/reset', to: 'publication_dates#reset'
-  resources :publication_dates, path: 'publication_date', only: [:index]
+  resources :publication_dates, path: 'publication_date', only: [:index, :update]
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
