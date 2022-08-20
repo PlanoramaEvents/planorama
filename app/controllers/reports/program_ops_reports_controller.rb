@@ -292,7 +292,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
         row.concat [
           assignment.session.title,
           assignment.session.start_time ? FastExcel.date_num(assignment.session.start_time, assignment.session.start_time.in_time_zone.utc_offset) : nil,
-          "#{assignment.session.duration} mins",
+          "#{assignment.session.duration}m",
           assignment.session.room&.name,
         ]
         styles.concat [
