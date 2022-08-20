@@ -384,6 +384,9 @@
           <strong><em>Person data included</em></strong>: all people with a role or staff and&#8725;or admin
         </p>
       </li>
+      <li>
+        <a href="/report/program_ops_reports/virtual_people" target="_blank">Virtaul Program Participants</a>
+      </li>
     </ul>
   </div>
 </template>

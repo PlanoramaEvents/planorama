@@ -3,6 +3,10 @@ class Reports::ProgramOpsReportPolicy < BasePolicy
     allowed?(action: :back_of_badge)
   end
 
+  def virtual_people?
+    allowed?(action: :virtual_people)
+  end 
+
   def room_signs?
     allowed?(action: :room_signs)
   end

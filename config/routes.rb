@@ -93,6 +93,7 @@ Rails.application.routes.draw do
   get 'report/people_reports/social_media', to: 'reports/people_reports#social_media'
 
   get 'report/program_ops_reports/back_of_badge', to: 'reports/program_ops_reports#back_of_badge'
+  get 'report/program_ops_reports/virtual_people', to: 'reports/program_ops_reports#virtual_people'
   get 'report/program_ops_reports/room_signs', to: 'reports/program_ops_reports#room_signs'
   get 'report/program_ops_reports/session_minors', to: 'reports/program_ops_reports#session_minors'
   get 'report/program_ops_reports/sign_up_sessions', to: 'reports/program_ops_reports#sign_up_sessions'
