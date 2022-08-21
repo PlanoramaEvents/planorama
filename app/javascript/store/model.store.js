@@ -75,9 +75,11 @@ import { configurationStore, configurationEndpoints } from './configuration.stor
 
 // session add-ons
 import { sessionAssignmentStore, sessionAssignmentEndpoints } from './session_assignment.store';
+import { publishedSessionEndpoints, publishedSessionStore } from './published_session.store';
 
 // global app things
 import { appStore } from './app.store';
+import { integrationEndpoints, integrationStore } from './integration.store';
 
 // schedule workflow
 import { scheduleWorkflowStore, scheduleWorkflowEndpoints } from './schedule_workflow/schedule_workflow.store';
@@ -109,6 +111,8 @@ const endpoints = {
   // ...personExclusionEndpoints,
   ...scheduleWorkflowEndpoints,
   ...personScheduleApprovalEndpoints,
+  ...publishedSessionEndpoints,
+  ...integrationEndpoints,
   ...publicationDatesEndpoints,
 }
 
@@ -146,6 +150,7 @@ export const store = new Vuex.Store({
       ...sessionConflictStore.selected,
       ...formatStore.selected,
       ...personScheduleApprovalStore.selected,
+      ...publishedSessionStore.selected,
       ...publicationDatesStore.selected,
     },
     ...personSessionStore.state,
@@ -158,6 +163,7 @@ export const store = new Vuex.Store({
     ...roomStore.state,
     ...appStore.state,
     ...scheduleWorkflowStore.state,
+    ...integrationStore.state,
     // ...mailingStore.state
   },
   getters: {
@@ -216,7 +222,8 @@ export const store = new Vuex.Store({
     ...surveyStore.mutations,
     ...searchStateStore.mutations,
     ...roomStore.mutations,
-    ...appStore.mutations
+    ...appStore.mutations,
+    ...integrationStore.mutations
   },
   actions: {
     /**
@@ -386,5 +393,6 @@ export const store = new Vuex.Store({
     ...sessionConflictStore.actions,
     ...scheduleWorkflowStore.actions,
     ...personScheduleApprovalStore.actions,
+    ...integrationStore.actions,
   }
 })

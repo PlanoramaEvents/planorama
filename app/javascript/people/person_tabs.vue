@@ -53,6 +53,9 @@
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
           <people-admin-tab></people-admin-tab>
         </b-tab>
+        <b-tab title="Integrations" lazy v-if="currentUserIsAdmin" :active="tab === 'integrations'">
+          <pre>{{JSON.stringify(person.integrations, undefined, 2)}}</pre>
+        </b-tab>
         <b-tab title="Surveys" disabled lazy>
         </b-tab>
       </b-tabs>
@@ -131,6 +134,9 @@ export default {
         baseTabs.splice(5, 0, 'schedule');
         baseTabs.push('email');
         baseTabs.push('admin');
+      }
+      if(this.currentUserIsAdmin) {
+        baseTabs.push('integrations');
       }
       return baseTabs;
     },

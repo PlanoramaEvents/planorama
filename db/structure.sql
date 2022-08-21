@@ -616,7 +616,8 @@ END) STORED,
     attendance_type character varying(200) DEFAULT NULL::character varying,
     twelve_hour boolean DEFAULT true,
     timezone character varying(500) DEFAULT NULL::character varying,
-    availability_notes character varying
+    availability_notes character varying,
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -923,6 +924,36 @@ CREATE TABLE public.ignored_conflicts (
     conflict_type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: integration_publishes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.integration_publishes (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    integration_name character varying,
+    data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    started_at timestamp without time zone,
+    completed_at timestamp without time zone,
+    created_by character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: integrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.integrations (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying,
+    config jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -1399,7 +1430,8 @@ CREATE TABLE public.published_session_assignments (
     session_assignment_role_type_id uuid NOT NULL,
     person_id uuid NOT NULL,
     sort_order integer,
-    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum
+    visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -1428,7 +1460,8 @@ CREATE TABLE public.published_sessions (
     environment public.session_environments_enum DEFAULT 'unknown'::public.session_environments_enum,
     minors_participation jsonb,
     recorded boolean DEFAULT false NOT NULL,
-    streamed boolean DEFAULT false NOT NULL
+    streamed boolean DEFAULT false NOT NULL,
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -1454,7 +1487,8 @@ CREATE TABLE public.rooms (
     room_set_id uuid,
     length numeric,
     width numeric,
-    height numeric
+    height numeric,
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -2211,6 +2245,22 @@ ALTER TABLE ONLY public.formats
 
 ALTER TABLE ONLY public.ignored_conflicts
     ADD CONSTRAINT ignored_conflicts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: integration_publishes integration_publishes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.integration_publishes
+    ADD CONSTRAINT integration_publishes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: integrations integrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.integrations
+    ADD CONSTRAINT integrations_pkey PRIMARY KEY (id);
 
 
 --
@@ -3377,6 +3427,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220801152151'),
 ('20220801173704'),
 ('20220801195644'),
-('20220818022629');
+('20220818022629'),
+('20220818200500'),
+('20220821001724');
 
 

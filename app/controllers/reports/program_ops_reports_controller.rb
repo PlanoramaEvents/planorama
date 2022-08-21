@@ -9,7 +9,6 @@ class Reports::ProgramOpsReportsController < ApplicationController
 
     assignments = PublishedSessionAssignment
                     .includes(:person, :session_assignment_role_type, :published_session)
-                    .where("published_sessions.environment = 'virtual'")
                     .where("session_assignment_role_type_id in (?)", [moderator.id, participant.id])
                     .order("people.published_name")
 
@@ -20,6 +19,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
       [
         'Published Name',
         'Name',
+        'Is Virtual',
         'Primary Email'
       ]
     )
@@ -29,6 +29,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
       row = [
         person.published_name,
         person.name,
+        grouped.reduce(false){|res, a| res || (a.published_session.environment == 'virtual')} ? 'Yes' : 'No', # grouped contains virtual
         person.primary_email.email
       ]
 
@@ -292,7 +293,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
         row.concat [
           assignment.session.title,
           assignment.session.start_time ? FastExcel.date_num(assignment.session.start_time, assignment.session.start_time.in_time_zone.utc_offset) : nil,
-          "#{assignment.session.duration} mins",
+          "#{assignment.session.duration}m",
           assignment.session.room&.name,
         ]
         styles.concat [

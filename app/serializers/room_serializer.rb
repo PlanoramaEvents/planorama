@@ -5,7 +5,7 @@ class RoomSerializer
              :name, :sort_order, :purpose, :comment, :capacity, :floor,
              :open_for_schedule, :is_virtual, :area_of_space,
              :length, :width, :height,
-             :venue_id, :room_set_id
+             :venue_id, :room_set_id, :integrations
 
 
 end
