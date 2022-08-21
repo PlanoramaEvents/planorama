@@ -64,6 +64,8 @@ class Reports::ProgramOpsReportsController < ApplicationController
     group_assignments = assignments.group_by {|a| a.person}
     max_sessions = 0
     group_assignments.each do |person, grouped|
+      next if person.attendance_type == 'virtual'
+
       row = [
         person.published_name
       ]
@@ -72,12 +74,15 @@ class Reports::ProgramOpsReportsController < ApplicationController
       grouped.each do |assignment|
         row.concat [
           assignment.session.title,
+          assignment.session.title.truncate(30),
           assignment.session.start_time ? FastExcel.date_num(assignment.session.start_time, assignment.session.start_time.in_time_zone.utc_offset) : nil,
-          "#{assignment.session.duration}m",
+          "#{assignment.session.duration}mins",
           assignment.session.room&.name,
+          assignment.session.format&.name,
+          assignment.session_assignment_role_type&.name
         ]
         styles.concat [
-          nil, date_time_style, nil, nil
+          nil, nil, date_time_style, nil, nil, nil, nil
         ]
       end
       max_sessions = grouped.size if grouped.size > max_sessions
@@ -87,7 +92,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
 
     header = ['Published Name']
     (0..max_sessions).each do |n|
-      header.concat ["Title #{n+1}", "Start Time #{n+1}", "Duration #{n+1}", "Room #{n+1}"]
+      header.concat ["Title #{n+1}", "Truncated Title #{n+1}", "Start Time #{n+1}", "Duration #{n+1}", "Room #{n+1}", "Format #{n+1}", "Role #{n+1}"]
     end
     worksheet.write_row(0, header)
 
