@@ -21,11 +21,7 @@ class IntegrationsController < ResourceController
       id
       name
       lock_version
-    ] << [
-      config: %i[
-        airmeet_host
-        airmeet_id
-      ]
+      config
     ]
   end
 

@@ -133,7 +133,7 @@ module AirmeetApiService
   end
 
   def self.virtual_sessions 
-    SessionService.published_sessions_unordered.where(streamed: true)
+    SessionService.published_sessions.where(streamed: true)
   end
 
   def self.moderator_id

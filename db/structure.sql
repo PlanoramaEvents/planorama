@@ -700,8 +700,7 @@ CREATE TABLE public.sessions (
     room_set_id uuid,
     room_notes text,
     recorded boolean DEFAULT false NOT NULL,
-    streamed boolean DEFAULT false NOT NULL,
-    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
+    streamed boolean DEFAULT false NOT NULL
 );
 
 
@@ -1322,25 +1321,6 @@ CREATE TABLE public.person_schedule_approvals (
 
 
 --
--- Name: person_schedule_approvals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.person_schedule_approvals_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: person_schedule_approvals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.person_schedule_approvals_id_seq OWNED BY public.person_schedule_approvals.id;
-
-
---
 -- Name: person_schedule_conflicts; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -1402,7 +1382,9 @@ CREATE TABLE public.publication_dates (
     dropped_sessions integer DEFAULT 0,
     new_assignments integer DEFAULT 0,
     updated_assignments integer DEFAULT 0,
-    dropped_assignments integer DEFAULT 0
+    dropped_assignments integer DEFAULT 0,
+    sent_external boolean DEFAULT false NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -1619,25 +1601,6 @@ CREATE TABLE public.schedule_workflows (
     updated_at timestamp(6) without time zone NOT NULL,
     state public.schedule_workflow_enum DEFAULT 'not_set'::public.schedule_workflow_enum
 );
-
-
---
--- Name: schedule_workflows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_workflows_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_workflows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_workflows_id_seq OWNED BY public.schedule_workflows.id;
 
 
 --

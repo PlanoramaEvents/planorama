@@ -108,7 +108,6 @@ const endpoints = {
   // ...personExclusionEndpoints,
   ...scheduleWorkflowEndpoints,
   ...personScheduleApprovalEndpoints,
-  ...publicationDatesEndpoints,
   ...publishedSessionEndpoints,
   ...integrationEndpoints,
 }
@@ -147,7 +146,6 @@ export const store = new Vuex.Store({
       ...sessionConflictStore.selected,
       ...formatStore.selected,
       ...personScheduleApprovalStore.selected,
-      ...publicationDatesStore.selected,
       ...publishedSessionStore.selected,
     },
     ...personSessionStore.state,
