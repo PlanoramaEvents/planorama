@@ -29,9 +29,9 @@
 
 <script>
 import { modelMixinNoProp } from '@/mixins'
-import { FETCH_AIRMEET_INTEGRATION, integrationModel } from '@/store/integration.store'
+import { FETCH_AIRMEET_INTEGRATION, integrationModel, SET_AIRMEET_INTEGRATION } from '@/store/integration.store'
 import { PATCH_FIELDS, SAVE } from '@/store/model.store'
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import toastMixin from '@/shared/toast-mixin';
 
 export default {
@@ -77,6 +77,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      setAirmeetInfo: SET_AIRMEET_INTEGRATION,
+    }),
     ...mapActions({
       fetchAirmeetInfo: FETCH_AIRMEET_INTEGRATION,
       patchModel: PATCH_FIELDS
@@ -91,7 +94,12 @@ export default {
       this.save(room);
     },
     patchAirmeetConfig() {
-      this.toastPromise(this.patchModel({model: integrationModel, item: this.airmeet, fields: ['config'], selected: false}), "Airmeet integration successfully updated.")
+      this.toastPromise(new Promise((res, rej) => {
+        this.patchModel({model: integrationModel, item: this.airmeet, fields: ['config'], selected: false}).then((data) => {
+          this.setAirmeetInfo(data);
+          res(data);
+        }).catch(rej);
+      }), "Airmeet integration successfully updated.")
     }
   },
   mounted() {
