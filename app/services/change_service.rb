@@ -38,9 +38,12 @@ module ChangeService
     object_version = audit.where("item_id = ? and item_type = ? and created_at <= ?", item_id, item_type, to)
                       .order('created_at desc')
                       .first
-    return nil unless object_version
+    object = if object_version
+               object_version.reify
+             else
+               item_type.constantize.find(session_id) if item_type.constantize.exists?(id)
+             end
 
-    object = object_version.reify
     return object
   end
 
@@ -66,7 +69,7 @@ module ChangeService
 
     res = []
     grouped_audits.each do |key, item_audits|
-      change = self.comnbined_changes(item_audits: item_audits, type: SessionAssignment)
+      change = self.combined_changes(item_audits: item_audits, type: SessionAssignment, to: to)
       res.concat [change[:object]] if self.assigned?(change: change, role_id: role_id)
     end
 
@@ -119,7 +122,7 @@ module ChangeService
     grouped_audits.each do |key, item_audits|
       # Rails.logger.debug "**** AUDIT #{key} #{publishable_session_ids}"
       # just in case we sort by date
-      change = self.comnbined_changes(item_audits: item_audits, type: type)
+      change = self.combined_changes(item_audits: item_audits, type: type, to: to)
       if publishable_session_ids && change[:object].respond_to?(:session_id)
         next unless publishable_session_ids.include?(change[:object].session_id)
       end
@@ -130,7 +133,7 @@ module ChangeService
     changes
   end
 
-  def self.comnbined_changes(item_audits:, type:)
+  def self.combined_changes(item_audits:, type:, to:)
     changes = nil
 
     item_audits.sort{|a,b| a.created_at <=> b.created_at}.each do |audit|
@@ -138,13 +141,23 @@ module ChangeService
       if changes
         changes[:changes] = self.merge_change_set(to: changes[:changes], from: audit.object_changes)
       else
+        # Get the most recent version (as of the to datetime)
+        recent = self.object_as_of(audit: audit.class, item_id: audit.item_id, item_type: audit.item_type, to: to)
+
         # Get the old version of the object
         obj = if audit.event == 'create'
                 type.find(audit.item_id) if type.exists?(audit.item_id)
               else
                 audit.reify
               end
-        changes = {item_id: audit.item_id, item_type: audit.item_type, event: audit.event, object: obj, changes: audit.object_changes}
+        changes = {
+          item_id: audit.item_id,
+          item_type: audit.item_type,
+          event: audit.event,
+          object: obj,
+          recent: recent,
+          changes: audit.object_changes
+        }
       end
     end
 
