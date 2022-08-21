@@ -50,14 +50,14 @@
           ref="configurations-manager"
         ></configurations-manager>
       </admin-accordion>
+      <admin-accordion id="integration-accordion" title="Integration Settings">
+        <integration-settings></integration-settings>
+      </admin-accordion>
       <admin-accordion id="agreements-accordion" title="Agreements" @show="showAgreements">
         <agreement-manager
           model="agreement"
           ref="agreements-manager"
         ></agreement-manager>
-      </admin-accordion>
-      <admin-accordion id="integration-accordion" title="Integration Settings">
-        <integration-settings></integration-settings>
       </admin-accordion>
     </div>
   </div>

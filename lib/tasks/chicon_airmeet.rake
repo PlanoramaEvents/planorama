@@ -7,13 +7,13 @@ namespace :chicon do
     # none of this gets you actual access to the airmeet so it's probably ok to actually check in???
     integration.update!({
       config: {
-        airmeet_id: "c8b39650-f33d-11ec-9c8a-2b58688a7745",
+        airmeet_id: "ac4b0bc0-1079-11ed-bed5-3112cc3e0b52",
         airmeet_host: "gail.terman@chicon.org",
         active: true
       }
     })
 
-    Room.find_by({name: "Airmeet 1"}).update({integrations: {airmeet: {room_host_email: 'gail.terman@chicon.org'}}})
+    # Room.find_by({name: "Airmeet 1"}).update({integrations: {airmeet: {room_host_email: 'gail.terman@chicon.org'}}})
   end
 
   task configure_airmeet: :environment do
@@ -30,10 +30,8 @@ namespace :chicon do
     })
   end
 
-  task test_airmeet: :environment do
-    puts AirmeetApiService.info
-    puts AirmeetApiService.get_session("f1dc078f-f4dc-4a98-973a-8c364036256b")
-    puts AirmeetApiService.get_participants
+  task sync_airmeet: :environment do
+    AirmeetApiService.sync_to_airmeet
   end
 end
 

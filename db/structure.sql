@@ -953,7 +953,8 @@ CREATE TABLE public.integrations (
     name character varying,
     config jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -3463,6 +3464,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220801173704'),
 ('20220801195644'),
 ('20220818022629'),
-('20220818200500');
+('20220818200500'),
+('20220821001724');
 
 

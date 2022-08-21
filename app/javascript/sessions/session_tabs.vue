@@ -30,6 +30,9 @@
       <b-tab title="Notes" :active="tab === 'notes'">
         <session-notes></session-notes>
       </b-tab>
+      <b-tab title="Integrations" v-if="currentUserIsAdmin" :active="tab === 'integrations'">
+        <pre>{{JSON.stringify(published_session.integrations, undefined, 2)}}</pre>
+      </b-tab>
     </b-tabs>
   </div>
 </template>
@@ -48,6 +51,8 @@ import SessionSchedule from './session_schedule';
 import SessionConflicts from '../conflicts/session_conflicts.vue'
 import { sessionConflictModel } from '@/store/session_conflict.store'
 import settingsMixin from "@/store/settings.mixin";
+import { personSessionMixin } from '@/mixins';
+import { publishedSessionModel } from '@/store/published_session.store';
 
 export default {
   name: "SessionTabs",
@@ -65,15 +70,19 @@ export default {
   },
   mixins: [
     modelUtilsMixin,
-    settingsMixin
+    settingsMixin,
+    personSessionMixin
   ],
   data: () => ({
     sessionAssignmentModel,
-    sessionConflictModel
+    sessionConflictModel,
   }),
   computed: {
     session() {
       return this.selected_model(sessionModel);
+    },
+    published_session() {
+      return this.selected_model(publishedSessionModel) || {};
     },
     assignmentFilter() {
       let filter = {
@@ -120,6 +129,9 @@ export default {
         case 4:
           path = `notes/${this.id}`;
           break;
+        case 5:
+          path = `integrations/${this.id}`
+          break;
       }
       // console.debug("****** Path:", path)
       // change the router path to match the current tab
@@ -138,7 +150,10 @@ export default {
       (obj) => {
         this.select_model(sessionModel, obj);
       }
-    )
+    ),
+    this.fetch_model_by_id(publishedSessionModel, this.id).then( (obj) => {
+      this.select_model(publishedSessionModel, obj)
+    })
   }
 }
 </script>
