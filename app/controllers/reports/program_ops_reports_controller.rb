@@ -76,7 +76,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
           assignment.session.title,
           assignment.session.title.truncate(30),
           assignment.session.start_time ? FastExcel.date_num(assignment.session.start_time, assignment.session.start_time.in_time_zone.utc_offset) : nil,
-          "#{assignment.session.duration}mins",
+          "#{assignment.session.duration}m",
           assignment.session.room&.name,
           assignment.session.format&.name,
           assignment.session_assignment_role_type&.name
