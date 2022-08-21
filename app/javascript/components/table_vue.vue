@@ -218,6 +218,7 @@ export default {
       if (to > this.totalRows) {
         to = this.totalRows
       }
+      if (this.totalRows == 0) from = 0 
 
       return `Showing ${from} to ${to} of ${this.totalRows} (${this.fullTotalRows} total records)`
     },
