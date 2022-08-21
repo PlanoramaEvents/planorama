@@ -43,6 +43,7 @@ module MigrationHelpers
             sessions.participant_notes,
             sessions.description,
             sessions.environment,
+            sessions.status,
             case
             when sa.updated_at > sessions.updated_at
           		then sa.updated_at

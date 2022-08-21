@@ -531,7 +531,9 @@ namespace :rbac do
         "session_selections": true,
         "sessions_with_participants": true,
         "record_stream_permissions": true,
-        "moderators": true
+        "moderators": true,
+        "mis_matched_envs": true,
+        "social_media": true
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -545,14 +547,20 @@ namespace :rbac do
         "assigned_sessions_not_scheduled": true,
         "session_copy_edit_status": true,
         "daily_grid": true,
-        "streamed_and_recorded": true
+        "streamed_and_recorded": true,
+        "session_needs": true
       },
       "schedule_report": {
         "schedule_diff": true
       },
       "program_ops_report": {
         "back_of_badge": true,
-        "virtual_people": true
+        "virtual_people": true,
+        "room_signs": true,
+        "sign_up_sessions": true,
+        "table_tents": true,
+        "session_minors": true,
+        "user_privileges": false
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -843,7 +851,9 @@ namespace :rbac do
         "session_selections": true,
         "sessions_with_participants": true,
         "record_stream_permissions": true,
-        "moderators": true
+        "moderators": true,
+        "mis_matched_envs": true,
+        "social_media": true
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -857,7 +867,8 @@ namespace :rbac do
         "assigned_sessions_not_scheduled": true,
         "session_copy_edit_status": true,
         "daily_grid": true,
-        "streamed_and_recorded": true
+        "streamed_and_recorded": true,
+        "session_needs": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -874,7 +885,12 @@ namespace :rbac do
       },
       "program_ops_report": {
         "back_of_badge": true,
-        "virtual_people": true
+        "virtual_people": true,
+        "room_signs": true,
+        "sign_up_sessions": true,
+        "table_tents": true,
+        "session_minors": true,
+        "user_privileges": true
       },
       "session_conflict": {
         "conflicts_with": true,

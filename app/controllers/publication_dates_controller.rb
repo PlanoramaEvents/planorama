@@ -30,4 +30,12 @@ class PublicationDatesController < ResourceController
   def paginate
     false
   end
+
+  def allowed_params
+    %i[
+      id
+      lock_version
+      sent_external
+    ]
+  end
 end

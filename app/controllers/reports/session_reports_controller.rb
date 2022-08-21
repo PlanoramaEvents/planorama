@@ -1,6 +1,56 @@
 class Reports::SessionReportsController < ApplicationController
   around_action :set_timezone
 
+  def session_needs
+    authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
+
+    sessions = SessionService.draft_sessions
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Session Needs")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [
+      nil, date_time_style
+    ]
+
+    worksheet.append_row(
+      [
+        'Session',
+        'Start Time',
+        'Room',
+        'Environment',
+        'Format',
+        'Areas',
+        'Required Room Features/Services', #room_notes
+        'Tech/Hotel Notes', #
+        'Room Setup' # room_set_id
+      ]
+    )
+
+    # require room features.services, tech/hotel notes, room setup
+
+    sessions.each do |session|
+      worksheet.append_row(
+        [
+          session.title,
+          session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
+          session.room&.name,
+          session.environment,
+          session.format&.name,
+          session.area_list.sort.join(';'),
+          session.room_notes,
+          session.tech_notes,
+          session.room_set&.name
+        ],
+        styles
+      )
+    end
+
+    send_data workbook.read_string,
+              filename: "SessionNeeds-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def streamed_and_recorded
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
