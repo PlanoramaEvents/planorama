@@ -21,11 +21,10 @@ class Reports::ScheduleReportsController < ApplicationController
                 ChangeService.published_changes(from: from, to: to)
               else
                 live = true
-                ChangeService.session_changes(from: from)
+                to ||= Time.now
+                ChangeService.session_changes(from: from, to: to)
               end
     fully_dropped = ChangeService.dropped_people(from: from, to: to)
-
-    to ||= Time.now
 
     workbook = FastExcel.open(constant_memory: true)
     init_sheets(workbook: workbook)
@@ -65,9 +64,8 @@ class Reports::ScheduleReportsController < ApplicationController
 
       if (change[:changes]['room_id'] || change[:changes]['start_time']) #&& !change[:changes]['status']
         next if ignore_session_status_change?(change: change)
-        next if live && !change[:changes]['status'] && ['draft', 'dropped'].include?(change[:object].status)
+        next if live && !change[:changes]['status'] && ['draft', 'dropped'].include?(change[:recent].status)
 
-        # Rails.logger.debug "******** SESSION ADD/REMOVE #{change[:changes]} "
         # If either room or time was added to the session
         if room_added?(change) || start_time_added?(change)
           session_added_row(@session_added, change, to)
@@ -94,6 +92,7 @@ class Reports::ScheduleReportsController < ApplicationController
       end
 
       # If the object is scheduked and title or description was changed
+      # We need the object as it is now???
       if change[:object].start_time && change[:object].room_id
         check_status_change(change: change, to: to, live: live)
 
@@ -140,7 +139,7 @@ class Reports::ScheduleReportsController < ApplicationController
     roles = [moderator.id, participant.id]
 
     changes.each do |id, change|
-      changed_assignment = change[:object]
+      changed_assignment = change[:recent]
       changed_assignment ||=  SessionAssignment.find(id) if SessionAssignment.exists?(id)
 
       next unless changed_assignment
@@ -191,12 +190,7 @@ class Reports::ScheduleReportsController < ApplicationController
     return if ignore_session_status_change?(change: change)
 
     if session_status_change_to_drop?(change: change)
-      if live
-        return unless change[:object].published_session
-
-        live_drop(session: change[:object], sheet: @participants_add_drop)
-      end
-
+      live_drop(session: change[:object], sheet: @participants_add_drop) if live
       session_removed_row(@session_removed, change)
 
       return
@@ -307,10 +301,9 @@ class Reports::ScheduleReportsController < ApplicationController
   end
 
   def session_removed_row(sheet, change)
-    # TODO: if it is a destroy ....
     sheet.append_row(
       [
-        change[:object].title
+        change[:recent].title
       ]
     )
   end
@@ -321,7 +314,7 @@ class Reports::ScheduleReportsController < ApplicationController
     # Rails.logger.debug "********* #{change[:changes]['start_time'][1]} =>  #{new_time.class} #{new_time.strftime("%H")}"
     sheet.append_row(
       [
-        change[:object].title,
+        change[:recent].title,
         orig_time ? FastExcel.date_num(orig_time, orig_time.in_time_zone.utc_offset) : nil,
         new_time ? FastExcel.date_num(new_time, new_time.in_time_zone.utc_offset) : nil
       ],
@@ -353,8 +346,6 @@ class Reports::ScheduleReportsController < ApplicationController
         object.room&.name,
         assignments[:moderators].collect{|a| a.person.published_name}.join("; "),
         assignments[:participants].collect{|a| a.person.published_name}.join("; ")
-        # object.participant_assignments.where("session_assignment_role_type_id = ?", moderator).collect{|a| a.person.published_name}.join("; "),
-        # object.participant_assignments.where("session_assignment_role_type_id = ?", participant).collect{|a| a.person.published_name}.join("; ")
       ],
       [
         nil, nil, nil, nil, @date_time_style, nil, nil, nil
