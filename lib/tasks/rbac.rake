@@ -281,6 +281,9 @@ namespace :rbac do
       },
       "publication_date": {
           "index": false
+      },
+      "integration": {
+          "publish": false
       }
     })
   end
@@ -548,7 +551,8 @@ namespace :rbac do
         "schedule_diff": true
       },
       "program_ops_report": {
-        "back_of_badge": true
+        "back_of_badge": true,
+        "virtual_people": true
       },
       "conflict_report": {
         "people_outside_availability": true,
@@ -589,6 +593,9 @@ namespace :rbac do
       },
       "publication_date": {
           "index": true
+      },
+      "integration": {
+          "publish": false
       }
     })
   end
@@ -866,7 +873,8 @@ namespace :rbac do
         "schedule_diff": true
       },
       "program_ops_report": {
-        "back_of_badge": true
+        "back_of_badge": true,
+        "virtual_people": true
       },
       "session_conflict": {
         "conflicts_with": true,
@@ -897,6 +905,9 @@ namespace :rbac do
       },
       "publication_date": {
           "index": true
+      },
+      "integration": {
+          "publish": true
       }
     })
   end

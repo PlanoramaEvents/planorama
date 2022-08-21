@@ -9,6 +9,7 @@ gem 'rails', '~> 6.1' #, '>= 6.0.3.2'
 gem 'pg', '>= 0.18', '< 2.0'
 
 gem 'activerecord-postgres_enum'
+gem 'actionpack-action_caching'
 
 # Use Puma as the app server
 gem 'puma', '>= 5.0'
@@ -62,6 +63,10 @@ gem 'truemail'
 
 # This is needed to run the migrations from id to uuid for primary keys
 gem 'webdack-uuid_migration'
+
+# for integrations!
+gem "httparty"
+gem "json-diff"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

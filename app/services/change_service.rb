@@ -16,6 +16,73 @@ module ChangeService
     }
   end
 
+  def self.dropped_people(from:, to: nil)
+    res = []
+    changes = get_changes(clazz: Audit::PersonVersion, type: Person, from: from, to: to)
+    changes.each do |id, change|
+      if change[:changes]['con_state'] && ['declined', 'rejected'].include?(change[:changes]['con_state'][1] )
+        # do not count a "dropped" state to another dropped state
+        next if ['declined', 'rejected'].include?(change[:changes]['con_state'][0])
+
+        res.append [change[:object].published_name]
+      end
+    end
+    res.uniq
+  end
+
+  def self.session_as_of(session_id:, to:)
+    self.object_as_of(audit: Audit::SessionVersion, item_id: session_id, item_type: 'Session', to: to)
+  end
+
+  def self.object_as_of(audit:, item_id:, item_type:, to:)
+    object_version = audit.where("item_id = ? and item_type = ? and created_at <= ?", item_id, item_type, to)
+                      .order('created_at desc')
+                      .first
+    return nil unless object_version
+
+    object = object_version.reify
+    return object
+  end
+
+  def self.assignments_as_of(session_id:, to:)
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+
+    participants = self.assignments_for(session_id: session_id, role_id: participant.id, to: to)
+    moderators = self.assignments_for(session_id: session_id, role_id: moderator.id, to: to)
+
+    {
+      participants: participants,
+      moderators: moderators
+    }
+  end
+
+  def self.assignments_for(session_id:, role_id:, to:)
+    audits = Audit::SessionVersion
+              .where_object(session_id: session_id)
+              .where("created_at <= ?", to)
+              .order("created_at desc")
+    grouped_audits = audits.group_by {|a| a.item_id}
+
+    res = []
+    grouped_audits.each do |key, item_audits|
+      change = self.comnbined_changes(item_audits: item_audits, type: SessionAssignment)
+      res.concat [change[:object]] if self.assigned?(change: change, role_id: role_id)
+    end
+
+    res
+  end
+
+  def self.assigned?(change:, role_id:)
+    return false unless change[:object]
+
+    return true if !change[:changes]['session_assignment_role_type_id'] && change[:object].session_assignment_role_type_id == role_id
+
+    return true if change[:changes]['session_assignment_role_type_id'] && change[:changes]['session_assignment_role_type_id'][1] == role_id
+
+    return false
+  end
+
   def self.sessions_changed(from:, to: nil)
     get_changes(clazz: Audit::SessionVersion, type: Session, from: from, to: to)
   end
@@ -47,29 +114,40 @@ module ChangeService
     audits = audits.where("created_at >= ?", from) if from
     audits = audits.where("created_at <= ?", to) if to
 
-    # Rails.logger.debug "**** AUDITS #{audits.count}"
-
     grouped_audits = audits.group_by {|a| a.item_id}
 
     grouped_audits.each do |key, item_audits|
       # Rails.logger.debug "**** AUDIT #{key} #{publishable_session_ids}"
       # just in case we sort by date
-      item_audits.sort{|a,b| a.created_at <=> b.created_at}.each do |audit|
-        # merge the change history
-        if changes[key]
-          changes[key][:changes] = self.merge_change_set(to: changes[key][:changes], from: audit.object_changes)
-        else
-          obj = type.find(audit.item_id) if audit.event != 'destroy' && type.exists?(audit.item_id)
-          obj ||= audit.reify
-          if publishable_session_ids
-            next unless publishable_session_ids.include?(obj.session_id)
-          end
-          changes[key] = {event: audit.event, object: obj, changes: audit.object_changes}
-        end
+      change = self.comnbined_changes(item_audits: item_audits, type: type)
+      if publishable_session_ids && change[:object].respond_to?(:session_id)
+        next unless publishable_session_ids.include?(change[:object].session_id)
+      end
+
+      changes[key] = change
+    end
+
+    changes
+  end
+
+  def self.comnbined_changes(item_audits:, type:)
+    changes = nil
+
+    item_audits.sort{|a,b| a.created_at <=> b.created_at}.each do |audit|
+      # merge the change history
+      if changes
+        changes[:changes] = self.merge_change_set(to: changes[:changes], from: audit.object_changes)
+      else
+        # Get the old version of the object
+        obj = if audit.event == 'create'
+                type.find(audit.item_id) if type.exists?(audit.item_id)
+              else
+                audit.reify
+              end
+        changes = {item_id: audit.item_id, item_type: audit.item_type, event: audit.event, object: obj, changes: audit.object_changes}
       end
     end
 
-    # TODO: any way we can order by the session title ???
     changes
   end
 

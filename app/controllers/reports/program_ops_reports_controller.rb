@@ -1,6 +1,52 @@
 class Reports::ProgramOpsReportsController < ApplicationController
   around_action :set_timezone
 
+  def virtual_people
+    authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
+
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+
+    assignments = PublishedSessionAssignment
+                    .includes(:person, :session_assignment_role_type, :published_session)
+                    .where("session_assignment_role_type_id in (?)", [moderator.id, participant.id])
+                    .order("people.published_name")
+
+    workbook = FastExcel.open(constant_memory: true)
+    worksheet = workbook.add_worksheet("Virtual Participants")
+
+    worksheet.append_row(
+      [
+        'Published Name',
+        'Name',
+        'Is Virtual',
+        'Primary Email'
+      ]
+    )
+
+    group_assignments = assignments.group_by {|a| a.person}
+    group_assignments.each do |person, grouped|
+      row = [
+        person.published_name,
+        person.name,
+        grouped.reduce(false){|res, a| res || (a.published_session.environment == 'virtual')} ? 'Yes' : 'No', # grouped contains virtual
+        person.primary_email.email
+      ]
+
+      person.email_addresses.each do |addr|
+        next if addr == person.primary_email
+
+        row.concat [addr.email]
+      end
+
+      worksheet.append_row(row)
+    end
+
+    send_data workbook.read_string,
+              filename: "VirtualParticipants-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              disposition: 'attachment'
+  end
+
   def back_of_badge
     authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
 
@@ -27,7 +73,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
         row.concat [
           assignment.session.title,
           assignment.session.start_time ? FastExcel.date_num(assignment.session.start_time, assignment.session.start_time.in_time_zone.utc_offset) : nil,
-          "#{assignment.session.duration} mins",
+          "#{assignment.session.duration}m",
           assignment.session.room&.name,
         ]
         styles.concat [
