@@ -64,6 +64,10 @@ gem 'truemail'
 # This is needed to run the migrations from id to uuid for primary keys
 gem 'webdack-uuid_migration'
 
+# for integrations!
+gem "httparty"
+gem "json-diff"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

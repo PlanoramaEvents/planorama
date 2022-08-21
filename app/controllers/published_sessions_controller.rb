@@ -1,3 +1,5 @@
 class PublishedSessionsController < ResourceController
-# TBD
+  SERIALIZER_CLASS = 'PublishedSessionSerializer'.freeze
+  POLICY_CLASS = 'PublishedSessionPolicy'.freeze
+#
 end
