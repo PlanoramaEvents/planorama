@@ -309,6 +309,8 @@ class Reports::ScheduleReportsController < ApplicationController
   end
 
   def session_time_change_row(sheet, change)
+    return unless change[:recent]
+
     orig_time = Time.parse(change[:changes]['start_time'][0]) if change[:changes]['start_time'][0]
     new_time = Time.parse(change[:changes]['start_time'][1]) if change[:changes]['start_time'][1]
     # Rails.logger.debug "********* #{change[:changes]['start_time'][1]} =>  #{new_time.class} #{new_time.strftime("%H")}"
