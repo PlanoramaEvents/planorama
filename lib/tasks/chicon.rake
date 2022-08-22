@@ -286,7 +286,8 @@ namespace :chicon do
         {venue_id: hyatt.id, name: "Regency Ballroom South Registration Desk", floor: "Ballroom Level, West Tower", purpose: "Art Demos / Costume Repair", sort_order: 144},
         {venue_id: hyatt.id, name: "Atlanta", floor: "Ballroom Level, West Tower", purpose: "Art Show Print Shop Functions? Or Programming?", comment: "90% sure it's programming - need confirmation", sort_order: 145},
         {venue_id: hyatt.id, name: "Other", purpose: "Tours / DH Meetings", sort_order: 171},
-        {venue_id: hyatt.id, name: "Autographing", floor: "Riverside Exhibit Hall, East Tower", purpose: "Programming", sort_order: 200}
+        {venue_id: hyatt.id, name: "Autographing", floor: "Riverside Exhibit Hall, East Tower", purpose: "Programming", sort_order: 200},
+        {venue_id: hyatt.id, name: "Gallery 2", purpose: "Programming", sort_order: 300}
       ]
     candidates.each do |candidate|
       room = Room.find_by name: candidate[:name]
