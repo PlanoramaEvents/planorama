@@ -38,10 +38,12 @@ module ChangeService
     object_version = audit.where("item_id = ? and item_type = ? and created_at <= ?", item_id, item_type, to)
                       .order('created_at desc')
                       .first
-    object = if object_version
-               object_version.reify
+    # We want the object as it is after the change (hence next and reify)
+    object = if object_version.next
+               # need to apply the changes
+               object_version.next.reify
              else
-               item_type.constantize.find(session_id) if item_type.constantize.exists?(id)
+               item_type.constantize.find(item_id) if item_type.constantize.exists?(item_id)
              end
 
     return object
