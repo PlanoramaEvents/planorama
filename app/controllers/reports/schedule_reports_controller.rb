@@ -303,7 +303,7 @@ class Reports::ScheduleReportsController < ApplicationController
   def session_removed_row(sheet, change)
     sheet.append_row(
       [
-        change[:recent].title
+        change[:object].title
       ]
     )
   end
