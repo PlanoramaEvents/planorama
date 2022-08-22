@@ -97,6 +97,7 @@ module ChangeService
   end
 
   def self.session_assignments_changed(from:, to: nil)
+    # TODO: may be an issue?
     publishable_sessions = PublicationService.publishable_sessions
     get_changes(clazz: Audit::SessionVersion, type: SessionAssignment, from: from, to: to, publishable_session_ids: publishable_sessions.collect(&:id))
   end
@@ -148,7 +149,10 @@ module ChangeService
 
         # Get the old version of the object
         obj = if audit.event == 'create'
-                type.find(audit.item_id) if type.exists?(audit.item_id)
+                # reify next just incase is has subsequently been deleted in a later pub and the find/exist will be nil
+                res = audit.next.reify
+                res ||= type.find(audit.item_id) if type.exists?(audit.item_id)
+                res
               else
                 audit.reify
               end
