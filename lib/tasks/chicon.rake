@@ -247,8 +247,8 @@ namespace :chicon do
     hyatt = Venue.find_by name: "Hyatt Regency Chicago"
     candidates = [
         {venue_id: hyatt.id, name: "Plaza AB", floor: "Lobby Level, East Tower", purpose: "Events - Cabaret", comment: "Cabaret Stage", sort_order: 21},
-        {venue_id: hyatt.id, name: "Michigan 1", floor: "Concourse Level, East Tower", purpose: "Programming / Stream out", sort_order: 30},
-        {venue_id: hyatt.id, name: "Michigan 2", floor: "Concourse Level, East Tower", purpose: "Programming / Stream out", comment: "Academic", sort_order: 31},
+        {venue_id: hyatt.id, name: "Michigan 1 / Airmeet 6", floor: "Concourse Level, East Tower", purpose: "Programming / Stream out", sort_order: 30},
+        {venue_id: hyatt.id, name: "Michigan 2 / Airmeet 7", floor: "Concourse Level, East Tower", purpose: "Programming / Stream out", comment: "Academic", sort_order: 31},
         {venue_id: hyatt.id, name: "Michigan 3", floor: "Concourse Level, East Tower", purpose: "Programming / Stream out", sort_order: 32},
         {venue_id: hyatt.id, name: "Michigan Boardroom", floor: "Concourse Level, East Tower", purpose: "Programming", sort_order: 33},
         {venue_id: hyatt.id, name: "Randolph 1", floor: "Concourse Level, East Tower", purpose: "Programming", sort_order: 40},
@@ -257,6 +257,7 @@ namespace :chicon do
         {venue_id: hyatt.id, name: "Roosevelt 1", floor: "Concourse Level, East Tower", purpose: "Programming", sort_order: 50},
         {venue_id: hyatt.id, name: "Roosevelt 3", floor: "Concourse Level, East Tower", purpose: "Programming", sort_order: 52},
         {venue_id: hyatt.id, name: "Grand Ballroom", floor: "Ballroom Level, East Tower", purpose: "Main Stage", sort_order: 70},
+        {venue_id: hyatt.id, name: "Grand Ballroom / Airmeet 5", floor: "Ballroom Level, East Tower", purpose: "Main Stage", sort_order: 79},
         {venue_id: hyatt.id, name: "Grand Suites 3", floor: "Ballroom Level, East Tower", purpose: "Programming", sort_order: 83},
         {venue_id: hyatt.id, name: "Grand Hall GH", floor: "Ballroom Level, East Tower", purpose: "Events", comment: "Not Saturday all day, Masq Green Room", sort_order: 90},
         {venue_id: hyatt.id, name: "Grand Hall I", floor: "Ballroom Level, East Tower", purpose: "Programming", sort_order: 91},
@@ -272,7 +273,7 @@ namespace :chicon do
         {venue_id: hyatt.id, name: "Ogden", floor: "Third Floor, West Tower", purpose: "Gaming", sort_order: 105},
         {venue_id: hyatt.id, name: "Wright", floor: "Third Floor, West Tower", purpose: "Programming / Gaming?", sort_order: 106},
         {venue_id: hyatt.id, name: "Addams", floor: "Third Floor, West Tower", purpose: "Programming", comment: "All Glass", sort_order: 107},
-        {venue_id: hyatt.id, name: "Crystal Ballroom A", floor: "Lobby Level, West Tower", purpose: "Programming", sort_order: 120},
+        {venue_id: hyatt.id, name: "Crystal Ballroom A / Airmeet 8", floor: "Lobby Level, West Tower", purpose: "Programming", sort_order: 120},
         {venue_id: hyatt.id, name: "Crystal Ballroom B", floor: "Lobby Level, West Tower", purpose: "Programming / WSFS", comment: "WSFS BM", sort_order: 121},
         {venue_id: hyatt.id, name: "Crystal Ballroom C", floor: "Lobby Level, West Tower", purpose: "Programming", sort_order: 122},
         {venue_id: hyatt.id, name: "Crystal Foyer", floor: "Lobby Level, West Tower", purpose: "Programming / TableTalks", sort_order: 123},
