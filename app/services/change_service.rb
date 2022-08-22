@@ -150,7 +150,7 @@ module ChangeService
         # Get the old version of the object
         obj = if audit.event == 'create'
                 # reify next just incase is has subsequently been deleted in a later pub and the find/exist will be nil
-                res = audit.next.reify
+                res = audit.next ? audit.next.reify : nil
                 res ||= type.find(audit.item_id) if type.exists?(audit.item_id)
                 res
               else
