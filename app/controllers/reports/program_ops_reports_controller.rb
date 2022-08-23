@@ -89,7 +89,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
               filename: "SessionAndMinors-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
-  
+
   def user_privileges
     authorize Person, policy_class: Reports::ProgramOpsReportPolicy
 
@@ -111,7 +111,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
     people.each do |person|
       worksheet.append_row(
         [
-          person.primary_email,
+          person.primary_email&.email,
           person.published_name,
           person.convention_roles.collect{|r| r.role}.join(', '),
           person.current_sign_in_at ? FastExcel.date_num(person.current_sign_in_at, person.current_sign_in_at.in_time_zone.utc_offset) : nil,
