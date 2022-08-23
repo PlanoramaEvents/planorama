@@ -38,9 +38,14 @@ module ChangeService
     object_version = audit.where("item_id = ? and item_type = ? and created_at <= ?", item_id, item_type, to)
                       .order('created_at desc')
                       .first
-    return nil unless object_version
+    # We want the object as it is after the change (hence next and reify)
+    object = if object_version.next
+               # need to apply the changes
+               object_version.next.reify
+             else
+               item_type.constantize.find(item_id) if item_type.constantize.exists?(item_id)
+             end
 
-    object = object_version.reify
     return object
   end
 
@@ -66,7 +71,7 @@ module ChangeService
 
     res = []
     grouped_audits.each do |key, item_audits|
-      change = self.comnbined_changes(item_audits: item_audits, type: SessionAssignment)
+      change = self.combined_changes(item_audits: item_audits, type: SessionAssignment, to: to)
       res.concat [change[:object]] if self.assigned?(change: change, role_id: role_id)
     end
 
@@ -92,6 +97,7 @@ module ChangeService
   end
 
   def self.session_assignments_changed(from:, to: nil)
+    # TODO: may be an issue?
     publishable_sessions = PublicationService.publishable_sessions
     get_changes(clazz: Audit::SessionVersion, type: SessionAssignment, from: from, to: to, publishable_session_ids: publishable_sessions.collect(&:id))
   end
@@ -119,7 +125,7 @@ module ChangeService
     grouped_audits.each do |key, item_audits|
       # Rails.logger.debug "**** AUDIT #{key} #{publishable_session_ids}"
       # just in case we sort by date
-      change = self.comnbined_changes(item_audits: item_audits, type: type)
+      change = self.combined_changes(item_audits: item_audits, type: type, to: to)
       if publishable_session_ids && change[:object].respond_to?(:session_id)
         next unless publishable_session_ids.include?(change[:object].session_id)
       end
@@ -130,7 +136,7 @@ module ChangeService
     changes
   end
 
-  def self.comnbined_changes(item_audits:, type:)
+  def self.combined_changes(item_audits:, type:, to:)
     changes = nil
 
     item_audits.sort{|a,b| a.created_at <=> b.created_at}.each do |audit|
@@ -138,13 +144,26 @@ module ChangeService
       if changes
         changes[:changes] = self.merge_change_set(to: changes[:changes], from: audit.object_changes)
       else
+        # Get the most recent version (as of the to datetime)
+        recent = self.object_as_of(audit: audit.class, item_id: audit.item_id, item_type: audit.item_type, to: to)
+
         # Get the old version of the object
         obj = if audit.event == 'create'
-                type.find(audit.item_id) if type.exists?(audit.item_id)
+                # reify next just incase is has subsequently been deleted in a later pub and the find/exist will be nil
+                res = audit.next ? audit.next.reify : nil
+                res ||= type.find(audit.item_id) if type.exists?(audit.item_id)
+                res
               else
                 audit.reify
               end
-        changes = {item_id: audit.item_id, item_type: audit.item_type, event: audit.event, object: obj, changes: audit.object_changes}
+        changes = {
+          item_id: audit.item_id,
+          item_type: audit.item_type,
+          event: audit.event,
+          object: obj,
+          recent: recent,
+          changes: audit.object_changes
+        }
       end
     end
 

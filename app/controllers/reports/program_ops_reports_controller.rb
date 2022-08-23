@@ -270,9 +270,14 @@ class Reports::ProgramOpsReportsController < ApplicationController
   def back_of_badge
     authorize SessionAssignment, policy_class: Reports::ProgramOpsReportPolicy
 
-    assignments = PublishedSessionAssignment
-                    .includes(:person, :session_assignment_role_type, :published_session)
-                    .order("people.published_name, published_sessions.start_time asc")
+    reserve = SessionAssignmentRoleType.find_by(name: 'Reserve')
+    assignments = SessionAssignment
+                    .includes(:person, :session_assignment_role_type, :session)
+                    .where("sessions.start_time is not null and sessions.room_id is not null")
+                    .where("sessions.status != 'draft' and sessions.status != 'dropped'")
+                    .where("session_assignments.session_assignment_role_type_id not in (?)", [reserve.id])
+                    .where("people.con_state not in (?)", ['declined', 'rejected'])
+                    .order("people.published_name, sessions.start_time asc")
 
 
     workbook = FastExcel.open #(constant_memory: true)
