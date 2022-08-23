@@ -143,6 +143,10 @@ module ChangeService
       # merge the change history
       if changes
         changes[:changes] = self.merge_change_set(to: changes[:changes], from: audit.object_changes)
+        # Pass through the final event if it is a destroy or create
+        if audit.event == 'destroy' || audit.event == 'create'
+          changes[:event] = audit.event
+        end
       else
         # Get the most recent version (as of the to datetime)
         recent = self.object_as_of(audit: audit.class, item_id: audit.item_id, item_type: audit.item_type, to: to)
