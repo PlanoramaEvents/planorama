@@ -85,6 +85,9 @@ import { integrationEndpoints, integrationStore } from './integration.store';
 import { scheduleWorkflowStore, scheduleWorkflowEndpoints } from './schedule_workflow/schedule_workflow.store';
 import { personScheduleApprovalStore, personScheduleApprovalEndpoints } from './person_schedule_approval/person_schedule_approval.store';
 
+// publication dates
+import { publicationDatesEndpoints, publicationDatesStore } from './publication_dates.store';
+
 import merge from 'lodash.merge'
 
 const endpoints = {
@@ -110,6 +113,7 @@ const endpoints = {
   ...personScheduleApprovalEndpoints,
   ...publishedSessionEndpoints,
   ...integrationEndpoints,
+  ...publicationDatesEndpoints,
 }
 
 // NOTE: this is really the store
@@ -147,6 +151,7 @@ export const store = new Vuex.Store({
       ...formatStore.selected,
       ...personScheduleApprovalStore.selected,
       ...publishedSessionStore.selected,
+      ...publicationDatesStore.selected,
     },
     ...personSessionStore.state,
     ...settingsStore.state,

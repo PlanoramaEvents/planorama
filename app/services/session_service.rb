@@ -94,14 +94,17 @@ module SessionService
     end
   end
 
-  def self.published_sessions
+  def self.published_sessions_unordered
     PublishedSession.select(
       ::PublishedSession.arel_table[Arel.star],
       'areas_list.area_list'
     )
       .includes(:format, :room, {participant_assignments: :person})
       .joins(self.area_subquery(clazz: PublishedSession))
-      .order(:start_time)
+  end
+
+  def self.published_sessions
+    self.published_sessions_unordered.order(:start_time)
   end
 
   def self.draft_sessions
@@ -133,7 +136,7 @@ module SessionService
     participant = SessionAssignmentRoleType.find_by(name: 'Participant')
 
     people = Person.includes(
-      {published_session_assignments: [:published_session, :session_assignment_role_type]}
+      {published_session_assignments: [:published_session, :session_assignment_role_type, :person]}
     ).references(
       {published_session_assignments: :published_session}
     )
@@ -155,6 +158,22 @@ module SessionService
     .where("session_assignments.session_assignment_role_type_id in (?)", [moderator.id, participant.id])
     .where("sessions.start_time is not null and sessions.room_id is not null")
     .where("sessions.status != 'dropped' and sessions.status != 'draft'")
+    .where("people.con_state not in (?)", ['declined', 'rejected']) #.distinct
+    .order("people.published_name")
+  end
+
+  def self.draft_people
+    moderator = SessionAssignmentRoleType.find_by(name: 'Moderator')
+    participant = SessionAssignmentRoleType.find_by(name: 'Participant')
+
+    people = Person.includes(
+      {session_assignments: [:session, :session_assignment_role_type]}
+    ).references(
+      {session_assignments: :session}
+    )
+    .where("session_assignments.session_assignment_role_type_id in (?)", [moderator.id, participant.id])
+    .where("sessions.start_time is not null and sessions.room_id is not null")
+    .where("sessions.status != 'dropped'")
     .where("people.con_state not in (?)", ['declined', 'rejected']) #.distinct
     .order("people.published_name")
   end

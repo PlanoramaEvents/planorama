@@ -46,4 +46,8 @@ class Reports::SessionReportPolicy < BasePolicy
   def streamed_and_recorded?
     allowed?(action: :streamed_and_recorded)
   end
+
+  def session_needs?
+    allowed?(action: :session_needs)
+  end
 end

@@ -89,7 +89,7 @@ class Session < ApplicationRecord
       .order("sart.sort_order, people.published_name asc")
     },
     class_name: 'SessionAssignment'
-  has_many :participants, through: :participant_assignments, source: :person, class_name: 'Person'
+  # has_many :participants, through: :participant_assignments #, source: :person, class_name: 'Person'
 
   # TODO: Will also need a published versioon of the relationship
   has_many :session_areas, inverse_of: :session
