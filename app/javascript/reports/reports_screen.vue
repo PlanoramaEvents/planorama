@@ -379,7 +379,7 @@
         <a href="/report/program_ops_reports/virtual_people" target="_blank">Participant Emails and Virtual Sessions</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: List of emails for moderators and participants of published sessions, with indicator about whether they are assigned to any session(s) of environment virtual, one line per participant<br />
-          <strong><em>Fields</em></strong>: Published name, name, whether person is assigned to a virtual session (y&#8725;n), primary email, other emails<br />
+          <strong><em>Fields</em></strong>: Published name, name, whether person is assigned to a virtual session (y &#8725; n), primary email, other emails<br />
           <strong><em>Session data included</em></strong>: all published sessions<br />
           <strong><em>Person data included</em></strong>: moderators and participants
         </p>
