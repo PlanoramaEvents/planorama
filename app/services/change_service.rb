@@ -65,6 +65,7 @@ module ChangeService
   def self.assignments_for(session_id:, role_id:, to:)
     audits = Audit::SessionVersion
               .where_object(session_id: session_id)
+              .where(item_type: 'SessionAssignment')
               .where("created_at <= ?", to)
               .order("created_at desc")
     grouped_audits = audits.group_by {|a| a.item_id}
