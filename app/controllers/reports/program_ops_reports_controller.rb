@@ -122,7 +122,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "UserPrivlages-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "UserPrivileges-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
@@ -224,7 +224,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "SessionRequoringSignup-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "SessionRequiringSignup-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 
