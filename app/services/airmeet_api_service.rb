@@ -75,7 +75,7 @@ module AirmeetApiService
     })
   end
 
-  def self.person_to_airmeet(person)
+  def self.person_to_airmeet(person, dont_send = false)
     speaker_email = person.primary_email.email
     country = nil
     city = nil
@@ -94,7 +94,12 @@ module AirmeetApiService
       args[:city] = city
     end
     puts args
-    result = create_speaker(args)
+    if dont_send
+      result = args
+      result["email"] = args[:email]
+    else
+      result = create_speaker(args)
+    end
     puts result
     person.update({integrations: person.integrations.merge({airmeet: {speaker_email: speaker_email, synced: !!result["email"] || (person.integrations["airmeet"] || {})["synced"], data: args, synced_at: !!result["email"] ? Time.now.iso8601 : (person.integrations["airmeet"] || {})["synced_at"] }})})
     result["email"]

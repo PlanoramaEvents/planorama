@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
+    get 'resync_airmeet', to: 'people#resync_airmeet'
     resources :availabilities, path: 'availability', only: [:index]
     patch 'availability', to: 'availabilities#replace'
     resources :person_exclusions, path: 'person_exclusion', only: [:index]

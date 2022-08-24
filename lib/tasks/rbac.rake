@@ -99,7 +99,8 @@ namespace :rbac do
           "live_sessions": false,
           "snapshot_schedule": true,
           "create": false,
-          "destroy": false
+          "destroy": false,
+          "resync_airmeet": false,
       },
       "survey": {
           "assign_people": false,
@@ -362,7 +363,8 @@ namespace :rbac do
           "live_sessions": true,
           "snapshot_schedule": true,
           "create": true,
-          "destroy": true
+          "destroy": true,
+          "resync_airmeet": false
       },
       "survey": {
           "assign_people": true,
@@ -682,7 +684,8 @@ namespace :rbac do
           "live_sessions": true,
           "snapshot_schedule": true,
           "create": true,
-          "destroy": true
+          "destroy": true,
+          "resync_airmeet": true
       },
       "survey": {
           "assign_people": true,
