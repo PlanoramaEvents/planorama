@@ -118,12 +118,12 @@
         </p>
       </li>
       <li>
-        <a href="/report/people_reports/mis_matched_envs" target="_blank">Participants with Mismatching Sessions Session Environments and Attendance Types</a>
+        <a href="/report/people_reports/mis_matched_envs" target="_blank">Participants with Mismatching Session Environments and Attendance Types</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Participants whose attendance type does not match the session environment for sessions they are assigned to, one line per participant and session<br />
           <strong><em>Fields</em></strong>: Published name, primary email, attendance type, participant status, session title, session room, session start time, session environment<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
-          <strong><em>Person data included</em></strong>: moderators and participants with attendance type of &quot;virtual&quot; assigned to session with environment of &quot;hybrid&quot; or &quot;in person&quot;, or with attendance type of &quot;in person&quot; assigned to session with environment of &quot;hybrid&quot; or &quot;virtual&quot;
+          <strong><em>Person data included</em></strong>: moderators and participants with attendance type of &quot;virtual&quot; assigned to session with environment of &quot;hybrid&quot; or &quot;in person&quot;, or with attendance type of &quot;in person&quot; assigned to session with environment of &quot;virtual&quot;
         </p>
       </li>
       
@@ -350,7 +350,7 @@
         </p>
       </li>
       <li>
-        <a href="/report/program_ops_reports/session_minors" target="_blank">Session and Minors</a>
+        <a href="/report/program_ops_reports/session_minors" target="_blank">Sessions and Minors</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Minors participation and attendee age restrictions, one line per session<br />
           <strong><em>Fields</em></strong>: Session title, session description, session start time, session room, attendee age restriction, minors participation<br />
@@ -361,7 +361,7 @@
         <a href="/report/program_ops_reports/room_signs" target="_blank">Room Sign Data for Mail Merge</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Room sign data for mail merge, one line per room and day of week<br />
-          <strong><em>Fields</em></strong>: Room, day of week, sessions (title, start time, description, participant list with moderators)<br />
+          <strong><em>Fields</em></strong>: Room, day of week, sessions (title, start time, description, moderators, participants)<br />
           <strong><em>Session data included</em></strong>: all published sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
@@ -379,14 +379,14 @@
         <a href="/report/program_ops_reports/virtual_people" target="_blank">Participant Emails and Virtual Sessions</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: List of emails for moderators and participants of published sessions, with indicator about whether they are assigned to any session(s) of environment virtual, one line per participant<br />
-          <strong><em>Fields</em></strong>: Published name, name, whether person is assigned to a virtual session (y&#8725;n), primary email, other emails<br />
+          <strong><em>Fields</em></strong>: Published name, name, whether person is assigned to a virtual session (y &#8725; n), primary email, other emails<br />
           <strong><em>Session data included</em></strong>: all published sessions<br />
           <strong><em>Person data included</em></strong>: moderators and participants
         </p>
       </li>
     </ul>
     <div style="clear: both; height: 5rem;">&nbsp;</div>
-        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
+        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>User Privileges</span>
         <a href="/report/program_ops_reports/user_privileges" target="_blank" v-if="currentUserIsAdmin">User Privileges</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Login (primary email) listing, one line per person<br />
