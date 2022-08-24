@@ -96,12 +96,12 @@ module AirmeetApiService
     puts args
     result = create_speaker(args)
     puts result
-    person.update({integrations: person.integrations.merge({airmeet: {speaker_email: speaker_email, synced: true, data: args, synced_at: Time.now.iso8601}})})
+    person.update({integrations: person.integrations.merge({airmeet: {speaker_email: speaker_email, synced: !!result["email"] || (person.integrations["airmeet"] || {})["synced"], data: args, synced_at: !!result["email"] ? Time.now.iso8601 : (person.integrations["airmeet"] || {})["synced_at"] }})})
     result["email"]
   end
 
   def self.session_to_airmeet(session)
-    args = {sessionTitle: "#{session.room.name} - #{session.title} - #{session.format.name} - #{session.area_list.join(", ")}",
+    args = {sessionTitle: "#{session.title} - #{session.format.name}",
       sessionSummary: session.description,
       sessionDuration: session.duration,
       sessionStartTime: session.start_time,
@@ -112,12 +112,15 @@ module AirmeetApiService
       args[:speakerEmails] = participants.map{|p| p.integrations["airmeet"]["speaker_email"]}
       args[:cohostEmails] = session.published_session_assignments.filter { |sa| sa.session_assignment_role_type_id == moderator_id }.map { |sa| sa.person.integrations["airmeet"]["speaker_email"] }
     end
+    if session.id === "e3e249ee-2800-40cc-a245-f462187833b9"
+      args[:sessionTitle] = "Never Give Up, Never Surrender! The Art of Eric Wilkerson: Scifi Illustrator and Visual Afrofuturist"
+    end
     puts args
     result = create_session(args);
     puts result
-    session.update({integrations: session.integrations.merge({airmeet: {session_id: result["uid"], synced: true, synced_at: Time.now(), data: args}})})
+    session.update({integrations: session.integrations.merge({airmeet: {session_id: result["uid"] || (session.integrations["airmeet"] || {})["session_id"], synced: !!result["uid"] || (session.integrations["airmeet"] || {})["synced"] , synced_at: !!result["uid"] ? Time.now() : (session.integrations["airmeet"] || {})["synced_at"] , data: args}})})
     if session.environment == "virtual"
-      people_tokens = result["token"].inject({}) {|p,c| p[c["email"]] = c["token"]; p}
+      people_tokens = (result["token"] || []).inject({}) {|p,c| p[c["email"]] = c["token"]; p}
       participants.each { |p| p.update({integrations: p.integrations.merge({airmeet: (p.integrations["airmeet"] || {}).merge({token: people_tokens[(p.integrations["airmeet"] || {})["speaker_email"]]})})})}
     end
   end
@@ -145,8 +148,14 @@ module AirmeetApiService
   end
 
   def self.sync_to_airmeet
-    virtual_people.map { |p| person_to_airmeet(p) }
-    virtual_sessions.map { |s| session_to_airmeet(s) }
+    virtual_people.map { |p, i|
+      person_to_airmeet(p)
+      puts "Finished person #{i}"
+    }
+    virtual_sessions.map { |s, i|
+      session_to_airmeet(s)
+      puts "Finished session #{i}"
+    }
     puts "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA IT WORKED"
   end
 
