@@ -256,8 +256,8 @@ class Reports::ProgramOpsReportsController < ApplicationController
           pa.person.published_name,
           session.description,
           session.participant_notes,
-          session.published_session_assignments.role(moderator).collect{|p| "#{p.person.published_name} (#{p.person.pronouns})" }.join(",\n"),
-          session.published_session_assignments.role(participant).collect{|p| "#{p.person.published_name} (#{p.person.pronouns})" }.join(",\n")
+          session.published_session_assignments.role(moderator).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n"),
+          session.published_session_assignments.role(participant).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n")
         ]
       end
     end
