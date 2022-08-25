@@ -101,6 +101,9 @@ Rails.application.routes.draw do
   get 'report/program_ops_reports/table_tents', to: 'reports/program_ops_reports#table_tents'
   get 'report/program_ops_reports/user_privileges', to: 'reports/program_ops_reports#user_privileges'
 
+  get 'report/integrations_reports/airmeet_magic_link', to: 'reports/integrations_reports#airmeet_magic_link'
+  get 'report/integrations_reports/airmeet_diffs', to: 'reports/integrations_reports#airmeet_diffs'
+
   get 'report/schedule_reports/schedule_diff(/:from)(/:to)', to: 'reports/schedule_reports#schedule_diff'
   get 'publication_date/reset', to: 'publication_dates#reset'
   resources :publication_dates, path: 'publication_date', only: [:index, :update]

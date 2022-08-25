@@ -85,7 +85,7 @@ module AirmeetApiService
       city = person.integrations["airmeet"]["city"]
     end
     name = person.published_name
-    bio = person.bio
+    bio = ActionView::Base.full_sanitizer.sanitize(person.bio)
     args = {name: name, email: speaker_email, bio: bio}
     if country 
       args[:country] = country
@@ -107,7 +107,7 @@ module AirmeetApiService
 
   def self.session_to_airmeet(session)
     args = {sessionTitle: "#{session.title} - #{session.format.name}",
-      sessionSummary: session.description,
+      sessionSummary: ActionView::Base.full_sanitizer.sanitize(session.description),
       sessionDuration: session.duration,
       sessionStartTime: session.start_time,
       hostEmail: room_hosts[session.room_id]
@@ -153,14 +153,8 @@ module AirmeetApiService
   end
 
   def self.sync_to_airmeet
-    virtual_people.map { |p, i|
-      person_to_airmeet(p)
-      puts "Finished person #{i}"
-    }
-    virtual_sessions.map { |s, i|
-      session_to_airmeet(s)
-      puts "Finished session #{i}"
-    }
+    virtual_people.map { |p| person_to_airmeet(p) }
+    virtual_sessions.map { |s, | session_to_airmeet(s) }
     puts "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA IT WORKED"
   end
 

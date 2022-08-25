@@ -535,7 +535,9 @@ namespace :rbac do
         "record_stream_permissions": true,
         "moderators": true,
         "mis_matched_envs": true,
-        "social_media": true
+        "social_media": true,
+        "airmeet_magic_link": true,
+        "airmeet_diffs": true,
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -856,7 +858,9 @@ namespace :rbac do
         "record_stream_permissions": true,
         "moderators": true,
         "mis_matched_envs": true,
-        "social_media": true
+        "social_media": true,
+        "airmeet_magic_link": true,
+        "airmeet_diffs": true,
       },
       "session_report": {
         "panels_with_too_few_people": true,
