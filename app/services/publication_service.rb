@@ -165,7 +165,7 @@ module PublicationService
   end
 
   def self.remove_dropped_assignments(assignments)
-    candidates = PublishedSessionAssignment.where("session_assignment_id not in (?)", assignments.collect(&:id))
+    candidates = PublishedSessionAssignment.where("session_assignment_id not in (?) or session_assignment_id not in (select id from session_assignments)", assignments.collect(&:id))
     count = candidates.count
     candidates.destroy_all
     count
