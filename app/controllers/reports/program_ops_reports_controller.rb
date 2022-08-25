@@ -157,7 +157,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
               # session.start_time.strftime('%A'),
               session.title,
               session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
-              session.description,
+              ActionView::Base.full_sanitizer.sanitize(session.description),
               session.published_session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join("; "),
               session.published_session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join("; "),
         ]
@@ -254,7 +254,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
         worksheet.append_row [
           session.title,
           pa.person.published_name,
-          session.description,
+          ActionView::Base.full_sanitizer.sanitize(session.description),
           session.participant_notes,
           session.published_session_assignments.role(moderator).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n"),
           session.published_session_assignments.role(participant).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n")
