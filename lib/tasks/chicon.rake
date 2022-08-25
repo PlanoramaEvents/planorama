@@ -232,7 +232,7 @@ namespace :chicon do
       {venue_id: airmeet.id, name: "Airmeet 4", floor: "Virtual", purpose: "Programming", sort_order: 504},
       {venue_id: airmeet.id, name: "Airmeet 5", floor: "Virtual", purpose: "Programming", sort_order: 505},
       {venue_id: airmeet.id, name: "Airmeet Readings", floor: "Virtual", purpose: "Programming", sort_order: 506},
-      {venue_id: airmeet.id, name: "Airmeet Table Talks", floor: "Virtual", purpose: "Programming", sort_order: 507}
+      {venue_id: airmeet.id, name: "Airmeet Table", floor: "Virtual", purpose: "Programming", sort_order: 507}
     ]
 
     candidates.each do |candidate|
