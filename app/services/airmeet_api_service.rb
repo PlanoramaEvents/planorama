@@ -75,7 +75,7 @@ module AirmeetApiService
     })
   end
 
-  def self.person_to_airmeet(person)
+  def self.person_to_airmeet(person, dont_send = false)
     speaker_email = person.primary_email.email
     country = nil
     city = nil
@@ -85,7 +85,7 @@ module AirmeetApiService
       city = person.integrations["airmeet"]["city"]
     end
     name = person.published_name
-    bio = person.bio
+    bio = ActionView::Base.full_sanitizer.sanitize(person.bio)
     args = {name: name, email: speaker_email, bio: bio}
     if country 
       args[:country] = country
@@ -94,15 +94,21 @@ module AirmeetApiService
       args[:city] = city
     end
     puts args
-    result = create_speaker(args)
+    if dont_send
+      result = args
+      # hack to make changed emails stop showing up in airmeet diffs
+      args[:email] = person.primary_email.email
+    else
+      result = create_speaker(args)
+    end
     puts result
-    person.update({integrations: person.integrations.merge({airmeet: {speaker_email: speaker_email, synced: true, data: args, synced_at: Time.now.iso8601}})})
-    result["email"]
+    newly_created = result["status"] == "SPEAKER_CREATED" || dont_send
+    person.update({integrations: person.integrations.merge({airmeet: {speaker_email: speaker_email, synced: newly_created || (person.integrations["airmeet"] || {})["synced"], data: newly_created ? args :  (person.integrations["airmeet"] || {})["data"], synced_at: newly_created ? Time.now.iso8601 : (person.integrations["airmeet"] || {})["synced_at"] }})})
   end
 
-  def self.session_to_airmeet(session)
-    args = {sessionTitle: "#{session.room.name} - #{session.title} - #{session.format.name} - #{session.area_list.join(", ")}",
-      sessionSummary: session.description,
+  def self.session_to_airmeet(session, dont_send = false)
+    args = {sessionTitle: "#{session.title} - #{session.format.name}",
+      sessionSummary: ActionView::Base.full_sanitizer.sanitize(session.description),
       sessionDuration: session.duration,
       sessionStartTime: session.start_time,
       hostEmail: room_hosts[session.room_id]
@@ -112,13 +118,22 @@ module AirmeetApiService
       args[:speakerEmails] = participants.map{|p| p.integrations["airmeet"]["speaker_email"]}
       args[:cohostEmails] = session.published_session_assignments.filter { |sa| sa.session_assignment_role_type_id == moderator_id }.map { |sa| sa.person.integrations["airmeet"]["speaker_email"] }
     end
+    if session.id === "e3e249ee-2800-40cc-a245-f462187833b9"
+      args[:sessionTitle] = "Never Give Up, Never Surrender! The Art of Eric Wilkerson: Scifi Illustrator and Visual Afrofuturist"
+    end
     puts args
-    result = create_session(args);
+    if dont_send
+      result = args
+    else
+      result = create_session(args);
+    end
     puts result
-    session.update({integrations: session.integrations.merge({airmeet: {session_id: result["uid"], synced: true, synced_at: Time.now(), data: args}})})
-    if session.environment == "virtual"
-      people_tokens = result["token"].inject({}) {|p,c| p[c["email"]] = c["token"]; p}
-      participants.each { |p| p.update({integrations: p.integrations.merge({airmeet: (p.integrations["airmeet"] || {}).merge({token: people_tokens[(p.integrations["airmeet"] || {})["speaker_email"]]})})})}
+    success = result["uid"] || dont_send
+    old_airmeet_data = session.integrations["airmeet"] || {}
+    session.update({integrations: session.integrations.merge({airmeet: {session_id: result["uid"] || old_airmeet_data["session_id"], synced: success || old_airmeet_data["synced"] , synced_at: success ? Time.now() : old_airmeet_data["synced_at"] , data: success ? args : old_airmeet_data["data"]}})})
+    if session.environment == "virtual" && !dont_send
+      people_tokens = (result["token"] || []).inject({}) {|p,c| p[c["email"]] = c["token"]; p}
+      participants.each { |p| p.update({integrations: p.integrations.merge({airmeet: (p.integrations["airmeet"] || {}).merge({token: people_tokens[(p.integrations["airmeet"] || {})["speaker_email"]] || (p.integrations["airmeet"] || {})["token"]})})})}
     end
   end
 
@@ -146,8 +161,16 @@ module AirmeetApiService
 
   def self.sync_to_airmeet
     virtual_people.map { |p| person_to_airmeet(p) }
-    virtual_sessions.map { |s| session_to_airmeet(s) }
+    virtual_sessions.map { |s, | session_to_airmeet(s) }
     puts "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA IT WORKED"
+  end
+
+  def self.clear_participant_data
+    Person.where.not(integrations: {}).update_all(integrations: {})
+  end
+
+  def self.clear_session_data
+    PublishedSession.where.not(integrations: {}).update_all(integrations: {})
   end
 
   class Airmeet

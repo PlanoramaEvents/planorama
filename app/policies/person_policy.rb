@@ -63,6 +63,10 @@ class PersonPolicy < PlannerPolicy
     allowed?(action: :mailed_surveys)
   end
 
+  def resync_airmeet?
+    allowed?(action: :resync_airmeet)
+  end
+
   class Scope < PlannerPolicy::Scope
     def resolve
       if allowed?(action: :index)

@@ -33,5 +33,10 @@ namespace :chicon do
   task sync_airmeet: :environment do
     AirmeetApiService.sync_to_airmeet
   end
+
+  task clear_airmeet: :environment do
+    AirmeetApiService.clear_participant_data
+    AirmeetApiService.clear_session_data
+  end
 end
 

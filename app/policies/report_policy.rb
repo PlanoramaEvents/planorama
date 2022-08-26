@@ -51,4 +51,12 @@ class ReportPolicy < BasePolicy
   def participant_do_not_assign_with?
     allowed?(action: :participant_do_not_assign_with)
   end
+
+  def airmeet_magic_link?
+    allowed?(action: :airmeet_magic_link)
+  end
+
+  def airmeet_diffs?
+    allowed?(action: :airmeet_diffs)
+  end
 end

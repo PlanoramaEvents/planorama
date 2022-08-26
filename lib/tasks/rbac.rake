@@ -99,7 +99,8 @@ namespace :rbac do
           "live_sessions": false,
           "snapshot_schedule": true,
           "create": false,
-          "destroy": false
+          "destroy": false,
+          "resync_airmeet": false,
       },
       "survey": {
           "assign_people": false,
@@ -362,7 +363,8 @@ namespace :rbac do
           "live_sessions": true,
           "snapshot_schedule": true,
           "create": true,
-          "destroy": true
+          "destroy": true,
+          "resync_airmeet": false
       },
       "survey": {
           "assign_people": true,
@@ -533,7 +535,9 @@ namespace :rbac do
         "record_stream_permissions": true,
         "moderators": true,
         "mis_matched_envs": true,
-        "social_media": true
+        "social_media": true,
+        "airmeet_magic_link": true,
+        "airmeet_diffs": true,
       },
       "session_report": {
         "panels_with_too_few_people": true,
@@ -682,7 +686,8 @@ namespace :rbac do
           "live_sessions": true,
           "snapshot_schedule": true,
           "create": true,
-          "destroy": true
+          "destroy": true,
+          "resync_airmeet": true
       },
       "survey": {
           "assign_people": true,
@@ -853,7 +858,9 @@ namespace :rbac do
         "record_stream_permissions": true,
         "moderators": true,
         "mis_matched_envs": true,
-        "social_media": true
+        "social_media": true,
+        "airmeet_magic_link": true,
+        "airmeet_diffs": true,
       },
       "session_report": {
         "panels_with_too_few_people": true,

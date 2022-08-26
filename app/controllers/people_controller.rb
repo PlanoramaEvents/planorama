@@ -47,6 +47,22 @@ class PeopleController < ResourceController
     end
   end
 
+  def resync_airmeet
+    authorize current_person, policy_class: policy_class
+
+    person = Person.find params[:person_id]
+
+    # makes the information in the airmeet sync record match the current person record
+    # NOTE: DOES NOT ACTUALLY DO A SYNC TO AIRMEET
+    if person
+      AirmeetApiService.person_to_airmeet(person, true);
+      # clumsily reload person after they are updated
+      person = Person.find params[:person_id]
+    end
+
+    render_object(person)
+  end
+
   def live_sessions
     authorize current_person, policy_class: policy_class
 

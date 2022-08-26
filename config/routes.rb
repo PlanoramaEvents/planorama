@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
+    get 'resync_airmeet', to: 'people#resync_airmeet'
     resources :availabilities, path: 'availability', only: [:index]
     patch 'availability', to: 'availabilities#replace'
     resources :person_exclusions, path: 'person_exclusion', only: [:index]
@@ -99,6 +100,9 @@ Rails.application.routes.draw do
   get 'report/program_ops_reports/sign_up_sessions', to: 'reports/program_ops_reports#sign_up_sessions'
   get 'report/program_ops_reports/table_tents', to: 'reports/program_ops_reports#table_tents'
   get 'report/program_ops_reports/user_privileges', to: 'reports/program_ops_reports#user_privileges'
+
+  get 'report/integrations_reports/airmeet_magic_link', to: 'reports/integrations_reports#airmeet_magic_link'
+  get 'report/integrations_reports/airmeet_diffs', to: 'reports/integrations_reports#airmeet_diffs'
 
   get 'report/schedule_reports/schedule_diff(/:from)(/:to)', to: 'reports/schedule_reports#schedule_diff'
   get 'publication_date/reset', to: 'publication_dates#reset'
