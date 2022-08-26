@@ -96,13 +96,14 @@ module AirmeetApiService
     puts args
     if dont_send
       result = args
-      result["email"] = args[:email]
+      # hack to make changed emails stop showing up in airmeet diffs
+      args[:email] = person.primary_email.email
     else
       result = create_speaker(args)
     end
     puts result
-    person.update({integrations: person.integrations.merge({airmeet: {speaker_email: speaker_email, synced: !!result["email"] || (person.integrations["airmeet"] || {})["synced"], data: args, synced_at: !!result["email"] ? Time.now.iso8601 : (person.integrations["airmeet"] || {})["synced_at"] }})})
-    result["email"]
+    newly_created = result["status"] == "SPEAKER_CREATED" || dont_send
+    person.update({integrations: person.integrations.merge({airmeet: {speaker_email: speaker_email, synced: newly_created || (person.integrations["airmeet"] || {})["synced"], data: newly_created ? args :  (person.integrations["airmeet"] || {})["data"], synced_at: newly_created ? Time.now.iso8601 : (person.integrations["airmeet"] || {})["synced_at"] }})})
   end
 
   def self.session_to_airmeet(session)
