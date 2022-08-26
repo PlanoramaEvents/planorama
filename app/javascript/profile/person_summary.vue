@@ -3,19 +3,19 @@
       <div class="row">
         <div class="col-8">
           <h3>{{selected.published_name}}<edit-button v-b-modal.person-top-modal></edit-button></h3>
+          <div>
+            Pronouns: <em>{{selected.pronouns}}</em>
+          </div>
+          <div>
+            Willing to moderate sessions: <em>{{willing_to_moderate}}</em>
+          </div>
+          <div>
+            Primary email: <em v-if="selected.primary_email">{{selected.primary_email.email}}</em>
+          </div>
         </div>
-        <div class="col-4 d-flex flex-row-reverse">
+        <div class="col-4 d-flex flex-column align-items-end">
             <small>Last Login: {{formatLocaleDate(selected.current_sign_in_at)}}</small>
-        </div>
-      </div>
-
-        <div>
-          Pronouns: <em>{{selected.pronouns}}</em>
-        <div>
-          Willing to moderate sessions: <em>{{willing_to_moderate}}</em>
-        </div>
-        <div>
-          Primary email: <em v-if="selected.primary_email">{{selected.primary_email.email}}</em>
+            <b-button v-if="currentUserIsAdmin" variant="warning" :disabled="!selected.integrations.airmeet" @click="resyncAirmeet" class="mt-2">Airmeet re-sync completed</b-button>
         </div>
       </div>
       <person-edit-modal id="person-top-modal" body-class="formscroll" :person="selected" :data="editData">
@@ -43,8 +43,9 @@ const { DateTime } = require("luxon");
 import EditButton from '@/components/edit_button';
 import PersonEditModal from './person_edit_modal';
 import { modelMixinNoProp } from '@/store/model.mixin';
-import { personModel } from '@/store/person.store';
+import { personEndpoints, personModel } from '@/store/person.store';
 import {PERSON_NEVER_LOGGED_IN} from "@/constants/strings";
+import { toastMixin, personSessionMixin } from '@/mixins';
 
 export default {
   name: "PersonSummary",
@@ -62,7 +63,9 @@ export default {
     model: personModel
   }),
   mixins: [
-    modelMixinNoProp
+    modelMixinNoProp,
+    personSessionMixin,
+    toastMixin,
   ],
   computed: {
     willing_to_moderate() {
@@ -84,6 +87,9 @@ export default {
     log(e) {
       console.log(e)
       console.log(this.editData)
+    },
+    resyncAirmeet() {
+      this.toastPromise(this.$store.dispatch('jv/get', `${personEndpoints[personModel]}/${this.selected.id}/resync_airmeet`), "Successfully updated airmeet sync data.")
     }
   }
 }
