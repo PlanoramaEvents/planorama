@@ -384,6 +384,22 @@
           <strong><em>Person data included</em></strong>: moderators and participants
         </p>
       </li>
+      <li>
+        <a href="/report/integrations_reports/airmeet_magic_link" target="_blank">Airmeet Magic Links</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: Links that get you into the program airmeet as each speaker in the system. For emergency customer service use.<br />
+          <strong><em>Fields</em></strong>: Published name, primary email, airmeet magic link<br />
+          <strong><em>Person data included</em></strong>: all moderators and participants on virtual panels
+        </p>
+      </li>
+      <li>
+        <a href="/report/integrations_reports/airmeet_diffs" target="_blank">Airmeet Diffs</a>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: People data that has changed for airmeet people since they were last synced (manually or automatically)<br />
+          <strong><em>Fields</em></strong>: Last sync, person last updated, airmeet email, what changed, from what, to what<br />
+          <strong><em>Person data included</em></strong>: all moderators and participants on virtual panels who have changed since their last sync to airmeet
+        </p>
+      </li>
     </ul>
     <div style="clear: both; height: 5rem;">&nbsp;</div>
         <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>User Privileges</span>
