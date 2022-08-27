@@ -321,7 +321,7 @@
         <p class="ml-2">
           <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
           <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session duration, session room<br />
-          <strong><em>Session data included</em></strong>: all scheduled sessions that are visible and published
+          <strong><em>Session data included</em></strong>: all published sessions in the most recent publish
         </p>
       </li>
       <li>
@@ -338,7 +338,7 @@
         <p class="ml-2">
           <strong><em>Description</em></strong>: Maximum number of attendees in sessions requiring signup, one line per session<br />
           <strong><em>Fields</em></strong>: Session title, session description, session room, session start time, session duration, session format, participants, session environment, max number of attendees<br />
-          <strong><em>Session data included</em></strong>: all published sessions<br />
+          <strong><em>Session data included</em></strong>: all published sessions in the most recent publish<br />
         </p>
       </li>
       <li>
@@ -346,7 +346,7 @@
         <p class="ml-2">
           <strong><em>Description</em></strong>: Session setup requirements, one line per session<br />
           <strong><em>Fields</em></strong>: Session title, session start time, session room, session environment, session format, session area(s), required room features&#8725;services, tech&#8725;hotel notes, room setup<br />
-          <strong><em>Session data included</em></strong>: all published sessions<br />
+          <strong><em>Session data included</em></strong>: all published sessions in the most recent publish<br />
         </p>
       </li>
       <li>
@@ -362,7 +362,7 @@
         <p class="ml-2">
           <strong><em>Description</em></strong>: Room sign data for mail merge, one line per room and day of week<br />
           <strong><em>Fields</em></strong>: Room, day of week, sessions (title, start time, description, moderators, participants)<br />
-          <strong><em>Session data included</em></strong>: all published sessions<br />
+          <strong><em>Session data included</em></strong>: all published sessions in the most recent publish<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
       </li>
@@ -371,7 +371,7 @@
         <p class="ml-2">
           <strong><em>Description</em></strong>: Table tent data for mail merge, one line per session and participant<br />
           <strong><em>Fields</em></strong>: Session title, published name, session description, scheduled participant notes, moderators and their pronouns, participants and their pronouns<br />
-          <strong><em>Session data included</em></strong>: published sessions with environment of &quot;in person&quot; or &quot;hybrid&quot;<br />
+          <strong><em>Session data included</em></strong>: published sessions  in the most recent publish, with environment of &quot;in person&quot; or &quot;hybrid&quot;<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
       </li>
@@ -380,24 +380,25 @@
         <p class="ml-2">
           <strong><em>Description</em></strong>: List of emails for moderators and participants of published sessions, with indicator about whether they are assigned to any session(s) of environment virtual, one line per participant<br />
           <strong><em>Fields</em></strong>: Published name, name, whether person is assigned to a virtual session (y &#8725; n), primary email, other emails<br />
-          <strong><em>Session data included</em></strong>: all published sessions<br />
+          <strong><em>Session data included</em></strong>: all published sessions in the most recent publish<br />
           <strong><em>Person data included</em></strong>: moderators and participants
         </p>
       </li>
       <li>
         <a href="/report/integrations_reports/airmeet_magic_link" target="_blank">Airmeet Magic Links</a>
         <p class="ml-2">
-          <strong><em>Description</em></strong>: Links that get you into the program airmeet as each speaker in the system. For emergency customer service use.<br />
-          <strong><em>Fields</em></strong>: Published name, primary email, airmeet magic link<br />
-          <strong><em>Person data included</em></strong>: all moderators and participants on virtual panels
+          <strong><em>Description</em></strong>: Links to get each participant (speaker) into Airmeet, one line per person. For emergency customer service use.<br />
+          <strong><em>Fields</em></strong>: Published name, primary email, Airmeet magic link<br />
+          <strong><em>Person data included</em></strong>: all moderators and participants assigned to virtual sessions
         </p>
       </li>
       <li>
         <a href="/report/integrations_reports/airmeet_diffs" target="_blank">Airmeet Diffs</a>
         <p class="ml-2">
-          <strong><em>Description</em></strong>: People data that has changed for airmeet people since they were last synced (manually or automatically)<br />
-          <strong><em>Fields</em></strong>: Last sync, person last updated, airmeet email, what changed, from what, to what<br />
-          <strong><em>Person data included</em></strong>: all moderators and participants on virtual panels who have changed since their last sync to airmeet
+          <strong><em>Description</em></strong>: Changes to person information since the last sync (manual or automatic) with Airmeet, one line per change<br />
+          <strong><em>Fields</em></strong>: Time of last sync, time when person last updated, Airmeet email, what changed, from what, to what<br />
+          <strong><em>Session data included</em></strong>: all published sessions with environment of &quot;virtual&quot;, in the most recent publish<br />
+          <strong><em>Person data included</em></strong>: moderators and participants assigned to published virtual sessions, whose published name, email, or bio has changed since their last sync to Airmeet
         </p>
       </li>
     </ul>
