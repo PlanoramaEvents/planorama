@@ -6,6 +6,36 @@ strip_converter = proc {|field| field ? field.strip : field}
 CSV::Converters[:strip] = strip_converter
 
 namespace :import do
+  task :airmeet_people, [:filename] => :environment do |t, args|
+    if !args[:filename]
+      p "You need to add the filename as an argument: rake import:filename[/path/to/file]"
+    end
+
+    File.open(args[:filename]) do |file|
+      parsed_output = CSV.read(file, headers: true, header_converters: :symbol, converters: :strip)
+      count = 0
+      parsed_output.each do |o|
+        email = o[:primary_email]
+        paid = o[:is_paid]&.downcase == "yes"
+        city = o[:city]
+        country = o[:country]
+        person = Person.joins(:primary_email).find_by(email_addresses: {email: email});
+        if !person
+          p "Skipping because can't find person with email #{email}"
+          next
+        end
+        person.update({
+          registered: paid,
+          integrations: person.integrations.merge({airmeet: (person.integrations["airmeet"] || {}).merge({city: city, country: country})})
+        })
+        p person
+        count += 1
+      end
+      p "Imported #{count} users country & city, skipped #{parsed_output.length - count}"
+    end
+  end
+
+
   task :users, [:filename] => :environment do |t, args|
     if !args[:filename]
       p "You need to add the filename as an argument: rake import:users[/path/to/file]"
