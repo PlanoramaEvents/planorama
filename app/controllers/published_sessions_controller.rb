@@ -5,7 +5,6 @@ class PublishedSessionsController < ResourceController
   def resync_airmeet
     authorize current_person, policy_class: policy_class
 
-    Rails.logger.info("params: " + params.to_s)
 
     #TODO stop mixing up published session and session for integration purposes
     session = PublishedSession.find params[:published_session_id]
