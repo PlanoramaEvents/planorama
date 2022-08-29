@@ -18,6 +18,9 @@
       },
       "user_input": null,
       "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
       "note": ""
     },
     {
@@ -38,6 +41,9 @@
       },
       "user_input": "params[:workflow_id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -58,6 +64,9 @@
       },
       "user_input": null,
       "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
       "note": ""
     },
     {
@@ -78,6 +87,9 @@
       },
       "user_input": "params[:survey_id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -98,26 +110,9 @@
       },
       "user_input": null,
       "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Unscoped Find",
-      "warning_code": 82,
-      "fingerprint": "6febff74984a127219272fbf1045466f8d4580b045abcccb8873a98cfc025ecd",
-      "check_name": "UnscopedFind",
-      "message": "Unscoped call to `Session#find`",
-      "file": "app/controllers/reports/schedule_reports_controller.rb",
-      "line": 118,
-      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
-      "code": "Session.find(SessionAssignment.find(change[:session_assignment_id]).session_id)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Reports::ScheduleReportsController",
-        "method": "schedule_diff"
-      },
-      "user_input": "SessionAssignment.find(change[:session_assignment_id]).session_id",
-      "confidence": "Weak",
+      "cwe_id": [
+        915
+      ],
       "note": ""
     },
     {
@@ -138,6 +133,9 @@
       },
       "user_input": "params[:survey_id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -158,6 +156,9 @@
       },
       "user_input": "params[:survey_id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -178,9 +179,58 @@
       },
       "user_input": "params[:workflow_id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "fd373f890a0b6a374e52c49351707bd80f5888070f85985257f64e1dcdf4c8b6",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `PublishedSession#find`",
+      "file": "app/controllers/published_sessions_controller.rb",
+      "line": 10,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "PublishedSession.find(params[:published_session_id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "PublishedSessionsController",
+        "method": "resync_airmeet"
+      },
+      "user_input": "params[:published_session_id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "fd373f890a0b6a374e52c49351707bd80f5888070f85985257f64e1dcdf4c8b6",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `PublishedSession#find`",
+      "file": "app/controllers/published_sessions_controller.rb",
+      "line": 17,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "PublishedSession.find(params[:published_session_id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "PublishedSessionsController",
+        "method": "resync_airmeet"
+      },
+      "user_input": "params[:published_session_id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     }
   ],
-  "updated": "2022-08-14 17:55:37 -0400",
-  "brakeman_version": "5.2.3"
+  "updated": "2022-08-29 13:18:44 -0400",
+  "brakeman_version": "5.3.1"
 }
