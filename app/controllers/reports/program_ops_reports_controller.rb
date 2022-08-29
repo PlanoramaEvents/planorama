@@ -237,10 +237,15 @@ class Reports::ProgramOpsReportsController < ApplicationController
 
     workbook = FastExcel.open #(constant_memory: true)
     worksheet = workbook.add_worksheet("Table Tents")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+
+    styles = [nil, nil, date_time_style, nil, nil, nil, nil, nil,]
 
     worksheet.append_row(
       [
         'Session',
+        'Room',
+        'Start Time',
         'Published Name',
         'Description',
         'Participant Notes',
@@ -251,14 +256,19 @@ class Reports::ProgramOpsReportsController < ApplicationController
 
     sessions.each do |session|
       session.published_session_assignments.each do |pa|
-        worksheet.append_row [
-          session.title,
-          pa.person.published_name,
-          ActionView::Base.full_sanitizer.sanitize(session.description),
-          session.participant_notes,
-          session.published_session_assignments.role(moderator).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n"),
-          session.published_session_assignments.role(participant).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n")
-        ]
+        worksheet.append_row(
+          [
+            session.title,
+            session.room&.name,
+            FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
+            pa.person.published_name,
+            ActionView::Base.full_sanitizer.sanitize(session.description),
+            session.participant_notes,
+            session.published_session_assignments.role(moderator).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n"),
+            session.published_session_assignments.role(participant).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n")
+          ],
+          styles
+        )
       end
     end
 
