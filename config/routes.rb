@@ -174,7 +174,9 @@ Rails.application.routes.draw do
   end
   # need id of person expressing interest
   get 'session/:id/express_interest(/:person_id)', to: 'sessions#express_interest'
-  resources :published_sessions, path: 'published_session'
+  resources :published_sessions, path: 'published_session' do
+    get 'resync_airmeet', to: 'published_sessions#resync_airmeet'
+  end
 
   resources :session_assignments, path: 'session_assignment'
   get 'session_assignment/:id/unexpress_interest(/:person_id)', to: 'session_assignments#unexpress_interest'

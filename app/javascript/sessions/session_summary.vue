@@ -106,19 +106,22 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
+        <b-button v-if="currentUserIsAdmin" variant="warning" :disabled="!session.streamed" @click="resyncAirmeet" class="mt-2">Airmeet re-sync completed</b-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { sessionModel } from '@/store/session.store'
+import { sessionEndpoints, sessionModel } from '@/store/session.store'
 import modelUtilsMixin from '@/store/model_utils.mixin';
 import { scheduledMixin } from './session_fields.mixin';
 import { SESSION_STATUS, SESSION_MUST_UNSCHEDULE } from '@/constants/strings';
 import settingsMixin from "@/store/settings.mixin";
 
 import PlanoEditor from '../components/plano_editor';
+import { personSessionMixin } from '@/mixins';
+import { publishedSessionEndpoints, publishedSessionModel } from '@/store/published_session.store';
 
 export default {
   name: "SessionSummary",
@@ -128,7 +131,8 @@ export default {
   mixins: [
     modelUtilsMixin,
     scheduledMixin,
-    settingsMixin
+    settingsMixin,
+    personSessionMixin
   ],
   data: () => ({
     SESSION_STATUS,
@@ -154,6 +158,9 @@ export default {
   methods: {
     saveSession() {
       return this.save_model(sessionModel, this.session).then()
+    },
+    resyncAirmeet() {
+      this.toastPromise(this.$store.dispatch('jv/get', `${publishedSessionEndpoints[publishedSessionModel]}/${this.session.id}/resync_airmeet`), "Successfully updated airmeet sync data.")
     }
   }
 }
