@@ -33,6 +33,7 @@ class Reports::IntegrationsReportsController < ApplicationController
 
   def airmeet_diffs
     authorize Person, policy_class: ReportPolicy
+    AirmeetApiService.clear_room_hosts
 
     people = AirmeetApiService.virtual_people
 
