@@ -145,7 +145,7 @@ module AirmeetApiService
         p "ERROR with session #{session.title}. please check manually."
         return
       end
-
+      participants = session.published_session_assignments.filter { |sa| (sa.session_assignment_role_type_id == moderator_id || sa.session_assignment_role_type_id == participant_id) && sa.person.registered }.map { |sa| sa.person }
       puts args
       if dont_send
         result = args
@@ -192,6 +192,10 @@ module AirmeetApiService
     virtual_people.map { |p| person_to_airmeet(p) }
     virtual_sessions.map { |s, | session_to_airmeet(s) }
     puts "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA IT WORKED"
+  end
+
+  def self.clear_room_hosts
+    @room_hosts = nil
   end
 
   def self.clear_participant_data
