@@ -38,6 +38,16 @@ class Reports::IntegrationsReportsController < ApplicationController
     people = AirmeetApiService.virtual_people
 
     workbook = FastExcel.open(constant_memory: true)
+    add_worksheet = workbook.add_worksheet("Added People")
+    add_worksheet.append_row(
+      [
+        'Plano id',
+        'Published Name',
+        'Email',
+        'Thing to paste gail'
+      ]
+    )
+
     worksheet = workbook.add_worksheet("Changed People")
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
 
@@ -60,45 +70,56 @@ class Reports::IntegrationsReportsController < ApplicationController
       end
       integrations = person.integrations["airmeet"] || {}
       data = integrations["data"] || {}
-      if data["name"] != person.published_name
-        worksheet.append_row(
+      if !integrations["synced"] 
+        add_worksheet.append_row(
           [
-            integrations["synced"] && DateTime.iso8601(integrations["synced_at"]),
-            person.updated_at,
-            integrations["speaker_email"],
-            "name",
-            data["name"],
-            person.published_name
-          ],
-          styles
+            person.id,
+            person.published_name,
+            person.primary_email&.email,
+            "AirmeetApiService.person_to_airmeet(Person.find(\"#{person.id}\"))"
+          ]
         )
-      end
-      if data["email"] != person.primary_email&.email
-        worksheet.append_row(
-          [
-            integrations["synced"] && DateTime.iso8601(integrations["synced_at"]),
-            person.updated_at,
-            integrations["speaker_email"],
-            "email",
-            data["email"],
-            person.primary_email&.email
-          ],
-          styles
-        )
-      end
-      bio = ActionView::Base.full_sanitizer.sanitize(person.bio)
-      if data["bio"] != bio
-        worksheet.append_row(
-          [
-            integrations["synced"] && DateTime.iso8601(integrations["synced_at"]),
-            person.updated_at,
-            integrations["speaker_email"],
-            "bio",
-            data["bio"],
-            bio
-          ],
-          styles
-        )
+      else
+        if data["name"] != person.published_name
+          worksheet.append_row(
+            [
+              integrations["synced"] && DateTime.iso8601(integrations["synced_at"]),
+              person.updated_at,
+              integrations["speaker_email"],
+              "name",
+              data["name"],
+              person.published_name
+            ],
+            styles
+          )
+        end
+        if data["email"] != person.primary_email&.email
+          worksheet.append_row(
+            [
+              integrations["synced"] && DateTime.iso8601(integrations["synced_at"]),
+              person.updated_at,
+              integrations["speaker_email"],
+              "email",
+              data["email"],
+              person.primary_email&.email
+            ],
+            styles
+          )
+        end
+        bio = ActionView::Base.full_sanitizer.sanitize(person.bio)
+        if data["bio"] != bio
+          worksheet.append_row(
+            [
+              integrations["synced"] && DateTime.iso8601(integrations["synced_at"]),
+              person.updated_at,
+              integrations["speaker_email"],
+              "bio",
+              data["bio"],
+              bio
+            ],
+            styles
+          )
+        end
       end
     end
 
