@@ -116,7 +116,8 @@ namespace :rbac do
           "destroy": false,
           "index": true,
           "show": true,
-          "update": false
+          "update": false,
+          "resync_airmeet": false,
       },
       "availability": {
           "create": true,
@@ -157,7 +158,7 @@ namespace :rbac do
           "show": true,
           "update": false,
           "update_all": false,
-          "schedule_publish": false
+          "schedule_publish": false,
       },
       "format": {
           "create": false,
@@ -380,7 +381,8 @@ namespace :rbac do
           "destroy": true,
           "index": true,
           "show": true,
-          "update": true
+          "update": true,
+          "resync_airmeet": false,
       },
       "availability": {
           "create": true,
@@ -421,7 +423,7 @@ namespace :rbac do
           "show": true,
           "update": true,
           "update_all": true,
-          "schedule_publish": false
+          "schedule_publish": false,
       },
       "format": {
           "create": true,
@@ -703,7 +705,8 @@ namespace :rbac do
           "destroy": true,
           "index": true,
           "show": true,
-          "update": true
+          "update": true,
+          "resync_airmeet": true,
       },
       "availability": {
           "create": true,
@@ -744,7 +747,7 @@ namespace :rbac do
           "show": true,
           "update": true,
           "update_all": true,
-          "schedule_publish": false
+          "schedule_publish": true,
       },
       "format": {
           "create": true,
