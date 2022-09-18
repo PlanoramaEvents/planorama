@@ -52,13 +52,13 @@ import {
   LOGIN_CLICK_TO_AGREE,
   IEA_FAILURE_TO_SIGN
 } from "@/constants/strings";
+import { settingsMixin } from "@/mixins";
 
 
 export default {
   name: "PlanLogin",
   data() {
     return {
-      LOGIN_CLICK_TO_AGREE,
       person: {
         email: "",
         password: "",
@@ -89,7 +89,15 @@ export default {
     PrivacyPolicyLink,
     IeaModal,
   },
-  mixins: [authMixin, personSessionMixin],
+  mixins: [authMixin, personSessionMixin, settingsMixin],
+  computed: {
+    conventionName() {
+      return this.configByName('convention_name') || ''
+    },
+    LOGIN_CLICK_TO_AGREE() {
+      return LOGIN_CLICK_TO_AGREE(this.conventionName);
+    }
+  },
   mounted: function () {
     if (this.$route.query.alert) {
       switch (this.$route.query.alert) {

@@ -77,5 +77,15 @@ namespace :parameters do
         }
       )
     end
+
+    unless ParameterName.find_by(parameter_name: 'convention_name')
+      ParameterName.create!(
+        {
+          parameter_name: 'convention_name',
+          parameter_description: 'The name of the convetion',
+          parameter_type: 'String'
+        }
+      )
+    end
   end
 end

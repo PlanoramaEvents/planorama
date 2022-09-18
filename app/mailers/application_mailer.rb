@@ -17,4 +17,8 @@ class ApplicationMailer < ActionMailer::Base
   def reply_to_email
     @reply_to_email = ConfigService.value('email_reply_to_address') || ENV['PROGRAM_EMAIL'] || ENV['SMTP_USER_NAME']
   end
+
+  def convention_name 
+    @convention_name = ConfigService.value('convention_name') || ENV['CONVENTION_NAME']
+  end
 end

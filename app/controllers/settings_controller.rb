@@ -26,6 +26,8 @@ class SettingsController < ApplicationController
       zones[zone.tzinfo.canonical_zone.name] = "(UTC#{zone.at(con_time).formatted_offset}) #{zone.name}"
     end
 
+    convention_name = ConfigService.value('convention_name')
+
     settings = {
       #
       env: Rails.env,
@@ -61,14 +63,14 @@ class SettingsController < ApplicationController
       attendance_type: [
         {
           value: 'in person',
-          label: '**In-person only:** I am planning to attend Chicon 8 in-person'
+          label: "**In-person only:** I am planning to attend #{convention_name} in-person"
         }, {
           value: 'virtual',
-          label: '**Virtual only:** I am not planning to attend Chicon 8 in-person, and would like to be a virtual participant on virtual-based items only (via Zoom or similar technology).'
+          label: "**Virtual only:** I am not planning to attend #{convention_name} in-person, and would like to be a virtual participant on virtual-based items only (via Zoom or similar technology)."
         },
         {
           value: 'hybrid',
-          label: '**In-person and virtual:** I am planning to attend Chicon 8 in-person, but would also like to be considered for virtual panels.'
+          label: "**In-person and virtual:** I am planning to attend #{convention_name} in-person, but would also like to be considered for virtual panels."
         },
       ],
       age_restrictions: ::AgeRestriction.all,

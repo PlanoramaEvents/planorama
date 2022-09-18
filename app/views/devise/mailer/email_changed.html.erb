@@ -1,9 +1,9 @@
 <p>Hello <%= @email %>!</p>
 
 <% if @resource.try(:unconfirmed_email?) %>
-  <p>We're contacting you to notify you that your email is being changed to <%= @resource.unconfirmed_email %> for Chicon Planorama.</p>
+  <p>We're contacting you to notify you that your email is being changed to <%= @resource.unconfirmed_email %> for <%= @convention_name %> Planorama.</p>
 <% else %>
-  <p>We're contacting you to notify you that your email has been changed to <%= @resource.email %> for Chicon Planorama.</p>
+  <p>We're contacting you to notify you that your email has been changed to <%= @resource.email %> for <%= @convention_name %> Planorama.</p>
 <% end %>
 
 <% if !Rails.env.production? %>
