@@ -3,6 +3,8 @@
 # stored in the DB
 #
 class ApplicationMailer < ActionMailer::Base
+  before_action :convention_name
+
   default from: Proc.new { from_email },
           reply_to: Proc.new { reply_to_email }
 
