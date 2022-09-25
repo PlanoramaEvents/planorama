@@ -3,6 +3,9 @@
     <div class="row">
       <div class="column">
         <h4 class="mt-3">Configuration</h4>
+        <b-form-group label-cols="auto" label="Enable Airmeet" class="configuration enable">
+          <b-form-checkbox switch v-model="airmeet_enabled" @change="patchAirmeetConfig()"></b-form-checkbox>
+        </b-form-group>
         <b-form-group label="Airmeet ID">
           <b-form-input type="text" v-model="airmeet_id" @blur="patchAirmeetConfig()"></b-form-input>
         </b-form-group>
@@ -74,6 +77,16 @@ export default {
           this.airmeet.config.airmeet_host = val;
         }
       }
+    },
+    airmeet_enabled: {
+      get() {
+        return this.airmeet?.config?.enabled
+      },
+      set(val) {
+        if(this.airmeet?.config) {
+          this.airmeet.config.enabled = val;
+        }
+      }
     }
   },
   methods: {
@@ -109,6 +122,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.configuration.enable .form-row {
+  align-items: center;
+}
 </style>
