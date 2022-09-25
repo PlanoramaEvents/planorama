@@ -29,12 +29,12 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/rake db:migrate
   bin/rake parameters:seed_names
   bin/rake role_types:seed_role_types
-  bin/rake chicon:seed_exclusions
-  bin/rake chicon:seed_room_sets
-  bin/rake chicon:seed_rooms
-  bin/rake chicon:fix_formats
-  bin/rake chicon:init_age_restrictions
-  bin/rake chicon:map_session_to_exclusion
+  bin/rake arisia:seed_exclusions
+  bin/rake arisia:seed_room_sets
+  bin/rake arisia:seed_rooms
+  bin/rake arisia:fix_formats
+  bin/rake arisia:init_age_restrictions
+  bin/rake arisia:map_session_to_exclusion
   bin/rake rbac:seed_defaults
 
   # Run migrations and start the server, anything that comes in on 3000 is accepted
@@ -47,12 +47,12 @@ elif [[ $RAILS_ENV = "staging" ]]; then
   bin/rake db:migrate
   bin/rake parameters:seed_names
   bin/rake role_types:seed_role_types
-  bin/rake chicon:seed_exclusions
-  bin/rake chicon:seed_room_sets
-  bin/rake chicon:seed_rooms
-  bin/rake chicon:fix_formats
-  bin/rake chicon:init_age_restrictions
-  bin/rake chicon:map_session_to_exclusion
+  bin/rake arisia:seed_exclusions
+  bin/rake arisia:seed_room_sets
+  bin/rake arisia:seed_rooms
+  bin/rake arisia:fix_formats
+  bin/rake arisia:init_age_restrictions
+  bin/rake arisia:map_session_to_exclusion
   bin/rake rbac:seed_defaults
 
   bin/rails db:seed
@@ -68,12 +68,12 @@ else
   bin/rake db:migrate
   bin/rake parameters:seed_names
   bin/rake role_types:seed_role_types
-  bin/rake chicon:seed_exclusions
-  bin/rake chicon:seed_room_sets
-  bin/rake chicon:seed_rooms
-  bin/rake chicon:fix_formats
-  bin/rake chicon:init_age_restrictions
-  bin/rake chicon:map_session_to_exclusion
+  bin/rake arisia:seed_exclusions
+  bin/rake arisia:seed_room_sets
+  bin/rake arisia:seed_rooms
+  bin/rake arisia:fix_formats
+  bin/rake arisia:init_age_restrictions
+  bin/rake arisia:map_session_to_exclusion
   bin/rake rbac:seed_defaults
 fi
 
