@@ -5,7 +5,7 @@
     :skipIfEmpty="true"
     v-slot="{ valid, errors }"
   >
-    <b-form-group :label="parameter.parameter_name">
+    <b-form-group :label="parameterLabel">
       <!-- TODO: We need more meaningful names, ^^^ change the label  -->
       <!-- TODO: we need to change the editor type depending on the parameter.type -->
       <div v-if="parameter.parameter_type === 'Timezone'">
@@ -41,6 +41,7 @@ import configurationMixin from './configuration.mixin';
 import { ValidationProvider } from 'vee-validate';
 import TimezoneSelector from "../components/timezone_selector.vue"
 import settingsMixin from "@/store/settings.mixin";
+import {startCase} from "lodash";
 
 const { DateTime } = require("luxon");
 
@@ -77,6 +78,12 @@ export default {
     },
     timezone() {
       return this.configByName('convention_timezone')
+    },
+    parameterLabel() {
+      if (this.parameter.parameter_name) {
+        return startCase(this.parameter.parameter_name)
+      }
+      return ''
     }
   },
   mixins: [
