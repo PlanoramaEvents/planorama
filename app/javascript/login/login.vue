@@ -39,7 +39,7 @@ import axios from 'axios';
 import {
   authMixin,
   personSessionMixin
-} from '@mixins';
+} from '@/mixins';
 
 import { validateFields } from "@/utils";
 

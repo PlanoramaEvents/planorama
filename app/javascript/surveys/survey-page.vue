@@ -61,7 +61,7 @@ import {
   surveyIdPropMixinSurveyId,
   surveyMixin,
   submissionMixin
-} from '@mixins';
+} from '@/mixins';
 import { SET_PREVIEW_MODE, REDIR_SHOWN } from '@/store/survey';
 import { ValidationObserver } from 'vee-validate';
 import personSessionMixin from '../auth/person_session.mixin';

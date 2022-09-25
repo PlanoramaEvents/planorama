@@ -61,11 +61,13 @@
     "react-dom": "^16.8.0",
     "style-loader": "1",
     "vue-loader": "^15.9.6",
+    "vue-styleguidist": "^4.54.1",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.46.0",
     "webpack-dev-server": "^3.11.3"
   },
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "styleguide": "vue-styleguidist server"
   }
 }

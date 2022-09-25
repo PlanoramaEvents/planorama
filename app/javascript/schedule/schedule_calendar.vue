@@ -43,7 +43,7 @@ export default {
     },
     days: {
       type: Array,
-      default: []
+      default: () => []
     },
     timezone: {
       type: String,

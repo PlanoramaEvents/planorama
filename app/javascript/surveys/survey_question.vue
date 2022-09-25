@@ -296,7 +296,7 @@ import {
   submissionMixin,
   responseMixin,
   toastMixin
-} from '@mixins';
+} from '@/mixins';
 import { v4 as uuidv4 } from 'uuid';
 import { submissionModel } from '@/store/survey';
 import { mapState } from 'vuex';

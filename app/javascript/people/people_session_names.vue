@@ -23,7 +23,7 @@ export default {
   props: {
     ids: {
       type: Array,
-      default: []
+      default: () => []
     },
     declinedRejected: {
       type: Boolean,

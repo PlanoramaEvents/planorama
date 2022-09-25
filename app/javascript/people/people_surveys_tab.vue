@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { modelMixin } from '@mixins'
+import { modelMixin } from '@/mixins'
 import SurveyTable from '../surveys/survey_table';
 
 export default {

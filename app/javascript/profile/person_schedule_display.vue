@@ -67,7 +67,7 @@ export default {
   props: {
     sessions: {
       type: Object,
-      default: {}
+      default: () => {}
     },
     title: {
       type: String,
