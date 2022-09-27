@@ -203,6 +203,7 @@ export const store = new Vuex.Store({
     ...settingsStore.getters,
     ...formatStore.getters,
     ...scheduleWorkflowStore.getters,
+    ...integrationStore.getters,
   },
   plugins: [
     ...surveyStore.plugins

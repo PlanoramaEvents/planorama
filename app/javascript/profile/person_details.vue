@@ -15,35 +15,37 @@
       </dl-person>
     </div>
     <div class="d-flex flex-column w-50 p-2">
-      <div><b>I plan to attend the convention:</b></div>
-      <b-form-radio-group
-        v-model="selected.attendance_type"
-        stacked
-        @change="saveSelected()"
-      >
-        <b-form-radio value="in person">In Person</b-form-radio>
-        <b-form-radio value="hybrid">In Person AND Virtually</b-form-radio>
-        <b-form-radio value="virtual">Virtually</b-form-radio>
-      </b-form-radio-group>
-      <b-form-group label="At the time of the convention I will be at UTC Offset">
-        <timezone-selector
-          v-model="selected.timezone"
-          @input="saveSelected()"
-          class="mb-2"
-          :disabled="disabled || selected.attendance_type != 'virtual'"
-        ></timezone-selector>
-        <p>
-          Your time now in the selected timezone is <b>{{youTimeNow}}</b>
-        </p>
-        <small>
-          If you are not sure what your UTC offset will be, or want to verify,
-          please go to
-          <a target="blank" href="https://www.timeanddate.com/worldclock/meeting.html">
-            https://www.timeanddate.com/worldclock/meeting.html
-          </a>
-          and check by specifying the date of September 1 2022 and your location as well as UTC/GMT
-        </small>
-      </b-form-group>
+      <div v-if="eventVirtual">
+        <div><b>I plan to attend the convention:</b></div>
+        <b-form-radio-group
+          v-model="selected.attendance_type"
+          stacked
+          @change="saveSelected()"
+        >
+          <b-form-radio value="in person">In Person</b-form-radio>
+          <b-form-radio value="hybrid">In Person AND Virtually</b-form-radio>
+          <b-form-radio value="virtual">Virtually</b-form-radio>
+        </b-form-radio-group>
+        <b-form-group label="At the time of the convention I will be at UTC Offset">
+          <timezone-selector
+            v-model="selected.timezone"
+            @input="saveSelected()"
+            class="mb-2"
+            :disabled="disabled || selected.attendance_type != 'virtual'"
+          ></timezone-selector>
+          <p>
+            Your time now in the selected timezone is <b>{{youTimeNow}}</b>
+          </p>
+          <small>
+            If you are not sure what your UTC offset will be, or want to verify,
+            please go to
+            <a target="blank" href="https://www.timeanddate.com/worldclock/meeting.html">
+              https://www.timeanddate.com/worldclock/meeting.html
+            </a>
+            and check by specifying the date of September 1 2022 and your location as well as UTC/GMT
+          </small>
+        </b-form-group>
+      </div>
       <!-- <b-form-checkbox v-model="selected.twelve_hour" @input="saveSelected()">
         12 Hour Display
       </b-form-checkbox> -->
@@ -219,6 +221,7 @@ import { modelMixinNoProp } from '@/store/model.mixin';
 import { personModel as model } from "@/store/person.store";
 import { DateTime } from "luxon";
 import personSessionMixin from '@/auth/person_session.mixin';
+import { eventVirtualMixin } from '@/shared/event-virtual.mixin';
 
 export default {
   name: "PersonDetails",
@@ -235,7 +238,8 @@ export default {
   mixins: [
     settingsMixin,
     modelMixinNoProp,
-    personSessionMixin
+    personSessionMixin,
+    eventVirtualMixin
   ],
   data: () =>  ({
     disabled: false,

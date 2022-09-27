@@ -13,6 +13,11 @@ export const integrationStore = {
   state: {
     airmeet: {}
   },
+  getters: {
+    airmeetEnabled(state) {
+      return state.airmeet?.config?.enabled;
+    }
+  },
   mutations: {
     [SET_AIRMEET_INTEGRATION] (state, integration) {
       state.airmeet = integration;
