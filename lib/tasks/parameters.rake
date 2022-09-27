@@ -107,5 +107,15 @@ namespace :parameters do
         }
       )
     end
+
+    unless ParameterName.find_by(parameter_name: 'event_virtual')
+      ParameterName.create!(
+        {
+          parameter_name: 'event_virtual',
+          parameter_description: 'This should be true if your event is virtual or hybrid',
+          parameter_type: 'Boolean'
+        }
+      )
+    end
   end
 end

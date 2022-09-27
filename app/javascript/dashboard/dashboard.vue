@@ -19,7 +19,7 @@
               <li>
                 Update your name(s), pronouns, email address, bio, and social media as needed
               </li>
-              <li>
+              <li v-if="eventVirtual">
                 If you’re not going to be attending the convention in-person, please let us know the timezone that you will be in when you attend virtually.
               </li>
             </ul>
@@ -57,7 +57,7 @@
               <li>
                 Select sessions by using the slider to the right of the description. Your selections will save automatically.
               </li>
-              <li>
+              <li v-if="eventVirtual">
                 While some items are marked or otherwise described as Virtual, many we’re not sure if they will be taking place in-person or online, so everyone should feel free to sign up for items not marked either way.
               </li>
             </ul>
@@ -113,14 +113,15 @@
 </template>
 
 <script>
-import { personSessionMixin, toastMixin } from '@/mixins';
+import { personSessionMixin, toastMixin} from '@/mixins';
 import { mapActions } from 'vuex'; 
 import { FETCH_WORKFLOWS, scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import PersonScheduleDisplay from '@/profile/person_schedule_display.vue';
+import { eventVirtualMixin } from '@/shared/event-virtual.mixin';
 
 export default {
   name: "Dashboard",
-  mixins: [personSessionMixin, toastMixin, scheduleWorkflowMixin],
+  mixins: [personSessionMixin, toastMixin, scheduleWorkflowMixin, eventVirtualMixin],
   components: {
     PersonScheduleDisplay
   },
