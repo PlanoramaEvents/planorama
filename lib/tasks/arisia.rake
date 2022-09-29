@@ -119,6 +119,21 @@ namespace :arisia do
           {
             title: 'Masquerade rehearsal'
           },
+          {
+            title: 'Geeky Belly Dance'
+          },
+          {
+            title: 'Post Meridian Players (PMRP)'
+          },
+          {
+            title: 'Ig Noble Prizes'
+          },
+          {
+            title: 'Mrs. Hawking'
+          },
+          {
+            title: 'Arisia January Corporate Meeting'
+          }
         ]
       )
     end
