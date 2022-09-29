@@ -15,7 +15,7 @@
         </div>
         <div class="col-4 d-flex flex-column align-items-end">
             <small>Last Login: {{formatLocaleDate(selected.current_sign_in_at)}}</small>
-            <b-button v-if="currentUserIsAdmin" variant="warning" :disabled="!selected.integrations.airmeet" @click="resyncAirmeet" class="mt-2">Airmeet re-sync completed</b-button>
+            <b-button v-if="currentUserIsAdmin && airmeetEnabled" variant="warning" :disabled="!selected.integrations.airmeet" @click="resyncAirmeet" class="mt-2">Airmeet re-sync completed</b-button>
         </div>
       </div>
       <person-edit-modal id="person-top-modal" body-class="formscroll" :person="selected" :data="editData">
@@ -46,6 +46,7 @@ import { modelMixinNoProp } from '@/store/model.mixin';
 import { personEndpoints, personModel } from '@/store/person.store';
 import {PERSON_NEVER_LOGGED_IN} from "@/constants/strings";
 import { toastMixin, personSessionMixin } from '@/mixins';
+import { airmeetMixin } from '@/integrations/airmeet.mixin';
 
 export default {
   name: "PersonSummary",
@@ -66,6 +67,7 @@ export default {
     modelMixinNoProp,
     personSessionMixin,
     toastMixin,
+    airmeetMixin
   ],
   computed: {
     willing_to_moderate() {

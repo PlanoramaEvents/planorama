@@ -6,10 +6,8 @@ class IntegrationSerializer
 
   attribute :config do |integration|
     {airmeet_id: integration.config["airmeet_id"],
-      airmeet_host: integration.config["airmeet_host"]
+      airmeet_host: integration.config["airmeet_host"],
+      enabled: integration.config["enabled"]
     }
   end
-
-  
-             
 end

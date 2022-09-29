@@ -77,5 +77,45 @@ namespace :parameters do
         }
       )
     end
+
+    unless ParameterName.find_by(parameter_name: 'convention_name')
+      ParameterName.create!(
+        {
+          parameter_name: 'convention_name',
+          parameter_description: 'The name of the convetion',
+          parameter_type: 'String'
+        }
+      )
+    end
+
+    unless ParameterName.find_by(parameter_name: 'privacy_policy_link')
+      ParameterName.create!(
+        {
+          parameter_name: 'privacy_policy_link',
+          parameter_description: 'A link to the privacy policy for this convention',
+          parameter_type: 'String'
+        }
+      )
+    end
+
+    unless ParameterName.find_by(parameter_name: 'terms_of_use_link')
+      ParameterName.create!(
+        {
+          parameter_name: 'terms_of_use_link',
+          parameter_description: 'A link to the planorama terms of use for this convention',
+          parameter_type: 'String'
+        }
+      )
+    end
+
+    unless ParameterName.find_by(parameter_name: 'event_virtual')
+      ParameterName.create!(
+        {
+          parameter_name: 'event_virtual',
+          parameter_description: 'This should be true if your event is virtual or hybrid',
+          parameter_type: 'Boolean'
+        }
+      )
+    end
   end
 end
