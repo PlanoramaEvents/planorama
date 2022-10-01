@@ -10,8 +10,9 @@ class Agreement < ApplicationRecord
   def self.unsigned(person:)
     raise 'Person needed to list agreements' unless person
 
-    scoping = Agreement.targets[:staff] if person.staff? || person.admin?
-    scoping = Agreement.targets[:participant] if person.participant? || person.no_group?
+    scoping = [Agreement.targets[:all]]
+    scoping += [Agreement.targets[:staff]] if person.staff? || person.admin?
+    scoping += [Agreement.targets[:participant]] if person.participant? || person.no_group?
 
     where(
       [
@@ -20,7 +21,7 @@ class Agreement < ApplicationRecord
       ]
     )
     .where(
-      ['target in (?)', [scoping, Agreement.targets[:all]].compact]
+      ['target in (?)', scoping.compact]
     )
   end
 
