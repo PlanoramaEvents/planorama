@@ -52,7 +52,7 @@
                 Use this tab to tell us what program items you are interested in.
               </li>
               <li>
-                You can filter the options for one area, look through all options (over 600!) or search based on text in the title and description. (Note: You need to click the search button - hitting enter does not work.)
+                You can filter the options for one area, look through all options or search based on text in the title and description. (Note: You need to click the search button - hitting enter does not work.)
               </li>
               <li>
                 Select sessions by using the slider to the right of the description. Your selections will save automatically.
@@ -87,7 +87,7 @@
                   A sentence or two is often sufficient; essays are not required.
                 </li>
                 <li>
-                  We have about 1000 potential panelists and about two dozen staffers engaged in panelist assignments; this step helps us learn more about you in the context of a particular session.
+                  We have about 700 potential panelists and about two dozen staffers engaged in panelist assignments; this step helps us learn more about you in the context of a particular session.
                 </li>
               </ul>
             </p>
