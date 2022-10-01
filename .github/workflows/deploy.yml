@@ -7,8 +7,19 @@ on:
       - main
       - staging
       - development
-      # - release
-      # - ci-testing*
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
 
 jobs:
   release:
@@ -16,6 +27,8 @@ jobs:
     # Temp key for building assets and tests
     env:
       DEVISE_SECRET: aa77bb734faa9b935c1f8b68846e37aed9096cc9fb746copypastaf856594409a11b1086535e468edb2e5bbc18482b386b6264ada38703dcdefd94a291ab5a95eb5
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
 
     steps:
       - name: Maximize build space
@@ -34,6 +47,29 @@ jobs:
           df -h
 
       - uses: actions/checkout@v2
+
+      #
+      # This section logs into registry for Github - so we push here as well as AWS for now
+      #
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      #
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern=latest
 
       - name: Extract branch name
         shell: bash
@@ -112,6 +148,26 @@ jobs:
         run: |
           docker tag $CONTAINER_TEST_REPOSITORY $CONTAINER_DEPLOY_REPOSITORY
           docker push $CONTAINER_DEPLOY_REPOSITORY
+
+      #
+      # Push the image to GHRC (does another build)
+      #
+      - name: Push the image
+        id: docker_push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-prod
+          builder: ${{ steps.buildx.outputs.name }}
+          build-args: |
+            DEVISE_SECRET=${{ env.DEVISE_SECRET }}
+            RAILS_ENV=production
+            NODE_ENV=development
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
 
       # Needed to prevent cache from growing forever (see https://github.com/docker/build-push-action/issues/252)
       - name: Move cache
