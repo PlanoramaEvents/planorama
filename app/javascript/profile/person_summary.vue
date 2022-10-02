@@ -1,8 +1,8 @@
 <template>
-    <div class="container-fluid my-3" v-if="selected">
+    <div :class="['container-fluid', {'my-3': !readOnly}]" v-if="selected">
       <div class="row">
         <div class="col-8">
-          <h3>{{selected.published_name}}<edit-button v-b-modal.person-top-modal></edit-button></h3>
+          <h3>{{selected.published_name}}<edit-button v-b-modal.person-top-modal v-if="!readOnly"></edit-button></h3>
           <div>
             Pronouns: <em>{{selected.pronouns}}</em>
           </div>
@@ -13,7 +13,7 @@
             Primary email: <em v-if="selected.primary_email">{{selected.primary_email.email}}</em>
           </div>
         </div>
-        <div class="col-4 d-flex flex-column align-items-end">
+        <div class="d-flex flex-column col-4 align-items-end">
             <small>Last Login: {{formatLocaleDate(selected.current_sign_in_at)}}</small>
             <b-button v-if="currentUserIsAdmin && airmeetEnabled" variant="warning" :disabled="!selected.integrations.airmeet" @click="resyncAirmeet" class="mt-2">Airmeet re-sync completed</b-button>
         </div>
@@ -50,6 +50,12 @@ import { airmeetMixin } from '@/integrations/airmeet.mixin';
 
 export default {
   name: "PersonSummary",
+  props: {
+    readOnly: {
+      type: Boolean,
+      default: false
+    }
+  },
   components: {
     EditButton,
     PersonEditModal,

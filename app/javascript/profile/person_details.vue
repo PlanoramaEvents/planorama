@@ -1,30 +1,49 @@
 <template>
   <div class="d-flex" v-if="selected">
     <div class="d-flex flex-column w-50 p-2">
+      <div>
+      <h5>Identity</h5>
       <dl-person :fields="['name', 'pseudonym']"></dl-person>
+      </div>
+      <div v-if="readOnly">
+        <h5>Emails</h5>
+        <dl>
+          <dt>Primary email (login)</dt>
+          <dd class="font-italic ml-2">{{selected.primary_email.email}}</dd>
+          <dt>Additional emails</dt>
+          <dd v-for="email in additionalEmails" class="ml-2 font-italic" :key="email.id">{{email.email}}</dd>
+          <dd v-if="!additionalEmails.length" class="ml-2 font-italic text-muted">None</dd>
+        </dl>
+      </div>
       <email-addresses-editor
+        v-if="!readOnly"
         class="mb-4"
         v-model="selected"
         model='email_address'
         @input="$emit('input', selected)"
       ></email-addresses-editor>
-      <h5>Preferences <edit-button v-b-modal.person-misc-modal></edit-button></h5>
+      <h5>Preferences <edit-button v-b-modal.person-misc-modal v-if="!readOnly"></edit-button></h5>
       <dl-person :fields="miscFields">
         <template #can_stream-val>{{can_stream_label}}</template>
         <template #can_record-val>{{can_record_label}}</template>
       </dl-person>
     </div>
     <div class="d-flex flex-column w-50 p-2">
-      <div v-if="eventVirtual">
+      <div v-if="eventVirtual && readOnly">
+        <h5>Virtual</h5>
+        <dl-person :fields="['attendance_type', 'timezone']">
+          <template #attendance_type-val="{value}">{{PERSON_ATTENDANCE_TYPE[value]}}</template>
+        </dl-person>
+      </div>
+      <div v-if="eventVirtual && !readOnly">
+        <h5>Virtual</h5>
         <div><b>I plan to attend the convention:</b></div>
         <b-form-radio-group
           v-model="selected.attendance_type"
           stacked
           @change="saveSelected()"
+          :options="attendanceTypeOptions"
         >
-          <b-form-radio value="in person">In Person</b-form-radio>
-          <b-form-radio value="hybrid">In Person AND Virtually</b-form-radio>
-          <b-form-radio value="virtual">Virtually</b-form-radio>
         </b-form-radio-group>
         <b-form-group label="At the time of the convention I will be at UTC Offset">
           <timezone-selector
@@ -49,9 +68,9 @@
       <!-- <b-form-checkbox v-model="selected.twelve_hour" @input="saveSelected()">
         12 Hour Display
       </b-form-checkbox> -->
-      <h5>Bio <edit-button v-b-modal.person-bio-modal></edit-button></h5>
+      <h5>Bio <edit-button v-b-modal.person-bio-modal v-if="!readOnly"></edit-button></h5>
       <div class="ml-2" v-html="selected.bio"></div>
-      <b class="mt-3">Social Media <edit-button v-b-modal.person-social-modal></edit-button></b>
+      <h5 class="mt-3">Social Media <edit-button v-b-modal.person-social-modal v-if="!readOnly"></edit-button></h5>
       <dl-person :fields="socialFields"></dl-person>
     </div>
     <person-edit-modal id="person-bio-modal" :person="selected" :data="{bio: null}">
@@ -214,7 +233,8 @@ import {
   TWITCH_ID_INVALID_MSG,
   YOUTUBE_ID_INVALID_MSG,
   TIKTOK_ID_INVALID_MSG,
-  LINKEDIN_ID_INVALID_MSG
+  LINKEDIN_ID_INVALID_MSG,
+  PERSON_ATTENDANCE_TYPE
 } from '../constants/strings';
 import settingsMixin from "@/store/settings.mixin";
 import { modelMixinNoProp } from '@/store/model.mixin';
@@ -225,6 +245,12 @@ import { eventVirtualMixin } from '@/shared/event-virtual.mixin';
 
 export default {
   name: "PersonDetails",
+  props: {
+    readOnly: {
+      type: Boolean,
+      default: false
+    }
+  },
   components: {
     TimezoneSelector,
     EmailAddressesEditor,
@@ -251,6 +277,7 @@ export default {
     YOUTUBE_ID_INVALID_MSG,
     TIKTOK_ID_INVALID_MSG,
     LINKEDIN_ID_INVALID_MSG,
+    PERSON_ATTENDANCE_TYPE,
     model,
     miscData: {
       do_not_assign_with: null,
@@ -275,6 +302,9 @@ export default {
     },
   }),
   computed: {
+    attendanceTypeOptions() {
+      return Object.entries(PERSON_ATTENDANCE_TYPE).map(([key, value]) => ({text: value, value: key}))
+    },
     socialFields() {
       return Object.keys(this.socialsData);
     },
@@ -332,6 +362,9 @@ export default {
     canEditSensitiveInfo() {
       // TODO in the future use the sensitive data permission instead of the admin setting
       return this.currentUserIsAdmin || this.currentUser.id === this.selected.id;
+    },
+    additionalEmails() {
+      return Object.values(this.selected.email_addresses).filter(e => !e.isdefault)
     }
   },
 }

@@ -187,7 +187,7 @@ module.exports = {
             is_local: "Is a local",
             willing_to_moderate: "Moderation interest",
             languages_fluent_in: "Fluent languages",
-            contact_email: "Contact email"
+            contact_email: "Contact email",
         },
     },
     nLines,
@@ -238,7 +238,9 @@ module.exports = {
         name: "Name",
         pseudonym: "Pseudonym",
         languages_fluent_in: "Languages spoken",
-        can_share: "Permission to share email with other Participants"
+        can_share: "Permission to share email with other Participants",
+        attendance_type: "Will attend convention",
+        timezone: "Timezone during convention",
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
@@ -253,6 +255,11 @@ module.exports = {
         accepted: "Accepted",
         declined: "Declined",
         rejected: "Rejected"
+    },
+    PERSON_ATTENDANCE_TYPE: {
+        'in person': "In Person",
+        hybrid: "In Person AND Virtually",
+        virtual: "Virtually",
     },
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",

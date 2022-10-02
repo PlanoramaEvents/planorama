@@ -8,13 +8,13 @@
     @hidden="unselect"
     no-header
   >
-    <b-nav fill>
-      <b-navbar-nav class="px-3 py-2">
+    <b-nav fill class="justify-content-between">
+      <b-navbar-nav class="px-3 py-2 flex-grow-1">
         <b-nav-text>
           <slot name="header"></slot>
         </b-nav-text>
       </b-navbar-nav>
-      <b-navbar-nav class="ml-auto px-3 py-2">
+      <b-navbar-nav class="px-3 py-2">
         <b-nav-form>
           <b-button @click="unselect">
             <i class="fas fa-times" @click="unselect"></i>
