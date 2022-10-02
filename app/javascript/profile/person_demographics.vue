@@ -2,11 +2,11 @@
   <section>
     <div class="d-flex flex-row mt-3">
       <div class="w-50 mr-2">
-        <h5>Demographics <edit-button v-b-modal.person-demo-modal v-if="canEditInfo"></edit-button></h5>
+        <h5>Demographics <edit-button v-b-modal.person-demo-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
         <dl-person :fields="demoFields"></dl-person>
       </div>
       <div class="w-50">
-        <h5>Community memberships <edit-button v-b-modal.person-community-modal v-if="canEditInfo"></edit-button></h5>
+        <h5>Community memberships <edit-button v-b-modal.person-community-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
         <dl-person :fields="communityFields"></dl-person>
       </div>
     </div>
@@ -61,6 +61,12 @@ import personSessionMixin from '@/auth/person_session.mixin';
 
 export default {
   name: "PersonDemographics",
+  props: {
+    readOnly: {
+      type: Boolean,
+      default: false
+    }
+  },
   components: {
     PersonEditModal,
     EditButton,

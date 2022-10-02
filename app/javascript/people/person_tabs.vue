@@ -11,7 +11,7 @@
           <person-demographics></person-demographics>
         </b-tab>
         <!-- Can not make this lazy otherwise we have lock issues with the notes -->
-        <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
+        <b-tab title="Availability" :active="tab === 'availability'">
           <availability-and-interests
             v-if="person"
             v-model="person"
