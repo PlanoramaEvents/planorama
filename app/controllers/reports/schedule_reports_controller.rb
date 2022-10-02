@@ -82,12 +82,12 @@ class Reports::ScheduleReportsController < ApplicationController
 
         # If the room was changed
         if change[:changes]['room_id']
-          session_room_change_row(@session_room_changed, change)
+          session_room_change_row(@session_room_changed, change) unless change[:event] == 'destroy'
         end
 
         # If the time was changed
         if change[:changes]['start_time']
-          session_time_change_row(@session_time_changed, change)
+          session_time_change_row(@session_time_changed, change) unless change[:event] == 'destroy'
         end
       end
 
@@ -95,6 +95,7 @@ class Reports::ScheduleReportsController < ApplicationController
       # We need the object as it is now???
       if change[:object].start_time && change[:object].room_id
         check_status_change(change: change, to: to, live: live)
+        next if change[:event] == 'destroy'
 
         if change[:changes]['title']
           session_title_change_row(@session_title_changed, change)
