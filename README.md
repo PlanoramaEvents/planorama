@@ -9,9 +9,6 @@
 Rails 6.x
 Vue.js
 
-### Devise
-We are using encrypted secrets for now. For dev please request key file.
-
 ## Note On Local Development
 
 ## Set up your environment
@@ -26,6 +23,11 @@ export POSTGRES_USER=yourdbuser
 export POSTGRES_PASSWORD=yourpassword
 export DEVISE_SECRET=abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
 export SIDEKIQ_REDIS_URL=redis://localhost:6379/0
+export SMTP_PORT=10025
+export SMTP_SERVER=127.0.0.1
+export HOSTNAME=localhost
+export HOSTPORT=3000
+export PROGRAM_EMAIL=planorama@mycon.org
 ```
 
 The USER and PASSWORD will be used by the docker scripts to create an instance of the database
@@ -34,8 +36,7 @@ unimportant and can be used as-is.
 
 DEVISE_SECRET is used by Ruby for encryption. Any long string will do. This one works fine.
 
-Redis is not running at the default port, so Sidekiq needs to be told where it is.
-
+Redis is running in a container, so Sidekiq and Rails needs to be told where it is.
 
 If you are installing this on a Windows machine, you may need to run the
 following command:
@@ -117,3 +118,140 @@ docker volume create --name=node_modules_sidekiq
 ```
 
 Now you can run `docker-compose`
+
+# Notes for Production
+
+There is a sample docker compose file `docker-compose-prod.yml` that can be used to base a prodction instance on. It assumes
+that the Postgres DB is running outside of docker. If you want to run the DB in a container have a look at the Staging
+compose file for an example of how that is done.
+
+There are automated builds happening in Github and docker containers are stored in the Github repo. One for each branch (main, staging, development)
+as well as a "latest" which is built when a release tag is done. To pull them use one of the following commands:
+
+```
+docker pull ghcr.io/chicagoworldcon/planorama:main
+docker pull ghcr.io/chicagoworldcon/planorama:staging
+docker pull ghcr.io/chicagoworldcon/planorama:development
+docker pull ghcr.io/chicagoworldcon/planorama:latest
+```
+
+Latest will be the last build based on a tagged release.
+
+## Directory mappings
+
+We map the log directories from the containers to teh system directories `/var/log/planorama/web` and `/var/log/planorama/sidekiq`,
+see the mapping under the web and sidekiq containers, they have a line like the following to do the mapping:
+
+```
+  - /var/log/planorama/web:/opt/planorama/log
+```
+
+## Redis data
+
+Redis data needs to be persistent between runs of the docker container. You will need to create a volume using the
+docker command as follows:
+
+```
+docker volume create --name=redis-data
+```
+
+## Environment
+
+The containers rely on enironment variables. The docker file loads the environment from a file,
+which is specified via a line as follows:
+
+```
+  - "/opt/chicago/etc/planorama.env"
+```
+
+change this to what is appropriate for your system.
+
+The file should contain lines like the following with values appropriate to your
+installation:
+
+```
+HOSTNAME=planorama.mycon.org
+RAILS_ENV=production
+RAILS_LOG_TO_STDOUT=true
+RAILS_LOG_LEVEL=info
+
+DEVISE_SECRET=
+
+DB_HOST=
+DB_NAME=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+
+PROGRAM_EMAIL=program@mycon.org
+
+SMTP_SERVER=
+SMTP_PORT=
+SMTP_USER_NAME=
+SMTP_PASSWORD=
+
+SIDEKIQ_REDIS_URL=redis://redis:6379/0
+# the sidekiq user and password are optional
+# SIDEKIQ_USER=sidekiq
+# SIDEKIQ_PASSWORD=
+```
+
+Generate a secret key for devise using the following
+
+```
+bundle exec rake secret
+```
+
+and set that as the value for the env variable
+
+## Event Settings
+
+Once you have an instance running you will need to do the following
+
+1. create an initial user
+2. login and setup the event Settings
+
+### Create initial user
+
+You can run a shell in the rails docker container and create a user as follows:
+
+Run a shell in the web docker container:
+```
+docker exec -it  planorama_web_1 sh
+```
+
+Run the rails console
+
+```
+bin/rails c
+```
+
+Create a person/user from within the rails console. Set the name, password and email to
+match what you need:
+
+```
+p = Person.create(
+  name: 'admin',
+  password: 'StrongPassword'
+)
+
+EmailAddress.create(
+  person: p,
+  isdefault: true,
+  email: 'admin@mycon.com',
+  is_valid: true
+)
+
+ConventionRole.create(
+  person: p,
+  role: ConventionRole.roles[:admin]
+)
+```
+
+### Event Settings
+
+In the Admin page you will see an Event Settings panel, open that and set at least the following:
+
+- Email From Address
+- Email reply to Address
+- Convention Timezone
+- Convention start and end times

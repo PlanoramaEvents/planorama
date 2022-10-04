@@ -2,20 +2,23 @@
 # This is the dev version of the docker compose
 # this is overlaid on the docket compose for dev environments
 #
-# docker-compose -p plano-dev -f docker-compose-dev.yml up
+# NOTE:
+# You will need to create volumes for the data to be persistent between runs
+#   docker volume create --name=pgdata
+#   docker volume create --name=redis-data
+#   docker volume create --name=node_modules
+#   docker volume create --name=node_modules_sidekiq
 #
-# docker-compose -p plano-dev -f docker-compose-dev.yml up --build
-#
-# docker-compose -p plano-dev -f docker-compose-dev.yml up --build -d
+# NOTE:
+# start the docker containers:
+#   docker-compose -p plano-dev -f docker-compose-dev.yml up
+# build and start the docker containers:
+#   docker-compose -p plano-dev -f docker-compose-dev.yml up --build
+# build and start the docker containers and detach the processes:
+#   docker-compose -p plano-dev -f docker-compose-dev.yml up --build -d
 #
 version: "3.7"
 
-#
-# docker volume create --name=pgdata
-# docker volume create --name=redis-data
-# docker volume create --name=node_modules
-# docker volume create --name=node_modules_sidekiq
-#
 volumes:
   pgdata:
     external: true
