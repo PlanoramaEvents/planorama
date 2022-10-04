@@ -1,16 +1,21 @@
 #
-# This is the dev version of the docker compose
+# This is sample docker file for use in a prod environment
 #
-# docker-compose -f  docker-compose-prod.yml up --build
+# NOTE:
+# You will need to create the redis-data volumes:
+# docker volume create --name=redis-data
 #
-# With a local postgres
-# docker-compose -p plano-prod -f  docker-compose-prod.yml -f docker-compose-pg.yml up
+# NOTE: if you want to run postgres in a container have a look at the staging compose file
+# you will need to set the links for web and sidekiq accordingling and also set up
+# an external volume for postgres data
 #
+# docker volume create --name=pgdata
+#
+
 version: "3.7"
 
 volumes:
   redis-data:
-  # box: {} # used for the bundler, persistent store between runs
 
 services:
   redis:
@@ -18,53 +23,51 @@ services:
     restart: always
     volumes:
       - redis-data:/data
-  #
-  # NOTE:
-  # .enrc set ths env variables for
-  #   DB_PORT
-  #   POSTGRES_USER
-  #   POSTGRES_PASSWORD
-  #
-  planorama:
-    # image: planorama:production
-    build:
-      context: .
-      dockerfile: Dockerfile-prod
-    env_file:
-      - .envrc
-    environment:
-      - DB_HOST=postgres
-      - RAILS_ENV=production
-      - NODE_ENV=production
-    command: /opt/planorama/script/planorama_start.sh
+  web:
+    command: "/opt/planorama/script/planorama_start.sh"
+    # planorama:latest for latest release (tagged)
+    # planorama:main for latest build of main branch
+    image: ghcr.io/chicagoworldcon/planorama:latest
+    ports:
+      - "127.0.0.1:3000:3000"
     volumes:
+      # NOTE: this will need to reflect local system
       - /var/log/planorama/web:/opt/planorama/log
       - type: tmpfs
-        target: /opt/planorama/tmp
-    ports:
-      - "3000:3000"
-    depends_on:
-      - redis
-    links:
-      - redis
-
-  planorama-sidekiq:
-    # image: planorama:production
-    build:
-      context: .
-      dockerfile: Dockerfile-prod
-    env_file:
-      - .envrc
+        target: /app/tmp
     environment:
-      - DB_HOST=postgres
+      - PGID=1005
+      - PUID=1001
       - RAILS_ENV=production
       - NODE_ENV=production
-    command: /opt/planorama/script/planorama_sidekiq.sh
-    volumes:
-      - /var/log/planorama/sidekiq:/opt/planorama/log
-      - type: tmpfs
-        target: /opt/planorama/tmp
+    env_file:
+      # NOTE: this will need to reflect local system
+      - "/opt/chicago/etc/planorama.env"
     depends_on:
       - redis
     links:
       - redis
+    restart: always
+
+  planorama-sidekiq:
+    command: "/opt/planorama/script/planorama_sidekiq.sh"
+    # See above note re which image to use
+    image: ghcr.io/chicagoworldcon/planorama:latest
+    volumes:
+      # NOTE: this will need to reflect local system
+      - /var/log/planorama/sidekiq:/opt/planorama/log
+      - type: tmpfs
+        target: /app/tmp
+    environment:
+      - PGID=1005
+      - PUID=1001
+      - RAILS_ENV=production
+      - NODE_ENV=production
+    env_file:
+      # NOTE: this will need to reflect local system
+      - "/opt/chicago/etc/planorama.env"
+    depends_on:
+      - redis
+    links:
+      - redis
+    restart: always
