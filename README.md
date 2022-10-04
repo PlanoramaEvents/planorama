@@ -195,6 +195,14 @@ SIDEKIQ_REDIS_URL=redis://redis:6379/0
 # SIDEKIQ_PASSWORD=
 ```
 
+Generate a secret key for devise using the following
+
+```
+bundle exec rake secret
+```
+
+and set that as the value for the env variable
+
 ## Event Settings
 
 Once you have an instance running you will need to do the following
