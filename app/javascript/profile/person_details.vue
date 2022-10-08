@@ -132,70 +132,62 @@
     <person-edit-modal id="person-social-modal" :person="selected" :data="socialsData">
       <template #modal-title>Edit Socials - {{selected.published_name}}</template>
       <template #default="{fields}">
-        <validated-social
-          :rules="{ regex: /^[a-z0-9_]{1,15}$/i }"
+        <simple-social
           label="Twitter"
+          :rules="{min: 1, max: 15, regex: /^[a-z0-9_]{1,15}$/i}"
           prepend="@"
           v-model="fields.twitter"
           :disabled="disabled"
-          :message="TWITTER_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
-          :rules="{ regex: /^[a-z\d.]{5,}$/i }"
+        ></simple-social>
+        <simple-social
+          :rules="{min: 5, regex: /^[a-z\d.]{5,}$/i }"
           label="Facebook"
           prepend="facebook.com/"
           v-model="fields.facebook"
           :disabled="disabled"
-          :message="FACEBOOK_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
           label="Website"
           prepend="url"
           v-model="fields.website"
           :disabled="disabled"
-          :message="WEBSITE_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex: /^[a-zA-Z0-9._]+$/ }"
           label="Instagram"
           prepend="instagram.com/"
           v-model="fields.instagram"
           :disabled="disabled"
-          :message="INSTAGRAM_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex: /^(#)?[a-zA-Z0-9][\w]{2,24}$/ }"
           label="Twitch"
           prepend="twitch.tv/"
           v-model="fields.twitch"
           :disabled="disabled"
-          :message="TWITCH_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex: /^[a-zA-Z0-9\/_]+([\-\.]{1}[a-zA-Z0-9\/_]+)*$/ }"
           label="YouTube"
           prepend="youtube.com/"
           v-model="fields.youtube"
           :disabled="disabled"
-          :message="YOUTUBE_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex:/^([a-zA-Z0-9._-])+$/ }"
           label="TikTok"
           prepend="@"
           v-model="fields.tiktok"
           :disabled="disabled"
-          :message="TIKTOK_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex:/^([a-zA-Z0-9.\/_-])+$/ }"
           label="LinkedIn"
           prepend="linkedin.com/in/"
           v-model="fields.linkedin"
           :disabled="disabled"
-          :message="LINKEDIN_ID_INVALID_MSG"
-        ></validated-social>
+        ></simple-social>
         <simple-social
           label="Other"
           v-model="fields.othersocialmedia"
@@ -219,7 +211,6 @@
 import TimezoneSelector from "@/components/timezone_selector.vue"
 import EmailAddressesEditor from "@/components/email_addresses_editor.vue"
 import PlanoEditor from '@/components/plano_editor'
-import ValidatedSocial from '@/components/validated_social.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
 import EditButton from '@/components/edit_button.vue';
 import PersonEditModal from './person_edit_modal.vue';
@@ -255,7 +246,6 @@ export default {
     TimezoneSelector,
     EmailAddressesEditor,
     PlanoEditor,
-    ValidatedSocial,
     SimpleSocial,
     PersonEditModal,
     EditButton,
