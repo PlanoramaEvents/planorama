@@ -10,7 +10,7 @@
           To get started, click on <a href="/#/profile">Profile</a>.
         </p>
         <p>
-          At this point there are 4 tabs in the profile. You will need to visit all of them.
+          At this point there are 5 tabs in the profile. You will need to visit all of them.
         </p>
         <ul>
           <li>
@@ -24,10 +24,14 @@
               </li>
             </ul>
           </li>
-        </ul>
-        <ul>
           <li>
-            <b>Availability & Interests</b>
+            <b>Demographics &amp; Community</b>
+            <ul>
+              <li>Fill in your information as needed.</li>
+            </ul>
+          </li>
+          <li>
+            <b>Availability</b>
             <ul>
               <li>
                 Fill in the maximum number of program items you would like to be on.
@@ -43,8 +47,6 @@
               </li>
             </ul>
           </li>
-        </ul>
-        <ul>
           <li>
             <b>Session Selection</b>
             <ul>
@@ -62,8 +64,6 @@
               </li>
             </ul>
           </li>
-        </ul>
-        <ul>
           <li>
             <b>Session Rankings</b>
             <p>
