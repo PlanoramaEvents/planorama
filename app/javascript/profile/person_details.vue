@@ -73,26 +73,32 @@
       <h5 class="mt-3">Social Media <edit-button v-b-modal.person-social-modal v-if="!readOnly"></edit-button></h5>
       <dl-person :fields="socialFields"></dl-person>
     </div>
-    <person-edit-modal id="person-bio-modal" :person="selected" :data="{bio: null}">
+    <person-edit-modal id="person-bio-modal" :person="selected" :data="{bio: null}" :validate="true">
       <template #modal-title>Edit Bio - {{selected.published_name}}</template>
       <template #default="{fields}">
-        <plano-editor
-          v-model="fields.bio"
-          type='classic'
-        ></plano-editor>
+        <validation-provider
+          name="Bio"
+        >
+          <plano-editor
+            v-model="fields.bio"
+            type='classic'
+          ></plano-editor>
+        </validation-provider>
       </template>
     </person-edit-modal>
-    <person-edit-modal id="person-misc-modal" :person="selected" :data="miscData">
+    <person-edit-modal id="person-misc-modal" :person="selected" :data="miscData" :validate="true">
       <template #modal-title>Edit Preferences - {{selected.published_name}}</template>
       <template #default="{fields}">
-        <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
-          <!-- TODO change edit permissions to sensitive data tickybox -->
-          <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.do_not_assign_with"></b-form-textarea>
-          <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
-        </b-form-group>
+        <validation-provider name="Anyone that should not be assigned with">
+          <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
+            <!-- TODO change edit permissions to sensitive data tickybox -->
+            <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.do_not_assign_with"></b-form-textarea>
+            <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
+          </b-form-group>
+        </validation-provider>
 
-        <!-- HERE -->
-        <b-form-group label="Permission to share email with other Participants">
+        <validation-provider name="Sharing preferences">
+          <b-form-group label="Permission to share email with other Participants">
             <b-form-radio-group
               stacked
               v-model="fields.can_share"
@@ -100,9 +106,11 @@
               <b-form-radio :value="true">{{yesLabel.label}}</b-form-radio>
               <b-form-radio :value="false">{{noLabel.label}}</b-form-radio>
             </b-form-radio-group>
-        </b-form-group>
+          </b-form-group>
+        </validation-provider>
 
         <b-form-group label="Permission to be included in a livestreamed program">
+          <validation-provider>
             <b-form-radio-group
               stacked
               v-model="fields.can_stream"
@@ -111,91 +119,94 @@
               <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
               <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
             </b-form-radio-group>
+          </validation-provider>
+          <validation-provider>
             <b-textarea v-model="fields.can_stream_exceptions"></b-textarea>
+          </validation-provider>
         </b-form-group>
         <b-form-group label="Permission to be included in a recorded program">
+          <validation-provider>
             <b-form-radio-group stacked v-model="fields.can_record" >
               <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
               <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
               <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
             </b-form-radio-group>
+          </validation-provider>
+          <validation-provider>
             <b-textarea v-model="fields.can_record_exceptions"></b-textarea>
+          </validation-provider>
         </b-form-group>
-        <b-form-group>
-        <b-form-checkbox switch v-model="fields.is_local">Local to the event</b-form-checkbox>
-        </b-form-group>
+        <validation-provider>
+          <b-form-group>
+          <b-form-checkbox switch v-model="fields.is_local">Local to the event</b-form-checkbox>
+          </b-form-group>
+        </validation-provider>
+        <validation-provider>
         <b-form-group label="Moderating experience">
           <b-form-textarea v-model="fields.moderation_experience"></b-form-textarea>
         </b-form-group>
+        </validation-provider>
       </template>
     </person-edit-modal>
-    <person-edit-modal id="person-social-modal" :person="selected" :data="socialsData">
+    <person-edit-modal id="person-social-modal" :person="selected" :data="socialsData" :validate="true">
       <template #modal-title>Edit Socials - {{selected.published_name}}</template>
       <template #default="{fields}">
-        <validated-social
-          :rules="{ regex: /^[a-z0-9_]{1,15}$/i }"
+        <simple-social
           label="Twitter"
+          :rules="{min: 1, max: 15, regex: /^[a-z0-9_]{1,15}$/i}"
           prepend="@"
           v-model="fields.twitter"
           :disabled="disabled"
-          :message="TWITTER_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
-          :rules="{ regex: /^[a-z\d.]{5,}$/i }"
+        ></simple-social>
+        <simple-social
+          :rules="{min: 5, regex: /^[a-z\d.]{5,}$/i }"
           label="Facebook"
           prepend="facebook.com/"
           v-model="fields.facebook"
           :disabled="disabled"
-          :message="FACEBOOK_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
           label="Website"
           prepend="url"
           v-model="fields.website"
           :disabled="disabled"
-          :message="WEBSITE_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex: /^[a-zA-Z0-9._]+$/ }"
           label="Instagram"
           prepend="instagram.com/"
           v-model="fields.instagram"
           :disabled="disabled"
-          :message="INSTAGRAM_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex: /^(#)?[a-zA-Z0-9][\w]{2,24}$/ }"
           label="Twitch"
           prepend="twitch.tv/"
           v-model="fields.twitch"
           :disabled="disabled"
-          :message="TWITCH_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex: /^[a-zA-Z0-9\/_]+([\-\.]{1}[a-zA-Z0-9\/_]+)*$/ }"
           label="YouTube"
           prepend="youtube.com/"
           v-model="fields.youtube"
           :disabled="disabled"
-          :message="YOUTUBE_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex:/^([a-zA-Z0-9._-])+$/ }"
           label="TikTok"
           prepend="@"
           v-model="fields.tiktok"
           :disabled="disabled"
-          :message="TIKTOK_ID_INVALID_MSG"
-        ></validated-social>
-        <validated-social
+        ></simple-social>
+        <simple-social
           :rules="{ regex:/^([a-zA-Z0-9.\/_-])+$/ }"
           label="LinkedIn"
           prepend="linkedin.com/in/"
           v-model="fields.linkedin"
           :disabled="disabled"
-          :message="LINKEDIN_ID_INVALID_MSG"
-        ></validated-social>
+        ></simple-social>
         <simple-social
           label="Other"
           v-model="fields.othersocialmedia"
@@ -219,21 +230,13 @@
 import TimezoneSelector from "@/components/timezone_selector.vue"
 import EmailAddressesEditor from "@/components/email_addresses_editor.vue"
 import PlanoEditor from '@/components/plano_editor'
-import ValidatedSocial from '@/components/validated_social.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
 import EditButton from '@/components/edit_button.vue';
 import PersonEditModal from './person_edit_modal.vue';
 import DlPerson from './dl_person.vue';
+import { ValidationProvider } from 'vee-validate';
 
 import {
-  TWITTER_ID_INVALID_MSG,
-  FACEBOOK_ID_INVALID_MSG,
-  WEBSITE_INVALID_MSG,
-  INSTAGRAM_ID_INVALID_MSG,
-  TWITCH_ID_INVALID_MSG,
-  YOUTUBE_ID_INVALID_MSG,
-  TIKTOK_ID_INVALID_MSG,
-  LINKEDIN_ID_INVALID_MSG,
   PERSON_ATTENDANCE_TYPE
 } from '../constants/strings';
 import settingsMixin from "@/store/settings.mixin";
@@ -255,11 +258,11 @@ export default {
     TimezoneSelector,
     EmailAddressesEditor,
     PlanoEditor,
-    ValidatedSocial,
     SimpleSocial,
     PersonEditModal,
     EditButton,
     DlPerson,
+    ValidationProvider,
   },
   mixins: [
     settingsMixin,
@@ -269,14 +272,6 @@ export default {
   ],
   data: () =>  ({
     disabled: false,
-    TWITTER_ID_INVALID_MSG,
-    FACEBOOK_ID_INVALID_MSG,
-    WEBSITE_INVALID_MSG,
-    INSTAGRAM_ID_INVALID_MSG,
-    TWITCH_ID_INVALID_MSG,
-    YOUTUBE_ID_INVALID_MSG,
-    TIKTOK_ID_INVALID_MSG,
-    LINKEDIN_ID_INVALID_MSG,
     PERSON_ATTENDANCE_TYPE,
     model,
     miscData: {

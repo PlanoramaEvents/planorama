@@ -37,6 +37,21 @@ import { CustomIconsPlugin } from '../icons';
 import AsyncComputed from 'vue-async-computed';
 import CKEditor from 'ckeditor4-vue';
 import VuePluralize from 'vue-pluralize';
+import { configure as validationConfigure, extend as validationExtend} from 'vee-validate';
+import { min, max, regex, required } from 'vee-validate/dist/rules';
+
+validationConfigure({
+  classes: {
+    valid: 'is-valid',
+    invalid: 'is-invalid',
+    dirty: 'is-dirty'
+  }
+})
+
+validationExtend('min', min);
+validationExtend('max', max);
+validationExtend('regex', regex);
+validationExtend('required', required);
 
 Vue.config.errorHandler = (err, vm, info) => {
   console.error(err);

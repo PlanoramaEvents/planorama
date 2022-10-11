@@ -1,35 +1,43 @@
 <template>
-  <b-form-group
-    :label="label"
-    :label-for="id"
-    :id="groupId"
-    class="mt-2"
+  <validation-provider
+    :rules="rules"
+    :name="label"
+    v-slot="{errors, dirty, validated, valid, classes}"
   >
-    <b-input-group>
-      <template #prepend v-if="prepend || $slots.prepend">
-        <slot name="prepend">
-          <b-input-group-text>{{prepend}}</b-input-group-text>
-        </slot>
-      </template>
-      <b-form-input
-        type="text"
-        @blur="onBlur"
-        :value="value"
-        :disabled="disabled"
-        :state="state"
-      ></b-form-input>
-    </b-input-group>
-  </b-form-group>
+    <b-form-group
+      :label="label"
+      :label-for="id"
+      :id="groupId"
+      class="mt-2"
+    >
+      <b-input-group :class="classes">
+        <template #prepend v-if="prepend || $slots.prepend">
+          <slot name="prepend">
+            <b-input-group-text>{{prepend}}</b-input-group-text>
+          </slot>
+        </template>
+        <b-form-input
+          type="text"
+          v-on="$listeners" 
+          :name="label"
+          :value="value"
+          :disabled="disabled"
+          :state="rules ? (dirty || validated ? valid ? null : false : null ) : null"
+          :aria-describedby="feedbackId"
+        ></b-form-input>
+      </b-input-group>
+      <b-form-invalid-feedback :id="feedbackId">{{errors[0]}}</b-form-invalid-feedback>
+    </b-form-group>
+  </validation-provider>
 </template>
 
 <script>
+
+import { ValidationProvider } from 'vee-validate';
+
 export default {
   name: "SimpleSocial",
   props: {
-    state: {
-      type: Boolean,
-      default: null
-    },
     disabled: {
       type: Boolean,
       default: false
@@ -47,20 +55,25 @@ export default {
     },
     id: {
       type: String,
-      required: false
+      required: false,
+      default: 'social-id'
+    },
+    rules: {
+      type: Object,
+      required: false,
     }
+  },
+  components: {
+    ValidationProvider
   },
   computed: {
     groupId() {
       return `${this.id}-group`;
+    },
+    feedbackId() {
+      return `${this.id}-feedback`;
     }
   },
-  methods: {
-    onBlur(e) {
-      this.$emit('input', e.target.value)
-      this.$emit('blur', e.target.value)
-    }
-  }
 }
 </script>
 
