@@ -1,7 +1,7 @@
 <template>
   <div>
     <model-loading-overlay :model="personModel">
-      <b-button variant="link" @click="back">Back</b-button>
+      <b-button variant="link" @click="back" v-if="currentUserIsAdmin || currentUserIsStaff">Back</b-button>
         <person-summary></person-summary>
       <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
         <b-tab title="General" :active="!tab" lazy>
