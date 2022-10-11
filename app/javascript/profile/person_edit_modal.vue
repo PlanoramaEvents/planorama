@@ -5,7 +5,7 @@
       @ok="handleSubmit(patchPerson())"
       v-bind="$attrs"
       v-on="$listeners"
-      :ok-disabled="invalid || pristine"
+      :ok-disabled="validate ? invalid || pristine : false"
     >
       <slot v-for="(_, name) in $slots" :name="name" :slot="name"></slot>
       <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData"><slot :name="name" v-bind="{...slotData, fields: data}"></slot></template>
@@ -37,6 +37,10 @@ export default {
     },
     data: {
       required: true
+    },
+    validate: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
