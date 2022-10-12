@@ -16,13 +16,7 @@
           <person-demographics :readOnly="true"></person-demographics>
         </b-tab>
         <b-tab title="Availability" lazy>
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-12">
-                See Edit view
-              </div>
-            </div>
-          </div>
+          <availability-flyout-tab></availability-flyout-tab>
         </b-tab>
         <b-tab :title="liveScheduleTitle" lazy v-if="currentUserIsAdmin || currentUserIsStaff || firmSchedule">
           <person-live-schedule :noSidebar="true"></person-live-schedule>
@@ -59,6 +53,7 @@ import PersonDetails from '@/profile/person_details.vue';
 import PersonLiveSchedule from '@/profile/person_live_schedule.vue';
 import PersonDraftSchedule from '@/profile/person_draft_schedule.vue';
 import PersonSummary from '@/profile/person_summary.vue';
+import AvailabilityFlyoutTab from '@/profile/availability_flyout_tab.vue';
 
 export default {
   name: 'PeopleSidebar',
@@ -72,7 +67,8 @@ export default {
     PersonLiveSchedule,
     PersonDraftSchedule,
     PeopleSurveysTab,
-    PersonSummary
+    PersonSummary,
+    AvailabilityFlyoutTab,
   },
   mixins: [
     modelMixin,
