@@ -4,6 +4,10 @@
           <div class="col-12 col-sm-6 col-lg-4">
             <dt>Status</dt>
             <dd class="font-italic ml-2">{{PERSON_CON_STATE[selected.con_state || 'not_set']}}</dd>
+            <dt>Registered</dt>
+            <dd class="font-italic ml-2">{{selected.registered ? 'Yes' : 'No'}}</dd>
+            <dt>Registration ID</dt>
+            <dd class="font-italic ml-2">{{selected.registration_number || 'Unknown'}}</dd>
             </div>
           <div class="col-12 col-sm-6 col-lg-4">
             <dt>Convention Class</dt>

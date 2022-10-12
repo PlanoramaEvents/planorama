@@ -1,14 +1,16 @@
 <template>
-  <edit-modal
-    @show="mirrorFromPerson()"
-    @ok="patchPerson()"
-    v-bind="$attrs"
-    v-on="$listeners"
-  >
-    <!-- TODO pass model data to slots -->
-    <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
-    <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData"><slot :name="name" v-bind="{...slotData, fields: data}" /></template>
-  </edit-modal>
+  <ValidationObserver v-slot="{handleSubmit, invalid, pristine}">
+    <edit-modal
+      @show="mirrorFromPerson()"
+      @ok="handleSubmit(patchPerson())"
+      v-bind="$attrs"
+      v-on="$listeners"
+      :ok-disabled="validate ? invalid || pristine : false"
+    >
+      <slot v-for="(_, name) in $slots" :name="name" :slot="name"></slot>
+      <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData"><slot :name="name" v-bind="{...slotData, fields: data}"></slot></template>
+    </edit-modal>
+  </ValidationObserver>
 </template>
 
 <script>
@@ -18,11 +20,13 @@ import { mapActions } from 'vuex';
 import toastMixin from '@/shared/toast-mixin';
 import { FETCH_BY_ID } from '@/store/model.store';
 import { PERSON_SAVE_SUCCESS } from '@/constants/strings';
+import { ValidationObserver } from 'vee-validate';
 
 export default {
   name: "PersonEditModal",
   components: {
-    EditModal
+    EditModal,
+    ValidationObserver,
   },
   mixins: [
     toastMixin
@@ -33,6 +37,10 @@ export default {
     },
     data: {
       required: true
+    },
+    validate: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <div class="admin scrollable">
-    <h1>Admin stuff goes here.  <b-icon-minecart-loaded></b-icon-minecart-loaded></h1>
+    <h1>Admin stuff goes here. <b-icon-minecart-loaded></b-icon-minecart-loaded></h1>
     <div class="accordion" role="tablist">
       <admin-accordion id="add-user-accordion" title="Add User">
         <person-add></person-add>
