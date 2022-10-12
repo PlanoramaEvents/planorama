@@ -38,6 +38,11 @@ footer {
 
   a {
     color: white;
+
+    &:hover {
+      color: white;
+      text-decoration: underline;
+    }
   }
 }
 </style>
