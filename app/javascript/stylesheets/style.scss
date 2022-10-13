@@ -121,3 +121,7 @@ body {
     @include alert-variant(theme-color-level($color, 0), theme-color-level($color, 0), theme-color-level($color, $alert-color-level));
   }
 }
+
+.flex-basis-50 {
+  flex-basis: 50%;
+}

@@ -7,6 +7,7 @@ export const UPDATE_AVAILABILITY = 'UPDATE AVAILABILITY';
 export const availabilityModel = 'availability';
 
 import { personModel } from '@/store/person.store'
+import { DateTime, Duration } from 'luxon';
 
 export const availabilityEndpoints = {
   [availabilityModel]: 'availability'
@@ -51,5 +52,14 @@ export const availabilityStore = {
     [availabilityModel]: undefined
   },
   getters: {
+    availabilitiesForPerson(store, getters) {
+      return (person) => {
+        const availabilities = Object.values(getters['jv/get'](
+          {_jv: {type: availabilityModel}}, 
+          `$[?(@.person_id=='${person.id}')]`
+        ));
+        return availabilities.map((a) => { return {start: DateTime.fromISO(a.start_time) , end: DateTime.fromISO(a.end_time)} })
+      };
+    }
   }
 }

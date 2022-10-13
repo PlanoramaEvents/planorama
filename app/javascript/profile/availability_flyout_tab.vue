@@ -1,28 +1,51 @@
 <template>
   <div class="d-flex flex-column">
+    <div class="flex-grow-1 flex-shrink-1 mb-4">
+      <dl>
+        <dt>Maximum number of program items across the duration of the convention</dt>
+        <dd class="ml-2 font-italic">{{limits[null] || 'Not Set'}}</dd>
+      </dl>
+    </div>
     <div class="d-flex">
-      <div class="flex-grow-1 flex-shrink-1">
+      <div class="flex-grow-1 flex-shrink-1 flex-basis-50">
         <dl>
-          <template v-for="{text, value} of daysList">
-            <dt :key="`${value}-label`">{{text}}</dt>
-            <dd :key="`${value}-amount`" class="ml-2 font-italic">{{limits[value] || 'Not Set'}}</dd>
-          </template>
+          <dt>Selected Times</dt>
+          <dd class="ml-2 font-italic text-muted" v-if="!availabilities.length && !availabilityLoading">None</dd>
+          <b-overlay :show="availabilityLoading" spinner-variant="primary" style="min-height: 5rem;">
+            <dd class="ml-2 font-italic" v-for="avail in availabilities" :key="avail">{{avail}}</dd>
+          </b-overlay>
         </dl>
       </div>
-      <div class="flex-grow-1 flex-shrink-1">
-        <p>Selected Times</p>
-        <p>See edit tab</p>
+      <div class="flex-grow-1 flex-shrink-1 flex-basis-50">
+        <dl>
+          <dt>Maximum number of program items per day</dt>
+          <dd class="ml-2 font-italic">
+            <table>
+              <tr v-for="{text, value} of dayOptions" :key="`${text}-${value}`">
+                <td>{{text}}&nbsp;</td>
+                <td class="pl-3">{{limits[value] || 'Not Set'}}</td>
+              </tr>
+            </table>
+          </dd>
+        </dl>
       </div>
     </div>
+    <!-- <div>
+      <dl>
+        <dt>Exclusions FIX ME</dt>
+        <dd>{{JSON.stringify(exclusions, undefined, 2)}}</dd>
+      </dl>
+    </div> -->
   </div> 
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { modelMixinNoProp } from '@/store/model.mixin';
 import { personModel as model} from '@/store/person.store';
 import conventionTimezoneMixin from '@/shared/convention-timezone.mixin';
-import { dateToEnUsFormat } from '@/utils';
+import { GET_AVAILABILITY } from '@/store/availability.store';
+import { GET_PERSON_EXCLUSIONS } from '@/store/person_exclusion.store';
 
 export default {
   name: "AvailabilityFlyoutTab",
@@ -32,20 +55,61 @@ export default {
   ],
   data: () => ({
     model,
+    availabilityLoading: false,
+    exclusionsLoading: false,
   }),
   computed: {
-    ...mapGetters(['limitsForPerson']),
+    ...mapGetters(['limitsForPerson', 'availabilitiesForPerson', 'exclusionsForPerson']),
     limits() {
       return this.selected 
-        ? this.limitsForPerson(this.selected).reduce((p, c) => ({...p, [dateToEnUsFormat(c.day)]: c.max_sessions}), {})
+        ? this.limitsForPerson(this.selected).reduce((p, c) => ({...p, [c.day]: c.max_sessions}), {})
         : [];
     },
-    daysList() {
-      return [{text: "Convention limit", value: null}, ...this.dayOptions];
+    availabilities() {
+      if(this.selected) {
+          const availabilities = this.availabilitiesForPerson(this.selected);
+          availabilities.sort((a, b) => a.start - b.start)
+          return availabilities.map(a => `${a.start.setZone(this.conventionTimezone).toLocaleString({weekday: 'long', hour: 'numeric', minute: '2-digit'})} - ${a.end.setZone(this.conventionTimezone).toLocaleString({hour: 'numeric', minute: '2-digit', timeZoneName: 'short'})}`)
+      }
+      return [];
+    },
+    dayOptions() {
+      return this.daysArray.map(d => ({text: d.toFormat('EEEE'), value: d.toFormat('y-MM-dd')}))
+    }
+  },
+  methods: {
+    ...mapActions({
+      getAvailabilities: GET_AVAILABILITY,
+      getExclusions: GET_PERSON_EXCLUSIONS
+    }),
+    fetchAvailability() {
+      if (this.selected) {
+        this.availabilityLoading = true;
+        this.getAvailabilities({person: this.selected}).then(() => {
+          this.availabilityLoading = false;
+        })
+      }
+    },
+    fetchExclusions() {
+      if (this.selected) {
+        this.exclusionsLoading = true;
+        this.getExclusions({person: this.selected}).then(() => {
+          this.exclusionsLoading = false;
+        })
+      }
     }
   },
   mounted() {
-    console.log(this.limits, this.daysList)
+    this.fetchAvailability();
+    this.fetchExclusions();
+  },
+  watch: {
+    selected(newVal, oldVal) {
+      if (newVal?.id !== oldVal?.id) {
+        this.fetchAvailability();
+        this.fetchExclusions();
+      }
+    }
   }
 }
 </script>

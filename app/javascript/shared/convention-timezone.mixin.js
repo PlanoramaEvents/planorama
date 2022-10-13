@@ -17,13 +17,16 @@ export const conventionTimezoneMixin = {
       const val = this.currentSettings?.configs?.find(c => c.parameter === 'convention_end_time')?.parameter_value;
       return val ? DateTime.fromISO(val) : DateTime.now();
     },
-    dayOptions() {
+    daysArray() {
       let numDays = Math.ceil(this.conventionEnd.diff(this.conventionStart).as('days'));
       const daysArray = [];
       for (let i = 0; i < numDays; i++) {
         daysArray.push(this.conventionStart.plus({days: i}))
       }
-      return daysArray.map(d => ({text: d.toFormat('DDDD'), value: d.toFormat('D', {locale: "en-US" })}))
+      return daysArray;
+    },
+    dayOptions() {
+      return this.daysArray.map(d => ({text: d.toFormat('DDDD'), value: d.toFormat('D', {locale: "en-US" })}))
     }
   }
 }
