@@ -73,17 +73,13 @@
       <h5 class="mt-3">Social Media <edit-button v-b-modal.person-social-modal v-if="!readOnly"></edit-button></h5>
       <dl-person :fields="socialFields"></dl-person>
     </div>
-    <person-edit-modal id="person-bio-modal" :person="selected" :data="{bio: null}" :validate="true">
+    <person-edit-modal id="person-bio-modal" :person="selected" :data="{bio: null}">
       <template #modal-title>Edit Bio - {{selected.published_name}}</template>
       <template #default="{fields}">
-        <validation-provider
-          name="Bio"
-        >
-          <plano-editor
-            v-model="fields.bio"
-            type='classic'
-          ></plano-editor>
-        </validation-provider>
+        <plano-editor
+          v-model="fields.bio"
+          type='classic'
+        ></plano-editor>
       </template>
     </person-edit-modal>
     <person-edit-modal id="person-misc-modal" :person="selected" :data="miscData" :validate="true">
