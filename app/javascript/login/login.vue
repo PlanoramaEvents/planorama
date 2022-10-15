@@ -134,6 +134,9 @@ export default {
     },
     onSaveFailure: function (error) {
       this.error.text = error.message;
+      if (error.message === "Request failed with status code 401") {
+        this.error.text = LOGIN_401;
+      }
       this.error.visible = true;
     },
     onIeaAgree() {

@@ -5,7 +5,7 @@ const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('
 
 module.exports = {
     // login page
-    LOGIN_401: "You have entered an incorrect username or password.",
+    LOGIN_401: "The username or password you entered is incorrect. Please check your spelling and try again.",
     LOGIN_MISSING_PASSWORD: "You must enter a valid password.",
     LOGIN_INVALID_FIELDS: "You must provide all of your login information.",
     MISSING_EMAIL: "You must enter a valid email address.",
