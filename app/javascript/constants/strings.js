@@ -306,4 +306,5 @@ module.exports = {
             comments: (approvalType) => errorMessage(`${titleCase(approvalType)} approval comment was not saved.`),
         },
     },
+    EVENT_SETTINGS_MUST_RELOAD: "Changes to these settings will only take effect after you reload your browser page.",
 }
