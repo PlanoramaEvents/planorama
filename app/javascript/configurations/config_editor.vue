@@ -42,6 +42,7 @@ import { ValidationProvider } from 'vee-validate';
 import TimezoneSelector from "../components/timezone_selector.vue"
 import settingsMixin from "@/store/settings.mixin";
 import {startCase} from "lodash";
+import { CONFIGURATION_LABEL_OVERRIDES } from '@/constants/strings';
 
 const { DateTime } = require("luxon");
 
@@ -80,8 +81,9 @@ export default {
       return this.configByName('convention_timezone')
     },
     parameterLabel() {
-      if (this.parameter.parameter_name) {
-        return startCase(this.parameter.parameter_name)
+      const param_name = this.parameter.parameter_name;
+      if (param_name) {
+        return CONFIGURATION_LABEL_OVERRIDES[param_name] || startCase(param_name)
       }
       return ''
     }
