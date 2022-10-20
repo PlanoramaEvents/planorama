@@ -46,3 +46,11 @@ export function query_to_rules(query) {
 
   return computed_rules
 }
+
+import { DateTime } from 'luxon';
+
+// date formats are stupid
+export const dateToEnUsFormat = (date) => {
+  if(!date) return date;
+  return DateTime.fromISO(date).toFormat('D', {locale: "en-US"})
+}

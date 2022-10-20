@@ -3,7 +3,13 @@ import { GET_SETTINGS}  from "@/store/settings.store";
 
 export const settingsMixin = {
   computed: {
-    ...mapGetters(['currentSettings'])
+    ...mapGetters(['currentSettings']),
+    exclusionsMap() {
+      if(this.currentSettings?.exclusions) {
+        return this.currentSettings.exclusions.reduce((p, c) => ({...p, [c.id]: c.title}), {})
+      }
+      return {};
+    }
   },
   methods: {
     ...mapActions({
