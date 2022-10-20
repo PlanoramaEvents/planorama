@@ -21,7 +21,7 @@ namespace :survey do
       q = Survey::Question
            .references(:survey)
            .where("survey_pages.survey_id = ?", survey_id)
-           .where("REPLACE(question, ' ', '') = ?", item['title'].gsub(/\s+/, ""))
+           .where("REPLACE(regexp_replace(question, E'[\\n\\r]+', '', 'g' ), ' ', '') = ?", item['title'].gsub(/\s+/, ""))
            .first
 
       case item['type']
