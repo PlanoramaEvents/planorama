@@ -306,8 +306,8 @@ module.exports = {
             comments: (approvalType) => errorMessage(`${titleCase(approvalType)} approval comment was not saved.`),
         },
     },
-    EVENT_SETTINGS_MUST_RELOAD: "Changes to these settings will only take effect after you reload your browser page.",
+    EVENT_SETTINGS_MUST_RELOAD: "*** Changes to these settings will only take effect after you reload your browser page. ***",
     CONFIGURATION_LABEL_OVERRIDES: {
-        event_virtual: "Does the event include a virtual component?"
+        event_virtual: "Does this event include a virtual component?"
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <div v-if="currentSettings">
-    <p>{{EVENT_SETTINGS_MUST_RELOAD}}</p>
+    <p><strong>{{EVENT_SETTINGS_MUST_RELOAD}}</strong></p>
     <div v-for="parameter in parameters" :key="parameter.paremeter_name">
       <config-editor
         model="configuration"
