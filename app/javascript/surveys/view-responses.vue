@@ -42,6 +42,7 @@ import TooltipOverflow from '../shared/tooltip-overflow';
 import { submissionModel, surveyModel } from '@/store/survey';
 import {http as axios} from '../http';
 import pageMixin from './page.mixin';
+import { spinnerMixin } from '@/store/spinner.mixin';
 
 export default {
   name: 'ViewReponses',
@@ -58,7 +59,8 @@ export default {
   mixins: [
     surveyMixin,
     submissionMixin,
-    pageMixin
+    pageMixin,
+    spinnerMixin,
   ],
   computed: {
     defaultUrl() {
@@ -127,7 +129,7 @@ export default {
     },
 
     downloadWithAxios(url, title) {
-      this.$router.app.$refs.planorama.displayOverlay()
+      this.showSpinner();
       axios({
         method: 'get',
         url,
@@ -135,11 +137,11 @@ export default {
       })
         .then((response) => {
           this.forceFileDownload(response, title)
-          this.$router.app.$refs.planorama.hideOverlay()
+          this.hideSpinner();
         })
         .catch(
           () => {
-            this.$router.app.$refs.planorama.hideOverlay()
+            this.hideSpinner();
           }
         )
     },
