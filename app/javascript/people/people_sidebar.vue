@@ -25,7 +25,7 @@
           <person-draft-schedule :noSidebar="true"></person-draft-schedule>
         </b-tab>
         <b-tab title="Emails" lazy v-if="currentUserIsAdmin || currentUserIsStaff">
-          <people-email-tab></people-email-tab>
+          <person-email-tab></person-email-tab>
         </b-tab>
         <b-tab title="Admin" v-if="currentUserIsAdmin || currentUserIsStaff">
          <people-admin-tab></people-admin-tab>
