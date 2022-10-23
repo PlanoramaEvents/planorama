@@ -45,6 +45,13 @@ export default {
       });
     }
   },
+  watch: {
+    selected(newVal, oldVal) {
+      if(newVal && newVal?.id !== oldVal?.id) {
+        this.fetchMailings();
+      }
+    }
+  },
   mounted() {
     if (this.selected) {
       this.fetchMailings();
