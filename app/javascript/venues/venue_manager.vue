@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <b-tabs @input="input">
+  <div class="scrollable">
+    <b-tabs @input="input" class="mt-2">
       <b-tab title="Rooms">
         <RoomsManager model="room" ref="rooms-manager"></RoomsManager>
       </b-tab>

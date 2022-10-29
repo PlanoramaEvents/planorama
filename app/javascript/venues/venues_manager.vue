@@ -1,12 +1,12 @@
 <template>
-  <div class="scrollable">
-    <div style="padding-bottom: 25px">
+  <div>
+    <div class="pb-4">
       <VenuesTable
           defaultFilter=''
           ref="venues-table"
       ></VenuesTable>
     </div>
-    <div style="border: solid">
+    <div class="border p-2 mb-2">
       <VenueEditor @saved="init" ref="venueEditor"/>
     </div>
   </div>

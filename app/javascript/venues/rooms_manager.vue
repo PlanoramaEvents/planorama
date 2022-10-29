@@ -1,12 +1,12 @@
 <template>
-  <div class="scrollable">
-    <div style="padding-bottom: 25px">
+  <div>
+    <div class="pb-4">
       <RoomsTable
           defaultFilter=''
           ref="rooms-table"
       ></RoomsTable>
     </div>
-    <div style="border: solid">
+    <div class="border p-2 mb-2">
       <RoomEditor @saved="init" ref="roomEditor"/>
     </div>
   </div>
