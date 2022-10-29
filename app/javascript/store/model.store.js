@@ -204,6 +204,7 @@ export const store = new Vuex.Store({
     ...formatStore.getters,
     ...scheduleWorkflowStore.getters,
     ...integrationStore.getters,
+    ...sessionLimitStore.getters,
   },
   plugins: [
     ...surveyStore.plugins
