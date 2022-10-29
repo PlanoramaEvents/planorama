@@ -83,7 +83,7 @@
       </template>
     </person-edit-modal>
     <person-edit-modal id="person-misc-modal" :person="selected" :data="miscData" :validate="true">
-      <template #modal-title>Edit Preferences - {{selected.published_name}}</template>
+      <template #modal-title>Edit Additional Info - {{selected.published_name}}</template>
       <template #default="{fields}">
         <validation-provider name="Anyone that should not be assigned with">
           <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
