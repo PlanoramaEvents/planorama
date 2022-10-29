@@ -22,7 +22,7 @@
         model='email_address'
         @input="$emit('input', selected)"
       ></email-addresses-editor>
-      <h5>Preferences <edit-button v-b-modal.person-misc-modal v-if="!readOnly"></edit-button></h5>
+      <h5>Additional Information <edit-button v-b-modal.person-misc-modal v-if="!readOnly"></edit-button></h5>
       <dl-person :fields="miscFields">
         <template #can_stream-val>{{can_stream_label}}</template>
         <template #can_record-val>{{can_record_label}}</template>
