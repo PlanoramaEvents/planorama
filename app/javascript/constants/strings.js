@@ -241,6 +241,8 @@ module.exports = {
         can_share: "Permission to share email with other Participants",
         attendance_type: "Will attend convention",
         timezone: "Timezone during convention",
+        needs_accommodations: "Accessibility and/or disability concerns",
+        accommodations: "Accessibility and/or disability details",
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
