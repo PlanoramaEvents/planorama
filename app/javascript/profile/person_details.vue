@@ -142,6 +142,22 @@
           <b-form-textarea v-model="fields.moderation_experience"></b-form-textarea>
         </b-form-group>
         </validation-provider>
+        <validation-provider>
+          <b-form-group label="Accessibility and/or disability concerns">
+            <b-form-radio-group
+              stacked
+              v-model="fields.needs_accommodations"
+            >
+              <b-form-radio :value="true">{{yesLabel.label}}</b-form-radio>
+              <b-form-radio :value="false">{{noLabel.label}}</b-form-radio>
+            </b-form-radio-group>
+          </b-form-group>
+        </validation-provider>
+        <validation-provider>
+          <b-form-group label="Accessibility and/or disability details">
+            <b-textarea v-model="fields.accommodations"></b-textarea>
+          </b-form-group>
+        </validation-provider>
       </template>
     </person-edit-modal>
     <person-edit-modal id="person-social-modal" :person="selected" :data="socialsData" :validate="true">
@@ -278,7 +294,9 @@ export default {
       can_record: null,
       can_record_exceptions: null,
       is_local: null,
-      moderation_experience: null
+      moderation_experience: null,
+      needs_accommodations: null,
+      accommodations: null,
     },
     socialsData: {
       twitter: null,
