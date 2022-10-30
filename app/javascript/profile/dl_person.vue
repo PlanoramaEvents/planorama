@@ -6,13 +6,13 @@
             {{PROFILE_FIELD_LABELS[field]}}
           </slot>
         </dt>
-        <dd :key="'dd-' + i" class="ml-2">
+        <dd :key="'dd-' + i" class="ml-2 font-italic">
           <slot :name="field + '-val'" :value="selected[field]">
-            <span v-if="selected[field] === undefined" class="text-muted font-italic">Restricted</span>
-            <span v-else-if="selected[field] === true" class="font-italic">Yes</span>
-            <span v-else-if="selected[field] === false" class="font-italic">No</span>
-            <span v-else-if="selected[field] === null || selected[field].trim().length === 0" class="text-muted font-italic">Not Specified</span>
-            <span v-else class="keep-format font-italic">{{selected[field]}}</span>
+            <span v-if="selected[field] === undefined" class="text-muted">Restricted</span>
+            <span v-else-if="selected[field] === true">Yes</span>
+            <span v-else-if="selected[field] === false">No</span>
+            <span v-else-if="selected[field] === null || selected[field].trim().length === 0" class="text-muted">Not Specified</span>
+            <span v-else class="keep-format">{{selected[field]}}</span>
           </slot>
         </dd>
     </template>

@@ -22,7 +22,7 @@
         model='email_address'
         @input="$emit('input', selected)"
       ></email-addresses-editor>
-      <h5>Preferences <edit-button v-b-modal.person-misc-modal v-if="!readOnly"></edit-button></h5>
+      <h5>Additional Information <edit-button v-b-modal.person-misc-modal v-if="!readOnly"></edit-button></h5>
       <dl-person :fields="miscFields">
         <template #can_stream-val>{{can_stream_label}}</template>
         <template #can_record-val>{{can_record_label}}</template>
@@ -83,7 +83,7 @@
       </template>
     </person-edit-modal>
     <person-edit-modal id="person-misc-modal" :person="selected" :data="miscData" :validate="true">
-      <template #modal-title>Edit Preferences - {{selected.published_name}}</template>
+      <template #modal-title>Edit Additional Info - {{selected.published_name}}</template>
       <template #default="{fields}">
         <validation-provider name="Anyone that should not be assigned with">
           <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
@@ -141,6 +141,22 @@
         <b-form-group label="Moderating experience">
           <b-form-textarea v-model="fields.moderation_experience"></b-form-textarea>
         </b-form-group>
+        </validation-provider>
+        <validation-provider>
+          <b-form-group label="Accessibility and/or disability concerns">
+            <b-form-radio-group
+              stacked
+              v-model="fields.needs_accommodations"
+            >
+              <b-form-radio :value="true">{{yesLabel.label}}</b-form-radio>
+              <b-form-radio :value="false">{{noLabel.label}}</b-form-radio>
+            </b-form-radio-group>
+          </b-form-group>
+        </validation-provider>
+        <validation-provider>
+          <b-form-group label="Accessibility and/or disability details">
+            <b-textarea v-model="fields.accommodations"></b-textarea>
+          </b-form-group>
         </validation-provider>
       </template>
     </person-edit-modal>
@@ -278,7 +294,9 @@ export default {
       can_record: null,
       can_record_exceptions: null,
       is_local: null,
-      moderation_experience: null
+      moderation_experience: null,
+      needs_accommodations: null,
+      accommodations: null,
     },
     socialsData: {
       twitter: null,
