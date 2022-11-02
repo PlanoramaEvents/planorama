@@ -374,7 +374,6 @@ class PeopleController < ResourceController
     [
       :email_addresses,
       :convention_roles,
-      :session_limits,
       :person_schedule_approvals
     ]
   end
@@ -383,8 +382,6 @@ class PeopleController < ResourceController
     [
       :email_addresses,
       :convention_roles,
-      :availabilities,
-      :session_limits,
       {person_schedule_approvals: {schedule_workflow: :schedule_snapshot}}
     ]
   end
