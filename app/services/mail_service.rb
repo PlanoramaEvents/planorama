@@ -94,7 +94,7 @@ module MailService
         mail: mail
       )
     end
-  rescue Net::SMTPSyntaxError
+  rescue Net::SMTPSyntaxError, Net::SMTPAuthenticationError, Net::SMTPFatalError, Net::SMTPUnknownError, Net::SMTPUnsupportedCommand => error
     self.save_mail_history(
       person:       person,
       email_status: MailHistory.email_statuses[:failed],
