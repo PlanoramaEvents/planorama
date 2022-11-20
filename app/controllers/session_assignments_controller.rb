@@ -4,8 +4,8 @@ class SessionAssignmentsController < ResourceController
   POLICY_SCOPE_CLASS = 'SessionAssignmentPolicy::Scope'.freeze
 
   def unexpress_interest
+    authorize @object, policy_class: policy_class
     model_class.transaction do
-      authorize @object, policy_class: policy_class
       # if there is a session assignment set interested to false
       person = Person.find params[:person_id] if params[:person_id]
       person ||= current_person
@@ -19,9 +19,13 @@ class SessionAssignmentsController < ResourceController
         interest_role: nil
       )
       @object.save!
-
-      render_object(@object)
     end
+
+    # post TX step to check is assignment should be deleted
+    ret = after_update_tx
+    return if ret # beciuse the after TX will do a redirect so we do not want the render
+
+    render_object(@object)
   end
 
   def update_actions
