@@ -131,7 +131,7 @@ class Survey::SubmissionsController < ResourceController
       row = [submission.created_at, submission.updated_at, submission.person.email]
       row.concat Array.new(response_columns.size)
       submission.responses.each do |response|
-        if can_access_response?(response, current_person)
+        if response_columns[response.question_id] && can_access_response?(response, current_person)
           row[response_columns[response.question_id]] = response.response_as_text
         end
       end
