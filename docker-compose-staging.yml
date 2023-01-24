@@ -26,7 +26,7 @@ services:
     restart: always
     env_file:
       # NOTE: this will need to reflect local system
-      - "/opt/chicago/etc/planorama.env"
+      - "/opt/plano/etc/planorama.env"
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -34,7 +34,7 @@ services:
 
   web:
     command: "/opt/planorama/script/planorama_start.sh"
-    image: ghcr.io/chicagoworldcon/planorama:staging
+    image: ghcr.io/PlanoramaEvents/planorama:staging
     ports:
       - 3000:3000
     volumes:
@@ -43,7 +43,7 @@ services:
       - type: tmpfs
         target: /app/tmp
       # NOTE: this will need to reflect local system
-      - /opt/chicago/etc/planorama:/config
+      - /opt/plano/etc/planorama:/config
     environment:
       - PGID=1005
       - PUID=1001
@@ -51,7 +51,7 @@ services:
       - NODE_ENV=staging
     env_file:
       # NOTE: this will need to reflect local system
-      - "/opt/chicago/etc/planorama.env"
+      - "/opt/plano/etc/planorama.env"
     depends_on:
       - redis
       - postgres
@@ -59,14 +59,14 @@ services:
 
   planorama-sidekiq:
     command: "/opt/planorama/script/planorama_sidekiq.sh"
-    image: ghcr.io/chicagoworldcon/planorama:staging
+    image: ghcr.io/PlanoramaEvents/planorama:staging
     volumes:
       # NOTE: this will need to reflect local system
       - /var/log/planorama/sidekiq:/opt/planorama/log
       - type: tmpfs
         target: /app/tmp
       # NOTE: this will need to reflect local system
-      - /opt/chicago/etc/planorama:/config
+      - /opt/plano/etc/planorama:/config
     environment:
       - PGID=1005
       - PUID=1001
@@ -74,7 +74,7 @@ services:
       - NODE_ENV=staging
     env_file:
       # NOTE: this will need to reflect local system
-      - "/opt/chicago/etc/planorama.env"
+      - "/opt/plano/etc/planorama.env"
     depends_on:
       - redis
     links:
