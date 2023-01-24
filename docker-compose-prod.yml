@@ -27,7 +27,7 @@ services:
     command: "/opt/planorama/script/planorama_start.sh"
     # planorama:latest for latest release (tagged)
     # planorama:main for latest build of main branch
-    image: ghcr.io/chicagoworldcon/planorama:latest
+    image: ghcr.io/PlanoramaEvents/planorama:latest
     ports:
       - "127.0.0.1:3000:3000"
     volumes:
@@ -42,7 +42,7 @@ services:
       - NODE_ENV=production
     env_file:
       # NOTE: this will need to reflect local system
-      - "/opt/chicago/etc/planorama.env"
+      - "/opt/plano/etc/planorama.env"
     depends_on:
       - redis
     links:
@@ -52,7 +52,7 @@ services:
   planorama-sidekiq:
     command: "/opt/planorama/script/planorama_sidekiq.sh"
     # See above note re which image to use
-    image: ghcr.io/chicagoworldcon/planorama:latest
+    image: ghcr.io/PlanoramaEvents/planorama:latest
     volumes:
       # NOTE: this will need to reflect local system
       - /var/log/planorama/sidekiq:/opt/planorama/log
@@ -65,7 +65,7 @@ services:
       - NODE_ENV=production
     env_file:
       # NOTE: this will need to reflect local system
-      - "/opt/chicago/etc/planorama.env"
+      - "/opt/plano/etc/planorama.env"
     depends_on:
       - redis
     links:
