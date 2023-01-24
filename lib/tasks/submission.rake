@@ -3,10 +3,12 @@ desc "Utilities for surveys"
 # Import a excel sheet with the survey submissions (from google)
 namespace :submission do
   # rake submission:import\['prg_survey.csv','00000000-0000-0000-0000-000000000014'\]
-  task :import, [:filename, :survey_id, :check_linked] => :environment do |t, args|
+  task :import, [:filename, :survey_id, :check_linked, :start_col] => :environment do |t, args|
     survey_id = args[:survey_id]
     check_linked = args[:check_linked].blank? ? false : args[:check_linked] == "true"
+    start_col = args[:start_col].blank? ? 2 : args[:start_col].to_i
 
+    p "#{args.to_json} #{survey_id} #{check_linked}"
     survey = Survey.find survey_id
     p "Did not find survey with id #{survey_id}" unless survey
 
@@ -30,7 +32,7 @@ namespace :submission do
     end
   end
 
-  def create_submission(header, row, survey, check_linked: false)
+  def create_submission(header, row, survey, start_col: 2, check_linked: false)
     Survey::Submission.transaction do
       timestamp = Time.parse row[0]
       email = row[1].strip
@@ -69,7 +71,7 @@ namespace :submission do
 
       # change the state of the person to applied on import
       # Also need better error reporting for which questions are a problem etc.
-      (2..(row.count-1)).each do |n|
+      (start_col..(row.count-1)).each do |n|
         if header[n]
           create_response(question: header[n], submission: submission, value: row[n], check_linked: check_linked)
         else
@@ -87,7 +89,7 @@ namespace :submission do
     header = []
     cols.each do |col|
       # check survey from id
-      q = Survey::Question.joins(:survey).where("survey_pages.survey_id = ? AND REPLACE(question, ' ', '') = ?", survey.id, col.gsub(/\s+/, "")).first
+      q = Survey::Question.joins(:survey).where("survey_pages.survey_id = ? AND REPLACE(regexp_replace(question, E'[\\n\\r]+', '', 'g' ), ' ', '') = ?", survey.id, col.gsub(/\s+/, "")).first
       header[n] = q
       n += 1
     end
@@ -187,6 +189,8 @@ namespace :submission do
     res = []
 
     values.each do |val|
+      next if val.blank?
+
       if val == 'I am interested in receiving information about presenting on our Academic program (You can find out more about our Academic program here <<link to Academic blurb that will be on Chicon website>>).'
         res.push "00000000-0000-0000-0000-000000000142-I am interested in receiving information about presenting on our Academic program (You can find out more about our Academic program at https://chicon.org/academic-program/ )."
       else
