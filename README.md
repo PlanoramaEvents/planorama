@@ -129,10 +129,10 @@ There are automated builds happening in Github and docker containers are stored 
 as well as a "latest" which is built when a release tag is done. To pull them use one of the following commands:
 
 ```
-docker pull ghcr.io/chicagoworldcon/planorama:main
-docker pull ghcr.io/chicagoworldcon/planorama:staging
-docker pull ghcr.io/chicagoworldcon/planorama:development
-docker pull ghcr.io/chicagoworldcon/planorama:latest
+docker pull ghcr.io/planoramaevents/planorama:main
+docker pull ghcr.io/planoramaevents/planorama:staging
+docker pull ghcr.io/planoramaevents/planorama:development
+docker pull ghcr.io/planoramaevents/planorama:latest
 ```
 
 Latest will be the last build based on a tagged release.
