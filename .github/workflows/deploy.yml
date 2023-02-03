@@ -78,8 +78,8 @@ jobs:
 
       - name: Define the repository labels
         run: |
-          echo "CONTAINER_TEST_REPOSITORY=${{ steps.login-ecr.outputs.registry }}/planorama:ci-${{ github.sha }}" >> $GITHUB_ENV
-          echo "CONTAINER_DEPLOY_REPOSITORY=${{ steps.login-ecr.outputs.registry }}/planorama:${{ steps.extract_name.outputs.branch }}" >> $GITHUB_ENV
+          echo "CONTAINER_TEST_REPOSITORY=ghcr.io/planoramaevents/planorama:ci-${{ github.sha }}" >> $GITHUB_ENV
+          echo "CONTAINER_DEPLOY_REPOSITORY=ghcr.io/planoramaevents/planorama:${{ steps.extract_name.outputs.branch }}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         id: buildx
