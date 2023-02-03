@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex flex-row w-100">
       <div class="w-75 mt-2 mr-3">
-        <b>Email</b>
+        <h5>Email</h5>
       </div>
       <div class="mt-2 pt-1 w-25 ooch-left">
         Make Primary

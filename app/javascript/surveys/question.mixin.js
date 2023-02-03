@@ -126,19 +126,19 @@ export const questionMixin = {
     },
     inPersonLabel() {
       return this.currentSettings?.attendance_type?.find(at => at.value === "in_person") || {
-        label: "**In-person only:** I am planning to attend Chicon 8 in-person",
+        label: "**In-person only:** I am planning to attend in-person",
         value: "in_person"
       }
     },
     virtualLabel() {
       return this.currentSettings?.attendance_type?.find(at => at.value === "virtual") || {
-        label: "**Virtual only:** I am not planning to attend Chicon 8 in-person, and would like to be a virtual participant on virtual-based items only (via Zoom or similar technology).",
+        label: "**Virtual only:** I am not planning to attend in-person, and would like to be a virtual participant on virtual-based items only (via Zoom or similar technology).",
         value: "virtual",
       };
     },
     hybridLabel() {
       return this.currentSettings?.attendance_type?.find(at => at.value === "hybrid") || {
-        label: "**In-person and virtual:** I am planning to attend Chicon 8 in-person, but would also like to be considered for virtual panels.",
+        label: "**In-person and virtual:** I am planning to attend in-person, but would also like to be considered for virtual panels.",
         value: "hybrid"
       }
     }

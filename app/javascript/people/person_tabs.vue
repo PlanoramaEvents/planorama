@@ -1,7 +1,7 @@
 <template>
   <div>
     <model-loading-overlay :model="personModel">
-      <b-button variant="link" @click="back">Back</b-button>
+      <b-button variant="link" @click="back" v-if="currentUserIsAdmin || currentUserIsStaff">Back</b-button>
         <person-summary></person-summary>
       <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
         <b-tab title="General" :active="!tab" lazy>
@@ -11,7 +11,7 @@
           <person-demographics></person-demographics>
         </b-tab>
         <!-- Can not make this lazy otherwise we have lock issues with the notes -->
-        <b-tab title="Availability &amp; Interests" :active="tab === 'availability'">
+        <b-tab title="Availability" :active="tab === 'availability'">
           <availability-and-interests
             v-if="person"
             v-model="person"

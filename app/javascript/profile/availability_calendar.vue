@@ -32,10 +32,6 @@
   </div>
 </template>
 
-GET
-	http://localhost:3000/person/d22c5c1f-407b-4538-a2ef-836a41b829cf/availability
-  http://localhost:3000/person/82d700c4-92c0-44e9-a1da-ab6b76db3f85/availability
-  http://localhost:3000/person/0b07c264-f71a-4540-a473-66772e559ab3/availability
 <script>
 import AvailabilityTimePicker from './availability_time_picker'
 import availabilityMixin from '../store/availability.mixin'

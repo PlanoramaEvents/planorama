@@ -5,7 +5,7 @@ const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('
 
 module.exports = {
     // login page
-    LOGIN_401: "You have entered an incorrect username or password.",
+    LOGIN_401: "The username or password you entered is incorrect. Please check your spelling and try again.",
     LOGIN_MISSING_PASSWORD: "You must enter a valid password.",
     LOGIN_INVALID_FIELDS: "You must provide all of your login information.",
     MISSING_EMAIL: "You must enter a valid email address.",
@@ -19,7 +19,7 @@ module.exports = {
     LOGIN_PASSWORD_RESET_EMAIL_SEND: "If an account with the address you specified exists you will receive an email with a password reset link.",
     LOGIN_PASSWORD_CHANGED: "You successfully changed your password.",
     LOGIN_TOKEN_EXPIRED: (resetPasswordLink) => `The password reset link you used is no longer valid. Please request another link here: ${resetPasswordLink}`,
-    LOGIN_CLICK_TO_AGREE: "By clicking ‘Log In’ below, I agree to Chicon 8 storing and using my personal data as documented in the",
+    LOGIN_CLICK_TO_AGREE: (conventionName) => `By clicking ‘Log In’ below, I agree to ${conventionName} storing and using my personal data as documented in the`,
 
     // toast titles
     ERROR_TOAST_TITLE: "Error",
@@ -187,7 +187,7 @@ module.exports = {
             is_local: "Is a local",
             willing_to_moderate: "Moderation interest",
             languages_fluent_in: "Fluent languages",
-            contact_email: "Contact email"
+            contact_email: "Contact email",
         },
     },
     nLines,
@@ -238,7 +238,11 @@ module.exports = {
         name: "Name",
         pseudonym: "Pseudonym",
         languages_fluent_in: "Languages spoken",
-        can_share: "Permission to share email with other Participants"
+        can_share: "Permission to share email with other Participants",
+        attendance_type: "Will attend convention",
+        timezone: "Timezone during convention",
+        needs_accommodations: "Accessibility and/or disability concerns",
+        accommodations: "Accessibility and/or disability details",
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
@@ -253,6 +257,11 @@ module.exports = {
         accepted: "Accepted",
         declined: "Declined",
         rejected: "Rejected"
+    },
+    PERSON_ATTENDANCE_TYPE: {
+        'in person': "In Person",
+        hybrid: "In Person AND Virtually",
+        virtual: "Virtually",
     },
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
@@ -299,4 +308,8 @@ module.exports = {
             comments: (approvalType) => errorMessage(`${titleCase(approvalType)} approval comment was not saved.`),
         },
     },
+    EVENT_SETTINGS_MUST_RELOAD: "*** Changes to these settings will only take effect after you reload your browser page. ***",
+    CONFIGURATION_LABEL_OVERRIDES: {
+        event_virtual: "Does this event include a virtual component?"
+    }
 }

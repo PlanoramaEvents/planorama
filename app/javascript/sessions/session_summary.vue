@@ -106,7 +106,7 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
-        <b-button v-if="currentUserIsAdmin" variant="warning" :disabled="!session.streamed" @click="resyncAirmeet" class="mt-2">Airmeet re-sync completed</b-button>
+        <b-button v-if="currentUserIsAdmin && airmeetEnabled" variant="warning" :disabled="!session.streamed" @click="resyncAirmeet" class="mt-2">Airmeet re-sync completed</b-button>
       </div>
     </div>
   </div>
@@ -122,6 +122,7 @@ import settingsMixin from "@/store/settings.mixin";
 import PlanoEditor from '../components/plano_editor';
 import { personSessionMixin } from '@/mixins';
 import { publishedSessionEndpoints, publishedSessionModel } from '@/store/published_session.store';
+import { airmeetMixin } from '@/integrations/airmeet.mixin';
 
 export default {
   name: "SessionSummary",
@@ -132,7 +133,8 @@ export default {
     modelUtilsMixin,
     scheduledMixin,
     settingsMixin,
-    personSessionMixin
+    personSessionMixin,
+    airmeetMixin
   ],
   data: () => ({
     SESSION_STATUS,

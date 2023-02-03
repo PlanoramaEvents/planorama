@@ -40,6 +40,7 @@
 <script>
   import XLSX from 'xlsx';
   import {http as axios} from '../http';
+  import { spinnerMixin } from '@/store/spinner.mixin';
 
   export default {
     name: 'SheetImporterVue',
@@ -48,6 +49,9 @@
       importUrl: String,
       exampleUrl: String
     },
+    mixins: [
+      spinnerMixin,
+    ],
     data() {
       return {
         file: null,
@@ -85,6 +89,7 @@
         event.preventDefault()
         // Get the form data from the modal
         // and send it to the backend as a POST request
+        this.showSpinner();
         axios.post(
           this.importUrl,
           {
@@ -95,6 +100,7 @@
         ).then(
           (res) => {
             this.importMessage = res.data.message
+            this.hideSpinner();
           }
         ).catch(
           (err) => {
@@ -106,7 +112,8 @@
                   variant: 'error',
                   title: this.errorMessage
                 }
-              )
+              );
+              this.hideSpinner();
             }
           }
         )

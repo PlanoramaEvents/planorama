@@ -1,9 +1,7 @@
 <template>
   <sidebar-vue :model="model">
     <template #header v-if="selected">
-      <h1>
-        {{selected.name}}
-      </h1>
+      <person-summary :readOnly="true"></person-summary>
     </template>
 
     <template #content v-if="selected">
@@ -11,8 +9,23 @@
         <b-button title="Edit Person" variant="primary" :to="editLink"><b-icon-pencil variant="white"></b-icon-pencil></b-button>
       </div>
       <b-tabs content-class="mt-3" nav-class="border-0" nav-wrapper-class="border-bottom">
-        <b-tab title="Summary">
-          <detail :model="model"></detail>
+        <b-tab title="General" active lazy>
+          <person-details :readOnly="true"></person-details>
+        </b-tab>
+        <b-tab title="Demographics" lazy>
+          <person-demographics :readOnly="true"></person-demographics>
+        </b-tab>
+        <b-tab title="Availability" lazy>
+          <availability-flyout-tab></availability-flyout-tab>
+        </b-tab>
+        <b-tab :title="liveScheduleTitle" lazy v-if="currentUserIsAdmin || currentUserIsStaff || firmSchedule">
+          <person-live-schedule :noSidebar="true"></person-live-schedule>
+        </b-tab>
+        <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule">
+          <person-draft-schedule :noSidebar="true"></person-draft-schedule>
+        </b-tab>
+        <b-tab title="Emails" lazy v-if="currentUserIsAdmin || currentUserIsStaff">
+          <person-email-tab></person-email-tab>
         </b-tab>
         <b-tab title="Admin" v-if="currentUserIsAdmin || currentUserIsStaff">
          <people-admin-tab></people-admin-tab>
@@ -28,11 +41,19 @@
 </template>
 
 <script>
-import SidebarVue from '../components/sidebar_vue';
+import SidebarVue from '../components/sidebar_vue.vue';
 import {personSessionMixin, modelMixin} from '@/mixins';
 import Detail from './detail.vue';
-import PeopleAdminTab from './people_admin_tab';
-import PeopleSurveysTab from './people_surveys_tab';
+import PeopleAdminTab from './people_admin_tab.vue';
+import PeopleSurveysTab from './people_surveys_tab.vue';
+import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
+import PersonDemographics from '@/profile/person_demographics.vue';
+import PersonEmailTab from '@/profile/person_email_tab.vue';
+import PersonDetails from '@/profile/person_details.vue';
+import PersonLiveSchedule from '@/profile/person_live_schedule.vue';
+import PersonDraftSchedule from '@/profile/person_draft_schedule.vue';
+import PersonSummary from '@/profile/person_summary.vue';
+import AvailabilityFlyoutTab from '@/profile/availability_flyout_tab.vue';
 
 export default {
   name: 'PeopleSidebar',
@@ -40,11 +61,19 @@ export default {
     SidebarVue,
     Detail,
     PeopleAdminTab,
-	PeopleSurveysTab,
+    PersonDemographics,
+    PersonEmailTab,
+    PersonDetails,
+    PersonLiveSchedule,
+    PersonDraftSchedule,
+    PeopleSurveysTab,
+    PersonSummary,
+    AvailabilityFlyoutTab,
   },
   mixins: [
     modelMixin,
-    personSessionMixin
+    personSessionMixin,
+    scheduleWorkflowMixin
   ],
   computed: {
     editLink() {

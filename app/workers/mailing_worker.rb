@@ -5,21 +5,19 @@ class MailingWorker
   def perform(mailing_id, send_test = false, test_address = nil, tester_id = nil)
     mailing = Mailing.find mailing_id
 
-    mailing.with_lock do
-      if send_test
-        send_test_mail(
-          mailing: mailing,
-          test_address: test_address,
-          tester_id: tester_id
-        )
-      else
-        send_mailing(mailing: mailing)
-      end
+    # Send the mailing
+    if send_test
+      send_test_mail(
+        mailing: mailing,
+        test_address: test_address,
+        tester_id: tester_id
+      )
+    else
+      send_mailing(mailing: mailing)
     end
   end
 
   def send_mailing(mailing:)
-    # TODO - if test run then send to the requestor
     return unless mailing.mailing_state == Mailing.mailing_states[:submitted] # Check just in case this is a dup
 
     participant_schedule_url = SessionService.participant_schedule_url
@@ -36,6 +34,7 @@ class MailingWorker
         )
 
         # note the last person processes so we can continue from there if job stopped and restarted
+        # need to do this as a seperate transaction ...
         mailing.last_person_idx = idx # use a counter
         mailing.save
       rescue => msg

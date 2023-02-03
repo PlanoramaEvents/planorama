@@ -24,7 +24,7 @@ namespace :submission do
         count += 1
         next if count == 0
         begin
-          create_submission(header, row, survey, check_linked: check_linked)
+          create_submission(header, row, survey, start_col: start_col, check_linked: check_linked)
         rescue => msg
           p "****** ERROR row: #{count+1} - #{msg}"
         end

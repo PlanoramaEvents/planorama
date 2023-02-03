@@ -12,9 +12,11 @@
           </session-limit-editor>
         <p>
           Under each day, highlight (click and drag) the times of day that you are available for programming in the calendar view below.
-          You can create multiple blocks of time per day. The in-person convention time is currently displayed,
+          You can create multiple blocks of time per day. <span v-if="eventVirtual" >The in-person convention time is currently displayed,
           and is Central Daylight Time (UTC-5). If you will be attending virtually,
           and want to enter your availability in that time zone, select that option from below the calendar.
+          </span>
+          <span v-if="!eventVirtual">The time is displayed in the convention time zone, which is currently {{timezone}}.</span>
         </p>
       </div>
     </div>
@@ -27,7 +29,7 @@
           :timezone="calTimeZone"
         ></availability-calendar>
         <!-- NOTE: The timezone selection for availability affects calendar AND limit display. -->
-        <div class="mt-1 w-50">
+        <div class="mt-1 w-50" v-if="eventVirtual">
           Select time zone to work in:
           <b-form-select v-model="calTimeZone" :options="timeZoneOptions"></b-form-select>
         </div>
@@ -75,13 +77,15 @@ import SessionLimitEditor from './session_limit_editor.vue'
 import AvailabilityNotesField from './availability_notes_field';
 import TimezoneSelector from "../components/timezone_selector.vue"
 import searchStateMixin from "@/store/search_state.mixin"
+import { eventVirtualMixin } from '@/shared/event-virtual.mixin';
 
 const { DateTime } = require("luxon");
 
 export default {
   name: "AvailabilityAndInterests",
   mixins: [
-    searchStateMixin
+    searchStateMixin,
+    eventVirtualMixin
   ],
   components: {
     SessionLimitEditor,
@@ -159,7 +163,7 @@ export default {
         start_day = start_day.plus({days: 1})
       }
       return res
-    }
+    },
   },
   methods: {
     onNotePatched(arg) {

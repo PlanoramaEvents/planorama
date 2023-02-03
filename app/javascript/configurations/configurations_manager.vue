@@ -1,6 +1,7 @@
 <template>
   <div v-if="currentSettings">
-    <div v-for="parameter in parameters">
+    <p><strong>{{EVENT_SETTINGS_MUST_RELOAD}}</strong></p>
+    <div v-for="parameter in parameters" :key="parameter.paremeter_name">
       <config-editor
         model="configuration"
         :parameter="parameter"
@@ -14,18 +15,18 @@
 import modelMixin from '../store/model.mixin';
 import ConfigEditor from './config_editor';
 import settingsMixin from "@/store/settings.mixin";
+import { EVENT_SETTINGS_MUST_RELOAD } from '@/constants/strings';
 
 export default {
   name: "ConfigurationsManager",
   components: {
     ConfigEditor
   },
-  data () {
-    return {
-      parameters: [],
-      loading: true
-    }
-  },
+  data: () => ({
+    parameters: [],
+    loading: true,
+    EVENT_SETTINGS_MUST_RELOAD
+  }),
   mixins: [
     modelMixin,
     settingsMixin

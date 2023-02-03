@@ -5,20 +5,23 @@
     :skipIfEmpty="true"
     v-slot="{ valid, errors }"
   >
-    <b-form-group :label="parameter.parameter_name">
+    <b-form-group :label="parameterLabel">
       <!-- TODO: We need more meaningful names, ^^^ change the label  -->
       <!-- TODO: we need to change the editor type depending on the parameter.type -->
-      <div v-if="parameter.parameter_type == 'Timezone'">
+      <div v-if="parameter.parameter_type === 'Timezone'">
         <timezone-selector
           v-model="configuration.parameter_value"
           @input="onChange"
         ></timezone-selector>
       </div>
-      <div v-else-if="parameter.parameter_type == 'DateTime'">
+      <div v-else-if="parameter.parameter_type === 'DateTime'">
         <b-form-datepicker
           v-model="dateval"
           @input="onChange"
         ></b-form-datepicker>
+      </div>
+      <div v-else-if="parameter.parameter_type === 'Boolean'">
+        <b-radio-group :options="[{text: 'Yes', value: 'true'}, {text: 'No', value: 'false'}]" @input="onChange" v-model="configuration.parameter_value"></b-radio-group>
       </div>
       <div v-else>
         <b-form-input
@@ -38,6 +41,8 @@ import configurationMixin from './configuration.mixin';
 import { ValidationProvider } from 'vee-validate';
 import TimezoneSelector from "../components/timezone_selector.vue"
 import settingsMixin from "@/store/settings.mixin";
+import {startCase} from "lodash";
+import { CONFIGURATION_LABEL_OVERRIDES } from '@/constants/strings';
 
 const { DateTime } = require("luxon");
 
@@ -74,6 +79,13 @@ export default {
     },
     timezone() {
       return this.configByName('convention_timezone')
+    },
+    parameterLabel() {
+      const param_name = this.parameter.parameter_name;
+      if (param_name) {
+        return CONFIGURATION_LABEL_OVERRIDES[param_name] || startCase(param_name)
+      }
+      return ''
     }
   },
   mixins: [

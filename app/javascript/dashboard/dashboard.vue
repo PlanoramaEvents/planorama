@@ -10,7 +10,7 @@
           To get started, click on <a href="/#/profile">Profile</a>.
         </p>
         <p>
-          At this point there are 4 tabs in the profile. You will need to visit all of them.
+          At this point there are 5 tabs in the profile. You will need to visit all of them.
         </p>
         <ul>
           <li>
@@ -19,15 +19,19 @@
               <li>
                 Update your name(s), pronouns, email address, bio, and social media as needed
               </li>
-              <li>
+              <li v-if="eventVirtual">
                 If you’re not going to be attending the convention in-person, please let us know the timezone that you will be in when you attend virtually.
               </li>
             </ul>
           </li>
-        </ul>
-        <ul>
           <li>
-            <b>Availability & Interests</b>
+            <b>Demographics &amp; Community</b>
+            <ul>
+              <li>Fill in your information as needed.</li>
+            </ul>
+          </li>
+          <li>
+            <b>Availability</b>
             <ul>
               <li>
                 Fill in the maximum number of program items you would like to be on.
@@ -43,8 +47,6 @@
               </li>
             </ul>
           </li>
-        </ul>
-        <ul>
           <li>
             <b>Session Selection</b>
             <ul>
@@ -57,13 +59,11 @@
               <li>
                 Select sessions by using the slider to the right of the description. Your selections will save automatically.
               </li>
-              <li>
+              <li v-if="eventVirtual">
                 While some items are marked or otherwise described as Virtual, many we’re not sure if they will be taking place in-person or online, so everyone should feel free to sign up for items not marked either way.
               </li>
             </ul>
           </li>
-        </ul>
-        <ul>
           <li>
             <b>Session Rankings</b>
             <p>
@@ -113,14 +113,15 @@
 </template>
 
 <script>
-import { personSessionMixin, toastMixin } from '@/mixins';
+import { personSessionMixin, toastMixin} from '@/mixins';
 import { mapActions } from 'vuex'; 
 import { FETCH_WORKFLOWS, scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import PersonScheduleDisplay from '@/profile/person_schedule_display.vue';
+import { eventVirtualMixin } from '@/shared/event-virtual.mixin';
 
 export default {
   name: "Dashboard",
-  mixins: [personSessionMixin, toastMixin, scheduleWorkflowMixin],
+  mixins: [personSessionMixin, toastMixin, scheduleWorkflowMixin, eventVirtualMixin],
   components: {
     PersonScheduleDisplay
   },

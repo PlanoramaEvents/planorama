@@ -1,5 +1,5 @@
 <template>
-  <person-schedule-display :sessions="sessions" :title="liveScheduleTitle" :approvalType="firmSchedule ? 'firm' : null"></person-schedule-display>
+  <person-schedule-display :sessions="sessions" :title="liveScheduleTitle" :approvalType="firmSchedule ? 'firm' : null" :noSidebar="noSidebar"></person-schedule-display>
 </template>
 
 <script>
@@ -11,6 +11,12 @@ import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 
 export default {
   name: "PersonLiveSchedule",
+  props: {
+    noSidebar: {
+      type: Boolean,
+      default: false
+    }
+  },
   components: {
     PersonScheduleDisplay
   },
@@ -26,13 +32,23 @@ export default {
     ...mapActions({
       get: 'jv/get'
     }),
+    getSchedule() {
+      if(this.selected) {
+        this.get(`/person/${this.selected.id}/live_sessions`).then(data => {
+          const {_jv, ...filtered_data} = data;
+          this.sessions = filtered_data;
+        })
+      }
+    }
   },
   mounted() {
-    if(this.selected) {
-      this.get(`/person/${this.selected.id}/live_sessions`).then(data => {
-        const {_jv, ...filtered_data} = data;
-        this.sessions = filtered_data;
-      })
+    this.getSchedule();
+  },
+  watch: {
+    selected(newVal, oldVal) {
+      if (newVal && newVal.id !== oldVal.id) {
+        this.getSchedule();
+      }
     }
   }
 }
