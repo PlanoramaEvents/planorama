@@ -253,6 +253,19 @@ class Person < ApplicationRecord
     end
   end
 
+  #
+  # Override the email changed notification for devise
+  #
+  def send_email_changed_notification
+    prev_email = email_addresses.first.email_before_last_save
+    return if prev_email.blank?
+
+    send_devise_notification(
+      :email_changed,
+      to: prev_email
+    )
+  end
+
   # check that the person has not been assigned to program items, if they have then return an error and do not delete
   def check_if_assigned
     if (SessionAssignment.where(person_id: id).count > 0) ||
