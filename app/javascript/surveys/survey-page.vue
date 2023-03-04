@@ -95,7 +95,7 @@ export default {
   computed: {
     ...mapState(['redirMessage']),
     is_assigned() {
-      return this.preview || this.currentUser.assigned_surveys[this.surveyId]!=undefined;
+      return this.preview || this.currentUser.assigned_surveys[this.surveyId]!=undefined || this.survey.unassigned;
     },
     next_page() {
       return `/surveys/${this.surveyId}/page/${this.nextPageId}${this.preview === "preview" ? '/preview' : ''}`
