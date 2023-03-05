@@ -46,6 +46,7 @@ class LoginController < ApplicationController
                 end
 
     # Rails.logger.debug "****** LINK IS #{magic_url}"
+    PersonMailer.with(email: email, url: magic_url).confirm_sign_up_email.deliver_later
 
     render json: { message: 'Succesful sign up.'}, status: :created
   end

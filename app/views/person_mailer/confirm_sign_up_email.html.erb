@@ -1,0 +1,9 @@
+<p>Welcome <%= @email %>!</p>
+
+<p>You can can complete your signup for <%= @convention_name %> Planorama through the link below:</p>
+
+<p><%= link_to 'Complete Sign Up', @url %></p>
+
+<% if !Rails.env.production? %>
+  <p><b>Brought to you by <%= Rails.env%></b></p>
+<% end %>
