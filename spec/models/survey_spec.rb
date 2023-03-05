@@ -8,7 +8,7 @@ RSpec.describe Survey  do
             expect(survey.transition_accept_status).to eq nil
             expect(survey.transition_decline_status).to eq nil
             expect(survey.public).to eq nil
-            expect(survey.anonymous).to be false
+            expect(survey.unassigned).to be false
         end
 
         it "creates a public survey" do
@@ -16,9 +16,9 @@ RSpec.describe Survey  do
             expect(survey.public).to eq true
         end
 
-        it "creates an anonymous survey" do
-            survey = create(:survey, anonymous: true)
-            expect(survey.anonymous).to eq true
+        it "creates an unassigned survey" do
+            survey = create(:survey, unassigned: true)
+            expect(survey.unassigned).to eq true
         end
 
     end

@@ -44,7 +44,7 @@ class Survey::SubmissionsController < ResourceController
 
   def before_save
     # Make sure the submission is assigned to the current person
-    # if there is one ... and survey is not anonymous
+    # if there is one ... and survey is not unassigned
     @object.person_id = current_person.id if current_person
   end
 
