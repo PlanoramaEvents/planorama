@@ -39,10 +39,15 @@ class LoginController < ApplicationController
     link = MagicLinkService.generate(person_id: person.id, redirect_url: url, valid_for: 48.hours)
 
     # TODO: send this in a welcome email
-    url = UrlService.url_for path: "login/#{link.token}"
-    Rails.logger.debug "****** LINK IS #{url}"
+    magic_url = if link
+                  UrlService.url_for path: "login/#{link.token}"
+                else
+                  root_path
+                end
 
-    render json: { message: 'Succesful sign up.', magic_url: url }
+    # Rails.logger.debug "****** LINK IS #{magic_url}"
+
+    render json: { message: 'Succesful sign up.'}, status: :created
   end
 
   # Complete the sign up by setting the password

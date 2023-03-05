@@ -78,10 +78,15 @@ export default {
         this.error.text = LOGIN_INVALID_FIELDS;
         this.error.visible = true;
       } else {
+        // TODO: we need the URL of the destination if any that the user is going to be sent to
+        // This would, for example, be the survey
+        let destination = "http://localhost:3000/#/people";
+
         http
           // TODO REPLACE ME with correct endpoint
-          .post("/auth/password.json", { person: this.person })
+          .post("/login/sign_up", { email: this.person.email, url: destination })
           .then((data) => {
+            console.debug("***** created ", data)
             this.successfullySent = data.status === 201;
             if (this.successfullySent) {
               this.$router.push("/?alert=reset_sent");
