@@ -24,8 +24,9 @@
       </div>
     </b-form>
     <!--iea-modal @cancel="onIeaCancel" @ok="onIeaAgree"></iea-modal-->
-    <div class="d-flex mb-3">
+    <div class="d-flex flex-column mb-3">
       <router-link to="/login/forgot">Never set up your password? Set it up now</router-link>
+      <router-link to="/login/new">Create account</router-link>
     </div>
   </div>
 </template>

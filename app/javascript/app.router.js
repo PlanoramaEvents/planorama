@@ -4,10 +4,14 @@ import LoginScreen from './login/login_screen.vue'
 import ForgotPassword from './login/forgot_password.vue'
 import PlanLogin from './login/login.vue';
 import NewPassword from './login/new_password.vue';
+import CreateAccount from './login/create_account.vue';
+import AccountSetup from './login/account_setup.vue'
 
 const loginRoutes = [
   { path: 'forgot', component: ForgotPassword },
+  { path: 'new', component: CreateAccount},
   { path: 'password-reset', component: NewPassword },
+  { path: 'setup', component: AccountSetup },
   { path: '', component: PlanLogin, name: "login" },
 ]
 

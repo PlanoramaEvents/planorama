@@ -23,6 +23,15 @@ export default {
   watch: {
     loggedIn (newval, oldval) {
       if (newval) {
+        if (hasPassword) {
+          this.$router.replace(this.redirect)
+        } else {
+          this.$router.push(`/login/setup?redirect=${this.redirect}`)
+        }
+      }
+    },
+    hasPassword(newVal, oldVal) {
+      if (newVal && !oldVal) {
         this.$router.replace(this.redirect)
       }
     }

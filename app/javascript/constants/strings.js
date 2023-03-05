@@ -9,6 +9,7 @@ module.exports = {
     LOGIN_MISSING_PASSWORD: "You must enter a valid password.",
     LOGIN_INVALID_FIELDS: "You must provide all of your login information.",
     MISSING_EMAIL: "You must enter a valid email address.",
+    MISSING_NAME: "Your name must be at least one character long.",
     NOT_AN_EMAIL: "Email address needs to be in the correct format e.g. xyz@test.com",
     LOGIN_SHORT_PASSWORD: "Your password must be at least 6 characters long.",
     LOGIN_PASSWORDS_DO_NOT_MATCH: "Your passwords do not match.",
