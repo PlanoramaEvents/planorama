@@ -20,6 +20,8 @@ class Person < ApplicationRecord
 
   has_many  :availabilities
 
+  has_many :magic_Links, dependent: :destroy
+
   has_many  :session_assignments, dependent: :destroy do
     def publishable
       # get the people with the given role
