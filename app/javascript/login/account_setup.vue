@@ -137,7 +137,14 @@ export default {
           .then((data) => {
             // The server will send back a 303 redirect
             if (data.status === 200) {
-              // this.$router.push("/?alert=password_changed");
+              // console.debug("SIGN UP COMPLETED", data.data.redirect)
+              // Need to refetch the person
+              this.fetchSession({force: true}).then(
+                () => {
+                  // NOTE: need this cause redirect is a full URL not a router path
+                  window.location.href = data.data.redirect;
+                }
+              )
             } else {
               this.error.text = SOMETHING_WENT_WRONG(
                 this.configByName("email_reply_to_address")

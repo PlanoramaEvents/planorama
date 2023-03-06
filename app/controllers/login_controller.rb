@@ -75,12 +75,11 @@ class LoginController < ApplicationController
     )
 
     # Check this is ok - password reset appears to sign person out?
-    # or does the redirect do that?
-    sign_in(person, scope: :person)
+    sign_in(person, bypass:true)
+    # sign_in(person, scope: :person)
 
-    #
-    # render json: { message: 'Passsword set.'}, status: :ok
-    redirect_to url, status: 303
+    # The say it is ok and pass along the redirect
+    render json: { message: 'Passsword set.', redirect: url }, status: :ok
   end
 
   # TODO
