@@ -83,10 +83,9 @@ export default {
         let destination = "http://localhost:3000/#/people";
 
         http
-          // TODO REPLACE ME with correct endpoint
           .post("/login/sign_up", { email: this.person.email, url: destination })
           .then((data) => {
-            console.debug("***** created ", data)
+            // console.debug("***** created ", data)
             this.successfullySent = data.status === 201;
             if (this.successfullySent) {
               this.$router.push("/?alert=reset_sent");

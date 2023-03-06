@@ -133,11 +133,11 @@ export default {
         this.error.visible = true;
       } else {
         http
-          // TODO change url
-          .put("/auth/password.json", { person: this.person })
+          .put("/login/complete_sign_up", { person: this.person })
           .then((data) => {
-            if (data.status === 204) {
-              this.$router.push("/?alert=password_changed");
+            // The server will send back a 303 redirect
+            if (data.status === 200) {
+              // this.$router.push("/?alert=password_changed");
             } else {
               this.error.text = SOMETHING_WENT_WRONG(
                 this.configByName("email_reply_to_address")

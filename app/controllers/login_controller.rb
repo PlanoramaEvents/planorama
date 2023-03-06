@@ -53,12 +53,10 @@ class LoginController < ApplicationController
 
   # Complete the sign up by setting the password
   def complete_sign_up
-    token = params[:magic_link]
-    password = params[:password]
-    password_confirmation = params[:password_confirmation]
-    name = params[:name]
+    token = session[:magic_token] #params[:magic_link]
+    person_params = params.permit![:person].to_h
 
-    raise "password and password confirmation do not match" if password != password_confirmation
+    raise "password and password confirmation do not match" if person_params[:password] != person_params[:password_confirmation]
 
     # redirect them to the URL that they were going to in the first place
     # if no URL then use the root path
@@ -72,11 +70,17 @@ class LoginController < ApplicationController
     # set the password AND name for the person
     person = current_person
     person.update!(
-      password: password,
-      name: name
+      password: person_params[:password],
+      name: person_params[:name]
     )
 
-    redirect_to url
+    # Check this is ok - password reset appears to sign person out?
+    # or does the redirect do that?
+    sign_in(person, scope: :person)
+
+    #
+    # render json: { message: 'Passsword set.'}, status: :ok
+    redirect_to url, status: 303
   end
 
   # TODO
@@ -95,11 +99,11 @@ class LoginController < ApplicationController
     # Authenticate the person
     sign_in(person, scope: :person)
 
-    # TODO: if person does not have a password then they need to go to password set screen
-    # put this as a pre-check in the application controller.
-
     # Direct them the destination page
-    if magic_link.url
+    # Also set magic link in cookie just in case
+    session[:magic_token] = token
+
+    if token && magic_link&.url
       redirect_to magic_link.url
     else
       redirect_to root_path

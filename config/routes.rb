@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   get '/login/:magic_link', to: 'login#magic_link'
   post '/login/sign_up', to: 'login#sign_up'
-  post '/login/complete_sign_up', to: 'login#complete_sign_up'
+  put '/login/complete_sign_up', to: 'login#complete_sign_up'
 
   post '/validator/email', to: 'validator/email#validate'
 
