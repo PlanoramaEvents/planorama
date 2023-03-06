@@ -18,22 +18,22 @@ class LoginController < ApplicationController
 
     # check that email is not used as primary by anyone
     # if it is then use that person if they do not have a password set
-    candidate = Person.joins(:email_addresses)
+    person = Person.joins(:email_addresses)
                   .where("email_addresses.isdefault = true AND email_addresses.email ILIKE ?", email.strip)
                   .first
 
-    raise "problem creating account" unless (candidate == nil) || candidate.password.blank?
-
-    # create a new person with this as the primnary email
-    person = Person.create!(
-      name: email,
-      email_addresses_attributes: [
-        {
-          email: email,
-          isdefault: true
-        }
-      ]
-    )
+    if (person == nil) then
+      # create a new person with this as the primnary email
+      person = Person.create!(
+        name: email,
+        email_addresses_attributes: [
+          {
+            email: email,
+            isdefault: true
+          }
+        ]
+      )
+    end
 
     # create a magic link for the person and the given url
     link = MagicLinkService.generate(person_id: person.id, redirect_url: url, valid_for: 48.hours)
@@ -46,6 +46,7 @@ class LoginController < ApplicationController
                 end
 
     # Rails.logger.debug "****** LINK IS #{magic_url}"
+    # TODO: if they already have a password ...???
     PersonMailer.with(email: email, url: magic_url).confirm_sign_up_email.deliver_later
 
     render json: { message: 'Succesful sign up.'}, status: :created
