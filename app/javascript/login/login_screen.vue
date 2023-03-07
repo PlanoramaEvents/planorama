@@ -2,7 +2,7 @@
   <div class="scrollable">
     <div class="login-screen container mb-3">
       <plan-logo></plan-logo>
-      <router-view></router-view>
+      <router-view :redirect="redirect"></router-view>
     </div>
   </div>
 </template>

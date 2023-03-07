@@ -45,6 +45,7 @@ import settingsMixin from "@/store/settings.mixin";
 export default {
   name: "CreateAccount",
   mixins: [settingsMixin],
+  props: ['redirect'],
   data: () => ({
     person: {
       email: "",
@@ -78,9 +79,12 @@ export default {
         this.error.text = LOGIN_INVALID_FIELDS;
         this.error.visible = true;
       } else {
-        // TODO: we need the URL of the destination if any that the user is going to be sent to
+        // We need the URL of the destination if any that the user is going to be sent to
         // This would, for example, be the survey
-        let destination = "http://localhost:3000/#/people";
+        let destination = null;
+        if (this.redirect) {
+          destination = window.location.origin + this.redirect;
+        }
 
         http
           .post("/login/sign_up", { email: this.person.email, url: destination })
