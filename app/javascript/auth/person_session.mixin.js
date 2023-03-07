@@ -11,7 +11,7 @@ export const personSessionMixin = {
       return !!this.currentUser.id
     },
     hasPassword() {
-      return !!this.currentUser.hasPassword
+      return !!this.currentUser.has_password
     },
     currentUserIsAdmin() {
       return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "admin")
