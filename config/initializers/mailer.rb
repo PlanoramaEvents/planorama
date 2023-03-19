@@ -38,5 +38,8 @@ Rails.application.config.action_mailer.tap do |action_mailer|
         ssl:                  ENV["SMTP_PORT"].to_i == 465
       }
     end
+
+    openssl_verify_mode = ENV.fetch('SMTP_SSL_VERIFY_MODE', nil)
+    action_mailer.smtp_settings[:openssl_verify_mode] if openssl_verify_mode
   end
 end
