@@ -103,7 +103,7 @@ namespace :survey do
       transition_decline_status: attrs['transition_decline_status'],
       declined_msg: attrs['declined_msg'],
       authenticate_msg: attrs['authenticate_msg'],
-      anonymous: attrs['anonymous'],
+      unassigned: attrs['unassigned'],
       description: attrs['description'],
       mandatory_star: attrs['mandatory_star'],
       numbered_questions: attrs['numbered_questions'],

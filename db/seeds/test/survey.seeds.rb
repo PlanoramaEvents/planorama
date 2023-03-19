@@ -28,7 +28,7 @@ after "test:person" do
     description: "For my first survey, i bet you are all wondering why i brought you here today.  Mawwige, mawwige is what brights us together today.  I am a very model of a modern major general.  Something something something vegetable and mineral.",
     declined_msg: Faker::Lorem.sentence,
     authenticate_msg: Faker::Lorem.sentence,
-    anonymous: false,
+    unassigned: false,
     created_by_id: creator,
     updated_by_id: creator
   )
@@ -98,7 +98,7 @@ after "test:person" do
     description: "I like bit butts and i can not lie.  Other brothers can deny, when a girl walks in with... it is so late at night and i cant even make more of this stuff up.  But this needs to be a few lines long for reasons so iam jsut typign anything that ends up in my head.  This may be dangerous.",
     declined_msg: Faker::Lorem.sentence,
     authenticate_msg: Faker::Lorem.sentence,
-    anonymous: false,
+    unassigned: false,
     created_by_id: creator,
     updated_by_id: creator
   )
@@ -172,7 +172,7 @@ after "test:person" do
       description: Faker::Lorem.paragraph,
       declined_msg: Faker::Lorem.sentence,
       authenticate_msg: Faker::Lorem.sentence,
-      anonymous: Faker::Boolean.boolean(true_ratio: 0.8),
+      unassigned: Faker::Boolean.boolean(true_ratio: 0.8),
       created_by_id: creator,
       updated_by_id: creator
     )
