@@ -250,7 +250,7 @@ export const surveyStore = {
         numbered_questions: item.numbered_questions,
         branded: item.branded,
         allow_submission_edits: true,
-        anonymous: item.anonymous,
+        unassigned: item.unassigned,
         // FIX - why do we want to do any sorting in the duplicates since the render also does a sort?
         // pages_attributes: getOrderedRelationships('pages', item).map(p => ({
         pages_attributes: Object.values(item.pages).sort((a, b) => a.sort_order - b.sort_order).map(p => ({

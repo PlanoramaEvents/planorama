@@ -9,8 +9,8 @@
           Published&nbsp;<span v-if="survey.public">on {{new Date(survey.published_on).toLocaleString()}}</span>
         </b-col>
       </b-row>
-      <survey-setting disabled v-model="survey.anonymous" field="anonymous">
-        Anonymous
+      <survey-setting bool v-model="survey.unassigned" field="unassigned">
+        Allow this survey to be taken without assignment
       </survey-setting>
       <survey-setting bool v-model="survey.mandatory_star" field="mandatory_star">
         Show star for required questions <small>(What is your name? <span class="text-danger" title="required">*</span>&nbsp;)</small>

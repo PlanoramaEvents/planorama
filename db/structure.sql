@@ -1939,7 +1939,7 @@ CREATE TABLE public.surveys (
     public boolean,
     declined_msg text,
     authenticate_msg text,
-    anonymous boolean DEFAULT false,
+    unassigned boolean DEFAULT false,
     published_on timestamp without time zone,
     published_by_id uuid,
     created_by_id uuid,
@@ -3429,6 +3429,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220801195644'),
 ('20220818022629'),
 ('20220818200500'),
-('20220821001724');
+('20220821001724'),
+('20230304203222');
 
 
