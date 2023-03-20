@@ -20,6 +20,8 @@ class Person < ApplicationRecord
 
   has_many  :availabilities
 
+  has_many :magic_Links, dependent: :destroy
+
   has_many  :session_assignments, dependent: :destroy do
     def publishable
       # get the people with the given role
@@ -251,6 +253,19 @@ class Person < ApplicationRecord
       # just search for users by the conditions as normal
       where(conditions.to_h).first
     end
+  end
+
+  #
+  # Override the email changed notification for devise
+  #
+  def send_email_changed_notification
+    prev_email = email_addresses.first.email_before_last_save
+    return if prev_email.blank?
+
+    send_devise_notification(
+      :email_changed,
+      to: prev_email
+    )
   end
 
   # check that the person has not been assigned to program items, if they have then return an error and do not delete

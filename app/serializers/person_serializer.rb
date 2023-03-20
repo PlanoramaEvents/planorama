@@ -49,7 +49,7 @@ class PersonSerializer #< ActiveModel::Serializer
 
   # Indicate whether the person has a password set
   protected_attribute :has_password do |person|
-    !person.password.blank?
+    !person.encrypted_password.blank?
   end
 
   attribute :tags do |person|

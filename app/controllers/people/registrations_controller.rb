@@ -1,12 +1,19 @@
 class People::RegistrationsController < Devise::RegistrationsController
   respond_to :json
 
+  #
+  # POST /auth
+  # TODO: check email is unique for login when sign up
+  # TODO: verification of CAPTCHA token, then delegate to usual path
+
   private
 
   def respond_with(resource, _opts = {})
-    register_success && return if resource.persisted?
-
-    register_failed
+    if resource.persisted?
+      register_success
+    else
+      register_failed
+    end
   end
 
   def register_success
