@@ -215,4 +215,7 @@ Rails.application.routes.draw do
   # This has to be at the end otherwise we do not match the resource endpoints
   # as this is a catch all
   # match '*path' => redirect('/'), via: :get
+  get '*path', to: 'home#index', constraints: -> (request) do
+    !request.xhr? && request.format.html?
+  end
 end
