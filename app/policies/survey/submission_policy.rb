@@ -39,7 +39,8 @@ class Survey::SubmissionPolicy < PlannerPolicy
     def resolve
       if allowed?(action: :index)
         scope.all
-        # scope.where(person_id: @person.id)
+      else
+        scope.where(person_id: @person.id)
       end
     end
   end
