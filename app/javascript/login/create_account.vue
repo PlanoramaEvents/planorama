@@ -48,6 +48,7 @@ import { validateFields } from "../utils";
 import {
   LOGIN_INVALID_FIELDS,
   SOMETHING_WENT_WRONG,
+  VALID_CAPTCHA_REQUIRED,
 } from "../constants/strings";
 import settingsMixin from "@/store/settings.mixin";
 import VueRecaptcha from 'vue-recaptcha';
@@ -89,12 +90,20 @@ export default {
     onVerifyCaptcha: function (response) {
       // console.log('Verify: ' + response)
       this.captcha_response = response;
+      this.captcha_errored = false;
     },
     onCaptchaError: function() {
       // We got an error from captcha
+      this.captcha_errored = true;
     },
     onSubmit: async function (event) {
       event.preventDefault();
+      if (this.currentSettings.recaptcha_site_key && this.captcha_errored) {
+        this.alert.text = VALID_CAPTCHA_REQUIRED;
+        this.alert.visible = true;
+        return;
+      }
+
       await validateFields(this.form.email);
       if (this.form.email.valid === false) {
         this.error.text = LOGIN_INVALID_FIELDS;
@@ -123,7 +132,7 @@ export default {
           })
           .catch((error) => {
             const errors = error.response.data.errors;
-            console.debug("ERROR: ", error.response)
+            // console.debug("ERROR: ", error.response)
 
             if (error.response.status == 422) {
               const errors = error.response.data.errors;
@@ -139,7 +148,8 @@ export default {
     },
   },
   mounted() {
-    this.captcha_response = null
+    this.captcha_response = null;
+    this.captcha_errored = false;
   }
 };
 </script>
