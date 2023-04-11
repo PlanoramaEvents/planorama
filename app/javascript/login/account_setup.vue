@@ -109,6 +109,7 @@ export default {
     resetPasswordLink: `<a href="/#/login/forgot">Reset Password</a>`,
   }),
   methods: {
+    // TODO: add code to enforce password security
     onSubmit: async function (event) {
       event.preventDefault();
       await validateFields(

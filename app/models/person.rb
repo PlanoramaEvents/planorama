@@ -10,6 +10,7 @@ class Person < ApplicationRecord
 
   # TODO: add a deleted_at mechanism for soft deletes
 
+  include PasswordArchivable
   # acts_as_taggable
   acts_as_taggable_on :tags
 
