@@ -9,6 +9,10 @@ class PersonPolicy < PlannerPolicy
   #   true
   # end
 
+  def check_password?
+    true
+  end
+
   def update_all?
     allowed?(action: :update_all)
   end

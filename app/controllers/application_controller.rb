@@ -48,6 +48,12 @@ class ApplicationController < ActionController::Base
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 
+  rescue_from Recaptcha::VerifyError, with: :recaptcha_problem
+  def recaptcha_problem(e)
+    error = { status: '422', title: 'CAPTCHA response was not valid' }
+    render jsonapi_errors: [error], status: :unprocessable_entity
+  end
+
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   def user_not_authorized(e)
     # should be 403, need a redirect ????

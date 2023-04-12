@@ -19,6 +19,15 @@
         @validated="form.email.valid = $event"
         :validateNow="form.email.validate"
       ></email-field>
+      <div class="d-flex flex-row-reverse mb-2" v-if="captchaKey">
+        <vue-recaptcha
+            ref="recaptcha" 
+            :sitekey="captchaKey"
+            :loadRecaptchaScript="true"
+            @verify="onVerifyCaptcha"
+            @error="onCaptchaError"
+        ></vue-recaptcha>
+      </div>
       <div class="d-flex flex-row-reverse">
         <b-button
           :disabled="submitDisabled"
@@ -39,8 +48,10 @@ import { validateFields } from "../utils";
 import {
   LOGIN_INVALID_FIELDS,
   SOMETHING_WENT_WRONG,
+  VALID_CAPTCHA_REQUIRED,
 } from "../constants/strings";
 import settingsMixin from "@/store/settings.mixin";
+import VueRecaptcha from 'vue-recaptcha';
 
 export default {
   name: "CreateAccount",
@@ -65,15 +76,34 @@ export default {
   }),
   components: {
     EmailField,
+    VueRecaptcha
   },
   computed: {
     submitDisabled: function () {
       return this.form.email.valid === false;
     },
+    captchaKey: function() {
+      return this.currentSettings.recaptcha_site_key
+    }
   },
   methods: {
+    onVerifyCaptcha: function (response) {
+      // console.log('Verify: ' + response)
+      this.captcha_response = response;
+      this.captcha_errored = false;
+    },
+    onCaptchaError: function() {
+      // We got an error from captcha
+      this.captcha_errored = true;
+    },
     onSubmit: async function (event) {
       event.preventDefault();
+      if (this.currentSettings.recaptcha_site_key && this.captcha_errored) {
+        this.alert.text = VALID_CAPTCHA_REQUIRED;
+        this.alert.visible = true;
+        return;
+      }
+
       await validateFields(this.form.email);
       if (this.form.email.valid === false) {
         this.error.text = LOGIN_INVALID_FIELDS;
@@ -87,7 +117,7 @@ export default {
         }
 
         http
-          .post("/login/sign_up", { email: this.person.email, url: destination })
+          .post("/login/sign_up", { email: this.person.email, url: destination, captcha_response: this.captcha_response })
           .then((data) => {
             // console.debug("***** created ", data)
             this.successfullySent = data.status === 201;
@@ -101,13 +131,25 @@ export default {
             }
           })
           .catch((error) => {
-            // this.alert.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
-            // this.alert.visible = true;
-            // Even if we have a problem we need to pretend that we do not
-            this.$router.push("/?alert=reset_sent");
+            const errors = error.response.data.errors;
+            // console.debug("ERROR: ", error.response)
+
+            if (error.response.status == 422) {
+              const errors = error.response.data.errors;
+
+              this.alert.text = errors[0].title;
+              this.alert.visible = true;
+            } else {
+              // Even if we have a problem we need to pretend that we do not
+              this.$router.push("/?alert=reset_sent");
+            }
           });
       }
     },
   },
+  mounted() {
+    this.captcha_response = null;
+    this.captcha_errored = false;
+  }
 };
 </script>
