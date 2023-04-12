@@ -292,6 +292,8 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    recaptcha (5.12.3)
+      json
     redis-client (0.14.1)
       connection_pool
     regexp_parser (2.7.0)
@@ -465,6 +467,7 @@ DEPENDENCIES
   rails (~> 6.1)
   ranked-model
   ransack
+  recaptcha
   request_store
   roo (~> 2.8.0)
   rspec

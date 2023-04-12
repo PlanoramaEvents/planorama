@@ -11,10 +11,15 @@ class LoginController < ApplicationController
   #
 
   # Step 1: from email create a person
-  # TODO: captcha check should be in here
   def sign_up
     email = params[:email]
     url = params[:url]
+    captcha_response = params[:captcha_response]
+
+    # recaptcha
+    if !ENV['RECAPTCHA_SECRET_KEY'].blank?
+      verify_recaptcha!({response: captcha_response, secret_key: ENV['RECAPTCHA_SECRET_KEY']})
+    end
 
     # check that email is not used as primary by anyone
     # if it is then use that person if they do not have a password set

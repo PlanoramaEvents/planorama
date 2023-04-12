@@ -15,6 +15,7 @@ module.exports = {
     LOGIN_PASSWORDS_DO_NOT_MATCH: "Your passwords do not match.",
     LOGIN_PASSWORD_UNSECURE: "Your password does not meet the security requirements.",
     SOMETHING_WENT_WRONG: (helpEmail) => `Oops, something went wrong on our end. Please try again in a few minutes or contact us at ${helpEmail} if the problem persists.`,
+    VALID_CAPTCHA_REQUIRED: "A valid response to the CAPTCHA is required",
     LOGIN_MISSING_NEW_PASSWORD: "You must enter a new password.",
     LOGIN_PASSWORDS_MUST_MATCH: "Your passwords must match.",
     LOGIN_PASSWORD_INVALID: "Your new password must meet the security criteria.",
