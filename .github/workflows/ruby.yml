@@ -30,7 +30,7 @@ jobs:
     # Set to 2.7.2 to match what the app is pinned to for now
     strategy:
       matrix:
-        ruby-version: ['2.7.2']
+        ruby-version: ['2.7.3']
 
     steps:
     - uses: actions/checkout@v2

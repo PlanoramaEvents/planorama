@@ -57,7 +57,7 @@ elif [[ $RAILS_ENV = "staging" ]]; then
 
   bin/rails db:seed
 else
-  until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST/$DB_NAME" -c 'select current_date'; do
+  until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST" -c 'select current_date'; do
     echo "waiting for postgres..."
     sleep 5
   done
