@@ -20,8 +20,8 @@
       <a :href="previewLink(item)" target="_blank">Preview</a>
     </template>
     <template #cell(surveyLink)="{ item }">
-      <small v-if="!item.anonymous"><i>This survey is not anonymous</i></small>
-      <a v-if="item.anonymous" :href="surveyLink(item)" target="_blank">{{ surveyLink(item) }}</a>
+      <small v-if="!item.unassigned"><i>This survey is not anonymous</i></small>
+      <a v-if="item.unassigned" :href="surveyLink(item)" target="_blank">{{ surveyLink(item) }}</a>
     </template>
   </table-vue>
 </template>

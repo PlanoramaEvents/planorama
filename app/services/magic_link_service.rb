@@ -20,6 +20,8 @@ module MagicLinkService
   end
 
   def self.decode(token:)
+    return nil unless token
+
     link = MagicLink.find_by(
       token: token
     )

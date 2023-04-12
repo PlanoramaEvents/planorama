@@ -282,6 +282,31 @@ class PeopleController < ResourceController
            content_type: 'application/json'
   end
 
+  # GET /auth/password/check/:password
+  def check_password
+    pwd = params[:password]
+
+    raise "Invalid: password is blank" if pwd.blank?
+
+    # does not contain email address
+    raise "Invalid: password is an email" if pwd =~ URI::MailTo::EMAIL_REGEXP
+
+    # does not contain word password
+    # not part of common passwords
+    raise "Invalid: password is not safe" if Pwned::Password.new(pwd, read_timeout: 5).pwned?
+
+    # is not a recent password (not possible)
+    if current_person
+      current_person.password = pwd
+      raise "Invalid: password was used in the past" if current_person.password_archive_included?
+    end
+
+    render json: { valid: true }, content_type: 'application/json'
+  rescue => e
+    Rails.logger.error "** BAD PASSWORD #{e}"
+    render json: { valid: false, reason: e.message }, content_type: 'application/json'
+  end
+
   def submissions
     authorize current_person, policy_class: policy_class
 

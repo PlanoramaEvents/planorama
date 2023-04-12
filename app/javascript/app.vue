@@ -3,8 +3,8 @@
       <sign-agreements ref="agreement-signer"></sign-agreements>
       <div class="row">
         <top-navbar></top-navbar>
-        <side-navbar v-if="loggedIn"></side-navbar>
-          <div :class="['col-12 pr-0', { 'col-sm-10': loggedIn, 'col-xl-10': loggedIn}]">
+        <side-navbar v-if="loggedIn && hasPassword"></side-navbar>
+          <div :class="['col-12 pr-0', { 'col-sm-10': (loggedIn && hasPassword), 'col-xl-10': (loggedIn && hasPassword )}]">
             <b-overlay :show="wholePageSpinner">
             <router-view :key="magicalReload"></router-view>
             </b-overlay>

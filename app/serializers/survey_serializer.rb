@@ -5,7 +5,7 @@ class SurveySerializer
              :name, :welcome, :thank_you, :submit_string,
              :use_captcha, :public,
              :transition_accept_status, :transition_decline_status,
-             :declined_msg, :authenticate_msg, :anonymous,
+             :declined_msg, :authenticate_msg, :unassigned,
              :published_on, :description,
              :mandatory_star,
              :numbered_questions,
