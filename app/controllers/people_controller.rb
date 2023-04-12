@@ -4,6 +4,7 @@ class PeopleController < ResourceController
   POLICY_SCOPE_CLASS = 'PersonPolicy::Scope'.freeze
   DEFAULT_SORTBY = 'name_sort_by'
 
+  skip_before_action :authenticate_person!, only: [:check_password]
   # need to add includes etc to speed up query
 
   def me

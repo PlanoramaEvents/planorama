@@ -11,7 +11,7 @@
         Password must not be a commonly used password of easily guessable.
         Planorama makes use of the service
         <a href="https://haveibeenpwned.com/" target="_blank">haveibeenpwned.com</a>
-        which is provided under the creatice commons (CC) license.
+        which is provided under the creative commons (CC) license.
       </li>
     </ul>
     <p>
