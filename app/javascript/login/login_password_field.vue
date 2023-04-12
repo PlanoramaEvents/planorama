@@ -21,10 +21,12 @@
 </template>
 
 <script>
+import { http } from "../http";
 import {
   LOGIN_MISSING_PASSWORD,
   LOGIN_PASSWORDS_DO_NOT_MATCH,
   LOGIN_SHORT_PASSWORD,
+  LOGIN_PASSWORD_UNSECURE
 } from "@/constants/strings";
 
 export default {
@@ -51,6 +53,7 @@ export default {
   },
   data: () => ({
     valid: null,
+    passSecurityNeeds: false
   }),
   computed: {
     formInputId: function () {
@@ -74,6 +77,9 @@ export default {
     invalidMessage: function () {
       if (this.value.length < 1 || (!this.newPassword && !this.confirmation)) {
         return LOGIN_MISSING_PASSWORD;
+      }
+      if (!this.passSecurityNeeds) {
+        return LOGIN_PASSWORD_UNSECURE;
       }
       if (this.confirmation) {
         return LOGIN_PASSWORDS_DO_NOT_MATCH;
@@ -109,7 +115,23 @@ export default {
       if (this.value.length < minLength || !matching) {
         this.valid = false;
       }
-      this.$emit("validated", this.valid);
+
+      // Enforce password security, only in case of confirmation
+      this.checkPasswordRules().then(
+        () => {
+          this.passSecurityNeeds = this.valid;
+          this.$emit("validated", this.valid);
+        }
+      );
+    },
+    checkPasswordRules: function(pwd) {
+      return http.get(`/person/check_password/${this.value}`)
+              .then((res) => {
+                this.valid = res.data.valid;
+              })
+              .catch((error) => {
+                this.valid = false;
+              });
     },
     onPasswordFocus: function (event) {
       this.valid = null;

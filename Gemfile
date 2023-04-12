@@ -38,6 +38,7 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'aasm'
 
 gem 'devise'
+gem 'pwned'
 # gem 'devise-jwt'
 gem 'rack-cors'
 gem 'request_store'

@@ -13,6 +13,7 @@ module.exports = {
     NOT_AN_EMAIL: "Email address needs to be in the correct format e.g. xyz@test.com",
     LOGIN_SHORT_PASSWORD: "Your password must be at least 6 characters long.",
     LOGIN_PASSWORDS_DO_NOT_MATCH: "Your passwords do not match.",
+    LOGIN_PASSWORD_UNSECURE: "Your password does not meet the security requirements.",
     SOMETHING_WENT_WRONG: (helpEmail) => `Oops, something went wrong on our end. Please try again in a few minutes or contact us at ${helpEmail} if the problem persists.`,
     VALID_CAPTCHA_REQUIRED: "A valid response to the CAPTCHA is required",
     LOGIN_MISSING_NEW_PASSWORD: "You must enter a new password.",

@@ -8,12 +8,10 @@
       <li>Does not contain your email address</li>
       <li>Is not one of your most recent passwords</li>
       <li>
-        Is not a member of this
-        <a
-          href="https://nordpass.com/most-common-passwords-list/"
-          target="_blank"
-          >list of common passwords</a
-        >
+        Password must not be a commonly used password of easily guessable.
+        Planorama makes use of the service
+        <a href="https://haveibeenpwned.com/" target="_blank">haveibeenpwned.com</a>
+        which is provided under the creatice commons (CC) license.
       </li>
     </ul>
     <p>
