@@ -19,7 +19,7 @@
         @validated="form.email.valid = $event"
         :validateNow="form.email.validate"
       ></email-field>
-      <div class="d-flex flex-row-reverse mb-2" v-if="captchaKey">
+      <div class="d-flex mb-2" v-if="captchaKey">
         <vue-recaptcha
             ref="recaptcha" 
             :sitekey="captchaKey"
