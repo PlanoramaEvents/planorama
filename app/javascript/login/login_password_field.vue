@@ -125,7 +125,8 @@ export default {
       );
     },
     checkPasswordRules: function(pwd) {
-      return http.get(`/person/check_password/${this.value}`)
+      // CHANGE /${this.value}
+      return http.post("/person/check_password", { password: this.value })
               .then((res) => {
                 this.valid = res.data.valid;
               })

@@ -31,7 +31,7 @@ Rails.application.routes.draw do
   post 'person/import', to: 'people#import'
   post 'person/update_all', to: 'people#update_all'
   post 'person/session_names', to: 'people#session_names'
-  get 'person/check_password(/:password)', to: 'people#check_password'
+  post 'person/check_password', to: 'people#check_password'
   resources :people, path: 'person' do
     get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
