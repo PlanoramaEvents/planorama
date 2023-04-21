@@ -1,26 +1,7 @@
 <template>
   <div class="new-password">
     <h3>Reset Password</h3>
-    <p>In order to protect your account, make sure your password:</p>
-    <ul>
-      <li>Is 6 or more characters</li>
-      <li>Does not contain the word "password"</li>
-      <li>Does not contain your email address</li>
-      <li>Is not one of your most recent passwords</li>
-      <li>
-        Password must not be a commonly used password of easily guessable.
-        Planorama makes use of the service
-        <a href="https://haveibeenpwned.com/" target="_blank">haveibeenpwned.com</a>
-        which is provided under the creative commons (CC) license.
-      </li>
-    </ul>
-    <p>
-      Optionally, we recommend you follow the
-      <a href="https://xkcd.com/936/" target="_blank"
-        >Correct Horse Battery Staple</a
-      >
-      paradigm.
-    </p>
+    <pw-requirements></pw-requirements>
     <b-form @submit="onSubmit">
       <b-alert
         :show="error.visible"
@@ -57,7 +38,8 @@ import {
   LOGIN_TOKEN_EXPIRED,
   SOMETHING_WENT_WRONG,
 } from "@/constants/strings";
-import LoginPasswordField from "./login_password_field";
+import LoginPasswordField from "./login_password_field.vue";
+import PwRequirements from './pw_requirements.vue';
 import { validateFields } from "@/utils";
 import settingsMixin from "@/store/settings.mixin";
 
@@ -65,6 +47,7 @@ export default {
   name: "NewPassword",
   components: {
     LoginPasswordField,
+    PwRequirements
   },
   mixins: [
     settingsMixin
