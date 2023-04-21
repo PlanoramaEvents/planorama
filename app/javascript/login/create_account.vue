@@ -21,7 +21,7 @@
       ></email-field>
       <div class="d-flex mb-2" v-if="captchaKey">
         <vue-recaptcha
-            ref="recaptcha" 
+            ref="recaptcha"
             :sitekey="captchaKey"
             :loadRecaptchaScript="true"
             @verify="onVerifyCaptcha"
@@ -73,6 +73,8 @@ export default {
         validate: null,
       },
     },
+    captcha_response: null,
+    captcha_errored: false
   }),
   components: {
     EmailField,
@@ -80,7 +82,12 @@ export default {
   },
   computed: {
     submitDisabled: function () {
-      return this.form.email.valid === false;
+      if (this.currentSettings.recaptcha_site_key) {
+        return this.captcha_errored || this.captcha_response == null || this.form.email.valid === false
+      } else {
+        console.log('submitDisabled: check email')
+        return this.form.email.valid === false;
+      }
     },
     captchaKey: function() {
       return this.currentSettings.recaptcha_site_key
@@ -88,7 +95,7 @@ export default {
   },
   methods: {
     onVerifyCaptcha: function (response) {
-      // console.log('Verify: ' + response)
+      console.log('Verify: ' + response)
       this.captcha_response = response;
       this.captcha_errored = false;
     },
@@ -98,16 +105,12 @@ export default {
     },
     onSubmit: async function (event) {
       event.preventDefault();
-      if (this.currentSettings.recaptcha_site_key && this.captcha_errored) {
-        this.alert.text = VALID_CAPTCHA_REQUIRED;
-        this.alert.visible = true;
-        return;
-      }
 
       await validateFields(this.form.email);
       if (this.form.email.valid === false) {
-        this.error.text = LOGIN_INVALID_FIELDS;
-        this.error.visible = true;
+        // This does not do anything @gail - verify
+        // this.error.text = LOGIN_INVALID_FIELDS;
+        // this.error.visible = true;
       } else {
         // We need the URL of the destination if any that the user is going to be sent to
         // This would, for example, be the survey
@@ -146,10 +149,6 @@ export default {
           });
       }
     },
-  },
-  mounted() {
-    this.captcha_response = null;
-    this.captcha_errored = false;
   }
 };
 </script>
