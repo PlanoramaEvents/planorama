@@ -93,6 +93,7 @@ export default {
     },
     onEmailUnfocus: function (event) {
       this.validate(event);
+      this.$emit("blur")
     },
     onEmailFocus: function (event) {
       this.valid = null;
