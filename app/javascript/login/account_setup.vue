@@ -30,28 +30,7 @@
         @validated="form.passwordConfirmation.valid = $event"
         :validateNow="form.passwordConfirmation.validate"
       ></login-password-field>
-      <p>In order to protect your account, make sure your password:</p>
-      <ul>
-        <li>Is 6 or more characters</li>
-        <li>Does not contain the word "password"</li>
-        <li>Does not contain your email address</li>
-        <li>Is not one of your most recent passwords</li>
-        <li>
-          Is not a member of this
-          <a
-            href="https://nordpass.com/most-common-passwords-list/"
-            target="_blank"
-            >list of common passwords</a
-          >
-        </li>
-      </ul>
-      <p>
-        Optionally, we recommend you follow the
-        <a href="https://xkcd.com/936/" target="_blank"
-          >Correct Horse Battery Staple</a
-        >
-        paradigm.
-      </p>
+      <pw-requirements></pw-requirements>
       <div class="d-flex flex-row-reverse">
         <b-button type="submit" variant="primary" class="px-5"
           >Create Account</b-button
@@ -74,12 +53,14 @@ import { validateFields } from "@/utils";
 import settingsMixin from "@/store/settings.mixin";
 import NameField from "@/shared/name_field.vue";
 import { personSessionMixin } from "@/mixins";
+import PwRequirements from './pw_requirements.vue';
 
 export default {
   name: "AccountSetup",
   components: {
     LoginPasswordField,
     NameField,
+    PwRequirements,
   },
   mixins: [settingsMixin, personSessionMixin],
   data: () => ({
