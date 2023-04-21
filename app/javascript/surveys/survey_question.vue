@@ -406,7 +406,6 @@ export default {
       this.createDummyResponse()
    } else {
       this.localResponse = this.getResponse(this.question, this.selectedSubmission)
-      // console.log("*******************", this.localResponse)
    }
   },
   watch: {
@@ -418,7 +417,6 @@ export default {
     selectedSubmission(newVal) {
       if (newVal) {
         this.localResponse = this.getResponse(this.question, newVal)
-        // console.log("*******************111111111", this.localResponse)
       }
     },
   }
