@@ -25,6 +25,7 @@
             :sitekey="captchaKey"
             :loadRecaptchaScript="true"
             @verify="onVerifyCaptcha"
+            @expired="onCaptchaError"
             @error="onCaptchaError"
         ></vue-recaptcha>
       </div>
