@@ -235,13 +235,11 @@ router.beforeEach((to, from, next) => {
         //
         if (session.has_password) {
           if(to.meta.requiresAdmin && !isAdmin) {
-            console.debug("not admin, sending to /profile");
             next({
               path: '/profile',
               query: { redirect: to.fullPath }
             })
           } else if(to.meta.requiresPowers && !hasPowers) {
-            console.debug("no powers, sending to /profile");
             next({
               path: '/profile',
               query: { redirect: to.fullPath }
@@ -252,7 +250,6 @@ router.beforeEach((to, from, next) => {
           }
         } else {
           // If the user has not set a password then get them to the setup screen to do so
-          console.debug("no password so set one");
           next({
             path: '/login/setup',
             query: { redirect: to.fullPath }
