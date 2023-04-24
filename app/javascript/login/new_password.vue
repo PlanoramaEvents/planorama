@@ -37,6 +37,7 @@ import {
   LOGIN_PASSWORDS_MUST_MATCH,
   LOGIN_TOKEN_EXPIRED,
   SOMETHING_WENT_WRONG,
+  PASSWORDS_MUST_NOT_BE_RECENT
 } from "@/constants/strings";
 import LoginPasswordField from "./login_password_field.vue";
 import PwRequirements from './pw_requirements.vue';
@@ -52,6 +53,7 @@ export default {
   mixins: [
     settingsMixin
   ],
+  props: ['redirect'],
   data: () => ({
     person: {
       password: "",
@@ -98,7 +100,11 @@ export default {
           .put("/auth/password.json", { person: this.person })
           .then((data) => {
             if (data.status === 204) {
-              this.$router.push("/?alert=password_changed");
+              if (this.redirect ) {
+                this.$router.push(`/login?redirect=${this.redirect}`)
+              } else {
+                this.$router.push("/?alert=password_changed");
+              }
             } else {
               this.error.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
               this.error.visible = true;
@@ -106,10 +112,14 @@ export default {
           })
           .catch((error, result) => {
             const errors = error.response.data.errors;
-            if (errors && errors.reset_password_token[0] === "has expired, please request a new one") {
+            if (errors && errors.reset_password_token && errors.reset_password_token[0] === "has expired, please request a new one") {
               this.error.text = LOGIN_TOKEN_EXPIRED(this.resetPasswordLink);
-            } else if (errors && errors.reset_password_token[0] === "is invalid") {
+            } else if (errors && errors.reset_password_token && errors.reset_password_token[0] === "is invalid") {
               this.error.text = LOGIN_TOKEN_EXPIRED(this.resetPasswordLink);
+            } else if (errors && errors.password[0] == "password was used in the past." ) {
+              // Usually will not get here as the password is chack in JS which checkpassword
+              // but this is a just in case
+              this.error.text = PASSWORDS_MUST_NOT_BE_RECENT;
             } else {
               this.error.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
             }

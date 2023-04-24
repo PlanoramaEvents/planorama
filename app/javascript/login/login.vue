@@ -17,7 +17,7 @@
       ></login-password-field>
       <div class="pt-3"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
       <div class="d-flex flex-row-reverse mb-3">
-        <router-link to="/login/forgot">Forgot Password?</router-link>
+        <router-link :to="'/login/forgot?redirect=' + redirect">Forgot Password?</router-link>
       </div>
       <div class="d-flex flex-row-reverse">
         <b-button type="submit" variant="primary" class="px-5">Log In</b-button>
@@ -25,7 +25,7 @@
     </b-form>
     <!--iea-modal @cancel="onIeaCancel" @ok="onIeaAgree"></iea-modal-->
     <div class="d-flex flex-column mb-3">
-      <router-link to="/login/forgot">Never set up your password? Set it up now</router-link>
+      <router-link :to="'/login/forgot?redirect=' + redirect">Never set up your password? Set it up now</router-link>
       <router-link :to="'/login/new?redirect=' + redirect">Create account</router-link>
     </div>
   </div>

@@ -23,6 +23,7 @@ module.exports = {
     LOGIN_PASSWORD_CHANGED: "You successfully changed your password.",
     LOGIN_TOKEN_EXPIRED: (resetPasswordLink) => `The password reset link you used is no longer valid. Please request another link here: ${resetPasswordLink}`,
     LOGIN_CLICK_TO_AGREE: (conventionName) => `By clicking ‘Log In’ below, I agree to ${conventionName} storing and using my personal data as documented in the`,
+    PASSWORDS_MUST_NOT_BE_RECENT: "The password entered was one you used recently, plase use a different password.",
 
     // toast titles
     ERROR_TOAST_TITLE: "Error",
