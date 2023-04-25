@@ -21,6 +21,9 @@ export const personSessionMixin = {
     },
     currentUserIsParticipant() {
       return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "participant")
+    },
+    currentUserEmail() {
+      return this.currentUser.primary_email?.email || '';
     }
   },
   methods: {

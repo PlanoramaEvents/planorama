@@ -5,6 +5,7 @@
       <li>Is 6 or more characters</li>
       <li>Does not contain the word "password"</li>
       <li>Does not contain your email address</li>
+      <li>Is not one of your most recent passwords</li>
       <li>
         Password must not be a commonly used password of easily guessable.
         Planorama makes use of the service

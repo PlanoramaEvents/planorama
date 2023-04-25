@@ -2,7 +2,7 @@
   <div>
     <header class="d-flex justify-content-between align-items-baseline">
       <h3>Create Account</h3>
-      <h5>For email: {{ currentUser.email }}</h5>
+      <h5>For email: {{ currentUserEmail }}</h5>
     </header>
 
     <b-form @submit="onSubmit">
