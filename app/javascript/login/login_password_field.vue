@@ -116,16 +116,18 @@ export default {
         this.valid = false;
       }
 
-      // Enforce password security, only in case of confirmation
-      this.checkPasswordRules().then(
-        () => {
-          this.passSecurityNeeds = this.valid;
-          this.$emit("validated", this.valid);
-        }
-      );
+      // only do the server side check if the JS checks have passed
+      if (this.valid) {
+        // Enforce password security
+        this.checkPasswordRules().then(
+          () => {
+            this.passSecurityNeeds = this.valid;
+            this.$emit("validated", this.valid);
+          }
+        );
+      }
     },
     checkPasswordRules: function(pwd) {
-      // CHANGE /${this.value}
       return http.post("/person/check_password", { password: this.value })
               .then((res) => {
                 this.valid = res.data.valid;
