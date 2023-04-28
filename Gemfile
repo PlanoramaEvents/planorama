@@ -19,6 +19,7 @@ gem 'sass-rails', '>= 6'
 gem 'webpacker', '~> 5.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'
+gem "recaptcha"
 
 gem "bundler-audit"        # checks for insecure gems
 
@@ -37,6 +38,7 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'aasm'
 
 gem 'devise'
+gem 'pwned'
 # gem 'devise-jwt'
 gem 'rack-cors'
 gem 'request_store'

@@ -4,6 +4,7 @@ class PeopleController < ResourceController
   POLICY_SCOPE_CLASS = 'PersonPolicy::Scope'.freeze
   DEFAULT_SORTBY = 'name_sort_by'
 
+  skip_before_action :authenticate_person!, only: [:check_password]
   # need to add includes etc to speed up query
 
   def me
@@ -280,6 +281,31 @@ class PeopleController < ResourceController
                   }
                 ).serializable_hash(),
            content_type: 'application/json'
+  end
+
+  # GET /auth/password/check/:password
+  def check_password
+    pwd = params[:password]
+
+    raise "Invalid: password is blank" if pwd.blank?
+
+    # does not contain email address
+    raise "Invalid: password is an email" if pwd =~ URI::MailTo::EMAIL_REGEXP
+
+    # does not contain word password
+    # not part of common passwords
+    raise "Invalid: password is not safe" if Pwned::Password.new(pwd, read_timeout: 5).pwned?
+
+    # is not a recent password (not possible)
+    if current_person
+      current_person.password = pwd
+      raise "Invalid: password was used in the past" if current_person.password_archive_included?
+    end
+
+    render json: { valid: true }, content_type: 'application/json'
+  rescue => e
+    Rails.logger.error "** BAD PASSWORD #{e}"
+    render json: { valid: false, reason: e.message }, content_type: 'application/json'
   end
 
   def submissions

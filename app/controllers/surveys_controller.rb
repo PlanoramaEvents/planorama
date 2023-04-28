@@ -118,7 +118,7 @@ class SurveysController < ResourceController
       transition_decline_status
       declined_msg
       authenticate_msg
-      anonymous
+      unassigned
       welcome
       description
       mandatory_star

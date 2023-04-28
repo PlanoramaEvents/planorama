@@ -41,6 +41,7 @@ import settingsMixin from "@/store/settings.mixin";
 export default {
   name: "ForgotPassword",
   mixins: [settingsMixin],
+  props: ['redirect'],
   data: () => ({
     person: {
       email: "",
@@ -75,7 +76,7 @@ export default {
         this.error.visible = true;
       } else {
         http
-          .post("/auth/password.json", { person: this.person })
+          .post("/auth/password.json", { person: this.person, redirect: this.redirect })
           .then((data) => {
             this.successfullySent = data.status === 201;
             if (this.successfullySent) {

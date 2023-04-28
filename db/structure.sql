@@ -24,6 +24,20 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
+-- Name: unaccent; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION unaccent; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION unaccent IS 'text search dictionary that removes accents';
+
+
+--
 -- Name: acceptance_status_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1060,6 +1074,39 @@ CREATE TABLE public.model_permissions (
 
 
 --
+-- Name: old_passwords; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.old_passwords (
+    id bigint NOT NULL,
+    encrypted_password character varying NOT NULL,
+    password_archivable_type character varying NOT NULL,
+    password_archivable_id integer NOT NULL,
+    password_salt character varying,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: old_passwords_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.old_passwords_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: old_passwords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.old_passwords_id_seq OWNED BY public.old_passwords.id;
+
+
+--
 -- Name: parameter_names; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1939,7 +1986,7 @@ CREATE TABLE public.surveys (
     public boolean,
     declined_msg text,
     authenticate_msg text,
-    anonymous boolean DEFAULT false,
+    unassigned boolean DEFAULT false,
     published_on timestamp without time zone,
     published_by_id uuid,
     created_by_id uuid,
@@ -2079,6 +2126,13 @@ ALTER TABLE ONLY public.audit_survey_versions ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.categorizations ALTER COLUMN id SET DEFAULT nextval('public.categorizations_id_seq'::regclass);
+
+
+--
+-- Name: old_passwords id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.old_passwords ALTER COLUMN id SET DEFAULT nextval('public.old_passwords_id_seq'::regclass);
 
 
 --
@@ -2301,6 +2355,14 @@ ALTER TABLE ONLY public.mailings
 
 ALTER TABLE ONLY public.model_permissions
     ADD CONSTRAINT model_permissions_pkey PRIMARY KEY (mdl_name, application_role_id);
+
+
+--
+-- Name: old_passwords old_passwords_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.old_passwords
+    ADD CONSTRAINT old_passwords_pkey PRIMARY KEY (id);
 
 
 --
@@ -2817,6 +2879,13 @@ CREATE INDEX index_mailings_on_mailing_state ON public.mailings USING btree (mai
 --
 
 CREATE INDEX index_model_permissions_on_application_role_id ON public.model_permissions USING btree (application_role_id);
+
+
+--
+-- Name: index_password_archivable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_password_archivable ON public.old_passwords USING btree (password_archivable_type, password_archivable_id);
 
 
 --
@@ -3429,6 +3498,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220801195644'),
 ('20220818022629'),
 ('20220818200500'),
-('20220821001724');
+('20220821001724'),
+('20230304203222'),
+('20230411123748');
 
 

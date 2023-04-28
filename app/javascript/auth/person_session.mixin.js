@@ -10,6 +10,9 @@ export const personSessionMixin = {
     loggedIn() {
       return !!this.currentUser.id
     },
+    hasPassword() {
+      return !!this.currentUser.has_password
+    },
     currentUserIsAdmin() {
       return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "admin")
     },
@@ -18,6 +21,9 @@ export const personSessionMixin = {
     },
     currentUserIsParticipant() {
       return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "participant")
+    },
+    currentUserEmail() {
+      return this.currentUser.primary_email?.email || '';
     }
   },
   methods: {

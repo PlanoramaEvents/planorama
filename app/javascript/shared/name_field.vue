@@ -14,8 +14,8 @@
       type="text"
       :state="valid"
       novalidate
-      @focus="onEmailFocus"
-      @blur="onEmailUnfocus"
+      @focus="onNameFocus"
+      @blur="onNameUnfocus"
       :disabled="disabled"
       :aria-describedBy="ariaDescribedBy || groupId"
       :required="required"
@@ -24,10 +24,10 @@
 </template>
 
 <script>
-import { NOT_AN_EMAIL, MISSING_EMAIL } from "../constants/strings";
+import { MISSING_NAME } from "../constants/strings";
 
 export default {
-  name: "EmailField",
+  name: "NameField",
   props: {
     value: {
       type: String,
@@ -37,11 +37,11 @@ export default {
     },
     id: {
       type: String,
-      default: "input-email"
+      default: "input-name"
     },
     label: {
       type: String,
-      default: "Email address"
+      default: "Name"
     },
     disabled: {
       type: Boolean,
@@ -62,10 +62,7 @@ export default {
   }),
   computed: {
     invalidFeedback() {
-      if (this.value?.length > 0) {
-        return NOT_AN_EMAIL;
-      }
-      return MISSING_EMAIL;
+      return MISSING_NAME;
     },
     groupId() {
       return `${this.id}-group`
@@ -79,23 +76,18 @@ export default {
   },
   methods: {
     validate: function (event) {
-      if (!this.value.trim().match(/.+@.+\..+/)) {
-        if (!this.value?.trim().length && !this.required) {
-          this.valid = null;
-        }
-        else {
-          this.valid = false;
-        }
-      } else {
+      if (!this.value?.trim().length && this.required) {
+        this.valid = false;
+      }
+      else {
         this.valid = null;
       }
       this.$emit("validated", this.valid);
     },
-    onEmailUnfocus: function (event) {
+    onNameUnfocus: function (event) {
       this.validate(event);
-      this.$emit("blur")
     },
-    onEmailFocus: function (event) {
+    onNameFocus: function (event) {
       this.valid = null;
       this.$emit("validated", this.valid);
     },

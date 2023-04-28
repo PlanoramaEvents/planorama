@@ -12,9 +12,10 @@ Rails.application.routes.draw do
              }, defaults: { format: :json }
 
   root to: 'home#index'
-  # get '/home', to: 'home#index'
 
   get '/login/:magic_link', to: 'login#magic_link'
+  post '/login/sign_up', to: 'login#sign_up'
+  put '/login/complete_sign_up', to: 'login#complete_sign_up'
 
   post '/validator/email', to: 'validator/email#validate'
 
@@ -30,6 +31,7 @@ Rails.application.routes.draw do
   post 'person/import', to: 'people#import'
   post 'person/update_all', to: 'people#update_all'
   post 'person/session_names', to: 'people#session_names'
+  post 'person/check_password', to: 'people#check_password'
   resources :people, path: 'person' do
     get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
@@ -213,4 +215,7 @@ Rails.application.routes.draw do
   # This has to be at the end otherwise we do not match the resource endpoints
   # as this is a catch all
   # match '*path' => redirect('/'), via: :get
+  get '*path', to: 'home#index', constraints: -> (request) do
+    !request.xhr? && request.format.html?
+  end
 end

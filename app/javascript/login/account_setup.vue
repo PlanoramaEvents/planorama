@@ -1,13 +1,22 @@
 <template>
-  <div class="new-password">
-    <h3>Reset Password</h3>
-    <pw-requirements></pw-requirements>
+  <div>
+    <header class="d-flex justify-content-between align-items-baseline">
+      <h3>Create Account</h3>
+      <h5>For email: {{ currentUserEmail }}</h5>
+    </header>
+
     <b-form @submit="onSubmit">
       <b-alert
         :show="error.visible"
         variant="danger"
         v-html="error.text"
       ></b-alert>
+      <name-field
+        v-model="person.name"
+        @validated="form.name.valid = $event"
+        :validateNow="form.name.validate"
+        :required="true"
+      ></name-field>
       <login-password-field
         v-model="person.password"
         :new-password="true"
@@ -21,9 +30,10 @@
         @validated="form.passwordConfirmation.valid = $event"
         :validateNow="form.passwordConfirmation.validate"
       ></login-password-field>
+      <pw-requirements></pw-requirements>
       <div class="d-flex flex-row-reverse">
         <b-button type="submit" variant="primary" class="px-5"
-          >Change Password</b-button
+          >Create Account</b-button
         >
       </div>
     </b-form>
@@ -37,28 +47,27 @@ import {
   LOGIN_PASSWORDS_MUST_MATCH,
   LOGIN_TOKEN_EXPIRED,
   SOMETHING_WENT_WRONG,
-  PASSWORDS_MUST_NOT_BE_RECENT
 } from "@/constants/strings";
-import LoginPasswordField from "./login_password_field.vue";
-import PwRequirements from './pw_requirements.vue';
+import LoginPasswordField from "./login_password_field";
 import { validateFields } from "@/utils";
 import settingsMixin from "@/store/settings.mixin";
+import NameField from "@/shared/name_field.vue";
+import { personSessionMixin } from "@/mixins";
+import PwRequirements from './pw_requirements.vue';
 
 export default {
-  name: "NewPassword",
+  name: "AccountSetup",
   components: {
     LoginPasswordField,
-    PwRequirements
+    NameField,
+    PwRequirements,
   },
-  mixins: [
-    settingsMixin
-  ],
-  props: ['redirect'],
+  mixins: [settingsMixin, personSessionMixin],
   data: () => ({
     person: {
       password: "",
       password_confirmation: "",
-      reset_password_token: "",
+      name: "",
     },
     error: {
       visible: false,
@@ -73,16 +82,22 @@ export default {
         valid: null,
         validate: null,
       },
+      name: {
+        valid: null,
+        validate: null,
+      },
     },
     resetPasswordLink: `<a href="/#/login/forgot">Reset Password</a>`,
   }),
-  mounted: function () {
-    this.person.reset_password_token = this.$route.query.reset_password_token;
-  },
   methods: {
+    // TODO: add code to enforce password security
     onSubmit: async function (event) {
       event.preventDefault();
-      await validateFields(this.form.password, this.form.passwordConfirmation);
+      await validateFields(
+        this.form.password,
+        this.form.passwordConfirmation,
+        this.form.name
+      );
       if (
         this.form.password.valid === false ||
         this.form.passwordConfirmation.valid === false
@@ -95,33 +110,47 @@ export default {
           this.error.text = LOGIN_PASSWORDS_MUST_MATCH;
         }
         this.error.visible = true;
+      } else if (this.form.name.valid === false) {
+        this.error.text = NAME_MISSING;
+        this.error.visible = true;
       } else {
         http
-          .put("/auth/password.json", { person: this.person })
+          .put("/login/complete_sign_up", { person: this.person })
           .then((data) => {
-            if (data.status === 204) {
-              if (this.redirect ) {
-                this.$router.push(`/login?redirect=${this.redirect}`)
-              } else {
-                this.$router.push("/?alert=password_changed");
-              }
+            // The server will send back a 303 redirect
+            if (data.status === 200) {
+              // console.debug("SIGN UP COMPLETED", data.data.redirect)
+              // Need to refetch the person
+              this.fetchSession({force: true}).then(
+                () => {
+                  // NOTE: need this cause redirect is a full URL not a router path
+                  window.location.href = data.data.redirect;
+                }
+              )
             } else {
-              this.error.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
+              this.error.text = SOMETHING_WENT_WRONG(
+                this.configByName("email_reply_to_address")
+              );
               this.error.visible = true;
             }
           })
           .catch((error, result) => {
             const errors = error.response.data.errors;
-            if (errors && errors.reset_password_token && errors.reset_password_token[0] === "has expired, please request a new one") {
+            if (
+              errors &&
+              errors.reset_password_token[0] ===
+                "has expired, please request a new one"
+            ) {
               this.error.text = LOGIN_TOKEN_EXPIRED(this.resetPasswordLink);
-            } else if (errors && errors.reset_password_token && errors.reset_password_token[0] === "is invalid") {
+            } else if (
+              errors &&
+              errors.reset_password_token[0] === "is invalid"
+            ) {
               this.error.text = LOGIN_TOKEN_EXPIRED(this.resetPasswordLink);
-            } else if (errors && errors.password[0] == "password was used in the past." ) {
-              // Usually will not get here as the password is chack in JS which checkpassword
-              // but this is a just in case
-              this.error.text = PASSWORDS_MUST_NOT_BE_RECENT;
             } else {
-              this.error.text = SOMETHING_WENT_WRONG(this.configByName('email_reply_to_address'));
+              this.error.text = SOMETHING_WENT_WRONG(
+                this.configByName("email_reply_to_address")
+              );
             }
             this.error.visible = true;
           });

@@ -4,10 +4,14 @@ import LoginScreen from './login/login_screen.vue'
 import ForgotPassword from './login/forgot_password.vue'
 import PlanLogin from './login/login.vue';
 import NewPassword from './login/new_password.vue';
+import CreateAccount from './login/create_account.vue';
+import AccountSetup from './login/account_setup.vue'
 
 const loginRoutes = [
   { path: 'forgot', component: ForgotPassword },
+  { path: 'new', component: CreateAccount},
   { path: 'password-reset', component: NewPassword },
+  { path: 'setup', component: AccountSetup },
   { path: '', component: PlanLogin, name: "login" },
 ]
 
@@ -228,21 +232,28 @@ router.beforeEach((to, from, next) => {
             return v.role;
           })
         }
-        if(to.meta.requiresAdmin && !isAdmin) {
-          console.debug("not admin, sending to /profile");
-          next({
-            path: '/profile',
-            query: { redirect: to.fullPath }
-          })
-        } else if(to.meta.requiresPowers && !hasPowers) {
-          console.debug("no powers, sending to /profile");
-          next({
-            path: '/profile',
-            query: { redirect: to.fullPath }
-          })
+        //
+        if (session.has_password) {
+          if(to.meta.requiresAdmin && !isAdmin) {
+            next({
+              path: '/profile',
+              query: { redirect: to.fullPath }
+            })
+          } else if(to.meta.requiresPowers && !hasPowers) {
+            next({
+              path: '/profile',
+              query: { redirect: to.fullPath }
+            })
+          } else {
+            router.app.$refs.planorama.check_signatures()
+            next()
+          }
         } else {
-          router.app.$refs.planorama.check_signatures()
-          next()
+          // If the user has not set a password then get them to the setup screen to do so
+          next({
+            path: '/login/setup',
+            query: { redirect: to.fullPath }
+          })
         }
       }
     }).catch((error) => {

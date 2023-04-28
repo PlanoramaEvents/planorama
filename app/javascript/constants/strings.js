@@ -9,10 +9,13 @@ module.exports = {
     LOGIN_MISSING_PASSWORD: "You must enter a valid password.",
     LOGIN_INVALID_FIELDS: "You must provide all of your login information.",
     MISSING_EMAIL: "You must enter a valid email address.",
+    MISSING_NAME: "Your name must be at least one character long.",
     NOT_AN_EMAIL: "Email address needs to be in the correct format e.g. xyz@test.com",
     LOGIN_SHORT_PASSWORD: "Your password must be at least 6 characters long.",
     LOGIN_PASSWORDS_DO_NOT_MATCH: "Your passwords do not match.",
+    LOGIN_PASSWORD_UNSECURE: "Your password does not meet the security requirements.",
     SOMETHING_WENT_WRONG: (helpEmail) => `Oops, something went wrong on our end. Please try again in a few minutes or contact us at ${helpEmail} if the problem persists.`,
+    VALID_CAPTCHA_REQUIRED: "A valid response to the CAPTCHA is required",
     LOGIN_MISSING_NEW_PASSWORD: "You must enter a new password.",
     LOGIN_PASSWORDS_MUST_MATCH: "Your passwords must match.",
     LOGIN_PASSWORD_INVALID: "Your new password must meet the security criteria.",
@@ -20,6 +23,7 @@ module.exports = {
     LOGIN_PASSWORD_CHANGED: "You successfully changed your password.",
     LOGIN_TOKEN_EXPIRED: (resetPasswordLink) => `The password reset link you used is no longer valid. Please request another link here: ${resetPasswordLink}`,
     LOGIN_CLICK_TO_AGREE: (conventionName) => `By clicking ‘Log In’ below, I agree to ${conventionName} storing and using my personal data as documented in the`,
+    PASSWORDS_MUST_NOT_BE_RECENT: "The password entered was one you used recently, plase use a different password.",
 
     // toast titles
     ERROR_TOAST_TITLE: "Error",

@@ -2,7 +2,7 @@
   <div class="scrollable">
     <div class="login-screen container mb-3">
       <plan-logo></plan-logo>
-      <router-view></router-view>
+      <router-view :redirect="redirect"></router-view>
     </div>
   </div>
 </template>
@@ -23,6 +23,15 @@ export default {
   watch: {
     loggedIn (newval, oldval) {
       if (newval) {
+        if (this.hasPassword) {
+          this.$router.replace(this.redirect)
+        } else {
+          this.$router.push(`/login/setup?redirect=${this.redirect}`)
+        }
+      }
+    },
+    hasPassword(newVal, oldVal) {
+      if (newVal && !oldVal) {
         this.$router.replace(this.redirect)
       }
     }

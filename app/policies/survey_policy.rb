@@ -1,8 +1,12 @@
 class SurveyPolicy < PlannerPolicy
   # Anyone can see a survey ...
-  # def show?
-  #   return true
-  # end
+  def show?
+    if record.class != Symbol
+      return true if record.public && record.unassigned
+    end
+
+    return super
+  end
 
   def assign_people?
     allowed?(action: :assign_people)
