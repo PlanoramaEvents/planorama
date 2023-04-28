@@ -78,7 +78,7 @@ export default {
       if (this.value.length < 1 || (!this.newPassword && !this.confirmation)) {
         return LOGIN_MISSING_PASSWORD;
       }
-      if (!this.passSecurityNeeds) {
+      if (!this.passSecurityNeeds && !this.confirmation) {
         return LOGIN_PASSWORD_UNSECURE;
       }
       if (this.confirmation) {
@@ -115,9 +115,12 @@ export default {
       if (this.value.length < minLength || !matching) {
         this.valid = false;
       }
+      if(this.confirmation && matching) {
+        this.valid = true;
+      }
 
       // only do the server side check if the JS checks have passed
-      if (this.valid) {
+      if (this.valid !== false && !this.confirmation) {
         // Enforce password security
         this.checkPasswordRules().then(
           () => {
