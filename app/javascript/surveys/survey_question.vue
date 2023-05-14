@@ -95,7 +95,7 @@
               :value="choiceValue(choice)"
               :disabled="!answerable"
               @input="changeNextPage($event, choice)"
-            >{{choice.answer}}</b-form-radio>
+            ><span v-html="choice.answer"></span></b-form-radio>
             <b-form-radio
               class="mt-2"
               v-if="otherFromQuestion"
@@ -134,7 +134,7 @@
               :key="choice.id"
               :value="choiceValue(choice)"
               :disabled="!answerable"
-            >{{choice.answer}}</b-form-checkbox>
+            ><span v-html="choice.answer"></span></b-form-checkbox>
             <b-form-checkbox
               class="mt-2"
               v-if="otherFromQuestion"
