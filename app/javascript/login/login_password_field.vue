@@ -50,6 +50,10 @@ export default {
     validateNow: {
       type: Function,
     },
+    validation: {
+      type: Boolean,
+      default: true
+    }
   },
   data: () => ({
     valid: null,
@@ -110,24 +114,26 @@ export default {
   },
   methods: {
     validate: function (event) {
-      const minLength = this.newPassword ? 6 : 1;
-      const matching = this.confirmation ? this.value === this.mustMatch : true;
-      if (this.value.length < minLength || !matching) {
-        this.valid = false;
-      }
-      if(this.confirmation && matching) {
-        this.valid = true;
-      }
+      if(this.validation) {
+        const minLength = this.newPassword ? 6 : 1;
+        const matching = this.confirmation ? this.value === this.mustMatch : true;
+        if (this.value.length < minLength || !matching) {
+          this.valid = false;
+        }
+        if(this.confirmation && matching) {
+          this.valid = true;
+        }
 
-      // only do the server side check if the JS checks have passed
-      if (this.valid !== false && !this.confirmation) {
-        // Enforce password security
-        this.checkPasswordRules().then(
-          () => {
-            this.passSecurityNeeds = this.valid;
-            this.$emit("validated", this.valid);
-          }
-        );
+        // only do the server side check if the JS checks have passed
+        if (this.valid !== false && !this.confirmation) {
+          // Enforce password security
+          this.checkPasswordRules().then(
+            () => {
+              this.passSecurityNeeds = this.valid;
+              this.$emit("validated", this.valid);
+            }
+          );
+        }
       }
     },
     checkPasswordRules: function(pwd) {

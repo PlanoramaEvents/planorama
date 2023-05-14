@@ -12,8 +12,7 @@
       ></email-field>
       <login-password-field
         v-model="person.password"
-        @validated="form.password.valid = $event"
-        :validateNow="form.password.validate"
+        :validation="false"
       ></login-password-field>
       <div class="pt-3"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
       <div class="d-flex flex-row-reverse mb-3">
