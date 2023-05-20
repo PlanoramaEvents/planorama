@@ -134,6 +134,9 @@ export default {
             }
           );
         }
+      } else {
+        // this.passSecurityNeeds = true;
+        this.$emit("validated", null);
       }
     },
     checkPasswordRules: function(pwd) {
