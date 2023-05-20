@@ -14,6 +14,7 @@
         v-model="person.password"
         @validated="form.password.valid = $event"
         :validateNow="form.password.validate"
+        :validation="false"
       ></login-password-field>
       <div class="pt-3"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
       <div class="d-flex flex-row-reverse mb-3">
@@ -119,6 +120,9 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault();
+      // It sure seems like we're validating password here. but we're not
+      // however if we don't go through the validation process, the form won't submit
+      // it is skipping the actual validation internally though
       validateFields(this.form.email, this.form.password).then(() => {
         if (
           this.form.email.valid === false ||
