@@ -8,13 +8,14 @@
             <div class="float-left qhandle" v-if="isSelected"><b-icon-grip-vertical></b-icon-grip-vertical></div>
             <component :is="optionComponent" disabled class="ml-3" :i="i + 1">
               <plano-editor
-                v-if="isSelected"
+                v-if="isSelected && usePlanoEditor"
                 v-model="a.answer"
                 class="mt-n2 mb-2"
                 @change="patchAnswerText(a, $event)"
               >
               </plano-editor>
-              <span v-if="!isSelected">{{a.answer}}</span>
+              <b-form-input v-if="isSelected && !usePlanoEditor" v-model="a.answer" class="mt-n2 mb-2" @change="patchAnswerText(a, $event)"></b-form-input>
+              <span v-if="!isSelected" v-html="a.answer"></span>
             </component>
           </div>
           <div class="col-1 pb-2 text-center" v-if="isSelected">
@@ -97,6 +98,9 @@ export default {
     other: null,
   }),
   computed: {
+    usePlanoEditor() {
+      return this.singlechoice || this.multiplechoice;
+    },
     optionComponent() {
       switch(this.question.question_type) {
         case "singlechoice":
