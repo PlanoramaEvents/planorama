@@ -7,7 +7,7 @@
       <li>Does not contain your email address</li>
       <li>Is not one of your most recent passwords</li>
       <li>
-        Password must not be a commonly used password of easily guessable.
+        Password must not be a commonly used password or easily guessable.
         Planorama makes use of the service
         <a href="https://haveibeenpwned.com/" target="_blank"
           >haveibeenpwned.com</a
