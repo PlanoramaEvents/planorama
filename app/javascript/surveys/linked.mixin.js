@@ -1,12 +1,12 @@
 import { LINKED_FIELD_LABELS } from "@/constants/strings";
 import settingsMixin from "@/store/settings.mixin";
-import { questionMixin } from "@/mixins";
+import { questionMixin, surveyMixin } from "@/mixins";
 
 /**
  * Note: this relies on this.question existing
  */
 export const linkedMixin = {
-  mixins: [settingsMixin, questionMixin],
+  mixins: [settingsMixin, questionMixin, surveyMixin],
   data: () => ({
     linkedFieldsForCache: null
   }),

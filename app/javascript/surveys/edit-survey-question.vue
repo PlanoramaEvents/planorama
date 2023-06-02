@@ -12,6 +12,7 @@
           <plano-editor style="border: solid 2px; border-radius: 5px;"
             :id="formId('question-text')"
             v-model="question.question"
+            title="Rich Text Editor for Question"
             @blur="patchSelectedQuestion({question: $event.editor._.data})"
           ></plano-editor>
         </b-form-group>
