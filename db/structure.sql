@@ -1074,6 +1074,24 @@ CREATE TABLE public.model_permissions (
 
 
 --
+-- Name: oauth_identities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.oauth_identities (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    provider character varying,
+    person_id uuid,
+    reg_id character varying,
+    reg_number character varying,
+    email character varying,
+    raw_info jsonb DEFAULT '{}'::jsonb NOT NULL,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: old_passwords; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2358,6 +2376,14 @@ ALTER TABLE ONLY public.model_permissions
 
 
 --
+-- Name: oauth_identities oauth_identities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_identities
+    ADD CONSTRAINT oauth_identities_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: old_passwords old_passwords_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3500,6 +3526,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220818200500'),
 ('20220821001724'),
 ('20230304203222'),
-('20230411123748');
+('20230411123748'),
+('20230602193356');
 
 

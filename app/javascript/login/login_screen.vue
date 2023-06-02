@@ -1,6 +1,11 @@
 <template>
   <div class="scrollable">
     <div class="login-screen container mb-3">
+      <!-- TODO: temp button to login to CLYDE, replace with proper UI -->
+      <form action="/auth/clyde" method="post" id="clyde-form">
+        <input type="hidden" v-model="csrfToken" name="authenticity_token" />
+        <button type="submit" form="clyde-form" value="Submit">CLYDE</button> 
+      </form>
       <plan-logo></plan-logo>
       <router-view :redirect="redirect"></router-view>
     </div>
@@ -20,6 +25,12 @@ export default {
   mixins: [
     personSessionMixin
   ],
+  computed: {
+    csrfToken() {
+      let token = $cookies.get('XSRF-TOKEN')
+      return token
+    }
+  },
   watch: {
     loggedIn (newval, oldval) {
       if (newval) {
@@ -35,7 +46,7 @@ export default {
         this.$router.replace(this.redirect)
       }
     }
-  },
+  }
 };
 </script>
 

@@ -6,6 +6,11 @@ class ApplicationController < ActionController::Base
 
   skip_before_action :verify_authenticity_token
 
+  # So that AXIOS can pass back the token for posts when needed
+  before_action do
+    cookies['XSRF-TOKEN'] = form_authenticity_token #unless cookies['XSRF-TOKEN']
+  end
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   # before_action :remove_cookies_action
 

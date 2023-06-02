@@ -38,6 +38,10 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'aasm'
 
 gem 'devise'
+# gem 'omniauth'
+gem "omniauth-rails_csrf_protection"
+gem 'omniauth-oauth2'
+
 gem 'pwned'
 # gem 'devise-jwt'
 gem 'rack-cors'

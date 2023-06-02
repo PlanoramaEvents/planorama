@@ -28,6 +28,7 @@
     "vue": "^2.6.12",
     "vue-async-computed": "^3.9.0",
     "vue-cal": "^3.10.1",
+    "vue-cookies": "^1.8.3",
     "vue-pluralize": "^0.0.2",
     "vue-query-builder": "^0.8",
     "vue-recaptcha": "1.3",
