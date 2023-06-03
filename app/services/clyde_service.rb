@@ -2,21 +2,22 @@ module ClydeService
   include HTTParty
 
   class Client
-    attr_accessor :access_token
+    attr_accessor :token
 
-    def initialize(access_token)
-      self.access_token = access_token
+    def initialize(token)
+      self.token = token
     end
 
     def base_url
+      # TODO: get this from settings
       'https://worldcon.staxotest.net'
     end
 
     # My Details
-    def my_details
+    def me
       response = HTTParty.get(
         "#{base_url}/api/v1/me",
-        headers: { 'Authorization' => "Bearer #{access_token}" }
+        headers: { 'Authorization' => "Bearer #{token}" }
       )
       result = JSON.parse(response.body)
 
@@ -26,7 +27,7 @@ module ClydeService
     # TODO: add API calls for participaint fetch and lookup
   end
 
-  def self.get_svc(access_token:)
-    ClydeService::Client.new(access_token)
+  def self.get_svc(token:)
+    ClydeService::Client.new(token)
   end
 end
