@@ -24,6 +24,15 @@ export const personSessionMixin = {
     },
     currentUserEmail() {
       return this.currentUser.primary_email?.email || '';
+    },
+    // Need to display something if there is no email ...
+    // which can happen with a non-unique email from OAuth login
+    currentUserDisplay() {
+      if (this.currentUser.primary_email) {
+        return this.currentUser.primary_email.email;
+      } else {
+        return this.currentUser.name;
+      }
     }
   },
   methods: {

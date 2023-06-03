@@ -96,7 +96,7 @@ class Person < ApplicationRecord
   has_many  :email_addresses, dependent: :destroy
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
-  has_one :oauth_identity
+  has_many :oauth_identities
 
   has_one :primary_email,
           -> { where(['email_addresses.isdefault = true']) },

@@ -18,7 +18,10 @@ class OauthIdentity < ApplicationRecord
 
       if !person
         addr = EmailAddress.find_by(email: identity.email, isdefault: true)
-        person = if addr && addr.person
+        candidate = addr.person if addr
+        identities = candidate.oauth_identities.where(provider: provider) if candidate
+
+        person = if candidate && (identities&.count == 0)
                     addr.person
                   else
                     fullname = details['full_name'].strip unless details['full_name']&.strip.blank?
@@ -32,7 +35,8 @@ class OauthIdentity < ApplicationRecord
                         email_addresses_attributes: [
                           {
                             email: identity.email,
-                            isdefault: true
+                            # if default for someone else it can not be default for a new person
+                            isdefault: addr ? false : true
                           }
                         ]
                       )
