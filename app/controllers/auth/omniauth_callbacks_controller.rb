@@ -12,7 +12,7 @@ module Auth
       # Get the Identity based on the Oauth service
       # Add in other cases as they are created
       identity = if provider == 'clyde'
-                   IdentityService.from_clyde(auth_info:auth_info)
+                   IdentityService.from_clyde(auth_info: auth_info)
                  end
 
       # sign in as the person for Plano

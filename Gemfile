@@ -42,6 +42,8 @@ gem 'devise'
 gem "omniauth-rails_csrf_protection"
 gem 'omniauth-oauth2'
 
+gem 'with_advisory_lock'
+
 gem 'pwned'
 # gem 'devise-jwt'
 gem 'rack-cors'
