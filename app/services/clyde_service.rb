@@ -1,6 +1,10 @@
 module ClydeService
   include HTTParty
 
+  def self.base_url
+    ::Configuration.find_by(parameter: "clyde_base_url")&.parameter_value
+  end
+
   class Client
     attr_accessor :token
 
@@ -8,15 +12,11 @@ module ClydeService
       self.token = token
     end
 
-    def base_url
-      # TODO: get this from settings
-      'https://worldcon.staxotest.net'
-    end
 
     # My Details
     def me
       response = HTTParty.get(
-        "#{base_url}/api/v1/me",
+        "#{ClydeService.base_url}/api/v1/me",
         headers: { 'Authorization' => "Bearer #{token}" }
       )
       result = JSON.parse(response.body)
