@@ -35,7 +35,7 @@
     "vue-select": "^3.16.0",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.2",
-    "xlsx": "^0.17.4"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
   },
   "version": "0.2.0",
   "devDependencies": {
