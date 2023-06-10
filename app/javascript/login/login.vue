@@ -29,13 +29,15 @@
       <router-link :to="'/login/forgot?redirect=' + redirect">Never set up your password? Set it up now</router-link>
       <router-link :to="'/login/new?redirect=' + redirect">Create account</router-link>
     </div>
+    <login-integrations></login-integrations>
   </div>
 </template>
 
 <script>
-import EmailField from "@/shared/email_field";
-import LoginPasswordField from "./login_password_field";
-import PrivacyPolicyLink from "@/administration/privacy_policy_link"
+import EmailField from "@/shared/email_field.vue";
+import LoginPasswordField from "./login_password_field.vue";
+import PrivacyPolicyLink from "@/administration/privacy_policy_link.vue"
+import LoginIntegrations from "./login_integrations.vue";
 import IeaModal from './iea-modal';
 import axios from 'axios';
 import {
@@ -90,6 +92,7 @@ export default {
     EmailField,
     LoginPasswordField,
     PrivacyPolicyLink,
+    LoginIntegrations,
     IeaModal,
   },
   mixins: [authMixin, personSessionMixin, settingsMixin],
@@ -99,7 +102,7 @@ export default {
     },
     LOGIN_CLICK_TO_AGREE() {
       return LOGIN_CLICK_TO_AGREE(this.conventionName);
-    }
+    },
   },
   mounted: function () {
     if (this.$route.query.alert) {
