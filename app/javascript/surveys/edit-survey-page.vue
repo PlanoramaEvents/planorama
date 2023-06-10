@@ -20,7 +20,7 @@
       <h3 v-if="!isSelected">{{page.title}}</h3>
     </div>
     <draggable v-model="questions" @end="saveQuestionOrder" handle=".handle">
-      <edit-survey-question :question="q" v-for="q in questions" :key="q.id" tabindex="0"></edit-survey-question>
+      <edit-survey-question :question="q" v-for="q in questions" :key="q.id"></edit-survey-question>
     </draggable>
     <div v-if="!isLastPage(page.id)" class="mt-3">
       After page {{i + 1}}

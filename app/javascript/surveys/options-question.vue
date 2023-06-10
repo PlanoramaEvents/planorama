@@ -6,7 +6,7 @@
         <div class="row survey-answer" :key="a.id" v-if="!a.other">
           <div class="col-5 pb-2">
             <div class="float-left qhandle" v-if="isSelected"><b-icon-grip-vertical></b-icon-grip-vertical></div>
-            <component :is="optionComponent" disabled class="ml-3 w-100" :i="i + 1">
+            <component :is="optionComponent" disabled class="ml-3" :i="i + 1">
               <plano-editor
                 v-if="isSelected && usePlanoEditor"
                 v-model="a.answer"
@@ -189,8 +189,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.survey_answer .custom-control-label {
-  width: 100%;
-}
+<style>
+
 </style>
