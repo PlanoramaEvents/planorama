@@ -9,7 +9,6 @@
           <b-nav-form>
             <help-link></help-link>
             <a href="https://planoramaevents.github.io/planorama" target="_blank" class="btn btn-link text-light my-2 my-sm-0 mx-2">About</a>
-            <!-- TODO logout button -->
             <b-button v-if="loggedIn" @click="logout" variant="primary">Logout</b-button>
           </b-nav-form>
         </b-navbar-nav>

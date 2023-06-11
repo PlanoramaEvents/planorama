@@ -1,3 +1,5 @@
+require "securerandom"
+
 module IdentityService
   def self.from_clyde(auth_info:)
     credentials = auth_info[:credentials]
@@ -42,7 +44,9 @@ module IdentityService
       name_sort_by: fullname,
       pseudonym: preferred_name,
       pseudonym_sort_by: preferred_name,
-      password: (0...50).map { ('a'..'z').to_a[rand(26)] }.join,
+      # We do not want to create a person with a blank password
+      # also it is not allowed to be NULL in the db
+      password: SecureRandom.uuid,
       email_addresses_attributes: email_attrs
     )
   end
@@ -71,7 +75,6 @@ module IdentityService
                    end
 
           # Otherwise we create a new person, if the email is already used as prime we can not set it as the default
-          Rails.logger.debug "****** CREATE PERSON #{identity.to_json}"
           person ||= create_person_from_clyde(details: details, identity: identity, email_is_default: addr.nil?)                 
 
           # And associate them with the Clyde Identity
