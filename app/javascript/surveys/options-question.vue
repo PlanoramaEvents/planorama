@@ -10,8 +10,8 @@
               <plano-editor
                 v-if="isSelected && usePlanoEditor"
                 v-model="a.answer"
-                class="mt-n2 mb-2"
                 @change="patchAnswerText(a, $event)"
+                :title="'Rich Text Editor for Option ' + (i + 1)"
               >
               </plano-editor>
               <b-form-input v-if="isSelected && !usePlanoEditor" v-model="a.answer" class="mt-n2 mb-2" @change="patchAnswerText(a, $event)"></b-form-input>
