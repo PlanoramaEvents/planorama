@@ -12,11 +12,11 @@ module Auth
       # Get the Identity based on the Oauth service
       # Add in other cases as they are created
       identity = if provider == 'clyde'
-                   IdentityService.from_clyde(auth_info: auth_info)
-                 end
+                    IdentityService.from_clyde(auth_info: auth_info, current_person: current_person)
+                  end
 
       # sign in as the person for Plano
-      sign_in identity.person if identity&.person
+      sign_in identity.person if !current_person && identity&.person
 
       redirect_to '/' # Got to the home page/dashboard
     end

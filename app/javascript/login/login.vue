@@ -29,6 +29,7 @@
       <router-link :to="'/login/forgot?redirect=' + redirect">Never set up your password? Set it up now</router-link>
       <router-link :to="'/login/new?redirect=' + redirect">Create account</router-link>
     </div>
+    <p class="lines-around d-flex align-items-center w-100">OR</p>
     <login-integrations></login-integrations>
   </div>
 </template>
@@ -160,3 +161,20 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.lines-around::after,
+.lines-around::before {
+  content: "";
+  flex: 1 1 0%;
+  border-bottom: 1px solid black;
+}
+
+.lines-around::before {
+  margin-right: 0.5rem;
+}
+
+.lines-around::after {
+  margin-left: 0.5rem;
+}
+</style>
