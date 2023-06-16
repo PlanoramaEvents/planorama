@@ -2,6 +2,9 @@ require "sidekiq/web"
 
 # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+  # OAuth Callbacks - provider is clyde for G24 reg etc, based on OAuth strategy
+  match "/auth/:provider/callback" => "auth/omniauth_callbacks#create", via: [:get, :post]
+
   devise_for :people, path: 'auth',
              controllers: {
                sessions: 'people/sessions',
