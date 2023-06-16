@@ -1,9 +1,10 @@
 <template>
-  <div class="d-flex align-items-center flex-column" v-if="enabledIntegrations.length">
-    <form :action="integration.endpoint" method="post" v-for="integration in enabledIntegrations" :key="integration.endpoint">
+  <div class="d-flex align-items-center flex-column pt-3" v-if="enabledIntegrations.length">
+    <form :action="integration.endpoint" method="post" v-for="integration in enabledIntegrations" :key="integration.endpoint" class="w-100">
       <input type="hidden" v-model="csrfToken" name="authenticity_token" />
-      <b-button type="submit" variant="primary">{{ integration.buttonText }}</b-button> 
+      <b-button type="submit" variant="primary" class="w-100 mb-2">Log in with {{ integration.name }}</b-button> 
     </form>
+    <p class="lines-around d-flex align-items-center w-100 pt-3">OR</p>
   </div>
 </template>
 
@@ -25,11 +26,5 @@ import { loginIntegrationsMixin } from '@/store/login_integrations.mixin';
 export default {
   name: "LoginIntegrations",
   mixins: [loginIntegrationsMixin],
-  computed: {
-    csrfToken() {
-      let token = $cookies.get('XSRF-TOKEN')
-      return token
-    }
-  }
 }
 </script>
