@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="column">
+      <div class="column flex-grow-1">
         <h4 class="mt-3">Configuration</h4>
           <config-editor
             model="configuration"
