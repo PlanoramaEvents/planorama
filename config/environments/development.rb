@@ -12,7 +12,7 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
-  config.hosts << "planorama.loophole.site"
+  config.hosts << "planorama.loophole.site" << "planorama2.loophole.site"
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
