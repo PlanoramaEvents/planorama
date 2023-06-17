@@ -247,6 +247,7 @@ module.exports = {
         timezone: "Timezone during convention",
         needs_accommodations: "Accessibility and/or disability concerns",
         accommodations: "Accessibility and/or disability details",
+        registration_number: "Ticket Number",
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",

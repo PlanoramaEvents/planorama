@@ -1,5 +1,7 @@
 <template>
   <div class="login">
+    <div class="py-2"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
+    <login-integrations></login-integrations>
     <b-alert :show="alert.visible" variant="success" dismissible>{{
       alert.text
     }}</b-alert>
@@ -16,7 +18,6 @@
         :validateNow="form.password.validate"
         :validation="false"
       ></login-password-field>
-      <div class="pt-3"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
       <div class="d-flex flex-row-reverse mb-3">
         <router-link :to="'/login/forgot?redirect=' + redirect">Forgot Password?</router-link>
       </div>
@@ -29,7 +30,6 @@
       <router-link :to="'/login/forgot?redirect=' + redirect">Never set up your password? Set it up now</router-link>
       <router-link :to="'/login/new?redirect=' + redirect">Create account</router-link>
     </div>
-    <login-integrations></login-integrations>
   </div>
 </template>
 
@@ -160,3 +160,20 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.lines-around::after,
+.lines-around::before {
+  content: "";
+  flex: 1 1 0%;
+  border-bottom: 1px solid black;
+}
+
+.lines-around::before {
+  margin-right: 0.5rem;
+}
+
+.lines-around::after {
+  margin-left: 0.5rem;
+}
+</style>

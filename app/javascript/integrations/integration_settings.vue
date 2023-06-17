@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="column">
+      <div class="column flex-grow-1">
         <b-tabs>
           <b-tab title="Airmeet">
             <airmeet-settings></airmeet-settings>
