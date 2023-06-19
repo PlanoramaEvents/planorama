@@ -24,8 +24,6 @@ class Survey::Answer < ApplicationRecord
   before_destroy :check_if_published
   before_update :check_if_published
 
-  private
-
   # need to check that answer type is valid for question
   def validate_answer
     # if the question type is boolean or yesnomaybe then we ensure we have correct answers
@@ -38,7 +36,11 @@ class Survey::Answer < ApplicationRecord
     if question.question_type == :attendance_type
       raise 'invalid answers for Attendance question type' unless ['in person', 'virtual', 'hybrid'].include? value
     end
+
+    raise 'this question should not have any answer options' unless [:singlechoice, :multiplechoice, :boolean, :yesnomaybe, :attendance_type].include? question.question_type
   end
+
+  private
 
   # Ensure the next page id is a valid value
   def ensure_next_page_consistency

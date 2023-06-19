@@ -39,6 +39,7 @@ class Survey::Question < ApplicationRecord
   before_destroy :check_for_use, prepend: true
   before_destroy :check_if_published
   before_update :check_linked_update, :check_if_published
+  before_update :validate_answers
 
   def soft_delete
     if responses.any?
@@ -55,6 +56,12 @@ class Survey::Question < ApplicationRecord
 
   def question_type= (value)
     write_attribute(:question_type, value.to_s)
+  end
+
+  def validate_answers
+    answers.each do |answer|
+      answer.validate_answer
+    end
   end
 
   def update_answers(new_answers) # A collection of answers that have been passed in
