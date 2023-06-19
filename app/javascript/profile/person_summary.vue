@@ -12,6 +12,14 @@
           <div>
             Primary email: <em v-if="selected.primary_email">{{selected.primary_email.email}}</em>
           </div>
+          <!-- 
+            This is to test self-associating the logged in person with clyde 
+            The participant would do an authenticate with Clyde to associate the two
+            accounts
+
+            only show if this is me and I am not linked ....
+          -->
+          <login-integrations></login-integrations>
         </div>
         <div class="d-flex flex-column col-4 align-items-end">
             <small>Last Login: {{formatLocaleDate(selected.current_sign_in_at)}}</small>
