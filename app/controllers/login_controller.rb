@@ -38,6 +38,12 @@ class LoginController < ApplicationController
           }
         ]
       )
+
+      # add Participant role to person
+      ConventionRole.create(
+        person: person,
+        role: ConventionRole.roles[:participant]
+      )
     end
 
     # create a magic link for the person and the given url
