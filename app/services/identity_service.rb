@@ -57,15 +57,20 @@ module IdentityService
     preferred_name = details['preferred_name'].strip unless details['preferred_name']&.strip.blank?
 
     email_attrs = [{ email: identity.email, isdefault: email_is_default }] if identity.email
-    Person.create!(
-      name: fullname,
-      name_sort_by: fullname,
-      pseudonym: preferred_name,
-      pseudonym_sort_by: preferred_name,
-      # We do not want to create a person with a blank password
-      # also it is not allowed to be NULL in the db
-      password: SecureRandom.uuid,
-      email_addresses_attributes: email_attrs
+    person = Person.create!(
+                name: fullname,
+                name_sort_by: fullname,
+                pseudonym: preferred_name,
+                pseudonym_sort_by: preferred_name,
+                # We do not want to create a person with a blank password
+                # also it is not allowed to be NULL in the db
+                password: SecureRandom.uuid,
+                email_addresses_attributes: email_attrs
+              )
+    # Add participant role to the person
+    ConventionRole.create(
+      person: person,
+      role: ConventionRole.roles[:participant]
     )
   end
 
