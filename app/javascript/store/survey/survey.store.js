@@ -197,9 +197,12 @@ export const surveyStore = {
       let newQuestion = {
         question: 'New Question',
         question_type: questionType,
-        answers_attributes: [{
-          answer: 'Option 1'
-        }],
+        // We should only have answer attributes for checkboxes and radio buttons
+        // creating them for other questions types creates an incorrect structure
+        // If you want a default Option 1 that is a UI issue not a backend store
+        // answers_attributes: [{
+        //   answer: 'Option 1'
+        // }],
         sort_order_position: insertAt,
         relationships: {
           page: {
