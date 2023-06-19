@@ -1,7 +1,8 @@
 <template>
 <div class="mr-3">
   <div v-if="!selected.registration_number">
-    <form :action="registrationIntegration.endpoint" method="post">
+    <!-- Use the redirect to come back to profile -->
+    <form :action="registrationIntegration.endpoint + '?redirect=profile'" method="post">
       <input type="hidden" v-model="csrfToken" name="authenticity_token" />
       <b-button variant="info" size="sm" type="submit">Link To Registration</b-button>
     </form>
