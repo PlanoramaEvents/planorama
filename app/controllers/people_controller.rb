@@ -396,6 +396,13 @@ class PeopleController < ResourceController
     q
   end
 
+  def after_update
+    # Unlink any OAuth Identitites if the reg number is blank
+    if @object.registration_number.blank?
+      @object.oauth_identities.delete_all
+    end
+  end
+
   def serializer_includes
     [
       :email_addresses,
