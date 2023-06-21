@@ -20,8 +20,9 @@
             v-model="localResponse.response.text"
             :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
+            :state="calcValid(errors, valid)"
             @blur="saveResponse(localResponse, selectedSubmission)"
-          >{{localResponse.response.text}}</b-form-textarea>
+        >{{localResponse.response.text}}</b-form-textarea>
 
           <b-form-input
             :class="{'w-50': answerable}"
