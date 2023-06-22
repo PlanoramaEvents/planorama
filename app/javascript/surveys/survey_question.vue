@@ -20,6 +20,7 @@
             v-model="localResponse.response.text"
             :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
+            :state="calcValid(errors, valid)"
             @blur="saveResponse(localResponse, selectedSubmission)"
           >{{localResponse.response.text}}</b-form-textarea>
 
@@ -38,7 +39,7 @@
             v-if="yesnomaybe"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors,valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
             <b-form-radio :disabled="!answerable" :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
@@ -49,7 +50,6 @@
                 :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
                 v-model="localResponse.response.text"
                 :disabled="!answerable || radioButtonResponse !== maybeLabel.value"
-                :required="radioButtonResponse === maybeLabel.value"
                 @blur="saveResponse(localResponse, selectedSubmission)"
               >
               </b-form-textarea>
@@ -61,7 +61,7 @@
             v-if="boolean"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors,valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
             <b-form-radio :disabled="!answerable" :value="bYesLabel.value">{{bYesLabel.label}}</b-form-radio>
@@ -73,7 +73,7 @@
             v-if="attendance_type"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors,valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
             <b-form-radio :disabled="!answerable" :value="inPersonLabel.value">{{inPersonLabel.label}}</b-form-radio>
@@ -86,7 +86,7 @@
             v-if="singlechoice"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors, valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
             <b-form-radio
@@ -94,6 +94,7 @@
               :key="choice.id"
               :value="choiceValue(choice)"
               :disabled="!answerable"
+              :state="calcValid(errors, valid)"
               @input="changeNextPage($event, choice)"
             ><span v-html="choice.answer"></span></b-form-radio>
             <b-form-radio
@@ -102,6 +103,7 @@
               :value="choiceValue(otherFromQuestion)"
               v-model="otherChecked"
               :disabled="!answerable"
+              :state="calcValid(errors, valid)"
               @input="changeNextPage($event, otherFromQuestion)"
             >
               <b-form-group
@@ -126,19 +128,21 @@
             v-if="multiplechoice"
             v-model="localResponse.response.answers"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors, valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
             <b-form-checkbox
               v-for="choice in choices.filter(a => !a.other)"
               :key="choice.id"
               :value="choiceValue(choice)"
+              :state="calcValid(errors, valid)"
               :disabled="!answerable"
             ><span v-html="choice.answer"></span></b-form-checkbox>
             <b-form-checkbox
               class="mt-2"
               v-if="otherFromQuestion"
               :value="choiceValue(otherFromQuestion)"
+              :state="calcValid(errors, valid)"
               :disabled="!answerable"
               v-model="otherChecked"
             >
@@ -162,7 +166,7 @@
             :class="{'w-50': answerable}"
             v-if="dropdown"
             v-model="localResponse.response.text"
-            :required="question.mandatory"
+            :state="calcValid(errors, valid)"
             :aria-describedby="ariaDescribedBy"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
@@ -177,7 +181,7 @@
             :class="{'w-50': answerable}"
             v-if="email"
             label-sr-only
-            :required="question.mandatory"
+            :state="calcValid(errors, valid)"
             v-model="localResponse.response.text"
             :disabled="!answerable"
             :aria-describedBy="ariaDescribedBy"
@@ -297,8 +301,6 @@ import {
   responseMixin,
   toastMixin
 } from '@mixins';
-import { v4 as uuidv4 } from 'uuid';
-import { submissionModel } from '@/store/survey';
 import { mapState } from 'vuex';
 import { ValidationProvider } from 'vee-validate';
 import { SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
