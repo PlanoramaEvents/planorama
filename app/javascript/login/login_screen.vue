@@ -21,15 +21,20 @@ export default {
     personSessionMixin
   ],
   watch: {
-    loggedIn (newval, oldval) {
-      if (newval) {
-        if (this.hasPassword) {
-          this.$router.replace(this.redirect)
-        } else {
-          this.$router.push(`/login/setup?redirect=${this.redirect}`)
-        }
-      }
-    },
+    // NOTE:
+    // This causes a double redirect cause the router does the same thing
+    // and throughs an error which sometime causes the survey etc not to render
+    // AND the logic for this is handled in the router anyway
+    // Hence the commenting out
+    // loggedIn (newval, oldval) {
+    //   if (newval) {
+    //     if (this.hasPassword) {
+    //       this.$router.replace(this.redirect)
+    //     } else {
+    //       this.$router.push(`/login/setup?redirect=${this.redirect}`)
+    //     }
+    //   }
+    // },
     hasPassword(newVal, oldVal) {
       if (newVal && !oldVal) {
         this.$router.replace(this.redirect)
