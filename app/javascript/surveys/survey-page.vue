@@ -1,6 +1,7 @@
 <!-- CONVERTED -->
 <template>
-  <div>
+  <!-- The test for survey is here to deal with timing issues to ensure survey is loaded -->
+  <div v-if="survey">
     <div class="scrollable" v-if="is_assigned">
       <div class="survey-page" v-if="selectedPage">
         <b-alert :show="redirMessage" dismissible fade class="mt-3 alert-bright d-flex align-items-center" variant="warning" @dismissed="redirShown()">
@@ -95,6 +96,7 @@ export default {
   computed: {
     ...mapState(['redirMessage']),
     is_assigned() {
+      // does not work
       return this.preview || this.currentUser.assigned_surveys[this.surveyId]!=undefined || this.survey.unassigned;
     },
     next_page() {
@@ -161,7 +163,7 @@ export default {
     next();
   },
   mounted() {
-    // console.debug('mounting page...')
+    console.debug('mounting page...')
     this.surveyLoadedPromise.then((surveyLoaded) => {
       // console.debug("i get here! and should have a survey", this.survey)
       // this.setPreviewMode(!!this.preview);
