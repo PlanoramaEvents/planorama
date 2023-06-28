@@ -9,6 +9,11 @@ module Auth
       auth_info = request.env["omniauth.auth"]
       provider = auth_info[:provider]
 
+      # Get the redirect from the oauth parameters
+      # which are passed through
+      oauth_params = request.env["omniauth.params"]
+      redirect = oauth_params['redirect']
+
       # Get the Identity based on the Oauth service
       # Add in other cases as they are created
       identity = if provider == 'clyde'
@@ -18,7 +23,11 @@ module Auth
       # sign in as the person for Plano
       sign_in identity.person if !current_person && identity&.person
 
-      redirect_to '/' # Got to the home page/dashboard
+      if !redirect.blank?
+        redirect_to "/#/#{redirect}"
+      else
+        redirect_to '/' # Got to the home page/dashboard
+      end
     end
   end
 end

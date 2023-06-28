@@ -1,4 +1,10 @@
 export const loginIntegrationsMixin = {
+  props: {
+    redirect: {
+      type: String,
+      default: null
+    }
+  },
   data: () => ({
     staticIntegrationsForTesting: [
       {endpoint: '/auth/clyde', name: 'Clyde', registration: true},

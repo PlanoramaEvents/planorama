@@ -1,7 +1,9 @@
 <template>
   <div class="login">
     <div class="py-2"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
-    <login-integrations></login-integrations>
+    <login-integrations
+      :redirect="redirect"
+    ></login-integrations>
     <b-alert :show="alert.visible" variant="success" dismissible>{{
       alert.text
     }}</b-alert>
