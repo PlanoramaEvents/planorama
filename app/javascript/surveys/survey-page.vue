@@ -12,7 +12,7 @@
         <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"></linked-field-icon>{{SURVEY_LINKED_FIELD2}}</b-alert>
         <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
         <ValidationObserver v-slot="{ handleSubmit }">
-          <form @submit.stop.prevent="handleSubmit(submit)">
+          <form @submit.prevent="handleSubmit(submit)">
             <survey-question
                 v-for="q in selectedPageQuestions"
                 :key="q.id"

@@ -152,7 +152,10 @@
     </div>
     <div class="row" v-if="isSelected">
       <div class="col-6">
-        <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Required</b-form-checkbox>
+        <div class="d-inline" v-if="socialmedia" title="Social Media questions cannot be required">
+          <b-form-checkbox inline disabled>Required</b-form-checkbox>
+        </div>
+        <b-form-checkbox inline v-if="!formatting && !socialmedia" :disabled="socialmedia" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Required</b-form-checkbox>
         <b-form-checkbox inline v-if="!formatting" v-model="question.private" @change="patchSelectedQuestion({private: $event})">Sensitive</b-form-checkbox>
         <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="patchSelectedQuestion({branching: $event})">Branching</b-form-checkbox>
       </div>
