@@ -3,7 +3,7 @@
     <!-- The oauth params to pass through have to be GET params rather than hidden inputs -->
     <form :action="integration.endpoint + '?redirect=' + redirect" method="post" v-for="integration in enabledIntegrations" :key="integration.endpoint" class="w-100">
       <input type="hidden" v-model="csrfToken" name="authenticity_token" />
-      <b-button type="submit" variant="primary" class="w-100 mb-2">Log in with {{ integration.name }}</b-button> 
+      <b-button type="submit" variant="primary" class="w-100 mb-2">{{ integration.buttonText || "Log in with " + integration.name }}</b-button>
     </form>
     <p class="lines-around d-flex align-items-center w-100 pt-3">OR</p>
   </div>

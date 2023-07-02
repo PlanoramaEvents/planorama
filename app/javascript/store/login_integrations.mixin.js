@@ -1,3 +1,12 @@
+import settingsMixin from "./settings.mixin";
+
+export const transformIntegration = (integrationObj) => ({
+  name: integrationObj.name,
+  endpoint: `/auth/${integrationObj.name}`,
+  registration: integrationObj?.config?.registration,
+  buttonText: integrationObj?.config?.button_text
+});
+
 export const loginIntegrationsMixin = {
   props: {
     redirect: {
@@ -5,15 +14,10 @@ export const loginIntegrationsMixin = {
       default: null
     }
   },
-  data: () => ({
-    staticIntegrationsForTesting: [
-      {endpoint: '/auth/clyde', name: 'Clyde', registration: true},
-    ]
-  }),
+  mixins: [settingsMixin],
   computed: {
     enabledIntegrations() {
-      // TODO actually fetch me from the backend
-      return this.staticIntegrationsForTesting;
+      return this.currentSettings.login_integrations?.map(transformIntegration) || []
     },
     registrationIntegration() {
       return this.enabledIntegrations.find(i => i.registration);
@@ -21,6 +25,6 @@ export const loginIntegrationsMixin = {
     csrfToken() {
       let token = $cookies.get('XSRF-TOKEN')
       return token
-    }
-  }
+    },
+  },
 }
