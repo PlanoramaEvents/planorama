@@ -7,6 +7,10 @@ class IntegrationPolicy < PlannerPolicy
     allowed?(action: :airmeet)
   end
 
+  def clyde?
+    allowed?(action: :clyde)
+  end
+
   def update?
     allowed?(action: :update)
   end

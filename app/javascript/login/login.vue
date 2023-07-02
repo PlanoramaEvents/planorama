@@ -1,9 +1,6 @@
 <template>
   <div class="login">
-    <div class="py-2"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
-    <login-integrations
-      :redirect="redirect"
-    ></login-integrations>
+    <login-small-print></login-small-print>
     <b-alert :show="alert.visible" variant="success" dismissible>{{
       alert.text
     }}</b-alert>
@@ -32,14 +29,16 @@
       <router-link :to="'/login/forgot?redirect=' + redirect">Never set up your password? Set it up now</router-link>
       <router-link :to="'/login/new?redirect=' + redirect">Create account</router-link>
     </div>
+    <div class="d-flex flex-column mb-3" v-if="enabledIntegrations.length">
+      <span>You can also <router-link :to="'/login/integrations?redirect=' + redirect">Log In</router-link> with another service.</span>
+    </div>
   </div>
 </template>
 
 <script>
 import EmailField from "@/shared/email_field.vue";
 import LoginPasswordField from "./login_password_field.vue";
-import PrivacyPolicyLink from "@/administration/privacy_policy_link.vue"
-import LoginIntegrations from "./login_integrations.vue";
+import LoginSmallPrint from './login_small_print.vue';
 import IeaModal from './iea-modal';
 import axios from 'axios';
 import {
@@ -55,10 +54,10 @@ import {
   LOGIN_INVALID_FIELDS,
   LOGIN_PASSWORD_RESET_EMAIL_SEND,
   LOGIN_PASSWORD_CHANGED,
-  LOGIN_CLICK_TO_AGREE,
   IEA_FAILURE_TO_SIGN
 } from "@/constants/strings";
 import { settingsMixin } from "@/mixins";
+import { loginIntegrationsMixin } from '@/store/login_integrations.mixin';
 
 
 export default {
@@ -93,19 +92,10 @@ export default {
   components: {
     EmailField,
     LoginPasswordField,
-    PrivacyPolicyLink,
-    LoginIntegrations,
+    LoginSmallPrint,
     IeaModal,
   },
-  mixins: [authMixin, personSessionMixin, settingsMixin],
-  computed: {
-    conventionName() {
-      return this.configByName('convention_name') || ''
-    },
-    LOGIN_CLICK_TO_AGREE() {
-      return LOGIN_CLICK_TO_AGREE(this.conventionName);
-    },
-  },
+  mixins: [authMixin, personSessionMixin, settingsMixin, loginIntegrationsMixin],
   mounted: function () {
     if (this.$route.query.alert) {
       switch (this.$route.query.alert) {
@@ -164,18 +154,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.lines-around::after,
-.lines-around::before {
-  content: "";
-  flex: 1 1 0%;
-  border-bottom: 1px solid black;
-}
-
-.lines-around::before {
-  margin-right: 0.5rem;
-}
-
-.lines-around::after {
-  margin-left: 0.5rem;
-}
 </style>

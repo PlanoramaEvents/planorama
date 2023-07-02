@@ -1,5 +1,5 @@
 <template>
-<div class="mr-3">
+<div class="mr-3" v-if="registrationIntegration">
   <div v-if="!selected.registration_number">
     <!-- Use the redirect to come back to profile -->
     <form :action="registrationIntegration.endpoint + '?redirect=profile'" method="post">

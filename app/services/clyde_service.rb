@@ -2,7 +2,7 @@ module ClydeService
   include HTTParty
 
   def self.base_url
-    ::Configuration.find_by(parameter: "clyde_base_url")&.parameter_value
+    ::Integration.find_by({name: "clyde"})&.config["base_url"]
   end
 
   class Client
