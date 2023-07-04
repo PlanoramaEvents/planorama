@@ -93,15 +93,18 @@ module IdentityService
         identity.save!
 
         update_identity(identity: identity, reg_id: reg_id, reg_number: reg_number, email: email, raw_info: details)
-
-        current_person.registration_number = details['ticket_number']
-        # TODO: we need to base this on the products that they have
-        # which requires a change to the Clyde API to get the products for the person
-        # person.registration_type = details[:product]
-        # person.registered = true 
-        current_person.save!
+        update_reg_info(person: current_person, details: details)
       end
     end
+  end
+
+  def self.update_reg_info(person:, details:)
+    person.registration_number = details['ticket_number']
+    # TODO: we need to base this on the products that they have
+    # which requires a change to the Clyde API to get the products for the person
+    # person.registration_type = details[:product]
+    # person.registered = true 
+    person.save!
   end
 
   def self.create_identity_from_clyde(details:)
