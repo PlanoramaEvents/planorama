@@ -4,7 +4,8 @@ export const transformIntegration = (integrationObj) => ({
   name: integrationObj.name,
   endpoint: `/auth/${integrationObj.name}`,
   registration: integrationObj?.config?.registration,
-  buttonText: integrationObj?.config?.button_text
+  buttonText: integrationObj?.config?.button_text,
+  linkText: integrationObj?.config?.link_text,
 });
 
 export const loginIntegrationsMixin = {
@@ -21,6 +22,9 @@ export const loginIntegrationsMixin = {
     },
     registrationIntegration() {
       return this.enabledIntegrations.find(i => i.registration);
+    },
+    clydeIntegration() {
+      return this.enabledIntegrations.find(i => i.name === "clyde");
     },
     csrfToken() {
       let token = $cookies.get('XSRF-TOKEN')

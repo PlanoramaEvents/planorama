@@ -15,6 +15,11 @@
         <b-form-group label="Button text for Log In Button" class="ml-2">
           <b-form-input type="text" v-model="clydeButtonText" @blur="patchClydeConfig()" :disabled="!clydeEnabled"></b-form-input>
         </b-form-group>
+        <b-form-group label="Link text for Log In Page" class="ml-2">
+          <div class="d-flex align-items-center">
+          <span class="basis-14">You can also log in with</span> <b-form-input type="text" v-model="clydeLinkText" @blur="patchClydeConfig()" :disabled="!clydeEnabled" inline></b-form-input>
+          </div>
+        </b-form-group>
       </div>
     </div>
   </div>
@@ -34,4 +39,8 @@ export default {
 .configuration.enable .form-row {
   align-items: center;
 }
+.basis-14 {
+  flex-basis: 14rem;
+}
 </style>
+
