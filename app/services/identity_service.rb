@@ -128,12 +128,11 @@ module IdentityService
           addr = EmailAddress.find_by(email: identity.email, isdefault: true)
 
           # if there is a person with this as primary email AND no OAuth Clyde identity
-          person = if addr && addr.person
-                     addr.person if addr.person.oauth_identities.where(provider: 'clyde').count == 0
-                   end
+          # then we will error out - as they should login with Plano and link instead
+          raise "Person already exists with that email" if addr.count > 0
 
           # Otherwise we create a new person, if the email is already used as prime we can not set it as the default
-          person ||= create_person_from_clyde(details: details, identity: identity, email_is_default: addr.nil?)                 
+          person = create_person_from_clyde(details: details, identity: identity, email_is_default: addr.nil?)                 
 
           # And associate them with the Clyde Identity
           identity.person = person
