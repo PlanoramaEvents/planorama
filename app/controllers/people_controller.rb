@@ -23,6 +23,18 @@ class PeopleController < ResourceController
     )
   end
 
+  def unlink_registration
+    authorize current_person, policy_class: policy_class
+
+    person = Person.find params[:person_id]
+
+    raise "No such person" unless person
+
+    person.oauth_identities.delete_all
+
+    render_object(person)
+  end
+
   def snapshot_schedule
     authorize current_person, policy_class: policy_class
 
