@@ -30,7 +30,12 @@ class PeopleController < ResourceController
 
     raise "No such person" unless person
 
+    # Remove the Oauth identity and all registration information
     person.oauth_identities.delete_all
+    person.registration_number = nil
+    person.registered = false
+    person.registration_type = nil
+    person.save!
 
     render_object(person)
   end
