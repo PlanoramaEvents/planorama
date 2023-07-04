@@ -101,6 +101,7 @@ namespace :rbac do
           "create": false,
           "destroy": false,
           "resync_airmeet": false,
+          "unlink_registration": false
       },
       "survey": {
           "assign_people": false,
@@ -365,7 +366,8 @@ namespace :rbac do
           "snapshot_schedule": true,
           "create": true,
           "destroy": true,
-          "resync_airmeet": false
+          "resync_airmeet": false,
+          "unlink_registration": true
       },
       "survey": {
           "assign_people": true,
@@ -689,7 +691,8 @@ namespace :rbac do
           "snapshot_schedule": true,
           "create": true,
           "destroy": true,
-          "resync_airmeet": true
+          "resync_airmeet": true,
+          "unlink_registration": true
       },
       "survey": {
           "assign_people": true,
