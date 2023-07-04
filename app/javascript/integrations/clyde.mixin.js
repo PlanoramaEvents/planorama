@@ -48,6 +48,16 @@ export const clydeMixin = {
           this.clyde.config.button_text = val;
         }
       }
+    },
+    clydeLinkText: {
+      get() {
+        return this.clyde?.config?.link_text
+      },
+      set(val) {
+        if(this.clyde?.config) {
+          this.clyde.config.link_text = val;
+        }
+      }
     }
   },
   methods: {

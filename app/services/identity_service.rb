@@ -72,6 +72,7 @@ module IdentityService
       person: person,
       role: ConventionRole.roles[:participant]
     )
+    person
   end
 
   def self.associate_identity_from_clyde(details:, current_person:)

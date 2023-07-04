@@ -24,7 +24,7 @@ module Auth
       sign_in identity.person if !current_person && identity&.person
 
       if !redirect.blank?
-        redirect_to "/#/#{redirect}"
+        redirect_to "/##{redirect}"
       else
         redirect_to '/' # Got to the home page/dashboard
       end

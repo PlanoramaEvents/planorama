@@ -29,9 +29,7 @@
       <router-link :to="'/login/forgot?redirect=' + redirect">Never set up your password? Set it up now</router-link>
       <router-link :to="'/login/new?redirect=' + redirect">Create account</router-link>
     </div>
-    <div class="d-flex flex-column mb-3" v-if="enabledIntegrations.length">
-      <span>You can also <router-link :to="'/login/integrations?redirect=' + redirect">Log In</router-link> with another service.</span>
-    </div>
+    <login-integrations :redirect="redirect"></login-integrations>
   </div>
 </template>
 
@@ -39,6 +37,7 @@
 import EmailField from "@/shared/email_field.vue";
 import LoginPasswordField from "./login_password_field.vue";
 import LoginSmallPrint from './login_small_print.vue';
+import LoginIntegrations from "./login_integrations.vue";
 import IeaModal from './iea-modal';
 import axios from 'axios';
 import {
@@ -94,6 +93,7 @@ export default {
     LoginPasswordField,
     LoginSmallPrint,
     IeaModal,
+    LoginIntegrations,
   },
   mixins: [authMixin, personSessionMixin, settingsMixin, loginIntegrationsMixin],
   mounted: function () {

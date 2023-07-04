@@ -6,14 +6,14 @@ import PlanLogin from './login/login.vue';
 import NewPassword from './login/new_password.vue';
 import CreateAccount from './login/create_account.vue';
 import AccountSetup from './login/account_setup.vue'
-import LoginIntegrations from './login/login_integrations.vue';
+import LoginClyde from './login/login_clyde.vue'
 
 const loginRoutes = [
   { path: 'forgot', component: ForgotPassword },
   { path: 'new', component: CreateAccount},
   { path: 'password-reset', component: NewPassword },
   { path: 'setup', component: AccountSetup },
-  { path: 'integrations', component: LoginIntegrations },
+  { path: 'clyde', component: LoginClyde },
   { path: '', component: PlanLogin, name: "login" },
 ]
 
