@@ -12,6 +12,24 @@ module ClydeService
       self.token = token
     end
 
+    # NOTE: a search would be useful. Need to ask STAXO about that
+    # change per_page
+    # svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
+    # svc.participants
+    # meta => current_page, from, to, per_page, total
+    def participants(page: nil)
+      url = "/api/v1/participants?page=#{page}" if page
+      url ||= "/api/v1/participants"
+
+      response = HTTParty.get(
+        "#{ClydeService.base_url}#{url}",
+        headers: { 'Authorization' => "Bearer #{token}" }
+      )
+      result = JSON.parse(response.body)
+
+      result
+    end
+
     # GET {base_url}/api/v1/participants/{id}
     # svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
     # svc.participant(id: '918')

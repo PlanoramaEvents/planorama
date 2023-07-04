@@ -100,6 +100,7 @@ module IdentityService
   end
 
   def self.update_reg_info(person:, details:)
+    # TODO: Need to store time of last sync
     person.registration_number = details['ticket_number']
     # TODO: we need to base this on the products that they have
     # which requires a change to the Clyde API to get the products for the person
