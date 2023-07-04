@@ -52,7 +52,9 @@ Rails.application.routes.draw do
     patch 'person_exclusion', to: 'person_exclusions#replace'
     resources :session_limits, path: 'session_limit', only: [:index]
     # patch 'session_limit', to: 'session_limits#replace'
+    post 'clyde_sync', to: 'people#clyde_sync'
     post 'unlink_registration'. to: 'people#unlink_registration'
+
   end
   get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
   get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
