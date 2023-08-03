@@ -1,10 +1,13 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="column">
+      <div class="column flex-grow-1">
         <b-tabs>
           <b-tab title="Airmeet">
             <airmeet-settings></airmeet-settings>
+          </b-tab>
+          <b-tab title="Clyde">
+            <clyde-settings></clyde-settings>
           </b-tab>
         </b-tabs>
       </div>
@@ -14,11 +17,13 @@
 
 <script>
 import AirmeetSettings from '@/airmeet/airmeet_settings.vue'
+import ClydeSettings from './clyde_settings.vue'
 
 export default {
   name: "IntegrationSettings",
   components: {
-    AirmeetSettings
+    AirmeetSettings,
+    ClydeSettings
   }
 }
 </script>

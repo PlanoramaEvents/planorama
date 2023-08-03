@@ -1,11 +1,11 @@
 <template>
   <div v-if="currentSettings">
     <p><strong>{{EVENT_SETTINGS_MUST_RELOAD}}</strong></p>
-    <div v-for="parameter in parameters" :key="parameter.paremeter_name">
+    <div v-for="parameter in parameters" :key="parameter.parameter_name">
       <config-editor
         model="configuration"
         :parameter="parameter"
-        v-if="parameter"
+        v-if="parameter && !exclusions.includes(parameter.parameter_name)"
       ></config-editor>
     </div>
   </div>
@@ -25,7 +25,8 @@ export default {
   data: () => ({
     parameters: [],
     loading: true,
-    EVENT_SETTINGS_MUST_RELOAD
+    EVENT_SETTINGS_MUST_RELOAD,
+    exclusions: ['clyde_base_url']
   }),
   mixins: [
     modelMixin,

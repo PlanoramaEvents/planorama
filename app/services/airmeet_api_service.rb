@@ -212,7 +212,7 @@ module AirmeetApiService
     
     headers 'Content-Type' => 'application/json' 
 
-    # TODO fix me for not testing
+    # TODO fix me to be based on environment
     default_options.update(verify: false)
 
     def auth

@@ -20,6 +20,6 @@ export default {
 <style lang="scss">
 #planorama-logo {
   width: 100%;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 </style>

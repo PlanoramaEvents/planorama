@@ -76,7 +76,8 @@ class SettingsController < ApplicationController
       age_restrictions: ::AgeRestriction.all,
       room_services: ::RoomService.all,
       timezones: zones,
-      recaptcha_site_key: ENV['RECAPTCHA_SITE_KEY']
+      recaptcha_site_key: ENV['RECAPTCHA_SITE_KEY'],
+      login_integrations: ::Integration.login,
     }
 
     render json: settings,

@@ -247,6 +247,7 @@ module.exports = {
         timezone: "Timezone during convention",
         needs_accommodations: "Accessibility and/or disability concerns",
         accommodations: "Accessibility and/or disability details",
+        registration_number: "Ticket Number",
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
@@ -314,6 +315,7 @@ module.exports = {
     },
     EVENT_SETTINGS_MUST_RELOAD: "*** Changes to these settings will only take effect after you reload your browser page. ***",
     CONFIGURATION_LABEL_OVERRIDES: {
-        event_virtual: "Does this event include a virtual component?"
+        event_virtual: "Does this event include a virtual component?",
+        clyde_base_url: "Base URL for Clyde"
     }
 }
