@@ -10,7 +10,7 @@ module AccessControlService
         name: { sensitive: false, linkable: true, type: :string},
         pseudonym: { sensitive: false, linkable: true, type: :string},
         primary_email: { sensitive: false, linkable: false, type: :email},
-        contact_email: { sensitive: false, linkable: true, type: :email},
+        contact_email: { sensitive: false, linkable: false, type: :email},
         last_sign_in_at: { sensitive: false, linkable: false, type: :datetime},
         current_sign_in_at: { sensitive: false, linkable: false, type: :datetime},
         pronouns: { sensitive: false, linkable: true, type: :string},
@@ -54,7 +54,7 @@ module AccessControlService
         do_not_assign_with: { sensitive: true, linkable: true, type: :text},
         can_stream_exceptions: { sensitive: false, linkable: true, type: :text},
         can_record_exceptions: { sensitive: false, linkable: true, type: :text},
-        can_photo_exceptions: { sensitive: false, linkable: true, type: :text},
+        can_photo_exceptions: { sensitive: false, linkable: false, type: :text},
         is_local: { sensitive: false, linkable: true, type: :boolean, values: [true, false]}, # PROB???
         languages_fluent_in: { sensitive: false, linkable: true, type: :string},
         socialmedia: { sensitive: false, linkable: true, type: :socialmedia}
