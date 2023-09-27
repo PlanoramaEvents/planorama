@@ -12,17 +12,17 @@ namespace :rbac do
       con_roles: ['participant'],
       name: 'Participant_Roles_Default',
       sensitive_access: false
-    ).delete_all
+    ).destroy_all
     role = ApplicationRole.where(
       con_roles: ['staff'],
       name: 'Staff_Roles_Default',
       sensitive_access: false
-    ).delete_all
+    ).destroy_all
     role = ApplicationRole.where(
       con_roles: ['admin'],
       name: 'Admin_Roles_Default',
       sensitive_access: true
-    ).delete_all
+    ).destroy_all
   end
 
   def create_participant_roles
@@ -286,6 +286,13 @@ namespace :rbac do
       },
       "integration": {
           "publish": false
+      },
+      "page_content": {
+        "create": false,
+        "destroy": false,
+        "index": true,
+        "show": true,
+        "update": false
       }
     })
   end
@@ -610,6 +617,13 @@ namespace :rbac do
       },
       "integration": {
           "publish": false
+      },
+      "page_content": {
+        "create": false,
+        "destroy": false,
+        "index": true,
+        "show": true,
+        "update": false
       }
     })
   end
@@ -934,6 +948,13 @@ namespace :rbac do
       },
       "integration": {
           "publish": true
+      },
+      "page_content": {
+        "create": true,
+        "destroy": true,
+        "index": true,
+        "show": true,
+        "update": true
       }
     })
   end

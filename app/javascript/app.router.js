@@ -18,6 +18,8 @@ const loginRoutes = [
 // admin
 import AdminComponent from './administration/admin_component.vue';
 
+import PlayGroundComponent from './administration/playground_component.vue';
+
 // people
 import PeopleScreen from './people/people-screen.vue';
 import PeopleList from './people/people_list.vue';
@@ -131,11 +133,19 @@ export const router = new VueRouter({
     //   }
     // },
     {
+      path: '/playground',
+      component: PlayGroundComponent,
+      meta: {
+        requiresAuth: true,
+        requiresAdmin : true
+      }
+    },
+    {
       path: '/admin',
       component: AdminComponent,
       meta: {
         requiresAuth: true,
-        requiresAdmin : true
+        requiresAdmin: true
       }
     },
     {
