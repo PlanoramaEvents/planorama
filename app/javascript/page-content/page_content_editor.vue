@@ -1,6 +1,10 @@
 <template>
-<div>
-  <b-form-select v-model="name" :options="options"></b-form-select>
+<div class="mr-3">
+  <b-form-select v-model="name" :options="options" class="w-50 mb-2">
+    <template #first>
+      <option :value="null">Select a content area to edit</option>
+    </template>
+  </b-form-select>
   <plano-editor
     v-model="content.html"
     type='classic'
@@ -28,11 +32,8 @@ export default {
       content: this.starter_content(),
       name: null,
       options: [
-        // NOTE: put in as many options as we want text for
-        // dashboard-intro is the introduction test for the dashboard (sans any publish)
-        { value: 'dashboard-intro', text: 'dashboard-intro' },
-        // stuff is just a dummy example
-        { value: 'dashboard-stuff', text: 'dashboard-stuff' }
+        { value: 'dashboard-default', text: 'Dashboard - Default' },
+        { value: 'dashboard-schedule', text: 'Dashboard - After Draft Publish' }
       ]
     }
   },

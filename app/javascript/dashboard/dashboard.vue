@@ -6,7 +6,7 @@
         You'll be using this site between now and the convention to view and manage your profile, interests and schedule.
       </p>
       <div v-if="!draftSchedule  && doneLoading">
-        <page-content-display name="dashboard-intro">
+        <page-content-display name="dashboard-default">
           <p>
             To get started, click on <a href="/#/profile">Profile</a>.
           </p>
@@ -97,6 +97,7 @@
         </page-content-display>
       </div>
       <div v-if="displayDraftSchedule">
+        <page-content-display name="dashboard-schdule"></page-content-display>
         <person-schedule-display :sessions="sessions" title="Your Draft Schedule">
           <template #message>
             <router-link to="/profile/draft-schedule">Approve your draft schedule<br />or provide change requests.</router-link>
@@ -104,6 +105,7 @@
         </person-schedule-display>
       </div>
       <div v-if="firmSchedule">
+        <page-content-display name="dashboard-schedule"></page-content-display>
         <person-schedule-display :sessions="sessions" title="Your Schedule">
           <template #message>
             <router-link to="/profile/schedule">Approve your schedule<br />or provide change requests.</router-link>

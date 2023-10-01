@@ -1,6 +1,7 @@
 <template>
-<div>
-  <p>This is a playground for new features ...</p>
+<div class="container-fluid scrollable">
+  <h1>Preview features</h1>
+  <h2>Page content editor (for the dashboard)</h2>
   <page-content-editor></page-content-editor>
 </div>
 </template>
