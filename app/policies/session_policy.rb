@@ -7,6 +7,10 @@ class SessionPolicy < PlannerPolicy
     allowed?(action: :schedule_publish)
   end
 
+  def has_open_for_interest?
+    allowed?(action: :index)
+  end
+
   def update_all?
     allowed?(action: :update_all)
   end

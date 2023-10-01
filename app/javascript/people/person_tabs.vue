@@ -23,16 +23,19 @@
         </b-tab>
         <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
           <session-selector
-            v-if="person"
+            v-if="person && hasOpenForInterest"
             v-model="person"
             defaultSortBy='sessions.title'
             :model="sessionModel"
             defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
           ></session-selector>
+        <div v-if="!hasOpenForInterest" class="container-fluid d-flex justify-content-center mt-5">
+          Coming soon!
+        </div>
         </b-tab>
         <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
           <session-ranker
-            v-if="person"
+            v-if="person && hasOpenForInterest"
             defaultSortBy='interest_ranking,session_assignments.updated_at'
             :defaultSortDesc="true"
             :perPage="null"
@@ -40,6 +43,9 @@
             :defaultFilter="rankedFilter"
             :person_id="person.id"
           ></session-ranker>
+        <div v-if="!hasOpenForInterest" class="container-fluid d-flex justify-content-center mt-5">
+          Coming soon!
+        </div>
         </b-tab>
         <b-tab :title="liveScheduleTitle" lazy v-if="currentUserIsAdmin || currentUserIsStaff || firmSchedule" :active="tab === 'schedule'">
           <person-live-schedule></person-live-schedule>
@@ -88,6 +94,7 @@ const { DateTime } = require("luxon");
 
 import VueRouter from 'vue-router';
 import { mapActions } from 'vuex';
+import { http } from '@/http';
 const { isNavigationFailure, NavigationFailureType } = VueRouter;
 
 
@@ -117,6 +124,7 @@ export default {
     personModel,
     sessionModel,
     sessionAssignmentModel,
+    hasOpenForInterest: false,
   }),
   computed: {
     tabsArray() {
@@ -171,6 +179,11 @@ export default {
     ...mapActions({
       fetchScheduleWorkflows: FETCH_WORKFLOWS
     }),
+    fetchOpenForInterest() {
+      http.get('/session/open_for_interest').then(({data}) => {
+        this.hasOpenForInterest = data.open_for_interest;
+      })
+    },
     back() {
       this.$router.push('/people')
     },
@@ -212,6 +225,7 @@ export default {
       }
     )
     this.fetchScheduleWorkflows();
+    this.fetchOpenForInterest();
   },
   beforeRouteLeave(to, from, next) {
     if (from.path.match(/.*profile.*/) && to.path === '/people') {
