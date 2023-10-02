@@ -191,6 +191,7 @@ Rails.application.routes.draw do
   resources :tag_contexts, path: 'tag_context'
   resources :configurations, path: 'configuration'
   resources :parameter_names, path: 'parameter_name'
+  resources :page_contents, path: 'page_content'
 
   get 'person_schedule_approval/fetch/:person_id/:workflow_id', to: 'person_schedule_approvals#fetch'
   post 'person_schedule_approval/approve/:person_id/:workflow_id', to: 'person_schedule_approvals#approve'
