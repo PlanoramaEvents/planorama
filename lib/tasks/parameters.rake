@@ -117,25 +117,5 @@ namespace :parameters do
         }
       )
     end
-
-    unless ParameterName.find_by(parameter_name: 'profile_show_demographics_and_community')
-      ParameterName.create!(
-        {
-          parameter_name: 'profile_show_demographics_and_community',
-          parameter_description: 'Toggle to enable/display the demographic and community questions in the profile.',
-          parameter_type: 'Boolean'
-        }
-      )
-    end
-
-    unless ParameterName.find_by(parameter_name: 'profile_show_additional_info')
-      ParameterName.create!(
-        {
-          parameter_name: 'profile_show_additional_info',
-          parameter_description: 'Toggle to enable/display the additional information in the profile',
-          parameter_type: 'Boolean'
-        }
-      )
-    end
   end
 end
