@@ -167,6 +167,7 @@ Rails.application.routes.draw do
 
   get 'session/tags', to: 'sessions#tags'
   get 'session/schedule_publish', to: 'sessions#schedule_publish'
+  get 'session/open_for_interest', to: 'sessions#has_open_for_interest'
   post 'session/import', to: 'sessions#import'
   post 'session/update_all', to: 'sessions#update_all'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id
