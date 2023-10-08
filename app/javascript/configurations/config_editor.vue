@@ -21,7 +21,8 @@
         ></b-form-datepicker>
       </div>
       <div v-else-if="parameter.parameter_type === 'Boolean'">
-        <b-radio-group :options="[{text: 'Yes', value: 'true'}, {text: 'No', value: 'false'}]" @input="onChange" v-model="configuration.parameter_value"></b-radio-group>
+        <!-- change to switch -->
+        <b-radio-group :options="[{text: 'Yes', value: 'true'}, {text: 'No', value: 'false'}]" @input="onChange" v-model="configuration.parameter_value" buttons></b-radio-group>
       </div>
       <div v-else>
         <b-form-input
