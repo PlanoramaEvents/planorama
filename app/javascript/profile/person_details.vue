@@ -313,7 +313,7 @@ export default {
   }),
   computed: {
     showAdditionalInfo() {
-      return (this.configByName('profile_show_additional_info') !== "false")
+      return (this.configByName('profile_show_info_demographic_community') !== "false")
     },
     attendanceTypeOptions() {
       return Object.entries(PERSON_ATTENDANCE_TYPE).map(([key, value]) => ({text: value, value: key}))

@@ -128,7 +128,7 @@ export default {
       return (this.currentUserIsAdmin || this.currentUser.id === this.selected.id) && this.showDemoAndCommunity;
     },
     showDemoAndCommunity() {
-      return (this.configByName('profile_show_demographics_and_community') !== "false")
+      return (this.configByName('profile_show_info_demographic_community') !== "false")
     }
   }
 };
