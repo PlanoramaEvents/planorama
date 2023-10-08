@@ -59,9 +59,9 @@
           ref="agreements-manager"
         ></agreement-manager>
       </admin-accordion>
-      <admin-accordion id="page-content-accordion" title="Page Content Editor">
+      <!-- <admin-accordion id="page-content-accordion" title="Page Content Editor">
         <page-content-editor></page-content-editor>
-      </admin-accordion>
+      </admin-accordion> -->
     </div>
   </div>
 </template>
