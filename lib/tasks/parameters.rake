@@ -118,23 +118,27 @@ namespace :parameters do
       )
     end
 
-    unless ParameterName.find_by(parameter_name: 'profile_show_demographics_and_community')
-      ParameterName.create!(
+    pname = ParameterName.find_by(parameter_name: 'profile_show_demographics_and_community')
+    if pname
+      pname.destroy
+    end
+    pname = ParameterName.find_by(parameter_name: 'profile_show_additional_info')
+    if pname
+      pname.destroy
+    end
+
+    unless ParameterName.find_by(parameter_name: 'profile_show_info_demographic_community')
+      pname = ParameterName.create!(
         {
-          parameter_name: 'profile_show_demographics_and_community',
-          parameter_description: 'Toggle to enable/display the demographic and community questions in the profile.',
+          parameter_name: 'profile_show_info_demographic_community',
+          parameter_description: 'Toggle to enable/display the additonal info, demographic and community questions in the profile.',
           parameter_type: 'Boolean'
         }
       )
-    end
-
-    unless ParameterName.find_by(parameter_name: 'profile_show_additional_info')
-      ParameterName.create!(
-        {
-          parameter_name: 'profile_show_additional_info',
-          parameter_description: 'Toggle to enable/display the additional information in the profile',
-          parameter_type: 'Boolean'
-        }
+      # And set a default value
+      Configuration.create(
+        parameter: pname.parameter_name,
+        parameter_value: 'false'
       )
     end
   end
