@@ -29,8 +29,8 @@
             :model="sessionModel"
             defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
           ></session-selector>
-        <div v-if="!hasOpenForInterest" class="container-fluid d-flex justify-content-center mt-5">
-          Coming soon!
+        <div v-if="!hasOpenForInterest" class="container-fluid mt-5">
+          <h5 class="font-italic text-muted">Coming soon!</h5>
         </div>
         </b-tab>
         <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
@@ -43,8 +43,8 @@
             :defaultFilter="rankedFilter"
             :person_id="person.id"
           ></session-ranker>
-        <div v-if="!hasOpenForInterest" class="container-fluid d-flex justify-content-center mt-5">
-          Coming soon!
+        <div v-if="!hasOpenForInterest" class="container-fluid d-flex mt-5">
+          <h5 class="font-italic text-muted">Coming soon!</h5>
         </div>
         </b-tab>
         <b-tab :title="liveScheduleTitle" lazy v-if="currentUserIsAdmin || currentUserIsStaff || firmSchedule" :active="tab === 'schedule'">
