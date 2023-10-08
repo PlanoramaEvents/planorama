@@ -317,6 +317,7 @@ module.exports = {
     },
     EVENT_SETTINGS_MUST_RELOAD: "*** Changes to these settings will only take effect after you reload your browser page. ***",
     CONFIGURATION_LABEL_OVERRIDES: {
-        event_virtual: "Does this event include a virtual component?"
+        event_virtual: "Does this event include a virtual component?",
+        profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
     }
 }
