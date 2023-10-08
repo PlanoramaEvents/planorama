@@ -15,7 +15,7 @@
       <b-nav-item v-if="can_see_this" to="/reports" active-class="active"><b-icon-bar-chart-line-fill class="mr-2"></b-icon-bar-chart-line-fill>Reports</b-nav-item>
       <b-nav-item to="/profile" active-class="active"><b-icon-person-badge class="mr-2"></b-icon-person-badge>Profile</b-nav-item>
       <b-nav-item v-if="currentUserIsAdmin" to="/admin" active-class="active"><b-icon-minecart-loaded class="mr-2"></b-icon-minecart-loaded>Admin</b-nav-item>
-      <b-nav-item v-if="currentUserIsAdmin" to="/admin-configuration" active-class="active"><b-icon-minecart-loaded class="mr-2"></b-icon-minecart-loaded>Configuration</b-nav-item>
+      <b-nav-item v-if="currentUserIsAdmin" to="/admin-configurations" active-class="active"><b-icon-minecart-loaded class="mr-2"></b-icon-minecart-loaded>Configurations</b-nav-item>
     </b-nav>
   </div>
 </template>
