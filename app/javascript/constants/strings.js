@@ -284,6 +284,9 @@ module.exports = {
         virtual: "Virtually",
     },
 
+    PAGE_CONTENT_SAVE_SUCCESS: "Page content saved successfully", 
+    PAGE_CONTENT_SAVE_ERROR: "Page content save failed",
+
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
     SURVEY_PUBLIC_NO_DELETE: "You cannot delete a published survey. Close the survey to enable deletion.",
@@ -331,6 +334,7 @@ module.exports = {
     EVENT_SETTINGS_MUST_RELOAD: "*** Changes to these settings will only take effect after you reload your browser page. ***",
     CONFIGURATION_LABEL_OVERRIDES: {
         event_virtual: "Does this event include a virtual component?",
-        clyde_base_url: "Base URL for Clyde"
+        clyde_base_url: "Base URL for Clyde",
+        profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
     }
 }
