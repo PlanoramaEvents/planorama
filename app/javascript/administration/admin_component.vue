@@ -59,6 +59,9 @@
           ref="agreements-manager"
         ></agreement-manager>
       </admin-accordion>
+      <!-- <admin-accordion id="page-content-accordion" title="Page Content Editor">
+        <page-content-editor></page-content-editor>
+      </admin-accordion> -->
     </div>
   </div>
 </template>
@@ -73,6 +76,7 @@ import SheetImporterVue from '../components/sheet_importer_vue.vue';
 import AgreementManager from "@/agreements/agreement_manager.vue";
 import ScheduleSettings from "@/schedule/schedule_settings.vue";
 import IntegrationSettings from "@/integrations/integration_settings.vue"
+import PageContentEditor from '@/page-content/page_content_editor.vue';
 
 export default {
   components: {
@@ -85,6 +89,7 @@ export default {
     ConfigurationsManager,
     ScheduleSettings,
     IntegrationSettings,
+    PageContentEditor,
   },
   name: 'AdminComponent',
   data: () => ({

@@ -22,11 +22,12 @@
         model='email_address'
         @input="$emit('input', selected)"
       ></email-addresses-editor>
-      <h5>Additional Information <edit-button v-b-modal.person-misc-modal v-if="!readOnly"></edit-button></h5>
-      <dl-person :fields="miscFields">
+      <h5>Additional Information <edit-button v-b-modal.person-misc-modal v-if="!readOnly && showAdditionalInfo"></edit-button></h5>
+      <dl-person :fields="miscFields" v-if="showAdditionalInfo">
         <template #can_stream-val>{{can_stream_label}}</template>
         <template #can_record-val>{{can_record_label}}</template>
       </dl-person>
+      <div v-else>Comming Soon</div>
     </div>
     <div class="d-flex flex-column w-50 p-2">
       <div v-if="eventVirtual && readOnly">
@@ -311,6 +312,9 @@ export default {
     },
   }),
   computed: {
+    showAdditionalInfo() {
+      return (this.configByName('profile_show_info_demographic_community') !== "false")
+    },
     attendanceTypeOptions() {
       return Object.entries(PERSON_ATTENDANCE_TYPE).map(([key, value]) => ({text: value, value: key}))
     },
