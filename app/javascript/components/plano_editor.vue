@@ -90,6 +90,7 @@ export default {
 
       local_config.enterMode = 2 // This is CKEDITOR.ENTER_BR
       local_config.toolbar = toolbar
+      local_config.contentsCss = "custom.scss"
 
       if (this.title) {
         local_config.title = this.title;

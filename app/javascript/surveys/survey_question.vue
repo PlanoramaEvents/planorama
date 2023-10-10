@@ -13,6 +13,8 @@
           mode="eager"
           :rules="rules"
           v-slot="{ valid, errors }"
+          :name="question.question"
+          v-if="!email"
         >
           <b-form-textarea
             :class="{'w-50': answerable}"
@@ -39,18 +41,17 @@
             v-if="yesnomaybe"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors,valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
-            <b-form-radio :disabled="!answerable" :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="noLabel.value">{{noLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="yesLabel.value" :state="calcValid(errors, valid)">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="noLabel.value" :state="calcValid(errors, valid)">{{noLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="maybeLabel.value" :state="calcValid(errors, valid)">{{maybeLabel.label}}</b-form-radio>
             <div class="ml-4 mt-1 mb-3">
               <b-form-textarea
                 :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
                 v-model="localResponse.response.text"
                 :disabled="!answerable || radioButtonResponse !== maybeLabel.value"
-                :required="radioButtonResponse === maybeLabel.value"
                 @blur="saveResponse(localResponse, selectedSubmission)"
               >
               </b-form-textarea>
@@ -62,11 +63,11 @@
             v-if="boolean"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors,valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
-            <b-form-radio :disabled="!answerable" :value="bYesLabel.value">{{bYesLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="bNoLabel.value">{{bNoLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="bYesLabel.value" :state="calcValid(errors, valid)">{{bYesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="bNoLabel.value" :state="calcValid(errors, valid)">{{bNoLabel.label}}</b-form-radio>
           </b-form-radio-group>
           <b-form-radio-group
             :class="{'w-50': answerable}"
@@ -74,12 +75,12 @@
             v-if="attendance_type"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors,valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
-            <b-form-radio :disabled="!answerable" :value="inPersonLabel.value">{{inPersonLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="virtualLabel.value">{{virtualLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="hybridLabel.value">{{hybridLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="inPersonLabel.value" :state="calcValid(errors, valid)">{{inPersonLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="virtualLabel.value" :state="calcValid(errors, valid)">{{virtualLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="hybridLabel.value" :state="calcValid(errors, valid)">{{hybridLabel.label}}</b-form-radio>
           </b-form-radio-group>
           <b-form-radio-group
             :class="{'w-50': answerable}"
@@ -87,7 +88,7 @@
             v-if="singlechoice"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors, valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
             <b-form-radio
@@ -95,6 +96,7 @@
               :key="choice.id"
               :value="choiceValue(choice)"
               :disabled="!answerable"
+              :state="calcValid(errors, valid)"
               @input="changeNextPage($event, choice)"
             ><span v-html="choice.answer"></span></b-form-radio>
             <b-form-radio
@@ -103,6 +105,7 @@
               :value="choiceValue(otherFromQuestion)"
               v-model="otherChecked"
               :disabled="!answerable"
+              :state="calcValid(errors, valid)"
               @input="changeNextPage($event, otherFromQuestion)"
             >
               <b-form-group
@@ -127,19 +130,21 @@
             v-if="multiplechoice"
             v-model="localResponse.response.answers"
             :aria-describedBy="ariaDescribedBy"
-            :required="question.mandatory"
+            :state="calcValid(errors, valid)"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
             <b-form-checkbox
               v-for="choice in choices.filter(a => !a.other)"
               :key="choice.id"
               :value="choiceValue(choice)"
+              :state="calcValid(errors, valid)"
               :disabled="!answerable"
             ><span v-html="choice.answer"></span></b-form-checkbox>
             <b-form-checkbox
               class="mt-2"
               v-if="otherFromQuestion"
               :value="choiceValue(otherFromQuestion)"
+              :state="calcValid(errors, valid)"
               :disabled="!answerable"
               v-model="otherChecked"
             >
@@ -163,7 +168,7 @@
             :class="{'w-50': answerable}"
             v-if="dropdown"
             v-model="localResponse.response.text"
-            :required="question.mandatory"
+            :state="calcValid(errors, valid)"
             :aria-describedby="ariaDescribedBy"
             @change="saveResponse(localResponse, selectedSubmission)"
           >
@@ -174,18 +179,17 @@
               :disabled="!answerable"
             >{{choice.answer}}</b-form-select-option>
           </b-form-select>
-          <email-field
-            :class="{'w-50': answerable}"
-            v-if="email"
-            label-sr-only
-            :required="question.mandatory"
-            v-model="localResponse.response.text"
-            :disabled="!answerable"
-            :aria-describedBy="ariaDescribedBy"
-            @blur="saveResponse(localResponse, selectedSubmission)"
-          ></email-field>
           <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
         </validation-provider>
+        <email-field-veevalidate
+          :answerable="answerable"
+          v-if="email"
+          label-sr-only
+          v-model="localResponse.response.text"
+          :disabled="!answerable"
+          :aria-describedBy="ariaDescribedBy"
+          @blur="saveResponse(localResponse, selectedSubmission)"
+        ></email-field-veevalidate>
       </template>
     </b-form-group>
     <div v-if="textonly" v-html="question.question"></div>
@@ -290,7 +294,7 @@
 <script>
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
-import EmailField from '../shared/email_field';
+import EmailFieldVeevalidate from '../shared/email_field_veevalidate.vue';
 import {
   questionMixin,
   surveyMixin,
@@ -298,8 +302,6 @@ import {
   responseMixin,
   toastMixin
 } from '@mixins';
-import { v4 as uuidv4 } from 'uuid';
-import { submissionModel } from '@/store/survey';
 import { mapState } from 'vuex';
 import { ValidationProvider } from 'vee-validate';
 import { SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
@@ -310,8 +312,8 @@ export default {
   components: {
     MandatoryStar,
     SimpleSocial,
-    EmailField,
     ValidationProvider,
+    EmailFieldVeevalidate,
     LinkedFieldIcon
 },
   mixins: [

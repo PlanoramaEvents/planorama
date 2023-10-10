@@ -173,6 +173,7 @@ Rails.application.routes.draw do
 
   get 'session/tags', to: 'sessions#tags'
   get 'session/schedule_publish', to: 'sessions#schedule_publish'
+  get 'session/open_for_interest', to: 'sessions#has_open_for_interest'
   post 'session/import', to: 'sessions#import'
   post 'session/update_all', to: 'sessions#update_all'
   # get sessions/assigned_id - &include=session_assignments&filter[session_assignments][person_id]=person_id
@@ -196,6 +197,7 @@ Rails.application.routes.draw do
   resources :tag_contexts, path: 'tag_context'
   resources :configurations, path: 'configuration'
   resources :parameter_names, path: 'parameter_name'
+  resources :page_contents, path: 'page_content'
 
   get 'person_schedule_approval/fetch/:person_id/:workflow_id', to: 'person_schedule_approvals#fetch'
   post 'person_schedule_approval/approve/:person_id/:workflow_id', to: 'person_schedule_approvals#approve'

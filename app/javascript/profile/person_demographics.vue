@@ -3,11 +3,13 @@
     <div class="d-flex flex-row mt-3">
       <div class="w-50 mr-2">
         <h5>Demographics <edit-button v-b-modal.person-demo-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
-        <dl-person :fields="demoFields"></dl-person>
+        <dl-person :fields="demoFields" v-if="showDemoAndCommunity"></dl-person>
+        <div v-else>Comming Soon</div>
       </div>
       <div class="w-50">
         <h5>Community memberships <edit-button v-b-modal.person-community-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
-        <dl-person :fields="communityFields"></dl-person>
+        <dl-person :fields="communityFields" v-if="showDemoAndCommunity"></dl-person>
+        <div v-else>Comming Soon</div>
       </div>
     </div>
     <person-edit-modal id="person-demo-modal" :person="selected" :data="demoData" :validate="true">
@@ -77,6 +79,7 @@ import EditButton from '@/components/edit_button';
 import DlPerson from './dl_person.vue';
 import personSessionMixin from '@/auth/person_session.mixin';
 import { ValidationProvider } from 'vee-validate';
+import { settingsMixin } from "@/mixins";
 
 export default {
   name: "PersonDemographics",
@@ -110,7 +113,8 @@ export default {
   }),
   mixins: [
     modelMixinNoProp,
-    personSessionMixin
+    personSessionMixin,
+    settingsMixin
   ],
   computed: {
     demoFields() {
@@ -121,7 +125,10 @@ export default {
     },
     canEditInfo() {
       // TODO use sensitive data permission in the future
-      return this.currentUserIsAdmin || this.currentUser.id === this.selected.id;
+      return (this.currentUserIsAdmin || this.currentUser.id === this.selected.id) && this.showDemoAndCommunity;
+    },
+    showDemoAndCommunity() {
+      return (this.configByName('profile_show_info_demographic_community') !== "false")
     }
   }
 };

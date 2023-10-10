@@ -1,7 +1,9 @@
 import { SUCCESS_TOAST_TITLE, ERROR_TOAST_TITLE, nLines, ERROR_GENERIC_RECOVERABLE, ERROR_GENERIC_UNRECOVERABLE } from "@/constants/strings"
-import { errorEmail } from "@/constants/config";
+// import { errorEmail } from "@/constants/config";
+import settingsMixin from "@/store/settings.mixin";
 
 export const toastMixin = {
+  mixins: [settingsMixin],
   methods: {
     success_toast(text) {
       if (typeof text === "function") {
@@ -37,10 +39,11 @@ export const toastMixin = {
       }
     },
     toastPromise(promise, success_text, error_text) {
+      let event_email = this.configByName('event_email');
       return new Promise((res, rej) => {
         promise.then((item) => {
           if(item.status && item.status >= 400) {
-            this.error_toast(getErrorText(item, error_text))
+            this.error_toast(getErrorText(event_email, item, error_text))
             rej(item)
           } else {
             this.success_toast(success_text);
@@ -49,7 +52,7 @@ export const toastMixin = {
         })
         .catch((error) => {
           console.error(error, error.response)
-          this.error_toast(getErrorText(error.response, error_text))
+          this.error_toast(getErrorText(event_email, error.response, error_text))
           rej(error);
         })
       });
@@ -57,7 +60,8 @@ export const toastMixin = {
   }
 }
 
-function getErrorText(errorResp, errorText) {
+// FIX
+function getErrorText(errorEmail, errorResp, errorText) {
   if (errorResp?.status === 422) {
     // if i have data, i can provide specific messages with, use that
     try {
