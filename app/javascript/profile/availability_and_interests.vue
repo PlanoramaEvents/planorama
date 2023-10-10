@@ -12,9 +12,9 @@
           </session-limit-editor>
         <p>
           Under each day, highlight (click and drag) the times of day that you are available for programming in the calendar view below.
-          You can create multiple blocks of time per day. <span v-if="eventVirtual" >The in-person convention time is currently displayed,
-          and is Central Daylight Time (UTC-5). If you will be attending virtually,
-          and want to enter your availability in that time zone, select that option from below the calendar.
+          You can create multiple blocks of time per day. <span v-if="eventVirtual" >The in-person convention time is currently displayed.
+          If you will be attending virtually, and want to enter your availability in that time zone,
+          select that option from below the calendar.
           </span>
           <span v-if="!eventVirtual">The time is displayed in the convention time zone, which is currently {{timezone}}.</span>
         </p>
