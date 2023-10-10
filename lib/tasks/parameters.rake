@@ -126,6 +126,7 @@ namespace :parameters do
           parameter_type: 'String'
         }
       )
+    end
 
     pname = ParameterName.find_by(parameter_name: 'profile_show_demographics_and_community')
     if pname
