@@ -22,7 +22,14 @@
       </div>
       <div v-else-if="parameter.parameter_type === 'Boolean'">
         <!-- <b-radio-group :options="[{text: 'Yes', value: 'true'}, {text: 'No', value: 'false'}]" @input="onChange" v-model="configuration.parameter_value"></b-radio-group> -->
-        <label>No <b-checkbox v-model="configuration.parameter_value" switch inline>Yes</b-checkbox></label>
+        <label>No <b-form-checkbox 
+          v-model="configuration.parameter_value"
+          @change="onChange"
+          value="true"
+          unchecked-value="false"
+          switch
+          inline
+        >Yes</b-form-checkbox></label>
       </div>
       <div v-else>
         <b-form-input
