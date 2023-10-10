@@ -33,6 +33,9 @@ import { roomStore, roomEndpoints } from './room.store';
 import { roomSetStore, roomSetEndpoints} from "@/store/room_set.store";
 import { venueStore, venueEndpoints} from "@/store/venue.store";
 
+// Page content (html)
+import { pageContentStore, pageContentEndpoints } from "@/store/page_content.store";
+
 // mailings
 import { mailingStore, mailingEndpoints } from './mailing.store';
 
@@ -96,6 +99,7 @@ const endpoints = {
   ...roomEndpoints,
   ...roomSetEndpoints,
   ...venueEndpoints,
+  ...pageContentEndpoints,
   ...surveyEndpoints,
   ...mailingEndpoints,
   ...sessionEndpoints,
@@ -139,6 +143,7 @@ export const store = new Vuex.Store({
       ...roomStore.selected,
       ...roomSetStore.selected,
       ...venueStore.selected,
+      ...pageContentStore.selected,
       ...surveyStore.selected,
       ...mailingStore.selected,
       ...sessionStore.selected,
@@ -188,6 +193,7 @@ export const store = new Vuex.Store({
     ...roomSetStore.getters,
     ...venueStore.getters,
     ...surveyStore.getters,
+    ...pageContentStore.getters,
     ...personSessionStore.getters,
     ...mailingStore.getters,
     ...sessionStore.getters,
@@ -379,6 +385,7 @@ export const store = new Vuex.Store({
     ...agreementStore.actions,
     ...roomStore.actions,
     ...roomSetStore.actions,
+    ...pageContentStore.actions,
     ...venueStore.actions,
     ...mailingStore.actions,
     ...settingsStore.actions,

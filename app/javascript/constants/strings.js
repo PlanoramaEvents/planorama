@@ -192,6 +192,19 @@ module.exports = {
             willing_to_moderate: "Moderation interest",
             languages_fluent_in: "Fluent languages",
             contact_email: "Contact email",
+            twitter: "Twitter",
+            facebook: "Facebook",
+            website: "Website",
+            instagram: "Instagram",
+            twitch: "Twitch",
+            youtube: "YouTube",
+            tiktok: "TikTok",
+            linkedin: "LinkedIn",
+            flickr: "Flickr",
+            reddit: "Reddit",
+            othersocialmedia: "Other Social Media",
+            socialmedia: "Social Media",
+            can_share: "Permission to share email with participants"
         },
     },
     nLines,
@@ -231,6 +244,8 @@ module.exports = {
         youtube: "YouTube",
         tiktok: "TikTok",
         linkedin: "LinkedIn",
+        flickr: "Flickr",
+        reddit: "Reddit",
         othersocialmedia: "Other",
         do_not_assign_with: "Anyone that should not be assigned to be on a panel with participant",
         is_local: "Local to the event",
@@ -268,6 +283,9 @@ module.exports = {
         hybrid: "In Person AND Virtually",
         virtual: "Virtually",
     },
+
+    PAGE_CONTENT_SAVE_SUCCESS: "Page content saved successfully", 
+    PAGE_CONTENT_SAVE_ERROR: "Page content save failed",
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
@@ -316,6 +334,7 @@ module.exports = {
     EVENT_SETTINGS_MUST_RELOAD: "*** Changes to these settings will only take effect after you reload your browser page. ***",
     CONFIGURATION_LABEL_OVERRIDES: {
         event_virtual: "Does this event include a virtual component?",
-        clyde_base_url: "Base URL for Clyde"
+        clyde_base_url: "Base URL for Clyde",
+        profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
     }
 }
