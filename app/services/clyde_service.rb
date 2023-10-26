@@ -2,7 +2,8 @@ module ClydeService
   include HTTParty
 
   def self.base_url
-    ::Integration.find_by({name: "clyde"})&.config["base_url"]
+    # Ensure that there is no trailing / in the base url
+    ::Integration.find_by({name: "clyde"})&.config["base_url"].chomp("/")
   end
 
   class Client
@@ -36,7 +37,10 @@ module ClydeService
     def participant(id:)
       response = HTTParty.get(
         "#{ClydeService.base_url}/api/v1/participants/#{id}",
-        headers: { 'Authorization' => "Bearer #{token}" }
+        headers: {
+          'Authorization' => "Bearer #{token}",
+          'Accept' => 'application/json'
+        }
       )
       result = JSON.parse(response.body)
 
@@ -47,7 +51,10 @@ module ClydeService
     def me
       response = HTTParty.get(
         "#{ClydeService.base_url}/api/v1/me",
-        headers: { 'Authorization' => "Bearer #{token}" }
+        headers: {
+          'Authorization' => "Bearer #{token}",
+          'Accept' => 'application/json'
+        }
       )
       result = JSON.parse(response.body)
 
