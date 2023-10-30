@@ -631,7 +631,8 @@ END) STORED,
     twelve_hour boolean DEFAULT true,
     timezone character varying(500) DEFAULT NULL::character varying,
     availability_notes character varying,
-    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL,
+    date_reg_synced timestamp without time zone
 );
 
 
@@ -3557,6 +3558,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230304203222'),
 ('20230411123748'),
 ('20230602193356'),
-('20230924145027');
+('20230924145027'),
+('20231030160649');
 
 

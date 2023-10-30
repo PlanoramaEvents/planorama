@@ -34,9 +34,41 @@ module ClydeService
     # GET {base_url}/api/v1/participants/{id}
     # svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
     # svc.participant(id: '918')
-    def participant(id:)
+    def person(id:)
       response = HTTParty.get(
         "#{ClydeService.base_url}/api/v1/participants/#{id}",
+        headers: {
+          'Authorization' => "Bearer #{token}",
+          'Accept' => 'application/json'
+        }
+      )
+      result = JSON.parse(response.body)
+
+      result
+    end
+
+    # 
+    #  Get the details of the people with the given set of ids
+    # 
+    def people(ids:)
+      response = HTTParty.get(
+        "#{ClydeService.base_url}/api/v1/participants?ids=#{ids.join(',')}",
+        headers: {
+          'Authorization' => "Bearer #{token}",
+          'Accept' => 'application/json'
+        }
+      )
+      result = JSON.parse(response.body)
+
+      result
+    end
+
+    # 
+    #  enables us to page through the people from Clyde
+    # 
+    def people_by_page(page: 1, page_size: 20)
+      response = HTTParty.get(
+        "#{ClydeService.base_url}/api/v1/participants?page=#{page}&page_size=#{page_size}",
         headers: {
           'Authorization' => "Bearer #{token}",
           'Accept' => 'application/json'
