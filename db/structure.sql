@@ -10,6 +10,34 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS btree_gin WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION btree_gin; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION btree_gin IS 'support for indexing common datatypes in GIN';
+
+
+--
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
+--
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -1546,6 +1574,49 @@ CREATE TABLE public.published_sessions (
 
 
 --
+-- Name: registration_sync_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.registration_sync_data (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    reg_id character varying,
+    registration_number character varying,
+    name character varying,
+    email character varying,
+    preferred_name character varying,
+    alternative_email character varying,
+    raw_info jsonb DEFAULT '{}'::jsonb NOT NULL,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: registration_sync_matches; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.registration_sync_matches AS
+ SELECT p.name,
+    NULL::character varying AS email,
+    p.id AS pid,
+    rsd.reg_id,
+    rsd.id AS rid,
+    'name'::text AS mtype
+   FROM (public.people p
+     JOIN public.registration_sync_data rsd ON (((rsd.name)::text ~~* (p.name)::text)))
+UNION
+ SELECT NULL::character varying AS name,
+    e.email,
+    e.person_id AS pid,
+    rsd.reg_id,
+    rsd.id AS rid,
+    'email'::text AS mtype
+   FROM (public.email_addresses e
+     JOIN public.registration_sync_data rsd ON (((rsd.email)::text ~~* (e.email)::text)));
+
+
+--
 -- Name: rooms; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2559,6 +2630,14 @@ ALTER TABLE ONLY public.published_sessions
 
 
 --
+-- Name: registration_sync_data registration_sync_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registration_sync_data
+    ADD CONSTRAINT registration_sync_data_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: room_services room_services_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2882,6 +2961,13 @@ CREATE INDEX index_convention_roles_on_person_id ON public.convention_roles USIN
 
 
 --
+-- Name: index_email_addresses_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_addresses_on_email ON public.email_addresses USING gin (email public.gin_trgm_ops);
+
+
+--
 -- Name: index_exclusions_sessions_on_exclusion_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2938,10 +3024,38 @@ CREATE INDEX index_password_archivable ON public.old_passwords USING btree (pass
 
 
 --
+-- Name: index_people_on_bio; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_people_on_bio ON public.people USING gin (bio public.gin_trgm_ops);
+
+
+--
 -- Name: index_people_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_people_on_confirmation_token ON public.people USING btree (confirmation_token);
+
+
+--
+-- Name: index_people_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_people_on_name ON public.people USING gin (name public.gin_trgm_ops);
+
+
+--
+-- Name: index_people_on_pseudonym; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_people_on_pseudonym ON public.people USING gin (pseudonym public.gin_trgm_ops);
+
+
+--
+-- Name: index_people_on_published_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_people_on_published_name ON public.people USING gin (published_name public.gin_trgm_ops);
 
 
 --
@@ -3043,6 +3157,34 @@ CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions 
 
 
 --
+-- Name: index_registration_sync_data_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_email ON public.registration_sync_data USING gin (email public.gin_trgm_ops);
+
+
+--
+-- Name: index_registration_sync_data_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_name ON public.registration_sync_data USING gin (name public.gin_trgm_ops);
+
+
+--
+-- Name: index_registration_sync_data_on_reg_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_reg_id ON public.registration_sync_data USING btree (reg_id);
+
+
+--
+-- Name: index_registration_sync_data_on_registration_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_registration_number ON public.registration_sync_data USING btree (registration_number);
+
+
+--
 -- Name: index_room_services_sessions_on_room_service_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3120,10 +3262,73 @@ CREATE UNIQUE INDEX index_session_limits_on_person_id_and_day ON public.session_
 
 
 --
+-- Name: index_sessions_on_description; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_description ON public.sessions USING gin (description public.gin_trgm_ops);
+
+
+--
+-- Name: index_sessions_on_instructions_for_interest; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_instructions_for_interest ON public.sessions USING gin (instructions_for_interest public.gin_trgm_ops);
+
+
+--
+-- Name: index_sessions_on_interest_opened_by; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_interest_opened_by ON public.sessions USING gin (interest_opened_by public.gin_trgm_ops);
+
+
+--
+-- Name: index_sessions_on_item_notes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_item_notes ON public.sessions USING gin (item_notes public.gin_trgm_ops);
+
+
+--
+-- Name: index_sessions_on_participant_notes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_participant_notes ON public.sessions USING gin (participant_notes public.gin_trgm_ops);
+
+
+--
 -- Name: index_sessions_on_room_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sessions_on_room_id ON public.sessions USING btree (room_id);
+
+
+--
+-- Name: index_sessions_on_room_notes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_room_notes ON public.sessions USING gin (room_notes public.gin_trgm_ops);
+
+
+--
+-- Name: index_sessions_on_tech_notes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_tech_notes ON public.sessions USING gin (tech_notes public.gin_trgm_ops);
+
+
+--
+-- Name: index_sessions_on_title; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_title ON public.sessions USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: index_sessions_on_updated_by; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_updated_by ON public.sessions USING gin (updated_by public.gin_trgm_ops);
 
 
 --
@@ -3559,6 +3764,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230411123748'),
 ('20230602193356'),
 ('20230924145027'),
-('20231030160649');
+('20231030160649'),
+('20231030174246'),
+('20231031141050'),
+('20231031141408');
 
 

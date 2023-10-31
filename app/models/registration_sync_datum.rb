@@ -1,0 +1,2 @@
+class RegistrationSyncDatum < ApplicationRecord
+end

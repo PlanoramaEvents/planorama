@@ -11,6 +11,30 @@ module MigrationHelpers
       self.create_person_back_to_back_to_back
       self.create_availability_conflicts
       self.create_session_conflicts
+
+      # view for reg matching
+      self.create_registration_sync_matches
+    end
+
+    def self.create_registration_sync_matches
+      ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS registration_sync_matches;
+      SQL
+
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW registration_sync_matches AS
+          select p.name, null as email, p.id as pid, rsd.reg_id, rsd.id as rid, 'name' as mtype
+          from people p 
+          join registration_sync_data rsd
+          on rsd."name" ilike p.name
+          union
+          select null as name, e.email, e.person_id as pid, rsd.reg_id, rsd.id as rid, 'email' as mtype
+          from email_addresses e 
+          join registration_sync_data rsd 
+          on rsd."email" ilike e.email
+      SQL
+
+      ActiveRecord::Base.connection.execute(query)
     end
 
     def self.create_person_schedules
