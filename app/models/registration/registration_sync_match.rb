@@ -1,3 +1,5 @@
+# This uses a View to of the potential map from
+# reg to people using names and/or email
 class Registration::RegistrationSyncMatch < ApplicationRecord
   self.table_name = :registration_sync_matches
   self.primary_keys = :rid, :mtype

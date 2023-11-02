@@ -102,7 +102,8 @@ module IdentityService
   def self.update_reg_info(person:, details:)
     person.registration_number = details['ticket_number']
     # Based on the products that they have
-    person.registration_type = details[:product]
+    person.registration_type = details['product']
+    person.reg_id = details['id']
     person.registered = true
     # Need to store time of last sync
     person.date_reg_synced = Time.now
