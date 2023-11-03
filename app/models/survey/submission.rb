@@ -2,10 +2,17 @@
 # allow one submission...
 class CheckUniqueSubmission < ActiveModel::Validator
   def validate(record)
-    count = Survey::Submission.where(
-        "survey_id = ? and person_id = ? and id != ?", 
-        record.survey_id, record.person_id, record.id
-      ).count
+    count = if record.id
+              Survey::Submission.where(
+                  "survey_id = ? and person_id = ? and id != ?", 
+                  record.survey_id, record.person_id, record.id
+                ).count
+            else
+              Survey::Submission.where(
+                  "survey_id = ? and person_id = ?", 
+                  record.survey_id, record.person_id
+                ).count
+            end
     if count > 0 
       record.errors.add(
         :person,

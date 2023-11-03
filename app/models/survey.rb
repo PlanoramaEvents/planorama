@@ -1,3 +1,20 @@
+# If survey changed to multiple and there are already saved responses do not allow change
+class CheckChangeToMultiple < ActiveModel::Validator
+  def validate(record)
+    # We need to check if the survey is not unique whether there are submissions
+    return unless record.unique_submission
+
+    count = Survey::Submission.where("survey_id = ?", record.id).count
+
+    if count > 0 
+      record.errors.add(
+        :unique_submission,
+        "Survey has submissions: not allowed to switch from multiple to unique"
+      )
+    end
+  end
+end
+
 class Survey < ApplicationRecord
   # Survey contains a series of pages, pages contain a series of questions
   has_many :pages,
@@ -31,11 +48,21 @@ class Survey < ApplicationRecord
 
   validates :name, presence: true
 
-  # transition_accept_status
-  # transition_decline_status
-
   # TODO change last modified on survey_questions CUD
   # TODO track created/updated by
+
+  # If survey changed to multiple and there are already saved responses do not allow change
+  validates_with CheckChangeToMultiple, on: :update, if: :unique_submission_changed?
+
+  # When survey changed to multiple we need to clear out all the linked questions  
+  after_save :check_questions
+  
+  def check_questions
+    return if self.unique_submission
+    
+    # All questions in a non-unique survey can not be linked
+    questions.update_all linked_field: nil
+  end
 
   private
 
