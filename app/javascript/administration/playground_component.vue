@@ -7,6 +7,7 @@
 </template>
 
 <script>
+// TODO: put in a component for the people matching with reg
 import PageContentEditor from "@/page-content/page_content_editor.vue"
 
 export default {

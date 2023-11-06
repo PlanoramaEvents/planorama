@@ -199,6 +199,12 @@ Rails.application.routes.draw do
   resources :parameter_names, path: 'parameter_name'
   resources :page_contents, path: 'page_content'
 
+  # TODO: check that json api pluralization is ok with this
+  resources :registration_sync_data, path: 'registration_sync_datum' do
+    # This needs to work a bit different than the other sub relationships
+    get 'people', to: 'registration_sync_data#people'
+  end
+
   get 'person_schedule_approval/fetch/:person_id/:workflow_id', to: 'person_schedule_approvals#fetch'
   post 'person_schedule_approval/approve/:person_id/:workflow_id', to: 'person_schedule_approvals#approve'
   resources :person_schedule_approvals, path: 'person_schedule_approval'
