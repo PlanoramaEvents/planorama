@@ -11,7 +11,7 @@
   ></plano-editor>
   <!-- TODO - do we want a delete? -->
   <b-button variant="primary" @click="saveContent">Save</b-button>
-  <b-button variant="secondary" @click="clearContent">Clear</b-button>
+  <b-button variant="secondary" @click="clearContent">Reset To Default</b-button>
 </div>
 </template>
 
