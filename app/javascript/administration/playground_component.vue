@@ -1,19 +1,19 @@
 <template>
 <div class="container-fluid scrollable">
   <h1>Preview features</h1>
-  <h2>Page content editor (for the dashboard)</h2>
-  <page-content-editor></page-content-editor>
+  <h2>Registration Info (from Reg/clyde)</h2>
+  <registration-sync-table></registration-sync-table>
 </div>
 </template>
 
 <script>
 // TODO: put in a component for the people matching with reg
-import PageContentEditor from "@/page-content/page_content_editor.vue"
+import RegistrationSyncTable from "@/registrations/registration_sync_table.vue"
 
 export default {
   name: "PlayGroundComponent",
   components: {
-    PageContentEditor
+    RegistrationSyncTable
   },
 }
 </script>
