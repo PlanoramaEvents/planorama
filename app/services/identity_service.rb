@@ -101,10 +101,17 @@ module IdentityService
 
   def self.update_reg_info(person:, details:)
     person.registration_number = details['ticket_number']
-    # TODO: we need to base this on the products that they have
-    # which requires a change to the Clyde API to get the products for the person
-    # person.registration_type = details[:product]
-    # person.registered = true 
+    # Based on the products that they have
+    person.registration_type = details['product']
+    person.reg_id = details['id']
+    person.registered = true
+    # Need to store time of last sync
+    person.date_reg_synced = Time.now
+    # Attendance type in Plano is one of
+    # in_person, hybrid, virtual
+    # Clyde does not map to these well. Recommend that we get this from survey and Person profile
+    # in Plano instead.
+    # person.attendance_type = 
     person.save!
   end
 
@@ -127,12 +134,11 @@ module IdentityService
           addr = EmailAddress.find_by(email: identity.email, isdefault: true)
 
           # if there is a person with this as primary email AND no OAuth Clyde identity
-          person = if addr && addr.person
-                     addr.person if addr.person.oauth_identities.where(provider: 'clyde').count == 0
-                   end
+          # then we will error out - as they should login with Plano and link instead
+          raise "Person already exists with that email" if addr.count > 0
 
           # Otherwise we create a new person, if the email is already used as prime we can not set it as the default
-          person ||= create_person_from_clyde(details: details, identity: identity, email_is_default: addr.nil?)                 
+          person = create_person_from_clyde(details: details, identity: identity, email_is_default: addr.nil?)                 
 
           # And associate them with the Clyde Identity
           identity.person = person
