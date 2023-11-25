@@ -32,7 +32,8 @@
     </div>
     <div class="row" v-if="!formatting && !isSelected">
       <div :class="{'col-12': !question.linked_field, 'col-6': question.linked_field}">
-        <div v-html="question.question" class="py-3"></div>
+        <span v-html="question.question" class="py-3"></span>
+        <mandatory-star :mandatory="question.mandatory"></mandatory-star>
       </div>
       <div v-if="question.linked_field" class="text-right col-6">
         Linked field: {{displayLinkedField}}
@@ -178,6 +179,7 @@ import draggable from 'vuedraggable';
 import OptionsQuestion from './options-question.vue';
 import PlanoEditor from '@/components/plano_editor';
 import LinkedField from './linked-field';
+import MandatoryStar from './mandatory-star.vue';
 import {
   surveyMixin,
   pageMixin,
@@ -193,6 +195,7 @@ export default {
     OptionsQuestion,
     PlanoEditor,
     LinkedField,
+    MandatoryStar,
   },
   data: () => ({
     SURVEY_YESNOMAYBE_PLACEHOLDER,

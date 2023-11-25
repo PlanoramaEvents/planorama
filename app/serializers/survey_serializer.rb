@@ -10,7 +10,8 @@ class SurveySerializer
              :mandatory_star,
              :numbered_questions,
              :branded,
-             :allow_submission_edits
+             :allow_submission_edits,
+             :unique_submission
 
   has_many :pages,
            serializer: Survey::PageSerializer,

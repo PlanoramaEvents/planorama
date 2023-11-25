@@ -127,6 +127,7 @@ class SurveysController < ResourceController
       allow_submission_edits
       pages
       pages_attributes
+      unique_submission
     ]
     # << [
     #   pages_attributes: %i[

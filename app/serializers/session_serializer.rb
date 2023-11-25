@@ -68,8 +68,8 @@ class SessionSerializer
 
   has_many :participant_assignments, lazy_load_data: true, serializer: SessionAssignmentSerializer
 
-  has_one :format, lazy_load_data: true,
-          if: Proc.new { |record| record.format },
+  has_one :format,
+          if: Proc.new { |record| record.format_id },
           links: {
             self: -> (object, params) {
               "#{params[:domain]}/session/#{object.id}"
