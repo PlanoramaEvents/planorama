@@ -76,6 +76,9 @@ GEM
       activerecord (>= 6.0, < 7.1)
     addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
+    annotate (3.2.0)
+      activerecord (>= 3.2, < 8.0)
+      rake (>= 10.4, < 14.0)
     ast (2.4.2)
     base64 (0.1.1)
     bcrypt (3.1.19)
@@ -483,6 +486,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   activerecord-postgres_enum
   acts-as-taggable-on (~> 9.0)
+  annotate
   bootsnap (>= 1.4.4)
   brakeman
   bundler-audit
