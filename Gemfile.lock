@@ -122,6 +122,7 @@ GEM
     et-orbi (1.2.7)
       tzinfo
     eventmachine (1.2.7)
+    eventmachine (1.2.7-x64-mingw32)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -136,6 +137,7 @@ GEM
     fast_excel (0.4.1)
       ffi (> 1.9, < 2)
     ffi (1.15.5)
+    ffi (1.15.5-x64-mingw32)
     formatador (1.1.0)
     fugit (1.8.1)
       et-orbi (~> 1, >= 1.2.7)
@@ -228,6 +230,8 @@ GEM
     nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    nokogiri (1.15.4-x64-mingw32)
+      racc (~> 1.4)
     nokogiri (1.15.4-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.15.4-x86_64-linux)
@@ -261,6 +265,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
+    pg (1.5.4-x64-mingw32)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -381,6 +386,8 @@ GEM
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
       ffi (~> 1.9)
+    sassc (2.4.0-x64-mingw32)
+      ffi (~> 1.9)
     sassc-rails (2.1.2)
       railties (>= 4.0.0)
       sassc (>= 2.0)
@@ -427,9 +434,12 @@ GEM
       simpleidn (~> 0.2.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2023.3)
+      tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
+    unf_ext (0.0.8.2-x64-mingw32)
     unicode-display_width (2.4.2)
     version_gem (1.1.3)
     warden (1.2.9)
@@ -462,6 +472,7 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw32
   x86_64-darwin-20
   x86_64-linux
   x86_64-linux-musl

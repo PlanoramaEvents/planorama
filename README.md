@@ -76,6 +76,15 @@ NOTE: the docker image will use the files from the project directory.
 So editing those files will affect what is running in docker (and most
 changes can be seen by refreshing the page you are working on)
 
+### Using Task
+
+If you'd rather not type out docker commands, you can use [Task](https://taskfile.dev/) instead. 
+First [install](https://taskfile.dev/installation/) it on your machine, then run `task -l` from the repo root 
+to see all commands available. There are commands for starting and stopping services, as well as for doing various
+steps in the ruby dev process like `task bundle-install` and `task migrate-dev`. All these commands are set up to
+run in the docker environment.
+
+
 ## Running tests
 
 Assuming you have your local environment going, the easiest way is to run them on docker:
