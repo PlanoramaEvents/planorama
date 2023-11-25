@@ -1618,6 +1618,40 @@ UNION
 
 
 --
+-- Name: registration_map_counts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.registration_map_counts AS
+ SELECT rsm.reg_id,
+    rsm.pid,
+    count(rsm.pid) AS sub_count
+   FROM public.registration_sync_matches rsm
+  GROUP BY rsm.reg_id, rsm.pid;
+
+
+--
+-- Name: registration_map_people_counts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.registration_map_people_counts AS
+ SELECT registration_map_counts.pid,
+    count(registration_map_counts.pid) AS count
+   FROM public.registration_map_counts
+  GROUP BY registration_map_counts.pid;
+
+
+--
+-- Name: registration_map_reg_counts; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.registration_map_reg_counts AS
+ SELECT registration_map_counts.reg_id,
+    count(registration_map_counts.reg_id) AS count
+   FROM public.registration_map_counts
+  GROUP BY registration_map_counts.reg_id;
+
+
+--
 -- Name: rooms; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2102,7 +2136,8 @@ CREATE TABLE public.surveys (
     branded boolean DEFAULT true,
     allow_submission_edits boolean DEFAULT true,
     transition_accept_status public.person_status_enum,
-    transition_decline_status public.person_status_enum
+    transition_decline_status public.person_status_enum,
+    unique_submission boolean DEFAULT true
 );
 
 
@@ -3769,6 +3804,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231030174246'),
 ('20231031141050'),
 ('20231031141408'),
-('20231101143131');
+('20231101143131'),
+('20231103133301');
 
 
