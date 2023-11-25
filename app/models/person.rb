@@ -115,8 +115,16 @@ class Person < ApplicationRecord
 
   has_and_belongs_to_many :application_roles, class_name: 'ApplicationRole'
 
-  has_many  :person_agreements
-  has_many  :agreements, through: :person_agreements
+  has_many :person_agreements
+  has_many :agreements, through: :person_agreements
+
+  has_many :registration_sync_matches, class_name: 'Registration::RegistrationSyncMatch', foreign_key: 'pid'
+
+  # Link to the sync data based on the registration systems id
+  has_one :registration_sync_datum,
+          class_name: 'RegistrationSyncDatum',
+          foreign_key: 'reg_id',
+          primary_key: 'reg_id'
 
   after_update :assigment_consistency
 

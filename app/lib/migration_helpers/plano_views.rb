@@ -11,6 +11,60 @@ module MigrationHelpers
       self.create_person_back_to_back_to_back
       self.create_availability_conflicts
       self.create_session_conflicts
+
+      # view for reg matching
+      self.create_registration_sync_matches
+      self.create_registration_map_counts
+      self.create_registration_map_reg_counts
+      self.create_registration_map_people_counts
+    end
+
+    def self.create_registration_sync_matches
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW registration_sync_matches AS
+          select p.name, null as email, p.id as pid, rsd.reg_id, rsd.id as rid, 'name' as mtype
+          from people p 
+          join registration_sync_data rsd
+          on rsd."name" ilike p.name
+          union
+          select null as name, e.email, e.person_id as pid, rsd.reg_id, rsd.id as rid, 'email' as mtype
+          from email_addresses e 
+          join registration_sync_data rsd 
+          on rsd."email" ilike e.email
+      SQL
+
+      ActiveRecord::Base.connection.execute(query)
+    end
+
+    def self.create_registration_map_counts
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW registration_map_counts AS
+          select rsm.reg_id, rsm.pid, count(rsm.pid) as sub_count 
+          from registration_sync_matches rsm 
+          group by rsm.reg_id, rsm.pid
+      SQL
+
+      ActiveRecord::Base.connection.execute(query)
+    end
+
+    def self.create_registration_map_reg_counts
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW registration_map_reg_counts AS
+          select reg_id, count(reg_id) as count from registration_map_counts
+          group by reg_id
+      SQL
+
+      ActiveRecord::Base.connection.execute(query)
+    end
+
+    def self.create_registration_map_people_counts
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW registration_map_people_counts AS
+          select pid, count(pid) as count from registration_map_counts
+          group by pid
+      SQL
+
+      ActiveRecord::Base.connection.execute(query)
     end
 
     def self.create_person_schedules
@@ -546,6 +600,22 @@ module MigrationHelpers
       SQL
       ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS person_schedules;
+      SQL
+
+      ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS registration_map_people_counts;
+      SQL
+
+      ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS registration_map_reg_counts;
+      SQL
+
+      ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS registration_map_counts;
+      SQL
+
+      ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS registration_sync_matches;
       SQL
     end
   end
