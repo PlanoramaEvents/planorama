@@ -36,6 +36,7 @@ tasks:
     deps:
       - task: quickstart
         vars: { CLI_ARGS: 'postgres' }
+      - task: build
     cmds:
       - docker-compose -f docker-compose-dev.yml run --rm --no-deps planorama bin/rails db:migrate {{.CLI_ARGS}}
   psql:

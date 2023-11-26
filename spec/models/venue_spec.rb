@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: venues
+#
+#  id           :uuid             not null, primary key
+#  address      :string
+#  lock_version :integer          default(0)
+#  name         :string
+#  sort_order   :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
 require 'rails_helper'
 
 RSpec.describe Venue, "#factories"  do
