@@ -287,7 +287,7 @@ module ResourceMethods
         key, operation, value = query
 
         col_table = if (key.include?('responses.'))
-          Arel::Table.new('survey_responses')
+                      Arel::Table.new('survey_responses')
         else
           get_table(column: key)
         end

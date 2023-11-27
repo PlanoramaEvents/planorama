@@ -49,6 +49,6 @@ class MailingSerializer
               }
 
   attribute :emails do |mailing|
-   mailing.primary_email.collect(&:email)
+    mailing.primary_email.collect(&:email)
   end
 end

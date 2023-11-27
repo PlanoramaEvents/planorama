@@ -22,7 +22,7 @@ class ScheduleWorkflowSerializer
              :created_by, :set_at, :state, :schedule_snapshot_id
 
   attribute :label do |obj|
-   obj.schedule_snapshot&.label
+    obj.schedule_snapshot&.label
   end
 
   # snapshot information

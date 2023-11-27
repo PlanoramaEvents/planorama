@@ -257,12 +257,6 @@ Layout/IndentationConsistency:
     - 'app/controllers/people/unlocks_controller.rb'
     - 'app/controllers/sessions_controller.rb'
 
-# Offense count: 113
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Width, AllowedPatterns.
-Layout/IndentationWidth:
-  Enabled: false
-
 # Offense count: 52
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowDoxygenCommentStyle, AllowGemfileRubyComment.

@@ -9,13 +9,13 @@ class People::SessionsController < Devise::SessionsController
   end
 
   private
-    def respond_with(resource, _opts = {})
-      super unless resource.id
+  def respond_with(resource, _opts = {})
+    super unless resource.id
 
-      if resource.id
-        render json: {
-          message: 'You are logged in.'
-        }, status: :ok
-      end
+    if resource.id
+      render json: {
+        message: 'You are logged in.'
+      }, status: :ok
     end
+  end
 end
