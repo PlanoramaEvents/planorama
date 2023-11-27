@@ -99,6 +99,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'rubocop'
   gem 'rubocop-rails'
+  gem 'rubocop-rspec'
   gem 'guard'
   gem 'guard-livereload'
   gem 'rack-livereload'
