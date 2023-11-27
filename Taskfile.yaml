@@ -49,3 +49,7 @@ tasks:
     desc: runs a rails console in the docker environment
     cmds:
       - docker-compose -f docker-compose-dev.yml run --rm --no-deps planorama bin/rails c
+  rubocop:
+    desc: runs rubocop commands in docker environment
+    cmds:
+      - docker-compose -f docker-compose-dev.yml run --rm --no-deps planorama bundle exec rubocop {{.CLI_ARGS}}
