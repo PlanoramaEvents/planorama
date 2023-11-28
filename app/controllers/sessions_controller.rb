@@ -12,10 +12,10 @@ class SessionsController < ResourceController
     render status: :ok, json: {}.to_json, content_type: 'application/json'
   end
 
-def has_open_for_interest
+  def has_open_for_interest
     authorize current_person, policy_class: policy_class
-    render json: {open_for_interest: Session.where(open_for_interest: true).count() > 0}
-  end
+      render json: {open_for_interest: Session.where(open_for_interest: true).count() > 0}
+    end
 
   # Mass update for the sessions (given ids and params)
   def update_all

@@ -84,6 +84,19 @@ to see all commands available. There are commands for starting and stopping serv
 steps in the ruby dev process like `task bundle-install` and `task migrate-dev`. All these commands are set up to
 run in the docker environment.
 
+### Using Rubocop
+
+Currently rubocop is only run manually. You can run it manually with either `rubocop` or `task rubocop`. Note:
+If you are on windows, and are doing rubocop autocorrect, only use the task version of the commands, otherwise 
+carriage returns will be inserted.
+
+Useful commands:
+- `task rubocop -- --autocorrect` (`task rubocop -- -a`)
+- `task rubocop -- --regenerate-todo`
+- `task rubocop`
+
+Entries in `.rubocop.todo.yml` should (over time) either be corrected or moved to `.rubocop.yml` 
+if it's a choice we want to keep.
 
 ## Running tests
 

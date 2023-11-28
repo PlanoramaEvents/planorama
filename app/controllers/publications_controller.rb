@@ -4,7 +4,7 @@ class PublicationsController < ApplicationController
   def schedule
     # use published if any otherwise use live
     sessions = if PublishedSession.count > 0
-                  SessionService.published_sessions
+                 SessionService.published_sessions
                 else
                   SessionService.live_sessions
                 end
