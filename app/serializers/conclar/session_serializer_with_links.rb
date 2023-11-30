@@ -1,4 +1,4 @@
-class Conclar::SessionSerializer < ActiveModel::Serializer
+class Conclar::SessionSerializerWithLinks < ActiveModel::Serializer
   attributes :title
 
   attribute :format do    
