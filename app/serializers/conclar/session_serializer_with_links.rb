@@ -14,7 +14,11 @@ class Conclar::SessionSerializerWithLinks < ActiveModel::Serializer
   end
 
   attribute :desc do
-    "#{object.description}<p><a href=\"#{object.integrations.dig('smofcon', 'link')}\" target=\"_blank\">Click here to view</a></p>"
+    if object.integrations
+      "#{object.description}<p><a href=\"#{object.integrations.dig('smofcon', 'link')}\" target=\"_blank\">Click here to view</a></p>"
+    else
+      object.description
+    end
   end
 
   attribute :datetime do

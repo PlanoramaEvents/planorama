@@ -28,7 +28,7 @@ class ScheduleController < ApplicationController
   # end
 
   def index
-    links = params.permit(:links)
+    links = params.permit(:links)[:links]
 
     serializer = links ? Conclar::SessionSerializerWithLinks : Conclar::SessionSerializer
     sessions = SessionService.scheduled_sessions
