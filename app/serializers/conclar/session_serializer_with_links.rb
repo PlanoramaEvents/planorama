@@ -15,7 +15,7 @@ class Conclar::SessionSerializerWithLinks < ActiveModel::Serializer
 
   attribute :desc do
     if object.integrations
-      "#{object.description}<p><a href=\"#{object.integrations.dig('smofcon', 'link')}\" target=\"_blank\">Click here to view</a></p>"
+      "#{object.description}<p><a href=\"#{object.integrations.dig('smofcon', 'link')}\" target=\"_blank\">#{object.integrations.dig('smofcon', 'text') || 'Click here to view'}</a></p>"
     else
       object.description
     end
