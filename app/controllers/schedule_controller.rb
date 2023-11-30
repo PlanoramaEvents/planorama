@@ -12,20 +12,33 @@ class ScheduleController < ApplicationController
   # 1. If prod always use the published schedule
   # 2. If staging or dev use published - if no published then use the live for testing
   # 3. cache mechanism (cache can be popultaed as part of the publish)
-  def index
-    cached = PublicationDate.order('created_at desc').first&.publish_snapshots&.schedules&.first
+  # def index_old
+  #   cached = PublicationDate.order('created_at desc').first&.publish_snapshots&.schedules&.first
 
-    if cached
-      render json: cached.snapshot, content_type: 'application/json'
-    else
-      sessions = SessionService.scheduled_sessions
-      render json: ActiveModel::Serializer::CollectionSerializer.new(
-                sessions,
-                serializer: Conclar::SessionSerializer
-              ),
-              content_type: 'application/json'
-    end
+  #   if cached
+  #     render json: cached.snapshot, content_type: 'application/json'
+  #   else
+  #     sessions = SessionService.scheduled_sessions
+  #     render json: ActiveModel::Serializer::CollectionSerializer.new(
+  #               sessions,
+  #               serializer: Conclar::SessionSerializer
+  #             ),
+  #             content_type: 'application/json'
+  #   end
+  # end
+
+  def index
+    links = params.permit(:links)
+
+    serializer = links ? Conclar::SessionSerializerWithLinks : Conclar::SessionSerializer
+    sessions = SessionService.scheduled_sessions
+    render json: ActiveModel::Serializer::CollectionSerializer.new(
+              sessions,
+              serializer: serializer
+            ),
+            content_type: 'application/json'
   end
+
 
   def participants
     participants = SessionService.scheduled_people
