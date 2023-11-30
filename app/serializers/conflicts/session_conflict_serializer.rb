@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: session_conflicts
+#
+#  conflict_session_assignment_name         :text
+#  conflict_session_duration                :integer
+#  conflict_session_start_time              :datetime
+#  conflict_session_title                   :string
+#  conflict_type                            :text
+#  person_name                              :string
+#  person_published_name                    :string
+#  session_assignment_name                  :string
+#  session_duration                         :integer
+#  session_start_time                       :datetime
+#  session_title                            :string(256)
+#  conflict_id                              :text             primary key
+#  conflict_session_assignment_role_type_id :uuid
+#  conflict_session_id                      :uuid
+#  person_id                                :uuid
+#  room_id                                  :uuid
+#  session_assignment_id                    :uuid
+#  session_assignment_role_type_id          :uuid
+#  session_id                               :uuid
+#
 class Conflicts::SessionConflictSerializer
   include JSONAPI::Serializer
 

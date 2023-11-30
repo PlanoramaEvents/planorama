@@ -76,6 +76,9 @@ GEM
       activerecord (>= 6.0, < 7.1)
     addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
+    annotate (3.2.0)
+      activerecord (>= 3.2, < 8.0)
+      rake (>= 10.4, < 14.0)
     ast (2.4.2)
     base64 (0.1.1)
     bcrypt (3.1.19)
@@ -122,6 +125,7 @@ GEM
     et-orbi (1.2.7)
       tzinfo
     eventmachine (1.2.7)
+    eventmachine (1.2.7-x64-mingw32)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -136,6 +140,7 @@ GEM
     fast_excel (0.4.1)
       ffi (> 1.9, < 2)
     ffi (1.15.5)
+    ffi (1.15.5-x64-mingw32)
     formatador (1.1.0)
     fugit (1.8.1)
       et-orbi (~> 1, >= 1.2.7)
@@ -228,6 +233,8 @@ GEM
     nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    nokogiri (1.15.4-x64-mingw32)
+      racc (~> 1.4)
     nokogiri (1.15.4-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.15.4-x86_64-linux)
@@ -261,6 +268,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
+    pg (1.5.4-x64-mingw32)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -370,6 +378,18 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.29.0)
       parser (>= 3.2.1.0)
+    rubocop-capybara (2.19.0)
+      rubocop (~> 1.41)
+    rubocop-factory_bot (2.24.0)
+      rubocop (~> 1.33)
+    rubocop-rails (2.22.1)
+      activesupport (>= 4.2.0)
+      rack (>= 1.1)
+      rubocop (>= 1.33.0, < 2.0)
+    rubocop-rspec (2.25.0)
+      rubocop (~> 1.40)
+      rubocop-capybara (~> 2.17)
+      rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     ruby_audit (2.2.0)
@@ -380,6 +400,8 @@ GEM
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
+      ffi (~> 1.9)
+    sassc (2.4.0-x64-mingw32)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
       railties (>= 4.0.0)
@@ -427,9 +449,12 @@ GEM
       simpleidn (~> 0.2.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2023.3)
+      tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
+    unf_ext (0.0.8.2-x64-mingw32)
     unicode-display_width (2.4.2)
     version_gem (1.1.3)
     warden (1.2.9)
@@ -462,6 +487,7 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw32
   x86_64-darwin-20
   x86_64-linux
   x86_64-linux-musl
@@ -472,6 +498,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   activerecord-postgres_enum
   acts-as-taggable-on (~> 9.0)
+  annotate
   bootsnap (>= 1.4.4)
   brakeman
   bundler-audit
@@ -513,6 +540,8 @@ DEPENDENCIES
   rspec
   rspec-rails
   rubocop
+  rubocop-rails
+  rubocop-rspec
   ruby_audit
   sass-rails (>= 6)
   seedbank

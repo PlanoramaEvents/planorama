@@ -1,5 +1,14 @@
-# This uses a View to of the potential map from
-# reg to people using names and/or email
+# == Schema Information
+#
+# Table name: registration_sync_matches
+#
+#  email  :string
+#  mtype  :text             primary key
+#  name   :string
+#  pid    :uuid
+#  rid    :uuid             primary key
+#  reg_id :string
+#
 class Registration::RegistrationSyncMatch < ApplicationRecord
   self.table_name = :registration_sync_matches
   self.primary_keys = :rid, :mtype

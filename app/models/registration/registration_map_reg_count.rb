@@ -1,7 +1,10 @@
-# 
-# Count of how many matches there are per reg id based on the map_reg count
-#  if > 1 then there are multiple potential reg data mapped to same person
-# 
+# == Schema Information
+#
+# Table name: registration_map_reg_counts
+#
+#  count  :bigint
+#  reg_id :string           primary key
+#
 class Registration::RegistrationMapRegCount < ApplicationRecord
   self.table_name = :registration_map_reg_counts
   self.primary_keys = :reg_id

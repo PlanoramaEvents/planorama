@@ -4,12 +4,12 @@
       <div class="w-50 mr-2">
         <h5>Demographics <edit-button v-b-modal.person-demo-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
         <dl-person :fields="demoFields" v-if="showDemoAndCommunity"></dl-person>
-        <div v-else>Comming Soon</div>
+        <div v-else>Coming Soon</div>
       </div>
       <div class="w-50">
         <h5>Community memberships <edit-button v-b-modal.person-community-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
         <dl-person :fields="communityFields" v-if="showDemoAndCommunity"></dl-person>
-        <div v-else>Comming Soon</div>
+        <div v-else>Coming Soon</div>
       </div>
     </div>
     <person-edit-modal id="person-demo-modal" :person="selected" :data="demoData" :validate="true">

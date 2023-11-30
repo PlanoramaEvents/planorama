@@ -30,7 +30,7 @@
         <template #can_stream-val>{{can_stream_label}}</template>
         <template #can_record-val>{{can_record_label}}</template>
       </dl-person>
-      <div v-else>Comming Soon</div>
+      <div v-else>Coming Soon</div>
     </div>
     <div class="d-flex flex-column w-50 p-2">
       <div v-if="eventVirtual && readOnly">

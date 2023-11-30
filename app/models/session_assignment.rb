@@ -1,21 +1,30 @@
-## schema
-# CREATE TABLE public.session_assignments (
-#     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-#     person_id uuid NOT NULL,
-#     created_at timestamp without time zone NOT NULL,
-#     updated_at timestamp without time zone NOT NULL,
-#     lock_version integer DEFAULT 0,
-#     session_assignment_role_type_id uuid NOT NULL,
-#     session_id uuid NOT NULL,
-#     sort_order integer,
-#     visibility public.visibility_enum DEFAULT 'public'::public.visibility_enum,
-#     interested boolean DEFAULT false,
-#     interest_ranking integer,
-#     interest_notes text,
-#     interest_role_type uuid,
-#     state character varying,
-#     planner_notes text
-# );
+# == Schema Information
+#
+# Table name: session_assignments
+#
+#  id                              :uuid             not null, primary key
+#  interest_notes                  :text
+#  interest_ranking                :integer
+#  interest_role                   :enum             default("no_preference")
+#  interested                      :boolean          default(FALSE)
+#  lock_version                    :integer          default(0)
+#  planner_notes                   :text
+#  sort_order                      :integer
+#  state                           :string
+#  visibility                      :enum             default("is_public")
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  person_id                       :uuid             not null
+#  session_assignment_role_type_id :uuid
+#  session_id                      :uuid             not null
+#
+# Indexes
+#
+#  index_session_assignments_on_interest_role                    (interest_role)
+#  index_session_assignments_on_session_assignment_role_type_id  (session_assignment_role_type_id)
+#  pia_person_index                                              (person_id)
+#  pis_prog_item_id_index                                        (session_id)
+#
 class SessionAssignment < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: [:session_id]

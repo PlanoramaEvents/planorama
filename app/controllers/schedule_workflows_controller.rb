@@ -18,11 +18,11 @@ class ScheduleWorkflowsController < ResourceController
   # ie on save
   def before_save
     @snapshot = if @object.state == 'draft'
-                 ScheduleSnapshot.create!(
-                   label: 'draft',
-                   created_by: current_person.name,
-                   started_at: Time.now
-                 )
+                  ScheduleSnapshot.create!(
+                    label: 'draft',
+                    created_by: current_person.name,
+                    started_at: Time.now
+                  )
                end
 
     @object.created_by = current_person.name

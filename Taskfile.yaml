@@ -1,0 +1,55 @@
+version: '3'
+
+tasks:
+  build:
+    desc: build the planorama container
+    cmds:
+      - docker-compose -f docker-compose-dev.yml build planorama
+  quickstart:
+    desc: 'start docker services without any building. Call as
+    task quickstart -- service_name to start just one service'
+    cmds:
+      - docker-compose -f docker-compose-dev.yml up -d {{.CLI_ARGS}}
+  start:
+    desc: 'build and start docker services. Use as
+    task start -- service_name
+    to start a specific service'
+    cmds:
+      - docker-compose -f docker-compose-dev.yml up --build -d {{.CLI_ARGS}}
+  restart:
+    desc: 'use without arguments to restart all services, or call as
+      task restart -- service_name
+      to restart a specific service'
+    cmds:
+      - docker-compose -f docker-compose-dev.yml restart {{.CLI_ARGS}}
+  stop:
+    desc: 'use without arguments to stop all services, or call as
+    task stop -- service_name to stop a specific service'
+    cmds:
+      - docker-compose -f docker-compose-dev.yml down {{.CLI_ARGS}}
+  bundle-install:
+    desc: runs bundle install in a docker container
+    cmds:
+      - docker-compose -f docker-compose-dev.yml run --rm --no-deps planorama bundle install
+  migrate-dev:
+    desc: Applies any new migrations to dev database
+    deps:
+      - task: quickstart
+        vars: { CLI_ARGS: 'postgres' }
+      - task: build
+    cmds:
+      - docker-compose -f docker-compose-dev.yml run --rm --no-deps planorama bin/rails db:migrate {{.CLI_ARGS}}
+  psql:
+    desc: gives you a psql shell against the running dev database
+    dotenv:
+      - '.envrc'
+    cmds:
+      - docker-compose -f docker-compose-dev.yml exec postgres psql -U $POSTGRES_USER -d planorama_development
+  rails-console:
+    desc: runs a rails console in the docker environment
+    cmds:
+      - docker-compose -f docker-compose-dev.yml run --rm --no-deps planorama bin/rails c
+  rubocop:
+    desc: runs rubocop commands in docker environment
+    cmds:
+      - docker-compose -f docker-compose-dev.yml run --rm --no-deps planorama bundle exec rubocop {{.CLI_ARGS}}
