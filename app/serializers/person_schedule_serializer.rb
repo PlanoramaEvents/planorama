@@ -1,3 +1,32 @@
+# == Schema Information
+#
+# Table name: person_schedules
+#
+#  id                              :text             primary key
+#  can_share                       :boolean
+#  con_state                       :enum
+#  description                     :text
+#  duration                        :integer
+#  end_time                        :datetime
+#  environment                     :enum
+#  name                            :string
+#  participant_notes               :text
+#  pronouns                        :string(400)
+#  published_name                  :string
+#  session_assignment_name         :string(100)
+#  session_assignment_role_type    :enum
+#  sort_order                      :integer
+#  start_time                      :datetime
+#  status                          :enum
+#  title                           :string(256)
+#  updated_at                      :datetime
+#  format_id                       :uuid
+#  person_id                       :uuid
+#  room_id                         :uuid
+#  session_assignment_id           :uuid
+#  session_assignment_role_type_id :uuid
+#  session_id                      :uuid
+#
 class PersonScheduleSerializer
 
   include JSONAPI::Serializer

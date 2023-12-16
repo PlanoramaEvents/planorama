@@ -8,6 +8,7 @@ on:
       - staging
       - development
       - g24-patch
+      - smofcon40
     tags:
       - 'v*'
   workflow_dispatch:

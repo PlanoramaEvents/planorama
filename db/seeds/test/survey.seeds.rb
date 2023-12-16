@@ -54,21 +54,24 @@ after "test:person" do
     question_type: :textfield,
     text_size: Faker::Number.between(from: 11, to: 16),
     horizontal: Faker::Boolean.boolean,
-    page_id: survey_page.id
+    page_id: survey_page.id,
+    sort_order: 0
   )
   survey_question2 = Survey::Question.create(
     question: "What is your quest?",
     question_type: :textfield,
     text_size: Faker::Number.between(from: 11, to: 16),
     horizontal: Faker::Boolean.boolean,
-    page_id: survey_page.id
+    page_id: survey_page.id,
+    sort_order: 1
   )
   survey_question3 = Survey::Question.create(
     question: "What is the air speed velocity of an unladen swallow?",
     question_type: :singlechoice,
     text_size: Faker::Number.between(from: 11, to: 16),
     horizontal: Faker::Boolean.boolean,
-    page_id: survey_page2.id
+    page_id: survey_page2.id,
+    sort_order: 2
   )
   Survey::Answer.create(
     question_id: survey_question3.id,
@@ -124,21 +127,24 @@ after "test:person" do
     question_type: :textbox,
     text_size: Faker::Number.between(from: 11, to: 16),
     horizontal: Faker::Boolean.boolean,
-    page_id: survey_page.id
+    page_id: survey_page.id,
+    sort_order: 0
   )
   survey_question2 = Survey::Question.create(
     question: "Are your pants on fire?",
     question_type: :textfield,
     text_size: Faker::Number.between(from: 11, to: 16),
     horizontal: Faker::Boolean.boolean,
-    page_id: survey_page.id
+    page_id: survey_page.id,
+    sort_order: 1
   )
   survey_question3 = Survey::Question.create(
     question: "What is the meaning of life?",
     question_type: :multiplechoice,
     text_size: Faker::Number.between(from: 11, to: 16),
     horizontal: Faker::Boolean.boolean,
-    page_id: survey_page2.id
+    page_id: survey_page2.id,
+    sort_order: 20
   )
   Survey::Answer.create(
     question_id: survey_question3.id,
@@ -191,7 +197,8 @@ after "test:person" do
         question_type: question_type,
         text_size: Faker::Number.between(from: 11, to: 16),
         horizontal: Faker::Boolean.boolean,
-        page_id: survey_page.id
+        page_id: survey_page.id,
+        sort_order: 0
       )
       case
       when :singlechoice, :multiplechoice, :dropdown

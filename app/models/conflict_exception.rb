@@ -1,4 +1,18 @@
-# require 'planner_utils'
+# == Schema Information
+#
+# Table name: conflict_exceptions
+#
+#  id            :uuid             not null, primary key
+#  affected      :integer
+#  conflict_type :string
+#  idx           :bigint
+#  lock_version  :integer          default(0)
+#  note          :text
+#  src1          :integer
+#  src2          :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
 class ConflictException < ApplicationRecord
   validates_inclusion_of :conflict_type,
                          in: %i[schedule room item avail time back2back]

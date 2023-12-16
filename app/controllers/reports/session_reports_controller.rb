@@ -382,15 +382,15 @@ class Reports::SessionReportsController < ApplicationController
     )
 
     people.each do |person|
-    worksheet.append_row(
-      [
-        person.name,
-        person.published_name,
-        person.con_state,
-        person.attendance_type,
-        person.bio
-      ]
-    )
+      worksheet.append_row(
+        [
+          person.name,
+          person.published_name,
+          person.con_state,
+          person.attendance_type,
+          person.bio
+        ]
+      )
     end
 
     send_data workbook.read_string,
