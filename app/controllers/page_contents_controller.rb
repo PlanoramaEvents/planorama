@@ -9,3 +9,5 @@ class PageContentsController < ResourceController
     false
   end
 end
+
+# TODO: check delete

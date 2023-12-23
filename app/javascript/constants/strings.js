@@ -286,6 +286,8 @@ module.exports = {
 
     PAGE_CONTENT_SAVE_SUCCESS: "Page content saved successfully", 
     PAGE_CONTENT_SAVE_ERROR: "Page content save failed",
+    PAGE_CONTENT_SUCCESS_DELETE: "Page content successfully deleted.",
+    PAGE_CONTENT_ERROR_DELETE: errorMessage("Page content failed to be deleted."),
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
