@@ -4,6 +4,12 @@ module UrlService
     host = ENV["HOSTNAME"]
     port = ENV["HOSTPORT"]
 
+    # Remove any slash from the start of the path if there happens to be one
+    # as we add one when building the URL with the protocol and host
+    if path.start_with?("/")
+      path = path[1..-1]
+    end
+
     if port
       "#{protocol}://#{host}:#{port}/#{path}"
     else
