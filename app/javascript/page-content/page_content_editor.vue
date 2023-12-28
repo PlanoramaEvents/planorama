@@ -11,7 +11,7 @@
   ></plano-editor>
   <!-- TODO - do we want a delete? -->
   <b-button variant="primary" @click="saveContent">Save</b-button>
-
+  <b-button variant="secondary" @click="clearContent">Reset To Default</b-button>
 </div>
 </template>
 
@@ -56,6 +56,14 @@ export default {
         name: '',
         html: ''
       }
+    },
+    clearContent() {
+      console.debug("**** DELETE", this.content)
+      this.deletePageContent(this.content).then(
+        () => {
+          this.content = this.starter_content()
+        }
+      );
     },
     saveContent() {
       let res = this.savePageContent(this.content);
