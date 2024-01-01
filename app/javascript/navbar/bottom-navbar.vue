@@ -35,6 +35,7 @@ footer {
   position: absolute;
   bottom: 0px;
   padding: 10px;
+  z-index: 3000;
 
   a {
     color: white;
