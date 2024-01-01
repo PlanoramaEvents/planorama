@@ -266,6 +266,8 @@ module.exports = {
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
+    PERSON_DISABLED_LINK: "You can only link your own registration",
+    PERSON_DISABLED_UNLINK: "You can only unlink your own registration",
     PERSON_CON_STATE: {
         not_set: "Not Set",
         applied: "Applied",
