@@ -58,13 +58,13 @@ class SurveysController < ResourceController
       # :created_by,
       # :updated_by,
       # :published_by,
-      :assigned_people
+      # :assigned_people
     ]
   end
 
   def references
     [
-      :assigned_people,
+      # :assigned_people,
       :submissions
     ]
   end
