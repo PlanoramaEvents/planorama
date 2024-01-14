@@ -140,6 +140,21 @@ export const session_columns = [
     choices: [{label: 'Visible', value: 'public'}, {label: 'Not Visible', value: 'private'}],
     sortable: true,
     sortKey: 'visibility'
+  },
+  {
+    key: 'created_at',
+    label: 'Date Created',
+    sortable: false
+  },
+  {
+    key: 'updated_at',
+    label: 'Date Updated',
+    sortable: false
+  },
+  {
+    key: 'updated_by',
+    label: 'Updated By',
+    sortable: false
   }
 ];
 //
