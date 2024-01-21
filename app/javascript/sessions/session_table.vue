@@ -62,6 +62,20 @@
         </span>
       </template>
       <!-- placeholder cols -->
+      <template #cell(created_at)="{ item }">
+        <span v-if="item.created_at">
+          <tooltip-overflow :title="formatLocaleDate(item.created_at)">
+            {{ formatLocaleDate(item.created_at) }}
+          </tooltip-overflow>
+        </span>
+      </template>
+      <template #cell(updated_at)="{ item }">
+        <span v-if="item.updated_at">
+          <tooltip-overflow :title="formatLocaleDate(item.updated_at)">
+            {{ formatLocaleDate(item.updated_at) }}
+          </tooltip-overflow>
+        </span>
+      </template>
       <template #cell(publish)>
         <div class="text-center text-muted">&mdash;</div>
       </template>
