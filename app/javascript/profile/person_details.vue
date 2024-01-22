@@ -65,7 +65,7 @@
             <a target="blank" href="https://www.timeanddate.com/worldclock/meeting.html">
               https://www.timeanddate.com/worldclock/meeting.html
             </a>
-            and check by specifying the date of September 1 2022 and your location as well as UTC/GMT
+            and check by specifying the date of the convention and your location as well as UTC/GMT
           </small>
         </b-form-group>
       </div>
