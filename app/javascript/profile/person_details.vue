@@ -5,7 +5,7 @@
         <h5>Identity</h5>
         <div class="d-flex justify-content-between">
           <dl-person :fields="['name', 'pseudonym']"></dl-person>
-          <registration-link></registration-link>
+          <registration-link v-if="!readOnly"></registration-link>
         </div>
       </div>
       <div v-if="readOnly">

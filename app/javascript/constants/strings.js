@@ -1,7 +1,7 @@
 const twoLines = (line1, line2) => (h) =>  h('p', {}, [line1, h('br'), line2]);
 const errorMessage = (message) => (errorCode) => twoLines(message, `Error code: ${errorCode}`);
 const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`;
-const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []))
+const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []));
 
 module.exports = {
     // login page
@@ -266,6 +266,12 @@ module.exports = {
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
+    PERSON_DISABLED_LINK: "You can only link your own registration",
+    PERSON_DISABLED_UNLINK: "You can only unlink your own registration",
+    PERSON_UNLINK_SUCCESS: "Your registration account has been unlinked.",
+    PERSON_UNLINK_FAILURE: errorMessage("Something went wrong while unlinking your registration account."),
+    PERSON_UNLINK_CONFIRMATION_1: "This will unlink your registration account from your Planorama account. It will not remove your data from other convention systems. If you later choose to log in using your registration account, this link will be reestablished.",
+    PERSON_UNLINK_CONFIRMATION_2: "Are you sure you want to do this action?",
     PERSON_CON_STATE: {
         not_set: "Not Set",
         applied: "Applied",
