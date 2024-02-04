@@ -52,8 +52,8 @@ class PeopleController < ResourceController
     person = Person.find params[:person_id]
 
     raise "No such person" unless person
-    # Remove the Oauth identity
-    person.oauth_identities.delete_all
+    # Remove the Oauth identity - needs to be destroy to remove the record
+    person.oauth_identities.destroy_all
     # But we want to keep the Reg info if there is any
     # for admin and planners to see (not speakers)
 
