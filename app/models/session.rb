@@ -173,7 +173,8 @@ class Session < ApplicationRecord
   }
 
   # acts_as_taggable
-  acts_as_taggable_on :tags
+  acts_as_taggable_on :tags # for public consumption
+  acts_as_taggable_on :labels # for admin use
 
   # TODO: need to add required setup (allowed to be null)
 

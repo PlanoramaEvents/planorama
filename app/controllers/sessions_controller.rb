@@ -176,6 +176,18 @@ class SessionsController < ResourceController
            content_type: 'application/json'
   end
 
+  def labels
+    res = Session.tags_on(:labels).order(:name)
+
+    render json: TagSerializer.new(res,
+      {
+        # include: serializer_includes,
+        params: {domain: "#{request.base_url}"}
+      }
+    ).serializable_hash(),
+    content_type: 'application/json'
+  end
+
   def before_update
     # if time or room have changed removed ignored conflicts
     p = _permitted_params(model: object_name, instance: @object)
@@ -207,7 +219,8 @@ class SessionsController < ResourceController
     [
       :format,
       :room,
-      :base_tags
+      :tags,
+      :labels
     ]
   end
 
@@ -318,6 +331,7 @@ class SessionsController < ResourceController
       open_for_interest
       instructions_for_interest
       tag_list
+      label_list
       session_areas_attributes
       proofed
       format_id
@@ -330,8 +344,5 @@ class SessionsController < ResourceController
       recorded
       streamed
     ]
-    # Tags
-    # format
-    # areas
   end
 end

@@ -93,8 +93,8 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12">
-        <b-form-group label="Attendee Signup Required" class="form-inline my-4">
+      <div class="col-6">
+        <b-form-group label="Attendee Signup Required" class="form-inline mb-4">
           <span>No</span>
           <b-form-checkbox  id="session-attendee-signup-req" inline switch v-model="session.require_signup" @change="saveSession()">Yes</b-form-checkbox>
           <label :class="['ml-2', {'text-muted': !session.require_signup}]">If yes, max openings:
@@ -113,12 +113,30 @@
           </label>
         </b-form-group>
       </div>
+      <div class="col-6">
+        <tag-display 
+          v-model="session.tag_list"
+          label="Public Tags"
+          color="secondary"
+          @input="saveSession()"
+          :modalOptions="sessionTagsOptions"
+        ></tag-display>
+      </div>
     </div>
     <div class="row">
-      <div class="col-12">
+      <div class="col-6">
         <b-form-group label="Attendee Age Restrictions">
           <b-form-radio-group id="session-age-restriction" stacked name="age_restriction" :options="ageRestrictionOptions" v-model="session.age_restriction_id" @change="saveSession()"></b-form-radio-group>
         </b-form-group>
+      </div>
+      <div class="col-6">
+        <tag-display
+          v-model="session.label_list"
+          label="Admin Labels"
+          color="warning"
+          @input="saveSession()"
+          :modalOptions="sessionLabelsOptions"
+        ></tag-display>
       </div>
     </div>
     <div class="row">
@@ -171,6 +189,8 @@ import { min_value } from 'vee-validate/dist/rules'
 import { SESSION_ENVIRONMENT } from '@/constants/strings'
 import {minorsParticipationMixin} from './minors_participation.mixin';
 import { ageRestrictionMixin } from './age_restriction.mixin';
+import TagDisplay from './tag_display.vue';
+import { tagsMixin } from '@/store/tags.mixin';
 
 extend('min_value', {
   ...min_value,
@@ -183,12 +203,14 @@ export default {
     ModelSelect,
     ModelTags,
     PlanoEditor,
-    ValidationProvider
+    ValidationProvider,
+    TagDisplay
   },
   mixins: [
     modelUtilsMixin,
     minorsParticipationMixin,
-    ageRestrictionMixin
+    ageRestrictionMixin,
+    tagsMixin,
   ],
   data: () => ({
     editable: false,
@@ -199,14 +221,14 @@ export default {
     session() {
       return this.selected_model(sessionModel)
     },
-    session_tags: {
-      get() {
-        return this.session.tag_list
-      },
-      set(val) {
-        this.session.tag_list = val
-      }
-    },
+    // session_tags: {
+    //   get() {
+    //     return this.session.tag_list
+    //   },
+    //   set(val) {
+    //     this.session.tag_list = val
+    //   }
+    // },
     session_areas: {
       get() {
         let res = Object.values(this.session.session_areas).filter(

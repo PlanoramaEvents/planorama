@@ -43,6 +43,22 @@ export const session_columns = [
     operators: ['is','is not', 'is empty','is not empty'],
   },
   {
+    key: 'tag_list',
+    label: 'Public Tags',
+    sortKey: 'tags.name',
+    sortable: true,
+    formatter: (value) => value && value.length ? value.join(", ") : value,
+    operators: ['is','is not', 'is only', 'is not only', 'is empty','is not empty'],
+  },
+  {
+    key: 'label_list',
+    label: 'Admin Labels',
+    sortKey: 'labels.name',
+    sortable: true,
+    formatter: (value) => value && value.length ? value.join(", ") : value,
+    operators: ['is','is not', 'is only', 'is not only', 'is empty','is not empty'],
+  },
+  {
     key: 'start_time',
     sortKey: 'sessions.start_time',
     label: 'Start Time',

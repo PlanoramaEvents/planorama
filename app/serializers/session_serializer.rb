@@ -72,7 +72,13 @@ class SessionSerializer
 
   # tag_list
   attribute :tag_list do |session|
-    session.base_tags.collect(&:name)
+    # session.base_tags.collect(&:name)
+    session.tag_list
+  end
+
+  # TODO henry is this right??
+  attribute :label_list do |session|
+    session.label_list
   end
 
   attribute :area_list do |session|
