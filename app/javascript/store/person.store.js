@@ -4,6 +4,7 @@ import { GET_SESSION_USER } from './person_session.store';
 export const NEW_PERSON = 'NEW PERSON';
 export const PATCH_PERSON_MODEL = 'PATCH_PERSON_MODEL';
 export const UNLINK_PERSON = 'UNLINK PERSON';
+export const RESYNC_PERSON = 'RESYNC PERSON';
 
 export const personModel = 'person';
 
@@ -43,6 +44,26 @@ export const personStore = {
           dispatch(GET_SESSION_USER, {force: true}).then(() => {
             res(savedModel);
           });
+        }).catch(rej);
+      });
+    },
+    [RESYNC_PERSON]({ dispatch, commit }, { person }) {
+      const model = personModel;
+      // limited field selection
+      let smallItem = {
+        // always include lock version so that we have optimistic locking
+        lock_version: person.lock_version,
+        id: person.id,
+        _jv: {
+          type: model,
+          id: person.id
+        }
+      }
+      return new Promise((res, rej) => {
+        dispatch('jv/post', [smallItem, { url: `/person/${person.id}/clyde_sync` }]).then((savedModel) => {
+          // person should always be selected at this point so we shouldn't check, we should just select.
+          commit(SELECT, { model, itemOrId: savedModel });
+          // This is done by admin to selected user so this is not the session user
         }).catch(rej);
       });
     }

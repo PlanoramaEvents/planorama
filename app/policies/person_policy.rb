@@ -71,6 +71,10 @@ class PersonPolicy < PlannerPolicy
     allowed?(action: :mailed_surveys)
   end
 
+  def clyde_sync?
+    allowed?(action: :clyde_sync)
+  end
+
   def resync_airmeet?
     allowed?(action: :resync_airmeet)
   end
