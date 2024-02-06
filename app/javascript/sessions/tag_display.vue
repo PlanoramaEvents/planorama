@@ -61,7 +61,7 @@ export default {
     },
     mutableValue: {
       get() {
-        return this.imutableValue.length ? this.imutableValue : [...this.value]
+        return this.imutableValue;
       },
       set(val) {
         this.imutableValue = val;
@@ -72,6 +72,10 @@ export default {
     clearValue() {
       this.imutableValue = []
     }
+  },
+  mounted() {
+    // Initialize here works better that trying to do something in get
+    this.imutableValue = this.value
   }
 }
 </script>

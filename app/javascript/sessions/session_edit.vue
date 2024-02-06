@@ -30,21 +30,6 @@
             @change="saveSession()"
           ></model-select>
         </b-form-group>
-        <!--
-        <b-form-group
-          label="Tags"
-        >
-          <model-tags
-            :taggable="true"
-            v-model="session_tags"
-            model="tag"
-            field="name"
-            fieldOnly=true
-            filter='{"op":"all","queries":[["taggings.taggable_type", "=", "Session"]]}'
-            disabled
-          ></model-tags>
-        </b-form-group>
-        -->
       </div>
       <div class="col-6">
         <b-form-group
@@ -221,14 +206,6 @@ export default {
     session() {
       return this.selected_model(sessionModel)
     },
-    // session_tags: {
-    //   get() {
-    //     return this.session.tag_list
-    //   },
-    //   set(val) {
-    //     this.session.tag_list = val
-    //   }
-    // },
     session_areas: {
       get() {
         let res = Object.values(this.session.session_areas).filter(
