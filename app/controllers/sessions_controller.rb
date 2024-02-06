@@ -240,11 +240,13 @@ class SessionsController < ResourceController
 
   def array_col?(col_name:)
     return true if col_name == 'area_list'
+    return true if col_name = 'tags_list'
     false
   end
 
   def array_table(col_name:)
     return 'areas_list' if col_name == 'area_list'
+    return 'tags_list_table' if col_name = 'tags_list'
     false
   end
 
@@ -252,12 +254,20 @@ class SessionsController < ResourceController
     sessions = Arel::Table.new(Session.table_name)
 
     subquery = Session.area_list.as('areas_list')
+    tags_subquery = Session.tags_list_table.as('tags_list')
     conflict_counts = Session.conflict_counts.as('conflict_counts')
     joins = [
       sessions.create_join(
         subquery,
         sessions.create_on(
           subquery[:session_id].eq(sessions[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      ),
+      sessions.create_join(
+        tags_subquery,
+        sessions.create_on(
+          tags_subquery[:session_id].eq(sessions[:id])
         ),
         Arel::Nodes::OuterJoin
       ),

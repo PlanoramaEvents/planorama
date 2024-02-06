@@ -204,9 +204,36 @@ class Session < ApplicationRecord
     session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
     areas = Arel::Table.new(Area.table_name)
 
-    sessions.project(sessions[:id].as('session_id'), area_aggregate_fn( areas[:name] ).as('area_list'))
+    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( areas[:name] ).as('area_list'))
       .join(session_areas, Arel::Nodes::OuterJoin).on(sessions[:id].eq(session_areas[:session_id]))
       .join(areas, Arel::Nodes::OuterJoin).on(session_areas[:area_id].eq(areas[:id]))
+      .group('sessions.id')
+  end
+
+  def self.tags_list_table
+    sessions = Session.arel_table
+    taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
+    tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
+
+    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( tags[:name] ).as('tags_list'))
+      .join(
+        taggings,
+        Arel::Nodes::OuterJoin
+      ).on(sessions[:id].eq(taggings[:taggable_id]).and(taggings[:taggable_type].eq('Session')))
+      .join(tags, Arel::Nodes::OuterJoin).on(taggings[:tag_id].eq(tags[:id]))
+      .where(taggings[:context].eq('tags'))
+      .group('sessions.id')
+  end
+
+  def self.labels_list_table
+    sessions = Session.arel_table
+    taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
+    tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
+
+    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( tags[:name] ).as('labels_list'))
+      .join(taggings, Arel::Nodes::OuterJoin).on(sessions[:id].eq(taggings[:taggable_id]).and(taggings[:taggable_type].eq('Session')))
+      .join(tags, Arel::Nodes::OuterJoin).on(taggings[:tag_id].eq(tags[:id]))
+      .where(taggings[:context].eq('labels'))
       .group('sessions.id')
   end
 
@@ -251,7 +278,7 @@ class Session < ApplicationRecord
     .group('sessions.id')
   end
 
-  def self.area_aggregate_fn(col)
+  def self.array_aggregate_fn(col)
     Arel::Nodes::NamedFunction.new('array_remove',[Arel::Nodes::NamedFunction.new('array_agg',[col]), Arel::Nodes::SqlLiteral.new("NULL")])
   end
 
