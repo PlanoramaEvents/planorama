@@ -116,9 +116,9 @@
       <div class="col-6">
         <tag-display 
           v-model="session.tag_list"
+          @input="saveSession()"
           label="Public Tags"
           color="secondary"
-          @input="saveSession()"
           :modalOptions="sessionTagsOptions"
         ></tag-display>
       </div>
@@ -132,9 +132,9 @@
       <div class="col-6">
         <tag-display
           v-model="session.label_list"
+          @input="saveSession()"
           label="Admin Labels"
           color="warning"
-          @input="saveSession()"
           :modalOptions="sessionLabelsOptions"
         ></tag-display>
       </div>

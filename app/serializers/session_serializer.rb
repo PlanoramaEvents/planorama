@@ -106,6 +106,10 @@ class SessionSerializer
     end
   end
 
+  attribute :is_published do |session|
+    session.published?
+  end
+
   has_many :session_areas, lazy_load_data: true, serializer: SessionAreaSerializer,
           links: {
             self: -> (object, params) {
