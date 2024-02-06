@@ -218,23 +218,23 @@ class SessionsController < ResourceController
   def includes
     [
       :format,
-      :room,
-      :tags,
-      :labels
+      :room
     ]
   end
 
   def references
     [
       :format,
-      :room,
+      :room
     ]
   end
 
   def eager_load
     [
       {session_areas: :area},
-      :areas
+      :areas,
+      :published_session,
+      {taggings: :tag}
     ]
   end
 

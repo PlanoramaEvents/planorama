@@ -70,15 +70,13 @@ class SessionSerializer
              :minors_participation, :age_restriction_id,
              :recorded, :streamed
 
-  # tag_list
+  # NOTE: session.tag_list would work, but if we prefetch taggings and tags this is faster (less DB queries)
   attribute :tag_list do |session|
-    # session.base_tags.collect(&:name)
-    session.tag_list
+    session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name)
   end
 
-  # TODO henry is this right??
   attribute :label_list do |session|
-    session.label_list
+    session.taggings.select{|t| t.context == 'labels'}.collect(&:tag).collect(&:name)
   end
 
   attribute :area_list do |session|
