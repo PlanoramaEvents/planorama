@@ -3,6 +3,9 @@ import AreaSelectForSearch from './area_select_for_search'
 import FormatSelectForSearch from './format_select_for_search'
 import RoomSelectForSearch from './room_select_for_search'
 
+import TagsSelectForSearch from './tags_select_for_search'
+import LabelsSelectForSearch from './labels_select_for_search'
+
 export const session_columns = [
   // {
   //   key: 'id'
@@ -48,8 +51,8 @@ export const session_columns = [
     sortable: true,
     sortKey: 'tags_list_table.tags_array',
     search_key: 'tags_list_table.tags_array',
-    // component: TagsSelectForSearch,
-    // type: 'custom-component',
+    component: TagsSelectForSearch,
+    type: 'custom-component',
     operators: ['is', 'is not', 'is only', 'is not only', 'is empty', 'is not empty'],
     formatter: (value) => value && value.length ? value.join(", ") : value
   },
@@ -57,10 +60,10 @@ export const session_columns = [
     key: 'label_list',
     label: 'Admin Labels',
     sortable: true,
-    sortKey: 'labels_array',
-    search_key: 'labels_array',
-    // component: LabelsSelectForSearch,
-    // type: 'custom-component',
+    sortKey: 'labels_list_table.labels_array',
+    search_key: 'labels_list_table.labels_array',
+    component: LabelsSelectForSearch,
+    type: 'custom-component',
     operators: ['is', 'is not', 'is only', 'is not only', 'is empty', 'is not empty'],
     formatter: (value) => value && value.length ? value.join(", ") : value
   },

@@ -240,15 +240,15 @@ class SessionsController < ResourceController
 
   def array_col?(col_name:)
     return true if col_name == 'area_list'
-    return true if col_name = 'tags_array'
-    return true if col_name = 'labels_array'
+    return true if col_name == 'tags_array'
+    return true if col_name == 'labels_array'
     false
   end
 
   def array_table(col_name:)
     return 'areas_list' if col_name == 'area_list'
-    return 'tags_list_table.tags_array' if col_name = 'tags_array'
-    return 'labels_list_table.labels_array' if col_name = 'labels_array'
+    return 'tags_list_table' if col_name == 'tags_array'
+    return 'labels_list_table' if col_name == 'labels_array'
     false
   end
 
