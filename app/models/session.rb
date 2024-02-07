@@ -215,7 +215,7 @@ class Session < ApplicationRecord
     taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
     tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
 
-    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( tags[:name] ).as('tags_list'))
+    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( tags[:name] ).as('tags_array'))
       .join(
         taggings,
         Arel::Nodes::OuterJoin
@@ -230,7 +230,7 @@ class Session < ApplicationRecord
     taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
     tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
 
-    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( tags[:name] ).as('labels_list'))
+    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( tags[:name] ).as('labels_array'))
       .join(taggings, Arel::Nodes::OuterJoin).on(sessions[:id].eq(taggings[:taggable_id]).and(taggings[:taggable_type].eq('Session')))
       .join(tags, Arel::Nodes::OuterJoin).on(taggings[:tag_id].eq(tags[:id]))
       .where(taggings[:context].eq('labels'))

@@ -240,13 +240,15 @@ class SessionsController < ResourceController
 
   def array_col?(col_name:)
     return true if col_name == 'area_list'
-    return true if col_name = 'tags_list'
+    return true if col_name = 'tags_array'
+    return true if col_name = 'labels_array'
     false
   end
 
   def array_table(col_name:)
     return 'areas_list' if col_name == 'area_list'
-    return 'tags_list_table' if col_name = 'tags_list'
+    return 'tags_list_table.tags_array' if col_name = 'tags_array'
+    return 'labels_list_table.labels_array' if col_name = 'labels_array'
     false
   end
 
@@ -254,7 +256,8 @@ class SessionsController < ResourceController
     sessions = Arel::Table.new(Session.table_name)
 
     subquery = Session.area_list.as('areas_list')
-    tags_subquery = Session.tags_list_table.as('tags_list')
+    tags_subquery = Session.tags_list_table.as('tags_list_table')
+    labels_subquery = Session.labels_list_table.as('labels_list_table')
     conflict_counts = Session.conflict_counts.as('conflict_counts')
     joins = [
       sessions.create_join(
@@ -268,6 +271,13 @@ class SessionsController < ResourceController
         tags_subquery,
         sessions.create_on(
           tags_subquery[:session_id].eq(sessions[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      ),
+      sessions.create_join(
+        labels_subquery,
+        sessions.create_on(
+          labels_subquery[:session_id].eq(sessions[:id])
         ),
         Arel::Nodes::OuterJoin
       ),
@@ -309,7 +319,9 @@ class SessionsController < ResourceController
   def select_fields
     Session.select(
       ::Session.arel_table[Arel.star],
-      'conflict_counts.conflict_count'
+      'conflict_counts.conflict_count',
+      'tags_list_table.tags_array',
+      'labels_list_table.labels_array'
     )
   end
 
