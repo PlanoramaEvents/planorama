@@ -385,17 +385,17 @@ module ResourceMethods
     if array_col?(col_name: column)
       array_query = case operation.downcase
                     when 'is'
-                      ::Arel.sql("('#{value}' = ANY(#{table}.#{column}))")
+                      ::Arel.sql("('#{value.gsub("'","''")}' = ANY(#{table}.#{column}))")
                     when 'is not'
-                      ::Arel.sql("('#{value}' != ALL(#{table}.#{column}) or cardinality(#{table}.#{column}) = 0)")
+                      ::Arel.sql("('#{value.gsub("'","''")}' != ALL(#{table}.#{column}) or cardinality(#{table}.#{column}) = 0)")
                     when 'is empty'
                       ::Arel.sql("(cardinality(#{table}.#{column}) = 0)")
                     when 'is not empty'
                       ::Arel.sql("(cardinality(#{table}.#{column}) > 0)")
                     when 'is only'
-                      ::Arel.sql("('#{value}' = ALL(#{table}.#{column}) AND cardinality(#{table}.#{column}) != 0)")
+                      ::Arel.sql("('#{value.gsub("'","''")}' = ALL(#{table}.#{column}) AND cardinality(#{table}.#{column}) != 0)")
                     when 'is not only'
-                      ::Arel.sql("('#{value}' = ANY(#{table}.#{column}) AND cardinality(#{table}.#{column}) > 1)")
+                      ::Arel.sql("('#{value.gsub("'","''")}' = ANY(#{table}.#{column}) AND cardinality(#{table}.#{column}) > 1)")
                     end
 
       # This is crappy, but I do not see a way round it. If the first query part is a array literal one
