@@ -23,6 +23,43 @@ class PeopleController < ResourceController
     )
   end
 
+  # Need method to sync clyde for given person ...
+  def clyde_sync
+    authorize current_person, policy_class: policy_class
+
+    person = Person.find params[:person_id]
+
+    raise "No such person" unless person
+    
+    Person.transaction do
+      identity = person.oauth_identities.oauth_identities.where(provider: 'clyde')
+      
+      raise "No Clyde Identity for given person" unless identity
+
+      svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
+      details = svc.participant(id: identity.reg_id)
+
+      IdentityService.update_reg_info(person: person, details: details['data'])
+
+      render_object(person)
+    end
+  end
+
+  def unlink_registration
+ 
+    authorize current_person, policy_class: policy_class
+
+    person = Person.find params[:person_id]
+
+    raise "No such person" unless person
+    # Remove the Oauth identity
+    person.oauth_identities.delete_all
+    # But we want to keep the Reg info if there is any
+    # for admin and planners to see (not speakers)
+
+    render_object(person)
+  end
+
   def snapshot_schedule
     authorize current_person, policy_class: policy_class
 

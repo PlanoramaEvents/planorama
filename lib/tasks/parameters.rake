@@ -117,6 +117,16 @@ namespace :parameters do
         }
       )
     end
+    
+    unless ParameterName.find_by(parameter_name: 'clyde_base_url')
+      ParameterName.create!(
+        {
+          parameter_name: 'clyde_base_url',
+          parameter_description: 'This is the URL for the Clyde Reg endpoint',
+          parameter_type: 'String'
+        }
+      )
+    end
 
     pname = ParameterName.find_by(parameter_name: 'profile_show_demographics_and_community')
     if pname

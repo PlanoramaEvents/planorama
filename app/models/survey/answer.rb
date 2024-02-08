@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: survey_answers
+#
+#  id               :uuid             not null, primary key
+#  answer           :text
+#  default          :boolean          default(FALSE)
+#  lock_version     :integer          default(0)
+#  next_page_action :enum             default("next_page")
+#  other            :boolean          default(FALSE)
+#  sort_order       :integer
+#  value            :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  next_page_id     :uuid
+#  question_id      :uuid
+#
+# Indexes
+#
+#  index_survey_answers_on_next_page_action  (next_page_action)
+#
 class Survey::Answer < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: :question_id

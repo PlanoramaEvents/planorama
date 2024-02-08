@@ -2,6 +2,9 @@ require "sidekiq/web"
 
 # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+  # OAuth Callbacks - provider is clyde for G24 reg etc, based on OAuth strategy
+  match "/auth/:provider/callback" => "auth/omniauth_callbacks#create", via: [:get, :post]
+
   devise_for :people, path: 'auth',
              controllers: {
                sessions: 'people/sessions',
@@ -49,6 +52,8 @@ Rails.application.routes.draw do
     patch 'person_exclusion', to: 'person_exclusions#replace'
     resources :session_limits, path: 'session_limit', only: [:index]
     # patch 'session_limit', to: 'session_limits#replace'
+    post 'clyde_sync', to: 'people#clyde_sync'
+    post 'unlink_registration', to: 'people#unlink_registration'
   end
   get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
   get 'person/:person_id/mailed_surveys', to: 'people#mailed_surveys'
@@ -111,6 +116,7 @@ Rails.application.routes.draw do
   resources :publication_dates, path: 'publication_date', only: [:index, :update]
   resources :integrations, path: 'integration', only: [:index, :update]
   get 'integration/airmeet', to: 'integrations#airmeet'
+  get 'integration/clyde', to: 'integrations#clyde'
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]

@@ -1,7 +1,7 @@
 const twoLines = (line1, line2) => (h) =>  h('p', {}, [line1, h('br'), line2]);
 const errorMessage = (message) => (errorCode) => twoLines(message, `Error code: ${errorCode}`);
 const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`;
-const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []))
+const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []));
 
 module.exports = {
     // login page
@@ -192,6 +192,19 @@ module.exports = {
             willing_to_moderate: "Moderation interest",
             languages_fluent_in: "Fluent languages",
             contact_email: "Contact email",
+            twitter: "Twitter",
+            facebook: "Facebook",
+            website: "Website",
+            instagram: "Instagram",
+            twitch: "Twitch",
+            youtube: "YouTube",
+            tiktok: "TikTok",
+            linkedin: "LinkedIn",
+            flickr: "Flickr",
+            reddit: "Reddit",
+            othersocialmedia: "Other Social Media",
+            socialmedia: "Social Media",
+            can_share: "Permission to share email with participants"
         },
     },
     nLines,
@@ -231,6 +244,8 @@ module.exports = {
         youtube: "YouTube",
         tiktok: "TikTok",
         linkedin: "LinkedIn",
+        flickr: "Flickr",
+        reddit: "Reddit",
         othersocialmedia: "Other",
         do_not_assign_with: "Anyone that should not be assigned to be on a panel with participant",
         is_local: "Local to the event",
@@ -247,9 +262,16 @@ module.exports = {
         timezone: "Timezone during convention",
         needs_accommodations: "Accessibility and/or disability concerns",
         accommodations: "Accessibility and/or disability details",
+        registration_number: "Ticket Number",
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
+    PERSON_DISABLED_LINK: "You can only link your own registration",
+    PERSON_DISABLED_UNLINK: "You can only unlink your own registration",
+    PERSON_UNLINK_SUCCESS: "Your registration account has been unlinked.",
+    PERSON_UNLINK_FAILURE: errorMessage("Something went wrong while unlinking your registration account."),
+    PERSON_UNLINK_CONFIRMATION_1: "This will unlink your registration account from your Planorama account. It will not remove your data from other convention systems. If you later choose to log in using your registration account, this link will be reestablished.",
+    PERSON_UNLINK_CONFIRMATION_2: "Are you sure you want to do this action?",
     PERSON_CON_STATE: {
         not_set: "Not Set",
         applied: "Applied",
@@ -270,6 +292,8 @@ module.exports = {
 
     PAGE_CONTENT_SAVE_SUCCESS: "Page content saved successfully", 
     PAGE_CONTENT_SAVE_ERROR: "Page content save failed",
+    PAGE_CONTENT_SUCCESS_DELETE: "Page content successfully deleted.",
+    PAGE_CONTENT_ERROR_DELETE: errorMessage("Page content failed to be deleted."),
 
     SURVEY_REDIRECT: "Unfortunately due to the browser refreshing we have lost any answers you filled in. Please fill the survey out again.",
     SURVEY_PUBLIC_NO_EDIT: "You cannot edit a published survey. Close the survey to enable editing.",
@@ -318,6 +342,7 @@ module.exports = {
     EVENT_SETTINGS_MUST_RELOAD: "*** Changes to these settings will only take effect after you reload your browser page. ***",
     CONFIGURATION_LABEL_OVERRIDES: {
         event_virtual: "Does this event include a virtual component?",
+        clyde_base_url: "Base URL for Clyde",
         profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
     }
 }

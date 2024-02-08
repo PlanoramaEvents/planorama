@@ -1,3 +1,49 @@
+# == Schema Information
+#
+# Table name: surveys
+#
+#  id                        :uuid             not null, primary key
+#  allow_submission_edits    :boolean          default(TRUE)
+#  authenticate_msg          :text
+#  branded                   :boolean          default(TRUE)
+#  declined_msg              :text
+#  description               :text
+#  lock_version              :integer          default(0)
+#  mandatory_star            :boolean          default(TRUE)
+#  name                      :string
+#  numbered_questions        :boolean          default(FALSE)
+#  public                    :boolean
+#  published_on              :datetime
+#  submit_string             :string           default("Save")
+#  thank_you                 :text
+#  transition_accept_status  :enum
+#  transition_decline_status :enum
+#  unassigned                :boolean          default(FALSE)
+#  unique_submission         :boolean          default(TRUE)
+#  use_captcha               :boolean          default(FALSE)
+#  welcome                   :text
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  created_by_id             :uuid
+#  published_by_id           :uuid
+#  updated_by_id             :uuid
+#
+class CheckChangeToMultiple < ActiveModel::Validator
+  def validate(record)
+    # We need to check if the survey is not unique whether there are submissions
+    return unless record.unique_submission
+
+    count = Survey::Submission.where("survey_id = ?", record.id).count
+
+    if count > 0 
+      record.errors.add(
+        :unique_submission,
+        "Survey has submissions: not allowed to switch from multiple to unique"
+      )
+    end
+  end
+end
+
 class Survey < ApplicationRecord
   # Survey contains a series of pages, pages contain a series of questions
   has_many :pages,
@@ -31,11 +77,21 @@ class Survey < ApplicationRecord
 
   validates :name, presence: true
 
-  # transition_accept_status
-  # transition_decline_status
-
   # TODO change last modified on survey_questions CUD
   # TODO track created/updated by
+
+  # If survey changed to multiple and there are already saved responses do not allow change
+  validates_with CheckChangeToMultiple, on: :update, if: :unique_submission_changed?
+
+  # When survey changed to multiple we need to clear out all the linked questions  
+  after_save :check_questions
+  
+  def check_questions
+    return if self.unique_submission
+    
+    # All questions in a non-unique survey can not be linked
+    questions.update_all linked_field: nil
+  end
 
   private
 

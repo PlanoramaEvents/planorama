@@ -1,9 +1,12 @@
 <template>
   <div class="d-flex" v-if="selected">
-    <div class="d-flex flex-column w-50 p-2">
+    <div class="d-flex flex-column w-50 p-2 mr-3">
       <div>
-      <h5>Identity</h5>
-      <dl-person :fields="['name', 'pseudonym']"></dl-person>
+        <h5>Identity</h5>
+        <div class="d-flex justify-content-between">
+          <dl-person :fields="['name', 'pseudonym']"></dl-person>
+          <registration-link v-if="!readOnly"></registration-link>
+        </div>
       </div>
       <div v-if="readOnly">
         <h5>Emails</h5>
@@ -27,7 +30,7 @@
         <template #can_stream-val>{{can_stream_label}}</template>
         <template #can_record-val>{{can_record_label}}</template>
       </dl-person>
-      <div v-else>Comming Soon</div>
+      <div v-else>Coming Soon</div>
     </div>
     <div class="d-flex flex-column w-50 p-2">
       <div v-if="eventVirtual && readOnly">
@@ -62,7 +65,7 @@
             <a target="blank" href="https://www.timeanddate.com/worldclock/meeting.html">
               https://www.timeanddate.com/worldclock/meeting.html
             </a>
-            and check by specifying the date of September 1 2022 and your location as well as UTC/GMT
+            and check by specifying the date of first day of the convention and your location as well as UTC/GMT
           </small>
         </b-form-group>
       </div>
@@ -246,6 +249,7 @@ import PlanoEditor from '@/components/plano_editor'
 import SimpleSocial from '../social-media/simple-social.vue';
 import EditButton from '@/components/edit_button.vue';
 import PersonEditModal from './person_edit_modal.vue';
+import RegistrationLink from './registration_link.vue';
 import DlPerson from './dl_person.vue';
 import { ValidationProvider } from 'vee-validate';
 
@@ -276,6 +280,7 @@ export default {
     EditButton,
     DlPerson,
     ValidationProvider,
+    RegistrationLink,
   },
   mixins: [
     settingsMixin,

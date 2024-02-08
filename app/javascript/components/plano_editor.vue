@@ -38,6 +38,10 @@ export default {
     height: {
       type: Number,
       default: null
+    },
+    title: {
+      type: String,
+      default: null
     }
   },
   computed: {
@@ -88,6 +92,10 @@ export default {
       local_config.toolbar = toolbar
       local_config.contentsCss = "custom.scss"
 
+      if (this.title) {
+        local_config.title = this.title;
+        local_config.applicationTitle = this.title;
+      }
       if (this.height) local_config.height = this.height
 
       return local_config

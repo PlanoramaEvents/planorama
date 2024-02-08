@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: published_session_assignments
+#
+#  integrations                    :jsonb            not null
+#  lock_version                    :integer          default(0)
+#  sort_order                      :integer
+#  visibility                      :enum             default("is_public")
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  person_id                       :uuid             not null
+#  published_session_id            :uuid             not null
+#  session_assignment_id           :uuid             not null, primary key
+#  session_assignment_role_type_id :uuid             not null
+#
+# Indexes
+#
+#  index_published_programme_item_assignments_on_person_id  (person_id)
+#  pub_progitem_assignment_item_index                       (published_session_id)
+#  pub_progitem_assignment_person_index                     (person_id)
+#
 class PublishedSessionAssignment < ApplicationRecord
   self.primary_key = :session_assignment_id
 

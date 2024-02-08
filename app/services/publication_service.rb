@@ -42,7 +42,7 @@ module PublicationService
 
   def self.publish_sessions(sessions:, since:)
     candidates = if since
-                    sessions.where("sessions.updated_at >= ?", since)
+                   sessions.where("sessions.updated_at >= ?", since)
                   else
                     sessions
                   end
@@ -81,7 +81,7 @@ module PublicationService
 
   def self.publish_new_sessions(sessions)
     candidates = if PublishedSession.count > 0
-      sessions.where("id not in (?)", PublishedSession.all.collect(&:session_id))
+                   sessions.where("id not in (?)", PublishedSession.all.collect(&:session_id))
     else
       sessions
     end
@@ -137,7 +137,7 @@ module PublicationService
   #
   def self.publish_new_assignments(assignments)
     candidates = if PublishedSessionAssignment.count > 0
-      assignments.where("id not in (?)", PublishedSessionAssignment.all.collect(&:session_assignment_id))
+                   assignments.where("id not in (?)", PublishedSessionAssignment.all.collect(&:session_assignment_id))
     else
       assignments
     end

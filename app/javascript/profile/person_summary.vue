@@ -67,6 +67,7 @@ import {PERSON_NEVER_LOGGED_IN} from "@/constants/strings";
 import { toastMixin, personSessionMixin } from '@/mixins';
 import { airmeetMixin } from '@/integrations/airmeet.mixin';
 import {ValidationProvider} from 'vee-validate';
+import LoginIntegrations from "@/login/login_integrations.vue";
 
 export default {
   name: "PersonSummary",
@@ -80,6 +81,7 @@ export default {
     EditButton,
     PersonEditModal,
     ValidationProvider,
+    LoginIntegrations
   },
   data: () => ({
     editData: {

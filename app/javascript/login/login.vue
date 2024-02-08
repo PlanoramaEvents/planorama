@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <login-small-print></login-small-print>
     <b-alert :show="alert.visible" variant="success" dismissible>{{
       alert.text
     }}</b-alert>
@@ -16,7 +17,6 @@
         :validateNow="form.password.validate"
         :validation="false"
       ></login-password-field>
-      <div class="pt-3"><small>{{LOGIN_CLICK_TO_AGREE}} <privacy-policy-link></privacy-policy-link>.</small></div>
       <div class="d-flex flex-row-reverse mb-3">
         <router-link :to="'/login/forgot?redirect=' + redirect">Forgot Password?</router-link>
       </div>
@@ -29,13 +29,15 @@
       <router-link :to="'/login/forgot?redirect=' + redirect">Never set up your password? Set it up now</router-link>
       <router-link :to="'/login/new?redirect=' + redirect">Create account</router-link>
     </div>
+    <login-integrations :redirect="redirect"></login-integrations>
   </div>
 </template>
 
 <script>
-import EmailField from "@/shared/email_field";
-import LoginPasswordField from "./login_password_field";
-import PrivacyPolicyLink from "@/administration/privacy_policy_link"
+import EmailField from "@/shared/email_field.vue";
+import LoginPasswordField from "./login_password_field.vue";
+import LoginSmallPrint from './login_small_print.vue';
+import LoginIntegrations from "./login_integrations.vue";
 import IeaModal from './iea-modal';
 import axios from 'axios';
 import {
@@ -51,10 +53,10 @@ import {
   LOGIN_INVALID_FIELDS,
   LOGIN_PASSWORD_RESET_EMAIL_SEND,
   LOGIN_PASSWORD_CHANGED,
-  LOGIN_CLICK_TO_AGREE,
   IEA_FAILURE_TO_SIGN
 } from "@/constants/strings";
 import { settingsMixin } from "@/mixins";
+import { loginIntegrationsMixin } from '@/store/login_integrations.mixin';
 
 
 export default {
@@ -89,18 +91,11 @@ export default {
   components: {
     EmailField,
     LoginPasswordField,
-    PrivacyPolicyLink,
+    LoginSmallPrint,
     IeaModal,
+    LoginIntegrations,
   },
-  mixins: [authMixin, personSessionMixin, settingsMixin],
-  computed: {
-    conventionName() {
-      return this.configByName('convention_name') || ''
-    },
-    LOGIN_CLICK_TO_AGREE() {
-      return LOGIN_CLICK_TO_AGREE(this.conventionName);
-    }
-  },
+  mixins: [authMixin, personSessionMixin, settingsMixin, loginIntegrationsMixin],
   mounted: function () {
     if (this.$route.query.alert) {
       switch (this.$route.query.alert) {
@@ -157,3 +152,6 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+</style>

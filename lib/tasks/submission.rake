@@ -122,7 +122,7 @@ namespace :submission do
              # there are 2 questions from google that this should deal with
              if value
                v = if value.include? 'except for items'
-                       'maybe'
+                     'maybe'
                      elsif value.downcase == 'yes'
                        'yes'
                      elsif value.downcase == 'no'

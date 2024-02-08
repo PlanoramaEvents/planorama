@@ -25,6 +25,10 @@ class PersonPolicy < PlannerPolicy
     allowed?(action: :import)
   end
 
+  def unlink_registration?
+    allowed?(action: :unlink_registration)
+  end
+
   def live_sessions?
     return true if @record.class != Symbol && @record.id == @person.id
 

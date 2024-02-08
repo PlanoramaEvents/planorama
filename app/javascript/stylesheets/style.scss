@@ -125,3 +125,8 @@ body {
 .flex-basis-50 {
   flex-basis: 50%;
 }
+
+// make disabled link buttons italic
+.btn-link:disabled, .btn-link.disabled {
+  font-style: italic;
+}

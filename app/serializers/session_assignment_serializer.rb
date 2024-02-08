@@ -1,3 +1,30 @@
+# == Schema Information
+#
+# Table name: session_assignments
+#
+#  id                              :uuid             not null, primary key
+#  interest_notes                  :text
+#  interest_ranking                :integer
+#  interest_role                   :enum             default("no_preference")
+#  interested                      :boolean          default(FALSE)
+#  lock_version                    :integer          default(0)
+#  planner_notes                   :text
+#  sort_order                      :integer
+#  state                           :string
+#  visibility                      :enum             default("is_public")
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  person_id                       :uuid             not null
+#  session_assignment_role_type_id :uuid
+#  session_id                      :uuid             not null
+#
+# Indexes
+#
+#  index_session_assignments_on_interest_role                    (interest_role)
+#  index_session_assignments_on_session_assignment_role_type_id  (session_assignment_role_type_id)
+#  pia_person_index                                              (person_id)
+#  pis_prog_item_id_index                                        (session_id)
+#
 class SessionAssignmentSerializer
   include JSONAPI::Serializer
 

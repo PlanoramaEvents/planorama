@@ -39,6 +39,7 @@ import CKEditor from 'ckeditor4-vue';
 import VuePluralize from 'vue-pluralize';
 import { configure as validationConfigure, extend as validationExtend} from 'vee-validate';
 import { min, max, regex, required, numeric, digits, email } from 'vee-validate/dist/rules';
+import VueCookies from 'vue-cookies';
 
 validationConfigure({
   classes: {
@@ -77,6 +78,8 @@ Vue.use(CustomIconsPlugin);
 Vue.use(AsyncComputed);
 Vue.use(CKEditor);
 Vue.use(VuePluralize);
+
+Vue.use(VueCookies, {});
 
 import vSelect from "vue-select";
 Vue.component("v-select", vSelect);

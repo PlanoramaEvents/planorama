@@ -12,6 +12,7 @@
           <plano-editor style="border: solid 2px; border-radius: 5px;"
             :id="formId('question-text')"
             v-model="question.question"
+            title="Rich Text Editor for Question"
             @blur="patchSelectedQuestion({question: $event.editor._.data})"
           ></plano-editor>
         </b-form-group>
@@ -31,7 +32,8 @@
     </div>
     <div class="row" v-if="!formatting && !isSelected">
       <div :class="{'col-12': !question.linked_field, 'col-6': question.linked_field}">
-        <div v-html="question.question" class="py-3"></div>
+        <span v-html="question.question" class="py-3"></span>
+        <mandatory-star :mandatory="question.mandatory"></mandatory-star>
       </div>
       <div v-if="question.linked_field" class="text-right col-6">
         Linked field: {{displayLinkedField}}
@@ -151,7 +153,10 @@
     </div>
     <div class="row" v-if="isSelected">
       <div class="col-6">
-        <b-form-checkbox inline v-if="!formatting" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Required</b-form-checkbox>
+        <div class="d-inline" v-if="socialmedia" title="Social Media questions cannot be required">
+          <b-form-checkbox inline disabled>Required</b-form-checkbox>
+        </div>
+        <b-form-checkbox inline v-if="!formatting && !socialmedia" :disabled="socialmedia" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Required</b-form-checkbox>
         <b-form-checkbox inline v-if="!formatting" v-model="question.private" @change="patchSelectedQuestion({private: $event})">Sensitive</b-form-checkbox>
         <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="patchSelectedQuestion({branching: $event})">Branching</b-form-checkbox>
       </div>
@@ -174,6 +179,7 @@ import draggable from 'vuedraggable';
 import OptionsQuestion from './options-question.vue';
 import PlanoEditor from '@/components/plano_editor';
 import LinkedField from './linked-field';
+import MandatoryStar from './mandatory-star.vue';
 import {
   surveyMixin,
   pageMixin,
@@ -189,6 +195,7 @@ export default {
     OptionsQuestion,
     PlanoEditor,
     LinkedField,
+    MandatoryStar,
   },
   data: () => ({
     SURVEY_YESNOMAYBE_PLACEHOLDER,
