@@ -14,4 +14,5 @@
 #  idx_tagname_on_context  (name,context) UNIQUE
 #
 class CuratedTag < ApplicationRecord
+  # Has a name and context
 end
