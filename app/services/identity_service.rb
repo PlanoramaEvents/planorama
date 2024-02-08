@@ -138,7 +138,7 @@ module IdentityService
           raise "Person already exists with that email" if addr
 
           # Otherwise we create a new person, if the email is already used as prime we can not set it as the default
-          person = create_person_from_clyde(details: details, identity: identity, email_is_default: addr.nil?)                 
+          person = create_person_from_clyde(details: details, identity: identity)                 
 
           # And associate them with the Clyde Identity
           identity.person = person
