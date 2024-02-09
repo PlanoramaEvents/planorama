@@ -57,5 +57,5 @@ class Survey::Submission < ApplicationRecord
 
   enum submission_state: { draft: 'draft', submitted: 'submitted' }
 
-  validates_with CheckUniqueSubmission
+  # validates_with CheckUniqueSubmission
 end
