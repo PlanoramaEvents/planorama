@@ -310,6 +310,7 @@ module.exports = {
         revised: "Revised",
         dropped: "Dropped",
     },
+    SESSION_NO_TAGS: (tagName) => `Click the pencil to add ${tagName}`,
     SESSION_MUST_UNSCHEDULE: "You must unschedule a session before dropping it",
     SESSION_MUST_UNDROP: "You must un-drop the session to be able to schedule it.",
     SESSION_MINORS_PARTICIPATION: {

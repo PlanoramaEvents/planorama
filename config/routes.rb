@@ -169,9 +169,11 @@ Rails.application.routes.draw do
 
   resources :formats, path: 'format'
   resources :areas, path: 'area'
-  resources :tags, path: 'tag'
+  # TODO: check
+  # resources :tags, path: 'tag'
 
   get 'session/tags', to: 'sessions#tags'
+  get 'session/labels', to: 'sessions#labels'
   get 'session/schedule_publish', to: 'sessions#schedule_publish'
   get 'session/open_for_interest', to: 'sessions#has_open_for_interest'
   post 'session/import', to: 'sessions#import'
