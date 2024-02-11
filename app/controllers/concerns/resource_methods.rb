@@ -206,6 +206,10 @@ module ResourceMethods
     order_str
   end
 
+  def collection_where
+    nil
+  end
+
   def collection
     base = if belong_to_class && belongs_to_param_id
              parent = belong_to_class.find belongs_to_param_id
@@ -226,6 +230,8 @@ module ResourceMethods
          .eager_load(eager_load)
          .joins(join_tables)
          .where(query(@filters))
+         .where(collection_where)
+        #  anpther where?
 
     q = q.distinct if join_tables && !join_tables.empty?
 

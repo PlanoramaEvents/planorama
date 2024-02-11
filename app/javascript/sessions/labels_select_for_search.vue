@@ -3,20 +3,19 @@
 </template>
 
 <script>
-// import { areaModel as model } from "@/store/area.store"
-// import { FETCH } from "@/store/model.store";
+import { curatedTagModel as model } from "@/store/curated_tag.store"
+import { FETCH } from "@/store/model.store";
 
 export default {
   name: "LabelsSelectForSearch",
   props: ['value'],
   computed: {
     labelNames() {
-      // return Object.values(this.$store.getters['jv/get']({ _jv: { type: model } })).map(a => a.name).sort((a, b) => a < b ? -1 : 1)
-      return ['needs review', 'options', 'do not reschedule', 'probable', 'really cool'];
+      return Object.values(this.$store.getters['jv/get']({ _jv: { type: model } }, '$[?(@.context=="label")]')).map(a => a.name).sort((a, b) => a < b ? -1 : 1)
     }
   },
   mounted() {
-    // this.$store.dispatch(FETCH, { model });
+    this.$store.dispatch(FETCH, { model });
   }
 }
 </script>

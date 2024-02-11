@@ -294,7 +294,14 @@ namespace :rbac do
         "index": true,
         "show": true,
         "update": false
-      }
+      },
+      "currated_tag": {
+        "create": false,
+        "destroy": false,
+        "index": true,
+        "show": true,
+        "update": false
+      }      
     })
   end
 
@@ -626,7 +633,14 @@ namespace :rbac do
         "index": true,
         "show": true,
         "update": false
-      }
+      },
+      "currated_tag": {
+        "create": false,
+        "destroy": false,
+        "index": true,
+        "show": true,
+        "update": false
+      }      
     })
   end
 
@@ -958,7 +972,14 @@ namespace :rbac do
         "index": true,
         "show": true,
         "update": true
-      }
+      },
+      "currated_tag": {
+        "create": true,
+        "destroy": true,
+        "index": true,
+        "show": true,
+        "update": true
+      }      
     })
   end
 end

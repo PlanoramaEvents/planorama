@@ -1,24 +1,18 @@
+import { curatedTagModel as model } from "@/store/curated_tag.store"
+import { FETCH } from "@/store/model.store";
+
 export const tagFormatter =  (tag) => {
   if (!tag) return '';
   return tag.split(' ').map(t => t[0].toUpperCase() + t.slice(1)).join(' ');
 }
 
-// TODO actually get these from the database
 export const tagsMixin = {
   computed: {
-    sessionTags() {
-      // TODO get these from the database
-      return ['cabbages', 'kings', 'queens', 'rutabegas', 'radishes'];
-    },
-    sessionLabels() {
-      // TODO get these from the database
-      return ['needs review', 'options', 'do not reschedule', 'probable', 'really cool'];
-    },
     sessionTagsOptions() {
-      return this.sessionTags.map(t => ({text: tagFormatter(t), value: t}))
+      return Object.values(this.$store.getters['jv/get']({ _jv: { type: model } }, '$[?(@.context=="tag")]')).map(t => ({ text: tagFormatter(t.name), value: t }));
     },
     sessionLabelsOptions() {
-      return this.sessionLabels.map(t => ({text: tagFormatter(t), value: t}))
+      return Object.values(this.$store.getters['jv/get']({ _jv: { type: model } }, '$[?(@.context=="label")]')).map(t => ({ text: tagFormatter(t.name), value: t }));
     }
   },
   methods: {
@@ -26,5 +20,8 @@ export const tagsMixin = {
     formatTags(tags) {
       return tags.length ? tags.map(tagFormatter).join(", ") : 'None'
     }
+  },
+  mounted() {
+    this.$store.dispatch(FETCH, { model });
   }
 }
