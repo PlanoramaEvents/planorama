@@ -169,12 +169,14 @@ export const session_columns = [
   {
     key: 'created_at',
     label: 'Date Created',
-    sortable: false
+    sortKey: 'sessions.created_at',
+    sortable: true
   },
   {
     key: 'updated_at',
     label: 'Date Updated',
-    sortable: false
+    sortKey: 'sessions.updated_at',
+    sortable: true
   },
   {
     key: 'updated_by',
