@@ -9,16 +9,16 @@ export const tagFormatter =  (tag) => {
 export const tagsMixin = {
   computed: {
     sessionTagsOptions() {
-      return Object.values(this.$store.getters['jv/get']({ _jv: { type: model } }, '$[?(@.context=="tag")]')).map(t => ({ text: tagFormatter(t.name), value: t }));
+      return Object.values(this.$store.getters['jv/get']({ _jv: { type: model } }, '$[?(@.context=="tag")]')).map(t => ({ value: t.name, text: tagFormatter(t.name) }));
     },
     sessionLabelsOptions() {
-      return Object.values(this.$store.getters['jv/get']({ _jv: { type: model } }, '$[?(@.context=="label")]')).map(t => ({ text: tagFormatter(t.name), value: t }));
+      return Object.values(this.$store.getters['jv/get']({ _jv: { type: model } }, '$[?(@.context=="label")]')).map(t => ({ value: t.name, text: tagFormatter(t.name) }));
     }
   },
   methods: {
     tagFormatter,
     formatTags(tags) {
-      return tags.length ? tags.map(tagFormatter).join(", ") : 'None'
+      return tags.length ? tags.map(tagFormatter).join(", ") : '';
     }
   },
   mounted() {
