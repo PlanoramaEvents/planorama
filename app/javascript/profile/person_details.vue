@@ -34,13 +34,13 @@
     </div>
     <div class="d-flex flex-column w-50 p-2">
       <div v-if="eventVirtual && readOnly">
-        <h5>Virtual</h5>
+        <h5>Online</h5>
         <dl-person :fields="['attendance_type', 'timezone']">
           <template #attendance_type-val="{value}">{{PERSON_ATTENDANCE_TYPE[value]}}</template>
         </dl-person>
       </div>
       <div v-if="eventVirtual && !readOnly">
-        <h5>Virtual</h5>
+        <h5>Online</h5>
         <div><b>I plan to attend the convention:</b></div>
         <b-form-radio-group
           v-model="selected.attendance_type"

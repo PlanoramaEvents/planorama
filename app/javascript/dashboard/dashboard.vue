@@ -21,7 +21,7 @@
                   Update your name(s), pronouns, email address, bio, and social media as needed
                 </li>
                 <li v-if="eventVirtual">
-                  If you’re not going to be attending the convention in-person, please let us know the timezone that you will be in when you attend virtually.
+                  If you’re not going to be attending the convention in-person, please let us know the timezone that you will be in when you attend online.
                 </li>
               </ul>
             </li>
@@ -61,7 +61,7 @@
                   Select sessions by using the slider to the right of the description. Your selections will save automatically.
                 </li>
                 <li v-if="eventVirtual">
-                  While some items are marked or otherwise described as Virtual, many we’re not sure if they will be taking place in-person or online, so everyone should feel free to sign up for items not marked either way.
+                  While some items are marked or otherwise described as online, many we’re not sure if they will be taking place in-person or online, so everyone should feel free to sign up for items not marked either way.
                 </li>
               </ul>
             </li>
