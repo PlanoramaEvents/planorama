@@ -170,7 +170,7 @@ Rails.application.routes.draw do
   resources :formats, path: 'format'
   resources :areas, path: 'area'
   # TODO: check
-  # resources :tags, path: 'tag'
+  resources :tags, path: 'tag'
 
   get 'session/tags', to: 'sessions#tags'
   get 'session/labels', to: 'sessions#labels'

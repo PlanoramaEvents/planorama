@@ -17,7 +17,8 @@
             v-model="tags"
             model="tag"
             field="name"
-            filter='{"op":"all","queries":[["taggings.taggable_type", "=", "Session"]]}'
+            filter='{"op":"all","queries":[["taggings.taggable_type", "=", "Session"], ["taggings.context", "=", "tags"]]}'
+            :formatter="tagFormatter"
           ></model-tags>
         </b-form-group>
       </b-col>
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+import { tagFormatter } from '@/store/tags.mixin';
 import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
 import searchStateMixin from '../store/search_state.mixin'
@@ -66,7 +68,8 @@ export default {
       title_desc: null,
       area_id: null,
       tags: null,
-      match: 'any'
+      match: 'any',
+      tagFormatter
     }
   },
   methods: {
