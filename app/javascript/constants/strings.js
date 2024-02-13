@@ -286,8 +286,8 @@ module.exports = {
     },
     PERSON_ATTENDANCE_TYPE: {
         'in person': "In Person",
-        hybrid: "In Person AND Virtually",
-        virtual: "Virtually",
+        hybrid: "In Person AND Online",
+        virtual: "Online",
     },
 
     PAGE_CONTENT_SAVE_SUCCESS: "Page content saved successfully", 
@@ -302,7 +302,7 @@ module.exports = {
         unknown: "Unknown",
         in_person: "In Person",
         hybrid: "Hybrid",
-        virtual: "Virtual"
+        virtual: "Online"
     },
     SESSION_STATUS: {
         draft: "Draft",
@@ -342,7 +342,7 @@ module.exports = {
     },
     EVENT_SETTINGS_MUST_RELOAD: "*** Changes to these settings will only take effect after you reload your browser page. ***",
     CONFIGURATION_LABEL_OVERRIDES: {
-        event_virtual: "Does this event include a virtual component?",
+        event_virtual: "Does this event include an online component?",
         clyde_base_url: "Base URL for Clyde",
         profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
     }
