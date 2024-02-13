@@ -103,7 +103,7 @@
           v-model="session.tag_list"
           @input="saveSession()"
           label="Public Tags"
-          color="secondary"
+          color="warning"
           :modalOptions="sessionTagsOptions"
         ></tag-display>
       </div>
@@ -119,7 +119,7 @@
           v-model="session.label_list"
           @input="saveSession()"
           label="Admin Labels"
-          color="warning"
+          color="secondary"
           :modalOptions="sessionLabelsOptions"
         ></tag-display>
       </div>

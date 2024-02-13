@@ -98,7 +98,7 @@ export default {
       }
 
       if (this.tags && (this.tags.length > 0)) {
-        let vals = this.tags.map(obj => (obj.label))
+        let vals = this.tags.map(obj => (obj.value))
         queries["queries"].push(
           ["tags.name","in",vals],
         )

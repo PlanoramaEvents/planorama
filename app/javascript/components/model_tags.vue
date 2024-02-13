@@ -73,6 +73,7 @@ export default {
             } else {
               return {
                 code: obj.id,
+                value: obj[this.field],
                 label: this.formatter(obj[this.field])
               }
             }
