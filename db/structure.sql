@@ -904,6 +904,20 @@ CREATE TABLE public.convention_roles (
 
 
 --
+-- Name: curated_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.curated_tags (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name character varying(190),
+    context character varying(190),
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: email_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2410,6 +2424,14 @@ ALTER TABLE ONLY public.convention_roles
 
 
 --
+-- Name: curated_tags curated_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.curated_tags
+    ADD CONSTRAINT curated_tags_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: email_addresses email_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2910,6 +2932,13 @@ CREATE INDEX fk_configurations_parameters_idx ON public.configurations USING btr
 --
 
 CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USING btree (parameter);
+
+
+--
+-- Name: idx_tagname_on_context; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_tagname_on_context ON public.curated_tags USING btree (name, context);
 
 
 --
@@ -3806,6 +3835,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231031141060'),
 ('20231031141408'),
 ('20231101143131'),
-('20231103133301');
+('20231103133301'),
+('20240207232239'),
+('20240207233122');
 
 

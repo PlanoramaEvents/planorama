@@ -54,6 +54,16 @@
           <span>{{formatAreas(item.area_list)}}</span>
         </tooltip-overflow>
       </template>
+      <template #cell(tag_list)="{ item }">
+        <tooltip-overflow v-if="item.tag_list" :title="formatTags(item.tag_list)">
+          <span>{{formatTags(item.tag_list)}}</span>
+        </tooltip-overflow>
+      </template>
+      <template #cell(label_list)="{ item }">
+        <tooltip-overflow v-if="item.label_list" :title="formatTags(item.label_list)">
+          <span>{{ formatTags(item.label_list) }}</span>
+        </tooltip-overflow>
+      </template>
       <template #cell(start_time)="{ item }">
         <span v-if="item.start_time">
           <tooltip-overflow :title="formatLocaleDate(item.start_time)">
@@ -100,6 +110,7 @@ import { mapActions } from 'vuex';
 import { SESSION_STATUS, SESSION_MUST_UNSCHEDULE } from '@/constants/strings';
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import BulkEditModal from '@/components/bulk_edit_modal.vue';
+import { tagsMixin } from '@/store/tags.mixin';
 
 export default {
   name: 'SessionTable',
@@ -114,6 +125,7 @@ export default {
     modelUtilsMixin,
     areaMixin,
     sessionStatusMixin,
+    tagsMixin,
   ],
   data: () => ({
     SESSION_STATUS,

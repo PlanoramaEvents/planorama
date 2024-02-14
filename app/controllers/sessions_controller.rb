@@ -176,6 +176,18 @@ class SessionsController < ResourceController
            content_type: 'application/json'
   end
 
+  def labels
+    res = Session.tags_on(:labels).order(:name)
+
+    render json: TagSerializer.new(res,
+      {
+        # include: serializer_includes,
+        params: {domain: "#{request.base_url}"}
+      }
+    ).serializable_hash(),
+    content_type: 'application/json'
+  end
+
   def before_update
     # if time or room have changed removed ignored conflicts
     p = _permitted_params(model: object_name, instance: @object)
@@ -206,32 +218,37 @@ class SessionsController < ResourceController
   def includes
     [
       :format,
-      :room,
-      :base_tags
+      :room
     ]
   end
 
   def references
     [
       :format,
-      :room,
+      :room
     ]
   end
 
   def eager_load
     [
       {session_areas: :area},
-      :areas
+      :areas,
+      :published_session,
+      {taggings: :tag}
     ]
   end
 
   def array_col?(col_name:)
     return true if col_name == 'area_list'
+    return true if col_name == 'tags_array'
+    return true if col_name == 'labels_array'
     false
   end
 
   def array_table(col_name:)
     return 'areas_list' if col_name == 'area_list'
+    return 'tags_list_table' if col_name == 'tags_array'
+    return 'labels_list_table' if col_name == 'labels_array'
     false
   end
 
@@ -239,12 +256,28 @@ class SessionsController < ResourceController
     sessions = Arel::Table.new(Session.table_name)
 
     subquery = Session.area_list.as('areas_list')
+    tags_subquery = Session.tags_list_table.as('tags_list_table')
+    labels_subquery = Session.labels_list_table.as('labels_list_table')
     conflict_counts = Session.conflict_counts.as('conflict_counts')
     joins = [
       sessions.create_join(
         subquery,
         sessions.create_on(
           subquery[:session_id].eq(sessions[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      ),
+      sessions.create_join(
+        tags_subquery,
+        sessions.create_on(
+          tags_subquery[:session_id].eq(sessions[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      ),
+      sessions.create_join(
+        labels_subquery,
+        sessions.create_on(
+          labels_subquery[:session_id].eq(sessions[:id])
         ),
         Arel::Nodes::OuterJoin
       ),
@@ -286,7 +319,9 @@ class SessionsController < ResourceController
   def select_fields
     Session.select(
       ::Session.arel_table[Arel.star],
-      'conflict_counts.conflict_count'
+      'conflict_counts.conflict_count',
+      'tags_list_table.tags_array',
+      'labels_list_table.labels_array'
     )
   end
 
@@ -318,6 +353,7 @@ class SessionsController < ResourceController
       open_for_interest
       instructions_for_interest
       tag_list
+      label_list
       session_areas_attributes
       proofed
       format_id
@@ -330,8 +366,5 @@ class SessionsController < ResourceController
       recorded
       streamed
     ]
-    # Tags
-    # format
-    # areas
   end
 end
