@@ -95,6 +95,10 @@
               <dd class="ml-2 font-italic text-muted" v-if="!selected.format">None Selected</dd>
               <dt>Session Environment</dt>
               <dd class="ml-2 font-italic">{{SESSION_ENVIRONMENT[selected.environment]}}</dd>
+              <dt>Public Tags</dt>
+              <dd class="ml-2 font-italic">{{ formatTags(selected.tag_list) }}</dd>
+              <dt>Admin Labels</dt>
+              <dd class="ml-2 font-italic">{{ formatTags(selected.label_list) }}</dd>
               <dt>Room Setup</dt>
               <dd class="ml-2 font-italic" v-if="selected.room_set">{{selected.room_set.name}}</dd>
               <dd class="ml-2 font-italic text-muted" v-if="!selected.room_set">None Selected</dd>
@@ -169,6 +173,7 @@ import SessionConflicts from '@/conflicts/session_conflicts.vue';
 import { SESSION_ENVIRONMENT, SESSION_STATUS} from '@/constants/strings';
 import { minorsParticipationMixin } from './minors_participation.mixin';
 import { ageRestrictionMixin } from './age_restriction.mixin';
+import { tagsMixin } from '@/store/tags.mixin'
 
 export default {
   name: 'SessionSidebar',
@@ -187,11 +192,12 @@ export default {
     startTimeMixin,
     minorsParticipationMixin,
     ageRestrictionMixin,
+    tagsMixin,
   ],
   data: () => ({
     sessionConflictModel,
     SESSION_ENVIRONMENT,
-    SESSION_STATUS
+    SESSION_STATUS,
   }),
   computed: {
     editLink() {

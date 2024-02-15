@@ -29,7 +29,7 @@ export const room_columns = [
   },
   {
     key: 'is_virtual',
-    label: 'Is Virtual',
+    label: 'Is Online',
     type: "radio",
     choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
   },

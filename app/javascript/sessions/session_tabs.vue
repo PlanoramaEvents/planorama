@@ -149,11 +149,13 @@ export default {
     this.fetch_model_by_id(sessionModel, this.id).then(
       (obj) => {
         this.select_model(sessionModel, obj);
+        if (obj.is_published) {
+          this.fetch_model_by_id(publishedSessionModel, this.id).then( (obj) => {
+            this.select_model(publishedSessionModel, obj)
+          })
+        }
       }
-    ),
-    this.fetch_model_by_id(publishedSessionModel, this.id).then( (obj) => {
-      this.select_model(publishedSessionModel, obj)
-    })
+    )
   }
 }
 </script>
