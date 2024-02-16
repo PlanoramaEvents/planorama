@@ -25,11 +25,6 @@ namespace :rbac do
     ).destroy_all
   end
 
-role = ApplicationRole.find_by(
-con_roles: ['participant'],
-name: 'Participant_Roles_Default',
-sensitive_access: false
-)
   def create_participant_roles
     role = ApplicationRole.find_or_create_by(
       con_roles: ['participant'],
