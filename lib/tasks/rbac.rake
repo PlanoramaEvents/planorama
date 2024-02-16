@@ -25,6 +25,11 @@ namespace :rbac do
     ).destroy_all
   end
 
+role = ApplicationRole.find_by(
+con_roles: ['participant'],
+name: 'Participant_Roles_Default',
+sensitive_access: false
+)
   def create_participant_roles
     role = ApplicationRole.find_or_create_by(
       con_roles: ['participant'],
@@ -295,7 +300,7 @@ namespace :rbac do
         "show": true,
         "update": false
       },
-      "currated_tag": {
+      "curated_tag": {
         "create": false,
         "destroy": false,
         "index": true,
@@ -634,7 +639,7 @@ namespace :rbac do
         "show": true,
         "update": false
       },
-      "currated_tag": {
+      "curated_tag": {
         "create": false,
         "destroy": false,
         "index": true,
@@ -973,7 +978,7 @@ namespace :rbac do
         "show": true,
         "update": true
       },
-      "currated_tag": {
+      "curated_tag": {
         "create": true,
         "destroy": true,
         "index": true,
