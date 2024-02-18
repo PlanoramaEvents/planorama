@@ -3,7 +3,7 @@
     <p>{{ label  }} <edit-button v-b-modal:[modalId]></edit-button></p>
     <span :class="clazz" v-for="tag in value" :key="tag">{{tagFormatter(tag)}}</span>
     <span v-if="!value.length" class="text-muted font-italic">{{ SESSION_NO_TAGS(label) }}</span>
-    <edit-modal :id="modalId" :title="modalTitle" @ok="$emit('input', mutableValue)" @hide="clearValue()">
+    <edit-modal :id="modalId" :title="modalTitle" @ok="$emit('input', mutableValue)" @hide="clearValue()" @show="initValue()">
         <b-form-select
         v-model="mutableValue"
         :options="modalOptions"
@@ -70,13 +70,12 @@ export default {
   },
   methods: {
     clearValue() {
-      this.imutableValue = []
+      this.imutableValue = [];
+    },
+    initValue() {
+      this.imutableValue = this.value;
     }
   },
-  mounted() {
-    // Initialize here works better that trying to do something in get
-    this.imutableValue = this.value
-  }
 }
 </script>
 
