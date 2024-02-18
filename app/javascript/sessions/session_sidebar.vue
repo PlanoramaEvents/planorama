@@ -96,9 +96,11 @@
               <dt>Session Environment</dt>
               <dd class="ml-2 font-italic">{{SESSION_ENVIRONMENT[selected.environment]}}</dd>
               <dt>Public Tags</dt>
-              <dd class="ml-2 font-italic">{{ formatTags(selected.tag_list) }}</dd>
+              <dd class="ml-2 font-italic" v-if="selected.tag_list.length">{{ formatTags(selected.tag_list) }}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.tag_list.length">None Selected</dd>
               <dt>Admin Labels</dt>
-              <dd class="ml-2 font-italic">{{ formatTags(selected.label_list) }}</dd>
+              <dd class="ml-2 font-italic" v-if="selected.label_list.length">{{ formatTags(selected.label_list) }}</dd>
+              <dd class="ml-2 font-italic text-muted" v-if="!selected.label_list.length">None Selected</dd>
               <dt>Room Setup</dt>
               <dd class="ml-2 font-italic" v-if="selected.room_set">{{selected.room_set.name}}</dd>
               <dd class="ml-2 font-italic text-muted" v-if="!selected.room_set">None Selected</dd>
