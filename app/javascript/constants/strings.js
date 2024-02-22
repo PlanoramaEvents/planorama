@@ -21,6 +21,7 @@ module.exports = {
     LOGIN_PASSWORD_INVALID: "Your new password must meet the security criteria.",
     LOGIN_PASSWORD_RESET_EMAIL_SEND: "If an account with the address you specified exists you will receive an email with a password reset link.",
     LOGIN_PASSWORD_CHANGED: "You successfully changed your password.",
+    LOGIN_NO_ROLE: (helpEmail) => `Your account has not been properly configured. Please contact ${helpEmail} for assistance.`,
     LOGIN_TOKEN_EXPIRED: (resetPasswordLink) => `The password reset link you used is no longer valid. Please request another link here: ${resetPasswordLink}`,
     LOGIN_CLICK_TO_AGREE: (conventionName) => `By clicking ‘Log In’ below, I agree to ${conventionName} storing and using my personal data as documented in the`,
     PASSWORDS_MUST_NOT_BE_RECENT: "The password entered was one you used recently, plase use a different password.",
