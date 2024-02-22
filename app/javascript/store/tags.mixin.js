@@ -1,9 +1,12 @@
 import { curatedTagModel as model } from "@/store/curated_tag.store"
 import { FETCH } from "@/store/model.store";
 
+// this now does nothing on purpose because the backend is handling caps
+// however if we ever need it it's still here
 export const tagFormatter =  (tag) => {
-  if (!tag) return '';
-  return tag.split(' ').map(t => t[0].toUpperCase() + t.slice(1)).join(' ');
+  return tag;
+  // if (!tag) return '';
+  // return tag.split(' ').map(t => t[0].toUpperCase() + t.slice(1)).join(' ');
 }
 
 export const tagsMixin = {
