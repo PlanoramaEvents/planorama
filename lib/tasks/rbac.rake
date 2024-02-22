@@ -295,7 +295,7 @@ namespace :rbac do
         "show": true,
         "update": false
       },
-      "currated_tag": {
+      "curated_tag": {
         "create": false,
         "destroy": false,
         "index": true,
@@ -634,7 +634,7 @@ namespace :rbac do
         "show": true,
         "update": false
       },
-      "currated_tag": {
+      "curated_tag": {
         "create": false,
         "destroy": false,
         "index": true,
@@ -973,7 +973,7 @@ namespace :rbac do
         "show": true,
         "update": true
       },
-      "currated_tag": {
+      "curated_tag": {
         "create": true,
         "destroy": true,
         "index": true,

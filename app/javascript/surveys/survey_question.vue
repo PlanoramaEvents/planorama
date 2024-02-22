@@ -179,7 +179,7 @@
               :disabled="!answerable"
             >{{choice.answer}}</b-form-select-option>
           </b-form-select>
-          <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+          <b-form-invalid-feedback :force-show="!calcValid(errors, valid)">{{ errors[0] }}</b-form-invalid-feedback>
         </validation-provider>
         <email-field-veevalidate
           :answerable="answerable"
