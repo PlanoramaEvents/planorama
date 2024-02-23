@@ -594,6 +594,8 @@ class PeopleController < ResourceController
       bio
       website
       twitter
+      fediverse
+      bsky
       othersocialmedia
       facebook
       linkedin
