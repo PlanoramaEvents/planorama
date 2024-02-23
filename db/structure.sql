@@ -661,7 +661,9 @@ END) STORED,
     availability_notes character varying,
     integrations jsonb DEFAULT '{}'::jsonb NOT NULL,
     date_reg_synced timestamp without time zone,
-    reg_id character varying
+    reg_id character varying,
+    fediverse character varying,
+    bsky character varying
 );
 
 
@@ -3837,6 +3839,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231101143131'),
 ('20231103133301'),
 ('20240207232239'),
-('20240207233122');
+('20240207233122'),
+('20240223134703');
 
 
