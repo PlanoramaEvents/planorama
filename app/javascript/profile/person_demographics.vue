@@ -56,6 +56,16 @@
           </b-form-group>
         </validation-provider>
         <validation-provider>
+          <b-form-group label="Member of the global diaspora">
+            <b-form-textarea v-model="fields.global_diaspora"></b-form-textarea>
+          </b-form-group>
+        </validation-provider>
+        <validation-provider>
+          <b-form-group label="Represent something other than a purely anglophone perspective">
+            <b-form-textarea v-model="fields.non_anglophone"></b-form-textarea>
+          </b-form-group>
+        </validation-provider>
+        <validation-provider>
           <b-form-group label="Represent something other than a purely US-centric perspective">
             <b-form-textarea v-model="fields.non_us_centric_perspectives"></b-form-textarea>
           </b-form-group>
@@ -107,8 +117,10 @@ export default {
       othered: null,
       indigenous: null,
       black_diaspora: null,
+      global_diaspora: null,
+      non_anglophone: null,
       non_us_centric_perspectives: null,
-      demographic_categories: null
+      demographic_categories: null,
     }
   }),
   mixins: [
