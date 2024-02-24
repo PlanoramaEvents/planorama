@@ -662,11 +662,11 @@ END) STORED,
     integrations jsonb DEFAULT '{}'::jsonb NOT NULL,
     date_reg_synced timestamp without time zone,
     reg_id character varying,
-    fediverse character varying,
-    bsky character varying,
     excluded_demographic_categories character varying,
     global_diaspora character varying,
-    non_anglophone character varying
+    non_anglophone character varying,
+    fediverse character varying,
+    bsky character varying
 );
 
 
@@ -3843,5 +3843,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231103133301'),
 ('20240207232239'),
 ('20240207233122'),
-('20240223134703'),
-('20240223132105');
+('20240223132105'),
+('20240223134703');
+
+
