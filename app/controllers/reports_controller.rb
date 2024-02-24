@@ -154,6 +154,7 @@ class ReportsController < ApplicationController
         'Session',
         'Session Type/Format',
         'Areas',
+        # Tags and Labels
         'Moderators',
         'Participants',
         'Reserves',
@@ -481,6 +482,7 @@ class ReportsController < ApplicationController
         'Ranking',
         'Ranking Notes',
         'Areas',
+        # Tags and Labels
         'Assigned',
         'Scheduled'
       ]
@@ -533,6 +535,7 @@ class ReportsController < ApplicationController
         'Ranking',
         'Notes',
         'Areas'
+        # Tags and Labels
       ]
     )
 

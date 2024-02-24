@@ -21,6 +21,7 @@ class Reports::SessionReportsController < ApplicationController
         'Environment',
         'Format',
         'Areas',
+        # Tags and Labels
         'Required Room Features/Services', #room_notes
         'Tech/Hotel Notes', #
         'Room Setup' # room_set_id
@@ -112,6 +113,7 @@ class Reports::SessionReportsController < ApplicationController
         'Session',
         'Areas',
         'Format',
+        # Tags and Labels
         'Start Time',
         'Duration',
         'Room'
@@ -150,6 +152,7 @@ class Reports::SessionReportsController < ApplicationController
         'Session',
         'Description',
         'Areas',
+        # Tags and Labels
         'Status',
         'Copy Edited',
         'Scheduled',
@@ -188,6 +191,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Areas',
+        # Tags and Labels
         'Moderators',
         'Participants',
         'Invisible',
@@ -230,6 +234,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Area',
+        # Tags and Labels
         'Start Time',
         'Room'
       ]
@@ -268,6 +273,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Area',
+        # Tags and Labels
         'Start Time',
         'Format',
         'People Assigned',
@@ -333,6 +339,7 @@ class Reports::SessionReportsController < ApplicationController
         'Participant Status',
         'Session',
         'Area'
+        # Tags and Labels
       ]
     )
 
@@ -484,6 +491,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Areas',
+        # Tags and Labels
         'Start Time',
         'Participant Count',
         'Participant Count Lower Bound',
@@ -531,6 +539,7 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Areas',
+        # Tags and Labels
         'Start Time',
         'Participant Count',
         'Participant Count Upper Bound',

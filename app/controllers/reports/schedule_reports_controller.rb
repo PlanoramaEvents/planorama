@@ -236,6 +236,8 @@ class Reports::ScheduleReportsController < ApplicationController
     @session_room_changed.append_row(['Session Title','Original Room', 'New Room'])
     @session_title_changed.append_row(['Original Session Title', 'New Session Title'])
     @session_description_changed.append_row(['Session Title','Original Description', 'New Description'])
+    # ????
+    # Tags and Labels
     @session_added.append_row(['Session Title', 'Session Description', 'Format', 'Areas', 'Start Time', 'Room', 'Moderators', 'Participants'])
     @session_removed.append_row(['Session Title'])
 
