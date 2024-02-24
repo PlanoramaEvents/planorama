@@ -144,7 +144,10 @@ class PersonSerializer #< ActiveModel::Serializer
               :twelve_hour,
               :attendance_type,
               :availability_notes,
-              :integrations
+              :integrations,
+              :excluded_demographic_categories,
+              :global_diaspora,
+              :non_anglophone
 
   # status and comments hidden except for staff
   protected_attributes :con_state, :comments
