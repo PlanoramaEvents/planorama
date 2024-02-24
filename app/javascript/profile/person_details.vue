@@ -96,6 +96,13 @@
             <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
           </b-form-group>
         </validation-provider>
+        <validation-provider name="Demographic categories to not discuss">
+          <b-form-group label="Demographic categories that apply, but should not be discussed on panels that include participant">
+            <!-- TODO change edit permissions to sensitive data tickybox -->
+            <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.excluded_demographic_categories"></b-form-textarea>
+            <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
+          </b-form-group>
+        </validation-provider>
 
         <validation-provider name="Sharing preferences">
           <b-form-group label="Permission to share email with other Participants">
@@ -294,6 +301,7 @@ export default {
     model,
     miscData: {
       do_not_assign_with: null,
+      excluded_demographic_categories: null,
       can_share: null,
       can_stream: null,
       can_stream_exceptions: null,
