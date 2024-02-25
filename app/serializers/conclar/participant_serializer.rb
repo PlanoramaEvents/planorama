@@ -42,6 +42,8 @@ class Conclar::ParticipantSerializer < ActiveModel::Serializer
     res['tiktok'] = "https://www.tiktok.com/@#{object.tiktok}" unless object.tiktok.blank?
     res['linkedin'] = "https://linkedin.com/in/#{object.linkedin}" unless object.linkedin.blank?
     res['othersocialmedia'] = object.othersocialmedia unless object.othersocialmedia.blank?
+    res['fediverse'] = object.fediverse unless object.fediverse.blank?
+    res['bsky'] = "https://bsky.app/profile/#{object.bsky}" unless object.bsky.blank?
 
     res
   end

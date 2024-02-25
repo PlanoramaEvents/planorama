@@ -94,7 +94,8 @@ export const surveyStore = {
     [NEW_RESPONSE] (state, {relationships = {}, text = '', answers = [], socialmedia = {
         twitter: null, facebook: null, linkedin: null,
         twitch: null, youtube: null, instagram: null,
-        tiktok: null, other: null, website: null
+        tiktok: null, other: null, website: null,
+        bsky: null, fediverse: null
     }}) {
       let id = uuidv4();
       let item = {

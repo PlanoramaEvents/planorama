@@ -31,11 +31,11 @@
           </div>
           <div class="w-50">
             <h5>Community Memberships</h5>
-            <dl-person :fields="['othered', 'indigenous', 'black_diaspora', 'non_us_centric_perspectives']"></dl-person>
+            <dl-person :fields="['othered', 'indigenous', 'black_diaspora', 'global_diaspora', 'non_anglophone', 'non_us_centric_perspectives', ]"></dl-person>
           </div>
         </div>
         <h5>Other Information</h5>
-        <dl-person :fields="['do_not_assign_with', 'can_stream', 'can_stream_exceptions', 'can_record', 'can_record_exceptions', 'is_local', 'moderation_experience', 'languages_fluent_in']">
+        <dl-person :fields="['do_not_assign_with', 'excluded_demographic_categories', 'can_stream', 'can_stream_exceptions', 'can_record', 'can_record_exceptions', 'is_local', 'moderation_experience', 'languages_fluent_in']">
           <template #can_stream-val>{{selected.can_stream | capitalize}}</template>
           <template #can_record-val>{{selected.can_record | capitalize}}</template>
           <template #can_stream_exceptions-label>Topics participant does not want to be streamed while talking about</template>

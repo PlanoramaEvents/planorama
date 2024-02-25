@@ -4,7 +4,7 @@
     <b-alert :show="alert.visible" variant="success" dismissible>{{
       alert.text
     }}</b-alert>
-    <b-alert :show="error.visible" variant="danger">{{ error.text }}</b-alert>
+    <b-alert :show="error.visible" variant="danger">{{ error.text || error.asyncText() }}</b-alert>
     <b-form @submit="onSubmit">
       <email-field
         v-model="person.email"
@@ -53,7 +53,8 @@ import {
   LOGIN_INVALID_FIELDS,
   LOGIN_PASSWORD_RESET_EMAIL_SEND,
   LOGIN_PASSWORD_CHANGED,
-  IEA_FAILURE_TO_SIGN
+  IEA_FAILURE_TO_SIGN,
+  LOGIN_NO_ROLE
 } from "@/constants/strings";
 import { settingsMixin } from "@/mixins";
 import { loginIntegrationsMixin } from '@/store/login_integrations.mixin';
@@ -71,6 +72,7 @@ export default {
       error: {
         visible: false,
         text: "",
+        asyncText: () => ""
       },
       alert: {
         visible: false,
@@ -98,17 +100,18 @@ export default {
   mixins: [authMixin, personSessionMixin, settingsMixin, loginIntegrationsMixin],
   mounted: function () {
     if (this.$route.query.alert) {
-      switch (this.$route.query.alert) {
-        case "reset_sent":
-          this.alert.text = LOGIN_PASSWORD_RESET_EMAIL_SEND;
-          this.alert.visible = true;
-          break;
-        case "password_changed":
-          this.alert.text = LOGIN_PASSWORD_CHANGED;
-          this.alert.visible = true;
-          break;
-        default:
-          this.alert.visible = false;
+      this.showAlert(this.$route.query.alert);
+    }
+  },
+  computed: {
+    helpEmail() {
+      return this.configByName("email_reply_to_address");
+    }
+  },
+  watch: {
+    ['$route.query'](newval) {
+      if(newval.alert) {
+        this.showAlert(newval.alert)
       }
     }
   },
@@ -148,6 +151,25 @@ export default {
         this.error.text = IEA_FAILURE_TO_SIGN;
         this.error.visible = true;
       })
+    },
+    showAlert(queryAlert) {
+      switch (queryAlert) {
+        case "reset_sent":
+          this.alert.text = LOGIN_PASSWORD_RESET_EMAIL_SEND;
+          this.alert.visible = true;
+          break;
+        case "password_changed":
+          this.alert.text = LOGIN_PASSWORD_CHANGED;
+          this.alert.visible = true;
+          break;
+        case "no_role":
+          this.error.asyncText = () => LOGIN_NO_ROLE(this.helpEmail);
+          this.error.visible = true;
+          break;
+        default:
+          this.error.visible = false;
+          this.alert.visible = false;
+      }
     }
   },
 };
