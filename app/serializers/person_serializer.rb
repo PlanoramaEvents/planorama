@@ -9,6 +9,7 @@
 #  availability_notes              :string
 #  bio                             :text
 #  black_diaspora                  :string(10000)
+#  bsky                            :string
 #  can_photo                       :enum             default("no")
 #  can_photo_exceptions            :string(10000)
 #  can_record                      :enum             default("no")
@@ -31,6 +32,7 @@
 #  excluded_demographic_categories :string
 #  facebook                        :string
 #  failed_attempts                 :integer          default(0), not null
+#  fediverse                       :string
 #  flickr                          :string
 #  gender                          :string(400)
 #  global_diaspora                 :string
@@ -115,6 +117,7 @@ class PersonSerializer #< ActiveModel::Serializer
               :can_share,
               :registered, :registration_type, :registration_number,
               :bio, :website, :twitter, :othersocialmedia,
+              :fediverse, :bsky,
               :facebook, :linkedin, :twitch, :youtube,
               :instagram, :flickr, :reddit, :tiktok,
               :can_stream,

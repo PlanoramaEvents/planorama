@@ -175,13 +175,6 @@
       <template #modal-title>Edit Socials - {{selected.published_name}}</template>
       <template #default="{fields}">
         <simple-social
-          label="Twitter"
-          :rules="{min: 1, max: 15, regex: /^[a-z0-9_]{1,15}$/i}"
-          prepend="@"
-          v-model="fields.twitter"
-          :disabled="disabled"
-        ></simple-social>
-        <simple-social
           :rules="{min: 5, regex: /^[a-z\d.]{5,}$/i }"
           label="Facebook"
           prepend="facebook.com/"
@@ -228,6 +221,26 @@
           label="LinkedIn"
           prepend="linkedin.com/in/"
           v-model="fields.linkedin"
+          :disabled="disabled"
+        ></simple-social>
+        <simple-social
+          label="Bluesky"
+          prepend="@"
+          v-model="fields.bsky"
+          :disabled="disabled"
+        ></simple-social>
+        <simple-social
+          label="Fediverse"
+          :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
+          prepend="url"
+          v-model="fields.fediverse"
+          :disabled="disabled"
+        ></simple-social>
+        <simple-social
+          label="X (formerly Twitter)"
+          :rules="{min: 1, max: 15, regex: /^[a-z0-9_]{1,15}$/i}"
+          prepend="@"
+          v-model="fields.twitter"
           :disabled="disabled"
         ></simple-social>
         <simple-social
@@ -313,7 +326,6 @@ export default {
       accommodations: null,
     },
     socialsData: {
-      twitter: null,
       facebook: null,
       website: null,
       instagram: null,
@@ -321,6 +333,9 @@ export default {
       youtube: null,
       tiktok: null,
       linkedin: null,
+      bsky: null,
+      fediverse: null,
+      twitter: null,
       othersocialmedia: null
     },
   }),

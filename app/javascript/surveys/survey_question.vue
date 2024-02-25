@@ -200,14 +200,6 @@
       <div :class="['row', 'ml-0', {'w-50': answerable}]">
         <div class="col-12 px-0">
           <simple-social
-            label="Twitter"
-            prepend="@"
-            :disabled="!answerable"
-            :id="formId('socials-twitter')"
-            v-model="localResponse.response.socialmedia.twitter"
-            @blur="saveResponse(localResponse, selectedSubmission)"
-          ></simple-social>
-          <simple-social
             label="Facebook"
             :disabled="!answerable"
             :id="formId('socials-facebook')"
@@ -278,6 +270,30 @@
               <b-input-group-text>linkedin.com&sol;in&sol;</b-input-group-text>
             </template>
           </simple-social>
+          <simple-social
+            label="Bluesky"
+            prepend="@"
+            :disabled="!answerable"
+            :id="formId('socials-bsky')"
+            v-model="localResponse.response.socialmedia.bsky"
+            @blur="saveResponse(localResponse, selectedSubmission)"
+          ></simple-social>
+          <simple-social
+            label="Fediverse"
+            prepend="url"
+            :disabled="!answerable"
+            :id="formId('socials-fediverse')"
+            v-model="localResponse.response.socialmedia.fediverse"
+            @blur="saveResponse(localResponse, selectedSubmission)"
+          ></simple-social>
+          <simple-social
+            label="X (formerly Twitter)"
+            prepend="@"
+            :disabled="!answerable"
+            :id="formId('socials-twitter')"
+            v-model="localResponse.response.socialmedia.twitter"
+            @blur="saveResponse(localResponse, selectedSubmission)"
+          ></simple-social>
           <simple-social
             label="Other"
             :disabled="!answerable"
@@ -398,7 +414,8 @@ export default {
         }, socialmedia: {
           twitter: null, facebook: null, linkedin: null,
           twitch: null, youtube: null, instagram: null,
-          tiktok: null, other: null, website: null
+          tiktok: null, other: null, website: null,
+          bsky: null, fediverse: null
         }}
       }
     }
