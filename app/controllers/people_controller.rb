@@ -376,6 +376,25 @@ class PeopleController < ResourceController
 
   end
 
+  def completed_surveys
+    authorize current_person, policy_class: policy_class
+
+    person = Person.find params[:person_id]
+    collection = person.completed_surveys
+    collection_total = collection.size
+
+    # The JSON is just the top level survey data
+    render json: SurveySerializer.new(collection,
+                  {
+                    params: {
+                      domain: "#{request.base_url}",
+                      person_id: params[:person_id],
+                    }
+                  }
+                ).serializable_hash(),
+           content_type: 'application/json'
+  end
+
   def submissions_collection(person_id:, survey_id: nil)
     @per_page, @current_page, @filters = collection_params(do_paginate: false)
 

@@ -203,6 +203,8 @@ class Person < ApplicationRecord
           class_name: 'EmailAddress'
 
   has_many :submissions, class_name: 'Survey::Submission', dependent: :destroy
+  has_many :completed_surveys, through: :submissions, source: :survey
+
   has_many :mailed_surveys, through: :mailings, source: :survey
   has_and_belongs_to_many :assigned_surveys, class_name: 'Survey'
 
