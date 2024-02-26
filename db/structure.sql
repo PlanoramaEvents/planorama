@@ -872,7 +872,8 @@ CREATE TABLE public.configurations (
     parameter_value character varying(150) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    lock_version integer DEFAULT 0
+    lock_version integer DEFAULT 0,
+    parameter_json jsonb
 );
 
 
@@ -3844,6 +3845,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240207232239'),
 ('20240207233122'),
 ('20240223132105'),
-('20240223134703');
+('20240223134703'),
+('20240226191153');
 
 
