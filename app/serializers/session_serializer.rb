@@ -70,9 +70,13 @@ class SessionSerializer
              :minors_participation, :age_restriction_id,
              :recorded, :streamed
 
-  # tag_list
+  # NOTE: session.tag_list would work, but if we prefetch taggings and tags this is faster (less DB queries)
   attribute :tag_list do |session|
-    session.base_tags.collect(&:name)
+    session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name)
+  end
+
+  attribute :label_list do |session|
+    session.taggings.select{|t| t.context == 'labels'}.collect(&:tag).collect(&:name)
   end
 
   attribute :area_list do |session|
@@ -98,6 +102,10 @@ class SessionSerializer
     else
       (session.session_conflicts.count > 0) || (session.conflict_sessions.count > 0)
     end
+  end
+
+  attribute :is_published do |session|
+    session.published?
   end
 
   has_many :session_areas, lazy_load_data: true, serializer: SessionAreaSerializer,

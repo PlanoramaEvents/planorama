@@ -169,9 +169,11 @@ Rails.application.routes.draw do
 
   resources :formats, path: 'format'
   resources :areas, path: 'area'
+  # TODO: check
   resources :tags, path: 'tag'
 
   get 'session/tags', to: 'sessions#tags'
+  get 'session/labels', to: 'sessions#labels'
   get 'session/schedule_publish', to: 'sessions#schedule_publish'
   get 'session/open_for_interest', to: 'sessions#has_open_for_interest'
   post 'session/import', to: 'sessions#import'
@@ -198,6 +200,9 @@ Rails.application.routes.draw do
   resources :configurations, path: 'configuration'
   resources :parameter_names, path: 'parameter_name'
   resources :page_contents, path: 'page_content'
+
+  # Curated tags are the list of tags for a given context etc
+  resources :curated_tags, path: 'curated_tag'
 
   get 'person_schedule_approval/fetch/:person_id/:workflow_id', to: 'person_schedule_approvals#fetch'
   post 'person_schedule_approval/approve/:person_id/:workflow_id', to: 'person_schedule_approvals#approve'

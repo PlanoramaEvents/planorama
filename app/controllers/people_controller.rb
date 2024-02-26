@@ -594,6 +594,8 @@ class PeopleController < ResourceController
       bio
       website
       twitter
+      fediverse
+      bsky
       othersocialmedia
       facebook
       linkedin
@@ -617,6 +619,9 @@ class PeopleController < ResourceController
       is_local
       languages_fluent_in
       demographic_categories
+      excluded_demographic_categories
+      global_diaspora
+      non_anglophone
       age_at_convention
       romantic_sexual_orientation
       needs_accommodations

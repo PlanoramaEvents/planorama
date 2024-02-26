@@ -52,7 +52,8 @@ export const responseMixin = {
       const socialmedia = {
         twitter: null, facebook: null, linkedin: null,
         twitch: null, youtube: null, instagram: null,
-        tiktok: null, other: null, website: null
+        tiktok: null, other: null, website: null,
+        bsky: null, fediverse: null
       }
       // first check for a linked field
       // console.debug("now i have both", this.question, this.selectedSubmission)
@@ -76,6 +77,8 @@ export const responseMixin = {
           socialmedia.tiktok = this.currentUser.tiktok
           socialmedia.other = this.currentUser.othersocialmedia
           socialmedia.website = this.currentUser.website
+          socialmedia.bsky = this.currentUser.bsky
+          socialmedia.fediverse = this.currentUser.fediverse
         } else if (fieldName=='contact_email') {
           text = this.currentUser.contact_email.email
         } else { // text answer

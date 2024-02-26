@@ -66,7 +66,6 @@
       </template>
       <template v-if="socialmedia">
         <div class="col-12 col-lg-8 col-xl-6" v-if="!isSelected">
-          <b-form-group label="Twitter" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
           <b-form-group label="Facebook" label-cols="3"><b-input-group>
             <template #prepend>
               <b-input-group-text>facebook.com&sol;</b-input-group-text>
@@ -99,6 +98,9 @@
             </template>
             <b-form-input type="text" disabled></b-form-input>
           </b-input-group></b-form-group>
+          <b-form-group label="Bluesky" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="Fediverse" label-cols="3"><b-input-group prepend="url"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="X (formerly Twitter)" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
           <b-form-group label="Other" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
         </div>
         <div class="col-12">
@@ -215,12 +217,14 @@ export default {
   computed: {
     socials() {
       return [
-        {value: "twitter", text: "Twitter"},
         {value: "facebook", text: "Facebook"},
         {value: "twitch", text: "Twitch"},
         {value: "youtube", text: "YouTube"},
         {value: "instagram", text: "Instagram"},
         {value: "website", text: "Website"},
+        {value: "bsky", text: "Bluesky"},
+        {value: "fediverse", text: "Fediverse"},
+        {value: "twitter", text: "X (formerly Twitter)"},
       ]
     },
     displayLinkedField() {

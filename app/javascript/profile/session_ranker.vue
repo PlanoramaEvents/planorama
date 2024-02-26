@@ -44,7 +44,7 @@
            Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list" :key="area">{{area}}</span>
          </div>
          <div v-if="item.session.tag_list && item.session.tag_list.length">
-           Tag(s): <span class="badge badge-pill badge-secondary mr-1" v-for="tag in item.session.tag_list" :key="tag">{{tag}}</span>
+          Tag(s): <span class="badge badge-pill badge-warning mr-1" v-for="tag in item.session.tag_list" :key="tag">{{tagFormatter(tag)}}</span>
          </div>
          <br />
          <div class="mt-3" v-if="item.session.instructions_for_interest">Instructions for potential panelists:</div>
@@ -97,6 +97,7 @@ import personSessionMixin from '../auth/person_session.mixin';
 import sessionAssignmentMixin from '../sessions/session_assignment.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import SessionAssignmentMonitor from './session_assignment_monitor.vue'
+import {tagsMixin} from '@/store/tags.mixin';
 
 import { SESSION_RANKING_ERROR } from '../constants/strings';
 
@@ -109,7 +110,8 @@ export default {
     personSessionMixin,
     modelMixin,
     tableMixin, // covers pagination and sorting
-    sessionAssignmentMixin
+    sessionAssignmentMixin,
+    tagsMixin,
   ],
   props: {
     person_id: {
