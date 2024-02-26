@@ -101,7 +101,7 @@ import VenueManager from './venues/venue_manager.vue';
 // main
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { GET_SESSION_USER } from './store/person_session.store';
+import { GET_SESSION_USER, SET_SESSION_USER } from './store/person_session.store';
 Vue.use(VueRouter);
 // var ua='', signed_agreements={}, doing_agreements=false;
 var con_roles=[], isAdmin=false, hasPowers=false;
@@ -234,6 +234,8 @@ export const router = new VueRouter({
   ]
 });
 
+import { http } from './http';
+
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // GET SESSION USER only fetches if we don't have one :)
@@ -244,6 +246,17 @@ router.beforeEach((to, from, next) => {
           path: '/login',
           query: { redirect: to.fullPath }
         })
+      } else if (!Object.values(session.convention_roles).length) {
+          const body = new FormData();
+          body.append("_method", "delete")
+          // const headers = {'Authorization': jwtToken()}
+          http.post('/auth/sign_out', body).then(() => {
+            router.app.$store.commit(SET_SESSION_USER, {});
+            next({
+              path: '/login',
+              query: {redirect: to.fullPath, alert: "no_role"}
+            })
+          })
       } else {
         if(con_roles.length===0) {
           // todo clean up side effect assignments

@@ -27,6 +27,10 @@ export default {
     filter: null,
     taggable: false,
     fieldOnly: false,
+    formatter: {
+      type: Function,
+      default: (val) => val
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -65,11 +69,12 @@ export default {
         ).map(
           (obj) => {
             if (this.fieldOnly) {
-              return obj[this.field]
+              return this.formatter(obj[this.field])
             } else {
               return {
                 code: obj.id,
-                label: obj[this.field]
+                value: obj[this.field],
+                label: this.formatter(obj[this.field])
               }
             }
 

@@ -169,9 +169,11 @@ Rails.application.routes.draw do
 
   resources :formats, path: 'format'
   resources :areas, path: 'area'
+  # TODO: check
   resources :tags, path: 'tag'
 
   get 'session/tags', to: 'sessions#tags'
+  get 'session/labels', to: 'sessions#labels'
   get 'session/schedule_publish', to: 'sessions#schedule_publish'
   get 'session/open_for_interest', to: 'sessions#has_open_for_interest'
   post 'session/import', to: 'sessions#import'
@@ -204,6 +206,9 @@ Rails.application.routes.draw do
     # This needs to work a bit different than the other sub relationships
     get 'people', to: 'registration_sync_data#people'
   end
+
+  # Curated tags are the list of tags for a given context etc
+  resources :curated_tags, path: 'curated_tag'
 
   get 'person_schedule_approval/fetch/:person_id/:workflow_id', to: 'person_schedule_approvals#fetch'
   post 'person_schedule_approval/approve/:person_id/:workflow_id', to: 'person_schedule_approvals#approve'

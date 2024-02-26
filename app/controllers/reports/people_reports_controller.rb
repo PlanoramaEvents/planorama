@@ -29,6 +29,8 @@ class Reports::PeopleReportsController < ApplicationController
       social <<  "TikTok: https://www.tiktok.com/@#{person.tiktok}" unless person.tiktok.blank?
       social <<  "LinkedIn: https://linkedin.com/in/#{person.linkedin}" unless person.linkedin.blank?
       social <<  "Other Social Media: #{person.othersocialmedia}"  unless person.othersocialmedia.blank?
+      social <<  "Fediverse: #{person.fediverse}"  unless person.fediverse.blank?
+      social <<  "BlueSky: https://bsky.app/profile/#{person.bsky}"  unless person.bsky.blank?
 
       worksheet.append_row(
         [

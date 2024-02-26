@@ -21,6 +21,7 @@ module.exports = {
     LOGIN_PASSWORD_INVALID: "Your new password must meet the security criteria.",
     LOGIN_PASSWORD_RESET_EMAIL_SEND: "If an account with the address you specified exists you will receive an email with a password reset link.",
     LOGIN_PASSWORD_CHANGED: "You successfully changed your password.",
+    LOGIN_NO_ROLE: (helpEmail) => `Your account has not been properly configured. Please contact ${helpEmail} for assistance.`,
     LOGIN_TOKEN_EXPIRED: (resetPasswordLink) => `The password reset link you used is no longer valid. Please request another link here: ${resetPasswordLink}`,
     LOGIN_CLICK_TO_AGREE: (conventionName) => `By clicking ‘Log In’ below, I agree to ${conventionName} storing and using my personal data as documented in the`,
     PASSWORDS_MUST_NOT_BE_RECENT: "The password entered was one you used recently, plase use a different password.",
@@ -175,12 +176,15 @@ module.exports = {
             bio: "Bio",
             can_stream_exceptions: "Topics not to stream",
             can_record_exceptions: "Topics not to record",
+            excluded_demographic_categories: "Demographic topics not to discuss",
             accommodations: "Accessibility details",
             moderation_experience: "Moderation experience",
             othered: "Othered?",
             indigenous: "Indigenous?",
             black_diaspora: "Black diaspora?",
+            global_diaspora: "Global diaspora?",
             non_us_centric_perspectives: "Not US-centric?",
+            non_anglophone: "Non-anglophone?",
             demographic_categories: "Further demographic categories",
             do_not_assign_with: "Do not assign with",
             attendance_type: "Attendance type",
@@ -192,7 +196,7 @@ module.exports = {
             willing_to_moderate: "Moderation interest",
             languages_fluent_in: "Fluent languages",
             contact_email: "Contact email",
-            twitter: "Twitter",
+            twitter: "X (formerly Twitter)",
             facebook: "Facebook",
             website: "Website",
             instagram: "Instagram",
@@ -202,6 +206,8 @@ module.exports = {
             linkedin: "LinkedIn",
             flickr: "Flickr",
             reddit: "Reddit",
+            bsky: "Bluesky",
+            fediverse: "Fediverse",
             othersocialmedia: "Other Social Media",
             socialmedia: "Social Media",
             can_share: "Permission to share email with participants"
@@ -218,7 +224,7 @@ module.exports = {
     ADD_CONFLICT_IGNORE_ERROR: "Ignore Conflict Failed",
 
     // Social Links Errors
-    TWITTER_ID_INVALID_MSG: "Twitter ID is not in a valid format",
+    TWITTER_ID_INVALID_MSG: "X (formerly Twitter) ID is not in a valid format",
     FACEBOOK_ID_INVALID_MSG: "Facebook ID is not in a valid format",
     WEBSITE_INVALID_MSG: "Website is not in a valid format",
     INSTAGRAM_ID_INVALID_MSG: "Instagram ID is not in a valid format",
@@ -236,7 +242,7 @@ module.exports = {
         black_diaspora: "Member of the global Black diaspora",
         non_us_centric_perspectives: "Represent something other than a purely US-centric perspective",
         demographic_categories: "Other demographic categories",
-        twitter: "Twitter",
+        twitter: "X (formerly Twitter)",
         facebook: "Facebook",
         website: "Website",
         instagram: "Instagram",
@@ -246,6 +252,8 @@ module.exports = {
         linkedin: "LinkedIn",
         flickr: "Flickr",
         reddit: "Reddit",
+        bsky: "Bluesky",
+        fediverse: "Fediverse",
         othersocialmedia: "Other",
         do_not_assign_with: "Anyone that should not be assigned to be on a panel with participant",
         is_local: "Local to the event",
@@ -263,6 +271,9 @@ module.exports = {
         needs_accommodations: "Accessibility and/or disability concerns",
         accommodations: "Accessibility and/or disability details",
         registration_number: "Ticket Number",
+        global_diaspora: "Member of the global diaspora",
+        non_anglophone: "Represent something other than a purely anglophone perspective",
+        excluded_demographic_categories: "Demographic categories that apply, but should not be discussed on panels that include participant",
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
@@ -286,8 +297,8 @@ module.exports = {
     },
     PERSON_ATTENDANCE_TYPE: {
         'in person': "In Person",
-        hybrid: "In Person AND Virtually",
-        virtual: "Virtually",
+        hybrid: "In Person AND Online",
+        virtual: "Online",
     },
 
     PAGE_CONTENT_SAVE_SUCCESS: "Page content saved successfully", 
@@ -302,7 +313,7 @@ module.exports = {
         unknown: "Unknown",
         in_person: "In Person",
         hybrid: "Hybrid",
-        virtual: "Virtual"
+        virtual: "Online"
     },
     SESSION_STATUS: {
         draft: "Draft",
@@ -310,6 +321,7 @@ module.exports = {
         revised: "Revised",
         dropped: "Dropped",
     },
+    SESSION_NO_TAGS: (tagName) => `Click the pencil to add ${tagName}`,
     SESSION_MUST_UNSCHEDULE: "You must unschedule a session before dropping it",
     SESSION_MUST_UNDROP: "You must un-drop the session to be able to schedule it.",
     SESSION_MINORS_PARTICIPATION: {
@@ -341,7 +353,7 @@ module.exports = {
     },
     EVENT_SETTINGS_MUST_RELOAD: "*** Changes to these settings will only take effect after you reload your browser page. ***",
     CONFIGURATION_LABEL_OVERRIDES: {
-        event_virtual: "Does this event include a virtual component?",
+        event_virtual: "Does this event include an online component?",
         clyde_base_url: "Base URL for Clyde",
         profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
     }

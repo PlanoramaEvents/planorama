@@ -34,13 +34,13 @@
     </div>
     <div class="d-flex flex-column w-50 p-2">
       <div v-if="eventVirtual && readOnly">
-        <h5>Virtual</h5>
+        <h5>Online</h5>
         <dl-person :fields="['attendance_type', 'timezone']">
           <template #attendance_type-val="{value}">{{PERSON_ATTENDANCE_TYPE[value]}}</template>
         </dl-person>
       </div>
       <div v-if="eventVirtual && !readOnly">
-        <h5>Virtual</h5>
+        <h5>Online</h5>
         <div><b>I plan to attend the convention:</b></div>
         <b-form-radio-group
           v-model="selected.attendance_type"
@@ -93,6 +93,13 @@
           <b-form-group label="Anyone that should not be assigned to be on a panel with participant">
             <!-- TODO change edit permissions to sensitive data tickybox -->
             <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.do_not_assign_with"></b-form-textarea>
+            <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
+          </b-form-group>
+        </validation-provider>
+        <validation-provider name="Demographic categories to not discuss">
+          <b-form-group label="Demographic categories that apply, but should not be discussed on panels that include participant">
+            <!-- TODO change edit permissions to sensitive data tickybox -->
+            <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.excluded_demographic_categories"></b-form-textarea>
             <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
           </b-form-group>
         </validation-provider>
@@ -168,13 +175,6 @@
       <template #modal-title>Edit Socials - {{selected.published_name}}</template>
       <template #default="{fields}">
         <simple-social
-          label="Twitter"
-          :rules="{min: 1, max: 15, regex: /^[a-z0-9_]{1,15}$/i}"
-          prepend="@"
-          v-model="fields.twitter"
-          :disabled="disabled"
-        ></simple-social>
-        <simple-social
           :rules="{min: 5, regex: /^[a-z\d.]{5,}$/i }"
           label="Facebook"
           prepend="facebook.com/"
@@ -221,6 +221,26 @@
           label="LinkedIn"
           prepend="linkedin.com/in/"
           v-model="fields.linkedin"
+          :disabled="disabled"
+        ></simple-social>
+        <simple-social
+          label="Bluesky"
+          prepend="@"
+          v-model="fields.bsky"
+          :disabled="disabled"
+        ></simple-social>
+        <simple-social
+          label="Fediverse"
+          :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
+          prepend="url"
+          v-model="fields.fediverse"
+          :disabled="disabled"
+        ></simple-social>
+        <simple-social
+          label="X (formerly Twitter)"
+          :rules="{min: 1, max: 15, regex: /^[a-z0-9_]{1,15}$/i}"
+          prepend="@"
+          v-model="fields.twitter"
           :disabled="disabled"
         ></simple-social>
         <simple-social
@@ -294,6 +314,7 @@ export default {
     model,
     miscData: {
       do_not_assign_with: null,
+      excluded_demographic_categories: null,
       can_share: null,
       can_stream: null,
       can_stream_exceptions: null,
@@ -305,7 +326,6 @@ export default {
       accommodations: null,
     },
     socialsData: {
-      twitter: null,
       facebook: null,
       website: null,
       instagram: null,
@@ -313,6 +333,9 @@ export default {
       youtube: null,
       tiktok: null,
       linkedin: null,
+      bsky: null,
+      fediverse: null,
+      twitter: null,
       othersocialmedia: null
     },
   }),

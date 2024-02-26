@@ -28,6 +28,10 @@ import { personStore, personEndpoints } from './person.store';
 // agreement add-ons
 import { agreementStore, agreementEndpoints } from './agreement.store';
 
+//
+import { curatedTagStore, curatedTagEndpoints } from './curated_tag.store';
+
+
 // venue add-ons
 import { roomStore, roomEndpoints } from './room.store';
 import { roomSetStore, roomSetEndpoints} from "@/store/room_set.store";
@@ -99,6 +103,7 @@ import merge from 'lodash.merge'
 const endpoints = {
   ...personEndpoints,
   ...agreementEndpoints,
+  ...curatedTagEndpoints,
   ...roomEndpoints,
   ...roomSetEndpoints,
   ...venueEndpoints,
@@ -144,6 +149,7 @@ export const store = new Vuex.Store({
     selected: {
       ...personStore.selected,
       ...agreementStore.selected,
+      ...curatedTagStore.selected,
       ...roomStore.selected,
       ...roomSetStore.selected,
       ...venueStore.selected,
