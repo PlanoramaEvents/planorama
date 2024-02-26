@@ -273,7 +273,7 @@ module.exports = {
         registration_number: "Ticket Number",
         global_diaspora: "Member of the global diaspora",
         non_anglophone: "Represent something other than a purely anglophone perspective",
-        excluded_demographic_categories: "Demographic categories that apply, but should not be discussed on panels that include participant",
+        excluded_demographic_categories: "Participant's demographic categories that should not be discussed on panels that include them",
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
