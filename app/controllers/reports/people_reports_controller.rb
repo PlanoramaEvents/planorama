@@ -179,7 +179,7 @@ class Reports::PeopleReportsController < ApplicationController
         'Streaming Exceptions',
         'Permission to Record',
         'Recording Exceptions',
-        "Participant's demographic categories that should not be discussed on panels that include them",
+        "Topics not to talk about",
         'Schedule'
       ]
     )
