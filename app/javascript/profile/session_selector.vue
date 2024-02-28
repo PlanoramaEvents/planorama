@@ -10,6 +10,7 @@
       :value="filter"
       @change="onSearchChanged"
       :columns="columns"
+      :personId="person.id"
     >
     </session-search>
 
