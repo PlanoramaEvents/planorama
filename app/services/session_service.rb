@@ -99,7 +99,11 @@ module SessionService
       ::PublishedSession.arel_table[Arel.star],
       'areas_list.area_list'
     )
-      .includes(:format, :room, {participant_assignments: :person})
+      .includes(
+        :format, :room,
+        {participant_assignments: :person},
+        {taggings: :tag}
+      )
       .joins(self.area_subquery(clazz: PublishedSession))
   end
 
@@ -112,7 +116,11 @@ module SessionService
       ::Session.arel_table[Arel.star],
       'areas_list.area_list'
     )
-      .includes(:format, :room, {participant_assignments: :person})
+      .includes(
+        :format, :room,
+        {participant_assignments: :person},
+        {taggings: :tag}
+      )
       .joins(self.area_subquery)
       .where("start_time is not null and room_id is not null")
       .where("status != 'dropped'")
@@ -124,7 +132,11 @@ module SessionService
       ::Session.arel_table[Arel.star],
       'areas_list.area_list'
     )
-      .includes(:format, :room, {participant_assignments: :person})
+      .includes(
+        :format, :room,
+        {participant_assignments: :person},
+        {taggings: :tag}
+      )
       .joins(self.area_subquery)
       .where("start_time is not null and room_id is not null")
       .where("status != 'dropped' and status != 'draft'")
