@@ -22,6 +22,11 @@ export const survey_columns = [
     sortable: true,
   },
   {
+    key: 'nbr_submissions',
+    label: 'Number of Submissions',
+    sortable: false    
+  },
+  {
     key: 'published_on',
     sortKey: 'surveys.published_on',
     label: 'Published On',

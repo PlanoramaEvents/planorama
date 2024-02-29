@@ -97,7 +97,7 @@
           </b-form-group>
         </validation-provider>
         <validation-provider name="Demographic categories to not discuss">
-          <b-form-group label="Demographic categories that apply, but should not be discussed on panels that include participant">
+          <b-form-group label="Participant's demographic categories that should not be discussed on panels that include them">
             <!-- TODO change edit permissions to sensitive data tickybox -->
             <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.excluded_demographic_categories"></b-form-textarea>
             <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
@@ -116,7 +116,7 @@
           </b-form-group>
         </validation-provider>
 
-        <b-form-group label="Permission to be included in a livestreamed program">
+        <b-form-group label="Permission to be included in a livestreamed programme">
           <validation-provider>
             <b-form-radio-group
               stacked
@@ -131,7 +131,7 @@
             <b-textarea v-model="fields.can_stream_exceptions"></b-textarea>
           </validation-provider>
         </b-form-group>
-        <b-form-group label="Permission to be included in a recorded program">
+        <b-form-group label="Permission to be included in a recorded programme">
           <validation-provider>
             <b-form-radio-group stacked v-model="fields.can_record" >
               <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>

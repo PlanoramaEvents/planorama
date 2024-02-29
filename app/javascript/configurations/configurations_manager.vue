@@ -2,10 +2,11 @@
   <div v-if="currentSettings">
     <p><strong>{{EVENT_SETTINGS_MUST_RELOAD}}</strong></p>
     <div v-for="parameter in parameters" :key="parameter.parameter_name">
+      <!-- We do not edit JSON configs here (such as people_hidden_fields) -->
       <config-editor
         model="configuration"
         :parameter="parameter"
-        v-if="parameter && !exclusions.includes(parameter.parameter_name)"
+        v-if="parameter && !exclusions.includes(parameter.parameter_name) && (parameter.parameter_type != 'JSON')"
       ></config-editor>
     </div>
   </div>
