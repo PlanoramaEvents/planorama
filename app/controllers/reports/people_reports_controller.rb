@@ -179,6 +179,7 @@ class Reports::PeopleReportsController < ApplicationController
         'Streaming Exceptions',
         'Permission to Record',
         'Recording Exceptions',
+        "Topics not to talk about",
         'Schedule'
       ]
     )
@@ -195,6 +196,7 @@ class Reports::PeopleReportsController < ApplicationController
           person.can_stream_exceptions,
           person.can_record,
           person.can_record_exceptions,
+          person.excluded_demographic_categories,
           person.sessions.scheduled.collect{|s| "'#{s.title}' - #{s.start_time.strftime('%Y-%m-%d %H:%M %Z')} - #{s.duration} mins - #{s.room.name}" }.join(";\n")
         ]
       )
