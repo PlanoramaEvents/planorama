@@ -43,9 +43,6 @@ class SurveySerializer
              :allow_submission_edits,
              :unique_submission
 
-  attribute :xxx do |object|
-  end
-
   has_many :pages,
            serializer: Survey::PageSerializer,
            links: {
