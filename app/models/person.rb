@@ -203,7 +203,12 @@ class Person < ApplicationRecord
           class_name: 'EmailAddress'
 
   has_many :submissions, class_name: 'Survey::Submission', dependent: :destroy
-  has_many :completed_surveys, through: :submissions, source: :survey
+  has_many :submitted_surveys, through: :submissions, source: :survey do
+    def completed
+      # can not rely on just state so look at responses
+      where("survey_submissions.id in (select distinct submission_id from survey_responses)")
+    end
+  end
 
   has_many :mailed_surveys, through: :mailings, source: :survey
   has_and_belongs_to_many :assigned_surveys, class_name: 'Survey'

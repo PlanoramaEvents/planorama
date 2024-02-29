@@ -380,7 +380,8 @@ class PeopleController < ResourceController
     authorize current_person, policy_class: policy_class
 
     person = Person.find params[:person_id]
-    collection = person.completed_surveys
+    # Get the completed surveys for the persom
+    collection = person.submitted_surveys.completed
     collection_total = collection.size
 
     # The JSON is just the top level survey data
