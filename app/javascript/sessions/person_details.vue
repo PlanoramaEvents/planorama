@@ -31,7 +31,7 @@
           </div>
           <div class="w-50">
             <h5>Community Memberships</h5>
-            <dl-person :fields="['othered', 'indigenous', 'black_diaspora', 'global_diaspora', 'non_anglophone', 'non_us_centric_perspectives', ]"></dl-person>
+            <dl-person :fields="['othered', 'indigenous', 'black_diaspora', 'global_diaspora', 'non_anglophone', 'non_us_centric_perspectives', 'demographic_categories']"></dl-person>
           </div>
         </div>
         <h5>Other Information</h5>
