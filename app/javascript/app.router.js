@@ -71,7 +71,7 @@ import SurveyPage from './surveys/survey-page.vue';
 import SurveyThankYou from './surveys/survey-thank-you.vue';
 
 const surveyRoutes = [
-  { path: 'edit/:id/:responses', component: ManageSurvey, props: true},
+  { path: 'edit/:id/:responses', component: ManageSurvey, props: true, name: 'survey_responses'},
   { path: 'edit/:id', component: ManageSurvey, props: true },
   { path: ':surveyId/page/:id/:preview', component: SurveyPage, props: true},
   { path: ':surveyId/page/:id', component: SurveyPage, props: true},
