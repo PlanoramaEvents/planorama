@@ -48,6 +48,7 @@ import { tagFormatter } from '@/store/tags.mixin';
 import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
 import searchStateMixin from '../store/search_state.mixin'
+import { personSessionMixin } from '@/mixins';
 
 const SAVED_SEARCH_STATE = "SESSION SELECT STATE";
 
@@ -58,10 +59,12 @@ export default {
     ModelTags
   },
   mixins: [
-    searchStateMixin
+    searchStateMixin,
+    personSessionMixin
   ],
   props: {
-    columns: Array
+    columns: Array,
+    personId: String
   },
   data() {
     return {
@@ -119,15 +122,16 @@ export default {
       this.$emit('change', this.fields_to_query())
     },
     init() {
-
-      let saved = this.getSearchState()(SAVED_SEARCH_STATE)
-      // console.debug("**** INIT ", saved)
-      if (saved) {
-        this.title_desc = saved.title_desc
-        this.area_id = saved.area_id
-        this.tags = saved.tags
-        this.match = saved.match
-        this.$emit('change', this.fields_to_query())
+      // Only deal wuth the saved filter the current user is the person we are looking at
+      if (this.currentUser.id == this.personId) {
+        let saved = this.getSearchState()(SAVED_SEARCH_STATE)
+        if (saved) {
+          this.title_desc = saved.title_desc
+          this.area_id = saved.area_id
+          this.tags = saved.tags
+          this.match = saved.match
+          this.$emit('change', this.fields_to_query())
+        }
       }
     }
   },
