@@ -869,11 +869,12 @@ ALTER SEQUENCE public.categorizations_id_seq OWNED BY public.categorizations.id;
 CREATE TABLE public.configurations (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     parameter character varying(45) NOT NULL,
-    parameter_value character varying(150) NOT NULL,
+    parameter_value character varying(150),
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     lock_version integer DEFAULT 0,
-    parameter_json jsonb
+    parameter_json jsonb,
+    CONSTRAINT param_exists CHECK (((parameter_json IS NOT NULL) OR (parameter_value IS NOT NULL)))
 );
 
 
@@ -3846,6 +3847,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240207233122'),
 ('20240223132105'),
 ('20240223134703'),
-('20240226191153');
+('20240226191153'),
+('20240303213410');
 
 
