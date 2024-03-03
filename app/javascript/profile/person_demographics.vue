@@ -15,23 +15,23 @@
     <person-edit-modal id="person-demo-modal" :person="selected" :data="demoData" :validate="true">
       <template #modal-title>Edit Demographics - {{selected.published_name}}</template>
       <template #default="{fields}">
-        <validation-provider>
-          <b-form-group label="Ethnicity">
+        <validation-provider v-if="!isHidden('ethnicity')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.ethnicity">
             <b-form-input type="text" v-model="fields.ethnicity"></b-form-input>
           </b-form-group>
         </validation-provider>
-        <validation-provider>
-          <b-form-group label="Gender">
+        <validation-provider v-if="!isHidden('gender')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.gender">
             <b-form-input type="text" v-model="fields.gender"></b-form-input>
           </b-form-group>
         </validation-provider>
-        <validation-provider>
-          <b-form-group label="Age at time of event">
+        <validation-provider v-if="!isHidden('age_at_convention')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.age_at_convention">
             <b-form-input type="text" v-model="fields.age_at_convention"></b-form-input>
           </b-form-group>
         </validation-provider>
-        <validation-provider>
-          <b-form-group label="Romantic and/or sexual orientation">
+        <validation-provider v-if="!isHidden('romantic_sexual_orientation')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.romantic_sexual_orientation">
             <b-form-textarea v-model="fields.romantic_sexual_orientation"></b-form-textarea>
           </b-form-group>
         </validation-provider>
@@ -40,38 +40,38 @@
     <person-edit-modal id="person-community-modal" :person="selected" :data="communityData" :validate="true">
       <template #modal-title>Edit community memberships - {{selected.published_name}}</template>
       <template #default="{fields}">
-        <validation-provider>
-          <b-form-group label="Experience with being &quot;othered&quot;">
+        <validation-provider v-if="!isHidden('othered')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.othered">
             <b-form-textarea v-model="fields.othered"></b-form-textarea>
           </b-form-group>
         </validation-provider>
-        <validation-provider>
-          <b-form-group label="Member of an Indigenous community">
+        <validation-provider v-if="!isHidden('indigenous')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.indigenous">
             <b-form-textarea v-model="fields.indigenous"></b-form-textarea>
           </b-form-group>
         </validation-provider>
-        <validation-provider>
-          <b-form-group label="Member of the global Black diaspora">
+        <validation-provider v-if="!isHidden('black_diaspora')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.black_diaspora">
             <b-form-textarea v-model="fields.black_diaspora"></b-form-textarea>
           </b-form-group>
         </validation-provider>
-        <validation-provider>
-          <b-form-group label="Member of the global diaspora">
+        <validation-provider v-if="!isHidden('global_diaspora')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.global_diaspora">
             <b-form-textarea v-model="fields.global_diaspora"></b-form-textarea>
           </b-form-group>
         </validation-provider>
-        <validation-provider>
-          <b-form-group label="Represent something other than a purely anglophone perspective">
+        <validation-provider v-if="!isHidden('non_anglophone')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.non_anglophone">
             <b-form-textarea v-model="fields.non_anglophone"></b-form-textarea>
           </b-form-group>
         </validation-provider>
-        <validation-provider>
-          <b-form-group label="Represent something other than a purely US-centric perspective">
+        <validation-provider v-if="!isHidden('non_us_centric_perspectives')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.non_us_centric_perspectives">
             <b-form-textarea v-model="fields.non_us_centric_perspectives"></b-form-textarea>
           </b-form-group>
         </validation-provider>
-        <validation-provider>
-          <b-form-group label="Other demographic categories">
+        <validation-provider v-if="!isHidden('demographic_categories')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.demographic_categories">
             <b-form-textarea v-model="fields.demographic_categories"></b-form-textarea>
           </b-form-group>
         </validation-provider>
@@ -90,6 +90,8 @@ import DlPerson from './dl_person.vue';
 import personSessionMixin from '@/auth/person_session.mixin';
 import { ValidationProvider } from 'vee-validate';
 import { settingsMixin } from "@/mixins";
+import { peopleHiddenFieldsMixin } from '@/configurations/people_hidden_fields.mixin';
+import { PROFILE_FIELD_LABELS } from "@/constants/strings";
 
 export default {
   name: "PersonDemographics",
@@ -121,19 +123,21 @@ export default {
       non_anglophone: null,
       non_us_centric_perspectives: null,
       demographic_categories: null,
-    }
+    },
+    PROFILE_FIELD_LABELS,
   }),
   mixins: [
     modelMixinNoProp,
     personSessionMixin,
-    settingsMixin
+    settingsMixin,
+    peopleHiddenFieldsMixin
   ],
   computed: {
     demoFields() {
-      return Object.keys(this.demoData);
+      return this.filterFieldList(Object.keys(this.demoData));
     },
     communityFields() {
-      return Object.keys(this.communityData);
+      return this.filterFieldList(Object.keys(this.communityData));
     },
     canEditInfo() {
       // TODO use sensitive data permission in the future
