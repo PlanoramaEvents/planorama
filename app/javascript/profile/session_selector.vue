@@ -35,16 +35,16 @@
         </div>
         <div class='row mb-5' v-for="item in sortedCollection" :key="item.id">
           <div class="col-11">
-            <h4>{{item.title}}</h4>
+            <h4>{{ item.title }}</h4>
             <div v-html="item.description"></div>
             <div v-if="item.format">
-              Format: <span class="badge badge-pill badge-info mr-1">{{item.format.name}}</span><br />
+              Format: <span class="badge badge-pill badge-info mr-1">{{ item.format.name }}</span><br />
             </div>
             <div v-if="item.area_list.length > 0">
-              Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list" :key="area">{{area}}</span>
+              Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.area_list" :key="area">{{ area }}</span>
             </div>
             <div v-if="item.tag_list.length > 0">
-              Tag(s): <span class="badge badge-pill badge-warning mr-1" v-for="tag in item.tag_list" :key="tag">{{tagFormatter(tag)}}</span>
+              Tag(s): <span class="badge badge-pill badge-warning mr-1" v-for="tag in item.tag_list" :key="tag">{{ tagFormatter(tag) }}</span>
             </div>
             <div class="mt-3" v-if="item.instructions_for_interest">Instructions for potential panelists:</div>
             <div class="panelist-instructions" v-html="item.instructions_for_interest">
@@ -85,6 +85,7 @@ import InterestIndicator from './interest_indicator.vue'
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import SessionSearch from './session_search'
 import { tagsMixin } from '@/store/tags.mixin';
+import { personModel } from '@/store/person.store'
 
 export default {
   name: "SessionSelector",

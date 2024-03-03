@@ -23,19 +23,19 @@
         </b-tab>
         <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
           <session-selector
-            v-if="person && hasOpenForInterest"
+            v-if="person && hasOpenForInterest && person_can_select_sessions"
             v-model="person"
             defaultSortBy='sessions.title'
             :model="sessionModel"
             defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
           ></session-selector>
-        <div v-if="!hasOpenForInterest" class="container-fluid mt-5">
+        <div v-if="!hasOpenForInterest || !person_can_select_sessions" class="container-fluid mt-5">
           <h5 class="font-italic text-muted">Coming soon!</h5>
         </div>
         </b-tab>
         <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
           <session-ranker
-            v-if="person && hasOpenForInterest"
+            v-if="person && hasOpenForInterest && person_can_select_sessions"
             defaultSortBy='interest_ranking,session_assignments.updated_at'
             :defaultSortDesc="true"
             :perPage="null"
@@ -43,7 +43,7 @@
             :defaultFilter="rankedFilter"
             :person_id="person.id"
           ></session-ranker>
-        <div v-if="!hasOpenForInterest" class="container-fluid d-flex mt-5">
+        <div v-if="!hasOpenForInterest || !person_can_select_sessions" class="container-fluid d-flex mt-5">
           <h5 class="font-italic text-muted">Coming soon!</h5>
         </div>
         </b-tab>
@@ -127,6 +127,10 @@ export default {
     hasOpenForInterest: false,
   }),
   computed: {
+    person_can_select_sessions() {
+      let selectedPerson = this.selected_model(personModel);
+      return !["not_set", "declined", "rejected"].includes(selectedPerson.con_state)
+    },
     tabsArray() {
       const baseTabs = [
         'edit',
