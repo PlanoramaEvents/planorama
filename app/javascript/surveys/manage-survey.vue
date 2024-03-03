@@ -28,7 +28,7 @@
       <b-tab v-if="survey" title="Responses" :active="!!responses" lazy>
         <view-responses :survey-id="id"></view-responses>
       </b-tab>
-      <survey-settings-tab lazy></survey-settings-tab>
+      <survey-settings-tab v-if="survey" lazy></survey-settings-tab>
       <b-tab v-if="survey" title="Audit Log" disabled lazy>
       </b-tab>
     </b-tabs>
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     init() {
-      this.selectSurvey(this.id)
+      this.selectSurvey(this.id);
       this.fetchSelectedSurvey();
     },
     back() {
