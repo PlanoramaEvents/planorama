@@ -1,7 +1,7 @@
 <template>
-  <div class="tag-display">
+  <div class="pill-display">
     <p>{{ label  }} <edit-button v-b-modal:[modalId]></edit-button></p>
-    <span :class="clazz" v-for="tag in value" :key="tag">{{tagFormatter(tag)}}</span>
+    <span :class="clazz" v-for="item in value" :key="item">{{formatter(item)}}</span>
     <span v-if="!value.length" class="text-muted font-italic">{{ SESSION_NO_TAGS(label) }}</span>
     <edit-modal :id="modalId" :title="modalTitle" @ok="$emit('input', mutableValue)" @hide="clearValue()" @show="initValue()">
         <b-form-select
@@ -18,10 +18,9 @@
 import EditButton from '@/components/edit_button.vue';
 import EditModal from '@/components/edit_modal.vue';
 import { SESSION_NO_TAGS } from '@/constants/strings';
-import { tagsMixin } from '@/store/tags.mixin';
 
 export default {
-  name: "TagDisplay",
+  name: "PillDisplay",
   props: {
     color: {
       type: String,
@@ -36,15 +35,15 @@ export default {
     },
     modalOptions: {
       required: true,
+    },
+    formatter: {
+      default: () => (_) => _
     }
   },
   components: {
     EditButton,
     EditModal,
   },
-  mixins: [
-    tagsMixin,
-  ],
   data: () => ({
     imutableValue: [],
     SESSION_NO_TAGS,
@@ -54,7 +53,7 @@ export default {
       return `badge badge-pill mr-1 badge-${this.color} mr-1`
     },
     modalId() {
-      return `tag-modal-${this.label.replace(' ', '-')}`
+      return `pill-modal-${this.label.replace(' ', '-')}`
     },
     modalTitle() {
       return `Edit ${this.label}`
