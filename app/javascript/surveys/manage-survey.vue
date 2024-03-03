@@ -63,7 +63,7 @@ export default {
   }),
   computed: {
     questionsTitle() {
-      return (this.survey && this.survey.public) ? SURVEY_PUBLIC_NO_EDIT : '';
+      return this.survey?.public ? SURVEY_PUBLIC_NO_EDIT : '';
     }
   },
   methods: {
