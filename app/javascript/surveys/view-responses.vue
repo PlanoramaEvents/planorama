@@ -146,14 +146,7 @@ export default {
         )
     },
     init() {
-      if (!this.survey || !this.survey.pages) {
-        this.selectSurvey(this.surveyId)
-        this.fetchSelectedSurvey().then(() => {
-          this.$refs['responses-table'].fetchPaged()
-        });
-      } else {
-        this.$refs['responses-table'].fetchPaged()
-      }
+      this.$refs['responses-table'].fetchPaged()
     }
   },
   mounted() {
