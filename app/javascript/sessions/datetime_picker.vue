@@ -30,10 +30,10 @@ export default {
   }),
   computed: {
     day() {
-      return this.value ? DateTime.fromISO(this.value, {zone: 'utc'}).setZone(this.conventionTimezone).toFormat('D', {locale: "en-US"}) : null;
+      return this.value ? DateTime.fromISO(this.value).setZone(this.conventionTimezone).toFormat('D', {locale: "en-US"}) : null;
     },
     time() {
-      return this.value ? DateTime.fromISO(this.value, {zone: 'utc'}).setZone(this.conventionTimezone).toFormat('HH:mm:ss', {locale: "en-US"}) : null;
+      return this.value ? DateTime.fromISO(this.value).setZone(this.conventionTimezone).toFormat('HH:mm:ss', {locale: "en-US"}) : null;
     },
     dayOptionsWithNull() {
       return [{text: "No day selected", value: null}, ...this.dayOptions];
@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     changeDay(newDay) {
-      let retDate = this.value ? DateTime.fromISO(this.value, {zone: 'utc'}).setZone(this.conventionTimezone) : DateTime.fromObject({hour: 0, minute: 0}, {zone: this.conventionTimezone});
+      let retDate = this.value ? DateTime.fromISO(this.value).setZone(this.conventionTimezone) : DateTime.fromObject({hour: 0, minute: 0}, {zone: this.conventionTimezone});
       if (newDay) {
         let date = DateTime.fromFormat(newDay, 'D', {locale: "en-US" }); //, {zone: this.conventionTimezone});
         retDate = retDate.set({
@@ -50,12 +50,12 @@ export default {
           day: date.day,
         })
         retDate = retDate.toUTC();
-        console.log('***** retDate', retDate.toISO());
+        // console.log('***** retDate', retDate.toISO());
         this.$emit('input', retDate.toISO());
       }
     },
     changeTime(newTime) {
-      let retDate = this.value ? DateTime.fromISO(this.value, {zone: 'utc'}) : DateTime.fromISO(this.conventionStart, {zone: 'utc'});
+      let retDate = this.value ? DateTime.fromISO(this.value).setZone(this.conventionTimezone) : DateTime.fromISO(this.conventionStart).setZone(this.conventionTimezone);
       if (newTime) {
         console.log('val', newTime, DateTime.fromFormat(newTime, 'HH:mm:ss'))
         let time = DateTime.fromFormat(newTime, 'HH:mm:ss', {zone: this.conventionTimezone}).toUTC();
