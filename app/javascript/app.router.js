@@ -108,7 +108,7 @@ var con_roles=[], isAdmin=false, hasPowers=false;
 
 export const router = new VueRouter({
   scrollBehavior(to) {
-    console.log(to)
+    // console.log(to)
     if (to.hash) {
       setTimeout(() => {
         const element = document.getElementById(to.hash.replace(/#/, ''))
