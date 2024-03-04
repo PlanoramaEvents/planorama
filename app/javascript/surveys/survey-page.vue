@@ -12,8 +12,12 @@
         <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
         <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"></linked-field-icon>{{SURVEY_LINKED_FIELD2}}</b-alert>
         <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
-        <ValidationObserver v-slot="{ handleSubmit }">
+        <ValidationObserver v-slot="{ handleSubmit, failed }">
           <form @submit.prevent="handleSubmit(submit)">
+            <b-alert show variant="danger" v-if="failed">
+              <!-- aka SCROLL UP ASSHAT -->
+              <b-icon-exclamation-triangle></b-icon-exclamation-triangle> You must correct all errors on the page to proceed.
+            </b-alert>
             <survey-question
                 v-for="q in selectedPageQuestions"
                 :key="q.id"
@@ -23,6 +27,10 @@
 
             ></survey-question>
             <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
+            <b-alert show variant="danger" v-if="failed">
+              <!-- aka SCROLL UP ASSHAT -->
+              <b-icon-exclamation-triangle></b-icon-exclamation-triangle> You must correct all errors on the page to proceed.
+            </b-alert>
             <div class="d-flex justify-content-end mt-2">
               <b-button variant="link" class="mr-1" v-if="!firstPage" @click="prev">Previous Page</b-button>
               <div v-b-tooltip="{disabled: !submit_disabled}" :title="submit_disabled_tooltip">
@@ -79,7 +87,7 @@ export default {
     SURVEY_NOT_ASSIGNED,
     SURVEY_LINKED_FIELD1,
     SURVEY_LINKED_FIELD2,
-    SURVEY_REDIRECT
+    SURVEY_REDIRECT,
   }),
   components: {
     SurveyQuestion,
