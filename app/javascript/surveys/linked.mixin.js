@@ -1,12 +1,13 @@
 import { LINKED_FIELD_LABELS } from "@/constants/strings";
 import settingsMixin from "@/store/settings.mixin";
 import { questionMixin } from "@/mixins";
+import { peopleHiddenFieldsMixin } from "@/configurations/people_hidden_fields.mixin";
 
 /**
  * Note: this relies on this.question existing
  */
 export const linkedMixin = {
-  mixins: [settingsMixin, questionMixin],
+  mixins: [settingsMixin, questionMixin, peopleHiddenFieldsMixin],
   data: () => ({
     linkedFieldsForCache: null
   }),
@@ -46,7 +47,7 @@ export const linkedMixin = {
               // nothing changes
               break;
           }
-          if(linkable) {
+          if(linkable && !this.isHidden(attr)) {
             opts[questionType].options.push({
               disabled: (qt) => qt !== questionType,
               text: LINKED_FIELD_LABELS[modelName][attr] || attr,

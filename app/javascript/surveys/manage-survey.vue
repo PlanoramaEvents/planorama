@@ -20,16 +20,16 @@
     >
       <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey()"></b-form-textarea>
     </b-form-group>
-    <b-alert :show="survey.public" variant="warning" class="alert-bright mx-3">{{SURVEY_PUBLIC_NO_EDIT}}</b-alert>
+    <b-alert v-if="survey" :show="survey.public" variant="warning" class="alert-bright mx-3">{{SURVEY_PUBLIC_NO_EDIT}}</b-alert>
     <b-tabs>
-      <b-tab button-id="questionTab" title="Question" :active="!responses && !survey.public" lazy :disabled="survey.public">
+      <b-tab v-if="survey" button-id="questionTab" title="Question" :active="!responses && !survey.public" lazy :disabled="survey.public">
         <edit-survey :survey-id="id"></edit-survey>
       </b-tab>
-      <b-tab title="Responses" :active="!!responses" lazy>
+      <b-tab v-if="survey" title="Responses" :active="!!responses" lazy>
         <view-responses :survey-id="id"></view-responses>
       </b-tab>
-      <survey-settings-tab lazy></survey-settings-tab>
-      <b-tab title="Audit Log" disabled lazy>
+      <survey-settings-tab v-if="survey" lazy></survey-settings-tab>
+      <b-tab v-if="survey" title="Audit Log" disabled lazy>
       </b-tab>
     </b-tabs>
     <b-tooltip :title="questionsTitle" target="questionTab"></b-tooltip>
@@ -63,12 +63,13 @@ export default {
   }),
   computed: {
     questionsTitle() {
-      return this.survey.public ? SURVEY_PUBLIC_NO_EDIT : '';
+      return this.survey?.public ? SURVEY_PUBLIC_NO_EDIT : '';
     }
   },
   methods: {
     init() {
-      this.selectSurvey(this.id)
+      this.selectSurvey(this.id);
+      this.fetchSelectedSurvey();
     },
     back() {
       this.unselectSurvey();
