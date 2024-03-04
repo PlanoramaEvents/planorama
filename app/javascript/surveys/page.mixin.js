@@ -89,7 +89,11 @@ export const pageMixin = {
       if (cached) {
         return cached
       } else {
-        return Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order)
+        if (page.questions) {
+          return Object.values(page.questions).sort((a, b) => a.sort_order - b.sort_order)
+        } else {
+          return [];
+        }
       }
     },
     newPage(args) {
