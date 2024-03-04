@@ -75,6 +75,12 @@ class PersonPolicy < PlannerPolicy
     allowed?(action: :clyde_sync)
   end
 
+  def completed_surveys?
+    return true if @record.class != Symbol && @record.id == @person.id
+
+    allowed?(action: :mailed_surveys)
+  end
+
   def resync_airmeet?
     allowed?(action: :resync_airmeet)
   end

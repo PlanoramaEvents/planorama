@@ -18,18 +18,14 @@
     <div class="row">
       <div class="col-6">
 
-        <b-form-group
+        <pill-display 
+          v-model="session_areas"
+          @input="saveSession()"
           label="Areas"
-        >
-          <model-select
-            id="session-areas"
-            v-model="session_areas"
-            model="area"
-            field="name"
-            :multiple="true"
-            @change="saveSession()"
-          ></model-select>
-        </b-form-group>
+          color="primary"
+          :modalOptions="areaOptions"
+          :formatter="areaFormatter"
+        ></pill-display>
       </div>
       <div class="col-6">
         <b-form-group
@@ -99,13 +95,13 @@
         </b-form-group>
       </div>
       <div class="col-6">
-        <tag-display 
+        <pill-display 
           v-model="session.tag_list"
           @input="saveSession()"
           label="Public Tags"
           color="warning"
           :modalOptions="sessionTagsOptions"
-        ></tag-display>
+        ></pill-display>
       </div>
     </div>
     <div class="row">
@@ -115,13 +111,13 @@
         </b-form-group>
       </div>
       <div class="col-6">
-        <tag-display
+        <pill-display
           v-model="session.label_list"
           @input="saveSession()"
           label="Admin Labels"
-          color="secondary"
+          color="info"
           :modalOptions="sessionLabelsOptions"
-        ></tag-display>
+        ></pill-display>
       </div>
     </div>
     <div class="row">
@@ -174,8 +170,9 @@ import { min_value } from 'vee-validate/dist/rules'
 import { SESSION_ENVIRONMENT } from '@/constants/strings'
 import {minorsParticipationMixin} from './minors_participation.mixin';
 import { ageRestrictionMixin } from './age_restriction.mixin';
-import TagDisplay from './tag_display.vue';
+import PillDisplay from '@/components/pill_display.vue';
 import { tagsMixin } from '@/store/tags.mixin';
+import { areaMixin } from '@/store/area.mixin';
 
 extend('min_value', {
   ...min_value,
@@ -189,13 +186,14 @@ export default {
     ModelTags,
     PlanoEditor,
     ValidationProvider,
-    TagDisplay
+    PillDisplay,
   },
   mixins: [
     modelUtilsMixin,
     minorsParticipationMixin,
     ageRestrictionMixin,
     tagsMixin,
+    areaMixin,
   ],
   data: () => ({
     editable: false,

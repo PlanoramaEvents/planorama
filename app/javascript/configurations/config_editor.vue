@@ -31,7 +31,16 @@
           inline
         >Yes</b-form-checkbox></label>
       </div>
-      <div v-else>
+      <div v-else-if="parameter.parameter_name === 'people_hidden_fields'">
+        <two-sided-multi-select
+          v-model="configuration.parameter_json"
+          :options="peopleHideableFieldsOptions"
+          not-selected-label="Visible"
+          selected-label="Hidden"
+          @change="onChange"
+        ></two-sided-multi-select>
+      </div>
+      <div v-else-if="parameter.parameter_type !== 'JSON'">
         <b-form-input
           v-model="configuration.parameter_value"
           :state="calcValid(errors,valid)"
@@ -49,8 +58,10 @@ import configurationMixin from './configuration.mixin';
 import { ValidationProvider } from 'vee-validate';
 import TimezoneSelector from "../components/timezone_selector.vue"
 import settingsMixin from "@/store/settings.mixin";
+import { peopleHiddenFieldsMixin } from './people_hidden_fields.mixin';
 import {startCase} from "lodash";
-import { CONFIGURATION_LABEL_OVERRIDES } from '@/constants/strings';
+import { CONFIGURATION_LABEL_OVERRIDES, LINKED_FIELD_LABELS } from '@/constants/strings';
+import TwoSidedMultiSelect from '@/components/two_sided_multi_select.vue';
 
 const { DateTime } = require("luxon");
 
@@ -58,7 +69,8 @@ export default {
   name: "ConfigEditor",
   components: {
     ValidationProvider,
-    TimezoneSelector
+    TimezoneSelector,
+    TwoSidedMultiSelect,
   },
   props: {
     parameter: {
@@ -99,7 +111,8 @@ export default {
   mixins: [
     modelMixin,
     configurationMixin,
-    settingsMixin
+    settingsMixin,
+    peopleHiddenFieldsMixin,
   ],
   methods: {
     calcValid(errors, valid) {
@@ -115,9 +128,9 @@ export default {
       let new_val = arg
       if (this.is_valid) {
 
-        if (this.parameter.parameter_type == 'DateTime') {
+        if (this.parameter.parameter_type === 'DateTime') {
           if (arg.length == 0) return
-          if (this.parameter.parameter_name == "convention_end_time") {
+          if (this.parameter.parameter_name === "convention_end_time") {
             new_val = DateTime.fromISO(arg, {zone: this.timezone}).endOf('day').minus({ hours: 8 }).toString()
           } else {
             new_val = DateTime.fromISO(arg, {zone: this.timezone}).startOf('day').plus({ hours: 6 }).toString()
@@ -125,11 +138,24 @@ export default {
         }
 
         if (typeof this.parameter.configuration.id === 'undefined') {
+
           let newconfig = {
-            parameter_value: new_val,
             parameter: this.parameter.parameter_name
           }
+          if (this.parameter.parameter_type === 'JSON') {
+            newconfig.parameter_json = new_val;
+          } else {
+            newconfig.parameter_value = new_val;
+          }
+
           this.createConfiguration(newconfig).then(
+            (data) => {
+              this.configuration = data
+            }
+          )
+        } else if (this.parameter.parameter_type === 'JSON') {
+          this.configuration.parameter_json = new_val;
+          this.save(this.configuration).then(
             (data) => {
               this.configuration = data
             }

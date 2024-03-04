@@ -5,7 +5,8 @@
 #  id              :uuid             not null, primary key
 #  lock_version    :integer          default(0)
 #  parameter       :string(45)       not null
-#  parameter_value :string(150)      not null
+#  parameter_json  :jsonb
+#  parameter_value :string(150)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
@@ -22,6 +23,6 @@ class ConfigurationSerializer
   include JSONAPI::Serializer
 
   attributes :id, :lock_version,
-             :parameter, :parameter_value,
+             :parameter, :parameter_value, :parameter_json,
              :created_at, :updated_at
 end

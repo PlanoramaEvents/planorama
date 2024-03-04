@@ -23,19 +23,19 @@
         </b-tab>
         <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
           <session-selector
-            v-if="person && hasOpenForInterest"
+            v-if="person && hasOpenForInterest && person_can_select_sessions"
             v-model="person"
             defaultSortBy='sessions.title'
             :model="sessionModel"
             defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
           ></session-selector>
-        <div v-if="!hasOpenForInterest" class="container-fluid mt-5">
+        <div v-if="!hasOpenForInterest || !person_can_select_sessions" class="container-fluid mt-5">
           <h5 class="font-italic text-muted">Coming soon!</h5>
         </div>
         </b-tab>
         <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
           <session-ranker
-            v-if="person && hasOpenForInterest"
+            v-if="person && hasOpenForInterest && person_can_select_sessions"
             defaultSortBy='interest_ranking,session_assignments.updated_at'
             :defaultSortDesc="true"
             :perPage="null"
@@ -43,7 +43,7 @@
             :defaultFilter="rankedFilter"
             :person_id="person.id"
           ></session-ranker>
-        <div v-if="!hasOpenForInterest" class="container-fluid d-flex mt-5">
+        <div v-if="!hasOpenForInterest || !person_can_select_sessions" class="container-fluid d-flex mt-5">
           <h5 class="font-italic text-muted">Coming soon!</h5>
         </div>
         </b-tab>
@@ -56,13 +56,14 @@
         <b-tab title="Emails" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'email'">
           <people-email-tab></people-email-tab>
         </b-tab>
+        <b-tab title="Surveys" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'surveys'">
+          <people-surveys-tab :person="person"></people-surveys-tab>
+        </b-tab>
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
           <people-admin-tab></people-admin-tab>
         </b-tab>
         <b-tab title="Integrations" lazy v-if="currentUserIsAdmin" :active="tab === 'integrations'">
           <pre>{{JSON.stringify(person.integrations, undefined, 2)}}</pre>
-        </b-tab>
-        <b-tab title="Surveys" disabled lazy>
         </b-tab>
       </b-tabs>
     </model-loading-overlay>
@@ -80,6 +81,7 @@ import PersonLiveSchedule from '@/profile/person_live_schedule.vue';
 import PersonDraftSchedule from '@/profile/person_draft_schedule.vue';
 import PeopleAdminTab from './people_admin_tab.vue';
 import PeopleEmailTab from '@/profile/person_email_tab.vue';
+import PeopleSurveysTab from '@/profile/person_surveys.vue';
 import ModelLoadingOverlay from '@/components/model_loading_overlay.vue';
 
 import { personModel } from '@/store/person.store'
@@ -113,6 +115,7 @@ export default {
     PersonDraftSchedule,
     PeopleAdminTab,
     PeopleEmailTab,
+    PeopleSurveysTab,
   },
   mixins: [
     personSessionMixin,
@@ -127,6 +130,10 @@ export default {
     hasOpenForInterest: false,
   }),
   computed: {
+    person_can_select_sessions() {
+      let selectedPerson = this.selected_model(personModel);
+      return !["not_set", "declined", "rejected"].includes(selectedPerson.con_state)
+    },
     tabsArray() {
       const baseTabs = [
         'edit',
@@ -141,6 +148,7 @@ export default {
       if (this.currentUserIsAdmin || this.currentUserIsStaff || this.firmSchedule) {
         baseTabs.splice(5, 0, 'schedule');
         baseTabs.push('email');
+        baseTabs.push('surveys');
         baseTabs.push('admin');
       }
       if(this.currentUserIsAdmin) {
