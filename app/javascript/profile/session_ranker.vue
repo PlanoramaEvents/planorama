@@ -26,56 +26,56 @@
         <h6>
           Current Counts
         </h6>
-        Rank 1: <b>{{rank1_total}}</b><br />
-        Rank 2: <b>{{rank2_total}}</b><br />
-        Rank 3: <b>{{rank3_total}}</b><br />
-        Unranked: <b>{{other_total}}</b><br />
+        Rank 1: <b>{{ rank1_total }}</b><br />
+        Rank 2: <b>{{ rank2_total }}</b><br />
+        Rank 3: <b>{{ rank3_total }}</b><br />
+        Unranked: <b>{{ other_total }}</b><br />
       </div>
-    </div>
-    <!-- :key="item.session.id"  Causes **lots** of vue errors with dups ids-->
-     <div class='row mb-4' v-for="item in sortedCollection" :key="item.id">
-       <div class="col-8">
-         <h4>{{item.session.title}}</h4>
-         <p v-html="item.session.description"></p>
-         <div v-if="item.session.format">
-           Format: <span class="badge badge-pill badge-info mr-1">{{item.session.format.name}}</span><br />
-         </div>
-         <div v-if="item.session.area_list && item.session.area_list.length">
-           Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list" :key="area">{{area}}</span>
-         </div>
-         <div v-if="item.session.tag_list && item.session.tag_list.length">
-          Tag(s): <span class="badge badge-pill badge-warning mr-1" v-for="tag in item.session.tag_list" :key="tag">{{tagFormatter(tag)}}</span>
-         </div>
-         <br />
-         <div class="mt-3" v-if="item.session.instructions_for_interest">Instructions for potential panelists:</div>
-         <div class="panelist-instructions" v-html="item.session.instructions_for_interest"></div>
-         <b-textarea
-           v-model="item.interest_notes"
-           @blur="changeAssignment(item)"
-         ></b-textarea>
-       </div>
-       <div class="col pt-4">
-         <session-assignment-monitor
-           :assignment="item"
-           model="session_assignment"
-           @change="changeAssignment"
-         ></session-assignment-monitor>
-         <b-form-group label="Rank">
-           <b-form-select
-             v-model="item.interest_ranking"
-             :state="errored(item)"
-             :options="rankOptions">
-           </b-form-select>
-         </b-form-group>
-         <b-form-group label="Override default moderating preferences for this session only?">
-           <b-form-select
-             v-model="item.interest_role"
-             :options="moderatorOptions">
-           </b-form-select>
-         </b-form-group>
-         <b-button variant="primary" @click="notInterested(item)"><b-icon-trash></b-icon-trash></b-button>
-       </div>
-     </div>
+      </div>
+      <!-- :key="item.session.id"  Causes **lots** of vue errors with dups ids-->
+      <div class='row mb-4' v-for="item in sortedCollection" :key="item.id">
+        <div class="col-8">
+          <h4>{{ item.session.title }}</h4>
+          <p v-html="item.session.description"></p>
+          <div v-if="item.session.format">
+            Format: <span class="badge badge-pill badge-info mr-1">{{ item.session.format.name }}</span><br />
+          </div>
+          <div v-if="item.session.area_list && item.session.area_list.length">
+            Area(s): <span class="badge badge-pill badge-primary mr-1" v-for="area in item.session.area_list" :key="area">{{ area }}</span>
+          </div>
+          <div v-if="item.session.tag_list && item.session.tag_list.length">
+          Tag(s): <span class="badge badge-pill badge-warning mr-1" v-for="tag in item.session.tag_list" :key="tag">{{ tagFormatter(tag) }}</span>
+          </div>
+          <br />
+          <div class="mt-3" v-if="item.session.instructions_for_interest">Instructions for potential panelists:</div>
+          <div class="panelist-instructions" v-html="item.session.instructions_for_interest"></div>
+          <b-textarea
+            v-model="item.interest_notes"
+            @blur="changeAssignment(item)"
+          ></b-textarea>
+        </div>
+        <div class="col pt-4">
+          <session-assignment-monitor
+            :assignment="item"
+            model="session_assignment"
+            @change="changeAssignment"
+          ></session-assignment-monitor>
+          <b-form-group label="Rank">
+            <b-form-select
+              v-model="item.interest_ranking"
+              :state="errored(item)"
+              :options="rankOptions">
+            </b-form-select>
+          </b-form-group>
+          <b-form-group label="Override default moderating preferences for this session only?">
+            <b-form-select
+              v-model="item.interest_role"
+              :options="moderatorOptions">
+            </b-form-select>
+          </b-form-group>
+          <b-button variant="primary" @click="notInterested(item)"><b-icon-trash></b-icon-trash></b-button>
+        </div>
+      </div>
 
      <b-modal
        title="Confirm Not Interested"
@@ -92,12 +92,14 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
+import modelUtilsMixin from '../store/model_utils.mixin';
 import tableMixin from '../store/table.mixin';
 import personSessionMixin from '../auth/person_session.mixin';
 import sessionAssignmentMixin from '../sessions/session_assignment.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import SessionAssignmentMonitor from './session_assignment_monitor.vue'
 import {tagsMixin} from '@/store/tags.mixin';
+import { personModel } from '@/store/person.store'
 
 import { SESSION_RANKING_ERROR } from '../constants/strings';
 
@@ -109,6 +111,7 @@ export default {
   mixins: [
     personSessionMixin,
     modelMixin,
+    modelUtilsMixin,
     tableMixin, // covers pagination and sorting
     sessionAssignmentMixin,
     tagsMixin,

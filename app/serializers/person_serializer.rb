@@ -2,87 +2,92 @@
 #
 # Table name: people
 #
-#  id                          :uuid             not null, primary key
-#  accommodations              :string(10000)
-#  age_at_convention           :string
-#  attendance_type             :string(200)
-#  availability_notes          :string
-#  bio                         :text
-#  black_diaspora              :string(10000)
-#  can_photo                   :enum             default("no")
-#  can_photo_exceptions        :string(10000)
-#  can_record                  :enum             default("no")
-#  can_record_exceptions       :string(10000)
-#  can_share                   :boolean          default(FALSE), not null
-#  can_stream                  :enum             default("no")
-#  can_stream_exceptions       :string(10000)
-#  comments                    :text
-#  con_state                   :enum             default("not_set")
-#  confirmation_sent_at        :datetime
-#  confirmation_token          :string
-#  confirmed_at                :datetime
-#  current_sign_in_at          :datetime
-#  current_sign_in_ip          :inet
-#  date_reg_synced             :datetime
-#  demographic_categories      :string
-#  do_not_assign_with          :string(10000)
-#  encrypted_password          :string           default(""), not null
-#  ethnicity                   :string(400)
-#  facebook                    :string
-#  failed_attempts             :integer          default(0), not null
-#  flickr                      :string
-#  gender                      :string(400)
-#  indigenous                  :string(10000)
-#  instagram                   :string
-#  integrations                :jsonb            not null
-#  is_local                    :boolean          default(FALSE)
-#  job_title                   :string
-#  language                    :string(5)        default("")
-#  languages_fluent_in         :string(10000)
-#  last_sign_in_at             :datetime
-#  last_sign_in_ip             :inet
-#  linkedin                    :string
-#  lock_version                :integer          default(0)
-#  locked_at                   :datetime
-#  moderation_experience       :string(10000)
-#  name                        :string           default("")
-#  name_sort_by                :string
-#  name_sort_by_confirmed      :boolean          default(FALSE)
-#  needs_accommodations        :boolean          default(FALSE)
-#  non_us_centric_perspectives :string(10000)
-#  opted_in                    :boolean          default(FALSE), not null
-#  organization                :string
-#  othered                     :string(10000)
-#  othersocialmedia            :string
-#  pronouns                    :string(400)
-#  pseudonym                   :string
-#  pseudonym_sort_by           :string
-#  pseudonym_sort_by_confirmed :boolean          default(FALSE)
-#  published_name              :string
-#  published_name_sort_by      :string
-#  reddit                      :string
-#  registered                  :boolean          default(FALSE), not null
-#  registration_number         :string
-#  registration_type           :string
-#  remember_created_at         :datetime
-#  reset_password_sent_at      :datetime
-#  reset_password_token        :string
-#  romantic_sexual_orientation :string
-#  sign_in_count               :integer          default(0), not null
-#  tiktok                      :string
-#  timezone                    :string(500)
-#  twelve_hour                 :boolean          default(TRUE)
-#  twitch                      :string
-#  twitter                     :string
-#  unconfirmed_email           :string
-#  unlock_token                :string
-#  website                     :string
-#  willing_to_moderate         :boolean          default(FALSE)
-#  year_of_birth               :integer
-#  youtube                     :string
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
-#  reg_id                      :string
+#  id                              :uuid             not null, primary key
+#  accommodations                  :string(10000)
+#  age_at_convention               :string
+#  attendance_type                 :string(200)
+#  availability_notes              :string
+#  bio                             :text
+#  black_diaspora                  :string(10000)
+#  bsky                            :string
+#  can_photo                       :enum             default("no")
+#  can_photo_exceptions            :string(10000)
+#  can_record                      :enum             default("no")
+#  can_record_exceptions           :string(10000)
+#  can_share                       :boolean          default(FALSE), not null
+#  can_stream                      :enum             default("no")
+#  can_stream_exceptions           :string(10000)
+#  comments                        :text
+#  con_state                       :enum             default("not_set")
+#  confirmation_sent_at            :datetime
+#  confirmation_token              :string
+#  confirmed_at                    :datetime
+#  current_sign_in_at              :datetime
+#  current_sign_in_ip              :inet
+#  date_reg_synced                 :datetime
+#  demographic_categories          :string
+#  do_not_assign_with              :string(10000)
+#  encrypted_password              :string           default(""), not null
+#  ethnicity                       :string(400)
+#  excluded_demographic_categories :string
+#  facebook                        :string
+#  failed_attempts                 :integer          default(0), not null
+#  fediverse                       :string
+#  flickr                          :string
+#  gender                          :string(400)
+#  global_diaspora                 :string
+#  indigenous                      :string(10000)
+#  instagram                       :string
+#  integrations                    :jsonb            not null
+#  is_local                        :boolean          default(FALSE)
+#  job_title                       :string
+#  language                        :string(5)        default("")
+#  languages_fluent_in             :string(10000)
+#  last_sign_in_at                 :datetime
+#  last_sign_in_ip                 :inet
+#  linkedin                        :string
+#  lock_version                    :integer          default(0)
+#  locked_at                       :datetime
+#  moderation_experience           :string(10000)
+#  name                            :string           default("")
+#  name_sort_by                    :string
+#  name_sort_by_confirmed          :boolean          default(FALSE)
+#  needs_accommodations            :boolean          default(FALSE)
+#  non_anglophone                  :string
+#  non_us_centric_perspectives     :string(10000)
+#  opted_in                        :boolean          default(FALSE), not null
+#  organization                    :string
+#  othered                         :string(10000)
+#  othersocialmedia                :string
+#  pronouns                        :string(400)
+#  pseudonym                       :string
+#  pseudonym_sort_by               :string
+#  pseudonym_sort_by_confirmed     :boolean          default(FALSE)
+#  published_name                  :string
+#  published_name_sort_by          :string
+#  reddit                          :string
+#  registered                      :boolean          default(FALSE), not null
+#  registration_number             :string
+#  registration_type               :string
+#  remember_created_at             :datetime
+#  reset_password_sent_at          :datetime
+#  reset_password_token            :string
+#  romantic_sexual_orientation     :string
+#  sign_in_count                   :integer          default(0), not null
+#  tiktok                          :string
+#  timezone                        :string(500)
+#  twelve_hour                     :boolean          default(TRUE)
+#  twitch                          :string
+#  twitter                         :string
+#  unconfirmed_email               :string
+#  unlock_token                    :string
+#  website                         :string
+#  willing_to_moderate             :boolean          default(FALSE)
+#  year_of_birth                   :integer
+#  youtube                         :string
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  reg_id                          :string
 #
 # Indexes
 #
@@ -112,6 +117,7 @@ class PersonSerializer #< ActiveModel::Serializer
               :can_share,
               :registered, :registration_type, :registration_number,
               :bio, :website, :twitter, :othersocialmedia,
+              :fediverse, :bsky,
               :facebook, :linkedin, :twitch, :youtube,
               :instagram, :flickr, :reddit, :tiktok,
               :can_stream,
@@ -138,7 +144,10 @@ class PersonSerializer #< ActiveModel::Serializer
               :twelve_hour,
               :attendance_type,
               :availability_notes,
-              :integrations
+              :integrations,
+              :excluded_demographic_categories,
+              :global_diaspora,
+              :non_anglophone
 
   # status and comments hidden except for staff
   protected_attributes :con_state, :comments
@@ -190,6 +199,16 @@ class PersonSerializer #< ActiveModel::Serializer
                   "#{params[:domain]}/person/#{object.id}/submissions"
                 }
               }
+
+  has_many :completed_surveys, lazy_load_data: true, serializer: SurveySerializer,
+             links: {
+               self: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}"
+               },
+               related: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}/completed_surveys"
+               }
+             }
 
   #
   has_many :mailed_surveys, lazy_load_data: true, serializer: SurveySerializer,

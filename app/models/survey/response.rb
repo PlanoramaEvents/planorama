@@ -92,6 +92,8 @@ class Survey::Response < ApplicationRecord
             submission.person.tiktok = val['tiktok']
             submission.person.othersocialmedia = val['other']
             submission.person.website = val['website']
+            submission.person.fediverse = val['fediverse']
+            submission.person.bsky = val['bsky']
           else
             if check_update_linked
               existing = submission.person.send("#{details[1]}")
@@ -195,7 +197,8 @@ class Survey::Response < ApplicationRecord
       text: "",
       answers: [],
       socialmedia: {
-        twitter: nil, facebook: nil, linkedin: nil, twitch: nil, youtube: nil, instagram: nil, tiktok: nil, other: nil, website: nil
+        twitter: nil, facebook: nil, linkedin: nil, twitch: nil, youtube: nil, instagram: nil, tiktok: nil, other: nil, website: nil,
+        bsky: nil, fediverse: nil
       }
     }
   end

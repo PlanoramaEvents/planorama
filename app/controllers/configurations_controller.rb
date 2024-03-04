@@ -22,6 +22,7 @@ class ConfigurationsController < ResourceController
       lock_version
       parameter
       parameter_value
+      parameter_json
     ]
   end
 end

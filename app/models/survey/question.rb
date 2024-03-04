@@ -38,7 +38,7 @@ class Survey::Question < ApplicationRecord
 
   has_paper_trail versions: { class_name: 'Audit::SurveyVersion' }, ignore: [:updated_at, :created_at, :lock_version, :sort_order]
 
-  default_scope {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
+  # default_scope {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
 
   belongs_to :page,
              class_name: 'Survey::Page',

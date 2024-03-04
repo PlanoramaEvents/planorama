@@ -39,7 +39,6 @@ import {
 } from '@/mixins';
 import TableVue from '../components/table_vue';
 import TooltipOverflow from '../shared/tooltip-overflow';
-import { submissionModel, surveyModel } from '@/store/survey';
 import {http as axios} from '../http';
 import pageMixin from './page.mixin';
 import { spinnerMixin } from '@/store/spinner.mixin';
@@ -146,14 +145,7 @@ export default {
         )
     },
     init() {
-      if (!this.survey || !this.survey.pages) {
-        this.selectSurvey(this.surveyId)
-        this.fetchSelectedSurvey().then(() => {
-          this.$refs['responses-table'].fetchPaged()
-        });
-      } else {
-        this.$refs['responses-table'].fetchPaged()
-      }
+      this.$refs['responses-table'].fetchPaged()
     }
   },
   mounted() {

@@ -53,7 +53,6 @@ export const surveyMixin = {
       this.$store.commit(UNSELECT, {model})
     },
     fetchSelectedSurvey() {
-      console.debug("FETCHING SELCTED SURVEY")
       return this.$store.dispatch(FETCH_SELECTED, {model});
     },
     deleteSurvey(itemOrId, success_text = SURVEY_SAVE_SUCCESS_DELETE, error_text = SURVEY_SAVE_ERROR_DELETE) {
