@@ -1,13 +1,17 @@
 <template>
-  <b-overlay :show="!selected" spinner-variant="primary" variant="white" opacity="1">
+  <loading-overlay :loading="!selected">
     <slot></slot>
-  </b-overlay>
+  </loading-overlay>
 </template>
 
 <script>
+import LoadingOverlay from './loading_overlay.vue';
 import { modelMixin } from '@/store/model.mixin'
 export default {
   name: "ModelLoadingOverlay",
+  components: {
+    LoadingOverlay
+  },
   mixins: [
     modelMixin
   ]
