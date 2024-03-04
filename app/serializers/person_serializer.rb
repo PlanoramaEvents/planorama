@@ -200,6 +200,16 @@ class PersonSerializer #< ActiveModel::Serializer
                 }
               }
 
+  has_many :completed_surveys, lazy_load_data: true, serializer: SurveySerializer,
+             links: {
+               self: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}"
+               },
+               related: -> (object, params) {
+                 "#{params[:domain]}/person/#{object.id}/completed_surveys"
+               }
+             }
+
   #
   has_many :mailed_surveys, lazy_load_data: true, serializer: SurveySerializer,
              links: {

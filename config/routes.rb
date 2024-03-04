@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   post 'person/session_names', to: 'people#session_names'
   post 'person/check_password', to: 'people#check_password'
   resources :people, path: 'person' do
+    # TODO: surveys
     get 'convention_roles', to: 'convention_roles#index'
     get 'email_addresses', to: 'email_addresses#index'
     get 'sessions', to: 'sessions#index'
@@ -45,6 +46,7 @@ Rails.application.routes.draw do
     get 'published_sessions', to: 'published_sessions#index'
     get 'mail_histories', to: 'mail_histories#index'
     get 'submissions', to: 'people#submissions'
+    get 'completed_surveys', to: 'people#completed_surveys'
     get 'resync_airmeet', to: 'people#resync_airmeet'
     resources :availabilities, path: 'availability', only: [:index]
     patch 'availability', to: 'availabilities#replace'

@@ -27,14 +27,13 @@
         <b-tab title="Emails" lazy v-if="currentUserIsAdmin || currentUserIsStaff">
           <person-email-tab></person-email-tab>
         </b-tab>
+        <b-tab title="Surveys" lazy v-if="currentUserIsAdmin || currentUserIsStaff">
+          <person-surveys></person-surveys>
+        </b-tab>
         <b-tab title="Admin" v-if="currentUserIsAdmin || currentUserIsStaff">
          <people-admin-tab></people-admin-tab>
         </b-tab>
         <!-- Need notes and a state change drop down -->
-        <!-- These need to be done and move to the people edit/tabs screen
-        <b-tab title="Surveys">
-          <people-surveys-tab :model="model"></people-surveys-tab>
-        </b-tab> -->
       </b-tabs>
     </template>
   </sidebar-vue>
@@ -45,7 +44,6 @@ import SidebarVue from '../components/sidebar_vue.vue';
 import {personSessionMixin, modelMixin} from '@/mixins';
 import Detail from './detail.vue';
 import PeopleAdminTab from './people_admin_tab.vue';
-import PeopleSurveysTab from './people_surveys_tab.vue';
 import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import PersonDemographics from '@/profile/person_demographics.vue';
 import PersonEmailTab from '@/profile/person_email_tab.vue';
@@ -54,6 +52,7 @@ import PersonLiveSchedule from '@/profile/person_live_schedule.vue';
 import PersonDraftSchedule from '@/profile/person_draft_schedule.vue';
 import PersonSummary from '@/profile/person_summary.vue';
 import AvailabilityFlyoutTab from '@/profile/availability_flyout_tab.vue';
+import PersonSurveys from '@/profile/person_surveys.vue';
 
 export default {
   name: 'PeopleSidebar',
@@ -66,9 +65,9 @@ export default {
     PersonDetails,
     PersonLiveSchedule,
     PersonDraftSchedule,
-    PeopleSurveysTab,
     PersonSummary,
     AvailabilityFlyoutTab,
+    PersonSurveys,
   },
   mixins: [
     modelMixin,

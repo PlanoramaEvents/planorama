@@ -128,6 +128,16 @@ namespace :parameters do
       )
     end
 
+    unless ParameterName.find_by(parameter_name: 'people_hidden_fields')
+      ParameterName.create!(
+        {
+          parameter_name: 'people_hidden_fields',
+          parameter_description: 'Which fields for a person can be hidden',
+          parameter_type: 'JSON'
+        }
+      )
+    end
+
     pname = ParameterName.find_by(parameter_name: 'profile_show_demographics_and_community')
     if pname
       pname.destroy
