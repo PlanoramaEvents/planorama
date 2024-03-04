@@ -25,7 +25,7 @@
       <div class="ml-2 keep-format" v-if="assignment">{{assignment.interest_notes | na_if_empty}}</div>
       <div class="ml-2" v-else>N/A</div>
     </div>
-    <div class="mt-2">
+    <div class="mt-2" v-if="!isHidden('demographic_categories')">
       <h6>Other demographic categories</h6>
       <div class="ml-2">
         {{assignee.demographic_categories | na_if_empty}}
@@ -36,11 +36,12 @@
 
 <script>
 import modelUtilsMixin from "@/store/model_utils.mixin";
+import { peopleHiddenFieldsMixin } from '@/configurations/people_hidden_fields.mixin';
 
 // Seacrh for people to add as participants
 export default {
   name: "Assignee",
-  mixins: [modelUtilsMixin],
+  mixins: [modelUtilsMixin, peopleHiddenFieldsMixin],
   props: {
     assignment: {
       type: Object,
