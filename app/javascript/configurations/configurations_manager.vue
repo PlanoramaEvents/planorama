@@ -1,6 +1,6 @@
 <template>
   <div v-if="currentSettings">
-    <p><strong>{{EVENT_SETTINGS_MUST_RELOAD}}</strong></p>
+    <b-alert show variant="warning">{{EVENT_SETTINGS_MUST_RELOAD}}</b-alert>
     <div v-for="parameter in parameters" :key="parameter.parameter_name">
       <config-editor
         model="configuration"
@@ -8,6 +8,7 @@
         v-if="parameter && !exclusions.includes(parameter.parameter_name)"
       ></config-editor>
     </div>
+    <b-alert show variant="warning">{{EVENT_SETTINGS_MUST_RELOAD}}</b-alert>
   </div>
 </template>
 

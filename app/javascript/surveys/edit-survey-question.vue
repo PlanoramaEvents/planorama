@@ -229,7 +229,6 @@ export default {
     },
     displayLinkedField() {
       const tokens = this.question.linked_field.split(".")
-      console.debug("tokens", tokens)
       return LINKED_FIELD_LABELS[tokens[0]]?.[tokens[1]] || tokens[1];
     }
   },
