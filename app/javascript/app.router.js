@@ -7,6 +7,7 @@ import NewPassword from './login/new_password.vue';
 import CreateAccount from './login/create_account.vue';
 import AccountSetup from './login/account_setup.vue'
 import LoginClyde from './login/login_clyde.vue'
+import ErrorScreen from './errors/error_screen.vue'
 
 const loginRoutes = [
   { path: 'forgot', component: ForgotPassword },
@@ -127,6 +128,14 @@ export const router = new VueRouter({
         guest: true
       },
       props: route => ({ redirect: route.query.redirect })
+    },
+    {
+      path: '/error/:code',
+      component: ErrorScreen,
+      meta: {
+        guest: true
+      },
+      props: true
     },
     // {
     //   path: '/agreements',

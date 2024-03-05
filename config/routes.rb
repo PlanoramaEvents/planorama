@@ -4,6 +4,7 @@ require "sidekiq/web"
 Rails.application.routes.draw do
   # OAuth Callbacks - provider is clyde for G24 reg etc, based on OAuth strategy
   match "/auth/:provider/callback" => "auth/omniauth_callbacks#create", via: [:get, :post]
+  get '/auth/failure', to: "auth/omniauth_callbacks#failure"
 
   devise_for :people, path: 'auth',
              controllers: {
@@ -232,5 +233,6 @@ Rails.application.routes.draw do
   # match '*path' => redirect('/'), via: :get
   get '*path', to: 'home#index', constraints: -> (request) do
     !request.xhr? && request.format.html?
+    #  && !request.path.include?('/auth')
   end
 end
