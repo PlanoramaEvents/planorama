@@ -165,8 +165,6 @@ export default {
         )
     },
     init() {
-      console.debug("PERSON ID IS ", this.person_id)
-
       this.$refs['responses-table'].fetchPaged()
     }
   },
