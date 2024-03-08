@@ -8,6 +8,7 @@
       ref="responses-table"
       model="submission_flat"
       :defaultUrl="defaultUrl"
+      :defaultFilter="defaultFilter"
       :show-add="false"
       :show-settings="false"
       :columns="question_columns"
@@ -49,6 +50,10 @@ export default {
     surveyId: {
       type: String,
       default: null
+    },
+    person_id: {
+      type: String,
+      default: null
     }
   },
   components: {
@@ -64,6 +69,21 @@ export default {
   computed: {
     defaultUrl() {
       return `/survey/${this.surveyId}/submissions/flat`
+    },
+    defaultFilter() {
+      if (this.person_id) {
+        let filter = {
+          "op": "all",
+          "queries":[
+            ["person_id", "=", this.person_id]
+          ]
+        }
+
+        return JSON.stringify(filter)
+      } else {
+        return null;
+      }
+
     },
     downloadLink() {
       return `/survey/${this.surveyId}/submissions.xlsx`
