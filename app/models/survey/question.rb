@@ -35,10 +35,9 @@ class Survey::Question < ApplicationRecord
   # Scopes to deal with the soft deletes
   scope :not_deleted, -> { where(deleted_at: nil) }
   scope :deleted, -> { where('survey_questions.deleted_at is not null') }
+  scope :sorted {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
 
   has_paper_trail versions: { class_name: 'Audit::SurveyVersion' }, ignore: [:updated_at, :created_at, :lock_version, :sort_order]
-
-  # default_scope {includes(:page).order(['survey_pages.sort_order asc', 'survey_questions.sort_order asc'])}
 
   belongs_to :page,
              class_name: 'Survey::Page',
