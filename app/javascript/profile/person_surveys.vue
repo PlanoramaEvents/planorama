@@ -41,19 +41,16 @@ export default {
   }),
   watch: {
     person: {
-      handler(person) {
-        if(person?.id) {
+      handler(newVal, oldVal) {
+        if(newVal?.id && (newVal?.id != oldVal?.id)) {
+          console.debug("Get surveys for ", newVal.id)
           this.loading = true;
-          this.getPersonSurveys({person}).then(data => {
+          
+          this.getPersonSurveys({person: newVal}).then(data => {
             const {_jv, ...surveys} = data;
             this.surveys = Object.values(data).map(s => ({name: s.name, id: s.id}))
             this.loading = false;
           })
-          // this.getSurveysForPerson(newVal).then(data => {
-          //   // I expect this to come back in [{name: "foo", id: "abc123"}]
-          //   this.surveys = data;
-          //   this.loading = false;
-          // })
         }
       },
       immediate: true
