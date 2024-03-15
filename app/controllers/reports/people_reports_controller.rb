@@ -203,7 +203,7 @@ class Reports::PeopleReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "PeopleRecordStream-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "PeopleSessionPermissions-#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
   end
 end
