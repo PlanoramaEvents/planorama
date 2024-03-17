@@ -26,7 +26,7 @@
         <edit-survey :survey-id="id"></edit-survey>
       </b-tab>
       <b-tab v-if="survey" title="Responses" :active="!!responses" lazy>
-        <view-responses :survey-id="id"></view-responses>
+        <view-responses :survey-id="id" :person_id="person_id"></view-responses>
       </b-tab>
       <survey-settings-tab v-if="survey" lazy></survey-settings-tab>
       <b-tab v-if="survey" title="Audit Log" disabled lazy>
@@ -59,7 +59,8 @@ export default {
     EditSurvey
   },
   data: () => ({
-    SURVEY_PUBLIC_NO_EDIT
+    SURVEY_PUBLIC_NO_EDIT,
+    person_id: null
   }),
   computed: {
     questionsTitle() {
@@ -68,6 +69,7 @@ export default {
   },
   methods: {
     init() {
+      this.person_id = this.$route.query.person_id
       this.selectSurvey(this.id);
       this.fetchSelectedSurvey();
     },
