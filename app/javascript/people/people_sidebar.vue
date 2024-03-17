@@ -28,7 +28,7 @@
           <person-email-tab></person-email-tab>
         </b-tab>
         <b-tab title="Surveys" lazy v-if="currentUserIsAdmin || currentUserIsStaff">
-          <person-surveys></person-surveys>
+          <person-surveys :person="selected"></person-surveys>
         </b-tab>
         <b-tab title="Admin" v-if="currentUserIsAdmin || currentUserIsStaff">
          <people-admin-tab></people-admin-tab>

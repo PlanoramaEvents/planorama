@@ -116,7 +116,7 @@ class Survey::SubmissionsController < ResourceController
     header = ['Created At', 'Updated At', 'Email']
     response_columns = {}
     posn = 3
-    survey.questions.each do |question|
+    survey.questions.sorted.each do |question|
       next if [:hr, :textonly].include? question.question_type
       next unless can_access_question?(question, current_person)
 
