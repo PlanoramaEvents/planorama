@@ -183,7 +183,7 @@ class Session < ApplicationRecord
   end
 
   def keep_who_did_it
-    self.updated_by = PaperTrail.request.whodunnit
+    self.updated_by = PaperTrail.request.whodunnit if self.changed?
   end
 
   def keep_interest_trail
