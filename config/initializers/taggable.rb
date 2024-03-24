@@ -4,3 +4,5 @@ ActsAsTaggableOn.remove_unused_tags = true
 
 # use lower case for all tags ???? (TODO: check)
 ActsAsTaggableOn.force_lowercase = false
+
+ActsAsTaggableOn.delimiter = ';'
