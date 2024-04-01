@@ -53,7 +53,7 @@ class PeopleController < ResourceController
 
     raise "No such person" unless person
     # Remove the Oauth identity
-    person.oauth_identities.delete_all
+    person.oauth_identities.destroy_all
     # But we want to keep the Reg info if there is any
     # for admin and planners to see (not speakers)
 
