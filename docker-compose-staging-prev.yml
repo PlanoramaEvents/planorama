@@ -34,7 +34,7 @@ services:
 
   web:
     command: "/opt/planorama/script/planorama_start.sh"
-    image: ghcr.io/planoramaevents/planorama:${PLANO_VERSION}
+    image: ghcr.io/planoramaevents/planorama:staging
     ports:
       - 3000:3000
     volumes:
@@ -49,7 +49,6 @@ services:
       - PUID=1001
       - RAILS_ENV=staging
       - NODE_ENV=staging
-      - PLANO_VERSION=${PLANO_VERSION}
     env_file:
       # NOTE: this will need to reflect local system
       - "/opt/plano/etc/planorama.env"
@@ -60,7 +59,7 @@ services:
 
   planorama-sidekiq:
     command: "/opt/planorama/script/planorama_sidekiq.sh"
-    image: ghcr.io/planoramaevents/planorama:${PLANO_VERSION}
+    image: ghcr.io/planoramaevents/planorama:staging
     volumes:
       # NOTE: this will need to reflect local system
       - /var/log/planorama/sidekiq:/opt/planorama/log

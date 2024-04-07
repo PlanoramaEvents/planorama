@@ -13,7 +13,8 @@ var path = require('path');
 
 environment.plugins.prepend('env',
   new webpack.DefinePlugin({
-    'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    'PLANO_VERSION': JSON.stringify(process.env.PLANO_VERSION)
   })
 )
 
