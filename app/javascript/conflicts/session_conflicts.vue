@@ -182,7 +182,7 @@ export default {
 <style lang="scss">
 .session-conflicts-list {
   overflow-y: auto;
-  max-height: 300px;
+  max-height: 240px;
 }
 
 .session-conflict:first-child {

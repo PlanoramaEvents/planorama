@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid pl-0">
     <div class="row">
-      <div class="col-3 pt-3 d-flex flex-column" style="max-height: calc(100vh - 150px)">
+      <div class="col-3 pt-3 d-flex flex-column gailtest" style="max-height: calc(100vh - 150px)">
         <schedulable-sessions
           :model="sessionModel"
           :defaultFilter="sessionFilter"
@@ -177,5 +177,5 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 </style>
