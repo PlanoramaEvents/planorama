@@ -3,11 +3,16 @@
     <h5>Surveys Taken</h5>
     <loading-overlay :loading="loading">
       <ul v-if="surveys.length" class="option-3">
-        <li v-for="survey in surveys" :key="survey.id"><router-link :to="{
+        <li v-for="survey in surveys" :key="survey.id">
+        <router-link
+        v-if="currentUserIsStaff || currentUserIsAdmin"
+        :to="{
           name: 'survey_responses',
           params: { id: survey.id, responses: 'responses' },
           query: { person_id: person.id }
-        }" target="_blank">{{ survey.name }}</router-link></li>
+        }" target="_blank">{{ survey.name }}</router-link>
+          <span v-if="!currentUserIsStaff && !currentUserIsAdmin">{{ survey.name }}</span>
+        </li>
       </ul>
       <div v-if="!surveys.length" class="mt-3">
         <h5 class="font-italic text-muted">No surveys taken.</h5>
@@ -21,6 +26,7 @@ import LoadingOverlay from '@/components/loading_overlay.vue';
 import { personSubmissionMixin } from './person.submission.mixin';
 import { mapActions } from 'vuex';
 import { GET_PERSON_SURVEYS } from '@/store/person.store';
+import { personSessionMixin } from '@/mixins';
 
 export default {
   name: "PeopleSurveysTab",
@@ -28,7 +34,8 @@ export default {
     LoadingOverlay,
   },
   mixins: [
-    personSubmissionMixin
+    personSubmissionMixin,
+    personSessionMixin
   ],
   props: {
     person: {
