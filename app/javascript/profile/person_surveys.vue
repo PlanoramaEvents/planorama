@@ -48,7 +48,7 @@ export default {
           
           this.getPersonSurveys({person: newVal}).then(data => {
             const {_jv, ...surveys} = data;
-            this.surveys = Object.values(data).map(s => ({name: s.name, id: s.id}))
+            this.surveys = Object.values(surveys).map(s => ({name: s.name, id: s.id}))
             this.loading = false;
           })
         }
