@@ -11,6 +11,7 @@ environment.loaders.prepend('erb', erb)
 
 var path = require('path');
 
+// NOTE: this is the build env
 environment.plugins.prepend('env',
   new webpack.DefinePlugin({
     'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
