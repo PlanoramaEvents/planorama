@@ -2,7 +2,7 @@
   <div>
     <b-button variant="link" class="text-light" v-b-modal.about-modal>About</b-button>
     <b-modal id="about-modal" title="About" modal-class="about-modal" ok-only>
-      <p>Version: {{ PLANO_VERSION }}</p>
+      <p>Version: {{ process.env.PLANO_VERSION }}</p>
       <p><a href="https://planoramaevents.github.io/planorama">About the Planorama Team &amp; Give Feedback</a></p>
     </b-modal>
   </div>
