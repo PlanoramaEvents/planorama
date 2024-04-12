@@ -13,7 +13,6 @@ class Reports::ConflictReportsController < ApplicationController
       [
         'Session',
         'Areas',
-        # Tags and Labels
         'Start Time',
         'Session Duration',
         'Room',
@@ -57,7 +56,6 @@ class Reports::ConflictReportsController < ApplicationController
       [
         'Session',
         'Areas',
-        # Tags and Labels
         'Start Time',
         'Session Duration',
         'Room',

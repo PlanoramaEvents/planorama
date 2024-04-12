@@ -124,24 +124,7 @@ class ReportsController < ApplicationController
   def sessions_with_participants
     authorize SessionAssignment, policy_class: ReportPolicy
 
-    session_table = Arel::Table.new(Session.table_name)
-    subquery = Session.area_list.as('areas_list')
-    joins = [
-      session_table.create_join(
-        subquery,
-        session_table.create_on(
-          subquery[:session_id].eq(session_table[:id])
-        ),
-        Arel::Nodes::OuterJoin
-      )
-    ]
-
-    # array aggregate ...
-    sessions = Session.select(
-                  ::Session.arel_table[Arel.star],
-                  'areas_list.area_list'
-                )
-                .joins(joins)
+    sessions = SessionService.sessions
                 .eager_load(:areas, {session_assignments: [:person]})
                 .where("session_assignments.session_assignment_role_type_id is not null")
                 .order('sessions.title')
@@ -154,7 +137,8 @@ class ReportsController < ApplicationController
         'Session',
         'Session Type/Format',
         'Areas',
-        # Tags and Labels
+        'Tags',
+        'Admin Labels',
         'Moderators',
         'Participants',
         'Reserves',
@@ -171,6 +155,8 @@ class ReportsController < ApplicationController
           session.title,
           session.format&.name,
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == reserve.id}.collect{|a| a.person.published_name}.join(';'),
@@ -198,24 +184,7 @@ class ReportsController < ApplicationController
   def schedule_by_room_then_time
     authorize SessionAssignment, policy_class: ReportPolicy
 
-    session_table = Arel::Table.new(Session.table_name)
-    subquery = Session.area_list.as('areas_list')
-    joins = [
-      session_table.create_join(
-        subquery,
-        session_table.create_on(
-          subquery[:session_id].eq(session_table[:id])
-        ),
-        Arel::Nodes::OuterJoin
-      )
-    ]
-
-    # array aggregate ...
-    sessions = Session.select(
-                  ::Session.arel_table[Arel.star],
-                  'areas_list.area_list'
-                )
-                .joins(joins)
+    sessions = SessionService.sessions
                 .references(:room)
                 .eager_load(:areas, :room, {session_assignments: [:person]})
                 .where("sessions.room_id is not null and sessions.start_time is not null")
@@ -228,6 +197,8 @@ class ReportsController < ApplicationController
       [
         'Session',
         'Area',
+        'Tags',
+        'Labels',
         'Start Time',
         'Session Duration',
         'Room',
@@ -245,6 +216,8 @@ class ReportsController < ApplicationController
         [
           session.title,
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
           session.duration,
           session.room.name,
@@ -282,25 +255,9 @@ class ReportsController < ApplicationController
   def schedule_by_person
     authorize SessionAssignment, policy_class: ReportPolicy
 
-    conflicts_table = ::PersonSchedule.arel_table
-    subquery = Session.area_list.as('areas_list')
-
-    joins = [
-      conflicts_table.create_join(
-        subquery,
-        conflicts_table.create_on(
-          subquery[:session_id].eq(conflicts_table[:session_id])
-        ),
-        Arel::Nodes::OuterJoin
-      )
-    ]
-
-    people_sessions = PersonSchedule.select(
-        ::PersonSchedule.arel_table[Arel.star],
-        'areas_list.area_list'
-      )
+    # 
+    people_sessions = SessionService.person_schedule
       .includes(:room).references(:room)
-      .joins(joins)
       .where("session_assignment_name in (?)", ['Moderator', 'Participant', "Invisible"])
       .where("start_time is not null and room_id is not null")
       .where("person_schedules.con_state not in (?)", ['declined', 'rejected'])
@@ -316,6 +273,8 @@ class ReportsController < ApplicationController
         'Participant Status',
         'Session',
         'Area',
+        'Tags',
+        'Admin Labels',
         'Start Time',
         'Room',
         'Moderator',
@@ -332,6 +291,8 @@ class ReportsController < ApplicationController
           sa.con_state,
           sa.title,
           sa.area_list.join('; '),
+          sa.tags_array&.join("; "),
+          sa.labels_array&.join("; "),
           FastExcel.date_num(sa.start_time, sa.start_time.in_time_zone.utc_offset),
           sa.room.name,
           if sa.session_assignment_name == 'Moderator' then 'Y' else 'N' end,
@@ -372,7 +333,9 @@ class ReportsController < ApplicationController
         'Participant Status',
         'Session',
         'Role',
-        'Scheduled'
+        'Scheduled',
+        'Tags',
+        'Admin Labels'
       ]
     )
 
@@ -385,7 +348,9 @@ class ReportsController < ApplicationController
             person.con_state,
             assignment.session.title,
             assignment.session_assignment_role_type.name,
-            assignment.session.start_time && assignment.session.room_id ? 'Y' : 'N'
+            assignment.session.start_time && assignment.session.room_id ? 'Y' : 'N',
+            assignment.session.tag_list.join("; "),
+            assignment.session.label_list.join("; ")
           ]
         )
       end
@@ -482,7 +447,8 @@ class ReportsController < ApplicationController
         'Ranking',
         'Ranking Notes',
         'Areas',
-        # Tags and Labels
+        'Tags',
+        'Labels',
         'Assigned',
         'Scheduled'
       ]
@@ -497,6 +463,8 @@ class ReportsController < ApplicationController
           assignment.interest_ranking,
           assignment.interest_notes,
           assignment.session.areas.collect(&:name).join("; "),
+          assignment.session.tag_list.join("; "),
+          assignment.session.label_list.join("; "),
           assignment.session_assignment_role_type && assignment.session_assignment_role_type.role_type == 'participant' &&  ['Moderator', 'Participant'].include?(assignment.session_assignment_role_type.name) ? 'Y' : 'N',
           assignment.session.start_time && assignment.session.room_id ? 'Y' : 'N'
         ]
@@ -517,7 +485,7 @@ class ReportsController < ApplicationController
   def session_selections
     authorize Session, policy_class: ReportPolicy
 
-    sessions = Session
+    sessions = SessionService.sessions
                 .eager_load(:areas, {session_assignments: [:person]})
                 .where('session_assignments.interested': true)
                 .where("people.con_state not in (?)", ['declined', 'rejected'])
@@ -534,8 +502,9 @@ class ReportsController < ApplicationController
         'Participant Status',
         'Ranking',
         'Notes',
-        'Areas'
-        # Tags and Labels
+        'Areas',
+        'Tags',
+        'Admin Labels'
       ]
     )
 
@@ -549,7 +518,9 @@ class ReportsController < ApplicationController
             assignment.person.con_state,
             assignment.interest_ranking,
             assignment.interest_notes,
-            session.areas.collect(&:name).join("; ")
+            session.areas.collect(&:name).join("; "),
+            session.tags_array&.join("; "),
+            session.labels_array&.join("; ")
           ]
         )
       end
@@ -618,6 +589,8 @@ class ReportsController < ApplicationController
         'Published Name',
         'Session',
         'Area',
+        'Tags',
+        'Admin Labels',
         'Assigned to session',
         'Do not assign with'
       ]
@@ -634,6 +607,8 @@ class ReportsController < ApplicationController
             person.published_name,
             sa.session.title,
             person.area_list.join('; '),
+            sa.session.tag_list.collect(&:name).join("; "),
+            sa.session.label_list.collect(&:name).join("; "),
             sa.session.session_assignments.select{|a| [participant.id, moderator.id, invisible.id].include?(a.session_assignment_role_type_id)}.collect{|s| s.person.published_name}.join('; '),
             person.do_not_assign_with
           ]
