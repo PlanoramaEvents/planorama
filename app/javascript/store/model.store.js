@@ -42,6 +42,7 @@ import { pageContentStore, pageContentEndpoints } from "@/store/page_content.sto
 
 // Registration Sync Datum/Data
 import { registrationSyncDatumStore, registrationSyncDatumEndpoints } from "@/store/registration_sync_datum.store";
+import { personSyncDatumStore, personSyncDatumEndpoints } from "@/store/person_sync_datum.store";
 
 // mailings
 import { mailingStore, mailingEndpoints } from './mailing.store';
@@ -109,6 +110,7 @@ const endpoints = {
   ...venueEndpoints,
   ...pageContentEndpoints,
   ...registrationSyncDatumEndpoints,
+  ...personSyncDatumEndpoints,
   ...surveyEndpoints,
   ...mailingEndpoints,
   ...sessionEndpoints,
@@ -155,6 +157,7 @@ export const store = new Vuex.Store({
       ...venueStore.selected,
       ...pageContentStore.selected,
       ...registrationSyncDatumStore.selected,
+      ...personSyncDatumStore.selected,
       ...surveyStore.selected,
       ...mailingStore.selected,
       ...sessionStore.selected,
@@ -206,6 +209,7 @@ export const store = new Vuex.Store({
     ...surveyStore.getters,
     ...pageContentStore.getters,
     ...registrationSyncDatumStore.getters,
+    ...personSyncDatumStore.getters,
     ...personSessionStore.getters,
     ...mailingStore.getters,
     ...sessionStore.getters,
@@ -399,6 +403,7 @@ export const store = new Vuex.Store({
     ...roomSetStore.actions,
     ...pageContentStore.actions,
     ...registrationSyncDatumStore.actions,
+    ...personSyncDatumStore.actions,
     ...venueStore.actions,
     ...mailingStore.actions,
     ...settingsStore.actions,

@@ -29,14 +29,14 @@ class RegistrationSyncDatumSerializer
              :preferred_name, :alternative_email,
              :raw_info
 
-  # The people that this data could be macthed to
-  has_many :people, serializer: PersonSerializer,
-              links: {
-                self: -> (object, params) {
-                  "#{params[:domain]}/registration_sync_datum/#{object.id}"
-                },
-                related: -> (object, params) {
-                  "#{params[:domain]}/registration_sync_datum/#{object.id}/people"
-                }
-              }
+  # The people that this data could be matched to
+  # has_many :people, serializer: PersonSerializer,
+  #             links: {
+  #               self: -> (object, params) {
+  #                 "#{params[:domain]}/registration_sync_datum/#{object.id}"
+  #               },
+  #               related: -> (object, params) {
+  #                 "#{params[:domain]}/registration_sync_datum/#{object.id}/people"
+  #               }
+  #             }
 end
