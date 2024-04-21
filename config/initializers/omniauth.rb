@@ -10,3 +10,5 @@ end
 
 OmniAuth.config.logger = Rails.logger
 OmniAuth.config.path_prefix = '/auth'
+# So dev is forced to use the error path that other envs will have
+OmniAuth.config.failure_raise_out_environments = []

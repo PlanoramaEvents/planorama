@@ -30,6 +30,7 @@
 class PersonSchedule < ApplicationRecord
   self.table_name = :person_schedules
   self.primary_key = :id
+  include Aggregates
 
   belongs_to :session_assignment
   belongs_to :person
