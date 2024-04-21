@@ -77,6 +77,17 @@ class Session < ApplicationRecord
 
   before_save :keep_who_did_it, :keep_interest_trail, :schedule_consistency
 
+  # Ensure that empty strings are stored as nulls
+  nilify_blanks only: [
+    :title,
+    :description,
+    :item_notes,
+    :tech_notes,
+    :participant_notes,
+    :instructions_for_interest,
+    :room_notes
+  ]
+
   has_many :session_conflicts,
     -> {
       where("session_conflicts.conflict_id not in (select conflict_id from ignored_conflicts)")
