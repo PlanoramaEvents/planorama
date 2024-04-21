@@ -75,10 +75,12 @@ class ReportsController < ApplicationController
       {submissions: :survey},
       :primary_email
     )
-    .where("people.con_state not in (?)", ['declined', 'rejected'])
     .references(
       :submissions
-    ).order("people.name")
+    )
+    .where("people.con_state not in (?)", ['declined', 'rejected'])
+    .where("survey_submissions.id in (?)", Survey::Response.select(:submission_id).distinct)
+    .order("people.name")
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("People and Submissions")
