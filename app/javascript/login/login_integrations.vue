@@ -5,7 +5,7 @@
       <input type="hidden" v-model="csrfToken" name="authenticity_token" />
       <b-button type="submit" variant="primary" class="w-100 mb-2">{{ integration.buttonText || "Log in with " + integration.name }}</b-button>
     </form>
-    <span v-if="clydeIntegration">You can also <router-link :to="'/login/clyde?redirect=' + redirect">Log In</router-link> with {{ clydeIntegration.linkText || 'Clyde' }}.</span>
+    <span v-if="clydeIntegration && !noClydeLogin">You can also <router-link :to="'/login/clyde?redirect=' + redirect">Log In</router-link> with {{ clydeIntegration.linkText || 'Clyde' }}.</span>
   </div>
 </template>
 
@@ -15,6 +15,10 @@ import { loginIntegrationsMixin } from '@/store/login_integrations.mixin';
 export default {
   name: "LoginIntegrations",
   mixins: [loginIntegrationsMixin],
+  data: () => ({
+    // the way clyde does logins is stupid
+    noClydeLogin: true
+  }),
   params: {
     redirect: {
       type: String,
