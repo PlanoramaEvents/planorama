@@ -112,16 +112,16 @@ class Reports::SessionReportsController < ApplicationController
     worksheet = workbook.add_worksheet("Assigned Session not Sched")
     date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
     styles = [
-      nil, nil, nil, date_time_style, nil
+      nil, nil, nil, nil, nil, date_time_style, nil
     ]
 
     worksheet.append_row(
       [
         'Session',
         'Areas',
-        'Format',
         'Tags',
         'Admin Labels',
+        'Format',
         'Start Time',
         'Duration',
         'Room'
@@ -357,8 +357,8 @@ class Reports::SessionReportsController < ApplicationController
           sa.con_state,
           sa.title,
           sa.area_list.join('; '),
-          sa.tag_list.join("; "),
-          sa.label_list.join("; "),
+          sa.tags_array&.join("; "),
+          sa.labels_array&.join("; ")
         ]
       )
     end

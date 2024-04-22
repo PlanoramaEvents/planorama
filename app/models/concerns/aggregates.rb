@@ -49,7 +49,16 @@ module Aggregates
     end
     
     def array_aggregate_fn(col)
-      Arel::Nodes::NamedFunction.new('array_remove',[Arel::Nodes::NamedFunction.new('array_agg',[col]), Arel::Nodes::SqlLiteral.new("NULL")])
+      Arel::Nodes::NamedFunction.new(
+        'array_remove',[
+          Arel::Nodes::NamedFunction.new(
+            'array_agg',[
+              Arel::Nodes::SqlLiteral.new("distinct #{col.relation.name}.#{col.name}")
+            ]
+          ),
+          Arel::Nodes::SqlLiteral.new("NULL")
+        ]
+      )
     end
   end
 end

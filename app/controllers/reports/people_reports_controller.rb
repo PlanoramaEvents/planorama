@@ -138,8 +138,8 @@ class Reports::PeopleReportsController < ApplicationController
             session.title,
             session.format&.name,
             session.environment,
-            session.tag_list.collect(&:name).join("; "),
-            session.label_list.collect(&:name).join("; "),
+            session.tag_list.join("; "),
+            session.label_list.join("; "),
           ]
         )
       end
