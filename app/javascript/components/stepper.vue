@@ -1,14 +1,14 @@
 <template>
-  <div :id="id">
+  <div :id="id" class="metro-stepper">
     <div class="main-line"></div>
     <div class="stations" role="radiogroup" :aria-label="ariaLabel">
       <div
         :id="stepId(i)"
-        :class="{ station: true, selected: selected === stop }"
+        :class="{ station: true, selected: selected === stop.value }"
         v-for="(stop, i) of stops"
         :key="i"
         :style="{ '--extra-len': (9 - stops.length) / 2 + 1 + 'rem' }"
-        :tabindex="selected !== undefined ? (stop === selected ? 0 : -1) : i === 0 ? 0 : -1"
+        :tabindex="selected !== undefined ? (stop.value === selected ? 0 : -1) : i === 0 ? 0 : -1"
         :aria-label="'Step ' + (i + 1) + ': ' + stop"
         role="radio"
         @click="select(i)"
@@ -19,7 +19,7 @@
         @keyup.up="select(i-1)"
       >
         <div class="stop">{{ i + 1 }}</div>
-        <div class="name">{{ stop }}</div>
+        <div class="name">{{ stop.text }}</div>
       </div>
     </div>
   </div>
@@ -31,7 +31,7 @@
  * Do otherwise at your own peril.
  */
 export default {
-  name: "Stepper2",
+  name: "Stepper",
   props: {
     steps: {
       type: Array,
@@ -44,7 +44,7 @@ export default {
     },
     id: {
       type: String,
-      default: "stepper2"
+      default: "stepper"
     }
   },
   data: () => ({
@@ -55,7 +55,12 @@ export default {
       return this.value ?? this.noVmodel ?? this.stops[0];
     },
     stops() {
-      return this.steps;
+      if(this.steps.length) {
+        if (typeof this.steps[0] === 'string') {
+
+        }
+      }
+      return this.steps.map(s => typeof s === 'string' ? {text: s, value: s} : s)
     }
   },
   methods: {
@@ -67,10 +72,10 @@ export default {
         this.select(0);
       } else {
         // actually select the thing
-        this.noVmodel = this.stops[i]
+        this.noVmodel = this.stops[i].value
         document.getElementById(this.stepId(i)).focus();
-        this.$emit('input', this.stops[i]);
-        this.$emit('change', this.stops[i]);
+        this.$emit('input', this.stops[i].value);
+        this.$emit('change', this.stops[i].value);
       }
     },
     stepId(i) {
@@ -81,6 +86,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.metro-stepper {
+  min-height: 12rem;
+  margin-top: 2rem;
+}
+
 .main-line {
   border: 5px solid #53269f;
   border-radius: 5px;

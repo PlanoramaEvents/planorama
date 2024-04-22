@@ -20,7 +20,7 @@
 
 <script>
 import TwoSidedMultiSelect from "@/components/two_sided_multi_select.vue";
-import Stepper2 from "@/components/stepper2.vue";
+import Stepper2 from "@/components/stepper.vue";
 
 export default {
   name: "PlayGroundComponent",

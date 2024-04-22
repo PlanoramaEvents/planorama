@@ -356,5 +356,9 @@ module.exports = {
         event_virtual: "Does this event include an online component?",
         clyde_base_url: "Base URL for Clyde",
         profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
+    },
+    RESET_TO_DEFAULT: {
+        'dashboard-default': "This text will ask for confirmation for dashboard-default",
+        'dashboard-schedule': "This text will ask for confirmation for dashboard-schedule"
     }
 }
