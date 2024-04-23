@@ -34,6 +34,7 @@
 #
 class PublishedSession < ApplicationRecord
   self.primary_key = :session_id
+  include Aggregates
 
   has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' },
                   ignore: [:updated_at, :created_at, :lock_version, :integrations],
@@ -85,8 +86,8 @@ class PublishedSession < ApplicationRecord
   has_many :session_areas, inverse_of: :session, foreign_key: 'session_id'
   has_many :areas, through: :session_areas
 
-  # acts_as_taggable
   acts_as_taggable_on :tags
+  acts_as_taggable_on :labels
 
   def self.only_public
     where(visibility: 'public')
@@ -102,20 +103,5 @@ class PublishedSession < ApplicationRecord
 
   def private?
     visibility == 'public'
-  end
-
-  def self.area_list
-    sessions = PublishedSession.arel_table
-    session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
-    areas = Arel::Table.new(Area.table_name)
-
-    sessions.project(sessions[:session_id].as('session_id'), area_aggregate_fn( areas[:name] ).as('area_list'))
-      .join(session_areas, Arel::Nodes::OuterJoin).on(sessions[:session_id].eq(session_areas[:session_id]))
-      .join(areas, Arel::Nodes::OuterJoin).on(session_areas[:area_id].eq(areas[:id]))
-      .group('published_sessions.session_id')
-  end
-
-  def self.area_aggregate_fn(col)
-    Arel::Nodes::NamedFunction.new('array_remove',[Arel::Nodes::NamedFunction.new('array_agg',[col]), Arel::Nodes::SqlLiteral.new("NULL")])
   end
 end
