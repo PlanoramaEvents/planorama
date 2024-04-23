@@ -11,9 +11,12 @@ class RegistrationSyncWorker
 
   def perform
     # Phase 1 - get the data from Clyde and store it
+    puts "--- Sync Phase 1 #{Time.now}"
     phase1
+    puts "--- Sync Phase 2 #{Time.now}"
     # Phase 2
     phase2
+    puts "--- Sync Complete #{Time.now}"
   end
 
   # Phase 1 is to suck up the data from Reg and put it into a temp store
