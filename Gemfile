@@ -68,6 +68,7 @@ gem "nokogiri", ">= 1.13"
 gem "roo", "~> 2.8.0"
 
 gem 'truemail'
+gem "net-http"
 
 # This is needed to run the migrations from id to uuid for primary keys
 gem 'webdack-uuid_migration'

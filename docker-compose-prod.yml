@@ -16,18 +16,32 @@ version: "3.7"
 
 volumes:
   redis-data:
-
+    external: true
+  pgdata:
+    external: true
 services:
   redis:
-    image: redis:alpine
+    image: redis:435993df2c8d
     restart: always
     volumes:
       - redis-data:/data
+
+  postgres:
+    image: postgres:db2247d3e23c
+    restart: always
+    env_file:
+      # NOTE: this will need to reflect local system
+      - "/opt/plano/etc/planorama.env"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
   web:
     command: "/opt/planorama/script/planorama_start.sh"
     # planorama:latest for latest release (tagged)
     # planorama:main for latest build of main branch
-    image: ghcr.io/planoramaevents/planorama:latest
+    image: planorama-copernicon:0.1.0
     ports:
       - "127.0.0.1:3000:3000"
     volumes:
@@ -52,7 +66,7 @@ services:
   planorama-sidekiq:
     command: "/opt/planorama/script/planorama_sidekiq.sh"
     # See above note re which image to use
-    image: ghcr.io/planoramaevents/planorama:latest
+    image: planorama-copernicon:0.1.0
     volumes:
       # NOTE: this will need to reflect local system
       - /var/log/planorama/sidekiq:/opt/planorama/log
