@@ -24,11 +24,11 @@
         <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule">
           <person-draft-schedule :noSidebar="true"></person-draft-schedule>
         </b-tab>
-        <b-tab title="Emails" lazy v-if="currentUserIsAdmin || currentUserIsStaff">
-          <person-email-tab></person-email-tab>
-        </b-tab>
         <b-tab title="Surveys" lazy v-if="currentUserIsAdmin || currentUserIsStaff">
           <person-surveys :person="selected"></person-surveys>
+        </b-tab>
+        <b-tab title="Emails" lazy v-if="currentUserIsAdmin || currentUserIsStaff">
+          <person-email-tab></person-email-tab>
         </b-tab>
         <b-tab title="Admin" v-if="currentUserIsAdmin || currentUserIsStaff">
          <people-admin-tab></people-admin-tab>

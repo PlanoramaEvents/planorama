@@ -54,6 +54,7 @@
 #
 class Session < ApplicationRecord
   include XmlFormattable
+  include Aggregates
 
   validates_presence_of :title
   validates_numericality_of :duration, allow_nil: true
@@ -76,6 +77,17 @@ class Session < ApplicationRecord
   belongs_to :room_set, required: false
 
   before_save :keep_who_did_it, :keep_interest_trail, :schedule_consistency
+
+  # Ensure that empty strings are stored as nulls
+  nilify_blanks only: [
+    :title,
+    :description,
+    :item_notes,
+    :tech_notes,
+    :participant_notes,
+    :instructions_for_interest,
+    :room_notes
+  ]
 
   has_many :session_conflicts,
     -> {
@@ -195,48 +207,6 @@ class Session < ApplicationRecord
     end
   end
 
-  # Aggregate for area queries
-  # '1946 Project' = ANY(area_list) (contains this)
-  # '1946 Project' != ANY(area_list) (does not contain this)
-  # AND array_length(area_list, 1) > 1
-  def self.area_list
-    sessions = Session.arel_table
-    session_areas = Arel::Table.new(SessionArea.table_name) #.alias('session')
-    areas = Arel::Table.new(Area.table_name)
-
-    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( areas[:name] ).as('area_list'))
-      .join(session_areas, Arel::Nodes::OuterJoin).on(sessions[:id].eq(session_areas[:session_id]))
-      .join(areas, Arel::Nodes::OuterJoin).on(session_areas[:area_id].eq(areas[:id]))
-      .group('sessions.id')
-  end
-
-  def self.tags_list_table
-    sessions = Session.arel_table
-    taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
-    tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
-
-    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( tags[:name] ).as('tags_array'))
-      .join(
-        taggings,
-        Arel::Nodes::OuterJoin
-      ).on(sessions[:id].eq(taggings[:taggable_id]).and(taggings[:taggable_type].eq('Session')))
-      .join(tags, Arel::Nodes::OuterJoin).on(taggings[:tag_id].eq(tags[:id]))
-      .where(taggings[:context].eq('tags'))
-      .group('sessions.id')
-  end
-
-  def self.labels_list_table
-    sessions = Session.arel_table
-    taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
-    tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
-
-    sessions.project(sessions[:id].as('session_id'), array_aggregate_fn( tags[:name] ).as('labels_array'))
-      .join(taggings, Arel::Nodes::OuterJoin).on(sessions[:id].eq(taggings[:taggable_id]).and(taggings[:taggable_type].eq('Session')))
-      .join(tags, Arel::Nodes::OuterJoin).on(taggings[:tag_id].eq(tags[:id]))
-      .where(taggings[:context].eq('labels'))
-      .group('sessions.id')
-  end
-
   def self.conflict_counts
     sessions = Session.arel_table
     conflicts = Conflicts::SessionConflict.arel_table
@@ -278,10 +248,6 @@ class Session < ApplicationRecord
     .group('sessions.id')
   end
 
-  def self.array_aggregate_fn(col)
-    Arel::Nodes::NamedFunction.new('array_remove',[Arel::Nodes::NamedFunction.new('array_agg',[col]), Arel::Nodes::SqlLiteral.new("NULL")])
-  end
-
   def schedule_consistency
     # if status dropped then we should not be scheduled in a space and time
     if status == Session.statuses[:dropped]
@@ -289,29 +255,4 @@ class Session < ApplicationRecord
       self.start_time = nil
     end
   end
-
-# NOTE: This only matches  that have the exact set of specified tags. If a user has additional tags, they are not returned.
-# Session.tagged_with(["awesome", "cool"], :match_all => true)
-#
-# # Find  with any of the specified tags:
-# Session.tagged_with(["awesome", "cool"], :any => true)
-#
-# Get all the tags for sessions
-# Session.tags_on(:tags).order(:name)
-#
-# class_name = params[:class]
-# tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
-# taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
-# ActsAsTaggableOn::Tag.where(
-#   tags[:id].in(
-#     taggings.project(taggings[:tag_id]).where(
-#       taggings[:taggable_type]
-#       .eq(class_name)
-#     ).distinct
-#   )
-# ).where(
-#   tags[:name].matches("%#{query}%")
-# )
-  # TODO: revisit for exclusion mappings
-  # has_many :excluded_items_survey_maps, dependent: :destroy
 end

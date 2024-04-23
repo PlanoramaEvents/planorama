@@ -283,7 +283,7 @@ module.exports = {
     PERSON_UNLINK_FAILURE: errorMessage("Something went wrong while unlinking your registration account."),
     PERSON_RESYNC_SUCCESS: "The Person sync has succeeded.",
     PERSON_RESYNC_FAILURE: errorMessage("Something went wrong while resyncing the person."),
-    PERSON_UNLINK_CONFIRMATION_1: "This will unlink your registration account from your Planorama account. It will not remove your data from other convention systems. If you later choose to log in using your registration account, this link will be reestablished.",
+    PERSON_UNLINK_CONFIRMATION_1: "This will unlink your registration account from your Planorama account. It will not remove your data from other convention systems.",
     PERSON_UNLINK_CONFIRMATION_2: "Are you sure you want to do this action?",
     PERSON_CON_STATE: {
         not_set: "Not Set",
