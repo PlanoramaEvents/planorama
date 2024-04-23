@@ -33,11 +33,13 @@ class PeopleController < ResourceController
     
     Person.transaction do
       identity = person.oauth_identities.where(provider: 'clyde').first
+
+      reg_id = person.reg_id || identity&.reg_id
       
-      raise "No Clyde Identity for given person" unless identity
+      raise "No Clyde Reg for given person" unless reg_id
 
       svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
-      details = svc.person(id: identity.reg_id)
+      details = svc.person(id: reg_id)
 
       IdentityService.update_reg_info(person: person, details: details['data'])
 

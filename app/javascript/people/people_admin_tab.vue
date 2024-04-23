@@ -9,9 +9,7 @@
             <dt>Registration ID</dt>
             <dd class="font-italic ml-2">{{selected.registration_number || 'Unknown'}}</dd>
 
-            <!-- TODO: only enable if there is an registration_number for this person ?? -->
-            <b-button @click="resyncPerson">Resync Registration</b-button>
-            
+            <b-button @click="resyncPerson" variant="primary" :disabled="selected.reg_id == null">Resync Registration</b-button>            
           </div>
           <div class="col-12 col-sm-6 col-lg-4">
             <dt>Convention Class</dt>
