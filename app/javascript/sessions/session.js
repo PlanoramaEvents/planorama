@@ -13,7 +13,7 @@ export const session_columns = [
   {
     key: 'title',
     sortKey: 'sessions.title',
-    label: 'Title',
+    label: 'Tytuł',
     type: "text",
     sortable: true,
     stickyColumn: true
@@ -21,7 +21,7 @@ export const session_columns = [
   {
     key: 'description',
     sortKey: 'sessions.description',
-    label: 'Description',
+    label: 'Opis',
     type: "text",
     sortable: true
   },
@@ -29,7 +29,7 @@ export const session_columns = [
     key: 'area_list',
     sortKey: 'areas.name',
     search_key: 'area_list',
-    label: 'Area',
+    label: 'Obszar',
     component: AreaSelectForSearch,
     type: 'custom-component',
     operators: ['is','is not', 'is only', 'is not only', 'is empty','is not empty'],
@@ -47,7 +47,7 @@ export const session_columns = [
   },
   {
     key: 'tag_list',
-    label: 'Public Tags',
+    label: 'Publiczne Tagi',
     sortable: true,
     sortKey: 'tags_list_table.tags_array',
     search_key: 'tags_list_table.tags_array',
@@ -58,7 +58,7 @@ export const session_columns = [
   },
   {
     key: 'label_list',
-    label: 'Admin Labels',
+    label: 'Etykiety Administratora',
     sortable: true,
     sortKey: 'labels_list_table.labels_array',
     search_key: 'labels_list_table.labels_array',
@@ -70,21 +70,20 @@ export const session_columns = [
   {
     key: 'start_time',
     sortKey: 'sessions.start_time',
-    label: 'Start Time',
+    label: 'Czas rozpoczęcia',
     sortable: true
   },
   {
     key: 'duration',
-    label: 'Duration',
+    label: 'Czas trwania',
     type: "text"
     // todo formatter here
   },
   {
     key: 'room.name',
-    label: 'Room',
+    label: 'Pokój',
     sortKey: 'rooms.name',
     sortable: true,
-    // type: "text"
     component: RoomSelectForSearch,
     type: 'custom-component',
     operators: ['is','is not', 'is empty','is not empty'],
@@ -103,84 +102,84 @@ export const session_columns = [
   },
   {
     key: 'proofed',
-    label: 'Copy Edited/Proofed',
+    label: 'Skorygowane/Zweryfikowane',
     type: "select",
-    choices: [{label: "Yes", value: true}, {label: "No", value: false}],
-    formatter: (value) => value ? "Yes" : "No",
+    choices: [{label: "Tak", value: true}, {label: "Nie", value: false}],
+    formatter: (value) => value ? "Tak" : "Nie",
     sortable: true,
   },
   {
     key: 'recorded',
-    label: 'Recorded',
+    label: 'Nagrywane',
     type: "select",
-    choices: [{label: "Yes", value: true}, {label: "No", value: false}],
-    formatter: (value) => value ? "Yes" : "No",
+    choices: [{label: "Tak", value: true}, {label: "Nie", value: false}],
+    formatter: (value) => value ? "Tak" : "Nie",
     sortable: true
   },
   {
     key: 'streamed',
-    label: 'Livestreamed',
+    label: 'Transmitowane na żywo',
     type: "select",
-    choices: [{label: "Yes", value: true}, {label: "No", value: false}],
-    formatter: (value) => value ? "Yes" : "No",
+    choices: [{label: "Tak", value: true}, {label: "Nie", value: false}],
+    formatter: (value) => value ? "Tak" : "Nie",
     sortable: true
   },
   {
     key: 'environment',
-    label: 'Environment',
+    label: 'Środowisko',
     type: "select",
     choices: Object.entries(SESSION_ENVIRONMENT).map(([value, label]) => ({label, value})),
     formatter: (value) => SESSION_ENVIRONMENT[value] || value,
   },
   {
     key: 'open_for_interest',
-    label: 'Open for Interest',
+    label: 'Otwarte dla zainteresowania',
     type: "select",
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    formatter: (value) => value ? "Yes" : "No",
+    choices: [{label: "Tak", value: "true"}, {label: "Nie", value: "false"}],
+    formatter: (value) => value ? "Tak" : "Nie",
     sortable: true,
     sortKey: 'open_for_interest'
   },
   {
     key: 'require_signup',
-    label: 'Requires Signup',
+    label: 'Wymaga zapisów',
     type: "select",
-    choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
-    formatter: (value) => value ? "Yes" : "No",
+    choices: [{label: "Tak", value: "true"}, {label: "Nie", value: "false"}],
+    formatter: (value) => value ? "Tak" : "Nie",
     sortable: true,
     sortKey: 'require_signup'
   },
   {
     key: 'publish',
-    label: 'Publish',
+    label: 'Publikuj',
     // type: "radio",
     // choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
     // sortable: false
   },
   {
     key: 'visibility',
-    label: 'Visibility',
-    formatter: (value) => value === 'is_public' ? 'Visible' : 'Not Visible',
+    label: 'Widoczność',
+    formatter: (value) => value === 'is_public' ? 'Widoczne' : 'Niewidoczne',
     type: "select",
-    choices: [{label: 'Visible', value: 'public'}, {label: 'Not Visible', value: 'private'}],
+    choices: [{label: 'Widoczne', value: 'public'}, {label: 'Niewidoczne', value: 'private'}],
     sortable: true,
     sortKey: 'visibility'
   },
   {
     key: 'created_at',
-    label: 'Date Created',
+    label: 'Data utworzenia',
     sortKey: 'sessions.created_at',
     sortable: true
   },
   {
     key: 'updated_at',
-    label: 'Date Updated',
+    label: 'Data aktualizacji',
     sortKey: 'sessions.updated_at',
     sortable: true
   },
   {
     key: 'updated_by',
-    label: 'Updated By',
+    label: 'Aktualizowane przez',
     sortable: false
   }
 ];

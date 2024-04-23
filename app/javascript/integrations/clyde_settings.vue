@@ -2,22 +2,22 @@
   <div class="container-fluid">
     <div class="row">
       <div class="column flex-grow-1">
-        <h4 class="mt-3">Configuration</h4>
-        <b-form-group label-cols="auto" label="Enable Clyde" class="configuration enable">
+        <h4 class="mt-3">Konfiguracja</h4>
+        <b-form-group label-cols="auto" label="Włącz Clyde" class="konfiguracja enable">
           <b-form-checkbox switch v-model="clydeEnabled" @change="patchClydeConfig()"></b-form-checkbox>
         </b-form-group>
-        <b-form-group label-cols="auto" label="Use Clyde as Registration Integration" class="configuration enable ml-2">
+        <b-form-group label-cols="auto" label="Użyj Clyde jako integracji rejestracji" class="konfiguracja enable ml-2">
           <b-form-checkbox switch v-model="clydeRegistration" @change="patchClydeConfig()" :disabled="!clydeEnabled"></b-form-checkbox>
         </b-form-group>
-        <b-form-group label="Base URL for Clyde" class="ml-2">
+        <b-form-group label="Adres URL podstawowy dla Clyde" class="ml-2">
           <b-form-input type="text" v-model="clydeBaseUrl" @blur="patchClydeConfig()" :disabled="!clydeEnabled"></b-form-input>
         </b-form-group>
-        <b-form-group label="Button text for Log In Button" class="ml-2">
+        <b-form-group label="Tekst przycisku Log In" class="ml-2">
           <b-form-input type="text" v-model="clydeButtonText" @blur="patchClydeConfig()" :disabled="!clydeEnabled"></b-form-input>
         </b-form-group>
-        <b-form-group label="Link text for Log In Page" class="ml-2">
+        <b-form-group label="Tekst linku do strony Log In" class="ml-2">
           <div class="d-flex align-items-center">
-          <span class="basis-14">You can also log in with</span> <b-form-input type="text" v-model="clydeLinkText" @blur="patchClydeConfig()" :disabled="!clydeEnabled" inline></b-form-input>
+            <span class="basis-14">Możesz także zalogować się za pomocą</span> <b-form-input type="text" v-model="clydeLinkText" @blur="patchClydeConfig()" :disabled="!clydeEnabled" inline></b-form-input>
           </div>
         </b-form-group>
       </div>
@@ -31,7 +31,7 @@ import { clydeMixin } from './clyde.mixin'
 export default {
   name: "ClydeSettings",
   mixins: [clydeMixin],
-
+  
 }
 </script>
 

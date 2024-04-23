@@ -1,9 +1,9 @@
 <template>
   <div>
     <b-tabs content-class="mt-3" v-model="tabIndex" no-nav-style no-key-nav nav-class="nav-tabs-style">
-      <b-tab title="First" active lazy>
+      <b-tab title="Pierwsza" active lazy>
         <div class="d-flex flex-row">
-          <h4>Draft Mailings</h4>
+          <h4>Projekty wiadomości</h4>
         </div>
         <div class="d-flex flex-row">
           <div class="p-6 col-sm">
@@ -19,17 +19,17 @@
             <b-button variant="primary" class="m-1" @click="onNewView">
               <b-icon-plus scale="2"></b-icon-plus>
             </b-button>
-            <b-button variant="primary" class="m-1" @click="onView" :disabled="!selectedId" title="View">
+            <b-button variant="primary" class="m-1" @click="onView" :disabled="!selectedId" title="Zobacz">
               <b-icon-eye></b-icon-eye>
             </b-button>
-            <b-button variant="primary" class="m-1" @click="onDelete" :disabled="!selectedId" title="Delete">
+            <b-button variant="primary" class="m-1" @click="onDelete" :disabled="!selectedId" title="Usuń">
               <b-icon-trash></b-icon-trash>
             </b-button>
           </div>
 
         </div>
         <div class="d-flex flex-row">
-          <h4>Sent Mailings</h4>
+          <h4>Wysłane wiadomości</h4>
         </div>
         <div class="d-flex flex-row">
           <mailings-table
@@ -40,7 +40,7 @@
           ></mailings-table>
         </div>
       </b-tab>
-      <b-tab title="Second" lazy>
+      <b-tab title="Druga" lazy>
         <mailing-editor
           :selectedId="selectedId"
           :readOnly="selected != null"
@@ -48,7 +48,7 @@
           @mailingSent="onManage"
         >
           <template v-slot:controls>
-            <b-button variant="primary" @click="onManage">Back</b-button>
+            <b-button variant="primary" @click="onManage">Powrót</b-button>
           </template>
         </mailing-editor>
       </b-tab>

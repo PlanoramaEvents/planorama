@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="ml-2 text-muted font-italic" v-else-if="sessionId && conflicts.length === 0 && conflicts_with.length === 0">
-          There are no conflicts for this session
+          Nie ma konfliktów dla tej sesji
         </div>
       </div>
     </b-overlay>
@@ -128,46 +128,46 @@ export default {
     conflict_type_string(conflict, conflict_with=false) {
       switch(conflict.conflict_type){
         case 'person_exclusion_conflict':
-          return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> scheduled against exclusion`
+          return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> zaplanowano w sposób wykluczający`
         case 'availability_conflict':
-          return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> is outside of availability`
+          return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> jest poza zakresem dostępności`
         case 'room_conflict':
           let start_time = this.formatLocaleDate(conflict.session_start_time) //DateTime.fromISO(conflict.session_start_time).setZone(this.timezone)
           if (conflict_with) {
             return `${conflict.room_name}<br />
              ${start_time} <br />
              "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
-             overlaps with  <br />
+             koliduje z  <br />
              "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
           } else {
             return `${conflict.room_name}<br />
             ${start_time} <br />
             "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"
-            overlaps with  <br />
+            koliduje z  <br />
             "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
         case 'person_schedule_conflict':
           if (conflict_with) {
-            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
+            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> ma zduplikowane rezerwacje z
                    "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
-                   and "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
+                   i "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
           } else {
-            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a>  is double booked with
+            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> ma zduplikowane rezerwacje z
                    "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"
-                   and "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+                   i "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
         case 'person_back_to_back':
           if (conflict_with) {
-            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> has back to back with
+            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> ma sesje bez przerwy z
                    "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"
-                   and "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
+                   i "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"`
           } else {
-            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> has back to back with
+            return `<a href="/#/people/edit/${conflict.person_id}">${conflict.person_published_name}</a> ma sesje bez przerwy z
                    "<a href="/#/sessions/edit/${conflict.session_id}">${conflict.session_title}</a>"
-                   and "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
+                   i "<a href="/#/sessions/edit/${conflict.conflict_session_id}">${conflict.conflict_session_title}</a>"`
           }
         default:
-          return `Some conflict ${conflict}`
+          return `Jakiś konflikt ${conflict}`
       }
     }
   },

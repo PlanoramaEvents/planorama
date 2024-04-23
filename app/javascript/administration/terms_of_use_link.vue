@@ -1,5 +1,5 @@
 <template>
-    <a :href="termsOfUseLink" target="_blank">Terms of Use</a>
+    <a :href="termsOfUseLink" target="_blank">Regulamin</a>
 </template>
 
 <script>

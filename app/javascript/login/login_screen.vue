@@ -21,7 +21,7 @@ export default {
     personSessionMixin
   ],
   watch: {
-    // NOTE:
+        // NOTE:
     // This causes a double redirect cause the router does the same thing
     // and throughs an error which sometime causes the survey etc not to render
     // AND the logic for this is handled in the router anyway

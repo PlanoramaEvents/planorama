@@ -1,17 +1,17 @@
 <template>
   <div>
     <model-loading-overlay :model="personModel">
-      <b-button variant="link" @click="back" v-if="currentUserIsAdmin || currentUserIsStaff">Back</b-button>
+      <b-button variant="link" @click="back" v-if="currentUserIsAdmin || currentUserIsStaff">Powrót</b-button>
         <person-summary></person-summary>
       <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="person">
-        <b-tab title="General" :active="!tab" lazy>
+        <b-tab title="Informacje ogólne" :active="!tab" lazy>
           <person-details></person-details>
         </b-tab>
-        <b-tab title="Demographics &amp; Community" :active="tab === 'other'" lazy>
+        <b-tab title="Demografia i społeczność" :active="tab === 'other'" lazy>
           <person-demographics></person-demographics>
         </b-tab>
-        <!-- Can not make this lazy otherwise we have lock issues with the notes -->
-        <b-tab title="Availability" :active="tab === 'availability'">
+        <!-- Nie można zrobić tego leniwie, inaczej będziemy mieli problemy z blokadami notatek -->
+        <b-tab title="Dostępność" :active="tab === 'availability'">
           <availability-and-interests
             v-if="person"
             v-model="person"
@@ -21,7 +21,7 @@
             class="mb-5"
           ></availability-and-interests>
         </b-tab>
-        <b-tab title="Session Selection" :active="tab === 'session-selection'" lazy>
+        <b-tab title="Wybór sesji" :active="tab === 'session-selection'" lazy>
           <session-selector
             v-if="person && hasOpenForInterest && person_can_select_sessions"
             v-model="person"
@@ -30,10 +30,10 @@
             defaultFilter='{"op":"all","queries":[["open_for_interest", "=", true]]}'
           ></session-selector>
         <div v-if="!hasOpenForInterest || !person_can_select_sessions" class="container-fluid mt-5">
-          <h5 class="font-italic text-muted">Coming soon!</h5>
+          <h5 class="font-italic text-muted">Już niedługo!</h5>
         </div>
         </b-tab>
-        <b-tab title="Session Rankings" :active="tab === 'session-ranking'" lazy>
+        <b-tab title="Ranking sesji" :active="tab === 'session-ranking'" lazy>
           <session-ranker
             v-if="person && hasOpenForInterest && person_can_select_sessions"
             defaultSortBy='interest_ranking,session_assignments.updated_at'
@@ -44,25 +44,25 @@
             :person_id="person.id"
           ></session-ranker>
         <div v-if="!hasOpenForInterest || !person_can_select_sessions" class="container-fluid d-flex mt-5">
-          <h5 class="font-italic text-muted">Coming soon!</h5>
+          <h5 class="font-italic text-muted">Już niedługo!</h5>
         </div>
         </b-tab>
         <b-tab :title="liveScheduleTitle" lazy v-if="currentUserIsAdmin || currentUserIsStaff || firmSchedule" :active="tab === 'schedule'">
           <person-live-schedule></person-live-schedule>
         </b-tab>
-        <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
+        <b-tab title="Szkic harmonogramu" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
           <person-draft-schedule></person-draft-schedule>
         </b-tab>
-        <b-tab title="Emails" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'email'">
+        <b-tab title="Emaile" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'email'">
           <people-email-tab></people-email-tab>
         </b-tab>
-        <b-tab title="Surveys" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'surveys'">
+        <b-tab title="Ankiety" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'surveys'">
           <people-surveys-tab :person="person"></people-surveys-tab>
         </b-tab>
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
           <people-admin-tab></people-admin-tab>
         </b-tab>
-        <b-tab title="Integrations" lazy v-if="currentUserIsAdmin" :active="tab === 'integrations'">
+        <b-tab title="Integracje" lazy v-if="currentUserIsAdmin" :active="tab === 'integrations'">
           <pre>{{JSON.stringify(person.integrations, undefined, 2)}}</pre>
         </b-tab>
       </b-tabs>

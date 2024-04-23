@@ -41,7 +41,7 @@ export default {
     },
     label: {
       type: String,
-      default: "Email address"
+      default: "Adres mailowy"
     },
     disabled: {
       type: Boolean,

@@ -1,40 +1,41 @@
+```html
 <template>
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
         <b-form-group label-cols="auto" class="align-items-center">
-          <template #label>Release <strong>Draft</strong> Schedule to Participants</template>
+          <template #label>Wydaj <strong>projekt</strong> Harmonogramu Uczestnikom</template>
           <b-form-checkbox switch v-model="localDraftSchedule" :disabled="localDraftSchedule" @change="openDraftConfirm" id="draft-schedule-checkbox" aria-describedby="draft-schedule-date"></b-form-checkbox>
           <span class="small text-muted" id="draft-schedule-date" v-if="localDraftSchedule">{{draftScheduledAtText}}</span>
         </b-form-group>
-        <b-form-group label-cols="auto" class="align-items-center" label="Release Firm Schedule to Participants">
+        <b-form-group label-cols="auto" class="align-items-center" label="Wydaj Harmonogram Uczestnikom">
           <b-form-checkbox id="firm-schedule-checkbox" switch v-model="localFirmSchedule" @change="openFirmConfirm" :disabled="!localDraftSchedule || localFirmSchedule" inline aria-describedby="firm-schedule-date"></b-form-checkbox>
           <span class="small text-muted" id="firm-schedule-date" v-if="localFirmSchedule">{{firmScheduledAtText}}</span>
         </b-form-group>
         <div v-if="currentSettings.env !== 'production'">
-          <b-button variant="danger" @click="reset()">Reset for Testing</b-button>
-          <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
+          <b-button variant="danger" @click="reset()">Resetuj do testów</b-button>
+          <span>TO USUWA ZDJĘCIE A NIE MOŻESZ GO NIGDY ODZYSKAĆ</span>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
-        <h5>Publish schedule to public</h5>
+        <h5>Opublikuj harmonogram publicznie</h5>
         <b-table-simple borderless fixed small style="width: 35rem;">
           <b-thead>
             <b-tr>
               <b-td colspan="3" class="text-center">
-                <b-button variant="primary" size="sm" :disabled="!canDiff" @click="diff">Show difference</b-button>
+                <b-button variant="primary" size="sm" :disabled="!canDiff" @click="diff">Pokaż różnicę</b-button>
               </b-td>
               <b-td colspan="13" class="text-right">
                 <icon-button icon="arrow-repeat" class="mr-2" @click="fetchPublicationDates()"></icon-button>
-                <b-button variant="primary" size="sm" v-b-modal.confirm-publish>Create a publish snapshot</b-button>
+                <b-button variant="primary" size="sm" v-b-modal.confirm-publish>Utwórz migawkę publikacji</b-button>
               </b-td>
             </b-tr>
           </b-thead>
         </b-table-simple>
         <b-table
-          :fields="[{key: 'select_2', tdClass: 'text-center', thClass: 'text-center',  thAttr: {'colspan': 3}, tdAttr: {'colspan': 3} }, {key: 'timestamp', tdClass: 'text-right', thClass: 'text-right', thAttr: {'colspan': 10}, tdAttr: {'colspan': 10}}, {key: 'sent_external', tdClass: 'text-center', thClass: 'text-center', thAttr: {'colspan': 3}, tdAttr: {'colspan': 3}, label: 'External'}]" 
+          :fields="[{key: 'select_2', tdClass: 'text-center', thClass: 'text-center',  thAttr: {'colspan': 3}, tdAttr: {'colspan': 3} }, {key: 'timestamp', tdClass: 'text-right', thClass: 'text-right', thAttr: {'colspan': 10}, tdAttr: {'colspan': 10}}, {key: 'sent_external', tdClass: 'text-center', thClass: 'text-center', thAttr: {'colspan': 3}, tdAttr: {'colspan': 3}, label: 'Zewnętrzne'}]" 
           bordered
           fixed
           small
@@ -53,30 +54,29 @@
           </template>
           <template #cell(timestamp)="{ item, index }">
             <div v-if="!index">{{item.timestamp}}</div>
-            <div v-b-tooltip.html.right="`New Sessions: ${item.new_sessions}<br />Dropped Sessions: ${item.dropped_sessions}<br />Updated Sessions: ${item.updated_sessions}<br />New Assignments: ${item.new_assignments}<br />Dropped Assignments: ${item.dropped_assignments}<br />Updated Assignments: ${item.updated_assignments}`" v-if="index">{{item.timestamp}}</div>
+            <div v-b-tooltip.html.right="`Nowe Sesje: ${item.new_sessions}<br />Usunięte Sesje: ${item.dropped_sessions}<br />Zaktualizowane Sesje: ${item.updated_sessions}<br />Nowe Przypisania: ${item.new_assignments}<br />Usunięte Przypisania: ${item.dropped_assignments}<br />Zaktualizowane Przypisania: ${item.updated_assignments}`" v-if="index">{{item.timestamp}}</div>
           </template>
           <template #cell(sent_external)="{ index, item }">
             <b-form-checkbox switch v-if="index" :checked="item.sent_external" @change="patchSentExternal(item, $event)"></b-form-checkbox>
           </template>
         </b-table>
         <div v-if="currentSettings.env !== 'production'">
-          <b-button variant="danger" @click="resetPubs()">Reset Publish for Testing</b-button>
-          <span>THIS DELETES ALL THE PUBLISHED DATA AND YOU CAN'T EVER GET IT BACK</span>
+          <b-button variant="danger" @click="resetPubs()">Resetuj publikację do testów</b-button>
+          <span>TO USUWA WSZYSTKIE OPUBLIKOWANE DANE I NIE MOŻESZ ICH NIGDY ODZYSKAĆ</span>
         </div>
       </div>
     </div>
     <plano-modal id="confirm-draft-modal" @cancel="cancelDraft()" @close="cancelDraft()" no-close-on-backdrop @ok="confirmDraft()">
-      <template #modal-title>Publish Draft Schedule Confirmation</template>
+      <template #modal-title>Potwierdzenie Publikacji Projektu Harmonogramu</template>
       {{SCHEDULE_DRAFT_CONFIRM_MESSAGE}}
     </plano-modal>
     <plano-modal id="confirm-firm-modal" @cancel="cancelFirm()" @close="cancelFirm()" no-close-on-backdrop @ok="confirmFirm()">
-      <template #modal-title>Publish Firm Schedule Confirmation</template>
+      <template #modal-title>Potwierdzenie Publikacji Ustalonego Harmonogramu</template>
       {{SCHEDULE_FIRM_CONFIRM_MESSAGE}}
     </plano-modal>
     <plano-modal id="confirm-publish" @ok="publishdSchedule()">
-      <template #modal-title>Publish Schedule To Public Confirmation</template>
-      This will publish the schedule and make the current version of it available to external sources. This action is
-      irreversible and will bring the server down for a short time. Please double check that you wish to perform this action.
+      <template #modal-title>Potwierdzenie Publikacji Harmonogramu Dla Publiczności</template>
+      To spowoduje opublikowanie harmonogramu i udostępnienie bieżącej wersji na zewnątrz. Ta operacja jest nieodwracalna i na krótko wyłączy serwer. Upewnij się, że chcesz wykonać tę operację.
     </plano-modal>
   </div>
 </template>

@@ -9,7 +9,7 @@ export default {
   name: "EditButton",
   props: {
     title: {
-      default: "Edit"
+      default: "Edytuj"
     }
   },
   components: {

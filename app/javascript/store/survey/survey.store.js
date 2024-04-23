@@ -158,14 +158,14 @@ export const surveyStore = {
   actions: {
     [NEW_SURVEY] ({dispatch}) {
       let newSurvey = {
-        name: 'New Survey',
+        name: 'Nowa Ankieta',
         pages_attributes: [{
-          title: 'New Survey',
+          title: 'Nowa Ankieta',
           questions_attributes: [{
-            question: 'New Question',
+            question: 'Nowe Pytanie',
             question_type: "textfield",
             answers_attributes: [{
-              answer: 'Option'
+              answer: 'Opcja'
             }]
           }]
         }]

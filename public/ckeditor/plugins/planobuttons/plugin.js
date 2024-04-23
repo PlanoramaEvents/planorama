@@ -118,48 +118,48 @@ CKEDITOR.plugins.add('planobuttons', {
 CKEDITOR.config.planobuttons = [
   {
     name:'insert-plano-email-fields',
-    title:'Insert email merge field',
+    title:'Wstaw pole łączenia emaili',
     align: 'left',
     items : [
       {
         name:'fullname',
         html:'<%= person.name %>',
-        title:'Person\'s Name'
+        title:'Imię i nazwisko osoby'
       },
       {
         name:'pubname',
         html:'<%= person.published_name %>',
-        title:'Person\'s Pub Name'
+        title:'Publikowane imię osoby'
       },
       {
         name:'email',
         html:'<%= person.email %>',
-        title:'Person\'s Primary Email'
+        title:'Główny adres email osoby'
       },
       {
         name:'participant_schedule_url',
         html:'<%= participant_schedule_url %>',
-        title:'Participant Schedule URL'
+        title:'URL harmonogramu uczestnika'
       },
       {
         name:'survey_name',
         html:'<%= survey.name %>',
-        title:'Survey Name'
+        title:'Nazwa ankiety'
       },
       {
         name:'survey_url',
         html:'<%= survey_url %>',
-        title:'Survey URL'
+        title:'URL ankiety'
       },
       {
         name:'login_url',
         html:'<%= login_url %>',
-        title:'Login URL'
+        title:'URL logowania'
       },
       {
         name:'participant_schedule',
         html:'<%= schedule_to_html %>',
-        title:'Participant Schedule'
+        title:'Harmonogram uczestnika'
       }
     ]
   }

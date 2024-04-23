@@ -2,13 +2,13 @@
   <div v-if="approvalType">
     <model-loading-overlay :model="model" v-if="!failedToLoad">
       <b-form-group v-if="selected">
-        <template #label>Do you approve this <strong>{{approvalType}}</strong> schedule?</template>
+        <template #label>Czy zatwierdzasz ten <strong>{{approvalType}}</strong> harmonogram?</template>
         <b-form-radio-group stacked :options="approvalOptions" v-model="selected.approved" @change="patchSingleField('approved')"></b-form-radio-group>
       </b-form-group>
-      <b-form-group label="If no, what changes would you like to have?" v-if="selected">
+      <b-form-group label="Jeśli nie, jakie zmiany chciałbyś wprowadzić?" v-if="selected">
         <b-textarea v-model="comments" :disabled="selected.approved !== 'no'" @blur="patchSingleField('comments')"></b-textarea>
       </b-form-group>
-      <span class="small text-muted">Last edited: {{lastEdited}}</span>
+      <span class="small text-muted">Ostatnio edytowane: {{lastEdited}}</span>
     </model-loading-overlay>
     <div v-if="failedToLoad">
       <span class="text-muted font-italic">{{SCHEDULE_APPROVAL_FAIL_TO_LOAD}}</span>
@@ -51,7 +51,7 @@ export default {
       if (this.selected && this.selected.updated_at !== this.selected.created_at) {
         return DateTime.fromISO(this.selected.updated_at).toFormat('DDDD, t ZZZZ');
       } else {
-        return 'never';
+        return 'nigdy';
       }
 
     },
@@ -95,3 +95,4 @@ export default {
 <style>
 
 </style>
+```

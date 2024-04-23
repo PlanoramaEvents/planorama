@@ -1,10 +1,10 @@
 <template>
   <div class="forgot-password">
-    <h3>Set/Reset Password</h3>
-    <p>Don't worry, this happens to the best of us.</p>
+    <h3>Ustaw/Resetuj Hasło</h3>
+    <p>Nie martw się, to zdarza się nawet najlepszym z nas.</p>
     <p>
-      If an account with this address exists, you will receive an email with a
-      link to complete the password process.
+      Jeśli istnieje konto powiązane z tym adresem e-mail, otrzymasz e-mail z
+      linkiem umożliwiającym zresetowanie hasła.
     </p>
     <b-alert :show="alert.visible" :variant="alert.variant">{{
       alert.text
@@ -21,7 +21,7 @@
           type="submit"
           variant="primary"
           class="px-5"
-          >Send me a link</b-button
+          >Wyślij mi link</b-button
         >
       </div>
     </b-form>

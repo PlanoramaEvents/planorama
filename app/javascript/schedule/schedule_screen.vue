@@ -20,7 +20,7 @@
       </div>
       <div class="col-9">
         <div class="d-flex justify-content-end">
-          <magical-reload class="mt-1" title="Reload Schedule" label="Schedule last reloaded at"></magical-reload>
+          <magical-reload class="mt-1" title="Przeładuj harmonogram" label="Harmonogram ostatnio przeładowany o"></magical-reload>
           <room-selector></room-selector>
         </div>
         <div class="scrollable minus31">

@@ -4,7 +4,7 @@
       <div class="col-12">
         <div class="d-flex">
           <h2>{{title}}</h2>
-          <b-button class="ml-2" variant="link" @click="allButton()">{{ anyOpen ? 'Collapse all' : 'Show all'}}</b-button>
+          <b-button class="ml-2" variant="link" @click="allButton()">{{ anyOpen ? 'Zwiń wszystkie' : 'Pokaż wszystkie'}}</b-button>
         </div>
       </div>
     </div>
@@ -14,31 +14,31 @@
           <schedule-collapse v-for="(session) in orderedSessions" :key="session.id" :id="session.id" v-model="open[session.id]">
             <template #title><span class="larger-text"><strong class="larger-text">{{session.title}}</strong>, {{formatStartTime(session)}}, {{session.room}}</span></template>
             <dl class="indented-dl">
-              <dt>Title</dt>
+              <dt>Tytuł</dt>
               <dd>{{session.title}}</dd>
-              <dt>Participants (with contact information where allowed)</dt>
-              <dd v-for="p in session.moderators" :key="p.published_name">{{p.published_name}} (m) {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
-              <dd v-for="p in session.participants" :key="p.published_name">{{p.published_name}} {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
-              <dd v-for="p in session.invisibles" :key="p.published_name">{{p.published_name}} (i) {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
+              <dt>Uczestnicy (z informacjami kontaktowymi, jeśli są dostępne)</dt>
+              <dd v-for="p in session.moderators" :key="p.published_name">{{p.published_name}} (m) {{p.pronouns}} - {{ p.email ? p.email : 'brak zgody'}}</dd>
+              <dd v-for="p in session.participants" :key="p.published_name">{{p.published_name}} {{p.pronouns}} - {{ p.email ? p.email : 'brak zgody'}}</dd>
+              <dd v-for="p in session.invisibles" :key="p.published_name">{{p.published_name}} (i) {{p.pronouns}} - {{ p.email ? p.email : 'brak zgody'}}</dd>
               <!--<dd class="text-muted" v-if="!Object.keys(session.participant_assignments).length">None Assigned</dd>-->
-              <dt>Description</dt>
+              <dt>Opis</dt>
               <dd v-html="session.description"></dd>
-              <dt>Space/Time</dt>
+              <dt>Miejsce/Czas</dt>
               <dd>{{session.room}} {{formatStartTime(session)}}</dd>
-              <dt>Duration</dt>
-              <dd>{{session.duration}} minutes</dd>
-              <dt>Session Environment</dt>
+              <dt>Czas trwania</dt>
+              <dd>{{session.duration}} minut</dd>
+              <dt>Środowisko sesji</dt>
               <dd>{{SESSION_ENVIRONMENT[session.environment]}}</dd>
-              <dt>Session Format</dt>
+              <dt>Format sesji</dt>
               <dd class="not-italic"><span class="badge badge-pill badge-info">{{session.format}}</span></dd>
-              <dt>Session Area(s)</dt>
+              <dt>Obszar(y) sesji</dt>
               <dd v-if="session.areas.length" class="not-italic"><span v-for="area in session.areas" class="badge badge-pill badge-primary" :key="area">{{area}}</span></dd>
-              <dd v-if="!session.areas.length" class="text-muted">None Selected</dd>
-              <dt>Schedule Notes</dt>
+              <dd v-if="!session.areas.length" class="text-muted">Brak wybranych obszarów</dd>
+              <dt>Notatki z harmonogramu</dt>
               <dd v-html="session.participant_notes"></dd>
             </dl>
           </schedule-collapse>
-          <div v-if="noSessions" class="p-5 text-muted font-italic">There are not currently any sessions for this participant.</div>
+          <div v-if="noSessions" class="p-5 text-muted font-italic">Obecnie nie ma żadnych sesji dla tego uczestnika.</div>
         </b-overlay>
       </div>
       <div class="col-4" v-if="!noSidebar">
@@ -71,7 +71,7 @@ export default {
     },
     title: {
       type: String,
-      default: "Schedule"
+      default: "Harmonogram"
     },
     approvalType: {
       type: String,

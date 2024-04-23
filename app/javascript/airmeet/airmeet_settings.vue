@@ -2,21 +2,21 @@
   <div class="container-fluid">
     <div class="row">
       <div class="column">
-        <h4 class="mt-3">Configuration</h4>
-        <b-form-group label-cols="auto" label="Enable Airmeet" class="configuration enable">
+        <h4 class="mt-3">Konfiguracja</h4>
+        <b-form-group label-cols="auto" label="Włącz Airmeet" class="configuration enable">
           <b-form-checkbox switch v-model="airmeet_enabled" @change="patchAirmeetConfig()"></b-form-checkbox>
         </b-form-group>
-        <b-form-group label="Airmeet ID">
+        <b-form-group label="ID Airmeet">
           <b-form-input type="text" v-model="airmeet_id" @blur="patchAirmeetConfig()"></b-form-input>
         </b-form-group>
-        <b-form-group label="Airmeet Host Email">
+        <b-form-group label="Email hosta Airmeet">
           <b-form-input type="text" v-model="airmeet_host" @blur="patchAirmeetConfig()"></b-form-input>
         </b-form-group>
-        <h4 class="mt-5">Room Hosts Setup</h4>
+        <h4 class="mt-5">Ustawienia gospodarzy pokoi</h4>
         <b-form inline @submit.prevent="addAirmeetRoom($event)" class="mb-5 mt-3">
           <b-form-select name="room" :options="nonAirmeetRoomOptions" :value="null"></b-form-select>
-          <b-input type="text" name="roomHostEmail" placeholder="Room Host Email"></b-input>
-          <b-button type="submit">Add Airmeet Room</b-button>
+          <b-input type="text" name="roomHostEmail" placeholder="E-mail gospodarza pokoju"></b-input>
+          <b-button type="submit">Dodaj pokój Airmeet</b-button>
         </b-form>
         <div class="border">
         <b-table :fields="airmeetRoomFields" :items="airmeetRooms" sticky-header class="mb-0">
@@ -44,7 +44,7 @@ export default {
     toastMixin
   ],
   data: () => ({
-    airmeetRoomFields: ['name', 'room_host_email'],
+    airmeetRoomFields: ['Nazwa', 'E-mail gospodarza pokoju'],
     model: 'room'
   }),
   computed: {
@@ -53,7 +53,7 @@ export default {
       return this.collection.filter(r => r.integrations?.airmeet)
     },
     nonAirmeetRoomOptions() {
-      return [{text: "Select a room", value: null, disabled: true}, ...this.collection.filter(r => !r.integrations?.airmeet).map(r => ({
+      return [{text: "Wybierz pokój", value: null, disabled: true}, ...this.collection.filter(r => !r.integrations?.airmeet).map(r => ({
         text: r.name,
         value: r.id
       }))]
@@ -112,7 +112,7 @@ export default {
           this.setAirmeetInfo(data);
           res(data);
         }).catch(rej);
-      }), "Airmeet integration successfully updated.")
+      }), "Integracja Airmeet została pomyślnie zaktualizowana.")
     }
   },
   mounted() {

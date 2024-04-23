@@ -18,16 +18,16 @@
         :validation="false"
       ></login-password-field>
       <div class="d-flex flex-row-reverse mb-3">
-        <router-link :to="'/login/forgot?redirect=' + redirect">Forgot Password?</router-link>
+        <router-link :to="'/login/forgot?redirect=' + redirect">Zapomniałeś hasła?</router-link>
       </div>
       <div class="d-flex flex-row-reverse">
-        <b-button type="submit" variant="primary" class="px-5">Log In</b-button>
+        <b-button type="submit" variant="primary" class="px-5">Zaloguj</b-button>
       </div>
     </b-form>
     <!--iea-modal @cancel="onIeaCancel" @ok="onIeaAgree"></iea-modal-->
     <div class="d-flex flex-column mb-3">
-      <router-link :to="'/login/forgot?redirect=' + redirect">Never set up your password? Set it up now</router-link>
-      <router-link :to="'/login/new?redirect=' + redirect">Create account</router-link>
+      <router-link :to="'/login/forgot?redirect=' + redirect">Nigdy nie ustawiłeś hasła? Ustaw je teraz</router-link>
+      <router-link :to="'/login/new?redirect=' + redirect">Utwórz konto</router-link>
     </div>
     <login-integrations :redirect="redirect"></login-integrations>
   </div>

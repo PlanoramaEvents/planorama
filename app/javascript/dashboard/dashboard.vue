@@ -1,94 +1,94 @@
 <template>
   <div class="row scrollable">
     <div class="col-12">
-      <p>Welcome to Planorama, {{currentUser.published_name}}!</p>
+      <p>Witaj w Planoramie, {{currentUser.published_name}}!</p>
       <p>
-        You'll be using this site between now and the convention to view and manage your profile, interests and schedule.
+        Będziesz korzystać z tej strony między teraz a konwencją, aby przeglądać i zarządzać swoim profilem, zainteresowaniami oraz harmonogramem.
       </p>
-      <div v-if="!draftSchedule  && doneLoading">
+      <div v-if="!draftSchedule && doneLoading">
         <page-content-display name="dashboard-default">
           <p>
-            To get started, click on <a href="/#/profile">Profile</a>.
+            Aby rozpocząć, kliknij <a href="/#/profile">Profil</a>.
           </p>
           <p>
-            At this point there are 5 tabs in the profile. You will need to visit all of them.
+            Obecnie w profilu znajduje się 5 zakładek. Musisz odwiedzić każdą z nich.
           </p>
           <ul>
             <li>
-              <b>General Tab</b>
+              <b>Zakładka Ogólna</b>
               <ul>
                 <li>
-                  Update your name(s), pronouns, email address, bio, and social media as needed
+                  Zaktualizuj swoje imię, nazwisko, zaimki, adres e-mail, biografię oraz media społecznościowe, jeśli jest to konieczne.
                 </li>
                 <li v-if="eventVirtual">
-                  If you’re not going to be attending the convention in-person, please let us know the timezone that you will be in when you attend online.
+                  Jeśli nie będziesz uczestniczyć w konwentu osobiście, daj nam znać strefę czasową, w której będziesz, gdy będziesz uczestniczyć online.
                 </li>
               </ul>
             </li>
             <li>
-              <b>Demographics &amp; Community</b>
+              <b>Demografia i Społeczność</b>
               <ul>
-                <li>Fill in your information as needed.</li>
+                <li>Wypełnij swoje informacje, jeśli jest to konieczne.</li>
               </ul>
             </li>
             <li>
-              <b>Availability</b>
+              <b>Dostępność</b>
               <ul>
                 <li>
-                  Fill in the maximum number of program items you would like to be on.
+                  Wypełnij maksymalną liczbę elementów programu, w których chcesz uczestniczyć.
                 </li>
                 <li>
-                  Select blocks of time you will be available during the convention on the availability calendar.
+                  Wybierz bloki czasowe, w których będziesz dostępny podczas konwentu w kalendarzu dostępności.
                 </li>
                 <li>
-                  Select any of the specific cornerstone items you do not want to be scheduled against.
+                  Wybierz wszystkie istotne elementy, wobec których nie chcesz być zaplanowany.
                 </li>
                 <li>
-                  Let us know any other scheduling constraints you have in the free text box.
+                  Daj nam znać, jakie inne ograniczenia czasowe masz, korzystając z pola tekstowego.
                 </li>
               </ul>
             </li>
             <li>
-              <b>Session Selection</b>
+              <b>Wybór Sesji</b>
               <ul>
                 <li>
-                  Use this tab to tell us what program items you are interested in.
+                  Użyj tej zakładki, aby powiedzieć nam, które elementy programu Cię interesują.
                 </li>
                 <li>
-                  You can filter the options for one area, look through all options (over 600!) or search based on text in the title and description. (Note: You need to click the search button - hitting enter does not work.)
+                  Możesz filtrować opcje dla jednej dziedziny, przeglądać wszystkie opcje (ponad 600!) lub wyszukiwać na podstawie tekstu w tytule i opisie. (Uwaga: Musisz kliknąć przycisk wyszukiwania - naciśnięcie Enter nie działa.)
                 </li>
                 <li>
-                  Select sessions by using the slider to the right of the description. Your selections will save automatically.
+                  Wybierz sesje, korzystając ze wskaźnika po prawej stronie opisu. Twoje wybory zostaną automatycznie zapisane.
                 </li>
                 <li v-if="eventVirtual">
-                  While some items are marked or otherwise described as online, many we’re not sure if they will be taking place in-person or online, so everyone should feel free to sign up for items not marked either way.
+                  Chociaż niektóre elementy są oznaczone lub opisane jako online, nie jesteśmy pewni, czy odbędą się osobiście czy online, dlatego każdy może zapisywać się na elementy, które nie są oznaczone żadnym z tych sposobów.
                 </li>
               </ul>
             </li>
             <li>
-              <b>Session Rankings</b>
+              <b>Ranking Sesji</b>
               <p>
-                The list of sessions you selected will display here. For each session:
+                Lista wybranych przez Ciebie sesji zostanie tutaj wyświetlona. Dla każdej sesji:
                 <ul>
                   <li>
-                    Add a ranking 1-3. The ranking system is explained on the tab. You may leave panels unranked.
+                    Dodaj ranking od 1 do 3. System rankingowy jest wyjaśniony na zakładce. Możesz nie oceniać paneli.
                   </li>
                   <li>
-                    Indicate moderation preference for the individual items.
+                    Określ preferencje moderacji dla poszczególnych elementów.
                   </li>
                   <li>
-                    Use the text box to tell us why you are a good choice for this panel and what you would contribute.
+                    Korzystaj z pola tekstowego, aby powiedzieć nam, dlaczego jesteś dobrym wyborem do tego panelu i co wniesiesz.
                   </li>
                 </ul>
               </p>
               <p>
-                Please follow the additional prompt, if present.
+                Prosimy postępuj zgodnie z dodatkowymi wskazówkami, jeśli są dostępne.
                 <ul>
                   <li>
-                    A sentence or two is often sufficient; essays are not required.
+                    Często wystarczy jedno lub dwa zdania; nie wymagamy esejów.
                   </li>
                   <li>
-                    We have about 1000 potential panelists and about two dozen staffers engaged in panelist assignments; this step helps us learn more about you in the context of a particular session.
+                    Mamy około 1000 potencjalnych panelistów i około dwóch dziesiątek pracowników zaangażowanych w przydział panelistów; ten krok pozwala nam dowiedzieć się więcej o Tobie w kontekście konkretnej sesji.
                   </li>
                 </ul>
               </p>
@@ -98,17 +98,17 @@
       </div>
       <div v-if="displayDraftSchedule">
         <page-content-display name="dashboard-schdule"></page-content-display>
-        <person-schedule-display :sessions="sessions" title="Your Draft Schedule">
+        <person-schedule-display :sessions="sessions" title="Twój Wstępny Harmonogram">
           <template #message>
-            <router-link to="/profile/draft-schedule">Approve your draft schedule<br />or provide change requests.</router-link>
+            <router-link to="/profile/draft-schedule">Zatwierdź swój wstępny harmonogram<br />lub zgłoś zmiany.</router-link>
           </template>
         </person-schedule-display>
       </div>
       <div v-if="firmSchedule">
         <page-content-display name="dashboard-schedule"></page-content-display>
-        <person-schedule-display :sessions="sessions" title="Your Schedule">
+        <person-schedule-display :sessions="sessions" title="Twój Harmonogram">
           <template #message>
-            <router-link to="/profile/schedule">Approve your schedule<br />or provide change requests.</router-link>
+            <router-link to="/profile/schedule">Zatwierdź swój harmonogram<br />lub zgłoś zmiany.</router-link>
           </template>
         </person-schedule-display>
       </div>

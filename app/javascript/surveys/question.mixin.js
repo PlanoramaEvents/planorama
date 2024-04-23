@@ -1,5 +1,5 @@
-import {mapGetters, mapMutations, mapActions} from 'vuex';
-import { SELECTED, SELECT, UNSELECT, DELETE, SAVE} from '@/store/model.store';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { SELECTED, SELECT, UNSELECT, DELETE, SAVE } from '@/store/model.store';
 import { GET_CACHED_INDEX, GET_CACHED_PAGES, GET_CACHED_QUESTIONS, GET_CACHED_ANSWERS } from '../store/survey/survey.store';
 import { questionModel as model, NEW_QUESTION, DUPLICATE_QUESTION } from '@/store/survey';
 import { pageMixin, surveyMixin } from '@/mixins';
@@ -11,9 +11,9 @@ import {
   QUESTION_DUPLICATE_ERROR,
   QUESTION_DUPLICATE_SUCCESS,
   QUESTION_SAVE_SUCCESS
-} from '../constants/strings'
+} from '../constants/strings';
 import settingsMixin from '@/store/settings.mixin';
-import {QUESTION_UNCHANGED} from "@/constants/strings";
+import { QUESTION_UNCHANGED } from "@/constants/strings";
 
 // CONVERTED
 export const questionMixin = {
@@ -25,16 +25,16 @@ export const questionMixin = {
   data: () => ({
     // if we ever change this, we need to change linked-fields.js too
     questionTypes: [
-      { value: 'textfield', text: 'Short Answer'},
-      { value: 'textbox', text: 'Long Answer'},
-      { value: 'singlechoice', text: 'Multiple Choice' },
-      { value: 'multiplechoice', text: 'Checkboxes' },
-      { value: 'dropdown', text: 'Dropdown' },
+      { value: 'textfield', text: 'Krótka odpowiedź' },
+      { value: 'textbox', text: 'Długa odpowiedź' },
+      { value: 'singlechoice', text: 'Jednokrotny wybór' },
+      { value: 'multiplechoice', text: 'Wielokrotny wybór' },
+      { value: 'dropdown', text: 'Lista rozwijana' },
       { value: 'email', text: 'Email' },
-      { value: 'socialmedia', text: 'Social Media' },
-      { value: 'yesnomaybe', text: 'Three Options Question' },
-      { value: 'boolean', text: 'Yes/No' },
-      { value: 'attendance_type', text: 'Attendance Type'},
+      { value: 'socialmedia', text: 'Media społecznościowe' },
+      { value: 'yesnomaybe', text: 'Pytanie z trzema opcjami' },
+      { value: 'boolean', text: 'Tak/Nie' },
+      { value: 'attendance_type', text: 'Typ uczestnictwa' },
     ],
     saved_question: null,
     saved_question_data: null,
@@ -45,7 +45,7 @@ export const questionMixin = {
       selected: SELECTED
     }),
     selectedQuestion() {
-      return this.selected({model});
+      return this.selected({ model });
     },
     textfield() {
       return this.question.question_type === "textfield";
@@ -97,48 +97,49 @@ export const questionMixin = {
     },
     yesLabel() {
       return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "yes") || {
-        label: "Yes",
+        label: "Tak",
         value: "yes"
       }
     },
     noLabel() {
       return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "no") || {
-        label: "No",
+        label: "Nie",
         value: "no"
       }
     },
     maybeLabel() {
       return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "maybe") || {
-        label: "Yes, except for items focused on the topics listed below.",
-        value: "maybe"};
+        label: "Tak, z wyjątkiem punktów wymienionych poniżej.",
+        value: "maybe"
+      };
     },
     bYesLabel() {
       return this.currentSettings?.boolean?.find(b => b.value === true) || {
-        label: "Yes",
+        label: "Tak",
         value: true
       };
     },
     bNoLabel() {
-      return this.currentSttings?.boolean?.find(b => b.value === false) || {
-        label: "No",
+      return this.currentSettings?.boolean?.find(b => b.value === false) || {
+        label: "Nie",
         value: false
       };
     },
     inPersonLabel() {
       return this.currentSettings?.attendance_type?.find(at => at.value === "in_person") || {
-        label: "In-person only: I am planning to attend in-person",
+        label: "Tylko osobiście: Planuję uczestniczyć osobiście",
         value: "in_person"
       }
     },
     virtualLabel() {
       return this.currentSettings?.attendance_type?.find(at => at.value === "virtual") || {
-        label: "Online only: I am not planning to attend in-person, and would like to be an online participant on online-based items only (via Zoom or similar technology).",
+        label: "Tylko online: Nie planuję uczestniczyć osobiście, chciałbym być uczestnikiem online tylko na tematach związanych z poniższymi zagadnieniami (za pomocą Zoom lub podobnej technologii).",
         value: "virtual",
       };
     },
     hybridLabel() {
       return this.currentSettings?.attendance_type?.find(at => at.value === "hybrid") || {
-        label: "In-person and online: I am planning to attend in-person, but would also like to be considered for online panels.",
+        label: "Osobiście i online: Planuję uczestniczyć osobiście, ale chciałbym być także brany pod uwagę do udziału w panelach online.",
         value: "hybrid"
       }
     }
@@ -168,23 +169,25 @@ export const questionMixin = {
       }), QUESTION_ADD_SAVE_SUCCESS, QUESTION_ADD_SAVE_ERROR);
     },
     saveQuestion(item) {
-      return this.save({model, item}).then((data) => {
+      return this.save({ model, item }).then((data) => {
         console.debug(data)
       })
     },
     selectQuestion(itemOrId) {
-      this.select({model, itemOrId})
+      this.select({ model, itemOrId })
     },
     unselectQuestion() {
-      this.unselect({model});
+      this.unselect({ model });
     },
     getQuestionAnswers(question) {
       let cached = this.getCachedAnswers()(question.id)
       if (cached) {
-          return cached
+        return cached
       } else {
         return Object.values(question.answers).sort((a, b) => a.sort_order - b.sort_order)
-      }
+     
+
+ }
     },
     getQuestionIndex(question) {
       if (!question) {
@@ -199,26 +202,26 @@ export const questionMixin = {
       }
     },
     duplicateSelectedQuestion() {
-      if(!this.selectedQuestion) {
+      if (!this.selectedQuestion) {
         return Promise.resolve()
       }
-      return this.toastPromise(this.duplicateQuestion({item: this.selectedQuestion, insertAt: this.selectedQuestionIndex + 1}), QUESTION_DUPLICATE_SUCCESS, QUESTION_DUPLICATE_ERROR)
+      return this.toastPromise(this.duplicateQuestion({ item: this.selectedQuestion, insertAt: this.selectedQuestionIndex + 1 }), QUESTION_DUPLICATE_SUCCESS, QUESTION_DUPLICATE_ERROR)
     },
     deleteSelectedQuestion() {
       if (!this.selectedQuestion) {
         return Promise.resolve()
       }
-      return this.fetchSurveyToastPromise( this.delete({model, itemOrId: this.selectedQuestion}), QUESTION_DELETE_SUCCESS, QUESTION_DELETE_ERROR);
+      return this.fetchSurveyToastPromise(this.delete({ model, itemOrId: this.selectedQuestion }), QUESTION_DELETE_SUCCESS, QUESTION_DELETE_ERROR);
     },
     patchQuestion(question, data, message = QUESTION_SAVE_SUCCESS) {
-      if(data.question_type && question.linked_field) {
+      if (data.question_type && question.linked_field) {
         // alert("question="+JSON.stringify(question));
         // alert("linked_field="+question.linked_field);
         // alert("data=" + JSON.stringify(data));
-        this.saved_question=question;
-        this.saved_question_data=data;
-        this.saved_question_message=message;
-        this.$root.$emit('bv::show::modal', 'unlink-question-modal' )
+        this.saved_question = question;
+        this.saved_question_data = data;
+        this.saved_question_message = message;
+        this.$root.$emit('bv::show::modal', 'unlink-question-modal')
       } else {
         return this.toastPromise(this.$store.dispatch('jv/patch', {
           ...data, _jv: {
@@ -233,8 +236,8 @@ export const questionMixin = {
     },
     unlinkQuestion() {
       // alert("unlinking!!");
-      this.saved_question_data.linked_field=null;
-      delete(this.saved_question.linked_field);
+      this.saved_question_data.linked_field = null;
+      delete (this.saved_question.linked_field);
       return this.toastPromise(this.$store.dispatch('jv/patch', {
         ...this.saved_question_data, _jv: {
           id: this.saved_question.id,

@@ -2,7 +2,7 @@
   <div class="detail container-fluid">
     <div class="row">
       <div class="col-12">
-        <h2>Basic Information</h2>
+        <h2>Informacje podstawowe</h2>
         <b-form-group
           label="Interest Instructions"
         >
@@ -78,7 +78,7 @@
         <b-form-group label="Attendee Signup Required" class="form-inline mb-4">
           <span>No</span>
           <b-form-checkbox  id="session-attendee-signup-req" inline switch v-model="session.require_signup" @change="saveSession()">Yes</b-form-checkbox>
-          <label :class="['ml-2', {'text-muted': !session.require_signup}]">If yes, max openings:
+          <label :class="['ml-2', {'text-muted': !session.require_signup}]">Jeśli tak, maksymalna liczba miejsc:
             <ValidationProvider v-slot="validationCtx" rules="min_value:1">
               <b-form-input
                 id="session-max-signups"

@@ -14,7 +14,7 @@
       @ok="okNotInterested"
     >
       <p class="my-4">
-        Confirm that you are no longer interested in that session.
+        Potwierdź, że nie jesteś już zainteresowany tą sesją.
       </p>
     </b-modal>
   </div>

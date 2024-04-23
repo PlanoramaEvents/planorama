@@ -1,20 +1,20 @@
 <template>
   <div class="page m-3">
     <div class="page-label">
-      <span :class="[singlePage ? 'd-none' : 'd-inline-block']">Page {{i + 1}} of {{n}} </span>
+      <span :class="[singlePage ? 'd-none' : 'd-inline-block']">Strona {{i + 1}} z {{n}} </span>
     </div>
     <div :class="['page-title', 'p-3', 'border', {selected: isSelected}]" @click="onPageClick">
       <b-form-group
         v-if="isSelected"
-        :label="i === 0 ? 'Display Title' : 'Page Title'"
+        :label="i === 0 ? 'Tytuł Wyświetlany' : 'Tytuł Strony'"
         :label-for="'page-title-' + page.id"
       >
         <b-form-input :id="'page-title-' + page.id" type="text" v-model="page.title" @change="savePage(page)"></b-form-input>
       </b-form-group>
       <div class="row" v-if="isSelected && i !== 0">
         <div class="col-12 d-flex justify-content-end">
-          <b-button variant="info" title="Merge page up" class="mr-2" @click="mergePageUp"><b-icon-arrow-up-circle-fill></b-icon-arrow-up-circle-fill></b-button>
-          <b-button variant="info" title="Delete page" v-b-modal="deleteModalId"><b-icon-trash></b-icon-trash></b-button>
+          <b-button variant="info" title="Scal stronę w górę" class="mr-2" @click="mergePageUp"><b-icon-arrow-up-circle-fill></b-icon-arrow-up-circle-fill></b-button>
+          <b-button variant="info" title="Usuń stronę" v-b-modal="deleteModalId"><b-icon-trash></b-icon-trash></b-button>
         </div>
       </div>
       <h3 v-if="!isSelected">{{page.title}}</h3>
@@ -23,10 +23,10 @@
       <edit-survey-question :question="q" v-for="q in questions" :key="q.id"></edit-survey-question>
     </draggable>
     <div v-if="!isLastPage(page.id)" class="mt-3">
-      After page {{i + 1}}
+      Po stronie {{i + 1}}
       <next-page-picker :for-page="page.id" :id="pagePickerId" class="ml-1" v-model="page.next_page_id"  @change="updatePage"></next-page-picker>
     </div>
-    <b-modal v-if="isSelected" :id="deleteModalId" @ok="deletePage(page)" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
+    <b-modal v-if="isSelected" :id="deleteModalId" @ok="deletePage(page)" ok-title="Tak" cancel-variant="link" title="Czy na pewno usunąć stronę i pytania?">
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_1}}</p>
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_2}}</p>
     </b-modal>

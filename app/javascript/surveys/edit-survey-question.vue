@@ -5,14 +5,13 @@
       <div class="col-5">
         <b-form-group
          :id="formGroupId('question-text')"
-         label="Question Text"
+         label="Treść pytania"
          :label-for="formId('question-text')"
         >
-
           <plano-editor style="border: solid 2px; border-radius: 5px;"
             :id="formId('question-text')"
             v-model="question.question"
-            title="Rich Text Editor for Question"
+            title="Edytor tekstu sformatowanego dla pytania"
             @blur="patchSelectedQuestion({question: $event.editor._.data})"
           ></plano-editor>
         </b-form-group>
@@ -20,7 +19,7 @@
       <div class="col-6 offset-1">
         <b-form-group
           :id="formGroupId('question-type')"
-          label="Question Type"
+          label="Typ pytania"
           :label-for="formId('question-type')"
         >
           <b-form-select :id="formId('question-type')" v-model="question.question_type" :options="questionTypes" @change="patchSelectedQuestion({question_type: $event})"></b-form-select>
@@ -36,20 +35,20 @@
         <mandatory-star :mandatory="question.mandatory"></mandatory-star>
       </div>
       <div v-if="question.linked_field" class="text-right col-6">
-        Linked field: {{displayLinkedField}}
+        Powiązane pole: {{displayLinkedField}}
       </div>
     </div>
     <div class="row">
       <template v-if="textfield">
         <div class="col-12">
-          <small v-if="isSelected">Short answer text</small>
-          <b-form-input v-if="!isSelected" type="text" disabled value="Short answer text"></b-form-input>
+          <small v-if="isSelected">Krótka odpowiedź tekstowa</small>
+          <b-form-input v-if="!isSelected" type="text" disabled value="Krótka odpowiedź tekstowa"></b-form-input>
         </div>
       </template>
       <template v-if="textbox">
         <div class="col-12">
-          <small v-if="isSelected">Long answer text</small>
-          <b-textarea disabled v-if="!isSelected" value="Long answer text"></b-textarea>
+          <small v-if="isSelected">Długa odpowiedź tekstowa</small>
+          <b-textarea disabled v-if="!isSelected" value="Długa odpowiedź tekstowa"></b-textarea>
         </div>
       </template>
       <options-question :question="question" v-if="singlechoice || multiplechoice || dropdown"></options-question>
@@ -61,7 +60,7 @@
       <template v-if="email">
         <div class="col-12">
           <b-form-input v-if="!isSelected" disabled type="email"></b-form-input>
-          <small v-if="isSelected">Email field</small>
+          <small v-if="isSelected">Pole email</small>
         </div>
       </template>
       <template v-if="socialmedia">
@@ -72,7 +71,7 @@
             </template>
             <b-form-input type="text" disabled></b-form-input>
           </b-input-group></b-form-group>
-          <b-form-group label="Website" label-cols="3"><b-input-group prepend="url"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="Strona internetowa" label-cols="3"><b-input-group prepend="url"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
           <b-form-group label="Instagram" label-cols="3"><b-input-group>
             <template #prepend>
               <b-input-group-text>instagram.com&sol;</b-input-group-text>
@@ -100,11 +99,11 @@
           </b-input-group></b-form-group>
           <b-form-group label="Bluesky" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
           <b-form-group label="Fediverse" label-cols="3"><b-input-group prepend="url"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
-          <b-form-group label="X (formerly Twitter)" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
-          <b-form-group label="Other" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
+          <b-form-group label="X (dawniej Twitter)" label-cols="3"><b-input-group prepend="@"><b-form-input type="text" disabled></b-form-input></b-input-group></b-form-group>
+          <b-form-group label="Inne" label-cols="3"><b-form-input type="text" disabled></b-form-input></b-form-group>
         </div>
         <div class="col-12">
-          <small v-if="isSelected">Social Media fields</small>
+          <small v-if="isSelected">Pola mediów społecznościowych</small>
         </div>
       </template>
       <template v-if="textonly">
@@ -155,22 +154,22 @@
     </div>
     <div class="row" v-if="isSelected">
       <div class="col-6">
-        <div class="d-inline" v-if="socialmedia" title="Social Media questions cannot be required">
-          <b-form-checkbox inline disabled>Required</b-form-checkbox>
+        <div class="d-inline" v-if="socialmedia" title="Pytania z mediów społecznościowych nie mogą być wymagane">
+          <b-form-checkbox inline disabled>Wymagane</b-form-checkbox>
         </div>
-        <b-form-checkbox inline v-if="!formatting && !socialmedia" :disabled="socialmedia" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Required</b-form-checkbox>
-        <b-form-checkbox inline v-if="!formatting" v-model="question.private" @change="patchSelectedQuestion({private: $event})">Sensitive</b-form-checkbox>
-        <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="patchSelectedQuestion({branching: $event})">Branching</b-form-checkbox>
+        <b-form-checkbox inline v-if="!formatting && !socialmedia" :disabled="socialmedia" v-model="question.mandatory" @change="patchSelectedQuestion({mandatory: $event})">Wymagane</b-form-checkbox>
+        <b-form-checkbox inline v-if="!formatting" v-model="question.private" @change="patchSelectedQuestion({private: $event})">Prywatne</b-form-checkbox>
+        <b-form-checkbox inline v-if="singlechoice" v-model="question.branching" @change="patchSelectedQuestion({branching: $event})">Rozgałęzianie</b-form-checkbox>
       </div>
       <div class="col-6 d-flex justify-content-end">
-        <b-button variant="info" class="mr-2" @click="duplicateSelectedQuestion" title="Duplicate" v-b-tooltip.bottom><b-icon-files></b-icon-files></b-button>
-        <b-button variant="info" @click="deleteSelectedQuestion" title="Delete" v-b-tooltip.bottom><b-icon-trash></b-icon-trash></b-button>
+        <b-button variant="info" class="mr-2" @click="duplicateSelectedQuestion" title="Duplikuj" v-b-tooltip.bottom><b-icon-files></b-icon-files></b-button>
+        <b-button variant="info" @click="deleteSelectedQuestion" title="Usuń" v-b-tooltip.bottom><b-icon-trash></b-icon-trash></b-button>
       </div>
     </div>
     <b-modal id='unlink-question-modal' size="lg"
              hide-header-close no-close-on-backdrop no-close-on-esc
-             title="Really??" @cancel="unlinkQuestion" @ok="restoreOldValues"
-             cancel-title="Yes, unlink" ok-title="Leave question type as it was">
+             title="Na pewno?" @cancel="unlinkQuestion" @ok="restoreOldValues"
+             cancel-title="Tak, odłącz" ok-title="Zostaw typ pytania bez zmian">
       <div>{{QUESTION_MODAL_MESSAGE}}</div>
     </b-modal>
   </div>

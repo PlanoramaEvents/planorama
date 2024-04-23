@@ -1,10 +1,10 @@
-import {PERSON_CON_STATE, SESSION_STATUS} from "@/constants/strings";
+import { PERSON_CON_STATE, SESSION_STATUS } from "@/constants/strings";
 import { personScheduleApprovalStateOptionsForSearch } from "@/store/person_schedule_approval";
 
 export const people_columns = [
   {
     key: 'published_name',
-    label: 'Published Name',
+    label: 'Opublikowana nazwa',
     type: "text",
     sortable: true,
     class: 'col-name-field',
@@ -12,14 +12,14 @@ export const people_columns = [
   },
   {
     key: 'name',
-    label: 'Name',
+    label: 'Imię i nazwisko',
     type: "text",
     sortable: true,
     class: 'col-name-field'
   },
   {
     key: 'pronouns',
-    label: 'Pronouns',
+    label: 'Zaimki',
     type: "text",
     sortable: false
   },
@@ -45,19 +45,19 @@ export const people_columns = [
   },
   {
     key: 'attendance_type',
-    label: 'Attendance Type'
+    label: 'Typ uczestnictwa'
   },
   {
     key: 'session_count',
     search_key: 'session_count',
-    label: 'Session Count',
+    label: 'Liczba sesji',
     sortable: true,
     type: "numeric",
     operators: ["equals", "does not equal", "is less than", "is less than or equal to", "is greater than", "is greater than or equal to"]
   },
   {
     key: 'draft_approval',
-    label: 'Draft Approved',
+    label: 'Zatwierdzony projekt',
     search_key: 'draft_person_schedule_approvals.approved',
     type: "select",
     choices: personScheduleApprovalStateOptionsForSearch,
@@ -65,12 +65,12 @@ export const people_columns = [
   },
   {
     key: 'draft_comments',
-    label: 'Draft Comments',
+    label: 'Komentarze do projektu',
     sortable: false
   },
   {
     key: 'firm_approval',
-    label: 'Firm Approved',
+    label: 'Zatwierdzony przez firmę',
     search_key: 'firm_person_schedule_approvals.approved',
     type: "select",
     choices: personScheduleApprovalStateOptionsForSearch,
@@ -78,24 +78,24 @@ export const people_columns = [
   },
   {
     key: 'firm_comments',
-    label: 'Firm Comments',
+    label: 'Komentarze firmy',
     sortable: false
   },
   {
     key: 'gender',
-    label: 'Gender',
+    label: 'Płeć',
     type: "text",
     sortable: false
   },
   {
     key: 'comments',
-    label: 'Notes',
+    label: 'Uwagi',
     type: "text",
     sortable: false
   },
   {
     key: 'current_sign_in_at',
-    label: 'Last Logged In',
+    label: 'Ostatnie logowanie',
     sortable: false
   }
 ];

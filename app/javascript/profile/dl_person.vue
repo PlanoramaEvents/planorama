@@ -8,10 +8,10 @@
         </dt>
         <dd :key="'dd-' + i" class="ml-2 font-italic">
           <slot :name="field + '-val'" :value="selected[field]">
-            <span v-if="selected[field] === undefined" class="text-muted">Restricted</span>
-            <span v-else-if="selected[field] === true">Yes</span>
-            <span v-else-if="selected[field] === false">No</span>
-            <span v-else-if="selected[field] === null || selected[field].trim().length === 0" class="text-muted">Not Specified</span>
+            <span v-if="selected[field] === undefined" class="text-muted">Ograniczone</span>
+            <span v-else-if="selected[field] === true">Tak</span>
+            <span v-else-if="selected[field] === false">Nie</span>
+            <span v-else-if="selected[field] === null || selected[field].trim().length === 0" class="text-muted">Nieokreślone</span>
             <span v-else class="keep-format">{{selected[field]}}</span>
           </slot>
         </dd>

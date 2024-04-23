@@ -1,65 +1,65 @@
 <template>
   <div class="admin scrollable">
-    <h1>Admin stuff goes here. <b-icon-minecart-loaded></b-icon-minecart-loaded></h1>
+    <h1>Panel administratora. <b-icon-minecart-loaded></b-icon-minecart-loaded></h1>
     <div class="accordion" role="tablist">
-      <admin-accordion id="add-user-accordion" title="Add User">
+      <admin-accordion id="add-user-accordion" title="Dodaj użytkownika">
         <person-add></person-add>
       </admin-accordion>
-      <admin-accordion id="import-users-accordion" title="Import Users">
+      <admin-accordion id="import-users-accordion" title="Importuj użytkowników">
         <sheet-importer-vue
-          title="Import People"
+          title="Importuj osoby"
           import-url="/person/import"
           example-url="/examples/people_import.xlsx"
         >
           <template v-slot:import-details="result">
-            Imported: {{result.importMessage.imported}} Skipped {{result.importMessage.skipped}}<br />
-            Malformed email: {{result.importMessage.bad_email}}<br />
-            Duplicate email: {{result.importMessage.duplicate_email}}<br />
-            No name: {{result.importMessage.noname}}
+            Zaimportowano: {{result.importMessage.imported}} Pominięto {{result.importMessage.skipped}}<br />
+            Nieprawidłowy adres e-mail: {{result.importMessage.bad_email}}<br />
+            Zduplikowany adres e-mail: {{result.importMessage.duplicate_email}}<br />
+            Brak nazwy: {{result.importMessage.noname}}
           </template>
         </sheet-importer-vue>
       </admin-accordion>
-      <admin-accordion id="edit-roles-accordion" title="Assign Convention Class" @show="showPeopleRoles">
+      <admin-accordion id="edit-roles-accordion" title="Przypisz klasę konwentu" @show="showPeopleRoles">
         <change-user-convention-roles model="person" ref="role-manager"></change-user-convention-roles>
       </admin-accordion>
-      <admin-accordion id="import-sessions-accordion" title="Import Sessions">
+      <admin-accordion id="import-sessions-accordion" title="Importuj sesje">
         <sheet-importer-vue
-          title="Import Sessions"
+          title="Importuj sesje"
           import-url="/session/import"
           example-url="/examples/session_import.xlsx"
         >
           <template v-slot:import-details="result">
-            Imported: {{result.importMessage.imported}} Skipped {{result.importMessage.skipped}}<br />
-            No Title: {{result.importMessage.no_title}}<br />
-            Duplicate Session: {{result.importMessage.duplicate_session}}<br />
+            Zaimportowano: {{result.importMessage.imported}} Pominięto {{result.importMessage.skipped}}<br />
+            Brak tytułu: {{result.importMessage.no_title}}<br />
+            Zduplikowana sesja: {{result.importMessage.duplicate_session}}<br />
           </template>
         </sheet-importer-vue>
       </admin-accordion>
-      <admin-accordion id="mailings-accordion" title="Mailings" @show="showMailings">
+      <admin-accordion id="mailings-accordion" title="Mailingi" @show="showMailings">
         <mailings-manager
           model="mailing"
           ref="mailing-manager"
         ></mailings-manager>
       </admin-accordion>
-      <admin-accordion id="schedule-settings-accordion" title="Schedule Settings">
+      <admin-accordion id="schedule-settings-accordion" title="Ustawienia harmonogramu">
         <schedule-settings></schedule-settings>
       </admin-accordion>
-      <admin-accordion id="event-settings-accordion" title="Event Settings" @show="showConfigs">
+      <admin-accordion id="event-settings-accordion" title="Ustawienia wydarzenia" @show="showConfigs">
         <configurations-manager
           model="parameter_name"
           ref="configurations-manager"
         ></configurations-manager>
       </admin-accordion>
-      <admin-accordion id="integration-accordion" title="Integration Settings">
+      <admin-accordion id="integration-accordion" title="Ustawienia integracji">
         <integration-settings></integration-settings>
       </admin-accordion>
-      <admin-accordion id="agreements-accordion" title="Agreements" @show="showAgreements">
+      <admin-accordion id="agreements-accordion" title="Umowy" @show="showAgreements">
         <agreement-manager
           model="agreement"
           ref="agreements-manager"
         ></agreement-manager>
       </admin-accordion>
-      <!-- <admin-accordion id="page-content-accordion" title="Page Content Editor">
+      <!-- <admin-accordion id="page-content-accordion" title="Edytor treści strony">
         <page-content-editor></page-content-editor>
       </admin-accordion> -->
     </div>

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <b-button variant="link" class="text-light" v-b-modal.help-modal>Help</b-button>
-    <b-modal id="help-modal" title="Help" modal-class="help-modal" ok-only>
-      <p>If you need help, you can email <br />
+    <b-button variant="link" class="text-light" v-b-modal.help-modal>Pomoc</b-button>
+    <b-modal id="help-modal" title="Pomoc" modal-class="help-modal" ok-only>
+      <p>Jeśli potrzebujesz pomocy, możesz napisać na <br />
       <a :href="mailto" target="_blank">{{email}}</a>
-      <!-- <span v-if="phone"><br />or call {{phone}}</span>.-->
+      <!-- <span v-if="phone"><br />lub zadzwonić pod numer {{phone}}</span>.-->
       </p>
     </b-modal>
   </div>
@@ -23,10 +23,10 @@ export default {
     phone() {
       // return this.configuration.event_phone.parameter_value || 'this event has not configured a phone yet';
       // TODO: get from settings
-      return 'this event has not configured a phone yet';
+      return 'ten event nie skonfigurował jeszcze numeru telefonu';
     },
     mailto() {
-      return `mailto:${this.email}`
+      return `mailuj do:${this.email}`
     }
   }
 }

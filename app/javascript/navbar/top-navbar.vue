@@ -4,12 +4,12 @@
       <b-navbar-brand to="/" :class="{ 'text-warning': currentSettings.env !== 'production'}">Planorama<span v-if="currentSettings.env !== 'production'" class="h1"> - {{currentSettings.env}}</span></b-navbar-brand>
       <div class="d-flex flex-column h-100">
         <!-- TODO -->
-        <div class="text-light mb-2">Logged in as: {{ currentUserDisplay }}</div>
+        <div class="text-light mb-2">Zalogowany jako: {{ currentUserDisplay }}</div>
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
             <help-link></help-link>
-            <a href="https://planoramaevents.github.io/planorama" target="_blank" class="btn btn-link text-light my-2 my-sm-0 mx-2">About</a>
-            <b-button v-if="loggedIn" @click="logout" variant="primary">Logout</b-button>
+            <a href="https://planoramaevents.github.io/planorama" target="_blank" class="btn btn-link text-light my-2 my-sm-0 mx-2">O Planoramie (ENG)</a>
+            <b-button v-if="loggedIn" @click="logout" variant="primary">Wyloguj</b-button>
           </b-nav-form>
         </b-navbar-nav>
       </div>

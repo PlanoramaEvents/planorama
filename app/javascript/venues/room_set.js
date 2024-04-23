@@ -1,13 +1,13 @@
 export const room_set_columns = [
   {
     key: 'name',
-    label: 'Name',
+    label: 'Imię',
     type: "text",
     sortable: true
   },
   {
     key: 'description',
-    label: 'Description',
+    label: 'Opis',
     type: "text",
   },
 ];

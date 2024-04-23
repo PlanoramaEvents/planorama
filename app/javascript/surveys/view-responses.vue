@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-if="survey">
-      <p>Download responses: <b-button variant="link" @click="downloadWithAxios(downloadLink, filename)">{{filename}}</b-button></p>
-      <p>There are <em>{{survey.nbr_submissions}}</em> total responses.</p>
+      <p>Pobierz odpowiedzi: <b-button variant="link" @click="downloadWithAxios(downloadLink, filename)">{{filename}}</b-button></p>
+      <p>Łącznie jest <em>{{survey.nbr_submissions}}</em> odpowiedzi.</p>
     </div>
     <table-vue
       ref="responses-table"
@@ -120,21 +120,22 @@ export default {
       )
 
       return [].concat.apply([
-        {
-          key: "submitter",
-          search_key: 'person.name',
-          label: "Submitter",
-          type: "text"
-        },
-        {
-          key: "created_at",
-          label: "Created At"
-        },
-        {
-          key: "updated_at",
-          label: "Updated At"
-        }
-      ], res)
+      {
+        key: "submitter",
+        search_key: 'person.name',
+        label: "Wysyłający",
+        type: "text"
+      },
+      {
+        key: "created_at",
+        label: "Utworzono"
+      },
+      {
+        key: "updated_at",
+        label: "Zaktualizowano"
+      }
+    ]
+  , res)
     },
   },
   methods: {

@@ -2,18 +2,18 @@
   <div class="container-fluid">
     <div class='row mb-4' v-if="sortedCollection.length == 0">
       <div class="col-12">
-        <h5>No participants have expressed interest in this session</h5>
+        <h5>Nikt z uczestników nie wyraził zainteresowania tą sesją</h5>
       </div>
     </div>
     <div class='row mb-4' v-if="sortedCollection.length > 0">
       <div class="col-3">
         <span>
-          Assignment State
-          <button @click="reorder" class="btn btn-primary btn-sm">Re-order</button>
+          Stan Przypisania
+          <button @click="reorder" class="btn btn-primary btn-sm">Zmień kolejność</button>
         </span>
       </div>
       <div class="col-9">
-        Potential Participants
+        Potencjalni Uczestnicy
       </div>
     </div>
     <div class='row mb-4' v-for="item in sortedCollection" :key="item.id">

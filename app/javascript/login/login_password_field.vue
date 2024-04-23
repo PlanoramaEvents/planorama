@@ -92,16 +92,16 @@ export default {
     },
     passwordLabel: function () {
       if (this.newPassword) {
-        return "New Password";
+        return "Nowe hasło";
       }
       if (this.confirmation) {
-        return "Re-enter Your New Password";
+        return "Powtórz nowe hasło";
       }
-      return "Password";
+      return "Hasło";
     },
     passwordDescription: function () {
       if (!this.newPassword && !this.confirmation) {
-        return "Passwords must contain: 6 or more characters. Password cannot contain: the word 'password' or your username";
+        return "Hasła muszą zawierać co najmniej: 6 znaków. Hasło nie może zawierać słowa 'hasło' ani nazwy użytkownika";
       }
       return "";
     },

@@ -19,7 +19,7 @@
       </b-input-group-append>
     </b-input-group>
 
-    <b-button v-b-toggle.advanced-search variant="primary" class="mb-2 mt-2">Advanced Search</b-button>
+    <b-button v-b-toggle.advanced-search variant="primary" class="mb-2 mt-2">Wyszukiwanie zaawansowane</b-button>
     <b-collapse id="advanced-search" class="">
       <b-tabs content-class="mt-3" fill>
         <b-tab title="Advanced">
@@ -29,7 +29,7 @@
             :maxDepth="2"
           >
           </vue-query-builder>
-          <b-button variant="primary" @click="onQuerySearch">Search</b-button>
+          <b-button variant="primary" @click="onQuerySearch">Wyszukaj</b-button>
         </b-tab>
         <slot name="alternate-search-tab"></slot>
       </b-tabs>

@@ -2,16 +2,16 @@
   <div>
     <mailing-preview :mailing="mailing"></mailing-preview>
     <plano-modal
-      title="Save Mailing"
+      title="Zapisz Mailing"
       id="save-mailing-modal"
       @close="onClose"
       @cancel="onClose"
       @ok="onConfirmedSave"
-      ok-title="Save"
+      ok-title="Zapisz"
     >
       <b-form>
-        <model-field label="Name" v-model="mailing.title" type="text" stateless></model-field>
-        <model-field label="Description" v-model="mailing.description" type="textarea" stateless></model-field>
+        <model-field label="Nazwa" v-model="mailing.title" type="text" stateless></model-field>
+        <model-field label="Opis" v-model="mailing.description" type="textarea" stateless></model-field>
       </b-form>
     </plano-modal>
     <div class="d-flex ">
@@ -26,14 +26,14 @@
       label-cols-lg="2"
       content-cols-sm="9"
       content-cols-lg="10"
-      label="Add Names:"
+      label="Dodaj Adresy Email:"
       label-for="email-addresses"
     >
       <email-list-input id="email-addresses" v-model="mailing.emails" :disabled="readOnly"></email-list-input>
     </b-form-group>
     <b-form-group>
       <b-form-checkbox v-model="has_survey" :disabled="readOnly">
-        This mailing has a survey attached
+        Ten mailing posiada załączony ankietę
       </b-form-checkbox>
     </b-form-group>
     <b-form-group
@@ -45,7 +45,7 @@
         label-cols-lg="2"
         content-cols-sm="9"
         content-cols-lg="10"
-        label="Select Survey:"
+        label="Wybierz Ankietę:"
         label-for="email-survey"
       >
         <model-select
@@ -62,7 +62,7 @@
       label-cols-lg="2"
       content-cols-sm="9"
       content-cols-lg="10"
-      label="Subject:"
+      label="Temat:"
       label-for="email-subject"
     >
       <b-form-input id="email-subject" v-model="mailing.subject" :disabled="readOnly"></b-form-input>
@@ -75,12 +75,12 @@
     ></plano-editor>
     <!-- TODO: put in sending to count -->
     <div class="d-flex justify-content-end" v-if="!readOnly">
-      <b-button variant="primary" class="m-1 btn-sm" @click="onSave">Save Mailing</b-button>
+      <b-button variant="primary" class="m-1 btn-sm" @click="onSave">Zapisz Mailing</b-button>
     </div>
     <div class="d-flex justify-content-end" v-if="!readOnly">
-      <b-button variant="primary" class="m-1" @click="onSendTest">Send test to self</b-button>
-      <b-button variant="primary" class="m-1" @click="onPreview">Preview</b-button>
-      <b-button variant="danger" class="m-1" @click="onSend">Send</b-button>
+      <b-button variant="primary" class="m-1" @click="onSendTest">Wyślij test do siebie</b-button>
+      <b-button variant="primary" class="m-1" @click="onPreview">Podgląd</b-button>
+      <b-button variant="danger" class="m-1" @click="onSend">Wyślij</b-button>
     </div>
   </div>
 </template>

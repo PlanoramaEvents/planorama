@@ -1,13 +1,13 @@
 <template>
   <b-form ref='add-agreement-form'>
-    <model-field label="Title" v-model="agreementData.title" type="text" stateless></model-field>
-    <label>Body</label>
+    <model-field label="Tytuł" v-model="agreementData.title" type="text" stateless></model-field>
+    <label>Treść</label>
     <plano-editor
         v-model="agreementData.terms"
         type='classic'
         :disabled="readOnly"
     ></plano-editor>
-    <label>Agreement Type:</label>
+    <label>Typ Umowy:</label>
     <select v-model="agreementData.agreement_type" style="padding-right: 15px">
       <option v-for="type in currentSettings.agreement_types" :selected="type === selected_agreement_type">{{type}}</option>
     </select>
@@ -40,7 +40,7 @@ export default {
   },
   mixins: [
     toastMixin,
-      settingsMixin
+    settingsMixin
   ],
   props: {
     showButtons: {
@@ -60,8 +60,8 @@ export default {
         agreement_type: '',
         target: ''
       },
-      selected_agreement_type: 'Terms and Conditions',
-      selected_target: 'none'
+      selected_agreement_type: 'Warunki i Zasady',
+      selected_target: 'brak'
     }
   },
   emits: ["saved"],
@@ -83,8 +83,8 @@ export default {
       this.agreementData.terms = '';
       this.agreementData.agreement_type = '';
       this.agreementData.target = '';
-      this.selected_agreement_type = 'Terms and Conditions';
-      this.selected_target = 'none';
+      this.selected_agreement_type = 'Warunki i Zasady';
+      this.selected_target = 'brak';
     },
     setAgreementData(data) {
       //console.log("setAgreementData: ", data);
@@ -103,7 +103,7 @@ export default {
             ADMIN_ADD_AGREEMENT_SUCCESS(obj.title),
             {
               variant: 'success',
-              title: 'Agreement Created'
+              title: 'Umowa utworzona'
             }
           )
           this.clear()

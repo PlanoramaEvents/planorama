@@ -2,7 +2,7 @@ export const survey_columns = [
   {
     key: 'name',
     sortKey: 'surveys.name',
-    label: 'Name',
+    label: 'Nazwa',
     type: "text",
     stickyColumn: true,
     sortable: true
@@ -10,7 +10,7 @@ export const survey_columns = [
   {
     key: 'description',
     sortKey: 'surveys.description',
-    label: 'Description',
+    label: 'Opis',
     type: "text",
     sortable: true,
   },
@@ -18,30 +18,30 @@ export const survey_columns = [
     key: 'public',
     sortKey: 'surveys.public',
     label: 'Status',
-    formatter: (p) => p ? 'Published' : 'Closed',
+    formatter: (p) => p ? 'Opublikowany' : 'Zamknięty',
     sortable: true,
   },
   {
     key: 'nbr_submissions',
-    label: 'Number of Submissions',
+    label: 'Liczba odpowiedzi',
     sortable: false    
   },
   {
     key: 'published_on',
     sortKey: 'surveys.published_on',
-    label: 'Published On',
+    label: 'Data publikacji',
     sortable: true,
   },
   {
     key: 'updated_at',
     sortKey: 'surveys.updated_at',
-    label: 'Last Modified On',
+    label: 'Ostatnio zmodyfikowany',
     sortable: true,
     formatter: (d) => new Date(d).toLocaleString()
   },
   {
     key: 'updated_by.name',
-    label: 'Last Modified By',
+    label: 'Ostatnio zmodyfikowany przez',
     sortable: false
   },
   'preview',

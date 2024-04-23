@@ -1,12 +1,12 @@
 <template>
   <div class="survey scrollable">
-    <b-button variant="link" @click="back">Back</b-button>
+    <b-button variant="link" @click="back">Powrót</b-button>
     <!-- TODO: wrap in permission  -->
     <b-form-group
       class="mx-3"
       v-if="survey"
       id="survey-name-group"
-      label="Survey Name"
+      label="Nazwa ankiety"
       label-for="survey-name"
     >
       <b-form-input id="survey-name" type="text" v-model="survey.name" @blur="saveSurvey()"></b-form-input>
@@ -15,21 +15,21 @@
       class="mx-3"
       v-if="survey"
       id="survey-description-group"
-      label="Survey Description"
+      label="Opis ankiety"
       label-for="survey-description"
     >
       <b-form-textarea id="survey-description" v-model="survey.description" @blur="saveSurvey()"></b-form-textarea>
     </b-form-group>
     <b-alert v-if="survey" :show="survey.public" variant="warning" class="alert-bright mx-3">{{SURVEY_PUBLIC_NO_EDIT}}</b-alert>
     <b-tabs>
-      <b-tab v-if="survey" button-id="questionTab" title="Question" :active="!responses && !survey.public" lazy :disabled="survey.public">
+      <b-tab v-if="survey" button-id="questionTab" title="Pytania" :active="!responses && !survey.public" lazy :disabled="survey.public">
         <edit-survey :survey-id="id"></edit-survey>
       </b-tab>
-      <b-tab v-if="survey" title="Responses" :active="!!responses" lazy>
+      <b-tab v-if="survey" title="Odpowiedzi" :active="!!responses" lazy>
         <view-responses :survey-id="id" :person_id="person_id"></view-responses>
       </b-tab>
       <survey-settings-tab v-if="survey" lazy></survey-settings-tab>
-      <b-tab v-if="survey" title="Audit Log" disabled lazy>
+      <b-tab v-if="survey" title="Dziennik audytu" disabled lazy>
       </b-tab>
     </b-tabs>
     <b-tooltip :title="questionsTitle" target="questionTab"></b-tooltip>

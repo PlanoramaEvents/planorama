@@ -2,18 +2,18 @@
   <section>
     <div class="d-flex flex-row mt-3">
       <div class="w-50 mr-2">
-        <h5>Demographics <edit-button v-b-modal.person-demo-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
+        <h5>Dane demograficzne <edit-button v-b-modal.person-demo-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
         <dl-person :fields="demoFields" v-if="showDemoAndCommunity"></dl-person>
-        <div v-else>Coming Soon</div>
+        <div v-else>Wkrótce</div>
       </div>
       <div class="w-50">
-        <h5>Community memberships <edit-button v-b-modal.person-community-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
+        <h5>Członkostwo w społecznościach <edit-button v-b-modal.person-community-modal v-if="canEditInfo && !readOnly"></edit-button></h5>
         <dl-person :fields="communityFields" v-if="showDemoAndCommunity"></dl-person>
-        <div v-else>Coming Soon</div>
+        <div v-else>Wkrótce</div>
       </div>
     </div>
     <person-edit-modal id="person-demo-modal" :person="selected" :data="demoData" :validate="true">
-      <template #modal-title>Edit Demographics - {{selected.published_name}}</template>
+      <template #modal-title>Edytuj dane demograficzne - {{selected.published_name}}</template>
       <template #default="{fields}">
         <validation-provider v-if="!isHidden('ethnicity')">
           <b-form-group :label="PROFILE_FIELD_LABELS.ethnicity">
@@ -38,7 +38,7 @@
       </template>
     </person-edit-modal>
     <person-edit-modal id="person-community-modal" :person="selected" :data="communityData" :validate="true">
-      <template #modal-title>Edit community memberships - {{selected.published_name}}</template>
+      <template #modal-title>Edytuj członkostwo w społecznościach - {{selected.published_name}}</template>
       <template #default="{fields}">
         <validation-provider v-if="!isHidden('othered')">
           <b-form-group :label="PROFILE_FIELD_LABELS.othered">

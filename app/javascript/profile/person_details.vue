@@ -2,20 +2,20 @@
   <div class="d-flex" v-if="selected">
     <div class="d-flex flex-column w-50 p-2 mr-3">
       <div>
-        <h5>Identity</h5>
+        <h5>Tożsamość</h5>
         <div class="d-flex justify-content-between">
           <dl-person :fields="['name', 'pseudonym']"></dl-person>
           <registration-link v-if="!readOnly"></registration-link>
         </div>
       </div>
       <div v-if="readOnly">
-        <h5>Emails</h5>
+        <h5>Adresy email</h5>
         <dl>
-          <dt>Primary email (login)</dt>
+          <dt>Główny adres email (login)</dt>
           <dd class="font-italic ml-2">{{selected.primary_email.email}}</dd>
-          <dt>Additional emails</dt>
+          <dt>Dodatkowe adresy email</dt>
           <dd v-for="email in additionalEmails" class="ml-2 font-italic" :key="email.id">{{email.email}}</dd>
-          <dd v-if="!additionalEmails.length" class="ml-2 font-italic text-muted">None</dd>
+          <dd v-if="!additionalEmails.length" class="ml-2 font-italic text-muted">Brak</dd>
         </dl>
       </div>
       <email-addresses-editor
@@ -25,12 +25,12 @@
         model='email_address'
         @input="$emit('input', selected)"
       ></email-addresses-editor>
-      <h5>Additional Information <edit-button v-b-modal.person-misc-modal v-if="!readOnly && showAdditionalInfo"></edit-button></h5>
+      <h5>Dodatkowe informacje <edit-button v-b-modal.person-misc-modal v-if="!readOnly && showAdditionalInfo"></edit-button></h5>
       <dl-person :fields="miscFields" v-if="showAdditionalInfo">
         <template #can_stream-val>{{can_stream_label}}</template>
         <template #can_record-val>{{can_record_label}}</template>
       </dl-person>
-      <div v-else>Coming Soon</div>
+      <div v-else>Już niedługo</div>
     </div>
     <div class="d-flex flex-column w-50 p-2">
       <div v-if="eventVirtual && readOnly">
@@ -41,7 +41,7 @@
       </div>
       <div v-if="eventVirtual && !readOnly">
         <h5>Online</h5>
-        <div><b>I plan to attend the convention:</b></div>
+        <div><b>Planuję uczestniczyć w konwencie:</b></div>
         <b-form-radio-group
           v-model="selected.attendance_type"
           stacked
@@ -49,7 +49,7 @@
           :options="attendanceTypeOptions"
         >
         </b-form-radio-group>
-        <b-form-group label="At the time of the convention I will be at UTC Offset">
+        <b-form-group label="W czasie konwentu będę w strefie czasowej UTC Offset">
           <timezone-selector
             v-model="selected.timezone"
             @input="saveSelected()"
@@ -57,28 +57,28 @@
             :disabled="disabled || selected.attendance_type != 'virtual'"
           ></timezone-selector>
           <p>
-            Your time now in the selected timezone is <b>{{youTimeNow}}</b>
+            Obecna godzina w wybranej strefie czasowej to <b>{{youTimeNow}}</b>
           </p>
           <small>
-            If you are not sure what your UTC offset will be, or want to verify,
-            please go to
+            Jeśli nie jesteś pewien(-na), jaki będzie twój UTC offset, lub chcesz to zweryfikować,
+            proszę przejdź na stronę
             <a target="blank" href="https://www.timeanddate.com/worldclock/meeting.html">
               https://www.timeanddate.com/worldclock/meeting.html
             </a>
-            and check by specifying the date of first day of the convention and your location as well as UTC/GMT
+            i sprawdź podając datę pierwszego dnia konwentu i swoje miejsce, oraz UTC/GMT.
           </small>
         </b-form-group>
       </div>
       <!-- <b-form-checkbox v-model="selected.twelve_hour" @input="saveSelected()">
         12 Hour Display
       </b-form-checkbox> -->
-      <h5>Bio <edit-button v-b-modal.person-bio-modal v-if="!readOnly"></edit-button></h5>
+      <h5>Biografia <edit-button v-b-modal.person-bio-modal v-if="!readOnly"></edit-button></h5>
       <div class="ml-2" v-html="selected.bio"></div>
-      <h5 class="mt-3">Social Media <edit-button v-b-modal.person-social-modal v-if="!readOnly"></edit-button></h5>
+      <h5 class="mt-3">Media społecznościowe <edit-button v-b-modal.person-social-modal v-if="!readOnly"></edit-button></h5>
       <dl-person :fields="socialFields"></dl-person>
     </div>
     <person-edit-modal id="person-bio-modal" :person="selected" :data="{bio: null}">
-      <template #modal-title>Edit Bio - {{selected.published_name}}</template>
+      <template #modal-title>Edytuj biografię - {{selected.published_name}}</template>
       <template #default="{fields}">
         <plano-editor
           v-model="fields.bio"
@@ -87,24 +87,24 @@
       </template>
     </person-edit-modal>
     <person-edit-modal id="person-misc-modal" :person="selected" :data="miscData" :validate="true">
-      <template #modal-title>Edit Additional Info - {{selected.published_name}}</template>
+      <template #modal-title>Edytuj dodatkowe informacje - {{selected.published_name}}</template>
       <template #default="{fields}">
-        <validation-provider name="Anyone that should not be assigned with" v-if="!isHidden('do_not_assign_with')">
+        <validation-provider name="Osoby, z którymi nie powinno się ich przypisywać" v-if="!isHidden('do_not_assign_with')">
           <b-form-group :label="PROFILE_FIELD_LABELS.do_not_assign_with">
             <!-- TODO change edit permissions to sensitive data tickybox -->
             <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.do_not_assign_with"></b-form-textarea>
-            <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
+            <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Ograniczone"></b-form-textarea>
           </b-form-group>
         </validation-provider>
-        <validation-provider name="Demographic categories to not discuss" v-if="!isHidden('excluded_demographic_categories')">
+        <validation-provider name="Kategorie demograficzne, których nie należy dyskutować" v-if="!isHidden('excluded_demographic_categories')">
           <b-form-group :label="PROFILE_FIELD_LABELS.excluded_demographic_categories">
             <!-- TODO change edit permissions to sensitive data tickybox -->
             <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.excluded_demographic_categories"></b-form-textarea>
-            <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
+            <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Ograniczone"></b-form-textarea>
           </b-form-group>
         </validation-provider>
 
-        <validation-provider name="Sharing preferences" v-if="!isHidden('can_share')">
+        <validation-provider name="Preferencje dotyczące udostępniania" v-if="!isHidden('can_share')">
           <b-form-group :label="PROFILE_FIELD_LABELS.can_share">
             <b-form-radio-group
               stacked
@@ -172,7 +172,7 @@
       </template>
     </person-edit-modal>
     <person-edit-modal id="person-social-modal" :person="selected" :data="socialsData" :validate="true">
-      <template #modal-title>Edit Socials - {{selected.published_name}}</template>
+      <template #modal-title>Edytuj media społecznościowe - {{selected.published_name}}</template>
       <template #default="{fields}">
         <simple-social
           v-if="!isHidden('facebook')"
@@ -216,7 +216,7 @@
         ></simple-social>
         <simple-social
           v-if="!isHidden('tiktok')"
-          :rules="{ regex:/^([a-zA-Z0-9._-])+$/ }"
+          :rules:/^([a-zA-Z0-9._-])+$/ }"
           :label="PROFILE_FIELD_LABELS.tiktok"
           prepend="@"
           v-model="fields.tiktok"
@@ -224,7 +224,7 @@
         ></simple-social>
         <simple-social
           v-if="!isHidden('linkedin')"
-          :rules="{ regex:/^([a-zA-Z0-9.\/_-])+$/ }"
+          :rules:/^([a-zA-Z0-9.\/_-])+$/ }"
           :label="PROFILE_FIELD_LABELS.linkedin"
           prepend="linkedin.com/in/"
           v-model="fields.linkedin"
@@ -386,27 +386,27 @@ export default {
       if (this.selected.timezone) {
         return DateTime.now().setZone(this.selected.timezone).toLocaleString(DateTime.TIME_SIMPLE)
       }
-      return 'Not Set'
+      return 'Nie ustawione'
     },
     yesLabel() {
       return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "yes") || {
-        label: "Yes",
+        label: "Tak",
         value: "yes"
       }
     },
     noLabel() {
       return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "no") || {
-        label: "No",
+        label: "Nie",
         value: "no"
       }
     },
     maybeLabel() {
       return this.currentSettings?.yesnomaybe?.find(ynm => ynm.value === "maybe") || {
-        label: "Yes, except for items focused on the topics listed below.",
+        label: "Tak, z wyjątkiem tematów wymienionych poniżej.",
         value: "maybe"};
     },
     canEditSensitiveInfo() {
-      // TODO in the future use the sensitive data permission instead of the admin setting
+      // TODO w przyszłości użyj uprawnień do wrażliwych danych zamiast ustawienia administratora
       return this.currentUserIsAdmin || this.currentUser.id === this.selected.id;
     },
     additionalEmails() {

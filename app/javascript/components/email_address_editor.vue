@@ -31,7 +31,7 @@
           :name="radioGroup"
         >
         </b-form-radio>
-        <b-button v-if="canDelete" @click="onDelete" size="sm" title="Delete" class="mt-2" variant="primary">
+        <b-button v-if="canDelete" @click="onDelete" size="sm" title="Usuń" class="mt-2" variant="primary">
           <b-icon-trash></b-icon-trash>
         </b-button>
       </div>

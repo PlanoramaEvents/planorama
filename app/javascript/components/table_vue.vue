@@ -14,7 +14,7 @@
           <b-tab v-if="$slots['alternate-search']" ref="alternate-search-tab">
             <template #title>
               <slot name="alternate-search-title">
-                Alternate Search
+                Alternatywne wyszukiwanie
               </slot>
             </template>
 
@@ -26,27 +26,27 @@
       </div>
 
       <div class="d-flex justify-content-end">
-        <div class="d-inline mx-1" title="clone" v-if="showClone">
-          <b-button @click="$emit('clone')" variant="primary" title="Duplicate" :disabled='selected_items.length===0' >
+        <div class="d-inline mx-1" title="klon" v-if="showClone">
+          <b-button @click="$emit('clone')" variant="primary" title="Duplikuj" :disabled='selected_items.length===0' >
             <b-icon-files></b-icon-files>
           </b-button>
         </div>
-        <div class="d-inline mx-1" title="refresh" v-if="showRefresh">
-          <b-button @click="onRefresh" variant="primary" title="Refresh">
+        <div class="d-inline mx-1" title="odśwież" v-if="showRefresh">
+          <b-button @click="onRefresh" variant="primary" title="Odśwież">
             <b-icon-arrow-repeat></b-icon-arrow-repeat>
           </b-button>
         </div>
-        <div class="d-inline mx-1" title="newval" v-if="showAdd">
-          <b-button @click="$emit('new')" variant="primary" title="New">
+        <div class="d-inline mx-1" title="nowy" v-if="showAdd">
+          <b-button @click="$emit('new')" variant="primary" title="Nowy">
             <b-icon-plus></b-icon-plus>
           </b-button>
         </div>
-        <div class="d-inline mx-1" title="show" v-if="showView">
-          <b-button @click="$emit('view')" variant="primary" title="View">
+        <div class="d-inline mx-1" title="pokaż" v-if="showView">
+          <b-button @click="$emit('view')" variant="primary" title="Pokaż">
             <b-icon-eye></b-icon-eye>
           </b-button>
         </div>
-        <div class="d-inline" title="Settings" v-if="showSettings">
+        <div class="d-inline" title="Ustawienia" v-if="showSettings">
           <b-button disabled>
             <b-icon-gear-fill></b-icon-gear-fill>
           </b-button>
@@ -55,26 +55,26 @@
     </div>
 
     <div class="d-flex align-items-center">
-      <slot name="left-controls" v-bind:editableIds="editableIds"></slot>
+      <slot name="left-controls" :editableIds="editableIds"></slot>
         <b-pagination
           class="mb-0 mr-3 ml-auto"
           v-model="currentPage"
           :total-rows="totalRows"
           :per-page="perPage"
-          first-text="First"
-          last-text="Last"
-          prev-text="Prev"
-          next-text="Next"
+          first-text="Pierwsza"
+          last-text="Ostatnia"
+          prev-text="Poprzednia"
+          next-text="Następna"
         ></b-pagination>
         <b-form @submit="setCurrentPage()" inline>
-          <b-form-group label="Go to page" label-cols="auto">
+          <b-form-group label="Przejdź do strony" label-cols="auto">
             <b-input type="number" v-model="tempCurrentPage" style="width: 5.5rem;"></b-input>
           </b-form-group>
-            <b-button type="submit" variant="primary" class="ml-1">Go</b-button>
+            <b-button type="submit" variant="primary" class="ml-1">Przejdź</b-button>
         </b-form>
       </div>
     <div class="d-flex mb-1">
-      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
+      <span v-if="totalRows != fullTotalRows">Wyniki wyszukiwania: {{totalRows}}</span>
       <span class="ml-auto">{{countCaption}}</span>
     </div>
     <b-table
@@ -130,20 +130,20 @@
     </b-table>
 
     <div class="d-flex mb-1">
-      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
+      <span v-if="totalRows != fullTotalRows">Wyniki wyszukiwania: {{totalRows}}</span>
       <span class="ml-auto">{{countCaption}}</span>
     </div>
     <b-pagination class="d-flex justify-content-end"
       v-model="currentPage"
       :total-rows="totalRows"
       :per-page="perPage"
-      first-text="First"
-      last-text="Last"
-      prev-text="Prev"
-      next-text="Next"
+      first-text="Pierwsza"
+      last-text="Ostatnia"
+      prev-text="Poprzednia"
+      next-text="Następna"
     ></b-pagination>
     <div class="d-flex justify-content-end">
-      <b-form-group label="Number of Records" label-cols="auto" class="mb-0">
+      <b-form-group label="Liczba rekordów" label-cols="auto" class="mb-0">
         <b-form-select :options="[10, 20, 50]" v-model="perPage"></b-form-select>
       </b-form-group>
     </div>
@@ -188,7 +188,9 @@ export default {
     },
     showRefresh: {
       type: Boolean,
-      default: false
+      default
+
+: false
     },
     showClone: {
       type: Boolean,
@@ -220,7 +222,7 @@ export default {
       }
       if (this.totalRows == 0) from = 0 
 
-      return `Showing ${from} to ${to} of ${this.totalRows} (${this.fullTotalRows} total records)`
+      return `Wyświetlanie ${from} do ${to} z ${this.totalRows} (${this.fullTotalRows} wszystkich rekordów)`
     },
     useSelectMode() {
       if (this.selectMode == 'multi') {

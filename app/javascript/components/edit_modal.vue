@@ -18,7 +18,7 @@ export default {
   props: {
     okTitle: {
       type: String,
-      default: 'Save'
+      default: 'Zapisz'
     }
   },
   components: {

@@ -2,15 +2,15 @@
   <div class="d-flex flex-column">
     <div class="flex-grow-1 flex-shrink-1 mb-4">
       <dl>
-        <dt>Maximum number of program items across the duration of the convention</dt>
-        <dd class="ml-2 font-italic">{{limits[null] || 'Not Set'}}</dd>
+        <dt>Maksymalna liczba elementów programu na przestrzeni trwania konwentu</dt>
+        <dd class="ml-2 font-italic">{{limits[null] || 'Nie ustawiono'}}</dd>
       </dl>
     </div>
     <div class="d-flex">
       <div class="flex-grow-1 flex-shrink-1 flex-basis-50">
         <dl>
-          <dt>Selected Times</dt>
-          <dd class="ml-2 font-italic text-muted" v-if="!availabilities.length && !availabilityLoading">None</dd>
+          <dt>Wybrane godziny</dt>
+          <dd class="ml-2 font-italic text-muted" v-if="!availabilities.length && !availabilityLoading">Brak</dd>
           <b-overlay :show="availabilityLoading" spinner-variant="primary" style="min-height: 5rem;">
             <dd class="ml-2 font-italic" v-for="avail in availabilities" :key="avail">{{avail}}</dd>
           </b-overlay>
@@ -18,25 +18,25 @@
       </div>
       <div class="flex-grow-1 flex-shrink-1 flex-basis-50">
         <dl>
-          <dt>Maximum number of program items per day</dt>
+          <dt>Maksymalna liczba elementów programu dziennie</dt>
           <dd class="ml-2 font-italic mb-4">
             <table>
               <tr v-for="{text, value} of dayOptions" :key="`${text}-${value}`">
                 <td>{{text}}&nbsp;</td>
-                <td class="pl-3">{{limits[value] || 'Not Set'}}</td>
+                <td class="pl-3">{{limits[value] || 'Nie ustawiono'}}</td>
               </tr>
             </table>
           </dd>
-          <dt>Do not schedule against these specific events</dt>
+          <dt>Nie planuj w tym samym czasie co te konkretne wydarzenia</dt>
           <b-overlay :show="exclusionsLoading" spinner-variant="primary" style="min-height: 5rem;" class="mb-4">
             <dd class="ml-2 font-italic" v-for="exclusion in exclusions" :key="exclusion.id">
               {{exclusionsMap[exclusion.exclusion_id]}}
             </dd>
-            <dd class="ml-2 font-italic text-muted" v-if="!exclusions.length">None Selected</dd>
+            <dd class="ml-2 font-italic text-muted" v-if="!exclusions.length">Żadne wydarzenie nie zostało wybrane</dd>
           </b-overlay>
-          <dt>Other scheduling considerations</dt>
+          <dt>Inne uwzględniane kwestie podczas planowania</dt>
           <dd class="ml-2 font-italic keep-format">{{selected.availability_notes}}</dd>
-          <dd class="ml-2 font-italic text-muted" v-if="!selected.availability_notes">Not Specified</dd>
+          <dd class="ml-2 font-italic text-muted" v-if="!selected.availability_notes">Nie określono</dd>
         </dl>
       </div>
     </div>

@@ -2,12 +2,12 @@
   <div class="container">
     <b-row align-v="center">
       <b-col cols="2">
-        <b-form-group label="Area">
+        <b-form-group label="Obszar">
           <model-select
             v-model="area_id"
             model="area"
             field="name"
-            unselected-display="Any Area"
+            unselected-display="Dowolny obszar"
           ></model-select>
         </b-form-group>
       </b-col>
@@ -23,7 +23,7 @@
         </b-form-group>
       </b-col>
       <b-col cols="4">
-        <b-form-group label="Title or Description">
+        <b-form-group label="Tytuł lub opis">
           <b-form-input
             type="text"
             v-model="title_desc"
@@ -32,12 +32,12 @@
       </b-col>
       <b-col cols="2 align-self-end">
         <b-form-group>
-          <b-form-radio v-model="match" name="search-match" value="any">Match Any</b-form-radio>
-          <b-form-radio v-model="match" name="search-match" value="all">Match All</b-form-radio>
+          <b-form-radio v-model="match" name="search-match" value="any">Dopasuj dowolne</b-form-radio>
+          <b-form-radio v-model="match" name="search-match" value="all">Dopasuj wszystkie</b-form-radio>
         </b-form-group>
       </b-col>
       <b-col cols="2 align-self-end">
-        <b-button variant="primary" @click="onSearch" class="search-button">Search</b-button>
+        <b-button variant="primary" @click="onSearch" class="search-button">Szukaj</b-button>
       </b-col>
     </b-row>
   </div>

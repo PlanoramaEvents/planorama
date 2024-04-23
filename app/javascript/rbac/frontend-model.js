@@ -1,9 +1,9 @@
 export const createRbacModel = () => ({
   agreements: {
-    label: 'Agreements',
+    label: 'Umowy',
     policies: {
       agreement: {
-        label: 'Agreement',
+        label: 'Umowa',
         perms: {
           create: false,
           destroy: false,
@@ -12,14 +12,14 @@ export const createRbacModel = () => ({
         }
       },
       sign_target_agreement: {
-        label: 'Sign Target Agreement',
+        label: 'Podpisz docelową umowę',
         perms: {
           create: false,
           view: false,
         }
       },
       view_signed_agreements: {
-        label: 'View Signed Agreement',
+        label: 'Wyświetl podpisane umowy',
         perms: {
           view: false,
         }
@@ -27,10 +27,10 @@ export const createRbacModel = () => ({
     }
   },
   rooms: {
-    label: "Rooms & Venues",
+    label: "Pokoje i miejsca",
     policies: {
       room: {
-        label: "Room or Venue",
+        label: "Pokój lub Miejsce",
         perms: {
           create: false,
           destroy: false,
@@ -39,7 +39,7 @@ export const createRbacModel = () => ({
         }
       },
       assign_room_to_session: {
-        label: "Assign Rooms to Session",
+        label: "Przypisz pokoje do sesji",
         perms: {
           create: false,
           destroy: false,
@@ -50,7 +50,7 @@ export const createRbacModel = () => ({
     }
   },
   tags: {
-    label: "Tags",
+    label: "Tagi",
     policies: {
       tag: {
         label: "Tag",
@@ -62,7 +62,7 @@ export const createRbacModel = () => ({
         }
       },
       assign_tag_to_session: {
-        label: "Assign Tags to Session",
+        label: "Przypisz tagi do sesji",
         perms: {
           create: false,
           destroy: false,
@@ -73,10 +73,10 @@ export const createRbacModel = () => ({
     }
   },
   people: {
-    label: "People",
+    label: "Osoby",
     policies: {
       person: {
-        label: "Person Record",
+        label: "Rekord osoby",
         perms: {
           create: false,
           destroy: false,
@@ -88,7 +88,7 @@ export const createRbacModel = () => ({
         }
       },
       email_addresses: {
-        label: "Email Addresses",
+        label: "Adresy e-mail",
         perms: {
           create: false,
           destroy: false,
@@ -97,7 +97,7 @@ export const createRbacModel = () => ({
         }
       },
       person_on_session: {
-        label: "Person on session with",
+        label: "Osoba na sesji z",
         perms: {
           view: false
         },
@@ -106,7 +106,7 @@ export const createRbacModel = () => ({
         }
       },
       person_me: {
-        label: "My Person Record",
+        label: "Mój rekord osoby",
         perms: {
           view: true,
           update: true
@@ -116,7 +116,7 @@ export const createRbacModel = () => ({
         }
       },
       session_assignment: {
-        label: "Assign person to session",
+        label: "Przypisz osobę do sesji",
         perms: {
           create: false,
           destroy: false,
@@ -125,7 +125,7 @@ export const createRbacModel = () => ({
         }
       },
       session_assignment_visible: {
-        label: "View assigned visible participants",
+        label: "Wyświetl przypisanych widocznych uczestników",
         perms: {
           view: false
         },
@@ -134,14 +134,14 @@ export const createRbacModel = () => ({
         }
       },
       sensitive_data: {
-        label: "Sensitive Data",
+        label: "Dane wrażliwe",
         perms: {
           view: false,
           update: false
         }
       },
       notes: {
-        label: "Notes Field & Admin Tab",
+        label: "Pole notatek i karta Administratora",
         perms: {
           view: false,
           update: false
@@ -150,10 +150,10 @@ export const createRbacModel = () => ({
     }
   },
   schedule: {
-    label: "Schdule",
+    label: "Harmonogram",
     policies: {
       publish_schedule: {
-        label: "Publish Schedule",
+        label: "Opublikuj harmonogram",
         perms: {
           create: false,
           destroy: false,
@@ -162,7 +162,7 @@ export const createRbacModel = () => ({
         }
       },
       assign_spacetime: {
-        label: "Assign Spacetime",
+        label: "Przypisz czas i miejsce",
         perms: {
           create: false,
           destroy: false,
@@ -171,7 +171,7 @@ export const createRbacModel = () => ({
         }
       },
       conflicts: {
-        label: "Conflicts",
+        label: "Konflikty",
         perms: {
           view: false
         }
@@ -179,10 +179,10 @@ export const createRbacModel = () => ({
     }
   },
   sessions: {
-    label: "Sessions",
+    label: "Sesje",
     policies: {
       session: {
-        label: "Session",
+        label: "Sesja",
         perms: {
           create: false,
           destroy: false,
@@ -191,7 +191,7 @@ export const createRbacModel = () => ({
         }
       },
       published_session: {
-        label: "Published Session",
+        label: "Opublikowana sesja",
         perms: {
           create: false,
           destroy: false,
@@ -200,7 +200,7 @@ export const createRbacModel = () => ({
         }
       },
       format: {
-        label: "Session Format",
+        label: "Format sesji",
         perms: {
           create: false,
           destroy: false,
@@ -209,21 +209,23 @@ export const createRbacModel = () => ({
         }
       },
       area: {
-        label: "Area",
+        label: "Obszar",
         perms: {
           create: false,
           destroy: false,
           update: false,
           view: false
-        }
+       
+
+ }
       }
     }
   },
   admin: {
-    label: "Administration",
+    label: "Administracja",
     policies: {
       event_defaults: {
-        label: "Event Defaults",
+        label: "Domyślne wydarzenia",
         perms: {
           create: false,
           destroy: false,
@@ -232,7 +234,7 @@ export const createRbacModel = () => ({
         }
       },
       bulk_import: {
-        label: "Bulk Import",
+        label: "Import masowy",
         perms: {
           create: false,
           update: false
@@ -241,7 +243,7 @@ export const createRbacModel = () => ({
     }
   },
   mailings: {
-    label: "Mailings",
+    label: "Mailingi",
     policies: {
       mailing: {
         label: "Mailing",
@@ -253,7 +255,7 @@ export const createRbacModel = () => ({
         }
       },
       mail_history: {
-        label: "Mail History",
+        label: "Historia maili",
         perms: {
           create: false,
           destroy: false,
@@ -265,7 +267,7 @@ export const createRbacModel = () => ({
         }
       },
       my_mail_history: {
-        label: "My Mail History",
+        label: "Moja historia maili",
         perms: {
           view: true,
         },
@@ -274,7 +276,7 @@ export const createRbacModel = () => ({
         }
       },
       assign_mailing: {
-        label: "Assign a mailing",
+        label: "Przypisz mailing",
         perms: {
           create: false,
           destroy: false,
@@ -283,7 +285,7 @@ export const createRbacModel = () => ({
         }
       },
       send_maling: {
-        label: "Send a mailing",
+        label: "Wyślij mailing",
         perms: {
           create: false,
         }
@@ -291,10 +293,10 @@ export const createRbacModel = () => ({
     }
   },
   surveys: {
-    label: "Surveys - General",
+    label: "Ankiety - Ogólne",
     policies: {
       survey: {
-        label: "Survey",
+        label: "Ankieta",
         perms: {
           create: false,
           view: false,
@@ -306,7 +308,7 @@ export const createRbacModel = () => ({
         }
       },
       page: {
-        label: "Page",
+        label: "Strona",
         perms: {
           create: false,
           view: false,
@@ -318,7 +320,7 @@ export const createRbacModel = () => ({
         }
       },
       question: {
-        label: "Question",
+        label: "Pytanie",
         perms: {
           create: false,
           view: false,
@@ -330,7 +332,7 @@ export const createRbacModel = () => ({
         }
       },
       answer: {
-        label: "Question Option",
+        label: "Opcja pytania",
         perms: {
           create: false,
           view: false,
@@ -342,7 +344,7 @@ export const createRbacModel = () => ({
         }
       },
       submission: {
-        label: "Survey Response as a whole",
+        label: "Odpowiedź na ankietę jako całość",
         perms: {
           create: false,
           destroy: false,
@@ -354,7 +356,7 @@ export const createRbacModel = () => ({
         }
       },
       response: {
-        label: "Survey Response - each question",
+        label: "Odpowiedź na ankietę - każde pytanie",
         perms: {
           create: false,
           destroy: false,
@@ -368,10 +370,10 @@ export const createRbacModel = () => ({
     }
   },
   surveys_assigned_to_me: {
-    label: "Surveys - assigned to me",
+    label: "Ankiety - przypisane do mnie",
     policies: {
       survey: {
-        label: "Survey",
+        label: "Ankieta",
         perms: {
           view: false,
         },
@@ -380,7 +382,7 @@ export const createRbacModel = () => ({
         }
       },
       page: {
-        label: "Page",
+        label: "Strona",
         perms: {
           view: false,
         },
@@ -389,7 +391,7 @@ export const createRbacModel = () => ({
         }
       },
       question: {
-        label: "Question",
+        label: "Pytanie",
         perms: {
           view: false,
         },
@@ -398,7 +400,7 @@ export const createRbacModel = () => ({
         }
       },
       answer: {
-        label: "Question Option",
+        label: "Opcja pytania",
         perms: {
           view: false,
         },
@@ -407,7 +409,7 @@ export const createRbacModel = () => ({
         }
       },
       submission: {
-        label: "Survey Response as a whole",
+        label: "Odpowiedź na ankietę jako całość",
         perms: {
           create: false,
           view: false,
@@ -418,7 +420,7 @@ export const createRbacModel = () => ({
         }
       },
       response: {
-        label: "Survey Response - each question",
+        label: "Odpowiedź na ankietę - każde pytanie",
         perms: {
           create: false,
           view: false,
@@ -431,46 +433,46 @@ export const createRbacModel = () => ({
     }
   },
   menus: {
-    label: "Menu links",
+    label: "Linki menu",
     policies: {
       admin: {
-        label: "Admin",
+        label: "Administracja",
         perms: {
           view: false,
         }
       },
       survey: {
-        label: "Survey",
+        label: "Ankieta",
         perms: {
           view: false
         }
       },
       people: {
-        label: "People",
+        label: "Osoby",
         perms: {
           view: false
         }
       },
       venues: {
-        label: "Venues",
+        label: "Miejsca",
         perms: {
           view: false
         }
       },
       schedule: {
-        label: "Schedule",
+        label: "Harmonogram",
         perms: {
           view: false,
         }
       },
       sessions: {
-        label: "Sessions",
+        label: "Sesje",
         perms: {
           view: false
         }
       },
       my_profile: {
-        label: "My Profile",
+        label: "Mój profil",
         perms: {
           view: false
         }

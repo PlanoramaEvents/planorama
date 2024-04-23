@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex flex-row pb-3">
       <div>
-        What is the maximum number of program items you are willing to participate in across the entire duration of the convention?<br />
+        Jaka jest maksymalna liczba elementów programu, w których chcesz wziąć udział przez cały czas trwania konwentu?<br />
           <session-limit-editor
             v-model="person"
             :timezone="calTimeZone"
@@ -11,12 +11,12 @@
           >
           </session-limit-editor>
         <p>
-          Under each day, highlight (click and drag) the times of day that you are available for programming in the calendar view below.
-          You can create multiple blocks of time per day. <span v-if="eventVirtual" >The in-person convention time is currently displayed.
-          If you will be attending online, and want to enter your availability in that time zone,
-          select that option from below the calendar.
+          Pod każdym dniem zaznacz (kliknij i przeciągnij) godziny, w których jesteś dostępny do programowania w poniższym widoku kalendarza.
+          Możesz utworzyć wiele bloków czasowych w ciągu jednego dnia. <span v-if="eventVirtual" >Obecny osobisty czas konwentu obecnie wyświetlany.
+          Jeśli będziesz uczestniczyć online i chcesz wprowadzić swoją dostępność w tej strefie czasowej,
+          wybierz tę opcję spod kalendarza.
           </span>
-          <span v-if="!eventVirtual">The time is displayed in the convention time zone, which is currently {{timezone}}.</span>
+          <span v-if="!eventVirtual">Czas jest wyświetlany w strefie czasowej konwentu, która obecnie wynosi {{timezone}}.</span>
         </p>
       </div>
     </div>
@@ -30,7 +30,7 @@
         ></availability-calendar>
         <!-- NOTE: The timezone selection for availability affects calendar AND limit display. -->
         <div class="mt-1 w-50" v-if="eventVirtual">
-          Select time zone to work in:
+          Wybierz strefę czasową do pracy:
           <b-form-select v-model="calTimeZone" :options="timeZoneOptions"></b-form-select>
         </div>
       </div>
@@ -39,8 +39,8 @@
         <div class="container">
           <b-row class="my-1">
             <b-col sm="12">
-              What is the maximum number of program items you are willing to participate in on each day?<br />
-              <small class="text-muted">(These can add up to more than your convention maximum.)</small>
+              Jaka jest maksymalna liczba elementów programu, w których chcesz wziąć udział każdego dnia?<br />
+              <small class="text-muted">(Suma ta może być większa niż maksimum konwentu.)</small>
             </b-col>
           </b-row>
         </div>
@@ -121,7 +121,7 @@ export default {
     editable_person: null,
     // NOTE: if there are more than 5 days in the con we need to change display
     options: [
-          { value: null, text: 'Please select an option' },
+          { value: null, text: 'Proszę wybrać opcję' },
           { value: 'Europe/Paris', text: 'Europe/Paris' },
           { value: 'America/Los_Angeles', text: 'America/Los_Angeles' },
           { value: 'Australia/Victoria', text: 'Australia/Victoria' },
@@ -132,15 +132,15 @@ export default {
       let your_zone = this.person.timezone
       let enable_your_zone = your_zone && your_zone.length > 0
 
-      let your_zone_text = `Your Timezone during con -- ${your_zone}`
+      let your_zone_text = `Twoja strefa czasowa podczas konwentu -- ${your_zone}`
 
       if (!enable_your_zone) {
-        your_zone_text = "Your Timezone during con -- no value set"
+        your_zone_text = "Twoja strefa czasowa podczas konwentu -- nie ustawiono wartości"
       }
 
       return [
         {
-          text: `Timezone of Convention -- ${this.timezone}`,
+          text: `Strefa czasowa konwentu -- ${this.timezone}`,
           value: this.timezone
         },
         {

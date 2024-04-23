@@ -2,7 +2,7 @@
 <div class="mr-3">
   <b-form-select v-model="name" :options="options" class="w-50 mb-2">
     <template #first>
-      <option :value="null">Select a content area to edit</option>
+      <option :value="null">Wybierz obszar treści do edycji</option>
     </template>
   </b-form-select>
   <plano-editor
@@ -10,7 +10,7 @@
     type='classic'
   ></plano-editor>
   <!-- TODO - do we want a delete? -->
-  <b-button variant="primary" @click="saveContent">Save</b-button>
+  <b-button variant="primary" @click="saveContent">Zapisz</b-button>
   <!-- <b-button variant="danger" @click="clearContent">Reset To Default</b-button> -->
 </div>
 </template>

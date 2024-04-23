@@ -1,42 +1,42 @@
 <!-- CONVERTED -->
 <template>
-  <b-tab title="Settings">
+  <b-tab title="Ustawienia">
     <div v-if="survey" class="container">
       <b-row>
         <b-col>
-          <span class="mr-2">Closed</span>
+          <span class="mr-2">Zamknięty</span>
           <b-form-checkbox inline v-model="publishVal" switch size="lg" v-b-modal.confirmPublish class="mr-0"></b-form-checkbox>
-          Published&nbsp;<span v-if="survey.public">on {{new Date(survey.published_on).toLocaleString()}}</span>
+          Opublikowany&nbsp;<span v-if="survey.public">dnia {{new Date(survey.published_on).toLocaleString()}}</span>
         </b-col>
       </b-row>
       <survey-setting bool v-model="survey.unassigned" field="unassigned">
-        Allow this survey to be taken without assignment
+        Pozwól na wypełnienie ankiety bez przypisania
       </survey-setting>
       <survey-setting bool v-model="survey.mandatory_star" field="mandatory_star">
-        Show star for required questions <small>(What is your name? <span class="text-danger" title="required">*</span>&nbsp;)</small>
+        Pokaż gwiazdkę dla wymaganych pytań <small>(Jak masz na imię? <span class="text-danger" title="wymagane">*</span>&nbsp;)</small>
       </survey-setting>
       <survey-setting bool disabled v-model="survey.captcha" field="captcha">
-        Use CAPTCHA
+        Użyj CAPTCHA
       </survey-setting>
       <survey-setting bool disabled v-model="survey.numbered_questions" field="numbered_questions">
-        Show numbers on questions
+        Pokaż numerację pytań
       </survey-setting>
       <survey-setting bool disabled v-model="survey.branded" field="branded">
-        Show logo
+        Pokaż logo
       </survey-setting>
       <survey-setting text v-model="survey.submit_string" field="submit_string">
-        Text for submit button
+        Tekst na przycisku wyślij
       </survey-setting>
       <survey-setting text v-model="survey.thank_you" field="thank_you">
-        Confirmation message
+        Wiadomość potwierdzająca
       </survey-setting>
-      <b-modal v-if="survey" id="confirmPublish" @ok="togglePublish" @cancel="cancelPublish" ok-title="Yes" cancel-variant="link">
+      <b-modal v-if="survey" id="confirmPublish" @ok="togglePublish" @cancel="cancelPublish" ok-title="Tak" cancel-variant="link">
         <p v-if="survey.public">{{SURVEY_CONFIRM_CLOSE}}</p>
         <p v-if="!survey.public">{{SURVEY_CONFIRM_PUBLISH}}</p>
       </b-modal>
     </div>
     <div v-if="!survey">
-      <h3>Loading...</h3>
+      <h3>Ładowanie...</h3>
     </div>
   </b-tab>
 </template>

@@ -1,8 +1,8 @@
 <template>
   <div>
     <header class="d-flex justify-content-between align-items-baseline">
-      <h3>Create Account</h3>
-      <h5>For email: {{ currentUserEmail }}</h5>
+      <h3>Utwórz Konto</h3>
+      <h5>Dla adresu e-mail: {{ currentUserEmail }}</h5>
     </header>
 
     <b-form @submit="onSubmit">
@@ -33,7 +33,7 @@
       <pw-requirements></pw-requirements>
       <div class="d-flex flex-row-reverse">
         <b-button type="submit" variant="primary" class="px-5"
-          >Create Account</b-button
+          >Utwórz Konto</b-button
         >
       </div>
     </b-form>
@@ -87,7 +87,7 @@ export default {
         validate: null,
       },
     },
-    resetPasswordLink: `<a href="/#/login/forgot">Reset Password</a>`,
+    resetPasswordLink: `<a href="/#/login/forgot">Zresetuj Hasło</a>`,
   }),
   methods: {
     // TODO: add code to enforce password security

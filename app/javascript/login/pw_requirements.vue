@@ -1,26 +1,26 @@
 <template>
   <div>
-    <p>In order to protect your account, make sure your password:</p>
+    <p>Aby chronić swoje konto, upewnij się, że Twoje hasło:</p>
     <ul>
-      <li>Is 6 or more characters</li>
-      <li>Does not contain the word "password"</li>
-      <li>Does not contain your email address</li>
-      <li>Is not one of your most recent passwords</li>
+      <li>Składa się z 6 lub więcej znaków</li>
+      <li>Nie zawiera słowa "password"</li>
+      <li>Nie zawiera Twojego adresu email</li>
+      <li>Nie jest jednym z Twoich ostatnich haseł</li>
       <li>
-        Password must not be a commonly used password or easily guessable.
-        Planorama makes use of the service
+        Hasło nie może być powszechnie używanym hasłem lub łatwo odgadnionym.
+        Planorama korzysta z usługi
         <a href="https://haveibeenpwned.com/" target="_blank"
           >haveibeenpwned.com</a
-        >
-        which is provided under the <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" >CC BY 4.0</a> license.
+        >,
+        która jest udostępniana na licencji
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" >CC BY 4.0</a>.
       </li>
     </ul>
     <p>
-      Optionally, we recommend you follow the
+      Opcjonalnie, zalecamy stosowanie
       <a href="https://xkcd.com/936/" target="_blank"
-        >Correct Horse Battery Staple</a
-      >
-      paradigm.
+        >Correct Horse Battery Staple"</a
+      >paradigm.
     </p>
   </div>
 </template>

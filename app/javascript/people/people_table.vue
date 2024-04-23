@@ -1,6 +1,6 @@
 <template>
   <div>
-    <bulk-edit-modal title="Bulk Edit Status" id="bulk-edit-status" @ok="onSaveMassEdit">
+    <bulk-edit-modal title="Edycja grupowa statusu" id="bulk-edit-status" @ok="onSaveMassEdit">
       <template #default>
         <b-form>
           <person-con-state-selector
@@ -10,16 +10,15 @@
       </template>
       <template #confirm-default>
         <p>
-          Please confirm that you want to change the
-          status of {{editableIds.length}} {{editableIds.length == 1 ? 'person' : 'people'}} to '{{PERSON_CON_STATE[selectedConState]}}'
-          <span v-if="declinedRejected">and they will be removed from the below sessions.</span>
+          Potwierdź zmianę statusu dla {{editableIds.length}} {{editableIds.length == 1 ? 'osoby' : 'osób'}} na '{{PERSON_CON_STATE[selectedConState]}}'
+          <span v-if="declinedRejected">i zostaną one usunięte z poniższych sesji.</span>
         </p>
         <people-session-names :declinedRejected="declinedRejected" :ids="editableIds"></people-session-names>
       </template>
     </bulk-edit-modal>
 
     <modal-form
-      title="Add Person"
+      title="Dodaj osobę"
       ref="add-person-modal"
       @save="onSave"
     >
@@ -28,8 +27,8 @@
         ref="add-person-form"
       ></person-add>
       <template #footer="{ ok, cancel }">
-        <b-button variant="link" @click="cancel()">Cancel</b-button>
-        <b-button variant="primary" @click="ok()">Save</b-button>
+        <b-button variant="link" @click="cancel()">Anuluj</b-button>
+        <b-button variant="primary" @click="ok()">Zapisz</b-button>
       </template>
     </modal-form>
     <table-vue
@@ -41,10 +40,10 @@
       ref="people-table"
       stateName="people-table-search-state"
     >
-      <template v-slot:alternate-search-title>Seach by Email(s)</template>
+      <template v-slot:alternate-search-title>Wyszukaj po adresie(e-mail)</template>
       <template v-slot:alternate-search>
         <div class="d-flex">
-          <b-form-group label="Email(s)" class="w-100">
+          <b-form-group label="Adres(e-mail)" class="w-100">
             <b-form-input
               type="text"
               v-model="searchEmails"
@@ -52,7 +51,7 @@
           </b-form-group>
         </div>
         <div class="d-flex">
-          <b-button variant="primary" @click="onEmailSearch" class="">Search</b-button>
+          <b-button variant="primary" @click="onEmailSearch" class="">Szukaj</b-button>
         </div>
       </template>
 
@@ -62,7 +61,7 @@
             variant="primary"
             @click="onEditStates(editableIds)"
             :disabled="editableIds.length == 0"
-          >Edit Status(es)
+          >Edytuj status(y)
           </b-button>
         </div>
       </template>

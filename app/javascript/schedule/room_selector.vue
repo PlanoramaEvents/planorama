@@ -2,13 +2,13 @@
   <div>
     <icon-button class="mt-1 mr-3" icon="gear" v-b-modal.room-selector-modal></icon-button>
     <plano-modal id="room-selector-modal" @ok="ok" @show="show">
-      <template #modal-title>Displayed Rooms</template>
+      <template #modal-title>Pokazane Sale</template>
       <div class="room-list">
         <b-form-checkbox
           v-model="selectAll"
           @change="onSelectAll"
           ref="select-all"
-        >Select All</b-form-checkbox>
+        >Wybierz wszystkie</b-form-checkbox>
         <hr />
         <div v-for="room in collection" :key="room.id">
           <b-form-checkbox

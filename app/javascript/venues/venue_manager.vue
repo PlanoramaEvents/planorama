@@ -1,13 +1,13 @@
 <template>
   <div class="scrollable">
     <b-tabs @input="input" class="mt-2">
-      <b-tab title="Rooms">
+      <b-tab title="Sale">
         <RoomsManager model="room" ref="rooms-manager"></RoomsManager>
       </b-tab>
-      <b-tab title="Venues">
+      <b-tab title="Miejsca">
         <VenuesManager model="venue" ref="venues-manager"></VenuesManager>
       </b-tab>
-      <b-tab title="Room Setups">
+      <b-tab title="Ustawienia sal">
         <RoomSetsManager model="roomset" ref="room-sets-manager"></RoomSetsManager>
       </b-tab>
     </b-tabs>

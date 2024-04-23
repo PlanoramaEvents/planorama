@@ -3,30 +3,30 @@
     <div class="d-flex flex-row justify-content-between">
       <b-link @click="showPersonDetails(assignee)" class="mr-2">{{assignee.published_name}}</b-link>
       <div class="mr-2">
-        Rank: <em>{{rank}}</em>
+        Ranga: <em>{{rank}}</em>
       </div>
       <div class="mr-2">
-        Default moderation preference: <span class="first-capital"><em>{{defaultModPreference}}</em></span>
+        Domyślne preferencje moderacji: <span class="first-capital"><em>{{defaultModPreference}}</em></span>
       </div>
       <div class="mr-2">
-        Session moderation preference: <span class="first-capital"><em>{{sessionModPreference}}</em></span>
+        Preferencje moderacji sesji: <span class="first-capital"><em>{{sessionModPreference}}</em></span>
       </div>
       <div class="mr-2">
-        Attendance type: <em>{{assignee.attendance_type | capitalize | na_if_empty}}</em>
+        Typ uczestnictwa: <em>{{assignee.attendance_type | capitalize | na_if_empty}}</em>
       </div>
       <div class="mr-2">
-        Accessibility concerns: <em>{{assignee.needs_accommodations ? 'Y' : 'N'}}</em>
+        Wymagane dostosowania dostępu: <em>{{assignee.needs_accommodations ? 'Tak' : 'Nie'}}</em>
       </div>
     </div>
     <div class="mt-2">
-      <div v-if="noInterestExpressed"><em>Did not express interest</em></div>
+      <div v-if="noInterestExpressed"><em>Nie wyrażono zainteresowania</em></div>
       <div>Status: <em>{{assignee.con_state}}</em></div>
-      <h6>Session comments</h6>
+      <h6>Komentarze do sesji</h6>
       <div class="ml-2 keep-format" v-if="assignment">{{assignment.interest_notes | na_if_empty}}</div>
-      <div class="ml-2" v-else>N/A</div>
+      <div class="ml-2" v-else>Nie dotyczy</div>
     </div>
     <div class="mt-2" v-if="!isHidden('demographic_categories')">
-      <h6>Other demographic categories</h6>
+      <h6>Inne kategorie demograficzne</h6>
       <div class="ml-2">
         {{assignee.demographic_categories | na_if_empty}}
       </div>
@@ -38,7 +38,6 @@
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import { peopleHiddenFieldsMixin } from '@/configurations/people_hidden_fields.mixin';
 
-// Seacrh for people to add as participants
 export default {
   name: "Assignee",
   mixins: [modelUtilsMixin, peopleHiddenFieldsMixin],
@@ -66,22 +65,21 @@ export default {
           return this.assignment.interest_ranking
         }
       }
-      return 'Unranked'
+      return 'Brak rangi'
     },
     defaultModPreference() {
-      if (this.assignee.willing_to_moderate) return 'Y'
-      return 'N'
+      if (this.assignee.willing_to_moderate) return 'Tak'
+      return 'Nie'
     },
     sessionModPreference() {
       if (this.assignment) {
         if (this.assignment.interest_role == 'can_moderate') {
-          return "Y"
+          return "Tak"
         } else if (this.assignment.interest_role == 'not_moderate') {
-          return "N"
+          return "Nie"
         }
       }
-      // {{assignment.interest_role}}
-      return "default"
+      return "domyślnie"
     },
     assignee() {
       let p = this.person
@@ -95,7 +93,6 @@ export default {
   },
   methods: {
     showPersonDetails(person) {
-      // We need the assignment AND the person selected
       this.select_model('session_assignment', null)
       if (this.assignment) this.select_model('session_assignment', this.assignment);
       this.select_model('person', person);

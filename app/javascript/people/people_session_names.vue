@@ -1,12 +1,12 @@
 <template>
   <div v-if="declinedRejected">
     <b-overlay :show="!results" spinner-variant="primary" variant="white" opacity="1">
-      <button @click="copy" class="btn btn-primary mb-2">Copy to Clipboard</button><span class="text-success ml-2" v-if="copySuccess">Copied!</span>
+      <button @click="copy" class="btn btn-primary mb-2">Skopiuj do schowka</button><span class="text-success ml-2" v-if="copySuccess">Skopiowane!</span>
       <div ref="copybox">
         <div v-for="(sessions, id) in results" :key="id">
           <h6>{{id}}</h6>
           <ul>
-            <span v-if="!sessions.length" class="font-italic text-muted">No Sessions</span>
+            <span v-if="!sessions.length" class="font-italic text-muted">Brak sesji</span>
             <li v-for="session in sessions" :key="session">{{session}}</li>
           </ul>
         </div>

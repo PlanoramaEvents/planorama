@@ -15,7 +15,7 @@ export default {
   props: {
     disabledTooltip: {
       type: String,
-      default: "This button is disabled"
+      default: "Ten przycisk jest wyłączony"
     },
     disabled: {
       type: Boolean,

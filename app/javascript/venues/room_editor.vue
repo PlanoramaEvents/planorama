@@ -1,11 +1,11 @@
 <template>
   <b-form ref='add-room-form'>
-    <model-field label="Name" v-model="roomData.name" type="text" stateless></model-field>
-    <model-field label="Floor" v-model="roomData.floor" type="text" stateless></model-field>
-    <model-field label="Purpose" v-model="roomData.purpose" type="text" stateless></model-field>
+    <model-field label="Nazwa" v-model="roomData.name" type="text" stateless></model-field>
+    <model-field label="Piętro" v-model="roomData.floor" type="text" stateless></model-field>
+    <model-field label="Cel" v-model="roomData.purpose" type="text" stateless></model-field>
     <div class="d-flex justify-content-end" v-if='showButtons'>
-      <b-button variant="link" @click="clear">Cancel</b-button>
-      <b-button variant="primary" @click="saveRoom">Save</b-button>
+      <b-button variant="link" @click="clear">Anuluj</b-button>
+      <b-button variant="primary" @click="saveRoom">Zapisz</b-button>
     </div>
   </b-form>
 </template>

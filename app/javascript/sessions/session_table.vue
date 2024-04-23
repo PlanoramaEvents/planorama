@@ -1,6 +1,6 @@
 <template>
   <div>
-    <bulk-edit-modal id="bulk-edit-status" title="Bulk Edit Status(es)" @ok="onSaveMassEdit">
+    <bulk-edit-modal id="bulk-edit-status" title="Edycja masowa statusów" @ok="onSaveMassEdit">
       <template #default>
         <b-form-select :options="sessionStatusOptionsNoDropped"
           v-model="selectedSessionState"
@@ -8,8 +8,7 @@
       </template>
       <template #confirm-default>
         <p>
-          Please confirm that you want to change the
-          status of {{editableIds.length}} {{editableIds.length == 1 ? 'session' : 'sessions'}} to '{{SESSION_STATUS[selectedSessionState]}}'
+          Potwierdź zmianę statusu {{editableIds.length}} {{editableIds.length == 1 ? 'session' : 'session'}} na '{{SESSION_STATUS[selectedSessionState]}}'
         </p>
       </template>
     </bulk-edit-modal>
@@ -29,7 +28,7 @@
             variant="primary"
             @click="onEditStates(editableIds)"
             :disabled="editableIds.length == 0"
-          >Edit Status(es)
+          >Edytuj status(y)
           </b-button>
         </div>
       </template>
@@ -90,11 +89,11 @@
         <div class="text-center text-muted">&mdash;</div>
       </template>
     </table-vue>
-    <plano-modal id="add-session" title="Add Session" @ok="onNew">
-      <b-form-group label="Session Title">
-        <b-form-input id="session-new-session-title" type="text" v-model="newSessionTitle"></b-form-input>
-      </b-form-group>
-    </plano-modal>
+    <plano-modal id="add-session" title="Dodaj sesję" @ok="onNew">
+    <b-form-group label="Tytuł sesji">
+      <b-form-input id="session-new-session-title" type="text" v-model="newSessionTitle"></b-form-input>
+    </b-form-group>
+  </plano-modal>
   </div>
 </template>
 

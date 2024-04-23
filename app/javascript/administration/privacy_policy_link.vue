@@ -1,5 +1,5 @@
 <template>
-    <a :href="privacyPolicyLink" target="_blank">Data Privacy &amp; Protection Policy</a>
+    <a :href="privacyPolicyLink" target="_blank">Polityka prywatności</a>
 </template>
 
 <script>

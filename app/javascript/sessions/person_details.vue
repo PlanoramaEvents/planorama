@@ -8,38 +8,38 @@
           </h3>
         </b-link>
         <div class="ml-3">Rank: {{rank}}</div>
-        <div class="ml-3">Session moderation preference: <span class="first-capital">{{sessionModPreference}}</span></div>
+        <div class="ml-3">Preferencje moderacji sesji: <span class="first-capital">{{sessionModPreference}}</span></div>
       </div>
     </template>
     <template #content v-if="selected">
       <div>
         <div class="mt-2">
           <dl>
-            <dt>Session Comments:</dt>
+            <dt>Komentarze dotyczące sesji:</dt>
             <dd class='ml-2 keep-format'>{{sessionComments}}</dd>
-            <dt>Bio:</dt>
+            <dt>Biografia:</dt>
             <dd class='ml-2'>
               <span v-html="selected.bio" v-if="selected.bio"></span>
-              <span v-else class="text-muted font-italic">Not Specified</span>
+              <span v-else class="text-muted font-italic">Nieokreślone</span>
             </dd>
           </dl>
         </div>
         <div class="d-flex flex-row mt-3">
           <div class="w-50 mr-2">
-            <h5>Demographics</h5>
+            <h5>Dane demograficzne</h5>
             <dl-person :fields="demographicFields"></dl-person>
           </div>
           <div class="w-50">
-            <h5>Community Memberships</h5>
+            <h5>Członkostwo w społecznościach</h5>
             <dl-person :fields="communityFields"></dl-person>
           </div>
         </div>
-        <h5>Other Information</h5>
+        <h5>Inne informacje</h5>
         <dl-person :fields="otherFields">
           <template #can_stream-val>{{selected.can_stream | capitalize}}</template>
           <template #can_record-val>{{selected.can_record | capitalize}}</template>
-          <template #can_stream_exceptions-label>Topics participant does not want to be streamed while talking about</template>
-          <template #can_record_exceptions-label>Topics participant does not want to be recorded while talking about</template>
+          <template #can_stream_exceptions-label>Tematy, na których uczestnik nie chce być nagrywany podczas dyskusji</template>
+          <template #can_record_exceptions-label>Tematy, na których uczestnik nie chce być nagrywany podczas dyskusji</template>
         </dl-person>
       </div>
     </template>
@@ -80,7 +80,7 @@ export default {
           return this.assignment.interest_ranking
         }
       }
-      return 'Unranked'
+      return 'Nieocenione'
     },
     demographicFields() {
       return this.filterFieldList(['ethnicity', 'gender', 'age_at_convention', 'romantic_sexual_orientation']);
@@ -111,18 +111,18 @@ export default {
       ])
     },
     defaultModPreference() {
-      if (this.selected.willing_to_moderate) return 'Y'
-      return 'N'
+      if (this.selected.willing_to_moderate) return 'Tak'
+      return 'Nie'
     },
     sessionModPreference() {
       if (this.assignment) {
         if (this.assignment.interest_role == 'can_moderate') {
-          return "Y"
+          return "Tak"
         } else if (this.assignment.interest_role == 'not_moderate') {
-          return "N"
+          return "Nie"
         }
       }
-      return "Default"
+      return "Domyślne"
     },
     assignment() {
       let asgnmt = this.selected_model('session_assignment')

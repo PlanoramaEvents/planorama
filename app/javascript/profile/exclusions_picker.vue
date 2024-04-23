@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3">
-    Do not schedule me against these specific  events:<br />
+    Nie planuj mnie na te konkretne wydarzenia:<br />
     <div class="d-flex flex-row align-content-around flex-wrap" >
       <div v-for="exclusion in currentSettings.exclusions" class="w-25">
         <b-form-checkbox

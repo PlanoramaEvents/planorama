@@ -4,19 +4,19 @@
           <div class="col-12 col-sm-6 col-lg-4">
             <dt>Status</dt>
             <dd class="font-italic ml-2">{{PERSON_CON_STATE[selected.con_state || 'not_set']}}</dd>
-            <dt>Registered</dt>
-            <dd class="font-italic ml-2">{{selected.registered ? 'Yes' : 'No'}}</dd>
-            <dt>Registration ID</dt>
-            <dd class="font-italic ml-2">{{selected.registration_number || 'Unknown'}}</dd>
+            <dt>Zarejestrowany</dt>
+            <dd class="font-italic ml-2">{{selected.registered ? 'Tak' : 'Nie'}}</dd>
+            <dt>ID rejestracji</dt>
+            <dd class="font-italic ml-2">{{selected.registration_number || 'Nieznany'}}</dd>
             </div>
           <div class="col-12 col-sm-6 col-lg-4">
-            <dt>Convention Class</dt>
+            <dt>Klasa konwentu</dt>
             <dd class="font-italic ml-2">{{conventionClasses}}</dd>
           </div>
-          <dt class="col-12 mt-2">Comments</dt>
+          <dt class="col-12 mt-2">Komentarze</dt>
           <dd class="col-12">
             <b-form-textarea v-model="comments"></b-form-textarea>
-            <b-button class="float-right mt-1" @click="patchSelected({comments})" variant="primary">Save Comments</b-button>
+            <b-button class="float-right mt-1" @click="patchSelected({comments})" variant="primary">Zapisz komentarze</b-button>
           </dd>
         </dl>
   </div>

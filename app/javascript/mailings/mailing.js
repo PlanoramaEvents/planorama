@@ -1,33 +1,33 @@
 export const mailing_columns = [
   {
     key: 'display_name',
-    label: 'Name',
+    label: 'Nazwa',
     type: "text",
     sortable: true,
   },
   {
     key: 'description',
-    label: 'Description',
+    label: 'Opis',
     type: "text",
   },
   {
     key: 'mailing_state',
-    label: 'Status',
+    label: 'Stan',
     type: "text",
   },
   {
     key: 'date_sent',
-    label: 'Date Sent',
+    label: 'Data wysłania',
     sortable: true,
-    formatter: (d) => (d ? new Date(d).toLocaleString() : 'n/a')
+    formatter: (d) => (d ? new Date(d).toLocaleString() : 'n/d')
   },
   {
     key: 'sent_by.name',
-    label: 'Sent By',
+    label: 'Wysłane przez',
   },
   {
     key: 'content',
-    label: 'Content',
+    label: 'Treść',
     type: "text"
   }
 ]

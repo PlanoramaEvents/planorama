@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-if="exampleUrl">
-      Example: <a target="_blank" :href="exampleUrl">{{ exampleUrl }}</a>
+      Przykład: <a target="_blank" :href="exampleUrl">{{ exampleUrl }}</a>
     </div>
-    <label>File
+    <label>Plik
       <input
         type="file"
         id="files"
@@ -12,7 +12,7 @@
       />
     </label>
     <b-form-checkbox v-model="ignoreFirstLine" >
-      This file has a header
+      Ten plik zawiera nagłówek
     </b-form-checkbox>
     <div v-if="importMessage">
       <div class="border border-secondary d-flex p-2">
@@ -31,8 +31,8 @@
       </b-table>
     </div>
     <div class="d-flex justify-content-end">
-      <b-button variant="link" @click="clear">Cancel</b-button>
-      <b-button variant="primary" @click="submitData">Save</b-button>
+      <b-button variant="link" @click="clear">Anuluj</b-button>
+      <b-button variant="primary" @click="submitData">Zapisz</b-button>
     </div>
   </div>
 </template>

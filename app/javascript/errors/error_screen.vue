@@ -16,9 +16,9 @@ export default {
   data() {
     return {
       messages : {
-        '100': "There was a problem with the Authentication process.",
-        '101': "It appears that the Registration Identity you tried to use is already used by another Planorama user.",
-        '102': "It appears that the email associated wiht Registration Identity you tried to use is already used by another Planorama user."
+        '100': "Wystąpił problem z procesem uwierzytelniania.",
+        '101': "Wygląda na to, że tożsamość rejestracyjna, którą próbowałeś użyć, jest już używana przez innego użytkownika Planoramy.",
+        '102': "Wygląda na to, że adres e-mail powiązany z tożsamością rejestracyjną, którą próbowałeś użyć, jest już używany przez innego użytkownika Planoramy."
       }
     }
   },

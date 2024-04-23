@@ -5,7 +5,7 @@
       <dl-person :fields="fields"></dl-person>
     </slot>
     <person-edit-modal :id="modalName" :person="selected" :data="modalData">
-      <template #modal-title>Edit {{title}} - {{selected.published_name}}</template>
+      <template #modal-title>Edytuj {{title}} - {{selected.published_name}}</template>
       <template #default="slotData">
         <template v-for="field, i in fields">
           <b-form-group :key="i" :label="PROFILE_FIELD_LABELS[field]">

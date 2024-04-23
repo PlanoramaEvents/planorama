@@ -2,11 +2,11 @@
   <b-modal id='agreements-modal' size="lg"
          hide-header-close no-close-on-backdrop no-close-on-esc
          :title="title" @ok="onAgree" @cancel="onRefuse"
-         ok-title="I Agree" cancel-title="I Refuse">
+         ok-title="Zgadzam się" cancel-title="Nie zgadzam się">
     <div class="agreements-terms" v-html="terms"></div>
     <div>
       <footer class="modal-footer">
-        <p>By clicking ‘Agree’ below I do hereby agree to abide by the above usage restrictions. I acknowledge that there may be personal, business, and legal implications if I use this system inappropriately.</p>
+        <p>Klikając „Zgadzam się” poniżej, niniejszym wyrażam zgodę na przestrzeganie powyższych ograniczeń dotyczących użytkowania. Uznaję, że niewłaściwe korzystanie z tego systemu może mieć osobiste, biznesowe i prawne konsekwencje.</p>
       </footer>
     </div>
   </b-modal>

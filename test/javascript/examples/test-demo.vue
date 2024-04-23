@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button @click="count++">Add up</button>
-    <p>Total clicks: {{ count }}</p>
+    <button @click="count++">Dodaj</button>
+    <p>Liczba kliknięć: {{ count }}</p>
   </div>
 </template>
 

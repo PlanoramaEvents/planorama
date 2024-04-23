@@ -2,18 +2,18 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <b-form-group label="Area" label-cols="4">
+        <b-form-group label="Obszar" label-cols="4">
           <model-select
             size="sm"
             v-model="area_id"
             model="area"
             field="name"
-            unselected-display="Any Area"
+            unselected-display="Dowolny obszar"
           ></model-select>
         </b-form-group>
       </div>
       <div class="col-12">
-        <b-form-group label="Title" label-cols="4">
+        <b-form-group label="Tytuł" label-cols="4">
           <b-form-input
             type="text"
             v-model="title_desc"
@@ -22,20 +22,20 @@
         </b-form-group>
       </div>
       <div class="col-9">
-        <b-form-radio-group v-model="match" :options="[{text: 'Match Any', value: 'any'}, {text: 'Match All', value:'all'}]" size="sm">
+        <b-form-radio-group v-model="match" :options="[{text: 'Dowolne dopasowanie', value: 'any'}, {text: 'Dopasuj wszystko', value:'all'}]" size="sm">
         </b-form-radio-group>
       </div>
       <div class="col-3 px-0">
-        <b-button variant="primary" @click="onSearch" size="sm">Search</b-button>
+        <b-button variant="primary" @click="onSearch" size="sm">Szukaj</b-button>
       </div>
     </div>
     <!-- radio for none, time only, space only -->
     <div class="row">
       <div class="col-12">
         <b-form-radio-group v-model="schedFilter">
-          <b-form-radio value="all">All</b-form-radio>
-          <b-form-radio value="time">Time</b-form-radio>
-          <b-form-radio value="room">Room</b-form-radio>
+          <b-form-radio value="all">Wszystko</b-form-radio>
+          <b-form-radio value="time">Czas</b-form-radio>
+          <b-form-radio value="room">Sala</b-form-radio>
         </b-form-radio-group>
       </div>
     </div>

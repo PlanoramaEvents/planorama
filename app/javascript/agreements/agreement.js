@@ -2,31 +2,31 @@ export const agreement_columns = [
   {
     key: 'title',
     //sortKey: 'agreements.name',
-    label: 'Title',
+    label: 'Tytuł',
     type: "text",
     sortable: true
   },
   {
     key: 'terms',
-    label: 'Body',
+    label: 'Treść',
     type: "text",
     sortable: true,
   },
   {
     key: 'agreement_type',
-    label: 'Agreement Type',
+    label: 'Typ Umowy',
     type: 'text',
     sortable: true,
   },
   {
     key: 'target',
-    label: 'Target',
+    label: 'Cel',
     type: 'text',
     sortable: true,
   },
   {
     key: 'created_at',
-    label: 'Published On',
+    label: 'Opublikowano',
     sortable: true,
     formatter: (d) => new Date(d).toLocaleString()
   }

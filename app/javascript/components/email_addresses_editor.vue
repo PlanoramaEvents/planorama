@@ -5,11 +5,11 @@
         <h5>Email</h5>
       </div>
       <div class="mt-2 pt-1 w-25 ooch-left">
-        Make Primary
+        Ustaw jako główny
       </div>
     </div>
     <div v-if="primary" class="mt-3">
-      Primary email (login)
+      Główny adres email (do logowania)
       <email-address-editor
         v-bind:value="primary"
         :can-delete="false"
@@ -19,7 +19,7 @@
       ></email-address-editor>
     </div>
     <div class="mt-3">
-      Additional Emails
+      Dodatkowe adresy email
       <div v-for="email in additional" :key="email.id">
         <email-address-editor
           :value="email"
@@ -30,18 +30,17 @@
         ></email-address-editor>
       </div>
     </div>
-    <b-button ref="add_email_button" @click="onNew" variant="primary" title="New" class="mt-2" size="sm">
+    <b-button ref="add_email_button" @click="onNew" variant="primary" title="Nowy" class="mt-2" size="sm">
       <b-icon-plus></b-icon-plus>
     </b-button>
-    <plano-modal id="primaryEmailConfirm" title="Primary Email Confirmation" @ok="onConfirmOk()" @cancel="onConfirmCancel()" @close="onConfirmCancel()">
-      <p>You are about to change the primary email address associated with this profile. <strong>This will change the login email used for this account.</strong></p>
-      <p>Are you sure you wish to make this change?</p>
+    <plano-modal id="primaryEmailConfirm" title="Potwierdzenie głównego adresu email" @ok="onConfirmOk()" @cancel="onConfirmCancel()" @close="onConfirmCancel()">
+      <p>Chcesz zmienić główny adres email powiązany z tym profilem. <strong>To spowoduje zmianę adresu email do logowania na tym koncie.</strong></p>
+      <p>Czy na pewno chcesz dokonać tej zmiany?</p>
     </plano-modal>
   </div>
 </template>
 
 <script>
-
 import EmailAddressEditor from './email_address_editor.vue'
 import emailAddressMixin from '../store/email_address.mixin'
 import {personSessionMixin} from '@/mixins';
@@ -71,7 +70,7 @@ export default {
     disabled: false,
     id: {
       type: String,
-      default: 'email-addresses-editor'
+      default: 'edycja-adresów-email'
     }
   },
   data: () => ({
@@ -94,7 +93,7 @@ export default {
       }
     },
     radioGroup() {
-      return `${this.id}-make-primary`;
+      return `${this.id}-ustaw-jako-główny`;
     }
   },
   methods: {
@@ -173,6 +172,7 @@ export default {
   }
 }
 </script>
+
 <style scoped lang="scss">
 .ooch-left {
   margin-left: -3rem;

@@ -1,14 +1,9 @@
 <template>
   <div class="new-account">
-    <h3>Create Account</h3>
+    <h3>Utwórz Konto</h3>
+    <p>Podaj swój adres e-mail poniżej, aby utworzyć nowe konto lub zresetować hasło.</p>
     <p>
-      Enter your email address below to either create an account or reset your
-      password.
-    </p>
-    <p>
-      If an account with this address exists, you will receive an email with a
-      link to complete the password process. If one does not, you will receive a
-      link to create your account.
+      Jeśli istnieje konto powiązane z tym adresem, otrzymasz e-mail z linkiem umożliwiającym zresetowanie hasła. W przeciwnym razie otrzymasz link do utworzenia nowego konta.
     </p>
     <b-alert :show="alert.visible" :variant="alert.variant">{{
       alert.text
@@ -35,7 +30,7 @@
           type="submit"
           variant="primary"
           class="px-5"
-          >Send me a link</b-button
+          >Wyślij mi link</b-button
         >
       </div>
     </b-form>

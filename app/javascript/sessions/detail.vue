@@ -8,17 +8,17 @@
     <div class="row">
       <div class="col-12">
 
-        <b-button @click="edit" :disabled="editable">Edit</b-button>
-        <b-button @click="save" :disabled="!editable">Save</b-button>
-        <h2>Basic Information</h2>
+        <b-button @click="edit" :disabled="editable">Edytuj</b-button>
+        <b-button @click="save" :disabled="!editable">Zapisz</b-button>
+        <h2>Podstawowe informacje</h2>
         <b-form-group
-          label="Title"
+          label="Tytuł"
         >
           <b-form-input v-model="selected.title" :disabled="!editable"></b-form-input>
         </b-form-group>
 
         <b-form-group
-          label="Description"
+          label="Opis"
         >
           <plano-editor
             id="description-text"
@@ -29,11 +29,11 @@
         </b-form-group>
 
         <b-form-checkbox v-model="selected.open_for_interest" :disabled="!editable">
-          Open for Interest
+          Otwarte dla zainteresowania
         </b-form-checkbox>
 
         <b-form-group
-          label="Interest Instructions"
+          label="Instrukcje dotyczące zainteresowania"
         >
           <plano-editor
             id="interest-instructions-text"
@@ -44,7 +44,7 @@
         </b-form-group>
 
         <b-form-group
-          label="Tags"
+          label="Tagi"
         >
           <model-tags
             :taggable="true"
@@ -58,7 +58,7 @@
         </b-form-group>
 
         <b-form-group
-          label="Areas"
+          label="Obszary"
         >
           <model-select
             v-model="session_areas"

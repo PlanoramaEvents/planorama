@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h5>Additional Participants</h5>
+    <h5>Uczestnicy Dodatkowi</h5>
     <search-vue
       id="session-search-field" 
       class="w-75 mt-3"
@@ -14,15 +14,15 @@
       v-model="currentPage"
       :total-rows="totalRows"
       :per-page="perPage"
-      first-text="First"
-      last-text="Last"
-      prev-text="Prev"
-      next-text="Next"
+      first-text="Pierwsza"
+      last-text="Ostatnia"
+      prev-text="Poprzednia"
+      next-text="Następna"
     ></b-pagination>
 
     <div class='row mb-4' v-for="item in sortedCollection" :key="item.id">
       <div class="col-2">
-        <b-button variant="primary" @click="addToASession(item)">Add to Session</b-button>
+        <b-button variant="primary" @click="addToASession(item)">Dodaj do Sesji</b-button>
       </div>
       <assignee :person="item"></assignee>
     </div>
@@ -31,10 +31,10 @@
       v-model="currentPage"
       :total-rows="totalRows"
       :per-page="perPage"
-      first-text="First"
-      last-text="Last"
-      prev-text="Prev"
-      next-text="Next"
+      first-text="Pierwsza"
+      last-text="Ostatnia"
+      prev-text="Poprzednia"
+      next-text="Następna"
     ></b-pagination>
 
   </div>

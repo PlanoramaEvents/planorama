@@ -5,7 +5,7 @@
         <b-form-group
           class="mx-3"
           id="session-title-group"
-          label="Session Title"
+          label="Tytuł sesji"
           label-for="session-title"
         >
           <b-form-input
@@ -18,7 +18,7 @@
         <b-form-group
           class="mx-3"
           id="session-description-group"
-          label="Session Description"
+          label="Opis sesji"
           label-for="session-description"
         >
           <plano-editor
@@ -36,21 +36,21 @@
             v-model="session.open_for_interest"
             @change="saveSession()"
           >
-            Open for Interest
+            Otwarte dla zainteresowania
             <span v-if="session.open_for_interest">
-              on {{ session.interest_opened_at ? new Date(session.interest_opened_at).toLocaleString() : 'n/a'}}
-              by {{ session.interest_opened_by ? session.interest_opened_by.toLocaleString() : 'n/a'}}
+              od {{ session.interest_opened_at ? new Date(session.interest_opened_at).toLocaleString() : 'n/a'}}
+              przez {{ session.interest_opened_by ? session.interest_opened_by.toLocaleString() : 'n/a'}}
             </span>
           </b-form-checkbox>
         </b-form-group>
       </div>
       <div class='ml-auto' v-if="session">
         <small class="text-muted d-block">
-          Last edited by:
+          Ostatnio edytowane przez:
           <em>{{session.updated_by}}</em>
         </small>
         <small class="text-muted d-block">
-          Last edited on:
+          Ostatnia edycja:
           <em>{{new Date(session.updated_at).toLocaleString()}}</em>
         </small>
         <b-form-group class="mt-5">
@@ -59,7 +59,7 @@
             switch
             v-model="session.proofed"
             @change="saveSession()"
-          >Copy Edited/Proofed</b-form-checkbox>
+          >Skorygowane/zweryfikowane</b-form-checkbox>
         </b-form-group>
         <b-form-group>
           <b-form-checkbox
@@ -67,17 +67,17 @@
             switch
             disabled
             :checked="scheduled"
-          >Scheduled</b-form-checkbox>
+          >Zaplanowane</b-form-checkbox>
         </b-form-group>
-        <b-form-group label="Public Schedule Visibility" class="mb-3">
-          <span>Not Visible</span>
+        <b-form-group label="Widoczność w publicznym harmonogramie" class="mb-3">
+          <span>Niewidoczne</span>
           <b-form-checkbox
             id="session-public-schedule-visibility"
             switch
             v-model="visibility"
             @change="saveSession()"
             class="d-inline-block"
-          >Visible</b-form-checkbox>
+          >Widoczne</b-form-checkbox>
         </b-form-group>
         <b-form-group>
           <b-form-checkbox
@@ -85,7 +85,7 @@
             switch
             v-model="session.recorded"
             @change="saveSession()"
-          >Will be recorded</b-form-checkbox>
+          >Będzie nagrane</b-form-checkbox>
         </b-form-group>
         <b-form-group>
           <b-form-checkbox
@@ -93,7 +93,7 @@
             switch
             v-model="session.streamed"
             @change="saveSession()"
-          >Will be livestreamed</b-form-checkbox>
+          >Będzie transmitowane na żywo</b-form-checkbox>
         </b-form-group>
         <b-form-group label="Status" label-cols="auto">
           <b-form-select  id="session-status" v-model="session.status" @change="saveSession()">
@@ -106,7 +106,7 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
-        <b-button v-if="currentUserIsAdmin && airmeetEnabled" variant="warning" :disabled="!session.streamed" @click="resyncAirmeet" class="mt-2">Airmeet re-sync completed</b-button>
+        <b-button v-if="currentUserIsAdmin && airmeetEnabled" variant="warning" :disabled="!session.streamed" @click="resyncAirmeet" class="mt-2">Synchronizacja z Airmeet zakończona</b-button>
       </div>
     </div>
   </div>
