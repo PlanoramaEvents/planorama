@@ -20,7 +20,7 @@
       </ValidationProvider>
     </validation-observer>
     <!-- {{ value.isdefault }} -->
-    <div class="">
+    <div style="flex-basis: 25%;">
       <div class="d-flex flex-row justify-content-end">
         <b-form-radio
           switch size="lg"
