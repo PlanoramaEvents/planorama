@@ -45,7 +45,7 @@
         </p>
       </li>
       <li>
-        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
+        <span v-if="!currentUserIsAdmin" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
         <a href="/report/participant_do_not_assign_with" target="_blank" v-if="currentUserIsAdmin">Participants and Do Not Assign With</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: People who should not be assigned to the same session, one line per person and session; available only to users with permission to view sensitive data<br />
@@ -403,7 +403,7 @@
       </li>
     </ul>
     <div style="clear: both; height: 5rem;">&nbsp;</div>
-        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>User Privileges</span>
+        <span v-if="!currentUserIsAdmin" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>User Privileges</span>
         <a href="/report/program_ops_reports/user_privileges" target="_blank" v-if="currentUserIsAdmin">User Privileges</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Login (primary email) listing, one line per person<br />

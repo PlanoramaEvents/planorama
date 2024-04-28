@@ -168,7 +168,7 @@ class ReportsController < ApplicationController
     end
 
     send_data workbook.read_string,
-              filename: "SessionsWithPartiipants#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+              filename: "SessionsWithParticipants#{Time.now.strftime('%m-%d-%Y')}.xlsx",
               disposition: 'attachment'
 
   end
@@ -450,7 +450,7 @@ class ReportsController < ApplicationController
         'Ranking Notes',
         'Areas',
         'Tags',
-        'Labels',
+        'Admin Labels',
         'Assigned',
         'Scheduled'
       ]
@@ -608,9 +608,9 @@ class ReportsController < ApplicationController
             person.name,
             person.published_name,
             sa.session.title,
-            person.area_list.join('; '),
-            sa.session.tag_list.collect(&:name).join("; "),
-            sa.session.label_list.collect(&:name).join("; "),
+            person.area_list.join('; '),            
+            sa.session.tag_list&.join("; "),
+            sa.session.label_list&.join("; "),
             sa.session.session_assignments.select{|a| [participant.id, moderator.id, invisible.id].include?(a.session_assignment_role_type_id)}.collect{|s| s.person.published_name}.join('; '),
             person.do_not_assign_with
           ]

@@ -177,7 +177,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
 
     header = ['Room', 'Day']
     (1..max_sessions).each do |n|
-      header.concat ["Title #{n+1}", "Tags #{n+1}", "Admin Labels #{n+1}", "Start Time #{n+1}", "Description #{n+1}", "Moderators #{n+1}", "Participants #{n+1}"]
+      header.concat ["Title #{n}", "Tags #{n}", "Admin Labels #{n}", "Start Time #{n}", "Description #{n}", "Moderators #{n}", "Participants #{n}"]
     end
     worksheet.write_row(0, header)
 

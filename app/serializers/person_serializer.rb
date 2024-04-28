@@ -147,7 +147,8 @@ class PersonSerializer #< ActiveModel::Serializer
               :integrations,
               :excluded_demographic_categories,
               :global_diaspora,
-              :non_anglophone
+              :non_anglophone,
+              :reg_id
 
   # status and comments hidden except for staff
   protected_attributes :con_state, :comments
