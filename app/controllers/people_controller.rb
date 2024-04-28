@@ -32,12 +32,14 @@ class PeopleController < ResourceController
     raise "No such person" unless person
     
     Person.transaction do
-      identity = person.oauth_identities.oauth_identities.where(provider: 'clyde')
+      identity = person.oauth_identities.where(provider: 'clyde').first
+
+      reg_id = person.reg_id || identity&.reg_id
       
-      raise "No Clyde Identity for given person" unless identity
+      raise "No Clyde Reg for given person" unless reg_id
 
       svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
-      details = svc.participant(id: identity.reg_id)
+      details = svc.person(id: reg_id)
 
       IdentityService.update_reg_info(person: person, details: details['data'])
 
@@ -52,7 +54,7 @@ class PeopleController < ResourceController
     person = Person.find params[:person_id]
 
     raise "No such person" unless person
-    # Remove the Oauth identity
+    # Remove the Oauth identity - needs to be destroy to remove the record
     person.oauth_identities.destroy_all
     # But we want to keep the Reg info if there is any
     # for admin and planners to see (not speakers)
