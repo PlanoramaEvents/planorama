@@ -68,6 +68,18 @@ class RegistrationSyncWorker
         # puts "#{d['id']} -> #{d['full_name']} -> #{d['email']}"
         # preferred_name, alternative_email
         # TODO: move to an adapter when we have to support multiple reg services
+        next unless d['attending_status'] != 'Not Attending'
+        # Products to exclude from matching
+        next if [
+          'Chengdu',
+          'Volunteer',
+          'Apocryphal',
+          'Infant',
+          'Installment',
+          'Hall Pass',
+          'Staff',
+        ].include? d['product_list_name']
+
         RegistrationSyncDatum.create(
           reg_id: d['id'],
           name: d['full_name'],
