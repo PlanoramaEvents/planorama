@@ -120,6 +120,7 @@ module IdentityService
       # Based on the products that they have
       person.registration_type = details['product']
       person.registered = details['attending_status'] != 'Not Attending'
+      person.reg_attending_status = details['attending_status']
       # Need to store time of last sync
       person.date_reg_synced = Time.now
       # Attendance type in Plano is one of

@@ -666,7 +666,8 @@ END) STORED,
     global_diaspora character varying,
     non_anglophone character varying,
     fediverse character varying,
-    bsky character varying
+    bsky character varying,
+    reg_attending_status character varying
 );
 
 
@@ -3849,6 +3850,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240223134703'),
 ('20240226191153'),
 ('20240303213410'),
-('20240423130325');
+('20240423130325'),
+('20240429160250');
 
 
