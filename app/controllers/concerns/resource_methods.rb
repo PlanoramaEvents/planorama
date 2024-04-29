@@ -93,7 +93,12 @@ module ResourceMethods
     end
     ret = after_update_tx
     return if ret
-    render_object(@object)
+  
+    if @object.changed?
+      render_object(@object)
+    else
+      render status: :no_content, json: {}.to_json, content_type: 'application/json'
+    end
   end
 
   def destroy
