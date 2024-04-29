@@ -76,6 +76,7 @@ module ResourceMethods
   end
 
   def update
+    changed = false
     model_class.transaction do
       if @object.new_record?
         # authorize model_class, policy_class: policy_class
@@ -86,7 +87,11 @@ module ResourceMethods
       else
         authorize @object, policy_class: policy_class
         before_update
-        @object.update!(strip_params(_permitted_params(model: object_name, instance: @object)))
+        # updates does the save as well, need to assign without saving to determine if there is a change
+        @object.assign_attributes(strip_params(_permitted_params(model: object_name, instance: @object)))
+        changed = @object.changed?
+        # Then we can "save"
+        @object.save!
         @object.reload
         after_update
       end
@@ -94,7 +99,7 @@ module ResourceMethods
     ret = after_update_tx
     return if ret
   
-    if @object.changed?
+    if changed
       render_object(@object)
     else
       render status: :no_content, json: {}.to_json, content_type: 'application/json'
