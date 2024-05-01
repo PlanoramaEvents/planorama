@@ -47,8 +47,7 @@ class PeopleController < ResourceController
     end
   end
 
-  def unlink_registration
- 
+  def unlink_registration 
     authorize current_person, policy_class: policy_class
 
     person = Person.find params[:person_id]
@@ -58,6 +57,8 @@ class PeopleController < ResourceController
     person.oauth_identities.destroy_all
     # But we want to keep the Reg info if there is any
     # for admin and planners to see (not speakers)
+    IdentityService.clear_person_reg_info(person: person)
+    person.save!
 
     render_object(person)
   end
