@@ -99,6 +99,15 @@ module IdentityService
     end
   end
 
+  # Clear any linkage to reg for the person
+  def self.clear_person_reg_info(person:)
+    person.reg_id = nil
+    person.registration_type = nil
+    person.registered = false
+    person.registration_number = nil
+    person.date_reg_synced = Time.now
+  end
+
   def self.update_reg_info(person:, details:)
     person.registration_number = details['ticket_number']
     # Based on the products that they have
