@@ -63,6 +63,8 @@ class Reports::ProgramOpsReportsController < ApplicationController
     worksheet.append_row(
       [
         'Session',
+        'Tags',
+        'Admin Labels',
         'Description',
         'Start Time',
         'Room',
@@ -75,6 +77,8 @@ class Reports::ProgramOpsReportsController < ApplicationController
       worksheet.append_row(
         [
           session.title,
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.description,
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
           session.room&.name,
@@ -154,15 +158,16 @@ class Reports::ProgramOpsReportsController < ApplicationController
 
       sessions.sort{|a,b| a.start_time <=> b.start_time}.each do |session|
         row.concat [
-              # session.start_time.strftime('%A'),
               session.title,
+              session.tags_array&.join("; "),
+              session.labels_array&.join("; "),
               session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
               ActionView::Base.full_sanitizer.sanitize(session.description),
               session.published_session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join("; "),
               session.published_session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join("; "),
         ]
         styles.concat [
-          nil, date_time_style, nil, nil, nil
+          nil, nil, nil, date_time_style, nil, nil, nil
         ]
       end
       max_sessions = sessions.size if sessions.size > max_sessions
@@ -171,8 +176,8 @@ class Reports::ProgramOpsReportsController < ApplicationController
     end
 
     header = ['Room', 'Day']
-    (0..max_sessions).each do |n|
-      header.concat ["Title #{n+1}", "Start Time #{n+1}", "Description #{n+1}", "Moderators #{n+1}", "Participants #{n+1}"]
+    (1..max_sessions).each do |n|
+      header.concat ["Title #{n}", "Tags #{n}", "Admin Labels #{n}", "Start Time #{n}", "Description #{n}", "Moderators #{n}", "Participants #{n}"]
     end
     worksheet.write_row(0, header)
 

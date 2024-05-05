@@ -7,7 +7,8 @@
         name="Email"
         :skipIfEmpty="true"
         v-slot="{ valid, errors }"
-        class="w-75 mt-2 mr-3"
+        class="mt-2 mr-3"
+        style="flex-basis: 75%;"
       >
         <b-form-input
           :disabled='disabled'
@@ -19,14 +20,14 @@
       </ValidationProvider>
     </validation-observer>
     <!-- {{ value.isdefault }} -->
-    <div class="w-25">
-      <div class="d-flex flex-row w-100">
+    <div style="flex-basis: 25%;">
+      <div class="d-flex flex-row justify-content-end">
         <b-form-radio
           switch size="lg"
           value="true"
           @change="onCheck"
           :checked="isdefault"
-          class="mt-2 pt-1"
+          class="mt-2 pt-1 mr-5"
           :disabled='disabled'
           :name="radioGroup"
         >

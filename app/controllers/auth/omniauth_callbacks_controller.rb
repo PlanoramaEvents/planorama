@@ -28,6 +28,14 @@ module Auth
       else
         redirect_to '/' # Got to the home page/dashboard
       end
+    rescue Exceptions::AuthError => e
+      redirect_to "/#error/#{e.code}"
+    end
+
+    def failure
+      # Direct to an actual error page, as we can get here via link as well
+      # and we are already logged in
+      redirect_to "/#error/100" # Got to the error screen
     end
   end
 end

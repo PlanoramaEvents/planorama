@@ -38,11 +38,6 @@ module SessionService
     PersonScheduleSerializer.new(schedule).serializable_hash
   end
 
-  # Get all the schedule sessions
-  # ActiveModel::Serializer::CollectionSerializer.new(
-  #           sessions,
-  #           serializer: Conclar::SessionSerializer
-  #         )
   def self.scheduled_sessions
     if PublishedSession.count > 0 || Rails.env.production?
       self.published_sessions
@@ -81,12 +76,7 @@ module SessionService
     )
   end
 
-  # ActiveModel::Serializer::CollectionSerializer.new(
-  #           participants,
-  #           serializer: Conclar::ParticipantSerializer
-  #         ),
   def self.scheduled_people
-    # TODO: when publish process done change condition
     if PublishedSession.count > 0 || Rails.env.production?
       self.published_people
     else
@@ -97,7 +87,9 @@ module SessionService
   def self.published_sessions_unordered
     PublishedSession.select(
       ::PublishedSession.arel_table[Arel.star],
-      'areas_list.area_list'
+      'areas_list.area_list',
+      'labels_list_table.labels_array',
+      'tags_list_table.tags_array'
     )
       .includes(
         :format, :room,
@@ -105,16 +97,32 @@ module SessionService
         {taggings: :tag}
       )
       .joins(self.area_subquery(clazz: PublishedSession))
+      .joins(self.tags_subquery(clazz: PublishedSession))
+      .joins(self.labels_subquery(clazz: PublishedSession))
+  end
+
+  def self.person_schedule
+    PersonSchedule.select(
+      ::PersonSchedule.arel_table[Arel.star],
+      'areas_list.area_list',
+      'labels_list_table.labels_array',
+      'tags_list_table.tags_array'
+    )
+    .joins(self.area_subquery(clazz: PersonSchedule))
+    .joins(self.tags_subquery(clazz: PersonSchedule))
+    .joins(self.labels_subquery(clazz: PersonSchedule))
   end
 
   def self.published_sessions
     self.published_sessions_unordered.order(:start_time)
   end
 
-  def self.draft_sessions
+  def self.sessions
     Session.select(
       ::Session.arel_table[Arel.star],
-      'areas_list.area_list'
+      'areas_list.area_list',
+      'labels_list_table.labels_array',
+      'tags_list_table.tags_array'
     )
       .includes(
         :format, :room,
@@ -122,6 +130,12 @@ module SessionService
         {taggings: :tag}
       )
       .joins(self.area_subquery)
+      .joins(self.tags_subquery)
+      .joins(self.labels_subquery)
+  end
+
+  def self.draft_sessions
+    sessions.includes(:format, :room, {participant_assignments: :person})
       .where("start_time is not null and room_id is not null")
       .where("status != 'dropped'")
       .order(:start_time)
@@ -205,6 +219,45 @@ module SessionService
     .order("people.published_name")
   end
 
+  def self.assigned_sessions_not_scheduled
+    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and name != 'Reserve'")
+
+    self.sessions
+      .joins(self.area_subquery)
+      .joins(:session_assignments)
+      .eager_load({session_assignments: [:person]})
+      .where("session_assignments.session_assignment_role_type_id in (?)", active_roles.collect{|a| a.id})
+      .where("sessions.start_time is null or sessions.room_id is null")
+      .order('sessions.title')
+  end
+
+  def self.panels_with_counts(sub)
+    session_table = Session.arel_table
+    sessions = Session.select(
+        ::Session.arel_table[Arel.star],
+        sub[:nbr_assignments],
+        'areas_list.area_list',
+        'labels_list_table.labels_array',
+        'tags_list_table.tags_array'
+      )
+      .joins(
+        [
+          session_table.create_join(
+            sub,
+            session_table.create_on(
+              sub[:id].eq(session_table[:id])
+            ),
+            Arel::Nodes::OuterJoin
+          )
+        ]
+      )
+      .joins(area_subquery)
+      .joins(self.tags_subquery)
+      .joins(self.labels_subquery)
+      .eager_load(:areas, {session_assignments: [:person]})
+      .where("session_assignments.session_assignment_role_type_id is not null")
+  end
+
   def self.area_subquery(clazz: Session)
     session_table = clazz.arel_table
     areas_list = clazz.area_list.as('areas_list')
@@ -214,6 +267,36 @@ module SessionService
         areas_list,
         session_table.create_on(
           areas_list[:session_id].eq(session_table[id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+  end
+
+  def self.tags_subquery(clazz: Session)
+    session_table = clazz.arel_table
+    tag_subquery = clazz.tags_list_table.as('tags_list_table')
+    id = (clazz == Session) ? :id : :session_id
+    [
+      session_table.create_join(
+        tag_subquery,
+        session_table.create_on(
+          tag_subquery[:session_id].eq(session_table[id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+  end
+
+  def self.labels_subquery(clazz: Session)
+    session_table = clazz.arel_table
+    label_subquery = clazz.labels_list_table.as('labels_list_table')
+    id = (clazz == Session) ? :id : :session_id
+    [
+      session_table.create_join(
+        label_subquery,
+        session_table.create_on(
+          label_subquery[:session_id].eq(session_table[id])
         ),
         Arel::Nodes::OuterJoin
       )

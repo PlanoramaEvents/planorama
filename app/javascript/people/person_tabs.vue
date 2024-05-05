@@ -53,11 +53,11 @@
         <b-tab title="Draft Schedule" lazy v-if="displayDraftSchedule" :active="tab === 'draft-schedule'">
           <person-draft-schedule></person-draft-schedule>
         </b-tab>
+        <b-tab title="Surveys" lazy :active="tab === 'surveys'">
+          <people-surveys-tab :person="person"></people-surveys-tab>
+        </b-tab>
         <b-tab title="Emails" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'email'">
           <people-email-tab></people-email-tab>
-        </b-tab>
-        <b-tab title="Surveys" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'surveys'">
-          <people-surveys-tab :person="person"></people-surveys-tab>
         </b-tab>
         <b-tab title="Admin" lazy v-if="currentUserIsAdmin || currentUserIsStaff" :active="tab === 'admin'">
           <people-admin-tab></people-admin-tab>
@@ -141,6 +141,7 @@ export default {
         'availability',
         'session-selection',
         'session-ranking',
+        'surveys'
       ]
       if (this.displayDraftSchedule) {
         baseTabs.splice(5, 0, 'draft-schedule')
@@ -148,7 +149,6 @@ export default {
       if (this.currentUserIsAdmin || this.currentUserIsStaff || this.firmSchedule) {
         baseTabs.splice(5, 0, 'schedule');
         baseTabs.push('email');
-        baseTabs.push('surveys');
         baseTabs.push('admin');
       }
       if(this.currentUserIsAdmin) {

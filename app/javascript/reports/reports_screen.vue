@@ -14,7 +14,7 @@
         <a href="/report/participant_selections" target="_blank">Participant Selections</a><br />
         <p class="ml-2">
           <strong><em>Description</em></strong>: Sessions and rankings selected by people, one line per person and session<br />
-          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, ranking, ranking notes, area(s) for the session, has person been assigned (y/n), has session been scheduled (y/n)<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, ranking, ranking notes, area(s) for the session, tags, admin labels, has person been assigned (y/n), has session been scheduled (y/n)<br />
           <strong><em>Session data included</em></strong>: any session selected by at least one person<br />
           <strong><em>Person data included</em></strong>: participant status of applied, probable, vetted, invite_pending, invited, accepted
         </p>
@@ -31,7 +31,7 @@
         <a href="/report/assigned_sessions_by_participant" target="_blank">Assigned Sessions by Participant</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: People assigned to sessions, one line per person and session<br />
-          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, person’s role in the session, has session been scheduled (y/n)<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, person’s role in the session, has session been scheduled (y/n), tags, admin labels<br />
           <strong><em>Session data included</em></strong>: any session with at least one person assigned as moderator, participant, invisible participant, or reserved<br />
           <strong><em>Person data included</em></strong>: session role of moderator, participant, invisible participant, or reserved
         </p>
@@ -45,11 +45,11 @@
         </p>
       </li>
       <li>
-        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
+        <span v-if="!currentUserIsAdmin" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>Participants and Do Not Assign With</span>
         <a href="/report/participant_do_not_assign_with" target="_blank" v-if="currentUserIsAdmin">Participants and Do Not Assign With</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: People who should not be assigned to the same session, one line per person and session; available only to users with permission to view sensitive data<br />
-          <strong><em>Fields</em></strong>: Person name, published name, session title, area(s) of session, names of other people assigned to the session, names of people not to assign to the same session<br />
+          <strong><em>Fields</em></strong>: Person name, published name, session title, area(s) of session, tags, admin labels, names of other people assigned to the session, names of people not to assign to the same session<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants who listed information about who not to assign with
         </p>
@@ -76,7 +76,7 @@
         <a href="/report/session_reports/non_accepted_on_schedule" target="_blank">Non-Accepted Participants on Scheduled Sessions</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: People with participant status other than &quot;accepted&quot; or &quot;not_set&quot; assigned to scheduled sessions, one line per person and session<br />
-          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session, tags, admin labels<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants with a participant status that is not &quot;accepted&quot; or &quot;not_set&quot;
         </p>
@@ -103,7 +103,7 @@
         <a href="/report/people_reports/moderators" target="_blank">Participants Moderating at least One Session</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: People serving as moderator for at least one session, and the session information, one line per person and session<br />
-          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type (in-person, virtual, hybrid), participant status, session title, session environment<br />
+          <strong><em>Fields</em></strong>: Person name, published name, primary email, attendance type (in-person, virtual, hybrid), participant status, session title, session environment, tags, admin labels<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators
         </p>
@@ -135,7 +135,7 @@
         <a href="/report/session_selections" target="_blank">Session Selections</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Sessions and rankings selected by people, one line per session and person<br />
-          <strong><em>Fields</em></strong>: Session title, person name, person published name, participant status, ranking, ranking notes, area(s) of session<br />
+          <strong><em>Fields</em></strong>: Session title, person name, person published name, participant status, ranking, ranking notes, area(s) of session, tags, admin labels<br />
           <strong><em>Session data included</em></strong>: all sessions that at least one person selected<br />
           <strong><em>Person data included</em></strong>: participant status of applied, probable, vetted, invite_pending, invited, accepted
         </p>
@@ -144,7 +144,7 @@
         <a href="/report/sessions_with_participants" target="_blank">Sessions with Participants</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Sessions with people already assigned, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, session format, area(s) of session, moderators, participants, reserves, has session been scheduled (y/n)<br />
+          <strong><em>Fields</em></strong>: Session title, session format, area(s) of session, tags, admin labels, moderators, participants, reserves, has session been scheduled (y/n)<br />
           <strong><em>Session data included</em></strong>: all sessions with at least one person assigned<br />
           <strong><em>Person data included</em></strong>: moderators, participants, reserved
         </p>
@@ -153,7 +153,7 @@
         <a href="/report/session_reports/session_with_no_moderator" target="_blank">Sessions with no Moderator</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Scheduled sessions with no moderator assigned, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session format, people assigned (participants, invisible participants), reserved people<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, tags, admin labels, session start time, session format, people assigned (participants, invisible participants), reserved people<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: participants, invisible participants, reserved
         </p>
@@ -162,7 +162,7 @@
         <a href="/report/session_reports/scheduled_session_no_people" target="_blank">Scheduled Sessions with no Participants</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Scheduled sessions with no assigned moderators or participants, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, room<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, tags, admin labels, session start time, room<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions
         </p>
       </li>
@@ -170,7 +170,7 @@
         <a href="/report/session_reports/assigned_sessions_not_scheduled" target="_blank">Sessions with Participants not Scheduled</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Sessions that are not scheduled but have assigned people, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, moderators, participants, invisible participants<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, tags, admin labels, moderators, participants, invisible participants<br />
           <strong><em>Session data included</em></strong>: all unscheduled sessions with at least one person assigned as moderator, participant, and/or invisible participant<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
@@ -179,7 +179,7 @@
         <a href="/report/session_reports/panels_with_too_few_people" target="_blank">Panels with too few Participants</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Scheduled sessions (panel format only) with 3 or fewer assigned people (moderators, participants), one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, participant count, participant count lower bound (3), assigned participants, moderators<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, tags, admin labels, session start time, participant count, participant count lower bound (3), assigned participants, moderators<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
@@ -188,7 +188,7 @@
         <a href="/report/session_reports/panels_with_too_many_people" target="_blank">Panels with too many Participants</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Scheduled sessions (panel format only) with 6 or more assigned people (moderators, participants), one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, participant count, participant count upper bound (6), assigned participants, moderators<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, tags, admin labels, session start time, participant count, participant count upper bound (6), assigned participants, moderators<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
@@ -197,7 +197,7 @@
         <a href="/report/session_reports/session_copy_edit_status" target="_blank">Session Copy-Edit Status</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: The copy-edited status of each session, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session status, has session been copy edited (y/n), has session been scheduled (y/n), visibility (visible, not visible)<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, tags, admin labels, session status, has session been copy edited (y/n), has session been scheduled (y/n), visibility (visible, not visible)<br />
           <strong><em>Session data included</em></strong>: all sessions
         </p>
       </li>
@@ -205,7 +205,7 @@
         <a href="/report/session_reports/streamed_and_recorded" target="_blank">Scheduled Sessions Streamed and/or Recorded</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Information about livestreaming and recording, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, session start time, session room, session format, session environment, is session livestreamed (y/n), is session recorded (y/n)<br />
+          <strong><em>Fields</em></strong>: Session title, session start time, session room, session format, session environment, is session livestreamed (y/n), is session recorded (y/n), tags, admin labels<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions
         </p>
       </li>
@@ -291,7 +291,7 @@
         <a href="/report/schedule_by_room_then_time" target="_blank">Schedule by Room then Time</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: All scheduled sessions, one line per room and day/time<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, assigned participants, moderators<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, tags, admin labels, session start time, session duration, room, assigned participants, moderators<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
@@ -300,7 +300,7 @@
         <a href="/report/schedule_by_person" target="_blank">Schedule by Participant</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Schedule for each participant, one line per person and session<br />
-          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session, session start time, room, moderator (y/n), invisible participant (y/n)<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session, tags, admin labels, session start time, room, moderator (y/n), invisible participant (y/n)<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
       </li>
@@ -320,7 +320,7 @@
         <a href="/report/session_reports/daily_grid" target="_blank">Daily Grid</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Session information for daily grid, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session format, session start time, session duration, session room<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, tags, admin labels, session format, session start time, session duration, session room<br />
           <strong><em>Session data included</em></strong>: all published sessions in the most recent publish
         </p>
       </li>
@@ -345,7 +345,7 @@
         <a href="/report/session_reports/session_needs" target="_blank">Session Needs</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Session setup requirements, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, session start time, session room, session environment, session format, session area(s), required room features&#8725;services, tech&#8725;hotel notes, room setup<br />
+          <strong><em>Fields</em></strong>: Session title, session start time, session room, session environment, session format, session area(s), tags, admin labels, required room features&#8725;services, tech&#8725;hotel notes, room setup<br />
           <strong><em>Session data included</em></strong>: all published sessions in the most recent publish<br />
         </p>
       </li>
@@ -353,7 +353,7 @@
         <a href="/report/program_ops_reports/session_minors" target="_blank">Sessions and Minors</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Minors participation and attendee age restrictions, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, session description, session start time, session room, attendee age restriction, minors participation<br />
+          <strong><em>Fields</em></strong>: Session title, tags, admin labels, session description, session start time, session room, attendee age restriction, minors participation<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
         </p>
       </li>
@@ -361,7 +361,7 @@
         <a href="/report/program_ops_reports/room_signs" target="_blank">Room Sign Data for Mail Merge</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Room sign data for mail merge, one line per room and day of week<br />
-          <strong><em>Fields</em></strong>: Room, day of week, sessions (title, start time, description, moderators, participants)<br />
+          <strong><em>Fields</em></strong>: Room, day of week, sessions (title, tags, admin labels, start time, description, moderators, participants)<br />
           <strong><em>Session data included</em></strong>: all published sessions in the most recent publish<br />
           <strong><em>Person data included</em></strong>: moderators, participants
         </p>
@@ -403,7 +403,7 @@
       </li>
     </ul>
     <div style="clear: both; height: 5rem;">&nbsp;</div>
-        <span v-if="currentUserIsStaff" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>User Privileges</span>
+        <span v-if="!currentUserIsAdmin" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>User Privileges</span>
         <a href="/report/program_ops_reports/user_privileges" target="_blank" v-if="currentUserIsAdmin">User Privileges</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Login (primary email) listing, one line per person<br />

@@ -26,6 +26,7 @@
 #  pis_prog_item_id_index                                        (session_id)
 #
 class SessionAssignment < ApplicationRecord
+  include Aggregates
   include RankedModel
   ranks :sort_order, with_same: [:session_id]
 

@@ -317,6 +317,8 @@ export const store = new Vuex.Store({
       else {
         item._jv = { type: model }
       }
+      let has_lock_version = typeof item.lock_version !== 'undefined';
+      let prev_lock_version = has_lock_version ? item.lock_version : null;
 
       return new Promise((res, rej) => {
         dispatch('jv/patch', [item, {params}]).then((savedModel) => {
@@ -325,7 +327,12 @@ export const store = new Vuex.Store({
           if(selected) {
             commit(SELECT, {model, itemOrId: savedModel});
           }
-          res(savedModel);
+          if (has_lock_version && (prev_lock_version == savedModel.lock_version)) {
+            // On no change return null - NO=OP
+            res(null);
+          } else {
+            res(savedModel);
+          }
         }).catch(rej)
       });
     },

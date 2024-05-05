@@ -86,7 +86,7 @@ module IdentityService
         identity = find_identity(provider: 'clyde', reg_id: reg_id, reg_number: reg_number)
 
         if identity
-          raise "Identity already associated with another person" if identity.person_id != current_person.id
+          raise Exceptions::AuthError.new("Identity already associated with another person", "101") if identity.person_id != current_person.id
         end
 
         identity ||= create_identity(provider: 'clyde', reg_id: reg_id, reg_number: reg_number)
@@ -97,6 +97,15 @@ module IdentityService
         update_reg_info(person: current_person, details: details)
       end
     end
+  end
+
+  # Clear any linkage to reg for the person
+  def self.clear_person_reg_info(person:)
+    person.reg_id = nil
+    person.registration_type = nil
+    person.registered = false
+    person.registration_number = nil
+    person.date_reg_synced = Time.now
   end
 
   def self.update_reg_info(person:, details:)
@@ -135,7 +144,7 @@ module IdentityService
 
           # if there is a person with this as primary email AND no OAuth Clyde identity
           # then we will error out - as they should login with Plano and link instead
-          raise "Person already exists with that email" if addr
+          raise Exceptions::AuthError.new("Person already exists with that email", "102") if addr
 
           # Otherwise we create a new person, if the email is already used as prime we can not set it as the default
           person = create_person_from_clyde(details: details, identity: identity)                 
