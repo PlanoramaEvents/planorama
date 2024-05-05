@@ -358,5 +358,7 @@ module.exports = {
         event_virtual: "Does this event include an online component?",
         clyde_base_url: "Base URL for Clyde",
         profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
-    }
+    },
+    PROFILE_LINK_EXPLANATION: "Supercalifragilisticexpialidocious even though the sound of it is something quite atrocious If you say it loud enough it always sound precocious",
+    PROFILE_LINK_EXPLANATION_TITLE: "What does it mean to link to registration?",
 }
