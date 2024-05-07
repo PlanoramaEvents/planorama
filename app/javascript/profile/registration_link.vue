@@ -1,6 +1,6 @@
 <template>
 <div class="mr-3" v-if="registrationIntegration && isSelf">
-  <div v-if="!currentUserLinked">
+  <div v-if="!currentUserLinked" class="d-flex flex-column align-items-end">
     <!-- Use the redirect to come back to profile -->
     <form :action="registrationIntegration.endpoint + '?redirect=profile'" method="post">
       <input type="hidden" v-model="csrfToken" name="authenticity_token" />
@@ -8,6 +8,7 @@
         <b-button variant="info" size="sm" type="submit" :disabled="!isSelf">Link To Registration</b-button>
       </disabled-tooltip>
     </form>
+    <div class="font-italic"><a @click.prevent @keyup.prevent v-b-modal.linkExplanation href="">{{ PROFILE_LINK_EXPLANATION_TITLE }}</a></div>
   </div>
   <div v-if="currentUserLinked">
     <disabled-tooltip :disabled="!isSelf" :disabledTooltip="PERSON_DISABLED_UNLINK">
@@ -15,10 +16,13 @@
     </disabled-tooltip>
     <dl-person class="align-with-link pt-2" :fields="['registration_number']"></dl-person>
   </div>
-  <b-modal id="confirmUnlink" @ok="unlinkPerson" ok-title="Yes" cancel-variant="link">
+  <plano-modal id="confirmUnlink" @ok="unlinkPerson" ok-title="Yes" cancel-variant="link">
       <p>{{PERSON_UNLINK_CONFIRMATION_1}}</p>
       <p>{{PERSON_UNLINK_CONFIRMATION_2}}</p>
-    </b-modal>
+    </plano-modal>
+  <plano-modal id="linkExplanation" :ok-only="true" :title="PROFILE_LINK_EXPLANATION_TITLE">
+    {{ PROFILE_LINK_EXPLANATION }}
+  </plano-modal>
 </div>
 </template>
 
@@ -28,11 +32,22 @@ import { loginIntegrationsMixin } from '@/store/login_integrations.mixin';
 import { modelMixinNoProp, personSessionMixin, toastMixin } from '@/mixins';
 import { personModel as model, UNLINK_PERSON } from '@/store/person.store';
 import DisabledTooltip from '@/components/disabled_tooltip.vue';
-import { PERSON_DISABLED_LINK, PERSON_DISABLED_UNLINK, PERSON_UNLINK_FAILURE, PERSON_UNLINK_SUCCESS, PERSON_UNLINK_CONFIRMATION_1, PERSON_UNLINK_CONFIRMATION_2 } from '@/constants/strings';
+import {
+  PERSON_DISABLED_LINK,
+  PERSON_DISABLED_UNLINK,
+  PERSON_UNLINK_FAILURE,
+  PERSON_UNLINK_SUCCESS,
+  PERSON_UNLINK_CONFIRMATION_1,
+  PERSON_UNLINK_CONFIRMATION_2,
+  PROFILE_LINK_EXPLANATION,
+  PROFILE_LINK_EXPLANATION_TITLE,
+ } from '@/constants/strings';
 import { mapActions } from 'vuex';
+import PlanoModal from '@/components/plano_modal.vue';
+
 export default {
   name: "RegistrationLink",
-  components: { DlPerson, DisabledTooltip },
+  components: { DlPerson, DisabledTooltip, PlanoModal },
   mixins: [loginIntegrationsMixin, modelMixinNoProp, personSessionMixin, toastMixin],
   data: () => ({
     linked: false,
@@ -41,6 +56,8 @@ export default {
     PERSON_DISABLED_UNLINK,
     PERSON_UNLINK_CONFIRMATION_1,
     PERSON_UNLINK_CONFIRMATION_2,
+    PROFILE_LINK_EXPLANATION,
+    PROFILE_LINK_EXPLANATION_TITLE,
   }),
   computed: {
     isSelf() {
