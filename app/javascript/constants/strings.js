@@ -359,6 +359,6 @@ module.exports = {
         clyde_base_url: "Base URL for Clyde",
         profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
     },
-    PROFILE_LINK_EXPLANATION: "Supercalifragilisticexpialidocious even though the sound of it is something quite atrocious If you say it loud enough it always sound precocious",
+    PROFILE_LINK_EXPLANATION: "When you link your Planorama account to your registration account, they are matched using your email address and you will be asked to confirm the correct registration account. You will continue to log in to Planorama using the password you created, not your registration login details.",
     PROFILE_LINK_EXPLANATION_TITLE: "What does it mean to link to registration?",
 }
