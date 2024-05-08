@@ -8,7 +8,7 @@
         <b-button variant="info" size="sm" type="submit" :disabled="!isSelf">Link To Registration</b-button>
       </disabled-tooltip>
     </form>
-    <div class="font-italic"><a @click.prevent @keyup.prevent v-b-modal.linkExplanation href="">{{ PROFILE_LINK_EXPLANATION_TITLE }}</a></div>
+    <div class="font-italic"><a @click.prevent @keyup.prevent v-b-modal.linkExplanation href="">{{ PROFILE_LINK_EXPLAINATION_TITLE }}</a></div>
   </div>
   <div v-if="currentUserLinked">
     <disabled-tooltip :disabled="!isSelf" :disabledTooltip="PERSON_DISABLED_UNLINK">
@@ -20,8 +20,9 @@
       <p>{{PERSON_UNLINK_CONFIRMATION_1}}</p>
       <p>{{PERSON_UNLINK_CONFIRMATION_2}}</p>
     </plano-modal>
-  <plano-modal id="linkExplanation" :ok-only="true" :title="PROFILE_LINK_EXPLANATION_TITLE">
-    {{ PROFILE_LINK_EXPLANATION }}
+  <plano-modal id="linkExplanation" :ok-only="true" :title="PROFILE_LINK_EXPLAINATION_TITLE">
+    <p>{{ PROFILE_LINK_EXPLAINATION_1 }}</p>
+    <p>{{ PROFILE_LINK_EXPLAINATION_2 }}</p>
   </plano-modal>
 </div>
 </template>
@@ -39,8 +40,9 @@ import {
   PERSON_UNLINK_SUCCESS,
   PERSON_UNLINK_CONFIRMATION_1,
   PERSON_UNLINK_CONFIRMATION_2,
-  PROFILE_LINK_EXPLANATION,
-  PROFILE_LINK_EXPLANATION_TITLE,
+  PROFILE_LINK_EXPLAINATION_1,
+  PROFILE_LINK_EXPLAINATION_2,
+  PROFILE_LINK_EXPLAINATION_TITLE,
  } from '@/constants/strings';
 import { mapActions } from 'vuex';
 import PlanoModal from '@/components/plano_modal.vue';
@@ -56,8 +58,9 @@ export default {
     PERSON_DISABLED_UNLINK,
     PERSON_UNLINK_CONFIRMATION_1,
     PERSON_UNLINK_CONFIRMATION_2,
-    PROFILE_LINK_EXPLANATION,
-    PROFILE_LINK_EXPLANATION_TITLE,
+    PROFILE_LINK_EXPLAINATION_1,
+    PROFILE_LINK_EXPLAINATION_2,
+    PROFILE_LINK_EXPLAINATION_TITLE,
   }),
   computed: {
     isSelf() {
