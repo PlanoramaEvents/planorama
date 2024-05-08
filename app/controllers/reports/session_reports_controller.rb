@@ -21,6 +21,8 @@ class Reports::SessionReportsController < ApplicationController
         'Environment',
         'Format',
         'Areas',
+        'Tags',
+        'Admin Labels',
         'Required Room Features/Services', #room_notes
         'Tech/Hotel Notes', #
         'Room Setup' # room_set_id
@@ -38,6 +40,8 @@ class Reports::SessionReportsController < ApplicationController
           session.environment,
           session.format&.name,
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.room_notes,
           session.tech_notes,
           session.room_set&.name
@@ -71,7 +75,9 @@ class Reports::SessionReportsController < ApplicationController
         'Format',
         'Environment',
         'Livestreamed',
-        'Recorded'
+        'Recorded',
+        'Tags', 
+        'Admin Labels'
       ]
     )
 
@@ -84,7 +90,9 @@ class Reports::SessionReportsController < ApplicationController
           session.format&.name,
           session.environment,
           session.streamed ? 'Yes' : 'No',
-          session.recorded ? 'Yes' : 'No'
+          session.recorded ? 'Yes' : 'No',
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; ")
         ],
         styles
       )
@@ -104,13 +112,15 @@ class Reports::SessionReportsController < ApplicationController
     worksheet = workbook.add_worksheet("Assigned Session not Sched")
     date_time_style = workbook.number_format(EXCEL_NBR_FORMAT)
     styles = [
-      nil, nil, nil, date_time_style, nil
+      nil, nil, nil, nil, nil, date_time_style, nil
     ]
 
     worksheet.append_row(
       [
         'Session',
         'Areas',
+        'Tags',
+        'Admin Labels',
         'Format',
         'Start Time',
         'Duration',
@@ -123,6 +133,8 @@ class Reports::SessionReportsController < ApplicationController
         [
           session.title,
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.format&.name,
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
           session.duration,
@@ -150,6 +162,8 @@ class Reports::SessionReportsController < ApplicationController
         'Session',
         'Description',
         'Areas',
+        'Tags',
+        'Labels',
         'Status',
         'Copy Edited',
         'Scheduled',
@@ -163,6 +177,8 @@ class Reports::SessionReportsController < ApplicationController
           session.title,
           session.description, # NOTE: there is no mechanism for format HTML for excel so put the desc in and see what happens
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.status,
           session.proofed ? 'Y' : 'N',
           session.start_time && session.room_id ? 'Y' : 'N',
@@ -179,7 +195,7 @@ class Reports::SessionReportsController < ApplicationController
   def assigned_sessions_not_scheduled
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
-    sessions = ReportsService.assigned_sessions_not_scheduled
+    sessions = SessionService.assigned_sessions_not_scheduled
 
     workbook = FastExcel.open(constant_memory: true)
     worksheet = workbook.add_worksheet("Assigned Session not Sched")
@@ -188,6 +204,8 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Areas',
+        'Tags',
+        'Admin Labels',
         'Moderators',
         'Participants',
         'Invisible',
@@ -202,6 +220,8 @@ class Reports::SessionReportsController < ApplicationController
         [
           session.title,
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
           session.session_assignments.select{|a| a.session_assignment_role_type_id == invisible.id}.collect{|a| a.person.published_name}.join(';')
@@ -230,6 +250,8 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Area',
+        'Tags',
+        'Admin Labels',
         'Start Time',
         'Room'
       ]
@@ -240,6 +262,8 @@ class Reports::SessionReportsController < ApplicationController
         [
           session.title,
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
           session.room.name
         ],
@@ -268,6 +292,8 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Area',
+        'Tags',
+        'Admin Labels',
         'Start Time',
         'Format',
         'People Assigned',
@@ -283,6 +309,8 @@ class Reports::SessionReportsController < ApplicationController
         [
           session.title,
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
           session.format&.name,
           session.session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join(';'),
@@ -300,24 +328,7 @@ class Reports::SessionReportsController < ApplicationController
   def non_accepted_on_schedule
     authorize SessionAssignment, policy_class: Reports::SessionReportPolicy
 
-    conflicts_table = ::PersonSchedule.arel_table
-    subquery = Session.area_list.as('areas_list')
-
-    joins = [
-      conflicts_table.create_join(
-        subquery,
-        conflicts_table.create_on(
-          subquery[:session_id].eq(conflicts_table[:session_id])
-        ),
-        Arel::Nodes::OuterJoin
-      )
-    ]
-
-    people_sessions = PersonSchedule.select(
-                          ::PersonSchedule.arel_table[Arel.star],
-                          'areas_list.area_list'
-                        )
-                        .joins(joins)
+    people_sessions = SessionService.person_schedule
                         .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
                         .where("con_state not in ('not_set', 'accepted')")
                         .where("start_time is not null and room_id is not null")
@@ -332,7 +343,9 @@ class Reports::SessionReportsController < ApplicationController
         'Published Name',
         'Participant Status',
         'Session',
-        'Area'
+        'Area',
+        'Tags',
+        'Admin Labels'
       ]
     )
 
@@ -343,7 +356,9 @@ class Reports::SessionReportsController < ApplicationController
           sa.published_name,
           sa.con_state,
           sa.title,
-          sa.area_list.join('; ')
+          sa.area_list.join('; '),
+          sa.tags_array&.join("; "),
+          sa.labels_array&.join("; ")
         ]
       )
     end
@@ -484,6 +499,8 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Areas',
+        'Tags',
+        'Admin Labels',
         'Start Time',
         'Participant Count',
         'Participant Count Lower Bound',
@@ -499,6 +516,8 @@ class Reports::SessionReportsController < ApplicationController
         [
           session.title,
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : '',
           session.nbr_assignments,
           3,
@@ -531,6 +550,8 @@ class Reports::SessionReportsController < ApplicationController
       [
         'Session',
         'Areas',
+        'Tags',
+        'Admin Labels',
         'Start Time',
         'Participant Count',
         'Participant Count Upper Bound',
@@ -547,6 +568,8 @@ class Reports::SessionReportsController < ApplicationController
         [
           session.title,
           session.area_list.sort.join(';'),
+          session.tags_array&.join("; "),
+          session.labels_array&.join("; "),
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
           session.nbr_assignments,
           6,

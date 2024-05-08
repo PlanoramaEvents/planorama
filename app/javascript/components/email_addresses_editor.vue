@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="d-flex flex-row w-100">
-      <div class="w-75 mt-2 mr-3">
+    <div class="d-flex flex-row justify-content-between w-100">
+      <div class="mt-2 mr-3">
         <h5>Email</h5>
       </div>
-      <div class="mt-2 pt-1 w-25 ooch-left">
+      <div class="mt-2 pt-1 mr-3 pr-2">
         Make Primary
       </div>
     </div>

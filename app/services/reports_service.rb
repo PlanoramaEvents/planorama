@@ -12,25 +12,7 @@ module ReportsService
   end
 
   def self.all_sessions
-    sessions_table = Session.arel_table
-    subquery = Session.area_list.as('areas_list')
-
-    joins = [
-      sessions_table.create_join(
-        subquery,
-        sessions_table.create_on(
-          subquery[:session_id].eq(sessions_table[:id])
-        ),
-        Arel::Nodes::OuterJoin
-      )
-    ]
-
-    Session.select(
-      ::Session.arel_table[Arel.star],
-      'areas_list.area_list'
-    )
-      .joins(joins)
-      .order('title')
+    SessionService.sessions.order('title')
   end
 
   def self.all_conflicts(ignored: false)
@@ -64,46 +46,15 @@ module ReportsService
       .order(:session_title)
   end
 
-  def self.assigned_sessions_not_scheduled
-    active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and name != 'Reserve'")
-
-    Session.select(
-      ::Session.arel_table[Arel.star],
-      'areas_list.area_list'
-    )
-      .joins(self.area_subquery)
-      .joins(:session_assignments)
-      .eager_load(:areas, {session_assignments: [:person]})
-      .where("session_assignments.session_assignment_role_type_id in (?)", active_roles.collect{|a| a.id})
-      .where("sessions.start_time is null or sessions.room_id is null")
-      .order('sessions.title')
-  end
-
   def self.scheduled_session_no_people
     active_roles = SessionAssignmentRoleType.where("role_type = 'participant' and (name != 'Invisible' and name != 'Reserve')")
 
     # Get all sessions that are scheduled with people in role
     session_with_people = PersonSchedule.where("session_assignment_role_type_id in (?)", active_roles.collect{|a| a.id})
-    # Then get all scheduled sessions not in the above
-    Session.select(
-      ::Session.arel_table[Arel.star],
-      'areas_list.area_list'
-    )
-      .joins(self.area_subquery)
+    SessionService.sessions
       .where("start_time is not null and room_id is not null")
       .where("sessions.id not in (?)", session_with_people.collect{|a| a.session_id})
       .order(:start_time)
-
-
-    # Session.select(
-    #   ::Session.arel_table[Arel.star],
-    #   'areas_list.area_list'
-    # )
-    #   .joins(:session_assignments)
-    #   .eager_load(:areas, :room)
-    #   .where("session_assignments.session_assignment_role_type_id not in (?)", active_roles.collect{|a| a.id})
-    #   .where("start_time is not null and room_id is not null")
-    #   .order(:start_time)
   end
 
   def self.sessions_with_no_moderator
@@ -125,13 +76,9 @@ module ReportsService
       )
     ]
 
-    Session.select(
-      ::Session.arel_table[Arel.star],
-      'areas_list.area_list'
-    )
+    SessionService.sessions
       .joins(joins)
-      .joins(self.area_subquery)
-      .eager_load(:areas, :format, {session_assignments: [:person]})
+      .eager_load(:format, {session_assignments: [:person]})
       .order(:start_time)
   end
 
@@ -258,49 +205,12 @@ module ReportsService
 
   def self.panels_with_too_few_people
     sub = self.sessions_and_participant_count.as("session_list")
-    self.panels_with_counts(sub).where(sub[:nbr_assignments].lteq(3))
+    SessionService.panels_with_counts(sub).where(sub[:nbr_assignments].lteq(3))
   end
 
   def self.panels_with_too_many_people
     sub = self.sessions_and_participant_count.as("session_list")
-    self.panels_with_counts(sub).where(sub[:nbr_assignments].gteq(6))
-  end
-
-  def self.panels_with_counts(sub)
-    session_table = Session.arel_table
-    sessions = Session.select(
-        ::Session.arel_table[Arel.star],
-        sub[:nbr_assignments],
-        'areas_list.area_list'
-      )
-      .joins(
-        [
-          session_table.create_join(
-            sub,
-            session_table.create_on(
-              sub[:id].eq(session_table[:id])
-            ),
-            Arel::Nodes::OuterJoin
-          )
-        ]
-      )
-      .joins(area_subquery)
-      .eager_load(:areas, {session_assignments: [:person]})
-      .where("session_assignments.session_assignment_role_type_id is not null")
-  end
-
-  def self.area_subquery
-    session_table = Session.arel_table
-    areas_list = Session.area_list.as('areas_list')
-    [
-      session_table.create_join(
-        areas_list,
-        session_table.create_on(
-          areas_list[:session_id].eq(session_table[:id])
-        ),
-        Arel::Nodes::OuterJoin
-      )
-    ]
+    SessionService.panels_with_counts(sub).where(sub[:nbr_assignments].gteq(6))
   end
 
   def self.sessions_and_participant_count

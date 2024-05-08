@@ -121,7 +121,9 @@ class Reports::PeopleReportsController < ApplicationController
         'Participant Status',
         'Session Name',
         'Session Format',
-        'Session Environment'
+        'Session Environment',
+        'Tags',
+        'Admin Labels'
       ]
     )
 
@@ -135,7 +137,9 @@ class Reports::PeopleReportsController < ApplicationController
             person.con_state,
             session.title,
             session.format&.name,
-            session.environment
+            session.environment,
+            session.tag_list.join("; "),
+            session.label_list.join("; "),
           ]
         )
       end
