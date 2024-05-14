@@ -104,6 +104,8 @@ module IdentityService
     person.reg_id = nil
     person.registration_type = nil
     person.registered = false
+    person.registration_number = nil
+    person.reg_attending_status = nil
     person.date_reg_synced = Time.now
   end
 
