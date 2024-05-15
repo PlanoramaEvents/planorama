@@ -14,9 +14,9 @@ class RegistrationSyncWorker
       # DO WORK
       # Phase 1 - get the data from Clyde and store it
       puts "--- Sync Phase 1 #{Time.now}"
-    phase1
+      phase1
       puts "--- Sync Phase 2 #{Time.now}"
-    # Phase 2
+      # Phase 2
       phase2
 
       # update the status
