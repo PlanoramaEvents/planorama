@@ -9,7 +9,7 @@ class RegistrationSyncDataController < ResourceController
     authorize current_person, policy_class: policy_class
 
     status = RegistrationSyncStatus.order('created_at desc').first
-    status = RegistrationSyncStatus.new if pstatus == nil
+    status = RegistrationSyncStatus.new if status == nil
     if status.status != 'inprogress'
       status.status = 'inprogress'
       status.save!

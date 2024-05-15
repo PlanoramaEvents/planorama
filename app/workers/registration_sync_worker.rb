@@ -14,14 +14,14 @@ class RegistrationSyncWorker
       # DO WORK
       # Phase 1 - get the data from Clyde and store it
       puts "--- Sync Phase 1 #{Time.now}"
-      phase1
+      phase1(page_size: 30)
       puts "--- Sync Phase 2 #{Time.now}"
       # Phase 2
       phase2
 
       # update the status
       status = RegistrationSyncStatus.order('created_at desc').first
-      status = RegistrationSyncStatus.new if pstatus == nil
+      status = RegistrationSyncStatus.new if status == nil
       status.status = 'completed'
       status.save!
     end
@@ -42,7 +42,11 @@ class RegistrationSyncWorker
     last_page = results['meta']['last_page'].to_i
     for page in (2..last_page) do
       results = svc.people_by_page(page: page, page_size: page_size)
-      store_reg_data(data: results['data'])
+      if !results["message"]
+        store_reg_data(data: results['data'])
+      else
+        puts "We had an issue with the Clyde ... people by page #{page}, #{page_size}"
+      end
     end
   end
 
