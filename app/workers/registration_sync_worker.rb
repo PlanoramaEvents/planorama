@@ -13,8 +13,10 @@ class RegistrationSyncWorker
     PublishedSession.transaction do
       # DO WORK
       # Phase 1 - get the data from Clyde and store it
-      phase1
-      # Phase 2
+      puts "--- Sync Phase 1 #{Time.now}"
+    phase1
+      puts "--- Sync Phase 2 #{Time.now}"
+    # Phase 2
       phase2
 
       # update the status
@@ -23,6 +25,7 @@ class RegistrationSyncWorker
       status.status = 'completed'
       status.save!
     end
+    puts "--- Sync Complete #{Time.now}"
   end 
 
   # Phase 1 is to suck up the data from Reg and put it into a temp store
@@ -74,6 +77,18 @@ class RegistrationSyncWorker
         # puts "#{d['id']} -> #{d['full_name']} -> #{d['email']}"
         # preferred_name, alternative_email
         # TODO: move to an adapter when we have to support multiple reg services
+        next unless d['attending_status'] != 'Not Attending'
+        # Products to exclude from matching
+        next if [
+          'Chengdu',
+          'Volunteer',
+          'Apocryphal',
+          'Infant',
+          'Installment',
+          'Hall Pass',
+          'Staff',
+        ].include? d['product_list_name']
+
         RegistrationSyncDatum.create(
           reg_id: d['id'],
           name: d['full_name'],

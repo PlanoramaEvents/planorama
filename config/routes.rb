@@ -204,6 +204,15 @@ Rails.application.routes.draw do
   resources :parameter_names, path: 'parameter_name'
   resources :page_contents, path: 'page_content'
 
+  #
+  resources :registration_sync_data, path: 'registration_sync_datum' do
+    # This needs to work a bit different than the other sub relationships
+    get 'people', to: 'registration_sync_data#people'
+  end
+
+  resources :person_sync_data, path: 'person_sync_datum'
+  # get registration_sync_data
+
   # Curated tags are the list of tags for a given context etc
   resources :curated_tags, path: 'curated_tag'
 
