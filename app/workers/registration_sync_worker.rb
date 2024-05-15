@@ -14,7 +14,9 @@ class RegistrationSyncWorker
       # DO WORK
       # Phase 1 - get the data from Clyde and store it
       puts "--- Sync Phase 1 #{Time.now}"
-      phase1(page_size: 30)
+      # Hack because of staxo bug with page size on their staging server
+      page_size = Rails.env == 'production' ? 500 : 30
+      phase1(page_size: page_size)
       puts "--- Sync Phase 2 #{Time.now}"
       # Phase 2
       phase2
