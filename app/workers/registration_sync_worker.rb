@@ -10,11 +10,20 @@ class RegistrationSyncWorker
   include Sidekiq::Worker
 
   def perform
-    # Phase 1 - get the data from Clyde and store it
-    phase1
-    # Phase 2
-    phase2
-  end
+    PublishedSession.transaction do
+      # DO WORK
+      # Phase 1 - get the data from Clyde and store it
+      phase1
+      # Phase 2
+      phase2
+
+      # update the status
+      status = RegistrationSyncStatus.order('created_at desc').first
+      status = RegistrationSyncStatus.new if pstatus == nil
+      status.status = 'completed'
+      status.save!
+    end
+  end 
 
   # Phase 1 is to suck up the data from Reg and put it into a temp store
   # for matching

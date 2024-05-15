@@ -66,6 +66,7 @@
 #  published_name                  :string
 #  published_name_sort_by          :string
 #  reddit                          :string
+#  reg_attending_status            :string
 #  registered                      :boolean          default(FALSE), not null
 #  registration_number             :string
 #  registration_type               :string
