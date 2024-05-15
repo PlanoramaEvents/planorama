@@ -5,6 +5,21 @@ class RegistrationSyncDataController < ResourceController
   DEFAULT_SORTBY = 'registration_sync_data.name'
   DEFAULT_ORDER = 'asc'.freeze
 
+  def synchronize
+    authorize current_person, policy_class: policy_class
+
+    status = RegistrationSyncStatus.order('created_at desc').first
+    status = RegistrationSyncStatus.new if pstatus == nil
+    if status.status != 'inprogress'
+      status.status = 'inprogress'
+      status.save!
+
+      RegistrationSyncWorker.perform_async
+    end
+
+    render status: :ok, json: {}.to_json, content_type: 'application/json'
+  end
+
   def people
     authorize model_class, policy_class: policy_class
     datum = RegistrationSyncDatum.find params[:registration_sync_datum_id]

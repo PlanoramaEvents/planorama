@@ -1,6 +1,6 @@
 module PublicationService
 
-  # TODO: mimic this
+  #
   def self.start_publish_job
     pstatus = PublicationStatus.order('created_at desc').first
     pstatus = PublicationStatus.new if pstatus == nil
