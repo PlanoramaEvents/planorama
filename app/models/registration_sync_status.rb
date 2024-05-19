@@ -1,0 +1,3 @@
+#
+class RegistrationSyncStatus < JobStatus
+end

@@ -302,7 +302,16 @@ namespace :rbac do
         "index": true,
         "show": true,
         "update": false
-      }      
+      },
+      "RegistrationSyncDatum": {
+          "create": false,
+          "destroy": false,
+          "index": false,
+          "show": false,
+          "update": false,
+          "people": false,
+          "synchronize": false
+      }
     })
   end
 
@@ -643,7 +652,16 @@ namespace :rbac do
         "index": true,
         "show": true,
         "update": false
-      }      
+      },
+      "RegistrationSyncDatum": {
+          "create": false,
+          "destroy": false,
+          "index": true,
+          "show": true,
+          "update": false,
+          "people": true,
+          "synchronize": false
+      }
     })
   end
 
@@ -984,7 +1002,16 @@ namespace :rbac do
         "index": true,
         "show": true,
         "update": true
-      }      
+      },
+      "RegistrationSyncDatum": {
+          "create": true,
+          "destroy": true,
+          "index": true,
+          "show": true,
+          "update": true,
+          "people": true,
+          "synchronize": true
+      }
     })
   end
 end

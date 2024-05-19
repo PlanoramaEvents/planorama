@@ -178,6 +178,7 @@ export default {
     resetPubs() {
       this.toastPromise(http.get('/publication_date/reset'), "succesfully reset publication data")
     },
+    //
     publishdSchedule() {
       this.toastPromise(http.get('/session/schedule_publish'), "Succesfully requested publish")
     },

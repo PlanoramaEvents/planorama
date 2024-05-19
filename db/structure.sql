@@ -1024,6 +1024,21 @@ CREATE TABLE public.integrations (
 
 
 --
+-- Name: job_statuses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.job_statuses (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    status character varying,
+    submit_time timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    lock_version integer DEFAULT 0,
+    type character varying
+);
+
+
+--
 -- Name: label_dimensions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1516,20 +1531,6 @@ CREATE TABLE public.publication_dates (
     updated_assignments integer DEFAULT 0,
     dropped_assignments integer DEFAULT 0,
     sent_external boolean DEFAULT false NOT NULL,
-    lock_version integer DEFAULT 0
-);
-
-
---
--- Name: publication_statuses; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.publication_statuses (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    status character varying,
-    submit_time timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0
 );
 
@@ -2664,10 +2665,10 @@ ALTER TABLE ONLY public.publication_dates
 
 
 --
--- Name: publication_statuses publication_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: job_statuses publication_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.publication_statuses
+ALTER TABLE ONLY public.job_statuses
     ADD CONSTRAINT publication_statuses_pkey PRIMARY KEY (id);
 
 
@@ -3851,6 +3852,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240226191153'),
 ('20240303213410'),
 ('20240423130325'),
-('20240429160250');
+('20240429160250'),
+('20240515001411');
+
 
 
