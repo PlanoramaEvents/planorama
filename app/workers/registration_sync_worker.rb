@@ -41,13 +41,13 @@ class RegistrationSyncWorker
     results = svc.people_by_page(page: 1, page_size: page_size)
     store_reg_data(data: results['data'])
 
-    last_page = results['meta']['last_page'].to_i
+    last_page = results.dig('meta', 'last_page')&.to_i || 0
     for page in (2..last_page) do
       results = svc.people_by_page(page: page, page_size: page_size)
       if !results["message"]
         store_reg_data(data: results['data'])
       else
-        puts "We had an issue with the Clyde ... people by page #{page}, #{page_size}"
+        puts "We had an issue with the Clyde ... people by page #{page}, #{page_size}, #{last_page}, #{results["message"]}"
       end
     end
   end
@@ -79,31 +79,33 @@ class RegistrationSyncWorker
 
   def store_reg_data(data:)
     RegistrationSyncDatum.transaction do
-      data.each do |d|
-        # puts "#{d['id']} -> #{d['full_name']} -> #{d['email']}"
-        # preferred_name, alternative_email
-        # TODO: move to an adapter when we have to support multiple reg services
-        next unless d['attending_status'] != 'Not Attending'
-        # Products to exclude from matching
-        next if [
-          'Chengdu',
-          'Volunteer',
-          'Apocryphal',
-          'Infant',
-          'Installment',
-          'Hall Pass',
-          'Staff',
-        ].include? d['product_list_name']
+      if data
+        data.each do |d|
+          # puts "#{d['id']} -> #{d['full_name']} -> #{d['email']}"
+          # preferred_name, alternative_email
+          # TODO: move to an adapter when we have to support multiple reg services
+          next unless d['attending_status'] != 'Not Attending'
+          # Products to exclude from matching
+          next if [
+            'Chengdu',
+            'Volunteer',
+            'Apocryphal',
+            'Infant',
+            'Installment',
+            'Hall Pass',
+            'Staff',
+          ].include? d['product_list_name']
 
-        RegistrationSyncDatum.create(
-          reg_id: d['id'],
-          name: d['full_name'],
-          email: d['email'],
-          registration_number: d['ticket_number'],
-          preferred_name: d['preferred_name'],
-          alternative_email: d['alternative_email'],
-          raw_info: d
-        )
+          RegistrationSyncDatum.create(
+            reg_id: d['id'],
+            name: d['full_name'],
+            email: d['email'],
+            registration_number: d['ticket_number'],
+            preferred_name: d['preferred_name'],
+            alternative_email: d['alternative_email'],
+            raw_info: d
+          )
+        end
       end
     end
   end
