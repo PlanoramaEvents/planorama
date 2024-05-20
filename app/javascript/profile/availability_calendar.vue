@@ -95,15 +95,19 @@ export default {
       return DateTime.fromISO(date, {zone: this.timezone}).toLocaleString(config)
     },
     syncScrolling() {
-      for (const day of this.days) {
-        let component = this.$refs[`day-${day}`][0].scrollBarElement()
-        let targets = this.days.filter(d => d != day)
+      this.$nextTick(
+        () => {
+          for (const day of this.days) {
+            let component = this.$refs[`day-${day}`][0].scrollBarElement()
+            let targets = this.days.filter(d => d != day)
 
-        component.addEventListener("scroll",
-          this.syncScroll.bind(event,component,targets),
-          false
-        )
-      }
+            component.addEventListener("scroll",
+              this.syncScroll.bind(event,component,targets),
+              false
+            )
+          }
+        }
+      )
     },
     init: function(arg) {
       this.syncScrolling();
