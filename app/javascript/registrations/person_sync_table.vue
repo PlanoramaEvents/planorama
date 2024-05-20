@@ -5,18 +5,38 @@
       :columns="columns"
       ref="person-sync-table"
       stateName="person-sync-table-search-state"
+      :showControls="false"
     >
       <template #cell(primary_email)="{ item }">
         <tooltip-overflow v-if="item.primary_email" :title="item.primary_email.email">
           {{item.primary_email.email}}
         </tooltip-overflow>
       </template>
+      <template #head(registration_sync_data)="{ label }">
+        <div class="d-flex justify-content-between">
+        <span>{{ label }}</span>
+        <span class="mr-3 pr-3">Actions</span>
+        </div>
+      </template>
       <template #cell(registration_sync_data)="{ item }">
-        <div v-for="reg_data in item.registration_sync_data">
-          {{ reg_data.name }}
-          {{ reg_data.email }}
-          {{ reg_data.registration_number }}
-          <pre>{{ reg_data.raw_info | pretty }}</pre>
+        <div v-for="(reg_data, _, index) in item.registration_sync_data" :key="reg_data.id">
+          <div v-if="index !== 0" style="border-bottom: 1px solid black" class="w-75 my-3"></div>
+          <div class="d-flex justify-content-between">
+            <div>
+          <div>{{ reg_data.name }}</div>
+          <div>{{ reg_data.email }}</div>
+          <div class="mb-2">{{ reg_data.registration_number }}</div>
+          <div>Preferred Name: {{ reg_data.preferred_name }}</div>
+          <div>Badge Name: {{ reg_data.raw_info.badge_title }}</div>
+          <div>Alternative Email: {{  reg_data.alternative_email }}</div>
+          <div>Product: {{ reg_data.raw_info.product }}</div>
+          <div>Attending Status: {{ reg_data.raw_info.attending_status }}</div>
+          </div>
+          <div class="d-flex flex-column justify-content-center mr-3"> 
+            <b-button variant="primary">Match</b-button>
+            <b-button variant="primary" class="mt-2">Dismiss</b-button>
+          </div>
+          </div>
         </div>
       </template>
     </table-vue>

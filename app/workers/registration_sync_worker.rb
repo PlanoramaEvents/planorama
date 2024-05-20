@@ -16,6 +16,7 @@ class RegistrationSyncWorker
       puts "--- Sync Phase 1 #{Time.now}"
       # Hack because of staxo bug with page size on their staging server
       page_size = Rails.env == 'production' ? 500 : 30
+      puts "page size: #{page_size}"
       phase1(page_size: page_size)
       puts "--- Sync Phase 2 #{Time.now}"
       # Phase 2
@@ -37,6 +38,9 @@ class RegistrationSyncWorker
 
     # Get the clyde service and use the AUTH key that we have
     svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
+    if !svc.token {
+      raise "Missing auth token! abort abort abort!"
+    }
 
     results = svc.people_by_page(page: 1, page_size: page_size)
     store_reg_data(data: results['data'])
@@ -106,6 +110,8 @@ class RegistrationSyncWorker
             raw_info: d
           )
         end
+      else
+        puts "There was an error! Data is empty"
       end
     end
   end
