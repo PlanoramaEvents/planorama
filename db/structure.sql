@@ -1612,7 +1612,8 @@ CREATE TABLE public.registration_sync_data (
     raw_info jsonb DEFAULT '{}'::jsonb NOT NULL,
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    badge_name character varying
 );
 
 
@@ -1628,7 +1629,7 @@ CREATE VIEW public.registration_sync_matches AS
     rsd.id AS rid,
     'name'::text AS mtype
    FROM (public.people p
-     JOIN public.registration_sync_data rsd ON (((rsd.name)::text ~~* (p.name)::text)))
+     JOIN public.registration_sync_data rsd ON ((((rsd.name)::text ~~* (p.name)::text) OR ((rsd.preferred_name)::text ~~* (p.name)::text) OR ((rsd.badge_name)::text ~~* (p.name)::text))))
 UNION
  SELECT NULL::character varying AS name,
     e.email,
@@ -1637,7 +1638,8 @@ UNION
     rsd.id AS rid,
     'email'::text AS mtype
    FROM (public.email_addresses e
-     JOIN public.registration_sync_data rsd ON (((rsd.email)::text ~~* (e.email)::text)));
+     JOIN public.registration_sync_data rsd ON ((((rsd.email)::text ~~* (e.email)::text) OR ((rsd.alternative_email)::text ~~* (e.email)::text))))
+  WHERE (e.isdefault = true);
 
 
 --
@@ -3231,6 +3233,20 @@ CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions 
 
 
 --
+-- Name: index_registration_sync_data_on_alternative_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_alternative_email ON public.registration_sync_data USING gin (alternative_email public.gin_trgm_ops);
+
+
+--
+-- Name: index_registration_sync_data_on_badge_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_badge_name ON public.registration_sync_data USING gin (badge_name public.gin_trgm_ops);
+
+
+--
 -- Name: index_registration_sync_data_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3242,6 +3258,13 @@ CREATE INDEX index_registration_sync_data_on_email ON public.registration_sync_d
 --
 
 CREATE INDEX index_registration_sync_data_on_name ON public.registration_sync_data USING gin (name public.gin_trgm_ops);
+
+
+--
+-- Name: index_registration_sync_data_on_preferred_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_preferred_name ON public.registration_sync_data USING gin (preferred_name public.gin_trgm_ops);
 
 
 --
@@ -3853,6 +3876,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240303213410'),
 ('20240423130325'),
 ('20240429160250'),
-('20240515001411');
+('20240515001411'),
+('20240521184252'),
+('20240521193119');
 
 

@@ -15,9 +15,7 @@ class RegistrationSyncWorker
       # Phase 1 - get the data from Clyde and store it
       puts "--- Sync Phase 1 #{Time.now}"
       # Hack because of staxo bug with page size on their staging server
-      page_size = Rails.env == 'production' ? 500 : 30
-      puts "page size: #{page_size}"
-      phase1(page_size: page_size)
+      phase1(page_size: 500)
       puts "--- Sync Phase 2 #{Time.now}"
       # Phase 2
       phase2
@@ -29,7 +27,7 @@ class RegistrationSyncWorker
       status.save!
     end
     puts "--- Sync Complete #{Time.now}"
-  end 
+  end
 
   # Phase 1 is to suck up the data from Reg and put it into a temp store
   # for matching
@@ -38,9 +36,9 @@ class RegistrationSyncWorker
 
     # Get the clyde service and use the AUTH key that we have
     svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
-    if !svc.token {
+    if !svc.token
       raise "Missing auth token! abort abort abort!"
-    }
+    end
 
     results = svc.people_by_page(page: 1, page_size: page_size)
     store_reg_data(data: results['data'])
@@ -102,11 +100,12 @@ class RegistrationSyncWorker
 
           RegistrationSyncDatum.create(
             reg_id: d['id'],
-            name: d['full_name'],
-            email: d['email'],
-            registration_number: d['ticket_number'],
-            preferred_name: d['preferred_name'],
-            alternative_email: d['alternative_email'],
+            name: d['full_name']&.strip,
+            email: d['email']&.strip,
+            registration_number: d['ticket_number']&.strip,
+            preferred_name: d['preferred_name']&.strip,
+            alternative_email: d['alternative_email']&.strip,
+            badge_name: d['badge_name']&.strip,
             raw_info: d
           )
         end

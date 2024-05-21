@@ -25,12 +25,22 @@ module MigrationHelpers
           select p.name, null as email, p.id as pid, rsd.reg_id, rsd.id as rid, 'name' as mtype
           from people p 
           join registration_sync_data rsd
-          on rsd."name" ilike p.name
+          on 
+          (
+            rsd."name" ilike p.name OR
+            rsd."preferred_name" ilike p.name OR
+            rsd."badge_name" ilike p.name
+          )
           union
           select null as name, e.email, e.person_id as pid, rsd.reg_id, rsd.id as rid, 'email' as mtype
-          from email_addresses e 
+          from email_addresses e
           join registration_sync_data rsd 
-          on rsd."email" ilike e.email
+          on 
+          (
+            rsd."email" ilike e.email or
+            rsd."alternative_email" ilike e.email
+          )
+          where e.isdefault = true
       SQL
 
       ActiveRecord::Base.connection.execute(query)

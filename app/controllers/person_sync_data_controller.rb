@@ -15,10 +15,21 @@ class PersonSyncDataController < ResourceController
       .where('registration_sync_data.reg_id in (select reg_id from registration_map_counts)')
   end
 
+  def select_fields
+    PersonSyncDatum.select(
+      ::PersonSyncDatum.arel_table[Arel.star],
+      'name_sort_by'
+    )
+  end
+
   def serializer_includes
     [
       :registration_sync_data
     ]
+  end
+
+  def make_distinct?
+    true
   end
 
   def includes
