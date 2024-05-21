@@ -31,6 +31,7 @@ class RegistrationSyncDatumSerializer
   attributes :id, :lock_version, :created_at, :updated_at,
              :reg_id, :registration_number, :name, :email,
              :preferred_name, :alternative_email,
+             :badge_name,
              :raw_info
 
   # The people that this data could be matched to
