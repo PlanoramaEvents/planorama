@@ -109,7 +109,7 @@ module IdentityService
     person.date_reg_synced = Time.now
   end
 
-  def self.update_reg_info(person:, details:)
+  def self.update_reg_info(person:, details:, reg_match: Person.reg_matches[:self])
     # If the Ticket Numbers do not match then we reset cause there may be an issue
     if person.registration_number && person.registration_number != details['ticket_number']
       clear_person_reg_info(person: person)
@@ -125,6 +125,9 @@ module IdentityService
       person.reg_attending_status = details['attending_status']
       # Need to store time of last sync
       person.date_reg_synced = Time.now
+      # How the registration match was done
+      person.reg_match = reg_match
+
       # Attendance type in Plano is one of
       # in_person, hybrid, virtual
       # Clyde does not map to these well. Recommend that we get this from survey and Person profile

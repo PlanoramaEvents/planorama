@@ -67,6 +67,7 @@
 #  published_name_sort_by          :string
 #  reddit                          :string
 #  reg_attending_status            :string
+#  reg_match                       :enum             default("none")
 #  registered                      :boolean          default(FALSE), not null
 #  registration_number             :string
 #  registration_type               :string
@@ -152,6 +153,7 @@ class PersonSerializer #< ActiveModel::Serializer
               :reg_id,
               :reg_attending_status,
               :date_reg_synced
+              :reg_match
 
   # status and comments hidden except for staff
   protected_attributes :con_state, :comments

@@ -67,6 +67,7 @@
 #  published_name_sort_by          :string
 #  reddit                          :string
 #  reg_attending_status            :string
+#  reg_match                       :enum             default("none")
 #  registered                      :boolean          default(FALSE), not null
 #  registration_number             :string
 #  registration_type               :string
@@ -100,7 +101,6 @@
 #  index_people_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_people_on_unlock_token          (unlock_token) UNIQUE
 #
-#
 class PersonSyncDatumSerializer
   include JSONAPI::Serializer
 
@@ -108,8 +108,8 @@ class PersonSyncDatumSerializer
              :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
              :published_name, :published_name_sort_by,
              :job_title, :organization, :reg_id,
-             :primary_email, :contact_email
-
+             :primary_email, :contact_email,
+             :reg_match, :date_reg_synced
 
   has_many  :email_addresses, 
               if: Proc.new { |record, params| AccessControlService.shared_attribute_access?(instance: record, person: params[:current_person]) },

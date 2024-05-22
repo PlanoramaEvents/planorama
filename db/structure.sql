@@ -224,6 +224,19 @@ CREATE TYPE public.phone_type_enum AS ENUM (
 
 
 --
+-- Name: reg_match_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.reg_match_enum AS ENUM (
+    'none',
+    'automatic',
+    'assisted',
+    'manual',
+    'self'
+);
+
+
+--
 -- Name: schedule_approval_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -667,7 +680,8 @@ END) STORED,
     non_anglophone character varying,
     fediverse character varying,
     bsky character varying,
-    reg_attending_status character varying
+    reg_attending_status character varying,
+    reg_match public.reg_match_enum DEFAULT 'none'::public.reg_match_enum
 );
 
 
@@ -919,6 +933,20 @@ CREATE TABLE public.curated_tags (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying(190),
     context character varying(190),
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: dismissed_reg_sync_matches; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dismissed_reg_sync_matches (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid NOT NULL,
+    reg_id character varying NOT NULL,
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -1629,7 +1657,7 @@ CREATE VIEW public.registration_sync_matches AS
     rsd.id AS rid,
     'name'::text AS mtype
    FROM (public.people p
-     JOIN public.registration_sync_data rsd ON ((((rsd.name)::text ~~* (p.name)::text) OR ((rsd.preferred_name)::text ~~* (p.name)::text) OR ((rsd.badge_name)::text ~~* (p.name)::text))))
+     JOIN public.registration_sync_data rsd ON ((((rsd.name)::text ~~* (p.name)::text) OR ((rsd.preferred_name)::text ~~* (p.name)::text) OR ((rsd.badge_name)::text ~~* (p.name)::text) OR ((rsd.name)::text ~~* (p.pseudonym)::text) OR ((rsd.preferred_name)::text ~~* (p.pseudonym)::text) OR ((rsd.badge_name)::text ~~* (p.pseudonym)::text))))
 UNION
  SELECT NULL::character varying AS name,
     e.email,
@@ -2443,6 +2471,14 @@ ALTER TABLE ONLY public.curated_tags
 
 
 --
+-- Name: dismissed_reg_sync_matches dismissed_reg_sync_matches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dismissed_reg_sync_matches
+    ADD CONSTRAINT dismissed_reg_sync_matches_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: email_addresses email_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2946,6 +2982,13 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
+-- Name: idx_person_reg_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_person_reg_id ON public.dismissed_reg_sync_matches USING btree (person_id, reg_id);
+
+
+--
 -- Name: idx_tagname_on_context; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3034,6 +3077,20 @@ CREATE INDEX index_audit_survey_versions_on_item_type_and_item_id ON public.audi
 --
 
 CREATE INDEX index_convention_roles_on_person_id ON public.convention_roles USING btree (person_id);
+
+
+--
+-- Name: index_dismissed_reg_sync_matches_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dismissed_reg_sync_matches_on_person_id ON public.dismissed_reg_sync_matches USING btree (person_id);
+
+
+--
+-- Name: index_dismissed_reg_sync_matches_on_reg_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dismissed_reg_sync_matches_on_reg_id ON public.dismissed_reg_sync_matches USING btree (reg_id);
 
 
 --
@@ -3878,6 +3935,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240429160250'),
 ('20240515001411'),
 ('20240521184252'),
-('20240521193119');
+('20240521193119'),
+('20240522174506'),
+('20240522190737');
 
 
