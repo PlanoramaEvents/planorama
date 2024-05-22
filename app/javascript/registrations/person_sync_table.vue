@@ -27,7 +27,7 @@
           <div>{{ reg_data.email }}</div>
           <div class="mb-2">{{ reg_data.registration_number }}</div>
           <div>Preferred Name: {{ reg_data.preferred_name }}</div>
-          <div>Badge Name: {{ reg_data.raw_info.badge_title }}</div>
+          <div>Badge Name: {{ reg_data.badge_name }}</div>
           <div>Alternative Email: {{  reg_data.alternative_email }}</div>
           <div>Product: {{ reg_data.raw_info.product }}</div>
           <div>Attending Status: {{ reg_data.raw_info.attending_status }}</div>

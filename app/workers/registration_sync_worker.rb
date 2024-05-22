@@ -11,10 +11,8 @@ class RegistrationSyncWorker
 
   def perform
     PublishedSession.transaction do
-      # DO WORK
       # Phase 1 - get the data from Clyde and store it
       puts "--- Sync Phase 1 #{Time.now}"
-      # Hack because of staxo bug with page size on their staging server
       phase1(page_size: 500)
       puts "--- Sync Phase 2 #{Time.now}"
       # Phase 2
@@ -32,15 +30,15 @@ class RegistrationSyncWorker
   # Phase 1 is to suck up the data from Reg and put it into a temp store
   # for matching
   def phase1(page_size: 500)
-    RegistrationSyncDatum.connection.truncate(RegistrationSyncDatum.table_name)
-
     # Get the clyde service and use the AUTH key that we have
     svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
     if !svc.token
       raise "Missing auth token! abort abort abort!"
     end
 
+    RegistrationSyncDatum.connection.truncate(RegistrationSyncDatum.table_name)
     results = svc.people_by_page(page: 1, page_size: page_size)
+
     store_reg_data(data: results['data'])
 
     last_page = results.dig('meta', 'last_page')&.to_i || 0
@@ -73,8 +71,9 @@ class RegistrationSyncWorker
 
         datum = RegistrationSyncDatum.find_by reg_id: match.reg_id
 
+        # TODO: update the match status
+        # automatic match, assisted match, manual match, no match.
         IdentityService.update_reg_info(person: person, details: datum.raw_info)
-        person.save!
       end
     end
   end
@@ -105,7 +104,7 @@ class RegistrationSyncWorker
             registration_number: d['ticket_number']&.strip,
             preferred_name: d['preferred_name']&.strip,
             alternative_email: d['alternative_email']&.strip,
-            badge_name: d['badge_name']&.strip,
+            badge_name: d['badge']&.strip,
             raw_info: d
           )
         end

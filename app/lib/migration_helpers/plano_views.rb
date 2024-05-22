@@ -30,6 +30,9 @@ module MigrationHelpers
             rsd."name" ilike p.name OR
             rsd."preferred_name" ilike p.name OR
             rsd."badge_name" ilike p.name
+            or rsd."name" ilike p.pseudonym
+            or rsd."preferred_name" ilike p.pseudonym
+            or rsd."badge_name" ilike p.pseudonym
           )
           union
           select null as name, e.email, e.person_id as pid, rsd.reg_id, rsd.id as rid, 'email' as mtype
