@@ -72,7 +72,7 @@ class RegistrationSyncWorker
         datum = RegistrationSyncDatum.find_by reg_id: match.reg_id
 
         # If we match via the worker it is an "automatic match"
-        IdentityService.update_reg_info(person: person, details: datum.raw_info, Person.reg_matches[:automatic])
+        IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: Person.reg_matches[:automatic])
       end
     end
   end
