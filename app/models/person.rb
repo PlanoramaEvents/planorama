@@ -67,7 +67,7 @@
 #  published_name_sort_by          :string
 #  reddit                          :string
 #  reg_attending_status            :string
-#  reg_match                       :enum             default("no_match")
+#  reg_match                       :enum             default("none")
 #  registered                      :boolean          default(FALSE), not null
 #  registration_number             :string
 #  registration_type               :string

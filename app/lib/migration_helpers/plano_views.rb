@@ -53,7 +53,9 @@ module MigrationHelpers
       query = <<-SQL.squish
         CREATE OR REPLACE VIEW registration_map_counts AS
           select rsm.reg_id, rsm.pid, count(rsm.pid) as sub_count 
-          from registration_sync_matches rsm 
+          from registration_sync_matches rsm
+          where rsm.pid not in (select person_id from dismissed_reg_sync_matches)
+          and rsm.reg_id not in (select reg_id from dismissed_reg_sync_matches)
           group by rsm.reg_id, rsm.pid
       SQL
 

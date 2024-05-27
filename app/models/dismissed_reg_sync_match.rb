@@ -16,4 +16,6 @@
 #  index_dismissed_reg_sync_matches_on_reg_id     (reg_id)
 #
 class DismissedRegSyncMatch < ApplicationRecord
+  #
+  belongs_to :person
 end

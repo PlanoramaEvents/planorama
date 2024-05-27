@@ -211,8 +211,9 @@ Rails.application.routes.draw do
     get 'people', to: 'registration_sync_data#people'
   end
 
+  post 'person_sync_datum/dismiss_match', to: 'person_sync_data#dismiss_match'
+  post 'person_sync_datum/match', to: 'person_sync_data#match'
   resources :person_sync_data, path: 'person_sync_datum'
-  # get registration_sync_data
 
   # Curated tags are the list of tags for a given context etc
   resources :curated_tags, path: 'curated_tag'

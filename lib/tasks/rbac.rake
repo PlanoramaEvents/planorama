@@ -1011,6 +1011,12 @@ namespace :rbac do
           "update": true,
           "people": true,
           "synchronize": true
+      },
+      "PersonSyncDatum": {
+          "index": true,
+          "show": true,
+          "dismiss_match": true,
+          "match": true
       }
     })
   end

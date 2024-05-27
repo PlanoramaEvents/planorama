@@ -71,9 +71,8 @@ class RegistrationSyncWorker
 
         datum = RegistrationSyncDatum.find_by reg_id: match.reg_id
 
-        # TODO: update the match status
-        # automatic match, assisted match, manual match, no match.
-        IdentityService.update_reg_info(person: person, details: datum.raw_info)
+        # If we match via the worker it is an "automatic match"
+        IdentityService.update_reg_info(person: person, details: datum.raw_info, Person.reg_matches[:automatic])
       end
     end
   end
