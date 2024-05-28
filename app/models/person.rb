@@ -116,7 +116,9 @@ class Person < ApplicationRecord
   # acts_as_taggable
   acts_as_taggable_on :tags
 
-  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at, :lock_version, :integrations]
+  has_paper_trail versions: { class_name: 'Audit::PersonVersion' },
+                  ignore: [:updated_at, :created_at, :lock_version, :integrations],
+                  limit: nil
 
   before_destroy :check_if_assigned
   before_save :check_primary_email
