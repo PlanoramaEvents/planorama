@@ -45,16 +45,4 @@ class RegistrationSyncDataController < ResourceController
     query.where('reg_id not in (select reg_id from people where reg_id is not null)')
          .where('reg_id in (select reg_id from registration_map_counts)')
   end
-
-  def serializer_includes
-    [
-      :people
-    ]
-  end
-
-  def includes
-    [
-      :people
-    ]
-  end
 end
