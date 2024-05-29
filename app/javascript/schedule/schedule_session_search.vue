@@ -3,26 +3,37 @@
     <div class="row">
       <div class="col-12">
         <b-form-group label="Area" label-cols="4">
-          <model-select
-            size="sm"
-            v-model="area_id"
-            model="area"
-            field="name"
-            unselected-display="Any Area"
-          ></model-select>
+          <model-select size="sm" v-model="area_id" model="area" field="name"
+            unselected-display="Any Area"></model-select>
         </b-form-group>
       </div>
       <div class="col-12">
         <b-form-group label="Title" label-cols="4">
-          <b-form-input
-            type="text"
-            v-model="title_desc"
-            size="sm"
-          ></b-form-input>
+          <b-form-input type="text" v-model="title_desc" size="sm"></b-form-input>
         </b-form-group>
       </div>
+      <div class="col-12">
+        <b-form-group label="Tag" label-cols="4">
+          <b-form-select v-model="tag" :options="sessionTagsOptions" unselected-display="Any Tag" size="sm">
+            <template #first>
+              <b-form-select-option value="" disabled>-- Please select Tag --</b-form-select-option>
+            </template>
+          </b-form-select>
+        </b-form-group>
+      </div>
+      <div class="col-12">
+        <b-form-group label="Label" label-cols="4">
+          <b-form-select v-model="label" :options="sessionLabelsOptions" unselected-display="Any Admin Label" size="sm">
+            <template #first>
+              <b-form-select-option value="" disabled>-- Please select a Label --</b-form-select-option>
+            </template>
+          </b-form-select>
+        </b-form-group>
+      </div>
+      <!-- Add Label - drop down -->
       <div class="col-9">
-        <b-form-radio-group v-model="match" :options="[{text: 'Match Any', value: 'any'}, {text: 'Match All', value:'all'}]" size="sm">
+        <b-form-radio-group v-model="match"
+          :options="[{text: 'Match Any', value: 'any'}, {text: 'Match All', value:'all'}]" size="sm">
         </b-form-radio-group>
       </div>
       <div class="col-3 px-0">
@@ -46,6 +57,7 @@
 import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
 import searchStateMixin from '../store/search_state.mixin'
+import { tagsMixin } from '@/store/tags.mixin';
 
 const SAVED_SEARCH_STATE = "SCHEDULABLE SESSION SELECT STATE";
 
@@ -56,7 +68,8 @@ export default {
     ModelTags
   },
   mixins: [
-    searchStateMixin
+    searchStateMixin,
+    tagsMixin
   ],
   props: {
     columns: Array
@@ -67,7 +80,9 @@ export default {
       area_id: null,
       tags: null,
       match: 'any',
-      schedFilter: 'all'
+      schedFilter: 'all',
+      tag: null,
+      label: null
     }
   },
   watch: {
@@ -101,10 +116,15 @@ export default {
         )
       }
 
-      if (this.tags && (this.tags.length > 0)) {
-        let vals = this.tags.map(obj => (obj.label))
+      if (this.tag) {
         queries["queries"].push(
-          ["tags.name","in",vals],
+          ["tags_list_table.tags_array","is",this.tag],
+        )
+      }
+
+      if (this.label) {
+        queries["queries"].push(
+          ["labels_list_table.labels_array", "is", this.label],
         )
       }
 
@@ -151,7 +171,8 @@ export default {
         setting: {
           title_desc: this.title_desc,
           area_id: this.area_id,
-          tags: this.tags,
+          tag: this.tag,
+          label: this.label,
           match: this.match,
           schedFilter: this.schedFilter
         }
@@ -163,7 +184,8 @@ export default {
       if (saved) {
         this.title_desc = saved.title_desc
         this.area_id = saved.area_id
-        this.tags = saved.tags
+        this.tag = saved.tag
+        this.label = saved.label
         this.match = saved.match
         this.schedFilter = saved.schedFilter
       }
