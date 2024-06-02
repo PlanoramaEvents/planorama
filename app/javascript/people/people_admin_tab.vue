@@ -2,15 +2,19 @@
   <div class="container-fluid">
         <dl class="row">
           <div class="col-12 col-sm-6 col-lg-4">
-            <dt>Status</dt>
-            <dd class="font-italic ml-2">{{PERSON_CON_STATE[selected.con_state || 'not_set']}}</dd>
             <dt>Registered</dt>
             <dd class="font-italic ml-2">{{selected.registered ? 'Yes' : 'No'}}</dd>
             <dt>Registration ID</dt>
             <dd class="font-italic ml-2">{{selected.registration_number || 'Unknown'}} <edit-button v-b-modal.edit-reg-number></edit-button></dd>
+            <dt>Registration Type</dt>
+            <dd class="font-italic ml-2">{{selected.registration_type || 'Unknown'}}</dd>
+            <dt>Registration Attendance Status</dt>
+            <dd class="font-italic ml-2">{{selected.reg_attending_status || 'Unknown'}}</dd>
             <!-- <b-button @click="resyncPerson" variant="primary" :disabled="selected.reg_id == null">Resync Registration</b-button>             -->
           </div>
           <div class="col-12 col-sm-6 col-lg-4">
+            <dt>Status</dt>
+            <dd class="font-italic ml-2">{{PERSON_CON_STATE[selected.con_state || 'not_set']}}</dd>
             <dt>Convention Class</dt>
             <dd class="font-italic ml-2">{{conventionClasses}}</dd>
           </div>
@@ -20,15 +24,15 @@
             <b-button class="float-right mt-1" @click="patchSelected({comments})" variant="primary">Save Comments</b-button>
           </dd>
         </dl>
-        <person-edit-reg-number></person-edit-reg-number>
+        <person-edit-reg-number @unlink="unlinkPerson()" :canUnlink="selected.registration_number"></person-edit-reg-number>
   </div>
 </template>
 
 <script>
 import { makeSelectedFieldMixin } from '@/mixins'
 import { modelMixinNoProp } from '@/store/model.mixin';
-import { personModel as model ,RESYNC_PERSON } from '@/store/person.store';
-import { PERSON_CON_STATE, PERSON_RESYNC_SUCCESS, PERSON_RESYNC_FAILURE } from '@/constants/strings';
+import { personModel as model ,RESYNC_PERSON, UNLINK_PERSON } from '@/store/person.store';
+import { PERSON_CON_STATE, PERSON_RESYNC_SUCCESS, PERSON_RESYNC_FAILURE, PERSON_UNLINK_SUCCESS, PERSON_UNLINK_FAILURE } from '@/constants/strings';
 import { mapActions } from 'vuex';
 import EditModal from '@/components/edit_modal.vue';
 import EditButton from '@/components/edit_button.vue';
@@ -58,8 +62,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      resyncPersonStore: RESYNC_PERSON
+      resyncPersonStore: RESYNC_PERSON,
+      unlinkPersonStore: UNLINK_PERSON
     }),
+    unlinkPerson() {
+      this.toastPromise(this.unlinkPersonStore({person: this.selected}), PERSON_UNLINK_SUCCESS, PERSON_UNLINK_FAILURE);
+    },
     resyncPerson() {
       this.toastPromise(this.resyncPersonStore({ person: this.selected }), PERSON_RESYNC_SUCCESS, PERSON_RESYNC_FAILURE);
     }

@@ -362,4 +362,10 @@ module.exports = {
     PROFILE_LINK_EXPLAINATION_1: "When you link your Planorama account to your registration account they are matched, and you will be asked to confirm the correct registration account.",
     PROFILE_LINK_EXPLAINATION_2: "You will continue to log in to Planorama using the password you created, not your registration login details.",
     PROFILE_LINK_EXPLAINATION_TITLE: "What does it mean to link to registration?",
+    REG_ID_SEARCH_PLACEHOLDER: "Search for a registration ID.",
+    REG_ID_FOUND: "Found a match in the registration database",
+    REG_ID_NOT_FOUND: "No results found. This number may already be linked. Please check your input.",
+    REG_ID_UNLINK_BUTTON: "Unlink Current Registration",
+    REG_ID_UNLINK_CONFIRMATION_TITLE: "Really really???",
+    REG_ID_UNLINK_CONFIRMATION_TEXT: "Are you sure, bozo",
 }
