@@ -7,7 +7,7 @@
             <dt>Registered</dt>
             <dd class="font-italic ml-2">{{selected.registered ? 'Yes' : 'No'}}</dd>
             <dt>Registration ID</dt>
-            <dd class="font-italic ml-2">{{selected.registration_number || 'Unknown'}}</dd>
+            <dd class="font-italic ml-2">{{selected.registration_number || 'Unknown'}} <edit-button v-b-modal.edit-reg-number></edit-button></dd>
             <b-button @click="resyncPerson" variant="primary" :disabled="selected.reg_id == null">Resync Registration</b-button>            
           </div>
           <div class="col-12 col-sm-6 col-lg-4">
@@ -20,6 +20,7 @@
             <b-button class="float-right mt-1" @click="patchSelected({comments})" variant="primary">Save Comments</b-button>
           </dd>
         </dl>
+        <person-edit-reg-number></person-edit-reg-number>
   </div>
 </template>
 
@@ -29,6 +30,9 @@ import { modelMixinNoProp } from '@/store/model.mixin';
 import { personModel as model ,RESYNC_PERSON } from '@/store/person.store';
 import { PERSON_CON_STATE, PERSON_RESYNC_SUCCESS, PERSON_RESYNC_FAILURE } from '@/constants/strings';
 import { mapActions } from 'vuex';
+import EditModal from '@/components/edit_modal.vue';
+import EditButton from '@/components/edit_button.vue';
+import PersonEditRegNumber from './person-edit-reg-number.vue';
 
 const commentsMixin = makeSelectedFieldMixin('comments');
 
@@ -38,6 +42,11 @@ export default {
     modelMixinNoProp,
     commentsMixin
   ],
+  components: {
+    EditModal,
+    EditButton,
+    PersonEditRegNumber,
+  },
   data: () => ({
     model,
     PERSON_CON_STATE

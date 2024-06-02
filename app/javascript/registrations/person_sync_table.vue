@@ -23,14 +23,7 @@
           <div v-if="index !== 0" style="border-bottom: 1px solid black" class="w-75 my-3"></div>
           <div class="d-flex justify-content-between">
             <div>
-          <div>{{ reg_data.name }}</div>
-          <div>{{ reg_data.email }}</div>
-          <div class="mb-2">{{ reg_data.registration_number }}</div>
-          <div>Preferred Name: {{ reg_data.preferred_name }}</div>
-          <div>Badge Name: {{ reg_data.badge_name }}</div>
-          <div>Alternative Email: {{  reg_data.alternative_email }}</div>
-          <div>Product: {{ reg_data.raw_info.product }}</div>
-          <div>Attending Status: {{ reg_data.raw_info.attending_status }}</div>
+          <display-sync-data :regData="reg_data"></display-sync-data>
           </div>
           <div class="d-flex flex-column justify-content-center mr-3"> 
             <b-button variant="primary">Match</b-button>
@@ -44,16 +37,18 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue';
+import TableVue from '../components/table_vue.vue';
 import { person_sync_columns as columns } from './person_sync_columns';
 import { personSyncDatumModel as model } from '@/store/person_sync_datum.store'
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TooltipOverflow from '../shared/tooltip-overflow.vue';
+import DisplaySyncData from './display_sync_data.vue';
 
 export default {
   name: 'PersonSyncTable',
   components: {
     TableVue,
-    TooltipOverflow
+    TooltipOverflow,
+    DisplaySyncData,
   },
   data: () => ({
     columns,

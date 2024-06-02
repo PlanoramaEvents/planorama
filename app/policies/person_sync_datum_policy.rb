@@ -1,10 +1,10 @@
 class PersonSyncDatumPolicy < PlannerPolicy
 
-  def dismiss_match
+  def dismiss_match?
     allowed?(action: :dismiss_match)
   end
 
-  def match
+  def match?
     allowed?(action: :match)
   end
 
