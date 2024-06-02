@@ -8,7 +8,7 @@
             <dd class="font-italic ml-2">{{selected.registered ? 'Yes' : 'No'}}</dd>
             <dt>Registration ID</dt>
             <dd class="font-italic ml-2">{{selected.registration_number || 'Unknown'}} <edit-button v-b-modal.edit-reg-number></edit-button></dd>
-            <b-button @click="resyncPerson" variant="primary" :disabled="selected.reg_id == null">Resync Registration</b-button>            
+            <!-- <b-button @click="resyncPerson" variant="primary" :disabled="selected.reg_id == null">Resync Registration</b-button>             -->
           </div>
           <div class="col-12 col-sm-6 col-lg-4">
             <dt>Convention Class</dt>
