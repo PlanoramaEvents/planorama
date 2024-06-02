@@ -92,43 +92,6 @@ export default {
       this.getRegById({id: this.regId}).then(() => {
         this.searched = true;
       })
-      
-      // for testing, remove me
-      /*if(this.regId == "#123") {
-        this.regData = {
-    "id": "548cd721-5b5c-4b7a-a9e1-966523493beb",
-    "lock_version": 0,
-    "created_at": "2024-05-20T01:44:14.130Z",
-    "updated_at": "2024-05-20T01:44:14.130Z",
-    "reg_id": "49",
-    "registration_number": "#123",
-    "name": "Chris Baker",
-    "email": "fangorn73@hotmail.com",
-    "preferred_name": "Chris Baker",
-    "alternative_email": null,
-    "badge_name": null,
-    "raw_info": {
-        "id": 49,
-        "badge": "Fangorn",
-        "email": "fangorn73@hotmail.com",
-        "product": "Full Attending Adult",
-        "location": "England",
-        "full_name": "Chris Baker",
-        "date_added": "2022-08-26T12:25:18.000000Z",
-        "badge_title": "Glasgow 2024 Guest of Honour",
-        "wsfs_status": null,
-        "date_updated": "2022-08-26T15:58:37.000000Z",
-        "ticket_number": "#0001",
-        "preferred_name": "Chris Baker",
-        "attending_status": "In Person",
-        "alternative_email": null,
-        "product_list_name": "Full Adult",
-        "participant_activities": []
-    }
-}
-      } else {
-        this.regData = null;
-      }*/
     }
   }
 }
