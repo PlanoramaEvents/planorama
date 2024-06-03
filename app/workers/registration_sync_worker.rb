@@ -65,12 +65,11 @@ class RegistrationSyncWorker
       existing = Person.where("reg_id is not null")
       existing.each do |person|
         datum = RegistrationSyncDatum.find_by reg_id: person.reg_id
-
-        next unless datum
-
-        # TODO: only update if data has changed ...
-        IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: Person.reg_matches[:automatic])
-        number_updated += 1
+        
+        if datum
+          res = IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: Person.reg_matches[:automatic])
+          number_updated += 1 if res
+        end
       end
     end
 
@@ -82,24 +81,27 @@ class RegistrationSyncWorker
     # Find all the people that have an unique match for name AND email
     # (i.e. there is no other match for that registration info)
     matched = Registration::RegistrationMapCount.where(
-                  "pid in (?)", Registration::RegistrationMapPeopleCount.where("count = 1").pluck(:pid)
+                  "pid in (select pid from registration_map_people_counts where count = 1)"
                 ).where(
-                  "reg_id in (?)", Registration::RegistrationMapRegCount.where("count = 1").pluck(:reg_id)
+                  "reg_id in (select reg_id from registration_map_reg_counts where count = 1)"
+                ).where(
+                  "pid not in (select id from people where reg_id is not null)"
                 ).where("sub_count = 2")
 
     # Update those people with matched information
     number_matched = 0
-    Person.transaction do
-      matched.each do |match|
+    matched.each do |match|
+      Person.transaction do
         person = match.person
+
         # If the person has already been mapped then we ignore it
-        next if person.reg_id #(person.reg_id && (person.reg_id != match.reg_id))
+        if person.reg_id.nil?
+          datum = RegistrationSyncDatum.find_by reg_id: match.reg_id
 
-        datum = RegistrationSyncDatum.find_by reg_id: match.reg_id
-
-        # If we match via the worker it is an "automatic match"
-        IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: Person.reg_matches[:automatic])
-        number_matched += 1
+          # If we match via the worker it is an "automatic match"
+          IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: Person.reg_matches[:automatic])
+          number_matched += 1
+        end
       end
     end
 
