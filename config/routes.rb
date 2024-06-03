@@ -205,6 +205,7 @@ Rails.application.routes.draw do
   resources :page_contents, path: 'page_content'
 
   #
+  get 'registration_sync_data/sync_statistics', to: 'registration_sync_data#sync_statistics'
   get 'registration_sync_data/synchronize', to: 'registration_sync_data#synchronize'
   resources :registration_sync_data, path: 'registration_sync_datum' do
     # This needs to work a bit different than the other sub relationships

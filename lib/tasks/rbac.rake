@@ -310,7 +310,8 @@ namespace :rbac do
           "show": false,
           "update": false,
           "people": false,
-          "synchronize": false
+          "synchronize": false,
+          "sync_statistics": false
       }
     })
   end
@@ -660,7 +661,8 @@ namespace :rbac do
           "show": true,
           "update": false,
           "people": true,
-          "synchronize": false
+          "synchronize": false,
+          "sync_statistics": true
       }
     })
   end
@@ -1010,7 +1012,8 @@ namespace :rbac do
           "show": true,
           "update": true,
           "people": true,
-          "synchronize": true
+          "synchronize": true,
+          "sync_statistics": true
       },
       "PersonSyncDatum": {
           "index": true,
