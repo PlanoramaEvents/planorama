@@ -28,6 +28,7 @@ class PersonSyncDataController < ResourceController
       person = Person.find person_id
 
       # Update the person with the reg data
+      IdentityService.clear_person_reg_info(person: person);
       IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: reg_match)
 
       render status: :ok,
