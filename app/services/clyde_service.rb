@@ -3,7 +3,8 @@ module ClydeService
 
   def self.base_url
     # Ensure that there is no trailing / in the base url
-    ::Integration.find_by({name: "clyde"})&.config["base_url"].chomp("/")
+    # ::Integration.find_by({name: "clyde"})&.config["base_url"].chomp("/")
+    'https://registration.glasgow2024.org'
   end
 
   class Client

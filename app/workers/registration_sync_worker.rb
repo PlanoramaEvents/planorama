@@ -11,16 +11,23 @@ class RegistrationSyncWorker
 
   def perform
     PublishedSession.transaction do
-      # Phase 1 - get the data from Clyde and store it
-      puts "--- Sync Phase 1 #{Time.now}"
-      phase1(page_size: 500)
-      puts "--- Sync Phase 2 #{Time.now}"
-      # Phase 2
-      phase2
+      # get the data from Clyde and store it
+      puts "--- Sync Load Phase #{Time.now}"
+      load_phase(page_size: 500)
+      puts "--- Update Phase #{Time.now}"
+      number_updated = update_phase
+      puts "--- Match Phase #{Time.now}"
+      number_matched = matched_phase 
 
       # update the status
       status = RegistrationSyncStatus.order('created_at desc').first
       status = RegistrationSyncStatus.new if status == nil
+
+      status.result = {
+        updated: number_updated,
+        matched: number_matched,
+        not_found: Person.where("reg_id is null").count
+      }
       status.status = 'completed'
       status.save!
     end
@@ -29,7 +36,7 @@ class RegistrationSyncWorker
 
   # Phase 1 is to suck up the data from Reg and put it into a temp store
   # for matching
-  def phase1(page_size: 500)
+  def load_phase(page_size: 500)
     # Get the clyde service and use the AUTH key that we have
     svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
     if !svc.token
@@ -52,8 +59,26 @@ class RegistrationSyncWorker
     end
   end
 
+  def update_phase
+    number_updated = 0
+    Person.transaction do
+      existing = Person.where("reg_id is not null")
+      existing.each do |person|
+        datum = RegistrationSyncDatum.find_by reg_id: person.reg_id
+
+        next unless datum
+
+        # TODO: only update if data has changed ...
+        IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: Person.reg_matches[:automatic])
+        number_updated += 1
+      end
+    end
+
+    number_updated
+  end
+
   # Find good matches and update their information with that from the reg service
-  def phase2
+  def matched_phase
     # Find all the people that have an unique match for name AND email
     # (i.e. there is no other match for that registration info)
     matched = Registration::RegistrationMapCount.where(
@@ -63,18 +88,22 @@ class RegistrationSyncWorker
                 ).where("sub_count = 2")
 
     # Update those people with matched information
+    number_matched = 0
     Person.transaction do
       matched.each do |match|
         person = match.person
-        # If the person has been mapped to another reg then we ignore it
-        next if (person.reg_id && (person.reg_id != match.reg_id))
+        # If the person has already been mapped then we ignore it
+        next if person.reg_id #(person.reg_id && (person.reg_id != match.reg_id))
 
         datum = RegistrationSyncDatum.find_by reg_id: match.reg_id
 
         # If we match via the worker it is an "automatic match"
         IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: Person.reg_matches[:automatic])
+        number_matched += 1
       end
     end
+
+    number_matched
   end
 
   def store_reg_data(data:)

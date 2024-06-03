@@ -1062,7 +1062,8 @@ CREATE TABLE public.job_statuses (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    type character varying
+    type character varying,
+    result jsonb
 );
 
 
@@ -1679,6 +1680,9 @@ CREATE VIEW public.registration_map_counts AS
     rsm.pid,
     count(rsm.pid) AS sub_count
    FROM public.registration_sync_matches rsm
+  WHERE ((NOT (rsm.pid IN ( SELECT dismissed_reg_sync_matches.person_id
+           FROM public.dismissed_reg_sync_matches))) AND (NOT ((rsm.reg_id)::text IN ( SELECT dismissed_reg_sync_matches.reg_id
+           FROM public.dismissed_reg_sync_matches))))
   GROUP BY rsm.reg_id, rsm.pid;
 
 
@@ -3937,6 +3941,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240521184252'),
 ('20240521193119'),
 ('20240522174506'),
-('20240522190737');
+('20240522190737'),
+('20240602172220');
 
 
