@@ -21,14 +21,22 @@
 #  index_registration_sync_data_on_reg_id               (reg_id)
 #  index_registration_sync_data_on_registration_number  (registration_number)
 #
-class RegistrationSyncDatum < ApplicationRecord
-  has_many :registration_sync_matches,
-           class_name: 'Registration::RegistrationSyncMatch',
-           foreign_key: 'rid'
+class RegistrationSyncDatumSerializer
+  include JSONAPI::Serializer
 
-  # limit the matches ...?
-  # Add index of reg_id to people
-  # where reg_id not in people.reg_id
+  attributes :id, :lock_version, :created_at, :updated_at,
+             :reg_id, :registration_number, :name, :email,
+             :preferred_name, :alternative_email,
+             :raw_info
 
-  has_many :people, through: :registration_sync_matches
+  # The people that this data could be matched to
+  # has_many :people, serializer: PersonSerializer,
+  #             links: {
+  #               self: -> (object, params) {
+  #                 "#{params[:domain]}/registration_sync_datum/#{object.id}"
+  #               },
+  #               related: -> (object, params) {
+  #                 "#{params[:domain]}/registration_sync_datum/#{object.id}/people"
+  #               }
+  #             }
 end

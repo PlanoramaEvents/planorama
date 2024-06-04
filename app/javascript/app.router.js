@@ -22,6 +22,8 @@ const loginRoutes = [
 import AdminComponent from './administration/admin_component.vue';
 import AdminConfigurationsComponent from './administration/admin_configurations.vue';
 
+import AdminRegistrationsComponent from './administration/admin_registrations.vue';
+
 import PlayGroundComponent from './administration/playground_component.vue';
 
 // people
@@ -163,6 +165,14 @@ export const router = new VueRouter({
     {
       path: '/admin-configurations',
       component: AdminConfigurationsComponent,
+      meta: {
+        requiresAdmin: true,
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/admin-registrations',
+      component: AdminRegistrationsComponent,
       meta: {
         requiresAdmin: true,
         requiresAuth: true

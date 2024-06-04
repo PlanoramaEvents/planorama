@@ -2,7 +2,7 @@
   <div id="side-navbar" class="col-12 col-sm-2 col-xl-2 pl-0">
     <b-nav vertical>
       <b-nav-item to="/dashboard" active-class="active"><b-icon-pie-chart-fill class="mr-2"></b-icon-pie-chart-fill>Dashboard</b-nav-item>
-      <b-nav-item v-if="can_see_this" to="/venues" active-class="active"><b-icon-building class="mr-2"></b-icon-building>Venues</b-nav-item>
+      <!-- <b-nav-item v-if="can_see_this" to="/venues" active-class="active"><b-icon-building class="mr-2"></b-icon-building>Venues</b-nav-item> -->
       <b-nav-item v-if="can_see_this" to="/people" active-class="active"><b-icon-person-fill class="mr-2"></b-icon-person-fill>People</b-nav-item>
       <!-- <b-nav-item v-b-toggle.collapse-mailing variant="primary"><b-icon-envelope-fill class="mr-2"></b-icon-envelope-fill>Communications</b-nav-item>
       <b-collapse id="collapse-mailing" class="mt-2">
@@ -16,6 +16,7 @@
       <b-nav-item to="/profile" active-class="active"><b-icon-person-badge class="mr-2"></b-icon-person-badge>Profile</b-nav-item>
       <b-nav-item v-if="currentUserIsAdmin" to="/admin" active-class="active"><b-icon-minecart-loaded class="mr-2"></b-icon-minecart-loaded>Admin</b-nav-item>
       <b-nav-item v-if="currentUserIsAdmin" to="/admin-configurations" active-class="active"><b-icon-minecart-loaded class="mr-2"></b-icon-minecart-loaded>Configurations</b-nav-item>
+      <b-nav-item v-if="currentUserIsAdmin" to="/admin-registrations" active-class="active"><b-icon-minecart-loaded class="mr-2"></b-icon-minecart-loaded>Registrations</b-nav-item>
     </b-nav>
   </div>
 </template>
