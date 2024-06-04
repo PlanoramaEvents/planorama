@@ -39,7 +39,13 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   attribute :tags do
     res = []
     
-    res = session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name)
+    res = object.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect{|t|
+      {
+        value: "tag_".concat(t.name.gsub(/\s/,'_')),
+        category: "Tag",
+        label: t.name
+      }      
+    }
 
     case object.environment
     when 'in_person'
