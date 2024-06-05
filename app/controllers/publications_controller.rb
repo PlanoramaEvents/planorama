@@ -9,6 +9,7 @@ class PublicationsController < ApplicationController
                   SessionService.live_sessions
                 end
 
+    # TODO - check this
     send_data XmlFormatter.new(sessions).render('schedule', sessions)
     .gsub(/&lt;em&gt;/, '<em>')
     .gsub(/&lt;\/em&gt;/, '</em>')
@@ -25,8 +26,9 @@ class PublicationsController < ApplicationController
     .gsub(/\n\<\/timeduration\>/, '</timeduration>')
     .gsub(/\n\<room\>/, '<room>')
     .gsub(/\n\<areas\>/, ' - <areas>')
+    .gsub(/\n\<tags\>/, '<tags>')
     .gsub(/\n\<format\>/, ', <format>')
-    .gsub(/\n\<\/roomareasformat\>/, '</roomareasformat>')
+    .gsub(/\n\<\/roomareasformattags\>/, '</roomareasformattags>')
     .gsub(/\<participants\>\n/, '<participants>')
     .gsub(/\<person\>\n/, '<person>')
     .gsub(/\n\<person\>/, '<person>')

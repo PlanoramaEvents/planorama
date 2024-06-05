@@ -21,8 +21,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     object.start_time
   end
 
-
-  attribute :tags do
+  attribute :areas do |session|
     res = []
 
     object.area_list.each do |area|
@@ -33,6 +32,20 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       }
       res << a
     end
+
+    res
+  end
+
+  attribute :tags do
+    res = []
+    
+    res = object.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect{|t|
+      {
+        value: "tag_".concat(t.name.gsub(/\s/,'_')),
+        category: "Tag",
+        label: t.name
+      }      
+    }
 
     case object.environment
     when 'in_person'
@@ -53,7 +66,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       t = {
         value: "session_".concat(object.environment),
         category: "Environment",
-        label: 'Virtual'
+        label: 'Online'
       }
       res << t
     else

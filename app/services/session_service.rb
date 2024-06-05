@@ -91,7 +91,11 @@ module SessionService
       'labels_list_table.labels_array',
       'tags_list_table.tags_array'
     )
-      .includes(:format, :room, {participant_assignments: :person})
+      .includes(
+        :format, :room,
+        {participant_assignments: :person},
+        {taggings: :tag}
+      )
       .joins(self.area_subquery(clazz: PublishedSession))
       .joins(self.tags_subquery(clazz: PublishedSession))
       .joins(self.labels_subquery(clazz: PublishedSession))
@@ -120,6 +124,11 @@ module SessionService
       'labels_list_table.labels_array',
       'tags_list_table.tags_array'
     )
+      .includes(
+        :format, :room,
+        {participant_assignments: :person},
+        {taggings: :tag}
+      )
       .joins(self.area_subquery)
       .joins(self.tags_subquery)
       .joins(self.labels_subquery)
@@ -133,7 +142,16 @@ module SessionService
   end
 
   def self.live_sessions
-    sessions.includes(:format, :room, {participant_assignments: :person})
+    Session.select(
+      ::Session.arel_table[Arel.star],
+      'areas_list.area_list'
+    )
+      .includes(
+        :format, :room,
+        {participant_assignments: :person},
+        {taggings: :tag}
+      )
+      .joins(self.area_subquery)
       .where("start_time is not null and room_id is not null")
       .where("status != 'dropped' and status != 'draft'")
       .order(:start_time)
