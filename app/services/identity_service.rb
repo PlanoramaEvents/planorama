@@ -114,7 +114,7 @@ module IdentityService
     if person.registration_number && person.registration_number != details['ticket_number']
       clear_person_reg_info(person: person)
     # If the Reg numbers do not match then we reset cause there may be an issue
-    elsif person.reg_id && person.reg_id != details['id']
+    elsif person.reg_id && person.reg_id != details['id'].to_s
       clear_person_reg_info(person: person)
     else
       person.reg_id = details['id'] unless person.reg_id
@@ -124,17 +124,20 @@ module IdentityService
       person.registered = details['attending_status'] != 'Not Attending'
       person.reg_attending_status = details['attending_status']
       # Need to store time of last sync
-      person.date_reg_synced = Time.now
       # How the registration match was done
       person.reg_match = reg_match
 
+      # This will ensure update is done only any of the reg data has changed
+      if person.changed?
+        person.date_reg_synced = Time.now
+      end
       # Attendance type in Plano is one of
       # in_person, hybrid, virtual
       # Clyde does not map to these well. Recommend that we get this from survey and Person profile
       # in Plano instead.
       # person.attendance_type = 
     end
-    person.save!
+    person.changed? ? person.save! : false
   end
 
   def self.create_identity_from_clyde(details:)
