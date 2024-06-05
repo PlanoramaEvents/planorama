@@ -31,7 +31,7 @@ gem 'composite_primary_keys', '~> 13.0' # Version 13.x is designed to work with 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
-gem 'acts-as-taggable-on', '~> 9.0'
+gem 'acts-as-taggable-on', '~> 10.0'
 gem 'kaminari'
 gem 'active_model_serializers', '~> 0.10.0'
 

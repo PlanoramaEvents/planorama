@@ -67,6 +67,9 @@ class Session < ApplicationRecord
 
   has_paper_trail versions: { class_name: 'Audit::SessionVersion' },
                   ignore: [:updated_at, :created_at, :updated_by, :lock_version, :interest_opened_by, :interest_opened_at],
+                  meta: {
+                    tags: proc { |obj| obj.tag_list }
+                  },
                   limit: nil
 
   belongs_to :format, required: false

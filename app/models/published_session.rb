@@ -38,6 +38,9 @@ class PublishedSession < ApplicationRecord
 
   has_paper_trail versions: { class_name: 'Audit::PublishedSessionVersion' },
                   ignore: [:updated_at, :created_at, :lock_version, :integrations],
+                  meta: {
+                    tags: proc { |obj| obj.tag_list }
+                  },
                   limit: nil
 
   belongs_to :format, required: false
