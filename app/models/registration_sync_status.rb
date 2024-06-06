@@ -11,5 +11,5 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
-class PublicationStatus < JobStatus
+class RegistrationSyncStatus < JobStatus
 end

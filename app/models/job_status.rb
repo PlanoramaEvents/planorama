@@ -11,5 +11,6 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
-class PublicationStatus < JobStatus
+class JobStatus < ApplicationRecord
+  validates_inclusion_of :status, in: %w[inprogress completed]
 end

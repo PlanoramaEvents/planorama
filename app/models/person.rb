@@ -66,6 +66,8 @@
 #  published_name                  :string
 #  published_name_sort_by          :string
 #  reddit                          :string
+#  reg_attending_status            :string
+#  reg_match                       :enum             default("none")
 #  registered                      :boolean          default(FALSE), not null
 #  registration_number             :string
 #  registration_type               :string
@@ -114,7 +116,9 @@ class Person < ApplicationRecord
   # acts_as_taggable
   acts_as_taggable_on :tags
 
-  has_paper_trail versions: { class_name: 'Audit::PersonVersion' }, ignore: [:updated_at, :created_at, :lock_version, :integrations]
+  has_paper_trail versions: { class_name: 'Audit::PersonVersion' },
+                  ignore: [:updated_at, :created_at, :lock_version, :integrations],
+                  limit: nil
 
   before_destroy :check_if_assigned
   before_save :check_primary_email
@@ -253,6 +257,8 @@ class Person < ApplicationRecord
     declined: 'declined',
     rejected: 'rejected'
   }
+
+  enum reg_match: {none: 'none', automatic: 'automatic', assisted: 'assisted', manual: 'manual', self: 'self'}, _scopes: false
 
   nilify_blanks only: [
     :bio,

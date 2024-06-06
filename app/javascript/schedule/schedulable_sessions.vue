@@ -1,27 +1,17 @@
 <template>
   <div class="all-scheduable-session">
-    <schedule-session-search
-      :value="filter"
-      @change="onSearchChanged"
-    ></schedule-session-search>
+    <schedule-session-search :value="filter" @change="onSearchChanged"></schedule-session-search>
     <div class="all-scheduable-session-list">
-      <div
-        class="scheduable-session mb-1"
-        v-for="session in sortedCollection" :key="session.id"
-        draggable="true"
-        @dragstart="onEventDragStart($event, session)"
-      >
+      <div class="scheduable-session mb-1" v-for="session in sortedCollection" :key="session.id" draggable="true"
+        @dragstart="onEventDragStart($event, session)">
         <strong>{{session.title}}</strong>
         ({{ session.duration ? `${session.duration} min` : 'no duration' }})
+        <span class="badge badge-pill mr-1 badge-warning mr-1" v-for="item in session.tag_list" :key="item">{{ item }}</span>
+        <span class="badge badge-pill mr-1 badge-info mr-1" v-for="item in session.label_list" :key="item">{{ item }}</span>
       </div>
     </div>
-    <b-pagination class="d-flex"
-      v-model="currentPage"
-      :total-rows="totalRows"
-      :per-page="perPage"
-      size="sm"
-      align="center"
-    ></b-pagination>
+    <b-pagination class="d-flex" v-model="currentPage" :total-rows="totalRows" :per-page="perPage" size="sm"
+      align="center"></b-pagination>
   </div>
 </template>
 
@@ -51,6 +41,9 @@ export default {
       // Passing the event's data to Vue Cal through the DataTransfer object.
       e.dataTransfer.setData('event', JSON.stringify(draggable))
       e.dataTransfer.setData('cursor-grab-at', e.offsetY)
+    },
+    pillClass(color) {
+      return `badge badge-pill mr-1 badge-${color} mr-1`
     }
   },
   mounted() {

@@ -58,7 +58,7 @@ export default {
       let retDate = this.value ? DateTime.fromISO(this.value).setZone(this.conventionTimezone) : DateTime.fromISO(this.conventionStart).setZone(this.conventionTimezone);
       if (newTime) {
         console.log('val', newTime, DateTime.fromFormat(newTime, 'HH:mm:ss'))
-        let time = DateTime.fromFormat(newTime, 'HH:mm:ss', {zone: this.conventionTimezone}).toUTC();
+        let time = DateTime.fromFormat(newTime, 'HH:mm:ss', {zone: this.conventionTimezone});
         retDate = retDate.set({
           hour: time.hour,
           minute: time.minute,

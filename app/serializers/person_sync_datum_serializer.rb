@@ -101,39 +101,36 @@
 #  index_people_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_people_on_unlock_token          (unlock_token) UNIQUE
 #
-require 'rails_helper'
+class PersonSyncDatumSerializer
+  include JSONAPI::Serializer
 
-RSpec.describe Person, '#factories' do
-  context 'person' do
-    it 'creates a basic person' do
-      person = create(:person)
-      expect(person.con_state).to eq "not_set"
-      expect(person.email).to_not be_nil
-      expect(person.opted_in).to be false
-      expect(person.registered).to be false
-      expect(person.can_share).to be false
-      expect(person.can_photo).to eq "no"
-      expect(person.can_record).to eq "no"
-    end
-    it 'should not create a person with a name' do         #name should be a required field and non-blank
-      expect { person = create(:person, name: '') }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-  end
+  attributes :id, :name, :name_sort_by, :name_sort_by_confirmed,
+             :pseudonym, :pseudonym_sort_by, :pseudonym_sort_by_confirmed,
+             :published_name, :published_name_sort_by,
+             :job_title, :organization, :reg_id,
+             :primary_email, :contact_email,
+             :reg_match, :date_reg_synced
 
-  context 'pseudonym_person' do
-    it 'creates a person with a pseudonym' do
-      person = create(:pseudonym_person)
-      expect(person.pseudonym).to_not be nil
-      expect(person.pseudonym_sort_by).to_not be nil
-    end
-  end
-
-  context 'registered_person' do
-    it 'creates a registered person' do
-      person = create(:registered_person)
-      expect(person.registered).to be true
-      expect(person.registration_type).to be_truthy
-      expect(person.registration_number).to be_truthy
-    end
-  end
+  has_many  :email_addresses, 
+              if: Proc.new { |record, params| AccessControlService.shared_attribute_access?(instance: record, person: params[:current_person]) },
+              lazy_load_data: true, serializer: EmailAddressSerializer,
+              links: {
+                self: -> (object, params) {
+                  "#{params[:domain]}/person/#{object.id}"
+                },
+                related: -> (object, params) {
+                  "#{params[:domain]}/person/#{object.id}/email_addresses"
+                }
+              }
+  
+  # The reg data that this person could be matched to
+  has_many :registration_sync_data, serializer: RegistrationSyncDatumSerializer
+              # links: {
+              #   self: -> (object, params) {
+              #     "#{params[:domain]}/person_sync_data/#{object.id}"
+              #   },
+              #   related: -> (object, params) {
+              #     "#{params[:domain]}/registration_sync_datum/#{object.id}/registration_sync_data"
+              #   }
+              # }
 end

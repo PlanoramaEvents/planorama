@@ -25,10 +25,14 @@
 #  index_registration_sync_data_on_reg_id               (reg_id)
 #  index_registration_sync_data_on_registration_number  (registration_number)
 #
-require "test_helper"
+class RegistrationSyncDatumSerializer
+  include JSONAPI::Serializer
 
-class RegistrationSyncDatumTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  attributes :id, :lock_version, :created_at, :updated_at,
+             :reg_id, :registration_number, :name, :email,
+             :preferred_name, :alternative_email,
+             :badge_name,
+             :raw_info
+
+  has_one :matched_person, serializer: PersonSerializer
 end
