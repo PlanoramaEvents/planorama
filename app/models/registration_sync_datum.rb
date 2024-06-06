@@ -33,6 +33,10 @@ class RegistrationSyncDatum < ApplicationRecord
   # limit the matches ...?
   # Add index of reg_id to people
   # where reg_id not in people.reg_id
+  has_one :matched_person,
+          class_name: 'Person',
+          foreign_key: 'reg_id',
+          primary_key: 'reg_id'
 
   has_many :people, through: :registration_sync_matches
 end

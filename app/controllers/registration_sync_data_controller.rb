@@ -46,12 +46,18 @@ class RegistrationSyncDataController < ResourceController
            content_type: 'application/json'
   end
 
-  # by default get the data that is not already mapped to a person
-  def default_scope(query: nil)
-    return nil unless query
-
-    # People that have a potential mapping and not already mapped
-    query.where('reg_id not in (select reg_id from people where reg_id is not null)')
-         .where('reg_id in (select reg_id from registration_map_counts)')
+  def serializer_includes
+    [
+      :matched_person
+    ]
   end
+
+  # # by default get the data that is not already mapped to a person
+  # def default_scope(query: nil)
+  #   return nil unless query
+
+  #   # People that have a potential mapping and not already mapped
+  #   query.where('reg_id not in (select reg_id from people where reg_id is not null)')
+  #        .where('reg_id in (select reg_id from registration_map_counts)')
+  # end
 end

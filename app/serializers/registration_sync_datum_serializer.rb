@@ -34,14 +34,5 @@ class RegistrationSyncDatumSerializer
              :badge_name,
              :raw_info
 
-  # The people that this data could be matched to
-  # has_many :people, serializer: PersonSerializer,
-  #             links: {
-  #               self: -> (object, params) {
-  #                 "#{params[:domain]}/registration_sync_datum/#{object.id}"
-  #               },
-  #               related: -> (object, params) {
-  #                 "#{params[:domain]}/registration_sync_datum/#{object.id}/people"
-  #               }
-  #             }
+  has_one :matched_person, serializer: PersonSerializer
 end
