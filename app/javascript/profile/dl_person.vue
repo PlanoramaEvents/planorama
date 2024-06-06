@@ -13,6 +13,7 @@
             <span v-else-if="selected[field] === false">{{  no(field)  }}</span>
             <span v-else-if="selected[field] === null || selected[field].trim().length === 0" class="text-muted">{{ notSpecified(field) }}</span>
             <span v-else class="keep-format">{{selected[field]}}</span>
+            <slot :name="field + '-val-end'" :value="selected[field]"></slot>
           </slot>
         </dd>
     </template>
@@ -32,6 +33,9 @@ export default {
     },
     overrides: {
       default: () => {}
+    },
+    nullText: {
+      default: "Not Specified"
     }
   },
   mixins: [
@@ -46,7 +50,7 @@ export default {
       return this.overrides?.[key]?.[field] ?? defaultText;
     },
     notSpecified(field) {
-      return this.getOverride('null', 'Not Specified', field);
+      return this.getOverride('null', this.nullText, field);
     },
     yes(field) {
       return this.getOverride('true', 'Yes', field);

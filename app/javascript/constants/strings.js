@@ -2,6 +2,7 @@ const twoLines = (line1, line2) => (h) =>  h('p', {}, [line1, h('br'), line2]);
 const errorMessage = (message) => (errorCode) => twoLines(message, `Error code: ${errorCode}`);
 const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`;
 const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []));
+const bold = (text) => (h) => h('strong', {}, text);
 
 module.exports = {
     // login page
@@ -274,6 +275,9 @@ module.exports = {
         global_diaspora: "Member of the global diaspora",
         non_anglophone: "Represent something other than a purely anglophone perspective",
         excluded_demographic_categories: "Participant's demographic categories that should not be discussed on panels that include them",
+        registered: "Registered",
+        registration_type: "Registration Type",
+        reg_attending_status: "Registration Attending Status",
     },
     PERSON_SAVE_SUCCESS: "Profile record saved successfully",
     PERSON_NEVER_LOGGED_IN: "Never logged in",
@@ -362,10 +366,10 @@ module.exports = {
     PROFILE_LINK_EXPLAINATION_1: "When you link your Planorama account to your registration account they are matched, and you will be asked to confirm the correct registration account.",
     PROFILE_LINK_EXPLAINATION_2: "You will continue to log in to Planorama using the password you created, not your registration login details.",
     PROFILE_LINK_EXPLAINATION_TITLE: "What does it mean to link to registration?",
-    REG_ID_SEARCH_PLACEHOLDER: "Search for a registration ID.",
+    REG_ID_SEARCH_PLACEHOLDER: "Search for a ticket number.",
     REG_ID_FOUND: "Found a match in the registration database",
-    REG_ID_NOT_FOUND: "No results found. This number may already be linked. Please check your input.",
+    REG_ID_NOT_FOUND: "No results found. Please check your input.",
     REG_ID_UNLINK_BUTTON: "Unlink Current Registration",
-    REG_ID_UNLINK_CONFIRMATION_TITLE: "Really really???",
-    REG_ID_UNLINK_CONFIRMATION_TEXT: "Are you sure, bozo",
+    REG_ID_UNLINK_CONFIRMATION_TITLE: "",
+    REG_ID_UNLINK_CONFIRMATION_TEXT: (name, number) => `This will unlink ${name} from Ticket Number ${number}.`,
 }
