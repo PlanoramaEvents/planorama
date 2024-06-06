@@ -28,13 +28,19 @@ class ScheduleController < ApplicationController
   end
 
   def participants
-    participants = SessionService.scheduled_people
+    cached = PublicationDate.order('created_at desc').first&.publish_snapshots&.participants&.first
 
-    render json: ActiveModel::Serializer::CollectionSerializer.new(
-              participants,
-              serializer: Conclar::ParticipantSerializer
-            ),
-            content_type: 'application/json'
+    if cached
+      render json: cached.snapshot, content_type: 'application/json'
+    else
+      participants = SessionService.scheduled_people
+
+      render json: ActiveModel::Serializer::CollectionSerializer.new(
+                participants,
+                serializer: Conclar::ParticipantSerializer
+              ),
+              content_type: 'application/json'
+    end
   end
 
   def setup_cache_header
