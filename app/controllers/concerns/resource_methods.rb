@@ -249,7 +249,7 @@ module ResourceMethods
          .where(collection_where)
         #  anpther where?
 
-    q = q.distinct if join_tables && !join_tables.empty?
+    q = q.distinct if (join_tables && !join_tables.empty?) || make_distinct?
 
     q = q.order(order_string)
 
@@ -759,6 +759,10 @@ module ResourceMethods
   end
 
   def array_col?(col_name:)
+    false
+  end
+
+  def make_distinct?
     false
   end
 

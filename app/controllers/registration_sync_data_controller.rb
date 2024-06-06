@@ -5,6 +5,15 @@ class RegistrationSyncDataController < ResourceController
   DEFAULT_SORTBY = 'registration_sync_data.name'
   DEFAULT_ORDER = 'asc'.freeze
 
+  def sync_statistics
+    authorize current_person, policy_class: policy_class
+    status = RegistrationSyncStatus.order('created_at desc').first
+
+    result = status ? status.result : {}
+    
+    render status: :ok, json: result.to_json, content_type: 'application/json'
+  end
+
   def synchronize
     authorize current_person, policy_class: policy_class
 
@@ -37,24 +46,18 @@ class RegistrationSyncDataController < ResourceController
            content_type: 'application/json'
   end
 
-  # by default get the data that is not already mapped to a person
-  def default_scope(query: nil)
-    return nil unless query
-
-    # People that have a potential mapping and not already mapped
-    query.where('reg_id not in (select reg_id from people where reg_id is not null)')
-         .where('reg_id in (select reg_id from registration_map_counts)')
-  end
-
   def serializer_includes
     [
-      :people
+      :matched_person
     ]
   end
 
-  def includes
-    [
-      :people
-    ]
-  end
+  # # by default get the data that is not already mapped to a person
+  # def default_scope(query: nil)
+  #   return nil unless query
+
+  #   # People that have a potential mapping and not already mapped
+  #   query.where('reg_id not in (select reg_id from people where reg_id is not null)')
+  #        .where('reg_id in (select reg_id from registration_map_counts)')
+  # end
 end

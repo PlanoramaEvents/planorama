@@ -4,8 +4,9 @@
       <div>
         <h5>Identity</h5>
         <div class="d-flex justify-content-between">
-          <dl-person :fields="['name', 'pseudonym']"></dl-person>
-          <registration-link v-if="!readOnly"></registration-link>
+          <dl-person :fields="['name', 'pseudonym', 'registration_number']" :overrides="{'null': {registration_number: 'Unknown'}}"></dl-person>
+          <!-- <registration-link v-if="!readOnly"></registration-link> -->
+          <!-- <dl-person class="mr-3" :fields="['registration_number']"></dl-person> -->
         </div>
       </div>
       <div v-if="readOnly">

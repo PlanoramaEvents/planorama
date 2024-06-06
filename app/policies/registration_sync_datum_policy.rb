@@ -3,8 +3,12 @@ class RegistrationSyncDatumPolicy < PlannerPolicy
     allowed?(action: :people)
   end
 
+  def sync_statistics?
+    allowed?(action: :sync_statistics)
+  end
+
   def synchronize?
-    allowed?(action: :people)
+    allowed?(action: :synchronize)
   end
 
   class Scope < PlannerPolicy::Scope

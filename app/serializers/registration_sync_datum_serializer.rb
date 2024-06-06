@@ -4,6 +4,7 @@
 #
 #  id                  :uuid             not null, primary key
 #  alternative_email   :string
+#  badge_name          :string
 #  email               :string
 #  lock_version        :integer
 #  name                :string
@@ -16,8 +17,11 @@
 #
 # Indexes
 #
+#  index_registration_sync_data_on_alternative_email    (alternative_email) USING gin
+#  index_registration_sync_data_on_badge_name           (badge_name) USING gin
 #  index_registration_sync_data_on_email                (email) USING gin
 #  index_registration_sync_data_on_name                 (name) USING gin
+#  index_registration_sync_data_on_preferred_name       (preferred_name) USING gin
 #  index_registration_sync_data_on_reg_id               (reg_id)
 #  index_registration_sync_data_on_registration_number  (registration_number)
 #
@@ -27,16 +31,8 @@ class RegistrationSyncDatumSerializer
   attributes :id, :lock_version, :created_at, :updated_at,
              :reg_id, :registration_number, :name, :email,
              :preferred_name, :alternative_email,
+             :badge_name,
              :raw_info
 
-  # The people that this data could be matched to
-  # has_many :people, serializer: PersonSerializer,
-  #             links: {
-  #               self: -> (object, params) {
-  #                 "#{params[:domain]}/registration_sync_datum/#{object.id}"
-  #               },
-  #               related: -> (object, params) {
-  #                 "#{params[:domain]}/registration_sync_datum/#{object.id}/people"
-  #               }
-  #             }
+  has_one :matched_person, serializer: PersonSerializer
 end
