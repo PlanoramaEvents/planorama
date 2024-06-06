@@ -473,7 +473,8 @@ CREATE TABLE public.audit_published_session_versions (
     whodunnit character varying,
     object json,
     created_at timestamp without time zone,
-    object_changes json
+    object_changes json,
+    tags jsonb
 );
 
 
@@ -508,7 +509,8 @@ CREATE TABLE public.audit_session_versions (
     whodunnit character varying,
     object json,
     created_at timestamp without time zone,
-    object_changes json
+    object_changes json,
+    tags jsonb
 );
 
 
@@ -3946,6 +3948,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240522174506'),
 ('20240522190737'),
 ('20240602172220'),
+('20240605150110'),
 ('20240606115218');
 
 

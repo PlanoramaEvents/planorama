@@ -7,6 +7,7 @@
 #  item_type      :string           not null
 #  object         :json
 #  object_changes :json
+#  tags           :jsonb
 #  whodunnit      :string
 #  created_at     :datetime
 #  item_id        :uuid             not null
