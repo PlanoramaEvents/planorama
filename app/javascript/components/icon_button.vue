@@ -3,17 +3,19 @@
     <span :id="spanId" class="d-inline-block" :tabindex="disabled ? 0 : -1">
       <b-button
         :size="size"
-        :class="['mx-1', {'px-0': variant === 'link', 'px-2': variant === 'primary'}]"
-        :variant="variant"
+        :class="['mx-1', {'px-0': computedVariant === 'link', 'px-2': computedVariant === 'primary'}]"
+        :variant="computedVariant"
         v-on="$listeners"
         :id="id"
         :disabled="disabled"
         :style="style"
+        :title="tooltip"
         v-b-tooltip.bottom
         v-bind="$attrs"
+        v-b-modal="modal"
       >
-        <slot v-bind="{variant: iconVariant}">
-          <b-icon v-if="icon" :icon="icon" :variant="iconVariant"></b-icon>
+        <slot v-bind="{variant: iconVariant, disabled}">
+          <b-icon v-if="icon" :icon="icon" :variant="iconVariant" :class="{'text-muted': disabled}"></b-icon>
         </slot>
       </b-button>
     </span>
@@ -35,6 +37,10 @@ export default {
       type: String,
       required: false
     },
+    variant: {
+      type: String,
+      default: 'primary'
+    },
     disabledTooltip: {
       type: String,
       default: "This button is disabled"
@@ -51,23 +57,30 @@ export default {
       type: String,
       default: "sm"
     },
+    tooltip: {
+      type: String,
+    },
+    modal: {
+      type: String,
+    }
   },
   computed: {
-    variant() {
+    computedVariant() {
       switch(this.background) {
         case "none":
           return "link";
         case "default":
           return "primary";
+        case "danger":
+          return "danger";
       }
     },
     iconVariant() {
-      switch(this.variant) {
+      switch(this.computedVariant) {
         case "link":
-          return "primary";
-        case "primary": {
+          return this.disabled ? undefined : this.variant;
+        case "primary": 
           return undefined;
-        }
       }
     },
     spanId() {

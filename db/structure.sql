@@ -224,6 +224,19 @@ CREATE TYPE public.phone_type_enum AS ENUM (
 
 
 --
+-- Name: reg_match_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.reg_match_enum AS ENUM (
+    'none',
+    'automatic',
+    'assisted',
+    'manual',
+    'self'
+);
+
+
+--
 -- Name: schedule_approval_enum; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -667,7 +680,8 @@ END) STORED,
     non_anglophone character varying,
     fediverse character varying,
     bsky character varying,
-    reg_attending_status character varying
+    reg_attending_status character varying,
+    reg_match public.reg_match_enum DEFAULT 'none'::public.reg_match_enum
 );
 
 
@@ -926,6 +940,20 @@ CREATE TABLE public.curated_tags (
 
 
 --
+-- Name: dismissed_reg_sync_matches; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dismissed_reg_sync_matches (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    person_id uuid NOT NULL,
+    reg_id character varying NOT NULL,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: email_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1034,7 +1062,8 @@ CREATE TABLE public.job_statuses (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     lock_version integer DEFAULT 0,
-    type character varying
+    type character varying,
+    result jsonb
 );
 
 
@@ -1612,7 +1641,8 @@ CREATE TABLE public.registration_sync_data (
     raw_info jsonb DEFAULT '{}'::jsonb NOT NULL,
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    badge_name character varying
 );
 
 
@@ -2441,6 +2471,14 @@ ALTER TABLE ONLY public.curated_tags
 
 
 --
+-- Name: dismissed_reg_sync_matches dismissed_reg_sync_matches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dismissed_reg_sync_matches
+    ADD CONSTRAINT dismissed_reg_sync_matches_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: email_addresses email_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2944,6 +2982,20 @@ CREATE UNIQUE INDEX fl_configurations_unique_index ON public.configurations USIN
 
 
 --
+-- Name: idx_people_reg_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_people_reg_id ON public.people USING btree (reg_id);
+
+
+--
+-- Name: idx_person_reg_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_person_reg_id ON public.dismissed_reg_sync_matches USING btree (person_id, reg_id);
+
+
+--
 -- Name: idx_tagname_on_context; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3032,6 +3084,20 @@ CREATE INDEX index_audit_survey_versions_on_item_type_and_item_id ON public.audi
 --
 
 CREATE INDEX index_convention_roles_on_person_id ON public.convention_roles USING btree (person_id);
+
+
+--
+-- Name: index_dismissed_reg_sync_matches_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dismissed_reg_sync_matches_on_person_id ON public.dismissed_reg_sync_matches USING btree (person_id);
+
+
+--
+-- Name: index_dismissed_reg_sync_matches_on_reg_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dismissed_reg_sync_matches_on_reg_id ON public.dismissed_reg_sync_matches USING btree (reg_id);
 
 
 --
@@ -3231,6 +3297,20 @@ CREATE INDEX index_published_sessions_on_format_id ON public.published_sessions 
 
 
 --
+-- Name: index_registration_sync_data_on_alternative_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_alternative_email ON public.registration_sync_data USING gin (alternative_email public.gin_trgm_ops);
+
+
+--
+-- Name: index_registration_sync_data_on_badge_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_badge_name ON public.registration_sync_data USING gin (badge_name public.gin_trgm_ops);
+
+
+--
 -- Name: index_registration_sync_data_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3242,6 +3322,13 @@ CREATE INDEX index_registration_sync_data_on_email ON public.registration_sync_d
 --
 
 CREATE INDEX index_registration_sync_data_on_name ON public.registration_sync_data USING gin (name public.gin_trgm_ops);
+
+
+--
+-- Name: index_registration_sync_data_on_preferred_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_sync_data_on_preferred_name ON public.registration_sync_data USING gin (preferred_name public.gin_trgm_ops);
 
 
 --
@@ -3853,7 +3940,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240303213410'),
 ('20240423130325'),
 ('20240429160250'),
-('20240515001411');
-
+('20240515001411'),
+('20240521184252'),
+('20240521193119'),
+('20240522174506'),
+('20240522190737'),
+('20240602172220'),
+('20240606115218');
 
 

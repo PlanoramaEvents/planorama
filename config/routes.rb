@@ -205,14 +205,16 @@ Rails.application.routes.draw do
   resources :page_contents, path: 'page_content'
 
   #
+  get 'registration_sync_data/sync_statistics', to: 'registration_sync_data#sync_statistics'
   get 'registration_sync_data/synchronize', to: 'registration_sync_data#synchronize'
   resources :registration_sync_data, path: 'registration_sync_datum' do
     # This needs to work a bit different than the other sub relationships
     get 'people', to: 'registration_sync_data#people'
   end
 
+  post 'person_sync_datum/dismiss_match', to: 'person_sync_data#dismiss_match'
+  post 'person_sync_datum/match', to: 'person_sync_data#match'
   resources :person_sync_data, path: 'person_sync_datum'
-  # get registration_sync_data
 
   # Curated tags are the list of tags for a given context etc
   resources :curated_tags, path: 'curated_tag'

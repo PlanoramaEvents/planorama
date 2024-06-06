@@ -11,7 +11,7 @@
         <pre>{{ item.raw_info | pretty }}</pre>
       </template>
       <template #cell(people)="{ item }">
-        <div v-for="person in item.people">
+        <div v-for="person in item.people" :key="person.id">
           <a :href="personLink(person.id)">{{ person.name }}</a>
         </div>
       </template>
