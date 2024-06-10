@@ -345,8 +345,8 @@
         <a href="/report/session_reports/session_needs" target="_blank">Session Needs</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Session setup requirements, one line per session<br />
-          <strong><em>Fields</em></strong>: Session title, session start time, session room, session environment, session format, session area(s), tags, admin labels, required room features&#8725;services, tech&#8725;hotel notes, room setup<br />
-          <strong><em>Session data included</em></strong>: all published sessions in the most recent publish<br />
+          <strong><em>Fields</em></strong>: Session title, session start time, duration, session room, session environment, is session livestreamed (y/n), is session recorded (y/n), session format, session area(s), tags, admin labels, required room features&#8725;services, tech&#8725;hotel notes, room setup<br />
+          <strong><em>Session data included</em></strong>: all sessions with a time and place that are not dropped<br />
         </p>
       </li>
       <li>
