@@ -1,6 +1,7 @@
 #
 # XML template for a collection of sessions
 #
+# TODO:
 xml.schedule {
   # We need a <day> header at the start of the document, so
   # before_1st_session needs to be at least 86400 seconds (the
@@ -33,7 +34,7 @@ xml.schedule {
         xml.start_time(session.start_time.strftime("%-l:%M"))
         xml.duration(session.duration)
       }
-      xml.roomareasformat{
+      xml.roomareasformattags{
         session.environment == 'virtual' ? xml.virtual(session.room.name) : xml.room(session.room.name)
         xml.areas(session.area_list.join(", "))
         if session.format
@@ -41,6 +42,7 @@ xml.schedule {
         end
         session.streamed ? xml.streamed("- Livestream") : ""
         session.recorded ? xml.recorded("- Recorded") : ""
+        xml.tags(session.tag_list.join(", "))
       }
       xml.description(session.description)
       # If there are no visible participants, do not create an empty
