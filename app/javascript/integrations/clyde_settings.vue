@@ -25,7 +25,8 @@
     </div>
     <plano-modal id="confirm-reg-sync" @ok="synchronizeSchedule()">
       <template #modal-title>Synchonize Registration Info</template>
-      Only bad things will happen if you do this. Also this text needs to be in a strings file.
+      This will sync with the Registration system. This will bring the server down for a short time.
+      Please double check that you wish to perform this action.
     </plano-modal>
   </div>
 </template>
