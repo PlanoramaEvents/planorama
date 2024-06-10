@@ -30,7 +30,7 @@ class PublicationWorker
     if pub_date
       PublishedSession.transaction do
         SessionService.cache_published_sessions(publication_date: pub_date)
-        # SessionService.cache_published_participants(publication_date: pub_date)
+        SessionService.cache_published_participants(publication_date: pub_date)
       end
     end
   end
