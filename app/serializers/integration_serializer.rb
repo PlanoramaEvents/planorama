@@ -26,7 +26,8 @@ class IntegrationSerializer
         base_stage_url: integration.config["base_stage_url"],
         base_session_url: integration.config["base_session_url"],
         base_participant_url: integration.config["base_participant_url"],
-        enabled: integration.config["enabled"]
+        enabled: integration.config["enabled"],
+        ticket_name: integration.config["ticket_name"]
       }
     else
       integration.config

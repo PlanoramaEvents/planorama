@@ -7,10 +7,8 @@
           <b-form-checkbox switch v-model="g24rceEnabled" @change="patchG24RCEConfig()"></b-form-checkbox>
         </b-form-group>
 
-        <b-button variant="primary" size="sm" class="ml-2" :disabled="!g24rceEnabled" @click="exportPartipants">Export
-          Participants</b-button>
-        <b-button variant="primary" size="sm" class="ml-2" :disabled="!g24rceEnabled" @click="exportSessions">Export
-          Sessions</b-button>
+        <!-- <a href="/rce/participants" target="_blank" class="btn btn-primary mr-2">Export Participants</a> -->
+        <a href="/rce/schedule" target="_blank" class="btn btn-primary">Export Sessions</a>
 
         <b-form-group label="Base URL for RCE Stages" class="ml-2 mt-5">
           <b-form-input type="text" v-model="g24rceBaseStageUrl" @blur="patchClydeConfig()"
@@ -31,20 +29,10 @@
 
 <script>
 import { g24rceMixin } from './g24rce.mixin'
-import { toastMixin } from '@/mixins';
-import { http } from '@/http';
 
 export default {
   name: "G24RCESettings",
-  mixins: [g24rceMixin, toastMixin],
-  methods: {
-    exportPartipants() {
-
-    },
-    exportSessions() {
-
-    }
-  }
+  mixins: [g24rceMixin]
 }
 </script>
 
