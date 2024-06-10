@@ -120,6 +120,7 @@ Rails.application.routes.draw do
   resources :integrations, path: 'integration', only: [:index, :update]
   get 'integration/airmeet', to: 'integrations#airmeet'
   get 'integration/clyde', to: 'integrations#clyde'
+  get 'integration/g24rce', to: 'integrations#g24rce'  
 
   resources :availabilities, path: 'availability', except: [:index]
   resources :person_exclusions, path: 'person_exclusion', except: [:index]
