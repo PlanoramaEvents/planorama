@@ -6,7 +6,11 @@ class RceController < ApplicationController
   def schedule
     authorize Session, policy_class: RcePolicy
 
-    sessions = SessionService.scheduled_sessions
+    # Need to get sessions that are online or hybrid ...
+    # and/or streamed
+    sessions = SessionService.scheduled_sessions.where(
+        "environment in (?) or streamed = true", ['hybrid', 'virtual']
+      )
 
     send_data generate_csv(sessions),
               filename: "schedule-#{Time.now.strftime('%m-%d-%Y')}.csv",
@@ -24,19 +28,19 @@ class RceController < ApplicationController
       csv << column_names
 
       sessions.each do |session|
+        next unless session.room.integrations["rce"]
+
         csv << [
           session.start_time.strftime("%Y-%m-%d"),
-          # "2024-07-19",
           session.start_time.strftime("%H:%M"),
           (session.start_time + session.duration.minutes).strftime("%Y-%m-%d"),
-          # "2024-07-19",
           (session.start_time + session.duration.minutes).strftime("%H:%M"),
           session.title,
           session.description, # HTML may be an issue ...
           session.title,
-          'sessions',
+          session.room.integrations["rce"] ? session.room.integrations["rce"]["SegmentType"] : "sessions",
           # Areas and tags
-          "#{session.area_list.sort.join(', ')}, #{session.tags_array&.join(', ')}", # Tags may be new line seperated?
+          "#{session.area_list.sort.join(', ')}, #{session.tag_list&.join(', ')}", # Tags may be new line seperated?
           'regular'
         ]
       end
