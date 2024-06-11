@@ -49,9 +49,13 @@ module SessionService
   def self.cache_published_sessions(publication_date:)
     sessions = self.published_sessions
 
+    g24rce = Integration.find_by({name: 'g24rce'})
     snapshot = ActiveModel::Serializer::CollectionSerializer.new(
                   sessions,
-                  serializer: Conclar::SessionSerializer
+                  {
+                    serializer: Conclar::SessionSerializer,
+                    g24rce: g24rce[:config] ? g24rce[:config]['base_portal_url'] : nil
+                  }
                 ) #.serializable_hash
 
     PublishSnapshot.create!(

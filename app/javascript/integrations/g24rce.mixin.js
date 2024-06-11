@@ -19,33 +19,13 @@ export const g24rceMixin = {
         }
       }
     },
-    g24rceBaseStageUrl: {
+    g24rceBasebPortalUrl: {
       get() {
-        return this.g24rce?.config?.base_stage_url
+        return this.g24rce?.config?.base_portal_url
       },
       set(val) {
         if (this.g24rce?.config) {
-          this.g24rce.config.base_stage_url = val;
-        }
-      }
-    },
-    g24rceBaseSessionUrl: {
-      get() {
-        return this.g24rce?.config?.base_session_url
-      },
-      set(val) {
-        if (this.g24rce?.config) {
-          this.g24rce.config.base_session_url = val;
-        }
-      }
-    },
-    g24rceBaseParticipantUrl: {
-      get() {
-        return this.g24rce?.config?.base_participant_url
-      },
-      set(val) {
-        if (this.g24rce?.config) {
-          this.g24rce.config.base_participant_url = val;
+          this.g24rce.config.base_portal_url = val;
         }
       }
     }

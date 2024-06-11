@@ -23,9 +23,7 @@ class IntegrationSerializer
       }
     elsif integration.name === 'g24rce'
       {
-        base_stage_url: integration.config["base_stage_url"],
-        base_session_url: integration.config["base_session_url"],
-        base_participant_url: integration.config["base_participant_url"],
+        base_portal_url: integration.config["base_portal_url"],
         enabled: integration.config["enabled"],
         ticket_name: integration.config["ticket_name"]
       }

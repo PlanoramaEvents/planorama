@@ -7,19 +7,10 @@
           <b-form-checkbox switch v-model="g24rceEnabled" @change="patchG24RCEConfig()"></b-form-checkbox>
         </b-form-group>
 
-        <!-- <a href="/rce/participants" target="_blank" class="btn btn-primary mr-2">Export Participants</a> -->
         <a href="/rce/schedule" target="_blank" class="btn btn-primary">Export Sessions</a>
 
-        <b-form-group label="Base URL for RCE Stages" class="ml-2 mt-5">
-          <b-form-input type="text" v-model="g24rceBaseStageUrl" @blur="patchClydeConfig()"
-            :disabled="!g24rceEnabled"></b-form-input>
-        </b-form-group>
-        <b-form-group label="Base URL for RCE Sessions" class="ml-2">
-          <b-form-input type="text" v-model="g24rceBaseSessionUrl" @blur="patchClydeConfig()"
-            :disabled="!g24rceEnabled"></b-form-input>
-        </b-form-group>
-        <b-form-group label="Base URL for Participant Join" class="ml-2">
-          <b-form-input type="text" v-model="g24rceBaseParticipantUrl" @blur="patchClydeConfig()"
+        <b-form-group label="Base URL for Portal" class="ml-2 mt-5">
+          <b-form-input type="text" v-model="g24rceBasebPortalUrl" @blur="patchG24RCEConfig()"
             :disabled="!g24rceEnabled"></b-form-input>
         </b-form-group>
       </div>
