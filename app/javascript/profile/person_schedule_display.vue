@@ -16,6 +16,10 @@
             <dl class="indented-dl">
               <dt>Title</dt>
               <dd>{{session.title}}</dd>
+              <dt v-if="session.links">Participant Join URL</dt>
+              <dd v-if="session.links">
+                To join as a participant click <a :href="session.links.join">here</a>
+              </dd>
               <dt>Participants (with contact information where allowed)</dt>
               <dd v-for="p in session.moderators" :key="p.published_name">{{p.published_name}} (m) {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
               <dd v-for="p in session.participants" :key="p.published_name">{{p.published_name}} {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
