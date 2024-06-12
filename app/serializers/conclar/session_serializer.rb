@@ -128,23 +128,24 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   # links is an array that contains a set of url links for the programme item.
   # Currently, signup, meeting and recording are the valid link types.
   attribute :links do
-    # signup ?????
-    if instance_options[:g24rce] && object.room.integrations["rce"]
-      if object.room.integrations["rce"]["SegmentType"] == "stage"
-        {
-          meeting: "#{instance_options[:g24rce]}deep-link/stage?room_id=#{object.room.id}",
-          chat: "#{instance_options[:g24rce]}deep-link/chat?room_id=#{object.room.id}",
-          recording: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
-        }
-      else # session
-        {
-          meeting: "#{instance_options[:g24rce]}deep-link/session?item_id=#{object.id}",
-          chat: "#{instance_options[:g24rce]}deep-link/chat?item_id=#{object.id}",
-          recording: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
-        }
+    if instance_options[:g24rce]
+      if object.environment == 'virtual' || object.streamed
+        if object.room.integrations["rce"] && object.room.integrations["rce"]["SegmentType"]
+          if object.room.integrations["rce"]["SegmentType"] == "stage"
+            {
+              meeting: "#{instance_options[:g24rce]}deep-link/stage?room_id=#{object.room.id}",
+              chat: "#{instance_options[:g24rce]}deep-link/chat?room_id=#{object.room.id}",
+              recording: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
+            }
+          else # session
+            {
+              meeting: "#{instance_options[:g24rce]}deep-link/session?item_id=#{object.id}",
+              chat: "#{instance_options[:g24rce]}deep-link/chat?item_id=#{object.id}",
+              recording: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
+            }
+          end
+        end
       end
-    else
-      nil
     end
   end
 
