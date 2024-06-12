@@ -42,24 +42,26 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       res << a
     end
 
+    # TODO: change
+    # In Person, Online, both
     case object.environment
     when 'in_person'
       t = {
-        value: "session_".concat(object.environment),
+        value: "session_in_person",
         category: "Environment",
         label: 'In Person'
       }
       res << t
     when 'hybrid'
       t = {
-        value: "session_".concat(object.environment),
+        value: "session_in_person",
         category: "Environment",
-        label: 'Hybrid'
+        label: 'In Person'
       }
       res << t
     when 'virtual'
       t = {
-        value: "session_".concat(object.environment),
+        value: "session_online",
         category: "Environment",
         label: 'Online'
       }
@@ -96,11 +98,17 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
 
     if object.streamed
       t = {
-        value: "session_streamed",
+        value: "session_online",
         category: "Environment",
-        label: "Streamed"
+        label: 'Online'
       }
       res << t
+      # t = {
+      #   value: "session_streamed",
+      #   category: "Environment",
+      #   label: "Streamed"
+      # }
+      # res << t
     end
 
     res
