@@ -28,7 +28,10 @@ class RceController < ApplicationController
       csv << column_names
 
       sessions.each do |session|
-        next unless session.room.integrations["rce"]
+        # Session has an online audience only if it is streamed or virtual (online)
+        next unless session.environment == 'virtual' || session.streamed
+        # If the room is not an online room or an RCE stage then there is no online audience
+        next unless session.room.integrations["rce"] && session.room.integrations["rce"]["SegmentType"]
 
         csv << [
           session.start_time.strftime("%Y-%m-%d"),
