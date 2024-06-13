@@ -229,14 +229,14 @@ class SessionsController < ResourceController
     ]
   end
 
-  def eager_load
-    [
-      {session_areas: :area},
-      :areas,
-      :published_session,
-      {taggings: :tag}
-    ]
-  end
+  # def eager_load
+  #   [
+  #     # {session_areas: :area},
+  #     # :areas,
+  #     # :published_session,
+  #     # {taggings: :tag}
+  #   ]
+  # end
 
   def array_col?(col_name:)
     return true if col_name == 'area_list'
@@ -320,6 +320,7 @@ class SessionsController < ResourceController
     Session.select(
       ::Session.arel_table[Arel.star],
       'conflict_counts.conflict_count',
+      'areas_list.area_list',
       'tags_list_table.tags_array',
       'labels_list_table.labels_array'
     )
