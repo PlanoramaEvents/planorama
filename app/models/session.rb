@@ -191,7 +191,8 @@ class Session < ApplicationRecord
   # TODO: need to add required setup (allowed to be null)
 
   def published?
-    !published_session.nil?
+    # No need to load the whole record ...
+    PublishedSession.exists?(session_id: self.id)
   end
 
   def keep_who_did_it
