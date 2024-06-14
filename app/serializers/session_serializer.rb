@@ -73,7 +73,11 @@ class SessionSerializer
   # NOTE: session.tag_list would work, but if we prefetch taggings and tags this is faster (less DB queries)
   attribute :tag_list do |session|
     if session.has_attribute? :tags_array
-      session.tags_array
+      if session.tags_array
+        session.tags_array
+      else
+        []
+      end
     else
       session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name)
     end
@@ -81,7 +85,11 @@ class SessionSerializer
 
   attribute :label_list do |session|
     if session.has_attribute? :labels_array
-      session.labels_array
+      if session.labels_array
+        session.labels_array
+      else
+        []
+      end
     else
       session.taggings.select{|t| t.context == 'labels'}.collect(&:tag).collect(&:name)
     end
@@ -89,7 +97,11 @@ class SessionSerializer
 
   attribute :area_list do |session|
     if session.has_attribute? :area_list
-      session.area_list
+      if session.area_list
+        session.area_list
+      else
+        []
+      end
     else
       session.areas.collect(&:name).sort{ |a, b| a.downcase <=> b.downcase }
     end
