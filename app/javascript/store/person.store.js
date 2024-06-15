@@ -64,6 +64,7 @@ export const personStore = {
         dispatch('jv/post', [smallItem, { url: `/person/${person.id}/clyde_sync` }]).then((savedModel) => {
           // person should always be selected at this point so we shouldn't check, we should just select.
           commit(SELECT, { model, itemOrId: savedModel });
+          res(savedModel);
           // This is done by admin to selected user so this is not the session user
         }).catch(rej);
       });
