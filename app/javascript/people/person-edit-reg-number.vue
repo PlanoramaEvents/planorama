@@ -2,13 +2,13 @@
   <div>
     <edit-modal
       id="edit-reg-number"
-      title="Edit Registration ID"
+      title="Edit Ticket Number"
       @hidden="onHide()"
       @ok="manualMatchSelected()"
       :ok-disabled="!selected"
     >
       <form @submit.prevent="searchRegId()">
-        <label for="reg-id-input">Registration ID</label>
+        <label for="reg-id-input">Ticket Number</label>
         <div class="d-flex align-items-center input-line">
           <b-input-group prepend="#"
             ><b-form-input
@@ -27,7 +27,10 @@
           v-if="matchedPerson">, already linked to <strong>{{ matchedPerson }}</strong> in Planorama.</span><span
            v-if="!matchedPerson">, not currently linked to anybody in Planorama.</span>
         </h6>
-        <display-sync-data :regData="selected" class="ml-2"></display-sync-data>
+        <b-button v-if="matchedPerson" variant="link" v-b-toggle.sync-data class="pl-0">See matched person</b-button>
+        <b-collapse id="sync-data" :visible="!matchedPerson">
+          <display-sync-data :regData="selected" class="ml-2"></display-sync-data>
+        </b-collapse>
         <div class="text-muted font-italic" v-if="!selected && !searched">
           {{ REG_ID_SEARCH_PLACEHOLDER }}
         </div>
@@ -35,15 +38,6 @@
           {{ REG_ID_NOT_FOUND }}
         </div>
       </div>
-      <!-- <template #modal-footer="{cancel, ok, close}">
-      <div class="d-flex w-100 justify-content-between">
-        <b-button variant="danger" @click="close" v-b-modal.unlink-confirmation :disabled="!canUnlink">{{REG_ID_UNLINK_BUTTON}}</b-button>
-        <div>
-          <b-button variant="link" @click="cancel">Cancel</b-button>
-          <b-button variant="primary" @click="ok" :disabled="!selected">Save</b-button>
-        </div>
-      </div>
-    </template> -->
     </edit-modal>
   </div>
 </template>
@@ -123,7 +117,7 @@ form {
 }
 .display-sync-data {
   margin-top: 1.5rem;
-  min-height: 15rem;
+  min-height: 19rem;
   padding-top: 0.5rem;
   border-top: 1px solid #dee2e6;
 }
