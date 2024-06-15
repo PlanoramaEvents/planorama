@@ -19,7 +19,7 @@ export const personSyncDatumMixin = {
   },
   methods: {
     ...mapActions({
-      matchPersonAndReg: MATCH
+      matchPersonAndReg: MATCH,
     }),
     manualMatch(regId, personId) {
       return this.toastPromise(this.matchPersonAndReg({

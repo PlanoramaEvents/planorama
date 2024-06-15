@@ -1658,7 +1658,7 @@ CREATE VIEW public.registration_sync_matches AS
     rsd.id AS rid,
     'name'::text AS mtype
    FROM (public.people p
-     JOIN public.registration_sync_data rsd ON (((rsd.name)::text ~~* (p.name)::text)))
+     JOIN public.registration_sync_data rsd ON ((((rsd.name)::text ~~* (p.name)::text) OR ((rsd.preferred_name)::text ~~* (p.name)::text) OR ((rsd.badge_name)::text ~~* (p.name)::text) OR ((rsd.name)::text ~~* (p.pseudonym)::text) OR ((rsd.preferred_name)::text ~~* (p.pseudonym)::text) OR ((rsd.badge_name)::text ~~* (p.pseudonym)::text))))
 UNION
  SELECT NULL::character varying AS name,
     e.email,
@@ -1667,7 +1667,8 @@ UNION
     rsd.id AS rid,
     'email'::text AS mtype
    FROM (public.email_addresses e
-     JOIN public.registration_sync_data rsd ON (((rsd.email)::text ~~* (e.email)::text)));
+     JOIN public.registration_sync_data rsd ON ((((rsd.email)::text ~~* (e.email)::text) OR ((rsd.alternative_email)::text ~~* (e.email)::text))))
+  WHERE (e.isdefault = true);
 
 
 --
@@ -1679,6 +1680,9 @@ CREATE VIEW public.registration_map_counts AS
     rsm.pid,
     count(rsm.pid) AS sub_count
    FROM public.registration_sync_matches rsm
+  WHERE ((NOT (rsm.pid IN ( SELECT dismissed_reg_sync_matches.person_id
+           FROM public.dismissed_reg_sync_matches))) AND (NOT ((rsm.reg_id)::text IN ( SELECT dismissed_reg_sync_matches.reg_id
+           FROM public.dismissed_reg_sync_matches))))
   GROUP BY rsm.reg_id, rsm.pid;
 
 

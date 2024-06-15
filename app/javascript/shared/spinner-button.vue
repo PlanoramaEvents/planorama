@@ -1,5 +1,8 @@
 <template>
-  <b-button>
+  <b-button
+    v-on="$listeners"
+    v-bind="$attrs"
+  >
     <b-spinner label="Loading..." v-if="loading"></b-spinner>
     <slot v-if="!loading"></slot>
   </b-button>

@@ -26,7 +26,7 @@ export const personStore = {
       }
       return dispatch(PATCH_FIELDS, {model: personModel, item, fields: Object.keys(data), selected: false })
     },
-    [UNLINK_PERSON] ({dispatch, commit}, {person}) {
+    [UNLINK_PERSON] ({dispatch, commit}, {person, select = true}) {
       const model = personModel;
       // limited field selection
       let smallItem = {
@@ -40,8 +40,9 @@ export const personStore = {
       }
       return new Promise((res, rej) => {
         dispatch('jv/post', [smallItem, {url: `/person/${person.id}/unlink_registration`}]).then((savedModel) => {
-          // person should always be selected at this point so we shouldn't check, we should just select.
-          commit(SELECT, {model, itemOrId: savedModel});
+          if(select) {
+            commit(SELECT, {model, itemOrId: savedModel});
+          }
           dispatch(GET_SESSION_USER, {force: true}).then(() => {
             res(savedModel);
           });

@@ -93,6 +93,7 @@
 #
 # Indexes
 #
+#  idx_people_reg_id                     (reg_id) UNIQUE
 #  index_people_on_bio                   (bio) USING gin
 #  index_people_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_people_on_name                  (name) USING gin
