@@ -24,7 +24,7 @@
             ></icon-button>
           </template>
         </dl-person>
-        <!-- <b-button @click="resyncPerson" variant="primary" :disabled="selected.reg_id == null">Resync Registration</b-button>             -->
+        <b-button @click="resyncPerson" variant="primary" :disabled="selected.reg_id == null">Resync Registration</b-button>
       </div>
       <div class="col-12 col-sm-6 col-lg-4">
         <dt>Status</dt>
