@@ -1,5 +1,6 @@
 module PublicationService
 
+  #
   def self.start_publish_job
     pstatus = PublicationStatus.order('created_at desc').first
     pstatus = PublicationStatus.new if pstatus == nil
@@ -129,6 +130,9 @@ module PublicationService
 
       pub_session.send("#{attr}=", val) # the the attr in the publihsed instance
     end
+    # Need to copy the tags to the puiblished session
+    pub_session.tag_list = session.tag_list
+
     pub_session.session_id = session.id unless pub_session.session_id # point published to source session
 
     pub_session

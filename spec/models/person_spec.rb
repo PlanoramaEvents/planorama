@@ -66,6 +66,8 @@
 #  published_name                  :string
 #  published_name_sort_by          :string
 #  reddit                          :string
+#  reg_attending_status            :string
+#  reg_match                       :enum             default("none")
 #  registered                      :boolean          default(FALSE), not null
 #  registration_number             :string
 #  registration_type               :string
@@ -91,6 +93,7 @@
 #
 # Indexes
 #
+#  idx_people_reg_id                     (reg_id) UNIQUE
 #  index_people_on_bio                   (bio) USING gin
 #  index_people_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_people_on_name                  (name) USING gin

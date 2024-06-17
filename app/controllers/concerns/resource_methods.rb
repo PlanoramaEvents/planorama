@@ -230,11 +230,17 @@ module ResourceMethods
 
     @per_page, @current_page, @filters = collection_params
 
+
     q = if select_fields
           select_fields
         else
           policy_scope(base, policy_scope_class: policy_scope_class)
         end
+
+    if default_scope(query: q)
+      q = default_scope(query: q)
+    end
+
     q = q.includes(includes)
          .references(references)
          .eager_load(eager_load)
@@ -243,7 +249,7 @@ module ResourceMethods
          .where(collection_where)
         #  anpther where?
 
-    q = q.distinct if join_tables && !join_tables.empty?
+    q = q.distinct if (join_tables && !join_tables.empty?) || make_distinct?
 
     q = q.order(order_string)
 
@@ -255,8 +261,11 @@ module ResourceMethods
 
     # TODO we need the size without the query
     if paginated
-      @full_collection_total = policy_scope(base, policy_scope_class: policy_scope_class)
-                            .where(exclude_deleted_clause)
+      fq = policy_scope(base, policy_scope_class: policy_scope_class)
+      if default_scope(query: fq)
+        fq = default_scope(query: fq)
+      end      
+      @full_collection_total = fq.where(exclude_deleted_clause)
                             .includes(includes)
                             .references(references)
                             .eager_load(eager_load)
@@ -527,6 +536,10 @@ module ResourceMethods
     nil
   end
 
+  def default_scope(query: nil)
+    nil
+  end
+
   def model_name
     "#{model_class}"
   end
@@ -746,6 +759,10 @@ module ResourceMethods
   end
 
   def array_col?(col_name:)
+    false
+  end
+
+  def make_distinct?
     false
   end
 
