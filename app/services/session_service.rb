@@ -140,7 +140,6 @@ module SessionService
     )
       .includes(
         :format, :room,
-        {participant_assignments: :person},
         {taggings: :tag}
       )
       .joins(self.area_subquery)
@@ -149,7 +148,7 @@ module SessionService
   end
 
   def self.draft_sessions
-    sessions.includes(:format, :room, {participant_assignments: :person})
+    sessions.includes(:format, :room)
       .where("start_time is not null and room_id is not null")
       .where("status != 'dropped'")
       .order(:start_time)
