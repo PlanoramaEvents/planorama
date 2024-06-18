@@ -31,7 +31,7 @@
         <a href="/report/assigned_sessions_by_participant" target="_blank">Assigned Sessions by Participant</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: People assigned to sessions, one line per person and session<br />
-          <strong><em>Fields</em></strong>: Person name, published name, participant status, attendance type, session title, person’s role in the session, has session been scheduled (y/n), tags, admin labels<br />
+          <strong><em>Fields</em></strong>: Person name, published name, participant status, attendance type, match status, session title, person’s role in the session, has session been scheduled (y/n), tags, admin labels<br />
           <strong><em>Session data included</em></strong>: any session with at least one person assigned as moderator, participant, invisible participant, or reserved<br />
           <strong><em>Person data included</em></strong>: session role of moderator, participant, invisible participant, or reserved
         </p>
