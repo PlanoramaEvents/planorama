@@ -371,5 +371,5 @@ module.exports = {
     REG_ID_NOT_FOUND: "No results found. Please check your input.",
     REG_ID_UNLINK_BUTTON: "Unlink Current Registration",
     REG_ID_UNLINK_CONFIRMATION_TITLE: "",
-    REG_ID_UNLINK_CONFIRMATION_TEXT: (name, number) => `This will unlink ${name} from Ticket Number ${number}.`,
+    REG_ID_UNLINK_CONFIRMATION_TEXT: (name, number) => `This will unlink <b>${name}</b> from Ticket Number ${number}.`,
 }

@@ -53,7 +53,7 @@
       @ok="unlinkPerson()"
       :title="REG_ID_UNLINK_CONFIRMATION_TITLE"
     >
-      {{ REG_ID_UNLINK_CONFIRMATION_TEXT(selected.published_name, selected.registration_number) }}
+      <div v-html="REG_ID_UNLINK_CONFIRMATION_TEXT(selected.published_name, selected.registration_number)"></div>
     </plano-modal>
   </div>
 </template>
