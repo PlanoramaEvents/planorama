@@ -12,7 +12,7 @@
           nullText="Unknown"
         >
           <template #registration_number-val-end>
-            <edit-button v-b-modal.edit-reg-number id="reg-number-edit-button"></edit-button>
+            <edit-button v-if="currentUserIsAdmin" v-b-modal.edit-reg-number id="reg-number-edit-button"></edit-button>
             <icon-button
               modal="unlink-confirmation"
               :disabled="!selected.registration_number"
@@ -21,6 +21,7 @@
               background="none"
               variant="danger"
               icon="trash-fill"
+              v-if="currentUserIsAdmin"
             ></icon-button>
           </template>
         </dl-person>
@@ -59,6 +60,7 @@
 </template>
 
 <script>
+import personSessionMixin from '../auth/person_session.mixin.js';
 import { makeSelectedFieldMixin } from "@/mixins";
 import { modelMixinNoProp } from "@/store/model.mixin";
 import {
@@ -88,7 +90,7 @@ const commentsMixin = makeSelectedFieldMixin("comments");
 
 export default {
   name: "PeopleAdminTab",
-  mixins: [modelMixinNoProp, commentsMixin],
+  mixins: [modelMixinNoProp, commentsMixin, personSessionMixin],
   components: {
     EditModal,
     EditButton,
