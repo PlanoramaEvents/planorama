@@ -44,7 +44,10 @@ xml.schedule {
         session.recorded ? xml.recorded("- Recorded") : ""
         xml.tags(session.tag_list.join(", "))
       }
-      xml.description(session.description)
+      # Remove HTML from description done via Nokogiri parse using the text method
+      description = Nokogiri::HTML.parse session.description
+      # Using the .text method also translates characters to used the proper representation
+      xml.description(description.text)
       # If there are no visible participants, do not create an empty
       # <participants> element, because InDesign would render that
       # as an empty space.
