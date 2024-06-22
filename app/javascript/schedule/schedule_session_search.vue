@@ -14,19 +14,13 @@
       </div>
       <div class="col-12">
         <b-form-group label="Tag" label-cols="4">
-          <b-form-select v-model="tag" :options="sessionTagsOptions" unselected-display="Any Tag" size="sm">
-            <template #first>
-              <b-form-select-option value="" disabled>-- Please select Tag --</b-form-select-option>
-            </template>
+          <b-form-select v-model="tag" :options="sessionTagsDropDownOptions" size="sm">
           </b-form-select>
         </b-form-group>
       </div>
       <div class="col-12">
         <b-form-group label="Label" label-cols="4">
-          <b-form-select v-model="label" :options="sessionLabelsOptions" unselected-display="Any Admin Label" size="sm">
-            <template #first>
-              <b-form-select-option value="" disabled>-- Please select a Label --</b-form-select-option>
-            </template>
+          <b-form-select v-model="label" :options="sessionLabelsDropDownOptions" size="sm">
           </b-form-select>
         </b-form-group>
       </div>
@@ -91,6 +85,26 @@ export default {
         this.onSearch()
       }
     }
+  },
+  computed: {
+    sessionTagsDropDownOptions() {
+      this.sessionTagsOptions.unshift(
+        {
+          value: null,
+          text: "Any Tag"
+        }
+      )
+      return this.sessionTagsOptions
+    },
+    sessionLabelsDropDownOptions() {
+      this.sessionLabelsOptions.unshift(
+        {
+          value: null,
+          text: "Any Label"
+        }
+      )
+      return this.sessionLabelsOptions
+    }    
   },
   methods: {
     fields_to_query() {
