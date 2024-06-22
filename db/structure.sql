@@ -765,7 +765,7 @@ CREATE TABLE public.sessions (
     room_notes text,
     recorded boolean DEFAULT false NOT NULL,
     streamed boolean DEFAULT false NOT NULL,
-    short_title character varying(40) DEFAULT NULL::character varying
+    short_title character varying(30) DEFAULT NULL::character varying
 );
 
 
@@ -1626,7 +1626,7 @@ CREATE TABLE public.published_sessions (
     recorded boolean DEFAULT false NOT NULL,
     streamed boolean DEFAULT false NOT NULL,
     integrations jsonb DEFAULT '{}'::jsonb NOT NULL,
-    short_title character varying(40) DEFAULT NULL::character varying
+    short_title character varying(30) DEFAULT NULL::character varying
 );
 
 

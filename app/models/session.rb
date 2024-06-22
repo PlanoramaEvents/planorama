@@ -24,7 +24,7 @@
 #  recorded                  :boolean          default(FALSE), not null
 #  require_signup            :boolean          default(FALSE)
 #  room_notes                :text
-#  short_title               :string(40)
+#  short_title               :string(30)
 #  start_time                :datetime
 #  status                    :enum             default("draft")
 #  streamed                  :boolean          default(FALSE), not null
@@ -63,7 +63,7 @@ class Session < ApplicationRecord
   validates_numericality_of :maximum_people, allow_nil: true
   validates_numericality_of :audience_size, allow_nil: true
 
-  validates_length_of :short_title, maximum: 40, allow_nil: true
+  validates_length_of :short_title, maximum: 30, allow_nil: true
 
   # NOTE: when we have a config for default duration change to use a lambda
   attribute :duration, default: 60
