@@ -2,7 +2,6 @@ const twoLines = (line1, line2) => (h) =>  h('p', {}, [line1, h('br'), line2]);
 const errorMessage = (message) => (errorCode) => twoLines(message, `Error code: ${errorCode}`);
 const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`;
 const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []));
-const bold = (text) => (h) => h('strong', {}, text);
 
 module.exports = {
     // login page
@@ -371,5 +370,4 @@ module.exports = {
     REG_ID_NOT_FOUND: "No results found. Please check your input.",
     REG_ID_UNLINK_BUTTON: "Unlink Current Registration",
     REG_ID_UNLINK_CONFIRMATION_TITLE: "",
-    REG_ID_UNLINK_CONFIRMATION_TEXT: (name, number) => `This will unlink ${name} from Ticket Number ${number}.`,
 }
