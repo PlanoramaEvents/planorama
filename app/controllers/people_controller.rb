@@ -43,8 +43,26 @@ class PeopleController < ResourceController
 
       IdentityService.update_reg_info(person: person, details: details['data'])
 
+      # Also need to update the datum
+      update_datum(details['data'])
+
       render_object(person)
     end
+  end
+
+  def update_datum(data)
+      datum = RegistrationSyncDatum.find_by reg_id: data['id']
+      if datum
+        datum.update(
+            name: data['full_name']&.strip,
+            email: data['email']&.strip,
+            registration_number: data['ticket_number']&.strip,
+            preferred_name: data['preferred_name']&.strip,
+            alternative_email: data['alternative_email']&.strip,
+            badge_name: data['badge']&.strip,
+            raw_info: data
+          )
+      end
   end
 
   def unlink_registration 
