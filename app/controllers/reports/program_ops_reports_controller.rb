@@ -263,7 +263,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
       session.published_session_assignments.each do |pa|
         worksheet.append_row(
           [
-            session.title,
+            session.short_title || session.title,
             session.room&.name,
             FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
             pa.person.published_name,
@@ -313,7 +313,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
 
       grouped.each do |assignment|
         row.concat [
-          assignment.session.title,
+          assignment.session.short_title || assignment.session.title,
           assignment.session.title.truncate(30),
           assignment.session.start_time ? FastExcel.date_num(assignment.session.start_time, assignment.session.start_time.in_time_zone.utc_offset) : nil,
           "#{assignment.session.duration}m",

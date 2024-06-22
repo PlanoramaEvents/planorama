@@ -337,6 +337,7 @@ class SessionsController < ResourceController
       format_id
       room_set_id
       title
+      short_title
       description
       duration
       minimum_people

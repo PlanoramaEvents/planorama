@@ -135,7 +135,7 @@ class Reports::SessionReportsController < ApplicationController
     sessions.each do |session|
       worksheet.append_row(
         [
-          session.title,
+          session.short_title || session.title,
           session.area_list.sort.join(';'),
           session.tags_array&.join("; "),
           session.labels_array&.join("; "),

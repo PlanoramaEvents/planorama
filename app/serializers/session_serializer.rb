@@ -24,6 +24,7 @@
 #  recorded                  :boolean          default(FALSE), not null
 #  require_signup            :boolean          default(FALSE)
 #  room_notes                :text
+#  short_title               :string(40)
 #  start_time                :datetime
 #  status                    :enum             default("draft")
 #  streamed                  :boolean          default(FALSE), not null
@@ -56,7 +57,7 @@ class SessionSerializer
   include JSONAPI::Serializer
 
   attributes :id, :lock_version, :created_at, :updated_at,
-             :title, :description,
+             :title, :short_title, :description,
              :duration, :minimum_people, :maximum_people,
              :item_notes, :pub_reference_number, :audience_size,
              :participant_notes, :is_break, :start_time,

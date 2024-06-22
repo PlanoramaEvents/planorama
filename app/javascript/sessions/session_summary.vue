@@ -17,6 +17,19 @@
         </b-form-group>
         <b-form-group
           class="mx-3"
+          id="session-short-title-group"
+          label="Session Short Title"
+          label-for="session-short-title"
+        >
+          <b-form-input
+            id="session-short-title"
+            type="text"
+            v-model="session.short_title"
+            @blur="saveSession()"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          class="mx-3"
           id="session-description-group"
           label="Session Description"
           label-for="session-description"
