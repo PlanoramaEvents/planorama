@@ -54,7 +54,7 @@
       @ok="unlinkPerson()"
       :title="REG_ID_UNLINK_CONFIRMATION_TITLE"
     >
-      {{ REG_ID_UNLINK_CONFIRMATION_TEXT(selected.published_name, selected.registration_number) }}
+      This will unlink <strong>{{ selected.published_name }}</strong> from Ticket Number {{selected.registration_number}}.
     </plano-modal>
   </div>
 </template>
@@ -75,7 +75,6 @@ import {
   PERSON_UNLINK_SUCCESS,
   PERSON_UNLINK_FAILURE,
   REG_ID_UNLINK_CONFIRMATION_TITLE,
-  REG_ID_UNLINK_CONFIRMATION_TEXT,
   REG_ID_UNLINK_BUTTON,
 } from "@/constants/strings";
 import { mapActions } from "vuex";
@@ -103,7 +102,6 @@ export default {
     model,
     PERSON_CON_STATE,
     REG_ID_UNLINK_CONFIRMATION_TITLE,
-    REG_ID_UNLINK_CONFIRMATION_TEXT,
     REG_ID_UNLINK_BUTTON,
   }),
   computed: {
