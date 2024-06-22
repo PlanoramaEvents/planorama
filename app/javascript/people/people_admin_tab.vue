@@ -12,16 +12,15 @@
           nullText="Unknown"
         >
           <template #registration_number-val-end>
-            <edit-button v-if="currentUserIsAdmin" v-b-modal.edit-reg-number id="reg-number-edit-button"></edit-button>
+            <edit-button :disabled="!currentUserIsAdmin" v-b-modal.edit-reg-number id="reg-number-edit-button"></edit-button>
             <icon-button
               modal="unlink-confirmation"
-              :disabled="!selected.registration_number"
+              :disabled="!selected.registration_number || !currentUserIsAdmin"
               :tooltip="REG_ID_UNLINK_BUTTON"
-              disabledTooltip="No Ticket Number to unlink"
+              disabledTooltip="You are not an Admin or there is No Ticket Number to unlink"
               background="none"
               variant="danger"
               icon="trash-fill"
-              v-if="currentUserIsAdmin"
             ></icon-button>
           </template>
         </dl-person>
