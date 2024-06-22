@@ -54,7 +54,7 @@
         </div>
       </div>
     </edit-modal>
-    <plano-modal id="unmatch-match">This will unlink {{ matchedPerson }} from ticket number {{ selectedRegNumber }}, and link to the current profile.
+    <plano-modal id="unmatch-match">This will unlink <strong>{{ matchedPerson }}</strong> from ticket number {{ selectedRegNumber }}, and link to the current profile.
       <template #modal-footer="{ok, cancel}">
         <b-button variant="link" @click="cancel()">Cancel</b-button>
         <spinner-button variant="danger" :loading="unlinkLinkLoading" @click="unlinkLink(ok)">Ok</spinner-button>
