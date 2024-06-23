@@ -9,17 +9,13 @@
       </div>
     </div>
     <div class="row">
-      <div :class="{'col-8': !noSidebar, 'col-12': noSidebar}" :style="heightHelper">
+      <div :class="{'col-8': !noSidebar && !showJoinLinks, 'col-12': noSidebar, 'col-10': showJoinLinks}" :style="heightHelper">
         <b-overlay :show="loading" spinner-variant="primary" variant="white" opacity="1">
-          <schedule-collapse v-for="(session) in orderedSessions" :key="session.id" :id="session.id" v-model="open[session.id]">
+          <schedule-collapse v-for="(session) in orderedSessions" :key="session.id" :id="session.id" v-model="open[session.id]" :joinLink="session.links && session.links.join" :showJoinLinks="showJoinLinks">
             <template #title><span class="larger-text"><strong class="larger-text">{{session.title}}</strong>, {{formatStartTime(session)}}, {{session.room}}</span></template>
             <dl class="indented-dl">
               <dt>Title</dt>
               <dd>{{session.title}}</dd>
-              <dt v-if="session.links">Participant Join URL</dt>
-              <dd v-if="session.links">
-                To join as a participant click <a :href="session.links.join">here</a>
-              </dd>
               <dt>Participants (with contact information where allowed)</dt>
               <dd v-for="p in session.moderators" :key="p.published_name">{{p.published_name}} (m) {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
               <dd v-for="p in session.participants" :key="p.published_name">{{p.published_name}} {{p.pronouns}} - {{ p.email ? p.email : 'permission not given'}}</dd>
@@ -45,7 +41,7 @@
           <div v-if="noSessions" class="p-5 text-muted font-italic">There are not currently any sessions for this participant.</div>
         </b-overlay>
       </div>
-      <div class="col-4" v-if="!noSidebar">
+      <div class="col-4" v-if="!noSidebar && !showJoinLinks">
         <slot name="message"></slot>
         <person-schedule-approval :approvalType="approvalType"></person-schedule-approval>
       </div>
@@ -89,7 +85,8 @@ export default {
   data: () => ({
     open: {},
     SESSION_ENVIRONMENT,
-    loading: true
+    loading: true,
+    showJoinLinks: false,
   }),
   computed: {
     anyOpen() {

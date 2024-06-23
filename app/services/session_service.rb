@@ -42,7 +42,7 @@ module SessionService
       {
         params: {
           show_links: show_links,
-          g24rce: g24rce[:config] ? g24rce[:config]['base_portal_url'] : nil
+          g24rce: (g24rce && g24rce[:config]) ? g24rce[:config]['base_portal_url'] : nil
         }
       }
     ).serializable_hash
