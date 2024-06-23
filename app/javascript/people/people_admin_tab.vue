@@ -17,7 +17,7 @@
               modal="unlink-confirmation"
               :disabled="!selected.registration_number || !currentUserIsAdmin"
               :tooltip="REG_ID_UNLINK_BUTTON"
-              disabledTooltip="You are not an Admin or there is No Ticket Number to unlink"
+              disabledTooltip="You are not an admin or there is no Ticket Number to unlink"
               background="none"
               variant="danger"
               icon="trash-fill"
@@ -45,7 +45,7 @@
         >
       </dd>
     </dl>
-    <person-edit-reg-number></person-edit-reg-number>
+    <person-edit-reg-number v-if="currentUserIsAdmin"></person-edit-reg-number>
     <plano-modal
       return-focus="#reg-number-edit-button"
       id="unlink-confirmation"
