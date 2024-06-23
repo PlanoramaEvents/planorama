@@ -1,15 +1,19 @@
 <template>
   <div class="all-scheduable-session">
     <schedule-session-search :value="filter" @change="onSearchChanged"></schedule-session-search>
-    <div class="all-scheduable-session-list">
-      <div class="scheduable-session mb-1" v-for="session in sortedCollection" :key="session.id" draggable="true"
-        @dragstart="onEventDragStart($event, session)">
-        <strong>{{session.title}}</strong>
-        ({{ session.duration ? `${session.duration} min` : 'no duration' }})
-        <span class="badge badge-pill mr-1 badge-warning mr-1" v-for="item in session.tag_list" :key="item">{{ item }}</span>
-        <span class="badge badge-pill mr-1 badge-info mr-1" v-for="item in session.label_list" :key="item">{{ item }}</span>
+    <b-overlay :show="tableBusy" rounded="sm">
+      <div class="all-scheduable-session-list">
+        <div class="scheduable-session mb-1" v-for="session in sortedCollection" :key="session.id" draggable="true"
+          @dragstart="onEventDragStart($event, session)">
+          <strong>{{session.title}}</strong>
+          ({{ session.duration ? `${session.duration} min` : 'no duration' }})
+          <span class="badge badge-pill mr-1 badge-warning mr-1" v-for="item in session.tag_list" :key="item">{{ item
+            }}</span>
+          <span class="badge badge-pill mr-1 badge-info mr-1" v-for="item in session.label_list" :key="item">{{ item
+            }}</span>
+        </div>
       </div>
-    </div>
+    </b-overlay>
     <b-pagination class="d-flex" v-model="currentPage" :total-rows="totalRows" :per-page="perPage" size="sm"
       align="center"></b-pagination>
   </div>
@@ -55,10 +59,10 @@ export default {
 <style lang="scss">
 @import '../stylesheets/style.scss';
 
-
 .all-scheduable-session-list {
   overflow-y: scroll;
   max-height: 200px;
+  min-height: 200px;
 }
 
 .scheduable-session {
