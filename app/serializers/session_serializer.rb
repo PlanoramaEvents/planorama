@@ -130,7 +130,11 @@ class SessionSerializer
   end
 
   attribute :is_published do |session|
-    session.published?
+    if session.has_attribute?(:is_published)
+      session.is_published != nil
+    else
+      session.published?
+    end
   end
 
   has_many :session_areas, lazy_load_data: true, serializer: SessionAreaSerializer,
