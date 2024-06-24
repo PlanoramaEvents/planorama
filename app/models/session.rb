@@ -55,6 +55,7 @@
 class Session < ApplicationRecord
   include XmlFormattable
   include Aggregates
+  include DirtyAssociations
 
   validates_presence_of :title
   validates_numericality_of :duration, allow_nil: true
@@ -158,8 +159,12 @@ class Session < ApplicationRecord
   # has_many :participants, through: :participant_assignments #, source: :person, class_name: 'Person'
 
   # TODO: Will also need a published versioon of the relationship
-  has_many :session_areas, inverse_of: :session
-  has_many :areas, through: :session_areas
+  has_many :session_areas, inverse_of: :session,
+           after_add: :dirty_associations,
+           after_remove: :dirty_associations
+  has_many :areas, through: :session_areas,
+           after_add: :dirty_associations,
+           after_remove: :dirty_associations
   accepts_nested_attributes_for :session_areas, allow_destroy: true
   # accepts_nested_attributes_for :areas, allow_destroy: true
 

@@ -45,11 +45,15 @@ class CheckChangeToMultiple < ActiveModel::Validator
 end
 
 class Survey < ApplicationRecord
+  include DirtyAssociations
+
   # Survey contains a series of pages, pages contain a series of questions
   has_many :pages,
            class_name: 'Survey::Page',
            inverse_of: :survey,
-           dependent: :destroy
+           dependent: :destroy,
+           after_add: :dirty_associations,
+           after_remove: :dirty_associations
   accepts_nested_attributes_for :pages, allow_destroy: true
 
   has_paper_trail versions: { class_name: 'Audit::SurveyVersion' }, ignore: [:updated_at, :created_at, :lock_version]
