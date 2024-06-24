@@ -113,6 +113,8 @@ module MigrationHelpers
             sessions.description,
             sessions.environment,
             sessions.status,
+            sessions.streamed,
+            sessions.recorded,
             case
             when sa.updated_at > sessions.updated_at
           		then sa.updated_at

@@ -21,6 +21,12 @@ class IntegrationSerializer
         airmeet_host: integration.config["airmeet_host"],
         enabled: integration.config["enabled"]
       }
+    elsif integration.name === 'g24rce'
+      {
+        base_portal_url: integration.config["base_portal_url"],
+        enabled: integration.config["enabled"],
+        ticket_name: integration.config["ticket_name"]
+      }
     else
       integration.config
     end

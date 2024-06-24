@@ -19,6 +19,13 @@ export const session_columns = [
     stickyColumn: true
   },
   {
+    key: 'short_title',
+    sortKey: 'sessions.short_title',
+    label: 'Short Title',
+    type: "text",
+    sortable: true
+  },
+  {
     key: 'description',
     sortKey: 'sessions.description',
     label: 'Description',

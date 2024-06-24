@@ -14,6 +14,7 @@
 #  pub_reference_number :integer
 #  recorded             :boolean          default(FALSE), not null
 #  require_signup       :boolean          default(FALSE)
+#  short_title          :string(30)
 #  start_time           :datetime
 #  streamed             :boolean          default(FALSE), not null
 #  title                :string
