@@ -9,9 +9,9 @@
       </div>
     </div>
     <div class="row">
-      <div :class="{'col-8': !noSidebar, 'col-12': noSidebar}" :style="heightHelper">
+      <div :class="{'col-8': !noSidebar && !showJoinLinks, 'col-12': noSidebar, 'col-10': showJoinLinks}" :style="heightHelper">
         <b-overlay :show="loading" spinner-variant="primary" variant="white" opacity="1">
-          <schedule-collapse v-for="(session) in orderedSessions" :key="session.id" :id="session.id" v-model="open[session.id]">
+          <schedule-collapse v-for="(session) in orderedSessions" :key="session.id" :id="session.id" v-model="open[session.id]" :joinLink="session.links && session.links.join" :showJoinLinks="showJoinLinks">
             <template #title><span class="larger-text"><strong class="larger-text">{{session.title}}</strong>, {{formatStartTime(session)}}, {{session.room}}</span></template>
             <dl class="indented-dl">
               <dt>Title</dt>
@@ -41,7 +41,7 @@
           <div v-if="noSessions" class="p-5 text-muted font-italic">There are not currently any sessions for this participant.</div>
         </b-overlay>
       </div>
-      <div class="col-4" v-if="!noSidebar">
+      <div class="col-4" v-if="!noSidebar && !showJoinLinks">
         <slot name="message"></slot>
         <person-schedule-approval :approvalType="approvalType"></person-schedule-approval>
       </div>
@@ -54,6 +54,7 @@ import ScheduleCollapse from './schedule_collapse.vue';
 import PersonScheduleApproval from './person_schedule_approval.vue';
 import { startTimeMixinNoSelected } from '@/sessions/session_fields.mixin';
 import { SESSION_ENVIRONMENT } from '@/constants/strings';
+import { settingsMixin } from '@/mixins';
 
 export default {
   name: "PersonScheduleDisplay",
@@ -63,6 +64,7 @@ export default {
   },
   mixins: [
     startTimeMixinNoSelected,
+    settingsMixin,
   ],
   props: {
     sessions: {
@@ -85,7 +87,7 @@ export default {
   data: () => ({
     open: {},
     SESSION_ENVIRONMENT,
-    loading: true
+    loading: true,
   }),
   computed: {
     anyOpen() {
@@ -104,6 +106,9 @@ export default {
     },
     noSessions() {
       return this.sessions && !Object.keys(this.sessions).length;
+    },
+    showJoinLinks() {
+      return this.configByName('show_join_links') === "true";
     }
   },
   methods: {

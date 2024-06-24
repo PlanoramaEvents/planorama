@@ -37,7 +37,7 @@ class PersonScheduleSerializer
              :session_assignment_name,
              :title, :start_time, :end_time, :duration,
              :participant_notes, :description, :environment,
-             :recorded, :streamed
+             :streamed, :recorded
 
   attribute :areas do |object|
     object.area_list.sort{ |a, b| a.downcase <=> b.downcase }
@@ -62,5 +62,33 @@ class PersonScheduleSerializer
 
   attribute :invisibles do |object|
     object.invisibles.collect{|p| {published_name: p.published_name, email: p.can_share ? p.primary_email&.email : nil, pronouns: p.pronouns}}
+  end
+
+  attribute :links do |object, params|
+    if params[:show_links] && params[:g24rce]
+      if object.environment == 'virtual' || object.streamed
+        if object.room.integrations["rce"] && object.room.integrations["rce"]["SegmentType"]
+          if object.room.integrations["rce"]["SegmentType"] == "stage"
+            {
+              meeting: "#{params[:g24rce]}deep-link/stage?room_id=#{object.room_id}",
+              chat: "#{params[:g24rce]}deep-link/chat?room_id=#{object.room_id}",
+              recording: "#{params[:g24rce]}deep-link/replay?item_id=#{object.session_id}",
+              join: "#{params[:g24rce]}deep-link/participate?room_id=#{object.room_id}"
+            }
+          else # session
+            {
+              meeting: "#{params[:g24rce]}deep-link/session?item_id=#{object.session_id}",
+              chat: "#{params[:g24rce]}deep-link/chat?item_id=#{object.session_id}",
+              recording: "#{params[:g24rce]}deep-link/replay?item_id=#{object.session_id}",
+              join: "#{params[:g24rce]}deep-link/participate?item_id=#{object.session_id}"
+            }
+          end
+        end
+      elsif object.environment == 'hybrid'
+        {
+          join: "#{params[:g24rce]}deep-link/participate?room_id=#{object.room_id}"
+        }
+      end
+    end
   end
 end

@@ -9,6 +9,9 @@
           <b-tab title="Clyde">
             <clyde-settings></clyde-settings>
           </b-tab>
+          <b-tab title="G24 RCE">
+            <G24RCESettings></G24RCESettings>
+          </b-tab>
         </b-tabs>
       </div>
     </div>
@@ -18,12 +21,14 @@
 <script>
 import AirmeetSettings from '@/airmeet/airmeet_settings.vue'
 import ClydeSettings from './clyde_settings.vue'
+import G24RCESettings from './g24rce_settings.vue'
 
 export default {
   name: "IntegrationSettings",
   components: {
     AirmeetSettings,
-    ClydeSettings
+    ClydeSettings,
+    G24RCESettings
   }
 }
 </script>

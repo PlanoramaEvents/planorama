@@ -128,7 +128,7 @@ class PeopleController < ResourceController
     person = Person.find params[:person_id]
 
     if person
-      schedule = SessionService.draft_schedule_for(person: person, current_person: current_person)
+      schedule = SessionService.draft_schedule_for(person: person, current_person: current_person, show_links: true)
       render json: schedule, content_type: 'application/json'
     end
   end
