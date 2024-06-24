@@ -12,12 +12,12 @@
           nullText="Unknown"
         >
           <template #registration_number-val-end>
-            <edit-button v-b-modal.edit-reg-number id="reg-number-edit-button"></edit-button>
+            <edit-button :disabled="!currentUserIsAdmin" v-b-modal.edit-reg-number id="reg-number-edit-button"></edit-button>
             <icon-button
               modal="unlink-confirmation"
-              :disabled="!selected.registration_number"
+              :disabled="!selected.registration_number || !currentUserIsAdmin"
               :tooltip="REG_ID_UNLINK_BUTTON"
-              disabledTooltip="No Ticket Number to unlink"
+              disabledTooltip="You are not an admin or there is no Ticket Number to unlink"
               background="none"
               variant="danger"
               icon="trash-fill"
@@ -45,7 +45,7 @@
         >
       </dd>
     </dl>
-    <person-edit-reg-number></person-edit-reg-number>
+    <person-edit-reg-number v-if="currentUserIsAdmin"></person-edit-reg-number>
     <plano-modal
       return-focus="#reg-number-edit-button"
       id="unlink-confirmation"
@@ -53,12 +53,13 @@
       @ok="unlinkPerson()"
       :title="REG_ID_UNLINK_CONFIRMATION_TITLE"
     >
-      {{ REG_ID_UNLINK_CONFIRMATION_TEXT(selected.published_name, selected.registration_number) }}
+      This will unlink <strong>{{ selected.published_name }}</strong> from Ticket Number {{selected.registration_number}}.
     </plano-modal>
   </div>
 </template>
 
 <script>
+import personSessionMixin from '../auth/person_session.mixin.js';
 import { makeSelectedFieldMixin } from "@/mixins";
 import { modelMixinNoProp } from "@/store/model.mixin";
 import {
@@ -73,7 +74,6 @@ import {
   PERSON_UNLINK_SUCCESS,
   PERSON_UNLINK_FAILURE,
   REG_ID_UNLINK_CONFIRMATION_TITLE,
-  REG_ID_UNLINK_CONFIRMATION_TEXT,
   REG_ID_UNLINK_BUTTON,
 } from "@/constants/strings";
 import { mapActions } from "vuex";
@@ -88,7 +88,7 @@ const commentsMixin = makeSelectedFieldMixin("comments");
 
 export default {
   name: "PeopleAdminTab",
-  mixins: [modelMixinNoProp, commentsMixin],
+  mixins: [modelMixinNoProp, commentsMixin, personSessionMixin],
   components: {
     EditModal,
     EditButton,
@@ -101,7 +101,6 @@ export default {
     model,
     PERSON_CON_STATE,
     REG_ID_UNLINK_CONFIRMATION_TITLE,
-    REG_ID_UNLINK_CONFIRMATION_TEXT,
     REG_ID_UNLINK_BUTTON,
   }),
   computed: {
