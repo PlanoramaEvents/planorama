@@ -7,10 +7,6 @@
           @dragstart="onEventDragStart($event, session)">
           <strong>{{session.title}}</strong>
           ({{ session.duration ? `${session.duration} min` : 'no duration' }})
-          <span class="badge badge-pill mr-1 badge-warning mr-1" v-for="item in session.tag_list" :key="item">{{ item
-            }}</span>
-          <span class="badge badge-pill mr-1 badge-info mr-1" v-for="item in session.label_list" :key="item">{{ item
-            }}</span>
         </div>
       </div>
     </b-overlay>
