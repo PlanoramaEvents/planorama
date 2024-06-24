@@ -1,5 +1,5 @@
 <template>
-  <icon-button icon="pencil-fill" background="none" :title="title"></icon-button>
+  <icon-button icon="pencil-fill" background="none" :title="title" :disabled="disabled" disabledTooltip="You are not an admin"></icon-button>
 </template>
 
 <script>
@@ -10,6 +10,10 @@ export default {
   props: {
     title: {
       default: "Edit"
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
