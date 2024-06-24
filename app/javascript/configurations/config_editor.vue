@@ -5,6 +5,7 @@
     :skipIfEmpty="true"
     v-slot="{ valid, errors }"
   >
+  <slot v-bind="{onChange, config: configuration}">
     <b-form-group :label="parameterLabel">
       <!-- TODO: We need more meaningful names, ^^^ change the label  -->
       <!-- TODO: we need to change the editor type depending on the parameter.type -->
@@ -49,6 +50,7 @@
         <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
       </div>
     </b-form-group>
+    </slot>
   </ValidationProvider>
 </template>
 

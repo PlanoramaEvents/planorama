@@ -11,6 +11,25 @@
           <b-form-checkbox id="firm-schedule-checkbox" switch v-model="localFirmSchedule" @change="openFirmConfirm" :disabled="!localDraftSchedule || localFirmSchedule" inline aria-describedby="firm-schedule-date"></b-form-checkbox>
           <span class="small text-muted" id="firm-schedule-date" v-if="localFirmSchedule">{{firmScheduledAtText}}</span>
         </b-form-group>
+        <single-config-manager parameterName="show_join_links">
+          <template #default="{onChange, config}">
+            <b-form-group label-cols="auto" class="align-items-center" label="Show join links to participants">
+              <b-form-checkbox 
+                id="show-join-links-checkbox" 
+                switch 
+                v-model="config.parameter_value" 
+                @change="onChange" 
+                :disabled="!localFirmSchedule" 
+                inline
+                aria-describedby="show-join-links-date show-join-links-caveat"
+                value="true"
+                unchecked-value="false"
+              ></b-form-checkbox>
+              <span class="small text-muted" id="show-join-links-date" v-if="config.parameter_value === 'true'">{{ formatTime(config.updated_at) }}</span>
+              <div class="d-block ml-2 small text-muted font-italic" id="show-join-links-caveat">In order for this to take effect, you <strong style="font-size: 100%">must</strong> reload Planorama.</div>
+            </b-form-group>
+          </template>
+        </single-config-manager>
         <div v-if="currentSettings.env !== 'production'">
           <b-button variant="danger" @click="reset()">Reset for Testing</b-button>
           <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
@@ -96,6 +115,7 @@ import { DateTime } from 'luxon';
 import IconButton from '@/components/icon_button.vue';
 import { modelMixinNoProp } from '@/store/model.mixin';
 import { publicationDatesModel as model } from '@/store/publication_dates.store'
+import SingleConfigManager from '@/configurations/single_config_manager.vue';
 
 export default {
   name: "ScheduleSettings",
@@ -107,7 +127,8 @@ export default {
   ],
   components: {
     PlanoModal,
-    IconButton
+    IconButton,
+    SingleConfigManager,
   },
   data: () => ({
     localDraftSchedule: false,
@@ -144,6 +165,9 @@ export default {
     }
   },
   methods: {
+    formatTime(val) {
+      return DateTime.fromISO(val).toFormat('D, t ZZZZ');
+    },
     openDraftConfirm(val) {
       if (val) {
         this.$bvModal.show("confirm-draft-modal")

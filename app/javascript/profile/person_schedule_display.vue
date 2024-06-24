@@ -54,6 +54,7 @@ import ScheduleCollapse from './schedule_collapse.vue';
 import PersonScheduleApproval from './person_schedule_approval.vue';
 import { startTimeMixinNoSelected } from '@/sessions/session_fields.mixin';
 import { SESSION_ENVIRONMENT } from '@/constants/strings';
+import { settingsMixin } from '@/mixins';
 
 export default {
   name: "PersonScheduleDisplay",
@@ -63,6 +64,7 @@ export default {
   },
   mixins: [
     startTimeMixinNoSelected,
+    settingsMixin,
   ],
   props: {
     sessions: {
@@ -86,7 +88,6 @@ export default {
     open: {},
     SESSION_ENVIRONMENT,
     loading: true,
-    showJoinLinks: false,
   }),
   computed: {
     anyOpen() {
@@ -105,6 +106,9 @@ export default {
     },
     noSessions() {
       return this.sessions && !Object.keys(this.sessions).length;
+    },
+    showJoinLinks() {
+      return this.configByName('show_join_links') === "true";
     }
   },
   methods: {

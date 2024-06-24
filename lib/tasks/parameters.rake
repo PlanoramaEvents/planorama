@@ -128,6 +128,16 @@ namespace :parameters do
       )
     end
 
+    unless ParameterName.find_by(parameter_name: 'show_join_links')
+      ParameterName.create!(
+        {
+          parameter_name: 'show_join_links',
+          parameter_description: 'Whether or not to show join links on the schedule',
+          parameter_type: 'Boolean'
+        }
+      )
+    end
+
     unless ParameterName.find_by(parameter_name: 'people_hidden_fields')
       ParameterName.create!(
         {
