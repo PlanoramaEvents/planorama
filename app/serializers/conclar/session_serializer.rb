@@ -132,23 +132,30 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   # Currently, signup, meeting and recording are the valid link types.
   attribute :links do
     if instance_options[:g24rce]
+      res = {}
       if object.environment == 'virtual' || object.streamed
         if object.room.integrations["rce"] && object.room.integrations["rce"]["SegmentType"]
-          if object.room.integrations["rce"]["SegmentType"] == "stage"
+          res = if object.room.integrations["rce"]["SegmentType"] == "stage"
             {
-              meeting: "#{instance_options[:g24rce]}deep-link/stage?room_id=#{object.room.id}",
+              stage: "#{instance_options[:g24rce]}deep-link/stage?room_id=#{object.room.id}",
               chat: "#{instance_options[:g24rce]}deep-link/chat?room_id=#{object.room.id}",
-              recording: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
+              replay: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}",
             }
           else # session
             {
-              meeting: "#{instance_options[:g24rce]}deep-link/session?item_id=#{object.id}",
+              session: "#{instance_options[:g24rce]}deep-link/session?item_id=#{object.id}",
               chat: "#{instance_options[:g24rce]}deep-link/chat?item_id=#{object.id}",
-              recording: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
+              replay: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
             }
           end
         end
       end
+      # If the session requires signup then put in a link
+      # TBD: waiting on programme to decide if they want to do this
+      # if object.require_signup
+      #   res[:signup] = "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
+      # end
+      res
     end
   end
 
