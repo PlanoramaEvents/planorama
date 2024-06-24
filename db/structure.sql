@@ -1332,8 +1332,6 @@ CREATE VIEW public.person_schedules AS
     sessions.description,
     sessions.environment,
     sessions.status,
-    sessions.streamed,
-    sessions.recorded,
         CASE
             WHEN (sa.updated_at > sessions.updated_at) THEN sa.updated_at
             ELSE sessions.updated_at
