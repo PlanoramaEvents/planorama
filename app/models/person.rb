@@ -114,6 +114,7 @@ class Person < ApplicationRecord
   # TODO: add a deleted_at mechanism for soft deletes
 
   include PasswordArchivable
+  include DirtyAssociations
   # acts_as_taggable
   acts_as_taggable_on :tags
 
@@ -198,7 +199,9 @@ class Person < ApplicationRecord
   has_many  :mailings, through: :person_mailing_assignments
   has_many  :mail_histories
 
-  has_many  :email_addresses, dependent: :destroy
+  has_many  :email_addresses, dependent: :destroy,
+            after_add: :dirty_associations,
+            after_remove: :dirty_associations
   accepts_nested_attributes_for :email_addresses, reject_if: :all_blank, allow_destroy: true
 
   has_many :oauth_identities
@@ -222,7 +225,10 @@ class Person < ApplicationRecord
   # ?????
 
   # This is what has also been referred to as "class" of person
-  has_many :convention_roles, dependent: :destroy
+  has_many :convention_roles, 
+    dependent: :destroy,
+    after_add: :dirty_associations,
+    after_remove: :dirty_associations
   accepts_nested_attributes_for :convention_roles, allow_destroy: true
 
   has_and_belongs_to_many :application_roles, class_name: 'ApplicationRole'

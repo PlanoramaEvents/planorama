@@ -11,6 +11,10 @@
         <b-row>
           <b-col>
             <dl>
+              <dt>Short Title:</dt>
+              <dd class="ml-2">
+                {{selected.short_title}}
+              </dd>
               <dt>Status:</dt>
               <dd class="ml-2">
                 {{SESSION_STATUS[selected.status]}}

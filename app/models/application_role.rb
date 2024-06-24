@@ -16,7 +16,11 @@
 #
 #
 class ApplicationRole < ApplicationRecord
-  has_many :model_permissions, dependent: :destroy
+  include DirtyAssociations
+
+  has_many :model_permissions, dependent: :destroy,
+           after_add: :dirty_associations,
+           after_remove: :dirty_associations
   accepts_nested_attributes_for :model_permissions
 
   has_and_belongs_to_many :people, class_name: 'Person'

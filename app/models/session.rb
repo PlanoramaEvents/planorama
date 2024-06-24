@@ -24,6 +24,7 @@
 #  recorded                  :boolean          default(FALSE), not null
 #  require_signup            :boolean          default(FALSE)
 #  room_notes                :text
+#  short_title               :string(30)
 #  start_time                :datetime
 #  status                    :enum             default("draft")
 #  streamed                  :boolean          default(FALSE), not null
@@ -55,12 +56,15 @@
 class Session < ApplicationRecord
   include XmlFormattable
   include Aggregates
+  include DirtyAssociations
 
   validates_presence_of :title
   validates_numericality_of :duration, allow_nil: true
   validates_numericality_of :minimum_people, allow_nil: true
   validates_numericality_of :maximum_people, allow_nil: true
   validates_numericality_of :audience_size, allow_nil: true
+
+  validates_length_of :short_title, maximum: 30, allow_nil: true
 
   # NOTE: when we have a config for default duration change to use a lambda
   attribute :duration, default: 60
@@ -86,7 +90,8 @@ class Session < ApplicationRecord
     :tech_notes,
     :participant_notes,
     :instructions_for_interest,
-    :room_notes
+    :room_notes,
+    :short_title
   ]
 
   has_many :session_conflicts,
@@ -158,8 +163,12 @@ class Session < ApplicationRecord
   # has_many :participants, through: :participant_assignments #, source: :person, class_name: 'Person'
 
   # TODO: Will also need a published versioon of the relationship
-  has_many :session_areas, inverse_of: :session
-  has_many :areas, through: :session_areas
+  has_many :session_areas, inverse_of: :session,
+           after_add: :dirty_associations,
+           after_remove: :dirty_associations
+  has_many :areas, through: :session_areas,
+           after_add: :dirty_associations,
+           after_remove: :dirty_associations
   accepts_nested_attributes_for :session_areas, allow_destroy: true
   # accepts_nested_attributes_for :areas, allow_destroy: true
 
