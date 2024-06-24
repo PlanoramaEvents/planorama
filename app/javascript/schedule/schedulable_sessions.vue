@@ -4,7 +4,9 @@
     <b-overlay :show="tableBusy" rounded="sm">
       <div class="all-scheduable-session-list">
         <div class="scheduable-session mb-1" v-for="session in sortedCollection" :key="session.id" draggable="true"
-          @dragstart="onEventDragStart($event, session)">
+          @dragstart="onEventDragStart($event, session)"
+          @click="onSelectEvent($event, session)"
+        >
           <strong>{{session.title}}</strong>
           ({{ session.duration ? `${session.duration} min` : 'no duration' }})
         </div>
@@ -44,6 +46,9 @@ export default {
     },
     pillClass(color) {
       return `badge badge-pill mr-1 badge-${color} mr-1`
+    },
+    onSelectEvent(e, session) {
+      this.select(session.id)
     }
   },
   mounted() {
