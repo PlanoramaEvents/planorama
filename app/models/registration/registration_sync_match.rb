@@ -9,6 +9,11 @@
 #  rid    :uuid             primary key
 #  reg_id :string
 #
+# Indexes
+#
+#  matches_pid     (pid)
+#  matches_reg_id  (reg_id)
+#
 class Registration::RegistrationSyncMatch < ApplicationRecord
   self.table_name = :registration_sync_matches
   self.primary_keys = :rid, :mtype
