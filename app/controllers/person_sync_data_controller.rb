@@ -2,8 +2,17 @@ class PersonSyncDataController < ResourceController
   SERIALIZER_CLASS = 'PersonSyncDatumSerializer'.freeze
   POLICY_CLASS = 'PersonSyncDatumPolicy'.freeze
   POLICY_SCOPE_CLASS = 'PersonSyncDatumPolicy::Scope'.freeze
-  DEFAULT_SORTBY = 'name_sort_by'
+  DEFAULT_SORTBY = 'people.name_sort_by'
   DEFAULT_ORDER = 'asc'.freeze
+
+  # 
+  def possible_match_count
+    authorize model_class, policy_class: policy_class
+    
+    render status: :ok,
+      json: { total: collection_total }.to_json,
+      content_type: 'application/json'
+  end
 
   #
   #
@@ -72,7 +81,6 @@ class PersonSyncDataController < ResourceController
     # People that have a potential mapping and not already mapped
     query.joins(:registration_sync_data)
       .where('people.reg_id is null')
-      .where('registration_sync_data.reg_id in (select reg_id from registration_map_counts)')
   end
 
   def select_fields
@@ -88,14 +96,21 @@ class PersonSyncDataController < ResourceController
     ]
   end
 
-  def make_distinct?
-    true
+  # def make_distinct?
+  #   true
+  # end
+
+  def references
+    [
+      :primary_email,
+      {registration_sync_data: :matched_person}
+    ]
   end
 
   def includes
     [
-      :email_addresses,
-      :registration_sync_data
+      :primary_email,
+      {registration_sync_data: :matched_person}
     ]
   end
 end
