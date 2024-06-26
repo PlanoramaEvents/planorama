@@ -115,8 +115,6 @@ class Person < ApplicationRecord
 
   include PasswordArchivable
   include DirtyAssociations
-  # acts_as_taggable
-  acts_as_taggable_on :tags
 
   has_paper_trail versions: { class_name: 'Audit::PersonVersion' },
                   ignore: [:updated_at, :created_at, :lock_version, :integrations],
