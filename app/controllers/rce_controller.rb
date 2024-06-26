@@ -33,15 +33,24 @@ class RceController < ApplicationController
         # If the room is not an online room or an RCE stage then there is no online audience
         next unless session.room.integrations["rce"] && session.room.integrations["rce"]["SegmentType"]
 
+        description = session.description
+        segmentType = session.room.integrations["rce"] ? session.room.integrations["rce"]["SegmentType"] : "sessions"
+        if segmentType != "stage"
+          description = ActionView::Base.full_sanitizer.sanitize(description)
+        end
+
         csv << [
           session.start_time.strftime("%Y-%m-%d"),
           session.start_time.strftime("%H:%M"),
           (session.start_time + session.duration.minutes).strftime("%Y-%m-%d"),
           (session.start_time + session.duration.minutes).strftime("%H:%M"),
           session.title,
-          session.description, # HTML may be an issue ...
+          # if the session is a "session" then strip the HTML
+          description, # HTML may be an issue ...
+          # Segment Name
           session.title,
-          session.room.integrations["rce"] ? session.room.integrations["rce"]["SegmentType"] : "sessions",
+          # Segment Type
+          segmentType,
           # Areas and tags
           "#{session.area_list.sort.join(', ')}, #{session.tag_list&.join(', ')}", # Tags may be new line seperated?
           'regular'
