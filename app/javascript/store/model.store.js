@@ -183,6 +183,7 @@ export const store = new Vuex.Store({
     ...appStore.state,
     ...scheduleWorkflowStore.state,
     ...integrationStore.state,
+    ...registrationSyncDatumStore.state,
     // ...mailingStore.state
   },
   getters: {
@@ -247,7 +248,8 @@ export const store = new Vuex.Store({
     ...searchStateStore.mutations,
     ...roomStore.mutations,
     ...appStore.mutations,
-    ...integrationStore.mutations
+    ...integrationStore.mutations,
+    ...registrationSyncDatumStore.mutations,
   },
   actions: {
     /**

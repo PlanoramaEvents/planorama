@@ -6,7 +6,15 @@
       ref="person-sync-table"
       stateName="person-sync-table-search-state"
       :showControls="false"
+      stickyHeader="450px"
+      :showBottomControls="false"
     >
+    <template #left-controls="{total}">
+      <div>
+        <div>Last completed full sync: {{ lastSync }}</div>
+        <div>People with potential matches: <strong>{{ total }}</strong></div>
+      </div>
+    </template>
       <template #cell(primary_email)="{ item }">
         <tooltip-overflow v-if="item.primary_email" :title="item.primary_email.email">
           {{item.primary_email.email}}
@@ -42,6 +50,7 @@ import { person_sync_columns as columns } from './person_sync_columns';
 import { personSyncDatumModel as model } from '@/store/person_sync_datum.store'
 import TooltipOverflow from '../shared/tooltip-overflow.vue';
 import DisplaySyncData from './display_sync_data.vue';
+import { registrationSyncStatsMixin } from '@/store/registration_sync_stats.mixin';
 
 export default {
   name: 'PersonSyncTable',
@@ -50,6 +59,7 @@ export default {
     TooltipOverflow,
     DisplaySyncData,
   },
+  mixins: [registrationSyncStatsMixin],
   data: () => ({
     columns,
     model
