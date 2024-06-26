@@ -21,7 +21,8 @@ module MigrationHelpers
 
     def self.create_registration_sync_matches
       query = <<-SQL.squish
-        CREATE OR REPLACE VIEW registration_sync_matches AS
+        DROP materialized VIEW IF EXISTS registration_sync_matches;
+        CREATE MATERIALIZED VIEW registration_sync_matches AS
           select p.name, null as email, p.id as pid, rsd.reg_id, rsd.id as rid, 'name' as mtype
           from people p 
           join registration_sync_data rsd
@@ -43,7 +44,17 @@ module MigrationHelpers
             rsd."email" ilike e.email or
             rsd."alternative_email" ilike e.email
           )
-          where e.isdefault = true
+          where e.isdefault = true;
+        CREATE INDEX matches_reg_id ON registration_sync_matches (reg_id);
+        CREATE INDEX matches_pid ON registration_sync_matches (pid);
+      SQL
+
+      ActiveRecord::Base.connection.execute(query)
+    end
+
+    def self.refresh_registration_sync_matches
+      query = <<-SQL.squish
+        REFRESH MATERIALIZED VIEW registration_sync_matches;
       SQL
 
       ActiveRecord::Base.connection.execute(query)
@@ -587,6 +598,15 @@ module MigrationHelpers
       ActiveRecord::Base.connection.execute(query)
     end
 
+    def self.test_registration_sync_matches_type
+      query = <<-SQL.squish
+        select relkind from pg_catalog.pg_class where relname = 'registration_sync_matches';
+      SQL
+
+      res = ActiveRecord::Base.connection.execute(query)
+      res.first["relkind"]
+    end
+
     def self.drop_views
       ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS session_conflicts;
@@ -631,9 +651,15 @@ module MigrationHelpers
         DROP VIEW IF EXISTS registration_map_counts;
       SQL
 
-      ActiveRecord::Base.connection.execute <<-SQL
-        DROP VIEW IF EXISTS registration_sync_matches;
-      SQL
+      if self.test_registration_sync_matches_type == 'm'
+        ActiveRecord::Base.connection.execute <<-SQL
+          DROP materialized VIEW IF EXISTS registration_sync_matches;
+        SQL
+      else
+        ActiveRecord::Base.connection.execute <<-SQL
+          DROP VIEW IF EXISTS registration_sync_matches;
+        SQL
+      end
     end
   end
 end
