@@ -138,23 +138,21 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
           res = if object.room.integrations["rce"]["SegmentType"] == "stage"
             {
               stage: "#{instance_options[:g24rce]}deep-link/stage?room_id=#{object.room.id}",
-              chat: "#{instance_options[:g24rce]}deep-link/chat?room_id=#{object.room.id}",
-              replay: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}",
             }
           else # session
             {
-              session: "#{instance_options[:g24rce]}deep-link/session?item_id=#{object.id}",
-              chat: "#{instance_options[:g24rce]}deep-link/chat?item_id=#{object.id}",
-              replay: "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
+              session: "#{instance_options[:g24rce]}deep-link/session?item_id=#{object.id}"
             }
           end
         end
       end
-      # If the session requires signup then put in a link
-      # TBD: waiting on programme to decide if they want to do this
-      # if object.require_signup
-      #   res[:signup] = "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
-      # end
+
+      # replay link for recorded session
+      if object.recorded
+        res[:replay] = "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
+      end
+
+      res[:chat] = "#{instance_options[:g24rce]}deep-link/chat?item_id=#{object.id}"
       res
     end
   end
