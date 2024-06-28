@@ -78,9 +78,7 @@ class PersonSyncDataController < ResourceController
   def default_scope(query: nil)
     return nil unless query
 
-    # People that have a potential mapping and not already mapped
-    query.joins(:registration_sync_data)
-      .where('people.reg_id is null')
+    query.where('people.reg_id is null and people.id in (select pid from registration_sync_matches)')
   end
 
   def select_fields
@@ -102,15 +100,13 @@ class PersonSyncDataController < ResourceController
 
   def references
     [
-      :primary_email,
-      {registration_sync_data: :matched_person}
+      :primary_email
     ]
   end
 
   def includes
     [
-      :primary_email,
-      {registration_sync_data: :matched_person}
+      :primary_email
     ]
   end
 end
