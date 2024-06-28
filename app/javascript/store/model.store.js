@@ -184,6 +184,7 @@ export const store = new Vuex.Store({
     ...scheduleWorkflowStore.state,
     ...integrationStore.state,
     ...registrationSyncDatumStore.state,
+    ...personSyncDatumStore.state,
     // ...mailingStore.state
   },
   getters: {
@@ -250,6 +251,7 @@ export const store = new Vuex.Store({
     ...appStore.mutations,
     ...integrationStore.mutations,
     ...registrationSyncDatumStore.mutations,
+    ...personSyncDatumStore.mutations,
   },
   actions: {
     /**

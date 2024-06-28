@@ -20,15 +20,23 @@ export default {
     label: {
       type: String,
       default: "Last reloaded at"
-    }
+    },
+    reloadAction: { }
   },
   computed: {
     ...mapState(['reloadedAt'])
   },
   methods: {
     ...mapMutations({
-      reload: MAGICAL_RELOAD
-    })
+      magicalReload: MAGICAL_RELOAD
+    }),
+    reload() {
+      if (this.reloadAction) {
+        this.reloadAction();
+      } else {
+        this.magicalReload();
+      }
+    } 
   }
 }
 </script>
