@@ -236,7 +236,7 @@ class Reports::ScheduleReportsController < ApplicationController
     @session_room_changed.append_row(['Session Title','Original Room', 'New Room'])
     @session_title_changed.append_row(['Original Session Title', 'New Session Title'])
     @session_description_changed.append_row(['Session Title','Original Description', 'New Description'])
-    @session_added.append_row(['Session Title', 'Session Description', 'Format', 'Areas', 'Start Time', 'Room', 'Moderators', 'Participants'])
+    @session_added.append_row(['Session Id', 'Session Title', 'Session Description', 'Format', 'Areas', 'Start Time', 'Room', 'Moderators', 'Participants'])
     @session_removed.append_row(['Session Title'])
 
     @participants_add_drop.append_row(['Session Title', 'Participant Dropped', 'Participant Added'])
@@ -340,6 +340,7 @@ class Reports::ScheduleReportsController < ApplicationController
 
     sheet.append_row(
       [
+        object.id,
         object.title,
         object.description,
         object.format&.name,

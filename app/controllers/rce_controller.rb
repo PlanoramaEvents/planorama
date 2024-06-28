@@ -21,7 +21,8 @@ class RceController < ApplicationController
     column_names = [
         'Start date','Start time','End date','End time',
         'Schedule name','Schedule description','Segment name','Segment type',
-        'Tags','Attendance'
+        'Tags','Attendance',
+        'Event type', 'Room'
       ]
 
     CSV.generate do |csv|
@@ -53,7 +54,10 @@ class RceController < ApplicationController
           segmentType,
           # Areas and tags
           "#{session.area_list.sort.join(', ')}, #{session.tag_list&.join(', ')}", # Tags may be new line seperated?
-          'regular'
+          'regular',
+          # If is a stage then it is "hybrid" and we set Event Tyep and the Room name !!!
+          segmentType == "stage" ? 'hybrid' : 'virtual',
+          segmentType == "stage" ? session.room.name : '',
         ]
       end
     end
