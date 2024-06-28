@@ -58,15 +58,7 @@ docker volume create --name=node_modules_sidekiq
 Then to start the dev docker instances use
 
 ```
-docker-compose -f docker-compose-dev.yml up
-```
-
-alternatively use
-```
-rake docker:start
-
-# and to stop them
-rake docker:stop
+docker compose -f docker-compose-dev.yml up
 ```
 
 You will be able to access the running server via http://localhost:3000 and
