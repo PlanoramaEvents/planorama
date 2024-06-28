@@ -47,8 +47,8 @@ class RceController < ApplicationController
           session.title,
           # if the session is a "session" then strip the HTML
           description, # HTML may be an issue ...
-          # Segment Name
-          session.title,
+          # Segment Name, room if stage or title if session
+          segmentType != "stage" ? session.title : session.room.name,
           # Segment Type
           segmentType,
           # Areas and tags
