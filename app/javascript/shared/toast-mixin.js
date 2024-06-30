@@ -42,14 +42,17 @@ export const toastMixin = {
       let event_email = this.configByName('event_email');
       return new Promise((res, rej) => {
         promise.then((item) => {
-          // If the item is null then it is a NO-OP
-          if (item == null) return;
-          if(item.status && item.status >= 400) {
-            this.error_toast(getErrorText(event_email, item, error_text))
-            rej(item)
+          if (item == null) {
+            // If the item is null then it is a NO-OP
+            res(null);
           } else {
-            this.success_toast(success_text);
-            res(item);
+            if (item.status && item.status >= 400) {
+              this.error_toast(getErrorText(event_email, item, error_text))
+              rej(item)
+            } else {
+              this.success_toast(success_text);
+              res(item);
+            }
           }
         })
         .catch((error) => {
