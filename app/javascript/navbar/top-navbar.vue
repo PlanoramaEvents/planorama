@@ -8,7 +8,7 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
             <help-link></help-link>
-            <a href="https://planoramaevents.github.io/planorama" target="_blank" class="btn btn-link text-light my-2 my-sm-0 mx-2">About</a>
+            <about-link></about-link>
             <b-button v-if="loggedIn" @click="logout" variant="primary">Logout</b-button>
           </b-nav-form>
         </b-navbar-nav>
@@ -22,6 +22,7 @@
 <script>
 import { settingsMixin } from '@/mixins';
 import HelpLink from '../administration/help_link.vue';
+import AboutLink from '../administration/about_link.vue';
 import authMixin from '../auth/auth.mixin';
 import personSessionMixin from '../auth/person_session.mixin';
 
@@ -29,6 +30,7 @@ export default {
   name: 'TopNavbar',
   components: {
     HelpLink,
+    AboutLink,
   },
   mixins: [
     authMixin,
