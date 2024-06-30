@@ -168,7 +168,10 @@ export default {
       let res = this.save_or_update();
       res.then(
         (data) => {
-          this.mailing = data
+          if (data) {
+            // Take case of the 204 which comes back null
+            this.mailing = data
+          }
           this.$bvModal.hide('save-mailing-modal');
           if (this.next_action) {
             switch(this.next_action) {
