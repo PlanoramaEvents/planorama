@@ -51,7 +51,8 @@ export default {
     },
     config: function() {
       let local_config = {
-        removeButtons: "Subscript, Superscript"
+        removeButtons: "Subscript, Superscript",
+        versionCheck: false
       }
 
       let toolbar = [
