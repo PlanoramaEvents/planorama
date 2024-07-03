@@ -42,6 +42,7 @@ export const toastMixin = {
       let event_email = this.configByName('event_email');
       return new Promise((res, rej) => {
         promise.then((item) => {
+          // would be better it this was the original item
           if (item == null) {
             // If the item is null then it is a NO-OP
             res(null);
