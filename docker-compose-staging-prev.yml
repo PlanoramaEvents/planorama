@@ -1,0 +1,82 @@
+#
+# This is sample docker file for use in a staging environment
+#
+# NOTE:
+# You will need to create the pgdata and redis-data volumes:
+#   docker volume create --name=pgdata
+#   docker volume create --name=redis-data
+#
+version: '3.7'
+
+volumes:
+  redis-data:
+    external: true
+  pgdata:
+    external: true
+
+services:
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    env_file:
+      # NOTE: this will need to reflect local system
+      - "/opt/plano/etc/planorama.env"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    command: "/opt/planorama/script/planorama_start.sh"
+    image: ghcr.io/planoramaevents/planorama:staging
+    ports:
+      - 3000:3000
+    volumes:
+      # NOTE: this will need to reflect local system
+      - /var/log/planorama/web:/opt/planorama/log
+      - type: tmpfs
+        target: /app/tmp
+      # NOTE: this will need to reflect local system
+      - /opt/plano/etc/planorama:/config
+    environment:
+      - PGID=1005
+      - PUID=1001
+      - RAILS_ENV=staging
+      - NODE_ENV=staging
+    env_file:
+      # NOTE: this will need to reflect local system
+      - "/opt/plano/etc/planorama.env"
+    depends_on:
+      - redis
+      - postgres
+    restart: always
+
+  planorama-sidekiq:
+    command: "/opt/planorama/script/planorama_sidekiq.sh"
+    image: ghcr.io/planoramaevents/planorama:staging
+    volumes:
+      # NOTE: this will need to reflect local system
+      - /var/log/planorama/sidekiq:/opt/planorama/log
+      - type: tmpfs
+        target: /app/tmp
+      # NOTE: this will need to reflect local system
+      - /opt/plano/etc/planorama:/config
+    environment:
+      - PGID=1005
+      - PUID=1001
+      - RAILS_ENV=staging
+      - NODE_ENV=staging
+    env_file:
+      # NOTE: this will need to reflect local system
+      - "/opt/plano/etc/planorama.env"
+    depends_on:
+      - redis
+    links:
+      - redis
+    restart: always

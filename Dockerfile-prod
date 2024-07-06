@@ -15,6 +15,12 @@ ENV BUNDLE_PATH /var/bundler
 
 ARG DEVISE_SECRET
 
+# The build of the docker file will set the ARG PLANO_VERSION_FROM_BUILD
+ARG PLANO_VERSION_FROM_BUILD
+# And we set the ENV in the Docker container with a default value
+# based on PLANO_VERSION_FROM_BUILD
+ENV PLANO_VERSION=${PLANO_VERSION_FROM_BUILD}
+
 RUN apk add \
       build-base \
       freetds-dev \
