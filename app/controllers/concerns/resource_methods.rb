@@ -89,9 +89,10 @@ module ResourceMethods
         before_update
         # updates does the save as well, need to assign without saving to determine if there is a change
         @object.assign_attributes(strip_params(_permitted_params(model: object_name, instance: @object)))
-        changed = @object.changed?
         # Then we can "save"
         @object.save!
+        changed = @object.saved_changes?
+        # Rails.logger.debug("&****** has dirty #{@object.has_dirty_associations}")
         @object.reload
         after_update
       end
@@ -99,6 +100,7 @@ module ResourceMethods
     ret = after_update_tx
     return if ret
   
+    # also if relationships changed ....
     if changed
       render_object(@object)
     else

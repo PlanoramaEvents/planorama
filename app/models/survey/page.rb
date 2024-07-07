@@ -22,6 +22,7 @@
 #
 class Survey::Page < ApplicationRecord
   include RankedModel
+  include DirtyAssociations
   ranks :sort_order, with_same: :survey_id
 
   default_scope { order(['survey_pages.sort_order asc'])}
@@ -34,7 +35,9 @@ class Survey::Page < ApplicationRecord
            class_name: 'Survey::Question',
            foreign_key: 'page_id',
            inverse_of: :page,
-           dependent: :destroy
+           dependent: :destroy,
+           after_add: :dirty_associations,
+           after_remove: :dirty_associations
   accepts_nested_attributes_for :questions, allow_destroy: true
 
   belongs_to :survey

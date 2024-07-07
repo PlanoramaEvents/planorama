@@ -30,6 +30,7 @@
 #
 class Survey::Question < ApplicationRecord
   include RankedModel
+  include DirtyAssociations
   ranks :sort_order, with_same: :page_id
 
   # Scopes to deal with the soft deletes
@@ -50,7 +51,9 @@ class Survey::Question < ApplicationRecord
            class_name: 'Survey::Answer',
            foreign_key: 'question_id',
            inverse_of: :question,
-           dependent: :destroy
+           dependent: :destroy,
+           after_add: :dirty_associations,
+           after_remove: :dirty_associations
   accepts_nested_attributes_for :answers, :allow_destroy => true
 
   has_many :responses, dependent: :destroy, class_name: 'Survey::Response', foreign_key: 'question_id'

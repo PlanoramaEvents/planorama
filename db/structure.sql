@@ -764,7 +764,8 @@ CREATE TABLE public.sessions (
     room_set_id uuid,
     room_notes text,
     recorded boolean DEFAULT false NOT NULL,
-    streamed boolean DEFAULT false NOT NULL
+    streamed boolean DEFAULT false NOT NULL,
+    short_title character varying(30) DEFAULT NULL::character varying
 );
 
 
@@ -1622,7 +1623,8 @@ CREATE TABLE public.published_sessions (
     minors_participation jsonb,
     recorded boolean DEFAULT false NOT NULL,
     streamed boolean DEFAULT false NOT NULL,
-    integrations jsonb DEFAULT '{}'::jsonb NOT NULL
+    integrations jsonb DEFAULT '{}'::jsonb NOT NULL,
+    short_title character varying(30) DEFAULT NULL::character varying
 );
 
 
@@ -3950,6 +3952,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240522174506'),
 ('20240522190737'),
 ('20240602172220'),
-('20240606115218');
+('20240606115218'),
+('20240622165823');
 
 

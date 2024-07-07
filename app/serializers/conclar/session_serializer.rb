@@ -21,8 +21,17 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     object.start_time
   end
 
-  attribute :areas do |session|
+  attribute :tags do
     res = []
+    
+    object.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect{|t|
+      t = {
+        value: "tag_".concat(t.name.gsub(/\s/,'_')),
+        category: "Tag",
+        label: t.name
+      }
+      res << t
+    }
 
     object.area_list.each do |area|
       a = {
@@ -33,38 +42,26 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       res << a
     end
 
-    res
-  end
-
-  attribute :tags do
-    res = []
-    
-    res = object.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect{|t|
-      {
-        value: "tag_".concat(t.name.gsub(/\s/,'_')),
-        category: "Tag",
-        label: t.name
-      }      
-    }
-
+    # TODO: change
+    # In Person, Online, both
     case object.environment
     when 'in_person'
       t = {
-        value: "session_".concat(object.environment),
+        value: "session_in_person",
         category: "Environment",
         label: 'In Person'
       }
       res << t
     when 'hybrid'
       t = {
-        value: "session_".concat(object.environment),
+        value: "session_in_person",
         category: "Environment",
-        label: 'Hybrid'
+        label: 'In Person'
       }
       res << t
     when 'virtual'
       t = {
-        value: "session_".concat(object.environment),
+        value: "session_online",
         category: "Environment",
         label: 'Online'
       }
@@ -101,11 +98,17 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
 
     if object.streamed
       t = {
-        value: "session_streamed",
+        value: "session_online",
         category: "Environment",
-        label: "Streamed"
+        label: 'Online'
       }
       res << t
+      # t = {
+      #   value: "session_streamed",
+      #   category: "Environment",
+      #   label: "Streamed"
+      # }
+      # res << t
     end
 
     res
@@ -122,6 +125,35 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       [object.room.name]
     else
       []
+    end
+  end
+
+  # links is an array that contains a set of url links for the programme item.
+  # Currently, signup, meeting and recording are the valid link types.
+  attribute :links do
+    if instance_options[:g24rce]
+      res = {}
+      if object.environment == 'virtual' || object.streamed
+        if object.room.integrations["rce"] && object.room.integrations["rce"]["SegmentType"]
+          res = if object.room.integrations["rce"]["SegmentType"] == "stage"
+            {
+              stage: "#{instance_options[:g24rce]}deep-link/stage?room_id=#{object.room.id}",
+            }
+          else # session
+            {
+              session: "#{instance_options[:g24rce]}deep-link/session?item_id=#{object.id}"
+            }
+          end
+        end
+      end
+
+      # replay link for recorded session
+      if object.recorded
+        res[:replay] = "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
+      end
+
+      res[:chat] = "#{instance_options[:g24rce]}deep-link/chat?item_id=#{object.id}"
+      res
     end
   end
 
