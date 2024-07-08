@@ -55,8 +55,8 @@ class Reports::PeopleReportsController < ApplicationController
                 .joins(:person)
                 .where(
                   %q(case
-                  when (person_schedules.environment = 'in_person') then (people.attendance_type != 'in person' and people.attendance_type != 'hybrid')
-                  when (person_schedules.environment = 'hybrid') then (people.attendance_type != 'in person' and people.attendance_type != 'hybrid')
+                  when (person_schedules.environment = 'in_person') then (people.attendance_type != 'in_person' and people.attendance_type != 'hybrid')
+                  when (person_schedules.environment = 'hybrid') then (people.attendance_type != 'in_person' and people.attendance_type != 'hybrid')
                   when (person_schedules.environment = 'virtual') then (people.attendance_type != 'virtual' and people.attendance_type != 'hybrid')
                   end
                   )
@@ -89,7 +89,7 @@ class Reports::PeopleReportsController < ApplicationController
         [
           result.published_name,
           result.person.primary_email&.email,
-          result.person.attendance_type,
+          result.person.attendance_type, # This is wrong ...
           result.person.con_state,
           result.title,
           result.room&.name,

@@ -57,7 +57,7 @@ class Survey::Answer < ApplicationRecord
       raise 'invalid answers for YewNoMaybe question type' unless ['yes', 'no', 'maybe'].include? value
     end
     if question.question_type == :attendance_type
-      raise 'invalid answers for Attendance question type' unless ['in person', 'virtual', 'hybrid'].include? value
+      raise 'invalid answers for Attendance question type' unless ['in_person', 'virtual', 'hybrid'].include? value
     end
   end
 
