@@ -14,6 +14,8 @@ namespace :g24 do
       "Meeting Academy M1",
       "Meeting Academy M2/M3",
       "Inspiration",
+      "Hall 2",
+      "Events with British Sign Language Interpretation"
     ]
     session_rooms = [
       "Blaven",
@@ -249,6 +251,7 @@ namespace :g24 do
     candidates = [
         {venue_id: sec.id, name: "Hall 1", purpose: "Programme during day (either Table Talks or Lecture Theatre style)", sort_order: 110},
         {venue_id: sec.id, name: "Hall 2", purpose: "Events", sort_order: 112},
+        {venue_id: sec.id, name: "Events with British Sign Language Interpretation", purpose: "Events", sort_order: 113},        
         {venue_id: sec.id, name: "Hall 4 (Other)", purpose: "Table Talks (+ Stuff for other divisions)", sort_order: 115},
         {venue_id: sec.id, name: "Hall 4 (Table Talks)", purpose: "Table Talks (+ Stuff for other divisions)", sort_order: 116},
         {venue_id: sec.id, name: "Hall 4 (Autographs)", purpose: "Table Talks (+ Stuff for other divisions)", sort_order: 117},
