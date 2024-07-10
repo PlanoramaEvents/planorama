@@ -13,11 +13,13 @@
 #  participant_notes               :text
 #  pronouns                        :string(400)
 #  published_name                  :string
+#  recorded                        :boolean
 #  session_assignment_name         :string(100)
 #  session_assignment_role_type    :enum
 #  sort_order                      :integer
 #  start_time                      :datetime
 #  status                          :enum
+#  streamed                        :boolean
 #  title                           :string(256)
 #  updated_at                      :datetime
 #  format_id                       :uuid

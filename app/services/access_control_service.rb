@@ -24,7 +24,7 @@ module AccessControlService
         registered: { sensitive: false, linkable: false, type: :boolean, hidable: false},
         registration_type: { sensitive: true, linkable: false, type: :string, hidable: false},
         registration_number: { sensitive: true, linkable: false, type: :string, hidable: false},
-        attendance_type: { sensitive: false, linkable: true, type: :attendance_type, values: ['in person', 'virtual', 'hybrid'], hidable: false},
+        attendance_type: { sensitive: false, linkable: true, type: :attendance_type, values: ['in_person', 'virtual', 'hybrid'], hidable: false},
         bio: { sensitive: false, linkable: true, type: :text, hidable: false},
         # NOTE: we really do not want individual social media fields to be linked,
         # this was done as the google form migration. Surveys in Plano should use
