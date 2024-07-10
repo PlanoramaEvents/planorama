@@ -89,7 +89,7 @@ class Reports::PeopleReportsController < ApplicationController
         [
           result.published_name,
           result.person.primary_email&.email,
-          result.person.attendance_type, # This is wrong ...
+          result.person.attendance_type,
           result.person.con_state,
           result.title,
           result.room&.name,
