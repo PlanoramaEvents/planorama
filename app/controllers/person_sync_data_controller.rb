@@ -39,6 +39,9 @@ class PersonSyncDataController < ResourceController
       # Update the person with the reg data
       IdentityService.clear_person_reg_info(person: person);
       IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: reg_match)
+  
+      # We need to refresh the view on match
+      MigrationHelpers::PlanoViews.refresh_registration_sync_matches
 
       render status: :ok,
         json: { message: "Matched" }.to_json,
@@ -66,6 +69,10 @@ class PersonSyncDataController < ResourceController
           reg_id: reg_id,
           person_id: person_id
         })
+    
+        # We need to refresh the view on match
+        # this can take a few seconds
+        MigrationHelpers::PlanoViews.refresh_registration_sync_matches
       end
   
       render status: :ok,
@@ -77,6 +84,8 @@ class PersonSyncDataController < ResourceController
   # by default get the data that is not already mapped to a person
   def default_scope(query: nil)
     return nil unless query
+
+    # TODO: exclude people with no registration_sync_data
 
     query.where('people.reg_id is null and people.id in (select pid from registration_sync_matches)')
   end

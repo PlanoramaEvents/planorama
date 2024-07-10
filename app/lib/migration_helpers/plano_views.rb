@@ -35,16 +35,23 @@ module MigrationHelpers
             or rsd."preferred_name" ilike p.pseudonym
             or rsd."badge_name" ilike p.pseudonym
           )
+          where rsd.reg_id not in (select reg_id from people)
+          and 
+          concat(p.id, '-', rsd.reg_id) not in 
+          (select concat(drsm.person_id, '-' , rsd.reg_id) from dismissed_reg_sync_matches drsm)
           union
-          select null as name, e.email, e.person_id as pid, rsd.reg_id, rsd.id as rid, 'email' as mtype
+          select null as name, e.email, e.person_id as pid, rsd2.reg_id, rsd2.id as rid, 'email' as mtype
           from email_addresses e
-          join registration_sync_data rsd 
+          join registration_sync_data rsd2 
           on 
           (
-            rsd."email" ilike e.email or
-            rsd."alternative_email" ilike e.email
+            rsd2."email" ilike e.email or
+            rsd2."alternative_email" ilike e.email
           )
-          where e.isdefault = true;
+          where e.isdefault = true
+          and 
+          concat(e.person_id, '-', rsd2.reg_id) not in 
+          (select concat(drsm.person_id, '-' , rsd2.reg_id) from dismissed_reg_sync_matches drsm);
         CREATE INDEX matches_reg_id ON registration_sync_matches (reg_id);
         CREATE INDEX matches_pid ON registration_sync_matches (pid);
       SQL
