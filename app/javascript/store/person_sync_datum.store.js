@@ -60,8 +60,18 @@ export const personSyncDatumStore = {
   selected: {
     [personSyncDatumModel]: undefined
   },
+  page: {
+    [personSyncDatumModel]: {
+      usePaged: true,
+      total: undefined,
+      fullTotal: undefined,
+      currentPage: undefined,
+      perPage: undefined,
+      correctOrder: [],
+    }
+  },
   state: {
-    possibleMatchCount: undefined
+    possibleMatchCount: undefined,
   },
   getters: {
   },

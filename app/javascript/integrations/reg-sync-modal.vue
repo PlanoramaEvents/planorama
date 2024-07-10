@@ -10,33 +10,75 @@
 
     <plano-modal
       id="reg-sync-modal"
-      size="xl"
       title="Registration Sync Management"
       ok-only
       ok-title="Close"
       headerBgVariant="primary"
       headerTextVariant="light"
-      @hide="fetchMatchCount()"
+      @hide="onHide()"
     >
-      <person-sync-table></person-sync-table>
+        <div class="mb-2">
+          <div>Last completed full sync: {{ lastSync }}</div>
+          <b-spinner v-if="modalLoading"></b-spinner>
+          <div v-if="selected">Showing person {{ selectedOrdinal }} of {{ fullTotal }} potential matches</div>
+        </div>
+        <div v-if="!fullTotal && !modalLoading"><span class="text-muted font-italic">No more people to match!</span></div>
+      <div v-if="selected">
+        <div class="mb-2">
+          <b-button @click="selectPrev()">Prev</b-button>
+          <span class="name-span"> {{ selected.published_name }}</span>
+          <b-button @click="selectNext()">Next</b-button>
+        </div>
+        <div class="mb-2">
+          <div>Email: {{ selected.primary_email.email }}</div>
+          <div>Published Name: {{ selected.published_name }}</div>
+          <div>Name: {{ selected.name }}</div>
+        </div>
+        <h5>Potential Matches</h5>
+        <ol v-if="Object.keys(selected.registration_sync_data).length">
+        <li v-for="(reg_data, _, index) in selected.registration_sync_data" :key="reg_data.id">
+          <div v-if="index !== 0" style="border-bottom: 1px solid black" class="w-75 my-3"></div>
+          <div class="d-flex justify-content-between">
+            <div>
+          <display-sync-data :regData="reg_data"></display-sync-data>
+          </div>
+          <div class="d-flex flex-column justify-content-center mr-3"> 
+            <b-button variant="primary" @click="matchAndNext(reg_data.reg_id, selected.id)">Match</b-button>
+            <b-button variant="primary" class="mt-2" @click="dismissAndRefresh(reg_data.reg_id, selected.id)">Dismiss</b-button>
+          </div>
+          </div>
+        </li>
+        </ol>
+        <div v-else><span class="font-italic text-muted">There are no more potential matches.</span></div>
+      </div>
     </plano-modal>
   </div>
 </template>
 
 <script>
 import PlanoModal from "@/components/plano_modal.vue";
-import PersonSyncTable from "@/registrations/person_sync_table.vue";
-import { FETCH_MATCH_COUNT } from "@/store/person_sync_datum.store";
+import { modelMixinNoProp } from "@/mixins";
+import DisplaySyncData from "@/registrations/display_sync_data.vue";
+import { FETCH_MATCH_COUNT, personSyncDatumModel as model } from "@/store/person_sync_datum.store";
+import { registrationSyncStatsMixin } from "@/store/registration_sync_stats.mixin";
 import { mapActions, mapState } from "vuex";
+import { personSyncDatumMixin } from '@/store/person_sync_datum.mixin';
 
 export default {
   name: "RegSyncModal",
   components: {
     PlanoModal,
-    PersonSyncTable,
+    DisplaySyncData,
   },
+  mixins: [
+    modelMixinNoProp,
+    registrationSyncStatsMixin,
+    personSyncDatumMixin,
+  ],
   data: () => ({
-    loading: false
+    loading: false,
+    modalLoading: false,
+    model
   }),
   computed: {
     ...mapState(["possibleMatchCount"]),
@@ -45,11 +87,52 @@ export default {
     ...mapActions({
       fetchMatchCount: FETCH_MATCH_COUNT,
     }),
+    dismissAndRefresh(regId, personId) {
+      this.dismissMatch(regId, personId).then(() => {
+        this.fetchSelected();
+      })
+    },
+    matchAndNext(regId, personId) {
+      this.assistedMatch(regId, personId).then(() => {
+        if(this.selectedOrdinal === this.fullTotal) {
+          if (this.selectedOrdinal === 1) {
+            // fetch everything because this was the last one
+            // this should then display no more matches
+            this.unselect();
+            this.fetch();
+          } else {
+            // this is the last one but there are previous
+            this.selectPrev().then(() => {
+              // fix the ordinal
+              this.fetch();
+            });
+          }
+        } else {
+          this.selectNext().then(() => {
+            // fix the ordinal
+            this.fetch();
+          })
+        }
+      })
+    },
+    onHide() {
+      this.fetchMatchCount();
+      this.modalLoading = true;
+    this.fetch().then(() => {
+      this.selectFirst();
+      this.modalLoading = false;
+    })
+    }
   },
   mounted() {
     this.loading = true;
+    this.modalLoading = true;
     this.fetchMatchCount().then(() => {
       this.loading = false;
+    });
+    this.fetch().then(() => {
+      this.selectFirst();
+      this.modalLoading = false;
     })
   },
 };
@@ -64,5 +147,11 @@ export default {
     min-height: 100%;
     max-height: 100%;
   }
+}
+
+.name-span {
+  min-width: 16rem;
+  display: inline-block;
+  text-align: center;
 }
 </style>
