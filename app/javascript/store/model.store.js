@@ -436,8 +436,6 @@ export const store = new Vuex.Store({
         // return dispatch('jv/get', [endpoints[model], {params}])
         return new Promise((res, rej) => {
           dispatch('jv/get', [endpoints[model], {params}]).then(data => {
-            console.log('fetched data', model, data);
-            console.log('isthis paged', model, isPaged);
             if(isPaged) {
               const meta = {correctOrder:  data._jv.json.data.map(m => m.id)};
               if (typeof data._jv.json.meta !== 'undefined') {
