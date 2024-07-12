@@ -35,7 +35,7 @@ module MigrationHelpers
             or rsd."preferred_name" ilike p.pseudonym
             or rsd."badge_name" ilike p.pseudonym
           )
-          where 
+          where
           rsd.reg_id not in (select p2.reg_id from people p2 where  p2.reg_id is not null)
           and
           concat(p.id, '-', rsd.reg_id) not in 
@@ -50,6 +50,8 @@ module MigrationHelpers
             rsd2."alternative_email" ilike e.email
           )
           where e.isdefault = true
+          and
+          rsd2.reg_id not in (select p2.reg_id from people p2 where  p2.reg_id is not null)
           and 
           concat(e.person_id, '-', rsd2.reg_id) not in 
           (select concat(drsm.person_id, '-' , rsd2.reg_id) from dismissed_reg_sync_matches drsm);
