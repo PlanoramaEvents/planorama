@@ -18,24 +18,26 @@
       @hide="onHide()"
     >
         <div class="mb-2">
-          <div>Last completed full sync: {{ lastSync }}</div>
+          <div class="small">Last completed full sync: {{ lastSync }}</div>
           <b-spinner v-if="modalLoading"></b-spinner>
-          <div v-if="selected">Showing person {{ selectedOrdinal }} of {{ fullTotal }} potential matches</div>
+          <div v-if="selected">People with potential matches: {{ fullTotal }}</div>
         </div>
         <div v-if="!fullTotal && !modalLoading"><span class="text-muted font-italic">No more people to match!</span></div>
       <div v-if="selected">
-        <div class="mb-2">
-          <b-button @click="selectPrev()">Prev</b-button>
-          <span class="name-span"> {{ selected.published_name }}</span>
-          <b-button @click="selectNext()">Next</b-button>
+        <div class="mb-2 d-flex align-items-center">
+          <icon-button @click="alsoHideTooltip(selectPrev)" icon="caret-left-fill" tooltip="Previous" :disabled="selectedOrdinal === 1" disabledTooltip="No previous person"></icon-button>
+          <h5 class="name-span mb-0"> {{ selected.published_name }}</h5>
+          <icon-button @click="alsoHideTooltip(selectNext)" icon="caret-right-fill" tooltip="Next" :disabled="selectedOrdinal === fullTotal" disabledTooltip="No next person"></icon-button>
         </div>
-        <div class="mb-2">
+        <h6>Planorama Data</h6>
+        <div class="mb-3 ml-2">
           <div>Email: {{ selected.primary_email.email }}</div>
           <div>Published Name: {{ selected.published_name }}</div>
           <div>Name: {{ selected.name }}</div>
         </div>
-        <h5>Potential Matches</h5>
-        <ol v-if="Object.keys(selected.registration_sync_data).length">
+        <h5>Potential Matches (from registration system)</h5>
+        <div v-if="Object.keys(selected.registration_sync_data).length" class="scrollable-region">
+        <ol>
         <li v-for="(reg_data, _, index) in selected.registration_sync_data" :key="reg_data.id">
           <div v-if="index !== 0" style="border-bottom: 1px solid black" class="w-75 my-3"></div>
           <div class="d-flex justify-content-between">
@@ -48,7 +50,7 @@
           </div>
           </div>
         </li>
-        </ol>
+        </ol></div>
         <div v-else><span class="font-italic text-muted">There are no more potential matches.</span></div>
       </div>
     </plano-modal>
@@ -63,12 +65,14 @@ import { FETCH_MATCH_COUNT, personSyncDatumModel as model } from "@/store/person
 import { registrationSyncStatsMixin } from "@/store/registration_sync_stats.mixin";
 import { mapActions, mapState } from "vuex";
 import { personSyncDatumMixin } from '@/store/person_sync_datum.mixin';
+import IconButton from "@/components/icon_button.vue";
 
 export default {
   name: "RegSyncModal",
   components: {
     PlanoModal,
     DisplaySyncData,
+    IconButton,
   },
   mixins: [
     modelMixinNoProp,
@@ -115,6 +119,10 @@ export default {
         }
       })
     },
+    alsoHideTooltip(target) {
+      target();
+      this.$root.$emit('bv::hide::tooltip');
+    },
     onHide() {
       this.fetchMatchCount();
       this.modalLoading = true;
@@ -151,7 +159,11 @@ export default {
 
 .name-span {
   min-width: 16rem;
-  display: inline-block;
   text-align: center;
+}
+
+.scrollable-region {
+  max-height: 332px;
+  overflow-y: scroll;
 }
 </style>
