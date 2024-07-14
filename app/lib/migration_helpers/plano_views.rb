@@ -39,7 +39,7 @@ module MigrationHelpers
           rsd.reg_id not in (select p2.reg_id from people p2 where  p2.reg_id is not null)
           and
           concat(p.id, '-', rsd.reg_id) not in 
-          (select concat(drsm.person_id, '-' , rsd.reg_id) from dismissed_reg_sync_matches drsm)
+          (select concat(drsm.person_id, '-' , drsm.reg_id) from dismissed_reg_sync_matches drsm)
           union
           select null as name, e.email, e.person_id as pid, rsd2.reg_id, rsd2.id as rid, 'email' as mtype
           from email_addresses e
@@ -54,7 +54,7 @@ module MigrationHelpers
           rsd2.reg_id not in (select p2.reg_id from people p2 where  p2.reg_id is not null)
           and 
           concat(e.person_id, '-', rsd2.reg_id) not in 
-          (select concat(drsm.person_id, '-' , rsd2.reg_id) from dismissed_reg_sync_matches drsm);
+          (select concat(drsm.person_id, '-' , drsm.reg_id) from dismissed_reg_sync_matches drsm);
         CREATE INDEX matches_reg_id ON registration_sync_matches (reg_id);
         CREATE INDEX matches_pid ON registration_sync_matches (pid);
       SQL
