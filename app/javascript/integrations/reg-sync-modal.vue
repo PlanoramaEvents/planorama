@@ -16,6 +16,8 @@
       headerBgVariant="primary"
       headerTextVariant="light"
       @hide="onHide()"
+      :no-close-on-backdrop="true"
+      :no-close-on-esc="false"
     >
         <div class="mb-2">
           <div class="small">Last completed full sync: {{ lastSync }}</div>
@@ -28,6 +30,7 @@
           <icon-button @click="alsoHideTooltip(selectPrev)" icon="caret-left-fill" tooltip="Previous" :disabled="selectedOrdinal === 1" disabledTooltip="No previous person"></icon-button>
           <h5 class="name-span mb-0"> {{ selected.published_name }}</h5>
           <icon-button @click="alsoHideTooltip(selectNext)" icon="caret-right-fill" tooltip="Next" :disabled="selectedOrdinal === fullTotal" disabledTooltip="No next person"></icon-button>
+          <reg-sync-person-search @personSelected="select($event)"></reg-sync-person-search>
         </div>
         <h6>Planorama Data</h6>
         <div class="mb-3 ml-2">
@@ -66,6 +69,7 @@ import { registrationSyncStatsMixin } from "@/store/registration_sync_stats.mixi
 import { mapActions, mapState } from "vuex";
 import { personSyncDatumMixin } from '@/store/person_sync_datum.mixin';
 import IconButton from "@/components/icon_button.vue";
+import RegSyncPersonSearch from './reg-sync-person-search.vue';
 
 export default {
   name: "RegSyncModal",
@@ -73,6 +77,7 @@ export default {
     PlanoModal,
     DisplaySyncData,
     IconButton,
+    RegSyncPersonSearch,
   },
   mixins: [
     modelMixinNoProp,
@@ -130,7 +135,7 @@ export default {
       this.selectFirst();
       this.modalLoading = false;
     })
-    }
+    },
   },
   mounted() {
     this.loading = true;
