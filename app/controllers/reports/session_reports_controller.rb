@@ -334,7 +334,7 @@ class Reports::SessionReportsController < ApplicationController
 
     people_sessions = SessionService.person_schedule
                         .where("session_assignment_name in ('Moderator', 'Participant', 'Invisible')")
-                        .where("con_state not in ('not_set', 'accepted')")
+                        .where("con_state not in ('accepted')")
                         .where("start_time is not null and room_id is not null")
                         .order('name', 'start_time', 'title')
 
