@@ -22,7 +22,6 @@ dt {
 }
 
 .navbar.navbar-light {
-  height: 100px;
   background: linear-gradient(to right, #ffffff, $color-primary-4 67%);
   border-bottom: 5px solid $color-primary-0;
   .navbar-brand {
@@ -32,6 +31,9 @@ dt {
   }
   &.not-production {
     background: linear-gradient(to right, #ffffff, #f311d8 67%); 
+  }
+  @media (min-width: 576px) {
+    height: 100px;
   }
 }
 
