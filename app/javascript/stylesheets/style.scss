@@ -37,11 +37,13 @@ dt {
 
 #side-navbar .nav {
   background: $color-light-blue;
-  height: calc(100vh - 150px);
   overflow-y: auto;
   .nav-link.active {
     background: $color-primary-2;
     color: white;
+  }
+  @media (min-width: 576px) {
+    height: calc(100vh - 150px);
   }
 }
 
