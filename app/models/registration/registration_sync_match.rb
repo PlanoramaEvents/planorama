@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: registration_sync_matches
+# Table name: filtered_registration_sync_matches
 #
 #  email  :string
 #  mtype  :text             primary key
@@ -15,7 +15,7 @@
 #  matches_reg_id  (reg_id)
 #
 class Registration::RegistrationSyncMatch < ApplicationRecord
-  self.table_name = :registration_sync_matches
+  self.table_name = :filtered_registration_sync_matches
   self.primary_keys = :rid, :mtype
 
   belongs_to :person, optional: true, foreign_key: 'pid'

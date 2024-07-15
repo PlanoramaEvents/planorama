@@ -104,9 +104,6 @@
 #
 class PersonSyncDatum < Person
   has_many :registration_sync_matches,
-            -> {
-              where("concat(registration_sync_matches.pid, '-', registration_sync_matches.reg_id) not in (select concat(drsm.person_id, '-' , drsm.reg_id)  from dismissed_reg_sync_matches drsm)")
-            },
            class_name: 'Registration::RegistrationSyncMatch',
            foreign_key: 'pid'
 

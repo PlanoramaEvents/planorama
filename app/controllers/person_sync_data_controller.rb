@@ -40,9 +40,6 @@ class PersonSyncDataController < ResourceController
       IdentityService.clear_person_reg_info(person: person);
       IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: reg_match)
   
-      # We need to refresh the view on match
-      MigrationHelpers::PlanoViews.refresh_registration_sync_matches
-
       render status: :ok,
         json: { message: "Matched" }.to_json,
         content_type: 'application/json'

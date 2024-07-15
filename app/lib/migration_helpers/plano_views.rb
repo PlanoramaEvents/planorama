@@ -14,9 +14,20 @@ module MigrationHelpers
 
       # view for reg matching
       self.create_registration_sync_matches
+      self.create_filtered_registration_sync_matches
       self.create_registration_map_counts
       self.create_registration_map_reg_counts
       self.create_registration_map_people_counts
+    end
+
+    def self.create_filtered_registration_sync_matches
+      query = <<-SQL.squish
+        CREATE OR REPLACE VIEW filtered_registration_sync_matches AS
+          select * from registration_sync_matches rsm 
+          where rsm.reg_id not in (select p2.reg_id from people p2 where  p2.reg_id is not null)
+      SQL
+
+      ActiveRecord::Base.connection.execute(query)
     end
 
     def self.create_registration_sync_matches
@@ -36,8 +47,6 @@ module MigrationHelpers
             or rsd."badge_name" ilike p.pseudonym
           )
           where
-          rsd.reg_id not in (select p2.reg_id from people p2 where  p2.reg_id is not null)
-          and
           concat(p.id, '-', rsd.reg_id) not in 
           (select concat(drsm.person_id, '-' , drsm.reg_id) from dismissed_reg_sync_matches drsm)
           union
@@ -50,8 +59,6 @@ module MigrationHelpers
             rsd2."alternative_email" ilike e.email
           )
           where e.isdefault = true
-          and
-          rsd2.reg_id not in (select p2.reg_id from people p2 where  p2.reg_id is not null)
           and 
           concat(e.person_id, '-', rsd2.reg_id) not in 
           (select concat(drsm.person_id, '-' , drsm.reg_id) from dismissed_reg_sync_matches drsm);
@@ -659,6 +666,10 @@ module MigrationHelpers
 
       ActiveRecord::Base.connection.execute <<-SQL
         DROP VIEW IF EXISTS registration_map_counts;
+      SQL
+
+      ActiveRecord::Base.connection.execute <<-SQL
+        DROP VIEW IF EXISTS filtered_registration_sync_matches;
       SQL
 
       if self.test_registration_sync_matches_type == 'm'
