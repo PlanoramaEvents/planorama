@@ -112,17 +112,16 @@ class PersonSyncDatumSerializer
              :primary_email, :contact_email,
              :reg_match, :date_reg_synced
 
-  has_many  :email_addresses, 
-              if: Proc.new { |record, params| AccessControlService.shared_attribute_access?(instance: record, person: params[:current_person]) },
-              lazy_load_data: true, serializer: EmailAddressSerializer,
-              links: {
-                self: -> (object, params) {
-                  "#{params[:domain]}/person/#{object.id}"
-                },
-                related: -> (object, params) {
-                  "#{params[:domain]}/person/#{object.id}/email_addresses"
-                }
-              }
+  # has_many  :email_addresses, 
+  #             lazy_load_data: true, serializer: EmailAddressSerializer
+  #             links: {
+  #               self: -> (object, params) {
+  #                 "#{params[:domain]}/person/#{object.id}"
+  #               },
+  #               related: -> (object, params) {
+  #                 "#{params[:domain]}/person/#{object.id}/email_addresses"
+  #               }
+  #             }
   
   # The reg data that this person could be matched to
   has_many :registration_sync_data, serializer: RegistrationSyncDatumSerializer

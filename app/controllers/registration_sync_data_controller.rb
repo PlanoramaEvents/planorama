@@ -10,6 +10,7 @@ class RegistrationSyncDataController < ResourceController
     status = RegistrationSyncStatus.order('created_at desc').first
 
     result = status ? status.result : {}
+    result[:updated_at] = status&.updated_at;
     
     render status: :ok, json: result.to_json, content_type: 'application/json'
   end

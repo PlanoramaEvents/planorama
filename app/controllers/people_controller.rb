@@ -478,7 +478,8 @@ class PeopleController < ResourceController
     [
       :email_addresses,
       :convention_roles,
-      :person_schedule_approvals
+      :person_schedule_approvals,
+      :session_limits
     ]
   end
 

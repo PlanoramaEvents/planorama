@@ -301,7 +301,7 @@ module.exports = {
         rejected: "Rejected"
     },
     PERSON_ATTENDANCE_TYPE: {
-        'in person': "In Person",
+        in_person: "In Person",
         hybrid: "In Person AND Online",
         virtual: "Online",
     },
