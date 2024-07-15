@@ -75,7 +75,7 @@
       <li>
         <a href="/report/session_reports/non_accepted_on_schedule" target="_blank">Non-Accepted Participants on Scheduled Sessions</a>
         <p class="ml-2">
-          <strong><em>Description</em></strong>: People with participant status other than &quot;accepted&quot; or &quot;not_set&quot; assigned to scheduled sessions, one line per person and session<br />
+          <strong><em>Description</em></strong>: People with participant status other than &quot;accepted&quot; assigned to scheduled sessions, one line per person and session<br />
           <strong><em>Fields</em></strong>: Person name, published name, participant status, session title, area(s) of session, tags, admin labels<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants with a participant status that is not &quot;accepted&quot; or &quot;not_set&quot;
