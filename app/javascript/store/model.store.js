@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import { jsonapiModule, utils } from 'jsonapi-vuex'
 import { http } from '../http';
 import { getId } from '../utils/jsonapi_utils';
+import { of } from 'rxjs';
 
 export const SELECT = 'SELECT';
 export const UNSELECT = 'UNSELECT';
@@ -21,6 +22,17 @@ export const UPDATE_ALL = 'UPDATE ALL';
 
 export const PATCH_RELATED = 'PATCH RELATED';
 export const PATCH_FIELDS = 'PATCH FIELDS';
+
+// for paged models
+export const SET_MODEL_PAGE_SIZE = 'SET MODEL PAGE SIZE';
+export const SET_MODEL_PAGE_META = 'SET MODEL PAGE META';
+export const SELECT_NEXT = 'SELECT NEXT';
+export const SELECT_PREV = 'SELECT PREV';
+export const SELECT_FIRST = 'SELECT FIRST';
+export const FETCH_NEXT_PAGE = 'FETCH NEXT PAGE';
+export const FETCH_PREV_PAGE = 'FETCH PREV PAGE';
+export const FULL_TOTAL = 'FULL TOTAL';
+export const SELECTED_INDEX = 'SELECTED INDEX';
 
 // people add-ons
 import { personStore, personEndpoints } from './person.store';
@@ -172,6 +184,9 @@ export const store = new Vuex.Store({
       ...publishedSessionStore.selected,
       ...publicationDatesStore.selected,
     },
+    page: {
+      ...personSyncDatumStore.page,
+    },
     ...personSessionStore.state,
     ...settingsStore.state,
     ...surveyStore.state,
@@ -183,6 +198,8 @@ export const store = new Vuex.Store({
     ...appStore.state,
     ...scheduleWorkflowStore.state,
     ...integrationStore.state,
+    ...registrationSyncDatumStore.state,
+    ...personSyncDatumStore.state,
     // ...mailingStore.state
   },
   getters: {
@@ -199,6 +216,25 @@ export const store = new Vuex.Store({
           // console.debug('**** DEEP COPY ....', model)
           return utils.deepCopy(res)
         }
+      }
+    },
+    [FULL_TOTAL] (state) {
+      return ({model}) => {
+        return state.page[model].fullTotal;
+      }
+    },
+    [SELECTED_INDEX] (state) {
+      return ({model}) => {
+        const {perPage, currentPage, correctOrder } = state.page[model] ?? {};
+        const selectedId = state.selected[model];
+        if(perPage && currentPage && correctOrder && selectedId)  {
+          // we can calculate which one this is
+          const previousPageCount = perPage * (currentPage - 1);
+          const currentIndex = correctOrder.findIndex(id => id === selectedId);
+          return previousPageCount + currentIndex;
+        }
+        // we cannot calculate which one this is, we're missing some data
+        return -1;
       }
     },
     ...personStore.getters,
@@ -238,8 +274,25 @@ export const store = new Vuex.Store({
     [UNSELECT] (state, {model}) {
       state.selected[model] = undefined;
     },
+    [SELECT_FIRST] (state, {model}) {
+      // this only works if the model is paged
+      if(state.page[model].usePaged) {
+        state.selected[model] = state.page[model].correctOrder[0];
+      }
+    },
     [CLEAR] (state, {model}) {
       this.commit('jv/clearRecords', { _jv: { type: model } })
+    },
+    [SET_MODEL_PAGE_META] (state, {model, meta}) {
+      state.page[model] = {
+        ...state.page[model],
+        ...meta
+      };
+    },
+    [SET_MODEL_PAGE_SIZE] (state, {model, perPage}) {
+      state.page[model] ||= {}
+      state.page[model].perPage = perPage;
+      state.page[model].currentPage = 1;
     },
     ...personSessionStore.mutations,
     ...settingsStore.mutations,
@@ -247,7 +300,9 @@ export const store = new Vuex.Store({
     ...searchStateStore.mutations,
     ...roomStore.mutations,
     ...appStore.mutations,
-    ...integrationStore.mutations
+    ...integrationStore.mutations,
+    ...registrationSyncDatumStore.mutations,
+    ...personSyncDatumStore.mutations,
   },
   actions: {
     /**
@@ -360,11 +415,39 @@ export const store = new Vuex.Store({
       return dispatch('jv/search', [endpoints[model], {params}])
     },
     // need a way to override the default URL
-    [FETCH] ({dispatch}, {model, url = null, params}) {
+    [FETCH] ({dispatch, state, commit}, {model, url = null, params}) {
+      let isPaged = false;
+      if (state.page?.[model]?.usePaged) {
+        isPaged = true;
+        // modify params to fetch paged if they don't have page info already
+        let {current_page, perPage} = params ?? {}
+        if (!current_page) {
+          current_page = state.page[model]?.currentPage ?? 1;
+        }
+        if (!perPage) {
+          perPage = state.page[model]?.perPage ?? state.perPage ?? 20
+          commit(SET_MODEL_PAGE_SIZE, {model, perPage})
+        }
+        params = {...params, perPage, current_page}
+      } 
       if (url) {
         return dispatch('jv/get', [url, {params}])
       } else {
-        return dispatch('jv/get', [endpoints[model], {params}])
+        // return dispatch('jv/get', [endpoints[model], {params}])
+        return new Promise((res, rej) => {
+          dispatch('jv/get', [endpoints[model], {params}]).then(data => {
+            if(isPaged) {
+              const meta = {correctOrder:  data._jv.json.data.map(m => m.id)};
+              if (typeof data._jv.json.meta !== 'undefined') {
+                meta.currentPage = data._jv.json.meta.current_page;
+                meta.total = data._jv.json.meta.total;
+                meta.fullTotal = data._jv.json.meta.full_total;
+              }
+              commit(SET_MODEL_PAGE_META, {model, meta})
+            }
+            res(data);
+          }).catch(rej);
+        });
       }
     },
     // [CLEAR] ({dispatch}, {model}) {
@@ -379,6 +462,109 @@ export const store = new Vuex.Store({
     [FETCH_BY_ID] ({dispatch}, {model, id}) {
       // We do need this - not all fetch by id will be selected models
       return dispatch('jv/get', `${endpoints[model]}/${id}`)
+    },
+    [FETCH_NEXT_PAGE] ({state, dispatch}, {model, url = null, params}) {
+      //model must be paged
+      if(state.page[model]?.usePaged) {
+        let {currentPage, perPage, fullTotal} = state.page[model];
+        // model must have a next page
+        if(perPage * currentPage < fullTotal) {
+          // now we can fetch the next page
+          return dispatch(FETCH, {model, url, params: {...params, current_page: currentPage + 1}})
+        } else {
+          console.warn("Attempting to fetch next page when there aren't more pages: ", model)
+        }
+      } else {
+        console.warn("Attempting to fetch next page on an unpaged model: ", model);
+      }
+    },
+    [FETCH_PREV_PAGE] ({state, dispatch}, {model, url = null, params}) {
+      //model must be paged
+      if(state.page[model]?.usePaged) {
+        let {currentPage} = state.page[model];
+        console.log('fetching previous. current page', currentPage)
+        // model must have a next page
+        if(currentPage > 1) {
+          // now we can fetch the next page
+          return dispatch(FETCH, {model, url, params: {...params, current_page: currentPage - 1}})
+        } else {
+          console.warn("Attempting to fetch prev page when there aren't more pages: ", model)
+        }
+      } else {
+        console.warn("Attempting to fetch prev page on an unpaged model: ", model);
+      }
+    },
+    // this is an action rather than a mutation because we might need to fetch
+    [SELECT_NEXT] ({state, dispatch, commit}, {model}) {
+      // this currently only works with paged models
+      if(state.page[model]?.usePaged) {
+        if(state.selected[model]) {
+          const selected = state.selected[model];
+          let { correctOrder, currentPage, fullTotal, perPage } = state.page[model]; 
+          let currentIndex = correctOrder.findIndex((id) => id === selected);
+          if(currentIndex === correctOrder.length - 1) {
+            if(perPage * currentPage < fullTotal) {
+              // need to fetch next
+              return new Promise((res, rej) => {
+                // no params here, might need to add later
+                dispatch(FETCH_NEXT_PAGE, {model}).then((data) => {
+                  const itemOrId = data._jv.json.data[0].id;
+                  commit(SELECT, {model, itemOrId });
+                  res(itemOrId);
+                }).catch(rej);
+              })
+            } else {
+              // don't select anything cause it's on the last one, just return the current id
+              return of(selected.id);
+            }
+          } else {
+            const itemOrId = correctOrder[currentIndex + 1] 
+            commit(SELECT, {model, itemOrId});
+            return of(itemOrId);
+          }
+        } else {
+          console.log("Can't select next when there's nothing selected: ", model)
+        }
+      } else {
+        console.warn("Can't select next from unpaged model: ", model)
+      }
+      // todo what should i be returning here
+    },
+    // this is an action rather than a mutation because we might need to fetch
+    [SELECT_PREV] ({state, dispatch, commit}, {model}) {
+      // this currently only works with paged models
+      if(state.page[model]?.usePaged) {
+        if(state.selected[model]) {
+          const selected = state.selected[model];
+          let { correctOrder, currentPage } = state.page[model]; 
+          let currentIndex = correctOrder.findIndex((id) => id === selected);
+          if(currentIndex === 0) {
+            if (currentPage > 1) {
+              // need to fetch previous
+              return new Promise((res, rej) => {
+                // no params here, might need to add later
+                dispatch(FETCH_PREV_PAGE, {model}).then((data) => {
+                  const itemOrId = data._jv.json.data[data._jv.json.data.length - 1].id;
+                  commit(SELECT, {model, itemOrId });
+                  res(itemOrId);
+                }).catch(rej);
+              })
+            } else {
+              // don't select anything cause it's on the first one, just return the current id
+              return of(selected.id);
+            }
+          } else {
+            const itemOrId = correctOrder[currentIndex - 1];
+            commit(SELECT, {model, itemOrId});
+            return of(itemOrId);
+          }
+        } else {
+          console.log("Can't select prev when there's nothing selected: ", model)
+        }
+      } else {
+        console.warn("Can't select prev from unpaged model: ", model)
+      }
+      // todo what should i be returning here
     },
     [PATCH_FIELDS] ({dispatch, commit}, {model, item, fields=[], selected = true}) {
       // limited field selection

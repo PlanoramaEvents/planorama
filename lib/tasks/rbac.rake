@@ -1019,7 +1019,8 @@ namespace :rbac do
           "index": true,
           "show": true,
           "dismiss_match": true,
-          "match": true
+          "match": true,
+          "possible_match_count": true
       }
     })
   end

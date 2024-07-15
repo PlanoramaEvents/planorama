@@ -2,8 +2,17 @@ class PersonSyncDataController < ResourceController
   SERIALIZER_CLASS = 'PersonSyncDatumSerializer'.freeze
   POLICY_CLASS = 'PersonSyncDatumPolicy'.freeze
   POLICY_SCOPE_CLASS = 'PersonSyncDatumPolicy::Scope'.freeze
-  DEFAULT_SORTBY = 'name_sort_by'
+  DEFAULT_SORTBY = 'people.name_sort_by'
   DEFAULT_ORDER = 'asc'.freeze
+
+  # 
+  def possible_match_count
+    authorize model_class, policy_class: policy_class
+    
+    render status: :ok,
+      json: { total: collection_total }.to_json,
+      content_type: 'application/json'
+  end
 
   #
   #
@@ -30,7 +39,7 @@ class PersonSyncDataController < ResourceController
       # Update the person with the reg data
       IdentityService.clear_person_reg_info(person: person);
       IdentityService.update_reg_info(person: person, details: datum.raw_info, reg_match: reg_match)
-
+  
       render status: :ok,
         json: { message: "Matched" }.to_json,
         content_type: 'application/json'
@@ -57,6 +66,10 @@ class PersonSyncDataController < ResourceController
           reg_id: reg_id,
           person_id: person_id
         })
+    
+        # We need to refresh the view on match
+        # this can take a few seconds
+        MigrationHelpers::PlanoViews.refresh_registration_sync_matches
       end
   
       render status: :ok,
@@ -69,10 +82,9 @@ class PersonSyncDataController < ResourceController
   def default_scope(query: nil)
     return nil unless query
 
-    # People that have a potential mapping and not already mapped
-    query.joins(:registration_sync_data)
-      .where('people.reg_id is null')
-      .where('registration_sync_data.reg_id in (select reg_id from registration_map_counts)')
+    # TODO: exclude people with no registration_sync_data
+
+    query.where('people.reg_id is null and people.id in (select pid from registration_sync_matches)')
   end
 
   def select_fields
@@ -88,14 +100,19 @@ class PersonSyncDataController < ResourceController
     ]
   end
 
-  def make_distinct?
-    true
+  # def make_distinct?
+  #   true
+  # end
+
+  def references
+    [
+      :primary_email
+    ]
   end
 
   def includes
     [
-      :email_addresses,
-      :registration_sync_data
+      :primary_email
     ]
   end
 end
