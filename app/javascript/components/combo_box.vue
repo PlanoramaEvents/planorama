@@ -12,8 +12,8 @@
       <b-form-select
         v-model="selectedOption"
         @change="onChange"
-        v-bind:options="filtered_options"
-        v-bind:select-size="selectSize"
+        :options="filtered_options"
+        :select-size="selectSize"
         class="mt-1"
       ></b-form-select>
     </b-overlay>
@@ -30,18 +30,29 @@ export default {
     loading: {
       type: Boolean,
       default: false
-    }
+    },
+    value: {}
   },
   data: () =>  ({
-    selectedOption: null,
+    selectedOptionInternal: null,
     term: null
   }),
   methods: {
     onChange(arg) {
-      this.$emit('change', arg)
+      this.$emit('change', arg);
     }
   },
   computed: {
+    selectedOption: {
+      get() {
+        return this.value ?? this.selectedOptionInternal;
+      }, 
+      set(val) {
+        this.selectedOptionInternal = val;
+        this.$emit('input', val);
+      }
+
+    },
     filtered_options() {
       return this.options.filter(
         obj => ((this.term == null) || (this.term === "") || obj.text.toLowerCase().includes(this.term.toLowerCase()))

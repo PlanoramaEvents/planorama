@@ -54,7 +54,7 @@ import { pageContentStore, pageContentEndpoints } from "@/store/page_content.sto
 
 // Registration Sync Datum/Data
 import { registrationSyncDatumStore, registrationSyncDatumEndpoints } from "@/store/registration_sync_datum.store";
-import { personSyncDatumStore, personSyncDatumEndpoints } from "@/store/person_sync_datum.store";
+import { personSyncDatumStore, personSyncDatumEndpoints, personSyncDatumPageSize } from "@/store/person_sync_datum.store";
 
 // mailings
 import { mailingStore, mailingEndpoints } from './mailing.store';
@@ -141,6 +141,10 @@ const endpoints = {
   ...publishedSessionEndpoints,
   ...integrationEndpoints,
   ...publicationDatesEndpoints,
+}
+
+const pageSize = {
+  ...personSyncDatumPageSize,
 }
 
 // NOTE: this is really the store
@@ -425,7 +429,7 @@ export const store = new Vuex.Store({
           current_page = state.page[model]?.currentPage ?? 1;
         }
         if (!perPage) {
-          perPage = state.page[model]?.perPage ?? state.perPage ?? 20
+          perPage = pageSize[model] ?? state.page[model]?.perPage ?? state.perPage ?? 20
           commit(SET_MODEL_PAGE_SIZE, {model, perPage})
         }
         params = {...params, perPage, current_page}

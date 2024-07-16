@@ -1,10 +1,12 @@
 <template>
   <div>
-    <b-button v-b-modal.select-person-modal variant="link">Select Person</b-button>
+    <b-button v-b-modal.select-person-modal variant="link"
+      >Select Person</b-button
+    >
     <plano-modal
       id="select-person-modal"
-      @show="init()"
-      @ok="onOk()"
+      @show="load()"
+      @ok="$emit('personSelected', selectedId)"
       title="People with potential matches"
       ok-title="Go"
       headerBgVariant="primary"
@@ -15,7 +17,7 @@
         :options="options"
         :select-size="4"
         :loading="loading"
-        @change="onChange"
+        v-model="selectedId"
       ></combo-box>
     </plano-modal>
   </div>
@@ -29,54 +31,45 @@ import { personSyncDatumModel as model } from "@/store/person_sync_datum.store";
 
 export default {
   name: "RegSyncPersonSearch",
+  props: {
+    displayField: {
+      type: String,
+      default: "published_name",
+    },
+  },
   components: {
     ComboBox,
     PlanoModal,
   },
   data: () => ({
     options: [],
-    data: [],
     loading: true,
     selectedId: null,
     model,
   }),
   mixins: [modelMixinNoProp],
-  watch: {
-    data(newVal, oldVal) {
-      if (newVal) {
-        this.options = Object.values(newVal)
-          .filter((obj) => !obj.json)
-          .map((obj) => ({
-            value: obj.id,
-            text: obj.published_name,
-          }));
-      } else {
-        this.options = [];
-      }
-    },
-  },
   methods: {
-    onChange(arg) {
-      this.selectedId = arg;
-    },
-    load_people_combo() {
+    load() {
       this.loading = true;
       this.selectedId = null;
       this.search({
-        "fields[person_sync_datum]": "id,published_name",
-        sortBy: "published_name",
+        [`fields[${model}]`]: `id,${this.displayField}`,
+        sortBy: this.displayField,
         sortOrder: "asc",
         perPage: 10000,
       }).then((data) => {
-        this.data = data;
+        if (data) {
+          this.options = Object.entries(data)
+            .filter(([key, _]) => key !== "_jv")
+            .map(([_, obj]) => ({
+              value: obj.id,
+              text: obj[this.displayField],
+            }));
+        } else {
+          this.options = [];
+        }
         this.loading = false;
       });
-    },
-    init() {
-      this.load_people_combo();
-    },
-    onOk() {
-      this.$emit("personSelected", this.selectedId);
     },
   },
 };

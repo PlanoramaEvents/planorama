@@ -82,9 +82,8 @@ class PersonSyncDataController < ResourceController
   def default_scope(query: nil)
     return nil unless query
 
-    # TODO: exclude people with no registration_sync_data
-
-    query.where('people.reg_id is null and people.id in (select pid from registration_sync_matches)')
+    # exclude people with no registration_sync_data and/or matched
+    query.where('people.reg_id is null and people.id in (select pid from filtered_registration_sync_matches)')
   end
 
   def select_fields
