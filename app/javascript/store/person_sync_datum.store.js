@@ -13,6 +13,10 @@ export const personSyncDatumEndpoints = {
   [personSyncDatumModel]: 'person_sync_datum'
 }
 
+export const personSyncDatumPageSize = {
+  [personSyncDatumModel]: 2000
+}
+
 export const personSyncDatumStore = {
   actions: {
     [MATCH]({dispatch}, {regId, personId, regMatch, reload = false}) {

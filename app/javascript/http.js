@@ -6,13 +6,13 @@ export const http = axios.create({})
 
 http.interceptors.response.use(
   response => {
-    if (response.status == 503) {
+    if (response.status == 503 || response.status == 307) {
       window.location = "/maintenance.html"
     }
     return response;
   },
   error => {
-    if (error.response && error.response.status == 503) {
+    if (error.response && (error.response.status == 503 || response.status == 307)) {
       window.location = "/maintenance.html"
     }
 
