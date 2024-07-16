@@ -1,6 +1,7 @@
 export const MAGICAL_RELOAD = 'MAGICAL RELOAD'
 export const SET_PER_PAGE = 'SET PER PAGE';
 export const SET_SPINNER = 'SET SPINNER';
+export const SET_RELOADED_AT = 'SET RELOADED AT'
 
 export const appStore = {
   state: {
@@ -19,6 +20,9 @@ export const appStore = {
     },
     [SET_SPINNER] (state, spinner) {
       state.wholePageSpinner = spinner;
+    },
+    [SET_RELOADED_AT] (state) {
+      state.reloadedAt = new Date();
     }
   }
 }

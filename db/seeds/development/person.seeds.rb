@@ -42,7 +42,7 @@ if Person.count < 100
         flickr: username,
         reddit: username,
         tiktok: username,
-        attendance_type: ['in person', 'virtual', 'hybrid'].sample
+        attendance_type: ['in_person', 'virtual', 'hybrid'].sample
     )
     e = name.gsub(' ', '_') + i.to_s + '@test.com'
     EmailAddress.create(

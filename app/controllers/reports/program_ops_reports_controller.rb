@@ -314,7 +314,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
       grouped.each do |assignment|
         title = assignment.session.short_title || assignment.session.title
         row.concat [
-          title,
+          assignment.session.title,
           title.truncate(30),
           assignment.session.start_time ? FastExcel.date_num(assignment.session.start_time, assignment.session.start_time.in_time_zone.utc_offset) : nil,
           "#{assignment.session.duration}m",

@@ -39,11 +39,11 @@ class ApplicationController < ActionController::Base
 
   def check_up
     if ScheduleSnapshot.where("status = 'in_progress'").count > 0
-      redirect_to '/maintenance.html', status: 503
+      redirect_to '/maintenance.html', status: 307
     end
     # Stop people from making changes if we are running any long job
     if JobStatus.where("status = 'inprogress'").count > 0
-      redirect_to '/maintenance.html', status: 503
+      redirect_to '/maintenance.html', status: 307
     end
   end
 

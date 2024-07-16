@@ -53,7 +53,7 @@ class Conclar::ParticipantSerializer < ActiveModel::Serializer
     res = []
 
     case object.attendance_type
-    when 'in person'
+    when 'in_person'
       t = {
         value: "person_".concat(object.attendance_type),
         category: "Attendance",

@@ -23,6 +23,9 @@ class RegistrationSyncWorker
       status = RegistrationSyncStatus.order('created_at desc').first
       status = RegistrationSyncStatus.new if status == nil
 
+      # Refresh the materialized view(s)
+      MigrationHelpers::PlanoViews.refresh_registration_sync_matches
+
       status.result = {
         updated: number_updated,
         matched: number_matched,

@@ -1,4 +1,4 @@
-import { SELECTED, SELECT, UNSELECT, FETCH, FETCH_BY_ID, CLEAR, SEARCH, PATCH_FIELDS, SAVE, DELETE } from "./model.store";
+import { SELECTED, SELECT, UNSELECT, FETCH, FETCH_BY_ID, FETCH_SELECTED, CLEAR, SEARCH, PATCH_FIELDS, SAVE, DELETE, FETCH_NEXT_PAGE, FETCH_PREV_PAGE, SELECT_NEXT, SELECT_PREV, SELECT_FIRST, FULL_TOTAL, SELECTED_INDEX } from "./model.store";
 import { mapActions } from 'vuex';
 import { toastMixin } from "@/mixins";
 import { MODEL_SAVE_ERROR, MODEL_SAVE_SUCCESS, MODEL_DELETE_SUCCESS, MODEL_DELETE_ERROR, SPECIFIC_MODEL_SAVE_ERROR, SPECIFIC_MODEL_SAVE_SUCCESS } from "@/constants/strings";
@@ -13,6 +13,12 @@ export const modelMixinNoProp = {
     },
     collection() {
       return Object.values(this.$store.getters['jv/get']({_jv: { type: this.model }}))
+    },
+    fullTotal() {
+      return this.$store.getters[FULL_TOTAL]({model: this.model})
+    },
+    selectedOrdinal() {
+      return this.$store.getters[SELECTED_INDEX]({model: this.model}) + 1;
     }
   },
   methods: {
@@ -20,6 +26,15 @@ export const modelMixinNoProp = {
     ...mapActions('jv', ['search']),
     select(itemOrId) {
       this.$store.commit(SELECT, {model: this.model, itemOrId});
+    },
+    selectNext() {
+      return this.$store.dispatch(SELECT_NEXT, {model: this.model});
+    },
+    selectPrev() {
+      return this.$store.dispatch(SELECT_PREV, {model: this.model});
+    },
+    selectFirst() {
+      this.$store.commit(SELECT_FIRST, {model: this.model});
     },
     unselect() {
       this.$store.commit(UNSELECT, {model: this.model});
@@ -29,6 +44,12 @@ export const modelMixinNoProp = {
     },
     fetch(params, url = null) {
       return this.$store.dispatch(FETCH, {model: this.model, url: url, params});
+    },
+    fetchNextPage() {
+      return this.$store.dispatch(FETCH_NEXT_PAGE, {model: this.model, url: url, params});
+    },
+    fetchPrevPage() {
+      return this.$store.dispatch(FETCH_PREV_PAGE, {model: this.model, url: url, params});
     },
     fetch_by_id(id) {
       return this.$store.dispatch(FETCH_BY_ID, {model: this.model, id: id});
