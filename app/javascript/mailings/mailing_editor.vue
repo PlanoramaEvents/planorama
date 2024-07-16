@@ -169,7 +169,7 @@ export default {
       res.then(
         (data) => {
           if (data) {
-            // Take case of the 204 which comes back null
+            // Takes care of case 204 (no change on save) which comes back null
             this.mailing = data
           }
           this.$bvModal.hide('save-mailing-modal');
