@@ -22,7 +22,6 @@ dt {
 }
 
 .navbar.navbar-light {
-  height: 100px;
   background: linear-gradient(to right, #ffffff, $color-primary-4 67%);
   border-bottom: 5px solid $color-primary-0;
   .navbar-brand {
@@ -33,11 +32,29 @@ dt {
   &.not-production {
     background: linear-gradient(to right, #ffffff, #f311d8 67%); 
   }
+
+}
+
+@media (min-width: 576px) {
+  .navbar.navbar-light {
+    height: 100px;
+  }
+
+  #side-navbar .nav {
+    height: calc(100vh - 150px);
+  }
+
+  .scrollable {
+    max-height: calc(100vh - 150px);
+    overflow-x: auto;
+    &.minus31 {
+      max-height: calc(100vh - 181px);
+    }
+  }
 }
 
 #side-navbar .nav {
   background: $color-light-blue;
-  height: calc(100vh - 150px);
   overflow-y: auto;
   .nav-link.active {
     background: $color-primary-2;
@@ -53,12 +70,9 @@ dt {
   max-width: 30rem;
 }
 .scrollable {
-  max-height: calc(100vh - 150px);
   overflow-y: auto;
-  overflow-x: auto;
   padding-right: 1em;
   &.minus31 {
-    max-height: calc(100vh - 181px);
     padding-right: 0;
   }
 }
