@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 px-0">
-    <b-navbar toggleable="lg" type="light" :class="['justify-content-between', {'not-production': currentSettings.env !== 'production'}]">
+    <b-navbar id="top-navbar" toggleable="lg" type="light" :class="['justify-content-between', {'not-production': currentSettings.env !== 'production'}]">
       <b-navbar-brand to="/" :class="{ 'text-warning': currentSettings.env !== 'production'}">Planorama<span v-if="currentSettings.env !== 'production'" class="h1"> - {{currentSettings.env}}</span></b-navbar-brand>
       <div class="d-flex flex-column h-100">
         <!-- TODO -->

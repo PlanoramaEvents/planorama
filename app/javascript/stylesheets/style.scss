@@ -21,6 +21,13 @@ dt {
   white-space: pre-wrap;
 }
 
+#mobile-navbar {
+    &.not-production {
+      background-color: #ec6fde !important;
+    }
+}
+
+
 .navbar.navbar-light {
   background: linear-gradient(to right, #ffffff, $color-primary-4 67%);
   border-bottom: 5px solid $color-primary-0;
@@ -32,7 +39,6 @@ dt {
   &.not-production {
     background: linear-gradient(to right, #ffffff, #f311d8 67%); 
   }
-
 }
 
 @media (min-width: 576px) {
@@ -50,6 +56,12 @@ dt {
     &.minus31 {
       max-height: calc(100vh - 181px);
     }
+  }
+}
+
+@media (max-width: 575px) {
+  #top-navbar, #side-navbar {
+    display: none !important;
   }
 }
 
