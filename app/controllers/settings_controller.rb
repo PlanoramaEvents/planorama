@@ -62,7 +62,7 @@ class SettingsController < ApplicationController
       ],
       attendance_type: [
         {
-          value: 'in person',
+          value: 'in_person',
           label: "In-person only: I am planning to attend #{convention_name} in-person"
         }, {
           value: 'virtual',

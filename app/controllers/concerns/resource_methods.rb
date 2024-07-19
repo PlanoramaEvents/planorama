@@ -261,19 +261,8 @@ module ResourceMethods
     # Rails.logger.debug "****************************"
     # Rails.logger.debug "****************************"
 
-    # TODO we need the size without the query
     if paginated
-      fq = policy_scope(base, policy_scope_class: policy_scope_class)
-      if default_scope(query: fq)
-        fq = default_scope(query: fq)
-      end      
-      @full_collection_total = fq.where(exclude_deleted_clause)
-                            .includes(includes)
-                            .references(references)
-                            .eager_load(eager_load)
-                            .joins(join_tables)
-                            .distinct
-                            .count
+      @full_collection_total = collection_total
       instance_variable_set("@#{controller_name}", @full_collection_total)
     end
 
@@ -282,6 +271,27 @@ module ResourceMethods
     else
       q
     end
+  end
+
+  def collection_total
+    base = if belong_to_class && belongs_to_param_id
+             parent = belong_to_class.find belongs_to_param_id
+             parent.send(belongs_to_relationship)
+           else
+             model_class
+           end
+
+    fq = policy_scope(base, policy_scope_class: policy_scope_class)
+    if default_scope(query: fq)
+      fq = default_scope(query: fq)
+    end      
+    fq.where(exclude_deleted_clause)
+      .includes(includes)
+      .references(references)
+      .eager_load(eager_load)
+      .joins(join_tables)
+      .distinct
+      .count
   end
 
   def query(filters = nil)

@@ -215,6 +215,7 @@ Rails.application.routes.draw do
     get 'people', to: 'registration_sync_data#people'
   end
 
+  get 'person_sync_datum/possible_match_count', to: 'person_sync_data#possible_match_count'
   post 'person_sync_datum/dismiss_match', to: 'person_sync_data#dismiss_match'
   post 'person_sync_datum/match', to: 'person_sync_data#match'
   resources :person_sync_data, path: 'person_sync_datum'

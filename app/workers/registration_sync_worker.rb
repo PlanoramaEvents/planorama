@@ -10,15 +10,19 @@ class RegistrationSyncWorker
   include Sidekiq::Worker
 
   def perform
-    PublishedSession.transaction do
-      # get the data from Clyde and store it
-      puts "--- Sync Load Phase #{Time.now}"
-      load_phase(page_size: 500)
-      puts "--- Update Phase #{Time.now}"
-      number_updated = update_phase
-      puts "--- Match Phase #{Time.now}"
-      number_matched = matched_phase 
+    # get the data from Clyde and store it
+    puts "--- Sync Load Phase #{Time.now}"
+    load_phase(page_size: 500)
 
+    # Refresh the materialized view(s)
+    MigrationHelpers::PlanoViews.refresh_registration_sync_matches
+
+    puts "--- Update Phase #{Time.now}"
+    number_updated = update_phase
+    puts "--- Match Phase #{Time.now}"
+    number_matched = matched_phase 
+
+    PublishedSession.transaction do
       # update the status
       status = RegistrationSyncStatus.order('created_at desc').first
       status = RegistrationSyncStatus.new if status == nil
@@ -43,18 +47,20 @@ class RegistrationSyncWorker
       raise "Missing auth token! abort abort abort!"
     end
 
-    RegistrationSyncDatum.connection.truncate(RegistrationSyncDatum.table_name)
-    results = svc.people_by_page(page: 1, page_size: page_size)
+    Person.transaction do
+      RegistrationSyncDatum.connection.truncate(RegistrationSyncDatum.table_name)
+      results = svc.people_by_page(page: 1, page_size: page_size)
 
-    store_reg_data(data: results['data'])
+      store_reg_data(data: results['data'])
 
-    last_page = results.dig('meta', 'last_page')&.to_i || 0
-    for page in (2..last_page) do
-      results = svc.people_by_page(page: page, page_size: page_size)
-      if !results["message"]
-        store_reg_data(data: results['data'])
-      else
-        puts "We had an issue with the Clyde ... people by page #{page}, #{page_size}, #{last_page}, #{results["message"]}"
+      last_page = results.dig('meta', 'last_page')&.to_i || 0
+      for page in (2..last_page) do
+        results = svc.people_by_page(page: page, page_size: page_size)
+        if !results["message"]
+          store_reg_data(data: results['data'])
+        else
+          puts "We had an issue with the Clyde ... people by page #{page}, #{page_size}, #{last_page}, #{results["message"]}"
+        end
       end
     end
   end

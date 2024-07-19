@@ -1332,6 +1332,8 @@ CREATE VIEW public.person_schedules AS
     sessions.description,
     sessions.environment,
     sessions.status,
+    sessions.streamed,
+    sessions.recorded,
         CASE
             WHEN (sa.updated_at > sessions.updated_at) THEN sa.updated_at
             ELSE sessions.updated_at
@@ -1649,10 +1651,10 @@ CREATE TABLE public.registration_sync_data (
 
 
 --
--- Name: registration_sync_matches; Type: VIEW; Schema: public; Owner: -
+-- Name: registration_sync_matches; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.registration_sync_matches AS
+CREATE MATERIALIZED VIEW public.registration_sync_matches AS
  SELECT p.name,
     NULL::character varying AS email,
     p.id AS pid,
@@ -1670,7 +1672,8 @@ UNION
     'email'::text AS mtype
    FROM (public.email_addresses e
      JOIN public.registration_sync_data rsd ON ((((rsd.email)::text ~~* (e.email)::text) OR ((rsd.alternative_email)::text ~~* (e.email)::text))))
-  WHERE (e.isdefault = true);
+  WHERE (e.isdefault = true)
+  WITH NO DATA;
 
 
 --
@@ -2238,6 +2241,15 @@ CREATE TABLE public.tags (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying(191),
     taggings_count integer DEFAULT 0
+);
+
+
+--
+-- Name: tt; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tt (
+    relkind "char"
 );
 
 
@@ -3625,6 +3637,20 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 
 --
+-- Name: matches_pid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX matches_pid ON public.registration_sync_matches USING btree (pid);
+
+
+--
+-- Name: matches_reg_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX matches_reg_id ON public.registration_sync_matches USING btree (reg_id);
+
+
+--
 -- Name: par_approle_person_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3953,6 +3979,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240522190737'),
 ('20240602172220'),
 ('20240606115218'),
-('20240622165823');
+('20240622165823'),
+('20240708121706');
 
 

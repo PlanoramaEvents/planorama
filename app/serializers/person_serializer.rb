@@ -164,10 +164,6 @@ class PersonSerializer #< ActiveModel::Serializer
     !person.encrypted_password.blank?
   end
 
-  attribute :tags do |person|
-    person.base_tags.collect(&:name)
-  end
-
   attribute :session_count do |person|
     if person.has_attribute?(:session_count)
       person.session_count

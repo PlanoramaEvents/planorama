@@ -15,7 +15,7 @@
         v-b-modal="modal"
       >
         <slot v-bind="{variant: iconVariant, disabled}">
-          <b-icon v-if="icon" :icon="icon" :variant="iconVariant" :class="{'text-muted': disabled}"></b-icon>
+          <b-icon v-if="icon" :icon="icon" :variant="iconVariant" :class="{'text-muted': disabled && computedVariant === 'link'}"></b-icon>
         </slot>
       </b-button>
     </span>

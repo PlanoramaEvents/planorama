@@ -142,7 +142,7 @@ namespace :submission do
              if value.include?('**In-person and virtual:**')
                ['hybrid']
              elsif value.include?('**In-person only:**')
-               ['in person']
+               ['in_person']
              elsif value.include?('**Virtual only:**')
                ['virtual']
              end

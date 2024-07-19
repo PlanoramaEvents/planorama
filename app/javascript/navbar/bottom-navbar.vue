@@ -28,12 +28,18 @@ export default {
 .silly-spacer {
   width: 5rem;
 }
+
+@media (min-width: 576px) {
+  footer {
+    position: absolute;
+    bottom: 0px;
+  }
+}
+
 footer {
   background: $color-primary-4;
   height: 50px;
   width: 100%;
-  position: absolute;
-  bottom: 0px;
   padding: 10px;
   z-index: 3000;
 
@@ -44,6 +50,12 @@ footer {
       color: white;
       text-decoration: underline;
     }
+  }
+}
+
+@media (max-width: 575px) {
+  footer {
+    background: $color-primary-0;
   }
 }
 </style>

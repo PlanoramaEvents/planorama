@@ -55,8 +55,8 @@ class Reports::PeopleReportsController < ApplicationController
                 .joins(:person)
                 .where(
                   %q(case
-                  when (person_schedules.environment = 'in_person') then (people.attendance_type != 'in person' and people.attendance_type != 'hybrid')
-                  when (person_schedules.environment = 'hybrid') then (people.attendance_type != 'in person' and people.attendance_type != 'hybrid')
+                  when (person_schedules.environment = 'in_person') then (people.attendance_type != 'in_person' and people.attendance_type != 'hybrid')
+                  when (person_schedules.environment = 'hybrid') then (people.attendance_type != 'in_person' and people.attendance_type != 'hybrid')
                   when (person_schedules.environment = 'virtual') then (people.attendance_type != 'virtual' and people.attendance_type != 'hybrid')
                   end
                   )
