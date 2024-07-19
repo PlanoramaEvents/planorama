@@ -1,6 +1,7 @@
 <template>
   <div>
-    <b-button variant="link" class="text-light" v-b-modal="modalId">Help</b-button>
+    <b-button v-if="!mobile" variant="link" class="text-light" v-b-modal="modalId">Help</b-button>
+    <b-nav-item v-if="mobile" v-b-modal="modalId"><b-icon-question-circle class="mr-2"></b-icon-question-circle>Help</b-nav-item>
     <b-modal :id="modalId" title="Help" modal-class="help-modal" ok-only>
       <p>If you need help, you can email <br />
       <a :href="mailto" target="_blank">{{email}}</a>.
@@ -16,6 +17,11 @@ import {v4 as uuidv4 } from 'uuid';
 
 export default {
   name: "HelpLink",
+  props: {
+    mobile: {
+      default: false
+    }
+  },
   mixins: [settingsMixin],
   data: () => ({
     modalId: uuidv4()

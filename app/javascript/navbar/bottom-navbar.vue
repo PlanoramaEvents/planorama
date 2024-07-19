@@ -52,4 +52,10 @@ footer {
     }
   }
 }
+
+@media (max-width: 575px) {
+  footer {
+    background: $color-primary-0;
+  }
+}
 </style>

@@ -1,6 +1,5 @@
 <template>
   <div>
-  <b-navbar-nav>
     <b-nav-item to="/dashboard" active-class="active"
       ><b-icon-pie-chart-fill class="mr-2"></b-icon-pie-chart-fill
       >Dashboard</b-nav-item
@@ -45,7 +44,6 @@
       >Configurations</b-nav-item
     >
     <!-- <b-nav-item v-if="currentUserIsAdmin" to="/admin-registrations" active-class="active"><b-icon-minecart-loaded class="mr-2"></b-icon-minecart-loaded>Registrations</b-nav-item> -->
-  </b-navbar-nav>
   </div>
 </template>
 

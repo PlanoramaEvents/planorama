@@ -23,8 +23,9 @@ dt {
 
 #mobile-navbar {
     &.not-production {
-      background-color: #ec6fde !important;
+      // background-color: #ec6fde !important;
     }
+    border-bottom: 2px solid $color-primary-4;
 }
 
 
@@ -62,6 +63,10 @@ dt {
 @media (max-width: 575px) {
   #top-navbar, #side-navbar {
     display: none !important;
+  }
+
+  body {
+    overflow: visible;
   }
 }
 

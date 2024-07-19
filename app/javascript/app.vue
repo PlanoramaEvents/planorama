@@ -1,8 +1,8 @@
 <template>
     <div class="container-fluid">
       <sign-agreements ref="agreement-signer"></sign-agreements>
-      <div class="row"><mobile-navbar></mobile-navbar></div>
       <div class="row">
+        <mobile-navbar></mobile-navbar>
         <top-navbar></top-navbar>
         <side-navbar v-if="loggedIn && hasPassword"></side-navbar>
           <div :class="['col-12 pr-0', { 'col-sm-10': (loggedIn && hasPassword), 'col-xl-10': (loggedIn && hasPassword )}]">
