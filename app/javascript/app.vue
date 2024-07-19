@@ -2,6 +2,7 @@
     <div class="container-fluid">
       <sign-agreements ref="agreement-signer"></sign-agreements>
       <div class="row">
+        <mobile-navbar></mobile-navbar>
         <top-navbar></top-navbar>
         <side-navbar v-if="loggedIn && hasPassword"></side-navbar>
           <div :class="['col-12 pr-0', { 'col-sm-10': (loggedIn && hasPassword), 'col-xl-10': (loggedIn && hasPassword )}]">
@@ -18,6 +19,7 @@
 import 'vue-cal/dist/drag-and-drop.js'
 
 import TopNavbar from "./navbar/top-navbar.vue";
+import MobileNavbar from "./navbar/mobile-navbar.vue";
 import SideNavbar from "./navbar/side-navbar.vue";
 import BottomNavbar from "./navbar/bottom-navbar.vue";
 import personSessionMixin from "./auth/person_session.mixin";
@@ -38,7 +40,8 @@ export default  {
     TopNavbar,
     SideNavbar,
     BottomNavbar,
-    SignAgreements
+    SignAgreements,
+    MobileNavbar,
   },
   mixins: [personSessionMixin, settingsMixin],
   data() {

@@ -14,13 +14,13 @@ export const personSessionMixin = {
       return !!this.currentUser.has_password
     },
     currentUserIsAdmin() {
-      return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "admin")
+      return !!Object.values(this.currentUser?.convention_roles ?? {}).find(r => r.role === "admin")
     },
     currentUserIsStaff() {
-      return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "staff")
+      return !!Object.values(this.currentUser?.convention_roles ?? {}).find(r => r.role === "staff")
     },
     currentUserIsParticipant() {
-      return !!Object.values(this.currentUser.convention_roles).find(r => r.role === "participant")
+      return !!Object.values(this.currentUser?.convention_roles ?? {}).find(r => r.role === "participant")
     },
     currentUserEmail() {
       return this.currentUser.primary_email?.email || '';
