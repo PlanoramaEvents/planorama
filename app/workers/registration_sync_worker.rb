@@ -13,6 +13,10 @@ class RegistrationSyncWorker
     # get the data from Clyde and store it
     puts "--- Sync Load Phase #{Time.now}"
     load_phase(page_size: 500)
+
+    # Refresh the materialized view(s)
+    MigrationHelpers::PlanoViews.refresh_registration_sync_matches
+
     puts "--- Update Phase #{Time.now}"
     number_updated = update_phase
     puts "--- Match Phase #{Time.now}"
@@ -22,9 +26,6 @@ class RegistrationSyncWorker
       # update the status
       status = RegistrationSyncStatus.order('created_at desc').first
       status = RegistrationSyncStatus.new if status == nil
-
-      # Refresh the materialized view(s)
-      MigrationHelpers::PlanoViews.refresh_registration_sync_matches
 
       status.result = {
         updated: number_updated,
