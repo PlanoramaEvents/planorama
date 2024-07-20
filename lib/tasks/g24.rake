@@ -169,6 +169,14 @@ namespace :g24 do
         ]
       )
     end
+    offsite = Venue.find_by name: "Offsite"
+    if !offsite
+      Venue.create!(
+        [
+          {name: "Offsite", address: "Offsite"}
+        ]
+      )
+    end
 
     crowne_rooms
     sec_rooms
@@ -176,6 +184,20 @@ namespace :g24 do
     arc_rooms
     village_rooms
     online_rooms
+    offsite_rooms
+  end
+
+  def offsite_rooms
+    offsite = Venue.find_by name: "Offsite"
+    candidates = [
+      {venue_id: offsite.id, name: "Tours", purpose: "Tours", sort_order: 700}
+    ]
+    candidates.each do |candidate|
+      room = Room.find_by name: candidate[:name]
+      next if room
+
+      Room.create!(candidate)
+    end
   end
 
   def online_rooms
