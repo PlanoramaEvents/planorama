@@ -236,7 +236,8 @@ namespace :g24 do
         {venue_id: crowne.id, name: "Orkney", purpose: "Filk", sort_order: 240},
         {venue_id: crowne.id, name: "Malin", purpose: "Filk", sort_order: 245},
         {venue_id: crowne.id, name: "Argyll 1", purpose: "Book launches", sort_order: 250},
-        {venue_id: crowne.id, name: "Executive Boardroom", purpose: "Book launches", sort_order: 260}
+        {venue_id: crowne.id, name: "Executive Boardroom", purpose: "Book launches", sort_order: 260},
+        {venue_id: crowne.id, name: "Outside Crowne Plaza", purpose: "", sort_order: 270}
     ]
     candidates.each do |candidate|
       room = Room.find_by name: candidate[:name]
@@ -265,7 +266,9 @@ namespace :g24 do
         {venue_id: sec.id, name: "Dochart 2", purpose: "Green Room / Table Talks / Prog Ops?", sort_order: 150},
         {venue_id: sec.id, name: "Meeting Academy M1", purpose: "Programme room", sort_order: 155},
         {venue_id: sec.id, name: "Meeting Academy M2/M3", purpose: "Programme room", sort_order: 160},
-        {venue_id: sec.id, name: "Meeting Academy M4", purpose: "Programme room", sort_order: 165}
+        {venue_id: sec.id, name: "Meeting Academy M4", purpose: "Programme room", sort_order: 165},
+        {venue_id: sec.id, name: "Hall 4 (Crafting Area)", purpose: "Programme room", sort_order: 119},
+        {venue_id: sec.id, name: "Hall 4 (Art Show)", purpose: "Programme room", sort_order: 114}
     ]
     candidates.each do |candidate|
       room = Room.find_by name: candidate[:name]
