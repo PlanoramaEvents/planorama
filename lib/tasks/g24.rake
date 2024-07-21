@@ -290,7 +290,7 @@ namespace :g24 do
         {venue_id: sec.id, name: "Meeting Academy M2/M3", purpose: "Programme room", sort_order: 160},
         {venue_id: sec.id, name: "Meeting Academy M4", purpose: "Programme room", sort_order: 165},
         {venue_id: sec.id, name: "Hall 4 (Crafting Area)", purpose: "Programme room", sort_order: 119},
-        {venue_id: sec.id, name: "Hall 4 (Art Show)", purpose: "Programme room", sort_order: 114}
+        {venue_id: sec.id, name: "Hall 5 (Art Show)", purpose: "Programme room", sort_order: 114}
     ]
     candidates.each do |candidate|
       room = Room.find_by name: candidate[:name]
