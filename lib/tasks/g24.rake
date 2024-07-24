@@ -203,10 +203,10 @@ namespace :g24 do
   def online_rooms
     online = Venue.find_by name: "Online"
     candidates = [
-      {venue_id: online.id, name: "Nevis", purpose: "Programme room", sort_order: 500},
-      {venue_id: online.id, name: "Keen", purpose: "Programme room", sort_order: 505},
-      {venue_id: online.id, name: "Blaven", purpose: "Programme room", sort_order: 510},
-      {venue_id: online.id, name: "Cruachan", purpose: "Programme room", sort_order: 525}
+      {venue_id: online.id, name: "Nevis (Online)", purpose: "Programme room", sort_order: 500},
+      {venue_id: online.id, name: "Keen (Online)", purpose: "Programme room", sort_order: 505},
+      {venue_id: online.id, name: "Blaven (Online)", purpose: "Programme room", sort_order: 510},
+      {venue_id: online.id, name: "Cruachan (Online)", purpose: "Programme room", sort_order: 525}
     ]
     candidates.each do |candidate|
       room = Room.find_by name: candidate[:name]
