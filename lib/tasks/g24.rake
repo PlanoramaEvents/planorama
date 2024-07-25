@@ -2,8 +2,8 @@ namespace :g24 do
   desc "Setup integration info for RCE rooms"
   task rce_rooms: :environment do
     stage_rooms = [
-      "Nevis",
-      "Keen",
+      "Nevis (Online)",
+      "Keen (Online)",
       "Clyde Auditorium",
       "Lomond Auditorium",
       "Alsh 1",
@@ -18,8 +18,8 @@ namespace :g24 do
       "Events with British Sign Language Interpretation"
     ]
     session_rooms = [
-      "Blaven",
-      "Cruachan"
+      "Online 1",
+      "Online 2"
     ]
 
     stage_rooms.each do |name|
@@ -205,8 +205,8 @@ namespace :g24 do
     candidates = [
       {venue_id: online.id, name: "Nevis (Online)", purpose: "Programme room", sort_order: 500},
       {venue_id: online.id, name: "Keen (Online)", purpose: "Programme room", sort_order: 505},
-      {venue_id: online.id, name: "Blaven (Online)", purpose: "Programme room", sort_order: 510},
-      {venue_id: online.id, name: "Cruachan (Online)", purpose: "Programme room", sort_order: 525}
+      {venue_id: online.id, name: "Online 1", purpose: "Programme room", sort_order: 510},
+      {venue_id: online.id, name: "Online 2", purpose: "Programme room", sort_order: 525}
     ]
     candidates.each do |candidate|
       room = Room.find_by name: candidate[:name]
