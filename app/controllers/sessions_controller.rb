@@ -287,7 +287,8 @@ class SessionsController < ResourceController
         conflict_counts,
         sessions.create_on(
           conflict_counts[:session_id].eq(sessions[:id])
-        )
+        ),
+        Arel::Nodes::OuterJoin
       ),
       sessions.create_join(
         published_sessions,
