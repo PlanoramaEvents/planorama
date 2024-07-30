@@ -67,7 +67,7 @@ export default {
     },
     init: function() {
       this.loading = true
-      this.fetch({}).then(
+      this.fetchAll({}).then(
         () => {
           // $nextTick ensures that the DOM is rendered... which is usefull
           // when we want to do DOM type functions...
