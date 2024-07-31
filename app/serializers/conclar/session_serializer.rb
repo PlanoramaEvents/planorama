@@ -94,6 +94,13 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
         label: "Recorded"
       }
       res << t
+    else
+      t = {
+        value: "session_not_recorded",
+        category: "Note",
+        label: "Not Recorded"
+      }
+      res << t
     end
 
     if object.streamed
