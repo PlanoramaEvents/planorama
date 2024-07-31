@@ -89,9 +89,16 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
 
     if object.recorded
       t = {
-        value: "session_recorded",
+        value: "session_replay",
         category: "Note",
-        label: "Recorded"
+        label: "Replay"
+      }
+      res << t
+    else
+      t = {
+        value: "session_no_replay",
+        category: "Note",
+        label: "No Replay"
       }
       res << t
     end
