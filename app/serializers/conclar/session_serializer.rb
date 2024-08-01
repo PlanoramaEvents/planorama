@@ -159,7 +159,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
         res[:replay] = "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
       end
 
-      res[:chat] = "#{instance_options[:g24rce]}deep-link/chat?item_id=#{object.id}"
+      res[:chat] = "#{instance_options[:g24rce]}deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
       res
     end
   end
