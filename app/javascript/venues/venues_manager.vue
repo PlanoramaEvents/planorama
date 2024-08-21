@@ -6,9 +6,7 @@
           ref="venues-table"
       ></VenuesTable>
     </div>
-    <div class="border p-2 mb-2">
-      <VenueEditor @saved="init" ref="venueEditor"/>
-    </div>
+    <venues-sidebar></venues-sidebar>
   </div>
 </template>
 
@@ -18,10 +16,11 @@ import VenuesTable from "./venues_table";
 import VenueEditor from "./venue_editor";
 import modelMixin from '../store/model.mixin'
 import {venue_columns as columns} from "./venue.js";
+import VenuesSidebar from "./venues_sidebar.vue";
 
 export default {
   name: "VenuesManager",
-  components: {VenueEditor, VenuesTable},
+  components: {VenueEditor, VenuesTable, VenuesSidebar},
   mixins: [
     modelMixin,
   ],
