@@ -55,11 +55,11 @@
                     <b-button title="Edit Room" variant="primary" :to="editLink"><b-icon-pencil
                             variant="white"></b-icon-pencil></b-button>
                 </div>
-                <ul>
+                <!-- <ul>
                     <li v-for="(value, name) in selected">
                         {{ name }}: {{ value }}
                     </li>
-                </ul>
+                </ul> -->
             </template>
         </sidebar-vue>
     </div>

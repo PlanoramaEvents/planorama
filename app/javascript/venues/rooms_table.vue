@@ -4,6 +4,7 @@
     :columns="columns"
     :show-add="false"
     :show-settings="false"
+    :show-search="false"
     ref="rooms-table"
   >
     <template #cell(name)="{ item }">

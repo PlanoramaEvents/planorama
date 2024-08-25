@@ -7,9 +7,9 @@
       <b-tab title="Venues">
         <VenuesManager model="venue" ref="venues-manager"></VenuesManager>
       </b-tab>
-      <b-tab title="Room Setups">
+      <!-- <b-tab title="Room Setups">
         <RoomSetsManager model="roomset" ref="room-sets-manager"></RoomSetsManager>
-      </b-tab>
+      </b-tab> -->
     </b-tabs>
   </div>
 </template>

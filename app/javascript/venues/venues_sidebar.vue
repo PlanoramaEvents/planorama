@@ -10,45 +10,9 @@
             </template>
             <template #content v-if="selected">
                 <dl>
-                    <dt>Is Virtual:</dt>
+                    <dt>Address:</dt>
                     <dd class="ml-2">
-                        {{ selected.is_virtual }}
-                    </dd>
-                    <dt>Open for Scheduling:</dt>
-                    <dd class="ml-2">
-                        {{ selected.open_for_schedule }}
-                    </dd>
-                    <dt>Description:</dt>
-                    <dd class="ml-2">
-                        {{ selected.purpose }}
-                    </dd>
-                    <dt>Area:</dt>
-                    <dd class="ml-2">
-                        {{ selected.area_of_space }}
-                    </dd>
-                    <dt>Ceiling Height:</dt>
-                    <dd class="ml-2">
-                        {{ selected.height }}
-                    </dd>
-                    <dt>Length:</dt>
-                    <dd class="ml-2">
-                        {{ selected.length }}
-                    </dd>
-                    <dt>Width:</dt>
-                    <dd class="ml-2">
-                        {{ selected.width }}
-                    </dd>
-                    <dt>Capacity:</dt>
-                    <dd class="ml-2">
-                        {{ selected.capacity }}
-                    </dd>
-                    <dt>Floor:</dt>
-                    <dd class="ml-2">
-                        {{ selected.floor }}
-                    </dd>
-                    <dt>Venue:</dt>
-                    <dd class="ml-2">
-                        {{ selected.venue_id }}
+                        {{ selected.address }}
                     </dd>
                 </dl>
                 <div class="float-right d-flex justify-content-end">
