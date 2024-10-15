@@ -7,7 +7,7 @@
     "@rails/ujs": "^6.0.3-7",
     "@vuex-orm/core": "^0.36.4",
     "@vuex-orm/plugin-axios": "^0.9.4",
-    "axios": "^0.21.2",
+    "axios": "^0.28.0",
     "axios-observable": "^1.2.1",
     "bootstrap-vue": "^2.21.2",
     "ckeditor4-vue": "^2.0.0",
