@@ -34,13 +34,13 @@ import { modelMixinNoProp } from "@/mixins";
 import RoomPicker from './room_picker';
 import DatetimePicker from './datetime_picker';
 import { SESSION_MUST_UNDROP } from "@/constants/strings";
-import { ValidationProvider, extend } from 'vee-validate';
-import { min_value } from 'vee-validate/dist/rules'
+// import { ValidationProvider, extend } from 'vee-validate';
+// import { min_value } from 'vee-validate/dist/rules'
 
-extend('min_value', {
-  ...min_value,
-  message: "Sessions can't be less than 10 minutes long"
-  })
+// extend('min_value', {
+//   ...min_value,
+//   message: "Sessions can't be less than 10 minutes long"
+//   })
 
 export default {
   name: "SessionSchedule",
@@ -50,7 +50,7 @@ export default {
   components: {
     RoomPicker,
     DatetimePicker,
-    ValidationProvider
+    // ValidationProvider
   },
   data: () => ({
     tempDuration: null,

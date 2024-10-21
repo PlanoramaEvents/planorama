@@ -6,7 +6,7 @@ import { SAVE, DELETE } from "../store/model.store";
 import {
   CONFIGURATION_SAVED_SUCCESS,
   CONFIGURATION_SAVED_ERROR
-} from '../constants/strings'
+} from '@/constants/strings'
 
 export const configurationMixin = {
   mixins: [modelMixin, toastMixin],

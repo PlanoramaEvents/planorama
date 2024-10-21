@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { ValidationProvider } from "vee-validate"
+// import { ValidationProvider } from "vee-validate"
 
 export default {
   name: "EmailFieldVeevalidate",
@@ -67,7 +67,7 @@ export default {
     }
   },
   components: {
-    ValidationProvider
+    // ValidationProvider
   },
   computed: {
     groupId() {

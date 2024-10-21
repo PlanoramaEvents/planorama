@@ -165,8 +165,8 @@ import modelUtilsMixin from '@/store/model_utils.mixin';
 import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
 import PlanoEditor from '@/components/plano_editor';
-import { ValidationProvider, extend } from 'vee-validate';
-import { min_value } from 'vee-validate/dist/rules'
+// import { ValidationProvider, extend } from 'vee-validate';
+// import { min_value } from 'vee-validate/dist/rules'
 import { SESSION_ENVIRONMENT } from '@/constants/strings'
 import {minorsParticipationMixin} from './minors_participation.mixin';
 import { ageRestrictionMixin } from './age_restriction.mixin';
@@ -174,10 +174,10 @@ import PillDisplay from '@/components/pill_display.vue';
 import { tagsMixin } from '@/store/tags.mixin';
 import { areaMixin } from '@/store/area.mixin';
 
-extend('min_value', {
-  ...min_value,
-  message: "This value can't be less than 1"
-  })
+// extend('min_value', {
+//   ...min_value,
+//   message: "This value can't be less than 1"
+//   })
 
 export default {
   name: "SessionEdit",
@@ -185,7 +185,7 @@ export default {
     ModelSelect,
     ModelTags,
     PlanoEditor,
-    ValidationProvider,
+    // ValidationProvider,
     PillDisplay,
   },
   mixins: [

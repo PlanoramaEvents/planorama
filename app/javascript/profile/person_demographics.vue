@@ -88,7 +88,7 @@ import PersonEditModal from "./person_edit_modal.vue";
 import EditButton from '@/components/edit_button';
 import DlPerson from './dl_person.vue';
 import personSessionMixin from '@/auth/person_session.mixin';
-import { ValidationProvider } from 'vee-validate';
+// import { ValidationProvider } from 'vee-validate';
 import { settingsMixin } from "@/mixins";
 import { peopleHiddenFieldsMixin } from '@/configurations/people_hidden_fields.mixin';
 import { PROFILE_FIELD_LABELS } from "@/constants/strings";
@@ -105,7 +105,7 @@ export default {
     PersonEditModal,
     EditButton,
     DlPerson,
-    ValidationProvider,
+    // ValidationProvider,
   },
   data: () => ({
     model,

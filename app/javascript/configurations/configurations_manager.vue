@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import modelMixin from '../store/model.mixin';
+import modelMixin from '@/store/model.mixin';
 import ConfigEditor from './config_editor';
 import settingsMixin from "@/store/settings.mixin";
 import { EVENT_SETTINGS_MUST_RELOAD } from '@/constants/strings';

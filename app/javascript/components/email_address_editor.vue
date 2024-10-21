@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-row w-100">
-    <validation-observer slim ref="emailObserver">
-      <ValidationProvider
+    <!-- <validation-observer slim ref="emailObserver"> -->
+      <!-- <ValidationProvider -->
         mode="aggressive"
         rules="email"
         name="Email"
@@ -17,8 +17,8 @@
           @change="onChange"
         ></b-form-input>
         <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
-      </ValidationProvider>
-    </validation-observer>
+      <!-- </ValidationProvider> -->
+    <!-- </validation-observer> -->
     <!-- {{ value.isdefault }} -->
     <div style="flex-basis: 25%;">
       <div class="d-flex flex-row justify-content-end">
@@ -41,13 +41,13 @@
 </template>
 
 <script>
-import { ValidationProvider, ValidationObserver} from 'vee-validate';
+// import { ValidationProvider, ValidationObserver} from 'vee-validate';
 
 export default {
   name: 'EmailAddressEditor',
   components: {
-    ValidationProvider,
-    ValidationObserver
+    // ValidationProvider,
+    // ValidationObserver
   },
   props: {
     value: null,

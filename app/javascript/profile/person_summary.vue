@@ -58,7 +58,7 @@
 </template>
 
 <script>
-const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 import EditButton from '@/components/edit_button';
 import PersonEditModal from './person_edit_modal';
 import { modelMixinNoProp } from '@/store/model.mixin';
@@ -66,7 +66,7 @@ import { personEndpoints, personModel } from '@/store/person.store';
 import {PERSON_NEVER_LOGGED_IN} from "@/constants/strings";
 import { toastMixin, personSessionMixin } from '@/mixins';
 import { airmeetMixin } from '@/integrations/airmeet.mixin';
-import {ValidationProvider} from 'vee-validate';
+// import {ValidationProvider} from 'vee-validate';
 import LoginIntegrations from "@/login/login_integrations.vue";
 
 export default {
@@ -80,7 +80,7 @@ export default {
   components: {
     EditButton,
     PersonEditModal,
-    ValidationProvider,
+    // ValidationProvider,
     LoginIntegrations
   },
   data: () => ({

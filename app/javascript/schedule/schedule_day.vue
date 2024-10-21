@@ -60,7 +60,7 @@ import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
 import tableMixin from '../store/table.mixin';
 
-const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 
 export default {
   name: "ScheduleDay",

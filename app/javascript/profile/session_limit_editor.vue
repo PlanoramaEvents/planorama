@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { ValidationProvider, ValidationObserver} from 'vee-validate';
+// import { ValidationProvider, ValidationObserver} from 'vee-validate';
 import settingsMixin from "@/store/settings.mixin";
 import sessionLimitMixin from '../store/session_limit.mixin'
 import personSessionMixin from '../auth/person_session.mixin';
@@ -28,17 +28,17 @@ import personSessionMixin from '../auth/person_session.mixin';
 export default {
   name: "SessionLimitEditor",
   components: {
-    ValidationProvider,
-    ValidationObserver
+    // ValidationProvider,
+    // ValidationObserver
   },
   mixins: [
     settingsMixin,
     personSessionMixin,
     sessionLimitMixin
   ],
-  model: {
-    prop: 'person'
-  },
+  // model: {
+  //   prop: 'person'
+  // },
   props: {
     person: {
       type: Object,

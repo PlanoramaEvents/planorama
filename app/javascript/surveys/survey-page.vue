@@ -70,9 +70,9 @@ import {
   surveyIdPropMixinSurveyId,
   surveyMixin,
   submissionMixin
-} from '@mixins';
+} from '@/mixins.js';
 import { SET_PREVIEW_MODE, REDIR_SHOWN } from '@/store/survey';
-import { ValidationObserver } from 'vee-validate';
+// import { ValidationObserver } from 'vee-validate';
 import personSessionMixin from '../auth/person_session.mixin';
 import {SURVEY_NOT_ASSIGNED, SURVEY_LINKED_FIELD1, SURVEY_LINKED_FIELD2, SURVEY_REDIRECT} from "@/constants/strings";
 import LinkedFieldIcon from './linked-field-icon';
@@ -91,7 +91,7 @@ export default {
   }),
   components: {
     SurveyQuestion,
-    ValidationObserver,
+    // ValidationObserver,
     LinkedFieldIcon
   },
   mixins: [

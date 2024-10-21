@@ -10,8 +10,10 @@
       ok-title="Confirm"
       no-stacking
     >
-      <slot v-for="(_, name) in modalSlots" :name="name" :slot="name"></slot>
-      <template v-for="(_, name) in modalScopedSlots" :slot="name" slot-scope="slotData"><slot :name="name" v-bind="slotData"></slot></template>
+      <slot v-for="(_, name) in $slots" :name="name" />
+      <template v-for="(_, name) in $slot" v-slot:[name]="slotData">
+        <slot :name="name" v-bind="slotData"></slot>
+      </template>
     </edit-modal>
     <edit-modal
       v-on="$listeners"

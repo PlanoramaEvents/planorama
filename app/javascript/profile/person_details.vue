@@ -90,22 +90,23 @@
     <person-edit-modal id="person-misc-modal" :person="selected" :data="miscData" :validate="true">
       <template #modal-title>Edit Additional Info - {{selected.published_name}}</template>
       <template #default="{fields}">
-        <validation-provider name="Anyone that should not be assigned with" v-if="!isHidden('do_not_assign_with')">
+
+        <Field name="Anyone that should not be assigned with" v-if="!isHidden('do_not_assign_with')">
           <b-form-group :label="PROFILE_FIELD_LABELS.do_not_assign_with">
             <!-- TODO change edit permissions to sensitive data tickybox -->
             <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.do_not_assign_with"></b-form-textarea>
             <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
           </b-form-group>
-        </validation-provider>
-        <validation-provider name="Demographic categories to not discuss" v-if="!isHidden('excluded_demographic_categories')">
+        </Field>
+        <Field name="Demographic categories to not discuss" v-if="!isHidden('excluded_demographic_categories')">
           <b-form-group :label="PROFILE_FIELD_LABELS.excluded_demographic_categories">
             <!-- TODO change edit permissions to sensitive data tickybox -->
             <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.excluded_demographic_categories"></b-form-textarea>
             <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
           </b-form-group>
-        </validation-provider>
+        </Field>
 
-        <validation-provider name="Sharing preferences" v-if="!isHidden('can_share')">
+        <Field name="Sharing preferences" v-if="!isHidden('can_share')">
           <b-form-group :label="PROFILE_FIELD_LABELS.can_share">
             <b-form-radio-group
               stacked
@@ -115,10 +116,10 @@
               <b-form-radio :value="false">{{noLabel.label}}</b-form-radio>
             </b-form-radio-group>
           </b-form-group>
-        </validation-provider>
+        </Field>
 
         <b-form-group :label="PROFILE_FIELD_LABELS.can_stream" v-if="!isHidden('can_stream')">
-          <validation-provider>
+          <Field>
             <b-form-radio-group
               stacked
               v-model="fields.can_stream"
@@ -127,34 +128,34 @@
               <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
               <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
             </b-form-radio-group>
-          </validation-provider>
-          <validation-provider>
+          </Field>
+          <Field>
             <b-textarea v-model="fields.can_stream_exceptions"></b-textarea>
-          </validation-provider>
+          </Field>
         </b-form-group>
         <b-form-group :label="PROFILE_FIELD_LABELS.can_record" v-if="!isHidden('can_record')">
-          <validation-provider>
+          <Field>
             <b-form-radio-group stacked v-model="fields.can_record" >
               <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
               <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
               <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
             </b-form-radio-group>
-          </validation-provider>
-          <validation-provider>
+          </Field>
+          <Field>
             <b-textarea v-model="fields.can_record_exceptions"></b-textarea>
-          </validation-provider>
+          </Field>
         </b-form-group>
-        <validation-provider v-if="!isHidden('is_local')">
+        <Field v-if="!isHidden('is_local')">
           <b-form-group>
           <b-form-checkbox switch v-model="fields.is_local">{{ PROFILE_FIELD_LABELS.is_local }}</b-form-checkbox>
           </b-form-group>
-        </validation-provider>
-        <validation-provider v-if="!isHidden('moderation_experience')">
+        </Field>
+        <Field v-if="!isHidden('moderation_experience')">
         <b-form-group :label="PROFILE_FIELD_LABELS.moderation_experience">
           <b-form-textarea v-model="fields.moderation_experience"></b-form-textarea>
         </b-form-group>
-        </validation-provider>
-        <validation-provider v-if="!isHidden('needs_accommodations')">
+        </Field>
+        <Field v-if="!isHidden('needs_accommodations')">
           <b-form-group :label="PROFILE_FIELD_LABELS.needs_accommodations">
             <b-form-radio-group
               stacked
@@ -164,12 +165,12 @@
               <b-form-radio :value="false">{{noLabel.label}}</b-form-radio>
             </b-form-radio-group>
           </b-form-group>
-        </validation-provider>
-        <validation-provider v-if="!isHidden('accommodations')">
+        </Field>
+        <Field v-if="!isHidden('accommodations')">
           <b-form-group :label="PROFILE_FIELD_LABELS.accommodations">
             <b-textarea v-model="fields.accommodations"></b-textarea>
           </b-form-group>
-        </validation-provider>
+        </Field>
       </template>
     </person-edit-modal>
     <person-edit-modal id="person-social-modal" :person="selected" :data="socialsData" :validate="true">
@@ -273,7 +274,8 @@ import EditButton from '@/components/edit_button.vue';
 import PersonEditModal from './person_edit_modal.vue';
 import RegistrationLink from './registration_link.vue';
 import DlPerson from './dl_person.vue';
-import { ValidationProvider } from 'vee-validate';
+// import { ValidationProvider } from 'vee-validate';
+import { Field, Form, ErrorMessage } from 'vee-validate';
 
 import {
   PERSON_ATTENDANCE_TYPE,
@@ -303,8 +305,12 @@ export default {
     PersonEditModal,
     EditButton,
     DlPerson,
-    ValidationProvider,
+    // ValidationProvider,
     RegistrationLink,
+    // TODO
+    Form,
+    Field,
+    ErrorMessage
   },
   mixins: [
     settingsMixin,

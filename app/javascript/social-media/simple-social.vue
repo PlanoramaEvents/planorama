@@ -33,7 +33,7 @@
 
 <script>
 
-import { ValidationProvider } from 'vee-validate';
+// import { ValidationProvider } from 'vee-validate';
 
 export default {
   name: "SimpleSocial",
@@ -64,7 +64,7 @@ export default {
     }
   },
   components: {
-    ValidationProvider
+    // ValidationProvider
   },
   computed: {
     groupId() {

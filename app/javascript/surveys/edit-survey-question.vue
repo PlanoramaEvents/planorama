@@ -186,7 +186,7 @@ import {
   surveyMixin,
   pageMixin,
   questionMixin
-} from '@mixins';
+} from '@/mixins.js';
 import { LINKED_FIELD_LABELS, SURVEY_YESNOMAYBE_PLACEHOLDER, QUESTION_MODAL_MESSAGE } from '@/constants/strings';
 
 

@@ -317,9 +317,9 @@ import {
   submissionMixin,
   responseMixin,
   toastMixin
-} from '@mixins';
+} from '@/mixins.js';
 import { mapState } from 'vuex';
-import { ValidationProvider } from 'vee-validate';
+// import { ValidationProvider } from 'vee-validate';
 import { SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
 import LinkedFieldIcon from './linked-field-icon.vue';
 
@@ -328,7 +328,7 @@ export default {
   components: {
     MandatoryStar,
     SimpleSocial,
-    ValidationProvider,
+    // ValidationProvider,
     EmailFieldVeevalidate,
     LinkedFieldIcon
 },

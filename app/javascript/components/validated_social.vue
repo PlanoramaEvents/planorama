@@ -22,14 +22,14 @@
 </template>
 
 <script>
-import { ValidationProvider, ValidationObserver} from 'vee-validate';
+// import { ValidationProvider, ValidationObserver} from 'vee-validate';
 import SimpleSocial from '../social-media/simple-social.vue';
 
 export default {
   name: 'ValidatedSocial',
   components: {
-    ValidationProvider,
-    ValidationObserver,
+    // ValidationProvider,
+    // ValidationObserver,
     SimpleSocial
   },
   props: {

@@ -55,22 +55,23 @@
 </template>
 
 <script>
-import modelMixin from '../store/model.mixin';
+import modelMixin from '@/store/model.mixin';
 import configurationMixin from './configuration.mixin';
-import { ValidationProvider } from 'vee-validate';
-import TimezoneSelector from "../components/timezone_selector.vue"
+// import { ValidationProvider } from 'vee-validate';
+import TimezoneSelector from "@/components/timezone_selector.vue"
 import settingsMixin from "@/store/settings.mixin";
 import { peopleHiddenFieldsMixin } from './people_hidden_fields.mixin';
 import {startCase} from "lodash";
 import { CONFIGURATION_LABEL_OVERRIDES, LINKED_FIELD_LABELS } from '@/constants/strings';
 import TwoSidedMultiSelect from '@/components/two_sided_multi_select.vue';
 
-const { DateTime } = require("luxon");
+// const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 
 export default {
   name: "ConfigEditor",
   components: {
-    ValidationProvider,
+    // ValidationProvider,
     TimezoneSelector,
     TwoSidedMultiSelect,
   },
