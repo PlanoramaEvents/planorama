@@ -1,18 +1,18 @@
 <template>
-  <!-- <ValidationObserver v-slot="{handleSubmit, invalid, pristine}"> -->
+  <v-form as="div" ref="personEditForm" v-slot="{ handleSubmit, errors, meta }">
     <edit-modal
       @show="mirrorFromPerson()"
-      @ok="handleSubmit(patchPerson())"
+      @ok="(event) => { handleSubmit(event, patchPerson); }"
+      :ok-disabled="validate ? meta.dirty && !meta.valid : false"
       v-bind="$attrs"
       v-on="$listeners"
-      :ok-disabled="validate ? invalid || pristine : false"
     >
       <slot v-for="(_, name) in $slots" :name="name" />
       <template v-for="(_, name) in $slots" v-slot:[name]="slotData">
         <slot :name="name" v-bind="{ ...slotData, fields: data }" />
       </template>
     </edit-modal>
-  <!-- </ValidationObserver> -->
+  </v-form>
 </template>
 
 <script>
@@ -22,13 +22,13 @@ import { mapActions } from 'vuex';
 import toastMixin from '@/shared/toast-mixin';
 import { FETCH_BY_ID } from '@/store/model.store';
 import { PERSON_SAVE_SUCCESS } from '@/constants/strings';
-// import { ValidationObserver } from 'vee-validate';
+import { Form as VForm } from 'vee-validate';
 
 export default {
   name: "PersonEditModal",
   components: {
     EditModal,
-    // ValidationObserver,
+    VForm
   },
   mixins: [
     toastMixin

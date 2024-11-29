@@ -15,6 +15,7 @@ capybara-*.html
 rerun.txt
 pickle-email-*.html
 */config/sshkeys
+.ruby-lsp
 
 # Ignore all logfiles and tempfiles.
 /log/*

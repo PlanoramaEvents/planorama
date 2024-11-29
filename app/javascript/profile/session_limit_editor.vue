@@ -1,26 +1,24 @@
 <template>
-  <div v-if="my_limit">
-    <validation-provider
-      :rules="rules"
-      name="Limit"
-      :skipIfEmpty="true"
-      v-slot="{ valid, errors }"
-    >
-      <!-- Validate works if the type is text, if type is number then it does not -->
-      <input
-        v-model="my_limit.max_sessions"
-        type='text'
-        maxlength="4" size="4"
-        @blur="onChange"
-        :state="calcValid(errors,valid)"
-      />
-      <div class="invalid-message">{{ errors[0] }}</div>
-    </validation-provider>
+  <div>
+    <v-form as="div" ref="limitForm">
+      <v-field name="limitfield" type="number" :rules="limitRules" v-slot="{ handleChange, errors }">
+        <input
+          v-model="limit"
+          type='text'
+          maxlength="4" size="4"
+          @change="(event) => {handleChange(event); onChange(); }"
+          :class="{'is-invalid': !!errors.length }"
+        />
+      </v-field>
+      <error-message as="div" name="limitfield" v-slot="{message }">
+        <div class="invalid-message">{{ message }}</div>
+      </error-message>
+    </v-form>
   </div>
 </template>
 
 <script>
-// import { ValidationProvider, ValidationObserver} from 'vee-validate';
+import { Field as VField, Form as VForm, ErrorMessage } from 'vee-validate';
 import settingsMixin from "@/store/settings.mixin";
 import sessionLimitMixin from '../store/session_limit.mixin'
 import personSessionMixin from '../auth/person_session.mixin';
@@ -28,17 +26,18 @@ import personSessionMixin from '../auth/person_session.mixin';
 export default {
   name: "SessionLimitEditor",
   components: {
-    // ValidationProvider,
-    // ValidationObserver
+    VField,
+    VForm,
+    ErrorMessage
   },
   mixins: [
     settingsMixin,
     personSessionMixin,
     sessionLimitMixin
   ],
-  // model: {
-  //   prop: 'person'
-  // },
+  model: {
+    prop: 'session_limit'
+  },
   props: {
     person: {
       type: Object,
@@ -54,67 +53,53 @@ export default {
     }
   },
   data: () =>  ({
-    my_limit: {
-      max_sessions: null
-    },
-    rules: "numeric"
+    my_limit : null,
+    limit: null
   }),
-  computed: {
-    limit: {
-      get: function() {
-        let l = null
-        if (this.my_limit) {
-          l = this.my_limit.max_sessions
-        }
-        return l
-      },
-      set: function(l) {
-        // ???
-      }
-    }
-  },
   methods: {
-    calcValid(errors, valid) {
-      if (this.rules == '') {
-        return null
-      }
-
-      return errors[0] ? false : null //(valid ? true : null)
-    },
     onChange($event) {
-      // console.log('event', $event)
-      // console.log('my limit', this.my_limit)
-      if (!this.my_limit.max_sessions && this.my_limit.id) {
-        this.my_limit.max_sessions = null;
-        this.save(this.my_limit).then((data) => {
-          this.my_limit = data
-          return;
-        })
-      } else {
-        const num = Number(this.my_limit.max_sessions);
-        if (Number.isInteger(num) && num >= 0) {
-          if (this.my_limit.id) {
-            this.my_limit.max_sessions = num
-            this.save(this.my_limit).then(
-              (data) => {
-                this.my_limit = data
-              }
-            )
-          } else {
-            let candidate = {
-              person_id: this.person.id,
-              day: this.day,
-              max_sessions: num
+      // TODO: make this a merge ... see other examples
+      // if (this.limit == '') return;
+      this.$refs.limitForm.validate().then(
+        (result) => {
+          if (result) {
+            // update the value 
+            if ((typeof this.limit === "string" && this.limit.trim().length === 0)) {
+              this.my_limit.max_sessions = null;
             }
-            this.create_session_limit(candidate).then(
-              (data) => {
-                // console.log('data coming back from create', data)
-                this.my_limit = data
+            // this.$emit('input', this.value)
+            if (!this.limit && this.my_limit.id) {
+              this.my_limit.max_sessions = null;
+              this.patchSessionLimit(this.my_limit, ['max_sessions']).then((res) => {
+                this.my_limit = res
+                return;                
+              })
+            } else {
+              const num = Number(this.limit);
+              if (Number.isInteger(num) && num >= 0) {
+                if (this.my_limit.id) {
+                  this.my_limit.max_sessions = num
+                  this.patchSessionLimit(this.my_limit, ['max_sessions']).then((res) => {
+                    this.my_limit = res
+                    return;                
+                  })
+                } else {
+                  let candidate = {
+                    person_id: this.person.id,
+                    day: this.day,
+                    max_sessions: num
+                  }
+                  this.create_session_limit(candidate).then(
+                    (data) => {
+                      this.my_limit = data
+                    }
+                  )
+                }
               }
-            )
+            }
           }
         }
-      }
+      )
     }
   },
   mounted() {
@@ -130,6 +115,7 @@ export default {
     }
     if (existingLimit) {
       this.my_limit = existingLimit;
+      this.limit = this.my_limit.max_sessions
     } else {
       this.my_limit = {
         person_id: this.currentUser.id,
@@ -141,5 +127,21 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<script setup>
+import * as yup from 'yup';
+
+const limitRules = yup.string().test(
+  'is-number',
+  (n) => 'Limit is not valid',
+  (value) => value == null || (typeof value === "string" && value.trim().length === 0) || value >= 0,
+);
+</script>
+
+<style lang="css" scoped>
+.invalid-message {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
 </style>

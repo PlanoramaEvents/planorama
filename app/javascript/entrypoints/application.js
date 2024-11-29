@@ -1,8 +1,6 @@
 // console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify.app/guide/rails')
 
 import { BootstrapVue, IconsPlugin, BootstrapVueIcons } from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Vue from 'vue';
 import { createApp } from 'vue';
 import VueCookies from 'vue-cookies'
@@ -12,13 +10,12 @@ import VueResizeText from "vue3-resize-text"
 
 import { CustomIconsPlugin } from '../icons';
 import AsyncComputed from 'vue-async-computed';
-import CKEditor from '@mayasabha/ckeditor4-vue3';
+// TODO: will need to change at some point
+import CKEditor from 'ckeditor4-vue/dist/ckeditor';
 import VuePluralize from 'vue-pluralize';
-// import { configure as validationConfigure, extend as validationExtend} from 'vee-validate';
-// import { min, max, regex, required, numeric, digits, email } from 'vee-validate/dist/rules';
-
-import '@/stylesheets/custom.scss'
-import '@/stylesheets/style.scss'
+// 
+import { defineRule } from 'vee-validate';
+import { min, max, regex, required, numeric, digits, email } from '@vee-validate/rules';
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
@@ -49,12 +46,12 @@ Vue.use(VueCookies, {
 //   }
 // })
 
-// validationExtend('min', min);
-// validationExtend('max', max);
-// validationExtend('regex', regex);
-// validationExtend('email', email);
-// validationExtend('numeric', numeric);
-// validationExtend('digits', digits);
+defineRule('min', min);
+defineRule('max', max);
+defineRule('regex', regex);
+defineRule('email', email);
+defineRule('numeric', numeric);
+defineRule('digits', digits);
 
 // validationExtend('required', {
 //   ...required,
@@ -73,11 +70,10 @@ const app = createApp(PlanoramaApp);
 
 // See/review https://enterprisevue.dev/blog/error-handling-in-vue-3/
 app.config.errorHandler = (err, vm, info) => {
-  console.error(err);
   console.error("Error:", err);
-  console.error("Vue component:", vm);
-  console.error("Additional info:", info);
-  if(NODE_ENV !== 'development' || (err?.response && err.response?.status !== 422)) {
+  // console.error("Vue component:", vm);
+  // console.error("Additional info:", info);
+  if (!import.meta.env.DEV || (err?.response && err.response?.status !== 422)) {
     window.alert("Whoops! We messed up! Click ok to reload the page.")
     window.location.reload();
   }

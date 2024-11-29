@@ -12,33 +12,19 @@
 
     <script src="//cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
 
+    <%= vite_client_tag %>
+    <%= vite_stylesheet_tag 'application.scss' , media: :all %>
+    <%= vite_javascript_tag 'application' %>
     <!-- 
-    < % = javascript_pack_tag 'application' %>
-    < % = stylesheet_pack_tag 'application' %>
     < % = favicon_link_tag asset_path('p_for_plano.png') %>
     -->
-    <%= vite_stylesheet_tag 'application.scss', media: :all %>
-    <%= vite_client_tag %>
-    <%= vite_javascript_tag 'application' %>
-
+   
     <title>Planorama</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <script>
       CKEDITOR.plugins.addExternal( 'planobuttons', '/ckeditor/plugins/planobuttons/', 'plugin.js' )
     </script>
-    <%= vite_client_tag %>
-    <%= vite_javascript_tag 'application' %>
-    <!--
-      If using a TypeScript entrypoint file:
-        vite_typescript_tag 'application'
-
-      If using a .jsx or .tsx entrypoint, add the extension:
-        vite_javascript_tag 'application.jsx'
-
-      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
-    -->
-
   </head>
   <body>
     <%# Just yield cause this is a layout file with globale includes. The ERB contains the actual SPA %>

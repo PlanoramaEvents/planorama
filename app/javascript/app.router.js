@@ -104,7 +104,7 @@ import VenueManager from './venues/venue_manager.vue';
 // main
 import Vue from 'vue';
 // import VueRouter from 'vue-router';
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 // for locale
 // RouterView
 import { store } from '@/store/model.store';
@@ -114,7 +114,7 @@ import { GET_SESSION_USER, SET_SESSION_USER } from './store/person_session.store
 var con_roles=[], isAdmin=false, hasPowers=false;
 
 export const router = new createRouter({
-  history: createWebHistory(), //(process.env.BASE_URL),
+  history: createWebHashHistory(), //(process.env.BASE_URL),
   scrollBehavior(to) {
     // console.log(to)
     if (to.hash) {

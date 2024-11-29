@@ -16,6 +16,7 @@
 </template>
 
 <script>
+// TODO: check drag and drop
 // import 'vue-cal/dist/drag-and-drop.js'
 
 import TopNavbar from "./navbar/top-navbar.vue";
@@ -25,7 +26,6 @@ import BottomNavbar from "./navbar/bottom-navbar.vue";
 import personSessionMixin from "./auth/person_session.mixin";
 import SignAgreements from "./agreements/sign_agreements.vue";
 import settingsMixin from "@/store/settings.mixin";
-// import { ValidationProvider } from 'vee-validate';
 
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
@@ -36,10 +36,6 @@ export default  {
   name: "PlanoramaApp",
   components: {
     VueCal,
-    // VForm: VeeValidate.Form,
-    // VField: VeeValidate.Field,
-    // ErrorMessage: VeeValidate.ErrorMessage,
-    // ValidationProvider,
     TopNavbar,
     SideNavbar,
     BottomNavbar,
@@ -72,9 +68,3 @@ export default  {
   }
 }
 </script>
-
-<!-- this.$refs['agreement-checker'].savePerson() -->
-
-<style lang="scss" scoped>
-
-</style>

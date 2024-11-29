@@ -100,7 +100,6 @@
         </Field>
         <Field name="Demographic categories to not discuss" v-if="!isHidden('excluded_demographic_categories')">
           <b-form-group :label="PROFILE_FIELD_LABELS.excluded_demographic_categories">
-            <!-- TODO change edit permissions to sensitive data tickybox -->
             <b-form-textarea v-if="canEditSensitiveInfo" v-model="fields.excluded_demographic_categories"></b-form-textarea>
             <b-form-textarea v-if="!canEditSensitiveInfo" disabled value="Restricted"></b-form-textarea>
           </b-form-group>
@@ -117,9 +116,8 @@
             </b-form-radio-group>
           </b-form-group>
         </Field>
-
         <b-form-group :label="PROFILE_FIELD_LABELS.can_stream" v-if="!isHidden('can_stream')">
-          <Field>
+          <Field name="Can Stream">
             <b-form-radio-group
               stacked
               v-model="fields.can_stream"
@@ -134,28 +132,28 @@
           </Field>
         </b-form-group>
         <b-form-group :label="PROFILE_FIELD_LABELS.can_record" v-if="!isHidden('can_record')">
-          <Field>
+          <Field name="Can Record">
             <b-form-radio-group stacked v-model="fields.can_record" >
               <b-form-radio :value="yesLabel.value">{{yesLabel.label}}</b-form-radio>
               <b-form-radio :value="noLabel.value">{{noLabel.label}}</b-form-radio>
               <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
             </b-form-radio-group>
           </Field>
-          <Field>
+          <Field name="Record Excluded Topics">
             <b-textarea v-model="fields.can_record_exceptions"></b-textarea>
           </Field>
         </b-form-group>
-        <Field v-if="!isHidden('is_local')">
+        <Field name="Is Local" v-if="!isHidden('is_local')">
           <b-form-group>
           <b-form-checkbox switch v-model="fields.is_local">{{ PROFILE_FIELD_LABELS.is_local }}</b-form-checkbox>
           </b-form-group>
         </Field>
-        <Field v-if="!isHidden('moderation_experience')">
+        <Field name="Moderation Experiance" v-if="!isHidden('moderation_experience')">
         <b-form-group :label="PROFILE_FIELD_LABELS.moderation_experience">
           <b-form-textarea v-model="fields.moderation_experience"></b-form-textarea>
         </b-form-group>
         </Field>
-        <Field v-if="!isHidden('needs_accommodations')">
+        <Field name="Needs Accomodations" v-if="!isHidden('needs_accommodations')">
           <b-form-group :label="PROFILE_FIELD_LABELS.needs_accommodations">
             <b-form-radio-group
               stacked
@@ -166,7 +164,7 @@
             </b-form-radio-group>
           </b-form-group>
         </Field>
-        <Field v-if="!isHidden('accommodations')">
+        <Field name="Accomodations" v-if="!isHidden('accommodations')">
           <b-form-group :label="PROFILE_FIELD_LABELS.accommodations">
             <b-textarea v-model="fields.accommodations"></b-textarea>
           </b-form-group>
@@ -178,57 +176,57 @@
       <template #default="{fields}">
         <simple-social
           v-if="!isHidden('facebook')"
-          :rules="{min: 5, regex: /^[a-z\d.]{5,}$/i }"
           :label="PROFILE_FIELD_LABELS.facebook"
           prepend="facebook.com/"
+          :validation_rules="{ regex: /^$|^[a-z\d.]{5,}$/i }"
           v-model="fields.facebook"
           :disabled="disabled"
         ></simple-social>
         <simple-social
           v-if="!isHidden('website')"
-          :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
           :label="PROFILE_FIELD_LABELS.website"
           prepend="url"
+          :validation_rules="{ regex: /^$|^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
           v-model="fields.website"
           :disabled="disabled"
         ></simple-social>
         <simple-social
           v-if="!isHidden('instagram')"
-          :rules="{ regex: /^[a-zA-Z0-9._]+$/ }"
           :label="PROFILE_FIELD_LABELS.instagram"
           prepend="instagram.com/"
+          :validation_rules="{ regex: /^$|^[a-zA-Z0-9._]+$/ }"
           v-model="fields.instagram"
           :disabled="disabled"
         ></simple-social>
         <simple-social
           v-if="!isHidden('twitch')"
-          :rules="{ regex: /^(#)?[a-zA-Z0-9][\w]{2,24}$/ }"
           :label="PROFILE_FIELD_LABELS.twitch"
           prepend="twitch.tv/"
+          :validation_rules="{ regex: /^$|^(#)?[a-zA-Z0-9][\w]{2,24}$/ }"
           v-model="fields.twitch"
           :disabled="disabled"
         ></simple-social>
         <simple-social
           v-if="!isHidden('youtube')"
-          :rules="{ regex: /^[a-zA-Z0-9\/_]+([\-\.]{1}[a-zA-Z0-9\/_]+)*$/ }"
           :label="PROFILE_FIELD_LABELS.youtube"
           prepend="youtube.com/"
+          :validation_rules="{ regex: /^$|^[a-zA-Z0-9\/_]+([\-\.]{1}[a-zA-Z0-9\/_]+)*$/ }"
           v-model="fields.youtube"
           :disabled="disabled"
         ></simple-social>
         <simple-social
           v-if="!isHidden('tiktok')"
-          :rules="{ regex:/^([a-zA-Z0-9._-])+$/ }"
           :label="PROFILE_FIELD_LABELS.tiktok"
           prepend="@"
+          :validation_rules="{ regex:/^$|^([a-zA-Z0-9._-])+$/ }"
           v-model="fields.tiktok"
           :disabled="disabled"
         ></simple-social>
         <simple-social
           v-if="!isHidden('linkedin')"
-          :rules="{ regex:/^([a-zA-Z0-9.\/_-])+$/ }"
           :label="PROFILE_FIELD_LABELS.linkedin"
           prepend="linkedin.com/in/"
+          :validation_rules="{ regex:/^$|^([a-zA-Z0-9.\/_-])+$/ }"
           v-model="fields.linkedin"
           :disabled="disabled"
         ></simple-social>
@@ -242,16 +240,16 @@
         <simple-social
           v-if="!isHidden('fediverse')"
           :label="PROFILE_FIELD_LABELS.fediverse"
-          :rules="{ regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
           prepend="url"
+          :validation_rules="{ regex: /^$|^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9\/]+([\-\.]{1}[a-zA-Z0-9\/]+)*\.[a-zA-Z\/]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
           v-model="fields.fediverse"
           :disabled="disabled"
         ></simple-social>
         <simple-social
           v-if="!isHidden('twitter')"
           :label="PROFILE_FIELD_LABELS.twitter"
-          :rules="{min: 1, max: 15, regex: /^[a-z0-9_]{1,15}$/i}"
           prepend="@"
+          :validation_rules="{regex: /^$|^[a-z0-9_]{1,15}$/i}"
           v-model="fields.twitter"
           :disabled="disabled"
         ></simple-social>
@@ -274,8 +272,7 @@ import EditButton from '@/components/edit_button.vue';
 import PersonEditModal from './person_edit_modal.vue';
 import RegistrationLink from './registration_link.vue';
 import DlPerson from './dl_person.vue';
-// import { ValidationProvider } from 'vee-validate';
-import { Field, Form, ErrorMessage } from 'vee-validate';
+import { Field, Form as VForm, ErrorMessage } from 'vee-validate';
 
 import {
   PERSON_ATTENDANCE_TYPE,
@@ -305,10 +302,8 @@ export default {
     PersonEditModal,
     EditButton,
     DlPerson,
-    // ValidationProvider,
     RegistrationLink,
-    // TODO
-    Form,
+    VForm,
     Field,
     ErrorMessage
   },
@@ -423,5 +418,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-</style>
+<script setup>
+import * as yup from 'yup';
+
+const stringRules = yup.string().required();
+</script>

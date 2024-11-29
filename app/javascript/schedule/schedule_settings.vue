@@ -130,6 +130,7 @@ export default {
     IconButton,
     SingleConfigManager,
   },
+  // NODE_ENV,
   data: () => ({
     localDraftSchedule: false,
     draftScheduleConfirmed: false,
@@ -137,7 +138,6 @@ export default {
     firmScheduleConfirmed: false,
     SCHEDULE_DRAFT_CONFIRM_MESSAGE,
     SCHEDULE_FIRM_CONFIRM_MESSAGE,
-    NODE_ENV,
     pubsDiff: [],
     pubsLoading: false,
     model

@@ -135,6 +135,7 @@ export const    CONFIGURATION_SAVED_ERROR = errorMessage("Error on config save."
 
 export const    CREATE_SESSION_LIMIT_SUCCESS = "Session limit has been saved.";
 export const    CREATE_SESSION_LIMIT_ERROR = errorMessage("Error on session limit save.");
+export const    SESSION_LIMIT_SAVE_SUCCESS = "Session Limit successfully saved.";
 
 export const    AVAILABILITY_DESCRIPTION = "Under each day, please highlight (click and drag) the times you are available in the calendar view below.";
 export const    SAVE_AVAILABILITY_NOTES = "Other scheduling considerations saved successfully.";
