@@ -10,6 +10,7 @@
         <room-picker :value="selected.room_id" @change="patchSelected({room_id: $event})" :disabled="scheduleDisabled"></room-picker>
         <datetime-picker :value="selected.start_time" @input="patchSelected({start_time: $event})" :disabled="scheduleDisabled"></datetime-picker>
         <b-form-group label="Duration" class="pl-2" label-cols="12" label-cols-md="1">
+          <!-- TODO -->
           <ValidationProvider v-slot="validationCtx" rules="min_value:10" class="form-row h-100">
             <b-form-input
               type="number"

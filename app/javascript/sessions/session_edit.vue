@@ -79,18 +79,19 @@
           <span>No</span>
           <b-form-checkbox  id="session-attendee-signup-req" inline switch v-model="session.require_signup" @change="saveSession()">Yes</b-form-checkbox>
           <label :class="['ml-2', {'text-muted': !session.require_signup}]">If yes, max openings:
-            <ValidationProvider v-slot="validationCtx" rules="min_value:1">
+            <!-- TODO -->
+            <!-- <ValidationProvider v-slot="validationCtx" rules="min_value:1"> -->
               <b-form-input
                 id="session-max-signups"
                 type="number"
                 class="ml-1"
                 :disabled="!session.require_signup"
                 v-model="session.audience_size"
-                @blur="saveValidatedSession(validationCtx)"
-                :state="getValidationState(validationCtx)"
+                @blur="saveValidatedSession()"
+                :state="getValidationState()"
                 ></b-form-input>
-              <b-form-invalid-feedback>{{ validationCtx.errors[0] }}</b-form-invalid-feedback>
-            </ValidationProvider>
+              <!-- <b-form-invalid-feedback>{{ validationCtx.errors[0] }}</b-form-invalid-feedback> -->
+            <!-- </ValidationProvider> -->
           </label>
         </b-form-group>
       </div>
@@ -251,13 +252,13 @@ export default {
     saveSession() {
       this.save_model(sessionModel, this.session)
     },
-    saveValidatedSession({dirty, valid=null}) {
-      if(dirty && valid) {
+    saveValidatedSession() { //{dirty, valid=null}) {
+      // if(dirty && valid) {
         this.save_model(sessionModel, this.session)
-      }
+      // }
     },
-    getValidationState({ dirty, validated, valid = null }) {
-      return dirty || validated ? valid : null;
+    getValidationState() { //{ dirty, validated, valid = null }) {
+      // return dirty || validated ? valid : null;
     },
   }
 }

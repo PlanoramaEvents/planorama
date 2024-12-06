@@ -88,7 +88,6 @@ export default {
   },
   methods: {
     emitChange(ev) {
-      console.debug("***** MM", this.val)
       this.$emit('input', this.val)
     }
   },

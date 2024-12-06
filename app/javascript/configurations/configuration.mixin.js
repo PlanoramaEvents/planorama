@@ -1,7 +1,7 @@
-import {mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 import { toastMixin, modelMixin } from "@/mixins";
-import { NEW_CONFIGURATION } from "../store/configuration.store";
-import { SAVE, DELETE } from "../store/model.store";
+import { PATCH_FIELDS } from '@/store/model.store';
+import { NEW_CONFIGURATION, configurationModel } from '@/store/configuration.store';
 
 import {
   CONFIGURATION_SAVED_SUCCESS,
@@ -11,12 +11,22 @@ import {
 export const configurationMixin = {
   mixins: [modelMixin, toastMixin],
   methods: {
-    ...mapActions({ newConfiguration: NEW_CONFIGURATION}),
+    ...mapActions({ 
+      newConfiguration: NEW_CONFIGURATION,
+      patchModel: PATCH_FIELDS
+    }),
     createConfiguration(configuration, success_text = CONFIGURATION_SAVED_SUCCESS, error_text = CONFIGURATION_SAVED_ERROR) {
       return this.toastPromise(
         this.newConfiguration({configuration: configuration }), success_text, error_text
       );
-    }
+    },
+    patchConfiguration(configuration, fields) {
+      return this.toastPromise(new Promise((res, rej) => {
+        this.patchModel({model: configurationModel, item: configuration, fields: fields, selected: false}).then((data) => {
+          res(data);
+        }).catch(rej);
+      }), CONFIGURATION_SAVED_SUCCESS)
+    },
   }
 }
 

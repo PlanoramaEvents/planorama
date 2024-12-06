@@ -1,63 +1,75 @@
 <template>
-  <ValidationProvider
-    :name="parameter.parameter_name"
-    :rules="rules"
-    :skipIfEmpty="true"
-    v-slot="{ valid, errors }"
-  >
-  <slot v-bind="{onChange, config: configuration}">
-    <b-form-group :label="parameterLabel">
-      <!-- TODO: We need more meaningful names, ^^^ change the label  -->
-      <!-- TODO: we need to change the editor type depending on the parameter.type -->
-      <div v-if="parameter.parameter_type === 'Timezone'">
-        <timezone-selector
-          v-model="configuration.parameter_value"
-          @input="onChange"
-        ></timezone-selector>
-      </div>
-      <div v-else-if="parameter.parameter_type === 'DateTime'">
-        <b-form-datepicker
-          v-model="dateval"
-          @input="onChange"
-        ></b-form-datepicker>
-      </div>
-      <div v-else-if="parameter.parameter_type === 'Boolean'">
-        <!-- <b-radio-group :options="[{text: 'Yes', value: 'true'}, {text: 'No', value: 'false'}]" @input="onChange" v-model="configuration.parameter_value"></b-radio-group> -->
-        <label>No <b-form-checkbox 
-          v-model="configuration.parameter_value"
-          @change="onChange"
-          value="true"
-          unchecked-value="false"
-          switch
-          inline
-        >Yes</b-form-checkbox></label>
-      </div>
-      <div v-else-if="parameter.parameter_name === 'people_hidden_fields'">
-        <two-sided-multi-select
-          v-model="configuration.parameter_json"
-          :options="peopleHideableFieldsOptions"
-          not-selected-label="Visible"
-          selected-label="Hidden"
-          @change="onChange"
-        ></two-sided-multi-select>
-      </div>
-      <div v-else-if="parameter.parameter_type !== 'JSON'">
-        <b-form-input
-          v-model="configuration.parameter_value"
-          :state="calcValid(errors,valid)"
-          @change="onChange"
-        ></b-form-input>
-        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
-      </div>
-    </b-form-group>
-    </slot>
-  </ValidationProvider>
+  <v-form as="div" ref="configForm">
+    <Field 
+      :name="parameterLabel"
+      :rules="rules"
+      value=""
+      v-slot="{handleChange, meta, errors}"
+    >
+      <b-form-group
+        :label="parameterLabel"
+        :label-for="id"
+        :id="groupId"
+      >
+        <b-input-group>
+          <!-- TODO: We need more meaningful names, ^^^ change the label  -->
+          <!-- TODO: we need to change the editor type depending on the parameter.type -->
+          <div v-if="parameter.parameter_type === 'Timezone'">
+            <timezone-selector
+              :name="parameter.parameter_name"
+              v-model="configuration.parameter_value"
+              @input="onChange"
+            ></timezone-selector>
+          </div>
+          <div v-else-if="parameter.parameter_type === 'DateTime'">
+            <b-form-datepicker
+              :name="parameter.parameter_name"
+              v-model="dateval"
+              @input="onChange"
+            ></b-form-datepicker>
+          </div>
+          <div v-else-if="parameter.parameter_type === 'Boolean'">
+            <label>No <b-form-checkbox 
+              :name="parameter.parameter_name"
+              v-model="configuration.parameter_value"
+              @change="(event) => { handleChange(event); onChange(event); }"
+              value="true"
+              unchecked-value="false"
+              switch
+              inline
+            >Yes</b-form-checkbox></label>
+          </div>
+          <div v-else-if="parameter.parameter_name === 'people_hidden_fields'">
+            <two-sided-multi-select
+              :name="parameter.parameter_name"
+              v-model="configuration.parameter_json"
+              :options="peopleHideableFieldsOptions"
+              not-selected-label="Visible"
+              selected-label="Hidden"
+              @change="(event) => { handleChange(event); onChange(event); }"
+            ></two-sided-multi-select>
+          </div>
+          <div v-else-if="parameter.parameter_type !== 'JSON'">
+            <b-form-input
+              :name="parameterLabel"
+              v-model="configuration.parameter_value"
+              :class="{'is-invalid': meta.dirty && !meta.valid }"
+              @change="(event) => { handleChange(event); onChange(event); }"
+            ></b-form-input>
+          </div>
+        </b-input-group>
+        <error-message as="div" :name="parameterLabel" v-slot="{message}">
+          <div v-if="meta.dirty && !meta.valid" class="invalid-message">{{ errors[0] }}</div>
+        </error-message>  
+      </b-form-group>
+    </Field>
+  </v-form>
 </template>
 
 <script>
 import modelMixin from '@/store/model.mixin';
 import configurationMixin from './configuration.mixin';
-// import { ValidationProvider } from 'vee-validate';
+import { Field, Form as VForm, ErrorMessage } from 'vee-validate';
 import TimezoneSelector from "@/components/timezone_selector.vue"
 import settingsMixin from "@/store/settings.mixin";
 import { peopleHiddenFieldsMixin } from './people_hidden_fields.mixin';
@@ -65,13 +77,14 @@ import {startCase} from "lodash";
 import { CONFIGURATION_LABEL_OVERRIDES, LINKED_FIELD_LABELS } from '@/constants/strings';
 import TwoSidedMultiSelect from '@/components/two_sided_multi_select.vue';
 
-// const { DateTime } = require("luxon");
 import { DateTime } from 'luxon';
 
 export default {
   name: "ConfigEditor",
   components: {
-    // ValidationProvider,
+    VForm,
+    Field,
+    ErrorMessage,
     TimezoneSelector,
     TwoSidedMultiSelect,
   },
@@ -92,10 +105,11 @@ export default {
     rules() {
       switch (this.parameter.parameter_type) {
         case 'Email' :
-          return 'email'
+          return { regex: /^$|.+@.+\..+/ }
           break;
         case 'Integer' :
-          return 'numeric'
+          // return { integer: true }
+          return { regex: /^$|^\d+$/ }
           break;
       }
       return '';
@@ -109,69 +123,67 @@ export default {
         return CONFIGURATION_LABEL_OVERRIDES[param_name] || startCase(param_name)
       }
       return ''
+    },
+    groupId() {
+      return `${this.id}-group`;
+    },
+    feedbackId() {
+      return `${this.id}-feedback`;
     }
   },
   mixins: [
     modelMixin,
+    // TODO: add patch to the config mixin
     configurationMixin,
     settingsMixin,
     peopleHiddenFieldsMixin,
   ],
   methods: {
-    calcValid(errors, valid) {
-      if (this.rules == '') {
-        return null
-      }
-
-      let v = errors[0] ? false : null //(valid ? true : null);
-      this.is_valid = errors[0] ? false : true
-      return v;
-    },
     onChange(arg) {
-      let new_val = arg
-      if (this.is_valid) {
+      this.$refs.configForm.validate().then(
+        (result) => {
+          if (result) {
+            let new_val = arg
+            if (this.parameter.parameter_type === 'DateTime') {
+              if (arg.length == 0) return
+              if (this.parameter.parameter_name === "convention_end_time") {
+                new_val = DateTime.fromISO(arg, {zone: this.timezone}).endOf('day').minus({ hours: 8 }).toString()
+              } else {
+                new_val = DateTime.fromISO(arg, {zone: this.timezone}).startOf('day').plus({ hours: 6 }).toString()
+              }
+            }
 
-        if (this.parameter.parameter_type === 'DateTime') {
-          if (arg.length == 0) return
-          if (this.parameter.parameter_name === "convention_end_time") {
-            new_val = DateTime.fromISO(arg, {zone: this.timezone}).endOf('day').minus({ hours: 8 }).toString()
-          } else {
-            new_val = DateTime.fromISO(arg, {zone: this.timezone}).startOf('day').plus({ hours: 6 }).toString()
+            if (typeof this.parameter.configuration.id === 'undefined') {
+              let newconfig = {
+                parameter: this.parameter.parameter_name
+              }
+              if (this.parameter.parameter_type === 'JSON') {
+                newconfig.parameter_json = new_val;
+              } else {
+                newconfig.parameter_value = new_val;
+              }
+
+              this.createConfiguration(newconfig).then(
+                (data) => {
+                  this.configuration = data
+                }
+              )
+            } else if (this.parameter.parameter_type === 'JSON') {
+              this.configuration.parameter_json = new_val;
+              this.patchConfiguration(this.configuration, ['parameter_value']).then((res) => {
+                this.configuration = res
+                return;
+              })
+            } else {
+              this.configuration.parameter_value = new_val
+              this.patchConfiguration(this.configuration, ['parameter_value']).then((res) => {
+                this.configuration = res
+                return;
+              })
+            }
           }
         }
-
-        if (typeof this.parameter.configuration.id === 'undefined') {
-
-          let newconfig = {
-            parameter: this.parameter.parameter_name
-          }
-          if (this.parameter.parameter_type === 'JSON') {
-            newconfig.parameter_json = new_val;
-          } else {
-            newconfig.parameter_value = new_val;
-          }
-
-          this.createConfiguration(newconfig).then(
-            (data) => {
-              this.configuration = data
-            }
-          )
-        } else if (this.parameter.parameter_type === 'JSON') {
-          this.configuration.parameter_json = new_val;
-          this.save(this.configuration).then(
-            (data) => {
-              this.configuration = data
-            }
-          )
-        } else {
-          this.configuration.parameter_value = new_val
-          this.save(this.configuration).then(
-            (data) => {
-              this.configuration = data
-            }
-          )
-        }
-      }
+      );
     },
     init() {
       if (this.parameter.parameter_type == 'DateTime') {
@@ -191,3 +203,12 @@ export default {
   }
 }
 </script>
+
+<style lang="css" scoped>
+.invalid-message {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+</style>

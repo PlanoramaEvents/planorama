@@ -1,13 +1,13 @@
 <template>
   <div v-if="currentSettings">
     <b-alert show variant="warning">{{EVENT_SETTINGS_MUST_RELOAD}}</b-alert>
-    <div v-for="parameter in parameters" :key="parameter.parameter_name">
-      <config-editor
-        model="configuration"
-        :parameter="parameter"
-        v-if="parameter && !exclusions.includes(parameter.parameter_name)"
-      ></config-editor>
-    </div>
+      <div v-for="parameter in parameters" :key="parameter.parameter_name">
+        <config-editor
+          model="configuration"
+          :parameter="parameter"
+          v-if="parameter && !exclusions.includes(parameter.parameter_name)"
+        ></config-editor>
+      </div>
     <b-alert show variant="warning">{{EVENT_SETTINGS_MUST_RELOAD}}</b-alert>
   </div>
 </template>
@@ -47,12 +47,6 @@ export default {
     init() {
       this.load_parameters()
     }
-  // },
-  // mounted() {
-  //   this.fetchSettings()
   }
 }
 </script>
-
-<style lang="scss">
-</style>

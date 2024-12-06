@@ -15,7 +15,7 @@ import CKEditor from 'ckeditor4-vue/dist/ckeditor';
 import VuePluralize from 'vue-pluralize';
 // 
 import { defineRule } from 'vee-validate';
-import { min, max, regex, required, numeric, digits, email } from '@vee-validate/rules';
+import { min, max, regex, required, numeric, digits, email, integer } from '@vee-validate/rules';
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
@@ -52,6 +52,7 @@ defineRule('regex', regex);
 defineRule('email', email);
 defineRule('numeric', numeric);
 defineRule('digits', digits);
+defineRule('integer', integer);
 
 // validationExtend('required', {
 //   ...required,
