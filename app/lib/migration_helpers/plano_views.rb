@@ -621,7 +621,7 @@ module MigrationHelpers
       SQL
 
       res = ActiveRecord::Base.connection.execute(query)
-      res.first["relkind"]
+      res.first && res.first["relkind"]
     end
 
     def self.drop_views
