@@ -1,7 +1,7 @@
 # Dockerfile
 
 # Use ruby image to build our own image
-FROM --platform=linux/x86_64 ruby:2.7.3-alpine as base
+FROM --platform=linux/x86_64 ruby:3.1.4-alpine3.19 as base
 
 # Ensure that we work in UTF 8
 ENV LANG C.UTF-8 # ensure that the encoding is UTF8
@@ -30,7 +30,7 @@ RUN apk add \
     && rm -rf /var/cache/apk/*
 
 # Install bundler for this Docker image
-RUN gem install bundler:2.2.4
+RUN gem install bundler:2.3.26
 
 # WORKDIR /setup
 ADD . /opt/planorama
@@ -38,10 +38,10 @@ WORKDIR /opt/planorama
 
 # Just not use dev here
 RUN bin/bundle install --without development
-RUN bin/yarn install --frozen-lockfile
+RUN bin/vite install
 
 # The precompile will also deal with the webpacker assets
-RUN bin/rake assets:precompile --trace
+# RUN bin/rake assets:precompile --trace
 
 # We expose the port
 EXPOSE 3000

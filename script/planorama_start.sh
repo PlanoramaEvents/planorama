@@ -5,7 +5,7 @@ export NODE_ENV=${RAILS_ENV}
 
 # Development environment setup runs when RAILS_ENV is not set
 if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
-  gem install bundler:2.2.4
+  gem install bundler:2.3.26
   bin/bundle install --quiet
 
   # Install JS modules

@@ -1,9 +1,10 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-if ! foreman version &> /dev/null
-then
+# install foreman if needed — https://github.com/ddollar/foreman
+if ! gem list foreman -i --silent; then
   echo "Installing foreman..."
   gem install foreman
 fi
 
-foreman start -f Procfile.dev "$@"
+# foreman start -f Procfile.dev "$@"
+exec foreman start -f Procfile.dev "$@"

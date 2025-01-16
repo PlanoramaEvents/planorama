@@ -42,10 +42,10 @@ services:
       - DB_HOST=postgres
       - RAILS_ENV=development
       - NODE_ENV=development
-      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
       - SIDEKIQ_REDIS_URL=redis://redis:6379/0
       - SMTP_SERVER=mailcatcher
       - SMTP_PORT=1025
+      - VITE_RUBY_HOST=0.0.0.0
     volumes:
       - node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -53,8 +53,8 @@ services:
       - type: tmpfs
         target: /opt/planorama/tmp
     ports:
-      - "3000:3000"
-      - "3035:3035"
+      - "5100:5100"
+      - "3036:3036"
     depends_on:
       - postgres
       - redis
@@ -74,10 +74,10 @@ services:
       - DB_HOST=postgres
       - RAILS_ENV=development
       - NODE_ENV=development
-      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
       - SIDEKIQ_REDIS_URL=redis://redis:6379/0
       - SMTP_SERVER=mailcatcher
       - SMTP_PORT=1025
+      - VITE_RUBY_HOST=0.0.0.0
     volumes:
       - node_modules_sidekiq:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -111,17 +111,6 @@ services:
       - redis-data:/data
     ports:
       - "6379:6379"
-
-  livereload:
-    image: planorama:dev
-    build:
-      context: .
-      dockerfile: Dockerfile-dev
-    command: /opt/planorama/script/livereload_start.sh
-    ports:
-      - 35729:35729
-    volumes:
-      - .:/opt/planorama
 
   mailcatcher:
     image: schickling/mailcatcher

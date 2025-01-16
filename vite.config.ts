@@ -9,7 +9,7 @@ export default defineConfig({
       vue: '@vue/compat',
       "mixins": "/mixins"
     },
-    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue']
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },
   logLevel: 'error',
   plugins: [
