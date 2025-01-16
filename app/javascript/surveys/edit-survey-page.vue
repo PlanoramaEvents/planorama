@@ -35,7 +35,7 @@
 
 <script>
 import EditSurveyQuestion from './edit-survey-question.vue';
-import draggable from 'vuedraggable';
+import { VueDraggableNext } from 'vue-draggable-next'
 import NextPagePicker from './next-page-picker';
 import { SAVE } from '../store/model.store'
 
@@ -57,7 +57,7 @@ export default {
   name: "EditSurveyPage",
   components: {
     EditSurveyQuestion,
-    draggable,
+    draggable: VueDraggableNext,
     NextPagePicker,
   },
   mixins: [

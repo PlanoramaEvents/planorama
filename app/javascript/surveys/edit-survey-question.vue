@@ -177,7 +177,6 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
 import OptionsQuestion from './options-question.vue';
 import PlanoEditor from '@/components/plano_editor';
 import LinkedField from './linked-field';
@@ -193,7 +192,6 @@ import { LINKED_FIELD_LABELS, SURVEY_YESNOMAYBE_PLACEHOLDER, QUESTION_MODAL_MESS
 export default {
   name: "EditSurveyQuestion",
   components: {
-    draggable,
     OptionsQuestion,
     PlanoEditor,
     LinkedField,

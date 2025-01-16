@@ -1,6 +1,7 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -8,6 +9,13 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
 
 --
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
@@ -996,6 +1004,72 @@ CREATE TABLE public.exclusions_sessions (
 
 
 --
+-- Name: registration_sync_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.registration_sync_data (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    reg_id character varying,
+    registration_number character varying,
+    name character varying,
+    email character varying,
+    preferred_name character varying,
+    alternative_email character varying,
+    raw_info jsonb DEFAULT '{}'::jsonb NOT NULL,
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    badge_name character varying
+);
+
+
+--
+-- Name: registration_sync_matches; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.registration_sync_matches AS
+ SELECT p.name,
+    NULL::character varying AS email,
+    p.id AS pid,
+    rsd.reg_id,
+    rsd.id AS rid,
+    'name'::text AS mtype
+   FROM (public.people p
+     JOIN public.registration_sync_data rsd ON ((((rsd.name)::text ~~* (p.name)::text) OR ((rsd.preferred_name)::text ~~* (p.name)::text) OR ((rsd.badge_name)::text ~~* (p.name)::text) OR ((rsd.name)::text ~~* (p.pseudonym)::text) OR ((rsd.preferred_name)::text ~~* (p.pseudonym)::text) OR ((rsd.badge_name)::text ~~* (p.pseudonym)::text))))
+  WHERE (NOT (concat(p.id, '-', rsd.reg_id) IN ( SELECT concat(drsm.person_id, '-', drsm.reg_id) AS concat
+           FROM public.dismissed_reg_sync_matches drsm)))
+UNION
+ SELECT NULL::character varying AS name,
+    e.email,
+    e.person_id AS pid,
+    rsd2.reg_id,
+    rsd2.id AS rid,
+    'email'::text AS mtype
+   FROM (public.email_addresses e
+     JOIN public.registration_sync_data rsd2 ON ((((rsd2.email)::text ~~* (e.email)::text) OR ((rsd2.alternative_email)::text ~~* (e.email)::text))))
+  WHERE ((e.isdefault = true) AND (NOT (concat(e.person_id, '-', rsd2.reg_id) IN ( SELECT concat(drsm.person_id, '-', drsm.reg_id) AS concat
+           FROM public.dismissed_reg_sync_matches drsm))))
+  WITH NO DATA;
+
+
+--
+-- Name: filtered_registration_sync_matches; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.filtered_registration_sync_matches AS
+ SELECT rsm.name,
+    rsm.email,
+    rsm.pid,
+    rsm.reg_id,
+    rsm.rid,
+    rsm.mtype
+   FROM public.registration_sync_matches rsm
+  WHERE (NOT ((rsm.reg_id)::text IN ( SELECT p2.reg_id
+           FROM public.people p2
+          WHERE (p2.reg_id IS NOT NULL))));
+
+
+--
 -- Name: formats; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1631,52 +1705,6 @@ CREATE TABLE public.published_sessions (
 
 
 --
--- Name: registration_sync_data; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.registration_sync_data (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    reg_id character varying,
-    registration_number character varying,
-    name character varying,
-    email character varying,
-    preferred_name character varying,
-    alternative_email character varying,
-    raw_info jsonb DEFAULT '{}'::jsonb NOT NULL,
-    lock_version integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    badge_name character varying
-);
-
-
---
--- Name: registration_sync_matches; Type: MATERIALIZED VIEW; Schema: public; Owner: -
---
-
-CREATE MATERIALIZED VIEW public.registration_sync_matches AS
- SELECT p.name,
-    NULL::character varying AS email,
-    p.id AS pid,
-    rsd.reg_id,
-    rsd.id AS rid,
-    'name'::text AS mtype
-   FROM (public.people p
-     JOIN public.registration_sync_data rsd ON ((((rsd.name)::text ~~* (p.name)::text) OR ((rsd.preferred_name)::text ~~* (p.name)::text) OR ((rsd.badge_name)::text ~~* (p.name)::text) OR ((rsd.name)::text ~~* (p.pseudonym)::text) OR ((rsd.preferred_name)::text ~~* (p.pseudonym)::text) OR ((rsd.badge_name)::text ~~* (p.pseudonym)::text))))
-UNION
- SELECT NULL::character varying AS name,
-    e.email,
-    e.person_id AS pid,
-    rsd.reg_id,
-    rsd.id AS rid,
-    'email'::text AS mtype
-   FROM (public.email_addresses e
-     JOIN public.registration_sync_data rsd ON ((((rsd.email)::text ~~* (e.email)::text) OR ((rsd.alternative_email)::text ~~* (e.email)::text))))
-  WHERE (e.isdefault = true)
-  WITH NO DATA;
-
-
---
 -- Name: registration_map_counts; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -2074,7 +2102,8 @@ CREATE TABLE public.survey_pages (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     survey_id uuid,
-    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum
+    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -3980,6 +4009,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240602172220'),
 ('20240606115218'),
 ('20240622165823'),
-('20240708121706');
+('20240708121706'),
+('20250114163329');
 
 

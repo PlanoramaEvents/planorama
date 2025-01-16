@@ -38,14 +38,6 @@ Vue.use(VueCookies, {
   // options here
 });
 
-// validationConfigure({
-//   classes: {
-//     valid: 'is-valid',
-//     invalid: 'is-invalid',
-//     dirty: 'is-dirty'
-//   }
-// })
-
 defineRule('min', min);
 defineRule('max', max);
 defineRule('regex', regex);
@@ -54,12 +46,12 @@ defineRule('numeric', numeric);
 defineRule('digits', digits);
 defineRule('integer', integer);
 defineRule('min_value', min_value);
+defineRule('required', required);
 
-// validationExtend('required', {
-//   ...required,
-//   message: 'This field is required'
-// });
-
+// NOTE: this is needed while the app is using vue compat for vue2 components
+// the draggable component needs the vue3 rendering ...
+import { VueDraggableNext } from 'vue-draggable-next'
+VueDraggableNext.compatConfig = { MODE: 3 }
 
 Vue.use(IconsPlugin)
 Vue.use(BootstrapVueIcons)

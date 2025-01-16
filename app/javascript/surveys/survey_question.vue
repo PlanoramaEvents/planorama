@@ -9,31 +9,26 @@
         <linked-field-icon :linked_field="question.linked_field"></linked-field-icon>
       </template>
       <template #default="{ ariaDescribedBy }">
-        <validation-provider
-          mode="eager"
-          :rules="rules"
-          v-slot="{ valid, errors }"
-          :name="question.question"
-          v-if="!email"
-        >
+        <v-field ref="questionField" :name="question.question" :rules="rules" v-slot="{errors, meta }" v-if="!email">
           <b-form-textarea
             :class="{'w-50': answerable}"
             v-if="textbox"
             v-model="localResponse.response.text"
+            :state="!(meta.dirty && !meta.valid)"
             :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
-            :state="calcValid(errors, valid)"
-            @blur="saveResponse(localResponse, selectedSubmission)"
-        >{{localResponse.response.text}}</b-form-textarea>
-
+            @blur="validateField"
+          >
+            {{localResponse.response.text}}
+          </b-form-textarea>
           <b-form-input
             :class="{'w-50': answerable}"
             v-if="textfield"
             v-model="localResponse.response.text"
+            :state="!(meta.dirty && !meta.valid)"
             :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
-            :state="calcValid(errors,valid)"
-            @blur="saveResponse(localResponse, selectedSubmission)"
+            @blur="validateField"
           ></b-form-input>
           <b-form-radio-group
             :class="{'w-50': answerable}"
@@ -41,18 +36,18 @@
             v-if="yesnomaybe"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="calcValid(errors,valid)"
-            @change="saveResponse(localResponse, selectedSubmission)"
+            :state="!(meta.dirty && !meta.valid)"
+            @change="validateField"
           >
-            <b-form-radio :disabled="!answerable" :value="yesLabel.value" :state="calcValid(errors, valid)">{{yesLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="noLabel.value" :state="calcValid(errors, valid)">{{noLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="maybeLabel.value" :state="calcValid(errors, valid)">{{maybeLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="yesLabel.value" :state="!(meta.dirty && !meta.valid)">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="noLabel.value" :state="!(meta.dirty && !meta.valid)">{{noLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="maybeLabel.value" :state="!(meta.dirty && !meta.valid)">{{maybeLabel.label}}</b-form-radio>
             <div class="ml-4 mt-1 mb-3">
               <b-form-textarea
                 :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
                 v-model="localResponse.response.text"
                 :disabled="!answerable || radioButtonResponse !== maybeLabel.value"
-                @blur="saveResponse(localResponse, selectedSubmission)"
+                @blur="validateField"
               >
               </b-form-textarea>
             </div>
@@ -63,11 +58,11 @@
             v-if="boolean"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="calcValid(errors,valid)"
-            @change="saveResponse(localResponse, selectedSubmission)"
+            :state="!(meta.dirty && !meta.valid)"
+            @change="validateField"
           >
-            <b-form-radio :disabled="!answerable" :value="bYesLabel.value" :state="calcValid(errors, valid)">{{bYesLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="bNoLabel.value" :state="calcValid(errors, valid)">{{bNoLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="bYesLabel.value" :state="!(meta.dirty && !meta.valid)">{{bYesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="bNoLabel.value" :state="!(meta.dirty && !meta.valid)">{{bNoLabel.label}}</b-form-radio>
           </b-form-radio-group>
           <b-form-radio-group
             :class="{'w-50': answerable}"
@@ -75,12 +70,12 @@
             v-if="attendance_type"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="calcValid(errors,valid)"
-            @change="saveResponse(localResponse, selectedSubmission)"
+            :state="!(meta.dirty && !meta.valid)"
+            @change="validateField"
           >
-            <b-form-radio :disabled="!answerable" :value="inPersonLabel.value" :state="calcValid(errors, valid)">{{inPersonLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="virtualLabel.value" :state="calcValid(errors, valid)">{{virtualLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="hybridLabel.value" :state="calcValid(errors, valid)">{{hybridLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="inPersonLabel.value" :state="!(meta.dirty && !meta.valid)">{{inPersonLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="virtualLabel.value" :state="!(meta.dirty && !meta.valid)">{{virtualLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="hybridLabel.value" :state="!(meta.dirty && !meta.valid)">{{hybridLabel.label}}</b-form-radio>
           </b-form-radio-group>
           <b-form-radio-group
             :class="{'w-50': answerable}"
@@ -88,15 +83,15 @@
             v-if="singlechoice"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="calcValid(errors, valid)"
-            @change="saveResponse(localResponse, selectedSubmission)"
+            :state="!(meta.dirty && !meta.valid)"
+            @change="validateField"
           >
             <b-form-radio
               v-for="choice in choices.filter(a => !a.other)"
               :key="choice.id"
               :value="choiceValue(choice)"
               :disabled="!answerable"
-              :state="calcValid(errors, valid)"
+              :state="!(meta.dirty && !meta.valid)"
               @input="changeNextPage($event, choice)"
             ><span v-html="choice.answer"></span></b-form-radio>
             <b-form-radio
@@ -105,7 +100,7 @@
               :value="choiceValue(otherFromQuestion)"
               v-model="otherChecked"
               :disabled="!answerable"
-              :state="calcValid(errors, valid)"
+              :state="!(meta.dirty && !meta.valid)"
               @input="changeNextPage($event, otherFromQuestion)"
             >
               <b-form-group
@@ -130,21 +125,21 @@
             v-if="multiplechoice"
             v-model="localResponse.response.answers"
             :aria-describedBy="ariaDescribedBy"
-            :state="calcValid(errors, valid)"
-            @change="saveResponse(localResponse, selectedSubmission)"
+            :state="!(meta.dirty && !meta.valid)"
+            @change="validateField"
           >
-            <b-form-checkbox
+           <b-form-checkbox
               v-for="choice in choices.filter(a => !a.other)"
               :key="choice.id"
               :value="choiceValue(choice)"
-              :state="calcValid(errors, valid)"
+              :state="!(meta.dirty && !meta.valid)"
               :disabled="!answerable"
             ><span v-html="choice.answer"></span></b-form-checkbox>
             <b-form-checkbox
               class="mt-2"
               v-if="otherFromQuestion"
               :value="choiceValue(otherFromQuestion)"
-              :state="calcValid(errors, valid)"
+              :state="!(meta.dirty && !meta.valid)"
               :disabled="!answerable"
               v-model="otherChecked"
             >
@@ -168,9 +163,9 @@
             :class="{'w-50': answerable}"
             v-if="dropdown"
             v-model="localResponse.response.text"
-            :state="calcValid(errors, valid)"
             :aria-describedby="ariaDescribedBy"
-            @change="saveResponse(localResponse, selectedSubmission)"
+            :state="!(meta.dirty && !meta.valid)"
+            @change="validateField"
           >
             <b-form-select-option
               v-for="choice in choices"
@@ -179,8 +174,10 @@
               :disabled="!answerable"
             >{{choice.answer}}</b-form-select-option>
           </b-form-select>
-          <b-form-invalid-feedback :force-show="!calcValid(errors, valid)">{{ errors[0] }}</b-form-invalid-feedback>
-        </validation-provider>
+          <error-message as="div" :name="question.question" v-slot="{message}">
+            <div class="invalid-message">{{ message }}</div>
+          </error-message>
+        </v-field>
         <email-field-veevalidate
           :answerable="answerable"
           v-if="email"
@@ -188,6 +185,7 @@
           v-model="localResponse.response.text"
           :disabled="!answerable"
           :aria-describedBy="ariaDescribedBy"
+          :required="question.mandatory"
           @blur="saveResponse(localResponse, selectedSubmission)"
         ></email-field-veevalidate>
       </template>
@@ -319,17 +317,17 @@ import {
   toastMixin
 } from '@/mixins.js';
 import { mapState } from 'vuex';
-// TODO???
-// import { ValidationProvider } from 'vee-validate';
 import { SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
 import LinkedFieldIcon from './linked-field-icon.vue';
+import { Field as VField, ErrorMessage } from 'vee-validate';
 
 export default {
   name: "SurveyQuestion",
   components: {
     MandatoryStar,
     SimpleSocial,
-    // ValidationProvider,
+    VField,
+    ErrorMessage,
     EmailFieldVeevalidate,
     LinkedFieldIcon
 },
@@ -360,7 +358,7 @@ export default {
     ...mapState(['previewMode']),
     rules() {
       if (this.question.mandatory) {
-        return 'required'
+        return { required: true }; //'required'
       } else {
         return ''
       }
@@ -383,14 +381,18 @@ export default {
     },
   },
   methods: {
-    calcValid(errors, valid) {
-      if (this.rules == '') {
-        return null
-      }
-
-      let v = errors[0] ? false : null //(valid ? true : null);
-      this.is_valid = errors[0] ? false : true
-      return v;
+    validateField(ev) {
+      // First set the field without validation
+      this.$refs.questionField.handleChange(ev.target.value, false);
+      // Then we do the actual validation
+      this.$refs.questionField.validate().then(
+        (result) => {
+          // If there are no errors then save the response
+          if (result.errors.length == 0) {
+            this.saveResponse(this.localResponse, this.selectedSubmission)
+          }
+        }
+      );
     },
     formId(string) {
       return `${string}-${this.question.id}`
@@ -443,3 +445,12 @@ export default {
   }
 }
 </script>
+
+<style lang="css" scoped>
+.invalid-message {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+</style>

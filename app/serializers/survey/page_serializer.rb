@@ -3,6 +3,7 @@
 # Table name: survey_pages
 #
 #  id               :uuid             not null, primary key
+#  lock_version     :integer          default(0)
 #  next_page_action :enum             default("next_page")
 #  sort_order       :integer
 #  title            :string
@@ -23,7 +24,7 @@
 class Survey::PageSerializer
   include JSONAPI::Serializer
 
-  attributes :id, :title, :next_page_action,
+  attributes :id, :lock_version, :title, :next_page_action,
              :sort_order, :created_at, :updated_at, :survey_id
 
   # Because the DB can not set -1 for a UUID we fake it for the front end
