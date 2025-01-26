@@ -2,7 +2,8 @@ MIT License
 
 Copyright 2011-2015 Henry Balen, Ruth Leibig, Ian Stockdale, Cathy Mullican, Janice Gelb, Terry Fong
 Copyright 2013-2015 Grenadine Technologies Inc.
-Copyright (c) 2021 Chicago in 2022
+Copyright (c) 2021-2023 Chicago in 2022
+Copyright (c) 2023 Planorama Events Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
