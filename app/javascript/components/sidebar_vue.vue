@@ -47,3 +47,9 @@ export default {
   ]
 }
 </script>
+
+<style lang="scss">
+.b-sidebar {
+  height: calc(100vh - 50px);
+}
+</style>
