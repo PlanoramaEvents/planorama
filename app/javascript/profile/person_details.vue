@@ -169,6 +169,11 @@
             <b-textarea v-model="fields.accommodations"></b-textarea>
           </b-form-group>
         </Field>
+        <Field name="languages_fluent_in" v-if="!isHidden('languages_fluent_in')">
+          <b-form-group :label="PROFILE_FIELD_LABELS.languages_fluent_in">
+            <b-textarea v-model="fields.languages_fluent_in"></b-textarea>
+          </b-form-group>
+        </Field>
       </template>
     </person-edit-modal>
     <person-edit-modal id="person-social-modal" :person="selected" :data="socialsData" :validate="true">
@@ -330,6 +335,7 @@ export default {
       moderation_experience: null,
       needs_accommodations: null,
       accommodations: null,
+      languages_fluent_in: null,
     },
     socialsData: {
       facebook: null,

@@ -768,8 +768,9 @@ module ResourceMethods
   def paginated
     format = params[:format]
     return false if format == 'xls' || format == 'xlsx'
+    return false unless paginate && !params[:perPage].nil?
 
-    params[:perPage]&.to_i || paginate
+    params[:perPage]&.to_i
   end
 
   def derived_col?(col_name:)

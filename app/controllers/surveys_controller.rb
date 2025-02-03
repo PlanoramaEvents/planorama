@@ -39,11 +39,11 @@ class SurveysController < ResourceController
     [
       :pages,
       :'pages.questions',
-      :'pages.questions.answers'
+      :'pages.questions.answers',
       # :submissions
-      # :created_by,
-      # :updated_by,
-      # :published_by
+      :created_by,
+      :updated_by,
+      :published_by
     ]
   end
 
@@ -55,9 +55,9 @@ class SurveysController < ResourceController
         }
       },
       # :submissions,
-      # :created_by,
-      # :updated_by,
-      # :published_by,
+      :created_by,
+      :updated_by,
+      :published_by
       # :assigned_people
     ]
   end
