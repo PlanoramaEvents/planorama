@@ -10,8 +10,8 @@
       ok-title="Confirm"
       no-stacking
     >
-      <slot v-for="(_, name) in $slots" :name="name" />
-      <template v-for="(_, name) in $slot" v-slot:[name]="slotData">
+      <slot v-for="(_, name) in modalSlots" :name="name" />
+      <template v-for="(_, name) in modalScopedSlots" v-slot:[name]="slotData">
         <slot :name="name" v-bind="slotData"></slot>
       </template>
     </edit-modal>
@@ -22,8 +22,10 @@
       @close="$emit('close', $event)"
       :title="confirmTitle"
     >
-      <slot v-for="(_, name) in confirmSlots" :name="`confirm-${name}`" :slot="name"></slot>
-      <template v-for="(_, name) in confirmScopedSlots" :slot="name" slot-scope="slotData"><slot :name="`confirm-${name}`" v-bind="slotData"></slot></template>
+      <slot v-for="(_, name) in confirmSlots" :name="`confirm-${name}`" />
+      <template v-for="(_, name) in confirmScopedSlots" v-slot:[name]="slotData">
+        <slot :name="`confirm-${name}`" v-bind="slotData"></slot>
+      </template>
     </edit-modal>
   </div>
 </template>
