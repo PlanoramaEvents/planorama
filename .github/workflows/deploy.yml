@@ -112,6 +112,7 @@ jobs:
             DEVISE_SECRET=${{ env.DEVISE_SECRET }}
             RAILS_ENV=production
             NODE_ENV=development
+            PLANO_VERSION_FROM_BUILD=${{ github.ref_name }}
           push: false
           load: true
           # target: development
@@ -153,6 +154,7 @@ jobs:
             DEVISE_SECRET=${{ env.DEVISE_SECRET }}
             RAILS_ENV=production
             NODE_ENV=development
+            PLANO_VERSION_FROM_BUILD=${{ github.ref_name }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
