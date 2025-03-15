@@ -9,7 +9,7 @@ import {mapActions, mapMutations } from 'vuex';
 import {
   pageMixin,
   surveyIdPropMixinId
-} from '@/mixins.js';
+} from '@/mixins';
 import { NEW_SUBMISSION, SET_PREVIEW_MODE, SHOW_REDIR } from '@/store/survey';
 
 export default {

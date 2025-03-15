@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { surveyMixin } from '@/mixins.js'
+import { surveyMixin } from '@/mixins'
 export default {
   name: "MandatoryStar",
   props: {

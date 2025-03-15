@@ -315,7 +315,7 @@ import {
   submissionMixin,
   responseMixin,
   toastMixin
-} from '@/mixins.js';
+} from '@/mixins';
 import { mapState } from 'vuex';
 import { SURVEY_YESNOMAYBE_PLACEHOLDER } from '@/constants/strings';
 import LinkedFieldIcon from './linked-field-icon.vue';

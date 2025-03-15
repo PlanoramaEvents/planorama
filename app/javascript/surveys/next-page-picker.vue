@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { pageMixin, surveyMixin } from '@/mixins.js'
+import { pageMixin, surveyMixin } from '@/mixins'
 export default {
   name: 'NextPagePicker',
   mixins: [pageMixin, surveyMixin],

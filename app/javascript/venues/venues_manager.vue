@@ -17,7 +17,7 @@
 import VenuesTable from "./venues_table";
 import VenueEditor from "./venue_editor";
 import modelMixin from '../store/model.mixin'
-import {venue_columns as columns} from "./venue.js";
+import {venue_columns as columns} from "./venue";
 
 export default {
   name: "VenuesManager",

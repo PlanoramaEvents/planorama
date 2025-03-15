@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { surveyMixin, pageMixin, questionMixin }from '@/mixins.js';
+import { surveyMixin, pageMixin, questionMixin }from '@/mixins';
 import SurveySettingsTab from './survey-settings-tab.vue';
 import NotImplemented from '../shared/not-implemented.vue';
 import ViewResponses from './view-responses';

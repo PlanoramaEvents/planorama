@@ -60,7 +60,7 @@ import {
   questionMixin,
   answerMixin,
   toastMixin
-} from '@/mixins.js';
+} from '@/mixins';
 import DropdownItem from './dropdown-item';
 import NextPagePicker from './next-page-picker.vue';
 import { answerModel, questionModel } from '@/store/survey'

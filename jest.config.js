@@ -8,7 +8,7 @@ module.exports = {
   },
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/app/javascript/$1",
-    "@mixins": "@/mixins.js"
+    "@mixins": "@/mixins"
   },
   collectCoverage: true,
   collectCoverageFrom: ["**/app/javascript/**/*.{js, vue}", "!**/node_modules/**"],

@@ -50,7 +50,7 @@ import {
   surveyMixin,
   toastMixin,
   questionMixin
-} from '@/mixins.js';
+} from '@/mixins';
 import { questionModel } from '@/store/survey';
 
 export default {

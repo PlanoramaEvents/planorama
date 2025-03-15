@@ -1,11 +1,7 @@
-function twoLines(line1, line2) { (h) =>  h('p', {}, [line1, h('br'), line2]) };
-function errorMessage(message) {(errorCode) => twoLines(message, `Error code = ${errorCode}`)};
-function titleCase(model) { `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`};
-// nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []));
-
-export function nLines(lines) {
-  (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []));
-};
+const twoLines = (line1, line2) => (h) =>  h('p', {}, [line1, h('br'), line2]);
+const errorMessage = (message) => (errorCode) => twoLines(message, `Error code = ${errorCode}`);
+const titleCase = (model) => `${model.substring(0, 1).toUpperCase()}${model.substring(1)}`;
+export const nLines = (lines) => (h) => h('p', {}, lines.reduce((p, c) => [...p, c, h('br')], []));
 
 // login page
 export const    LOGIN_401 = "The username or password you entered is incorrect. Please check your spelling and try again.";
