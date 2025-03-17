@@ -35,7 +35,12 @@ export default {
       default: null
     },
     person_id: null,
-    assignments: null
+    assignments: null,
+    callback: {
+      type: Function,
+      required: false,
+      default: null
+    }
   },
   data: () => ({
     interested: false,
@@ -50,6 +55,7 @@ export default {
         (res) => {
           this.assignment = res
           this.interested = this.assignment.interested
+          this.callback();
         }
       )
     },
@@ -58,6 +64,7 @@ export default {
         this.expressInterest(this.session, this.person_id).then(
           (obj) => {
             this.assignment = obj
+            this.callback();
           }
         ).catch(
           () => {
