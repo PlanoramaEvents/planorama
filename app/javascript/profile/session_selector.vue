@@ -57,6 +57,7 @@
                 :person_id="person.id"
                 :model="sessionAssignmentModel"
                 :assignments="assignments"
+                :callback="fetchAssignments"
               ></interest-indicator>
             </div>
           </div>
@@ -132,20 +133,25 @@ export default {
   methods: {
     onSearchChanged(arg) {
       this.filter = arg
+    },
+    fetchAssignments() {
+      this.fetch_models(
+        sessionAssignmentModel,
+        {
+          filter: `{"op":"all","queries":[["person_id", "=", "${this.person.id}"]]}`
+        }
+      ).then(data => {
+        // Reload the assignments
+        this.assignments = null
+        this.assignments = Object.values(data)
+        this.loading = false
+      })
     }
   },
   mounted() {
     // Ensure we have fetched our assignments
     this.fetchPaged()
-    this.fetch_models(
-      sessionAssignmentModel,
-      {
-        filter: `{"op":"all","queries":[["person_id", "=", "${this.person.id}"]]}`
-      }
-    ).then(data => {
-      this.assignments = Object.values(data)
-      this.loading = false
-    })
+    this.fetchAssignments()
   }
 }
 </script>
