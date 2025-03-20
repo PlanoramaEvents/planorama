@@ -36,8 +36,8 @@
         </div>
         <h5>Other Information</h5>
         <dl-person :fields="otherFields">
-          <template #can_stream-val>{{selected.can_stream | capitalize}}</template>
-          <template #can_record-val>{{selected.can_record | capitalize}}</template>
+          <template #can_stream-val>{{ capitalize(selected.can_stream) }}</template>
+          <template #can_record-val>{{ capitalize(selected.can_record) }}</template>
           <template #can_stream_exceptions-label>Topics participant does not want to be streamed while talking about</template>
           <template #can_record_exceptions-label>Topics participant does not want to be recorded while talking about</template>
         </dl-person>
@@ -52,6 +52,7 @@ import {modelMixin} from '@/mixins';
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import DlPerson from "@/profile/dl_person.vue";
 import { peopleHiddenFieldsMixin } from '@/configurations/people_hidden_fields.mixin';
+import { textMixin } from '@/utils/text.mixin';
 
 // Seacrh for people to add as participants
 export default {
@@ -64,6 +65,7 @@ export default {
     modelMixin,
     modelUtilsMixin,
     peopleHiddenFieldsMixin,
+    textMixin,
   ],
   computed: {
     sessionComments() {

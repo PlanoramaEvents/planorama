@@ -14,9 +14,9 @@
 
 
 <script>
-import personSessionMixin from '../auth/person_session.mixin';
-import authMixin from '../auth/auth.mixin';
-import {http as axios} from '../http';
+import personSessionMixin from '@/auth/person_session.mixin';
+import authMixin from '@/auth/auth.mixin';
+import {http as axios} from '@/http';
 let signedAgreements={};
 
 export default {

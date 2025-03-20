@@ -58,7 +58,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../store/model.store';
+import { DELETE, UNSELECT } from '../store/model.store';
 import SurveyQuestion from './survey_question';
 import surveyMixin from './survey.mixin';
 import SurveySettingsTab from './survey-settings-tab';

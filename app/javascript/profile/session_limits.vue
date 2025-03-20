@@ -4,7 +4,7 @@
       <b-row class="my-1">
         <b-col class="sm-2">
           <session-limit-editor
-            v-model="person"
+            :person="person"
             :day="day"
             :timezone="timezone"
             model="session_limit"
@@ -22,16 +22,16 @@
 <script>
 import SessionLimitEditor from './session_limit_editor.vue'
 
-const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 
 export default {
   name: "SessionLimits",
   components: {
     SessionLimitEditor
   },
-  model: {
-    prop: 'person'
-  },
+  // model: {
+  //   prop: 'person'
+  // },
   props: {
     person: {
       type: Object,

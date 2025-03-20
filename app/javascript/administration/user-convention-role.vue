@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import toastMixin from '../shared/toast-mixin'
-import modelMixin from '../store/model.mixin'
+import toastMixin from '@/shared/toast-mixin'
+import modelMixin from '@/store/model.mixin'
 
 export default {
   name: "UserConventionRole",

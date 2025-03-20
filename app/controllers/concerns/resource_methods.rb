@@ -181,7 +181,13 @@ module ResourceMethods
     per_page = params[:perPage]&.to_i || model_class.default_per_page if paginated && do_paginate
     per_page = nil unless paginated && do_paginate
     current_page = params[:current_page]&.to_i || 1 if paginated && do_paginate
-    filters = JSON.parse(params[:filter]) if params[:filter].present?
+    filters = if params[:filter]
+                if params[:filter].kind_of? String
+                  JSON.parse(params[:filter]) 
+                else
+                  params[:filter]
+                end
+              end
 
     return per_page, current_page, filters
   end

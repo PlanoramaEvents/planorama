@@ -4,7 +4,7 @@
       <div>
         What is the maximum number of program items you are willing to participate in across the entire duration of the convention?<br />
           <session-limit-editor
-            v-model="person"
+            :person="person"
             :timezone="calTimeZone"
             model="session_limit"
             v-if="calTimeZone"
@@ -23,7 +23,7 @@
     <div class="d-flex flex-row" v-if="calTimeZone && start_time && end_time">
       <div class="d-flex flex-column">
         <availability-calendar
-          v-model="person"
+          :person="person"
           :days="days"
           model="availability"
           :timezone="calTimeZone"
@@ -45,7 +45,7 @@
           </b-row>
         </div>
         <session-limits
-          v-model="person"
+          :person="person"
           :days="days"
           :timezone="calTimeZone"
           v-if="calTimeZone && days"
@@ -55,7 +55,7 @@
     </div>
     <div class="d-flex flex-row">
       <exclusions-picker
-        v-model="person"
+        :person="person"
         model="person_exclusion"
       ></exclusions-picker>
     </div>
@@ -79,7 +79,7 @@ import TimezoneSelector from "../components/timezone_selector.vue"
 import searchStateMixin from "@/store/search_state.mixin"
 import { eventVirtualMixin } from '@/shared/event-virtual.mixin';
 
-const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 
 export default {
   name: "AvailabilityAndInterests",

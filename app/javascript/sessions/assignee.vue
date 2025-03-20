@@ -12,7 +12,7 @@
         Session moderation preference: <span class="first-capital"><em>{{sessionModPreference}}</em></span>
       </div>
       <div class="mr-2">
-        Attendance type: <em>{{assignee.attendance_type | capitalize | na_if_empty}}</em>
+        Attendance type: <em>{{ na_if_empty(capitalize(assignee.attendance_type)) }}</em>
       </div>
       <div class="mr-2">
         Accessibility concerns: <em>{{assignee.needs_accommodations ? 'Y' : 'N'}}</em>
@@ -22,13 +22,13 @@
       <div v-if="noInterestExpressed"><em>Did not express interest</em></div>
       <div>Status: <em>{{assignee.con_state}}</em></div>
       <h6>Session comments</h6>
-      <div class="ml-2 keep-format" v-if="assignment">{{assignment.interest_notes | na_if_empty}}</div>
+      <div class="ml-2 keep-format" v-if="assignment">{{ na_if_empty(assignment.interest_notes) }}</div>
       <div class="ml-2" v-else>N/A</div>
     </div>
     <div class="mt-2" v-if="!isHidden('demographic_categories')">
       <h6>Other demographic categories</h6>
       <div class="ml-2">
-        {{assignee.demographic_categories | na_if_empty}}
+        {{ na_if_empty(assignee.demographic_categories) }}
       </div>
     </div>
   </div>
@@ -37,11 +37,12 @@
 <script>
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import { peopleHiddenFieldsMixin } from '@/configurations/people_hidden_fields.mixin';
+import { textMixin } from '@/utils/text.mixin';
 
 // Seacrh for people to add as participants
 export default {
   name: "Assignee",
-  mixins: [modelUtilsMixin, peopleHiddenFieldsMixin],
+  mixins: [modelUtilsMixin, peopleHiddenFieldsMixin, textMixin],
   props: {
     assignment: {
       type: Object,

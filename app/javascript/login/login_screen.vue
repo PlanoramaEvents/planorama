@@ -9,7 +9,7 @@
 
 <script>
 import PlanLogo from "@/logo";
-import { personSessionMixin } from '@mixins';
+import { personSessionMixin } from '@/mixins';
 
 export default {
   name: "LoginScreen",

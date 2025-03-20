@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { modelMixinNoProp } from '../store/model.mixin';
+import { modelMixinNoProp } from '@/store/model.mixin';
 import ConfigEditor from './config_editor';
 import settingsMixin from "@/store/settings.mixin";
 

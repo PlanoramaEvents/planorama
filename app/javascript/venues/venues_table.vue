@@ -19,7 +19,7 @@ import TableVue from '../components/table_vue';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import { venue_columns as columns } from './venue';
 import { mapActions } from 'vuex';
-import { NEW_VENUE, venueModel as venue} from '../store/venue.store.js';
+import { NEW_VENUE, venueModel as venue} from '../store/venue.store';
 
 export default {
   name: 'VenuesTable',

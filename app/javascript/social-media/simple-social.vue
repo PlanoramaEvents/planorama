@@ -1,8 +1,9 @@
 <template>
-  <validation-provider
-    :rules="rules"
+  <Field 
     :name="label"
-    v-slot="{errors, dirty, validated, valid, classes}"
+    :rules="fieldRules"
+    value=""
+    v-slot="{handleChange, meta}"
   >
     <b-form-group
       :label="label"
@@ -10,7 +11,7 @@
       :id="groupId"
       class="mt-2"
     >
-      <b-input-group :class="classes">
+      <b-input-group>
         <template #prepend v-if="prepend || $slots.prepend">
           <slot name="prepend">
             <b-input-group-text>{{prepend}}</b-input-group-text>
@@ -18,22 +19,25 @@
         </template>
         <b-form-input
           type="text"
-          v-on="$listeners" 
           :name="label"
-          :value="value"
+          v-model="val"
+          @input="handleChange"
+          @blur="handleChange"
+          @change="emitChange" 
           :disabled="disabled"
-          :state="rules ? (dirty || validated ? valid ? null : false : null ) : null"
           :aria-describedby="feedbackId"
+          :class="{'is-invalid': meta.dirty && !meta.valid }"
         ></b-form-input>
       </b-input-group>
-      <b-form-invalid-feedback :id="feedbackId">{{errors[0]}}</b-form-invalid-feedback>
+      <error-message as="div" :name="label" v-slot="{message}">
+        <div v-if="meta.dirty && !meta.valid" class="invalid-message">{{ message }}</div>
+      </error-message>
     </b-form-group>
-  </validation-provider>
+  </Field>
 </template>
 
 <script>
-
-import { ValidationProvider } from 'vee-validate';
+import { Field, ErrorMessage } from 'vee-validate';
 
 export default {
   name: "SimpleSocial",
@@ -58,13 +62,21 @@ export default {
       required: false,
       default: 'social-id'
     },
-    rules: {
+    validation_rules: {
       type: Object,
       required: false,
+      default: null
+    }
+  },
+  data() {
+    return {
+      val: null,
+      fieldRules: null
     }
   },
   components: {
-    ValidationProvider
+    Field,
+    ErrorMessage
   },
   computed: {
     groupId() {
@@ -74,9 +86,23 @@ export default {
       return `${this.id}-feedback`;
     }
   },
+  methods: {
+    emitChange(ev) {
+      this.$emit('input', this.val)
+    }
+  },
+  mounted() {
+    this.fieldRules = this.validation_rules
+    this.val = this.value
+  }
 }
 </script>
 
-<style>
-
+<style lang="css" scoped>
+.invalid-message {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
 </style>

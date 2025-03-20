@@ -1,12 +1,11 @@
 import surveyMixin from './survey.mixin';
 import { pageModel as model, questionModel, NEW_PAGE } from '@/store/survey';
-import { SELECT, SELECTED, DELETE, SAVE, PATCH_RELATED, UNSELECT } from '@/store/model.store';
+import { SELECT, SELECTED, DELETE, SAVE, PATCH_FIELDS, PATCH_RELATED, UNSELECT } from '@/store/model.store';
 import { mapGetters, mapActions } from 'vuex';
 import { toastMixin }  from '../shared/toast-mixin';
 import { PAGE_ADD_ERROR, PAGE_ADD_SUCCESS, PAGE_DELETE_ERROR, PAGE_DELETE_SUCCESS, PAGE_MERGE_ERROR, PAGE_MERGE_SUCCESS, PAGE_SAVE_ERROR, PAGE_SAVE_SUCCESS } from '@/constants/strings';
 import { GET_CACHED_INDEX, GET_CACHED_PAGES, GET_CACHED_QUESTIONS, GET_CACHED_ANSWERS } from '../store/survey/survey.store';
 
-// CONVERTED
 export const pageMixin = {
   mixins: [surveyMixin, toastMixin],
   computed: {
@@ -99,7 +98,10 @@ export const pageMixin = {
       if (!item && this.selectedPage) {
         item = this.selectedPage
       }
-      return this.fetchSurveyToastPromise(this.$store.dispatch(SAVE, {model, item}), PAGE_SAVE_SUCCESS, PAGE_SAVE_ERROR);
+
+      // NOTE: this was needed because of changes to json vuex save!
+      let fields = Object.keys(item._jv.attrs);
+      return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model, item: item, fields: fields}), PAGE_SAVE_SUCCESS, PAGE_SAVE_ERROR)
     },
     mergePage(oldPage, newPage) {
       // move questions to new page

@@ -19,7 +19,7 @@
         @validated="form.email.valid = $event"
         :validateNow="form.email.validate"
       ></email-field>
-      <div class="d-flex mb-2" v-if="captchaKey">
+      <!-- <div class="d-flex mb-2" v-if="captchaKey">
         <vue-recaptcha
             ref="recaptcha"
             :sitekey="captchaKey"
@@ -28,7 +28,7 @@
             @expired="onCaptchaError"
             @error="onCaptchaError"
         ></vue-recaptcha>
-      </div>
+      </div> -->
       <div class="d-flex flex-row-reverse">
         <b-button
           :disabled="submitDisabled"
@@ -52,7 +52,7 @@ import {
   VALID_CAPTCHA_REQUIRED,
 } from "../constants/strings";
 import settingsMixin from "@/store/settings.mixin";
-import VueRecaptcha from 'vue-recaptcha';
+// import VueRecaptcha from 'vue-recaptcha';
 
 export default {
   name: "CreateAccount",
@@ -78,8 +78,8 @@ export default {
     captcha_errored: false
   }),
   components: {
-    EmailField,
-    VueRecaptcha
+    EmailField
+    // VueRecaptcha
   },
   computed: {
     submitDisabled: function () {

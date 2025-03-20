@@ -1,25 +1,18 @@
 <template>
   <div class="d-flex flex-row w-100">
-    <validation-observer slim ref="emailObserver">
-      <ValidationProvider
-        mode="aggressive"
-        rules="email"
-        name="Email"
-        :skipIfEmpty="true"
-        v-slot="{ valid, errors }"
-        class="mt-2 mr-3"
-        style="flex-basis: 75%;"
-      >
+    <v-form as="div" ref="emailForm">
+      <v-field name="emailfield" type="email" :rules="emailRules" v-slot="{ handleChange, errors }">
         <b-form-input
           :disabled='disabled'
-          :state="calcValid(errors,valid)"
           v-model.trim="value.email"
-          @change="onChange"
+          @change="(event) => {let res = handleChange(event); emitChange(res); }"
+          :class="{'is-invalid': !!errors.length }"
         ></b-form-input>
-        <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
-      </ValidationProvider>
-    </validation-observer>
-    <!-- {{ value.isdefault }} -->
+      </v-field>
+      <error-message as="div" name="emailfield" v-slot="{message }">
+        <div class="invalid-message">{{ message }}</div>
+      </error-message>
+    </v-form>
     <div style="flex-basis: 25%;">
       <div class="d-flex flex-row justify-content-end">
         <b-form-radio
@@ -41,13 +34,15 @@
 </template>
 
 <script>
-import { ValidationProvider, ValidationObserver} from 'vee-validate';
+
+import { Field as VField, Form as VForm, ErrorMessage } from 'vee-validate';
 
 export default {
   name: 'EmailAddressEditor',
   components: {
-    ValidationProvider,
-    ValidationObserver
+    VField,
+    VForm,
+    ErrorMessage
   },
   props: {
     value: null,
@@ -64,9 +59,6 @@ export default {
       default: 'email-address-make-primary'
     }
   },
-  data: () =>  ({
-    val: null
-  }),
   computed: {
     isdefault: {
       get: function() {
@@ -92,21 +84,10 @@ export default {
     onDelete(arg) {
       this.$emit('delete', this.value)
     },
-    calcValid(errors, valid) {
-      if (this.rules == '') {
-        return null
-      }
-      let v = errors[0] ? false : null //(valid ? true : null);
-      this.is_valid = v
-      return v;
-    },
-    onChange(arg) {
-      this.emitChange()
-    },
     emitChange() {
       if (this.value.email == '') return;
 
-      this.$refs["emailObserver"].validate().then(
+      this.$refs.emailForm.validate().then(
         (result) => {
           if (result) {
             this.$emit('input', this.value)
@@ -117,3 +98,18 @@ export default {
   }
 }
 </script>
+
+<script setup>
+import * as yup from 'yup';
+
+const emailRules = yup.string().email('Must be valid email');
+</script>
+
+<style lang="css" scoped>
+.invalid-message {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+</style>

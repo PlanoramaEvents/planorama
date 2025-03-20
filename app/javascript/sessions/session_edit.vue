@@ -79,18 +79,22 @@
           <span>No</span>
           <b-form-checkbox  id="session-attendee-signup-req" inline switch v-model="session.require_signup" @change="saveSession()">Yes</b-form-checkbox>
           <label :class="['ml-2', {'text-muted': !session.require_signup}]">If yes, max openings:
-            <ValidationProvider v-slot="validationCtx" rules="min_value:1">
-              <b-form-input
-                id="session-max-signups"
-                type="number"
-                class="ml-1"
-                :disabled="!session.require_signup"
-                v-model="session.audience_size"
-                @blur="saveValidatedSession(validationCtx)"
-                :state="getValidationState(validationCtx)"
+            <v-form as="div" ref="maxOpenings" v-slot="{errors, meta }">
+              <v-field name="max openings" type="number" rules="min_value:1" v-slot="{ handleChange, errors }">
+                <b-form-input
+                  id="session-max-signups"
+                  type="number"
+                  class="ml-1"
+                  :disabled="!session.require_signup"
+                  v-model="session.audience_size"
+                  @change="(event) => {handleChange(event); saveValidatedSession(); }"
+                  :class="{'is-invalid': meta.dirty && !meta.valid }"
                 ></b-form-input>
-              <b-form-invalid-feedback>{{ validationCtx.errors[0] }}</b-form-invalid-feedback>
-            </ValidationProvider>
+              </v-field>
+              <error-message as="div" name="max openings" v-slot="{message }">
+                <div class="invalid-message">{{ message }}</div>
+              </error-message>
+            </v-form>
           </label>
         </b-form-group>
       </div>
@@ -165,8 +169,7 @@ import modelUtilsMixin from '@/store/model_utils.mixin';
 import ModelSelect from '../components/model_select';
 import ModelTags from '../components/model_tags';
 import PlanoEditor from '@/components/plano_editor';
-import { ValidationProvider, extend } from 'vee-validate';
-import { min_value } from 'vee-validate/dist/rules'
+import { Field as VField, Form as VForm, ErrorMessage } from 'vee-validate';
 import { SESSION_ENVIRONMENT } from '@/constants/strings'
 import {minorsParticipationMixin} from './minors_participation.mixin';
 import { ageRestrictionMixin } from './age_restriction.mixin';
@@ -174,18 +177,15 @@ import PillDisplay from '@/components/pill_display.vue';
 import { tagsMixin } from '@/store/tags.mixin';
 import { areaMixin } from '@/store/area.mixin';
 
-extend('min_value', {
-  ...min_value,
-  message: "This value can't be less than 1"
-  })
-
 export default {
   name: "SessionEdit",
   components: {
     ModelSelect,
     ModelTags,
     PlanoEditor,
-    ValidationProvider,
+    VField,
+    VForm,
+    ErrorMessage,
     PillDisplay,
   },
   mixins: [
@@ -251,18 +251,24 @@ export default {
     saveSession() {
       this.save_model(sessionModel, this.session)
     },
-    saveValidatedSession({dirty, valid=null}) {
-      if(dirty && valid) {
-        this.save_model(sessionModel, this.session)
-      }
-    },
-    getValidationState({ dirty, validated, valid = null }) {
-      return dirty || validated ? valid : null;
-    },
+    saveValidatedSession(arg) {
+      this.$refs.maxOpenings.validate().then(
+        (result) => {
+          if (result) {
+            this.save_model(sessionModel, this.session)
+          }
+        }
+      )
+    }
   }
 }
 </script>
 
-<style>
-
+<style lang="css" scoped>
+.invalid-message {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
 </style>

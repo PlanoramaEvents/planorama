@@ -9,11 +9,14 @@ Bundler.require(*Rails.groups)
 module Planorama
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 7.0
 
     # Disable asset pipeline, should all be moved to webpacker now
-    config.assets.enabled = false
-    config.generators { |g| g.assets false }
+    # config.assets.enabled = false
+    # config.generators { |g| g.assets false }
+
+    # Don't generate system test files.
+    config.generators.system_tests = nil
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

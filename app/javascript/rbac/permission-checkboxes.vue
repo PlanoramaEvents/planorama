@@ -17,8 +17,8 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="({policies, label}, category) in model">
-          <tr :key="category"><td colspan="5"><strong>{{label}}</strong></td></tr>
+        <template v-for="({policies, label}, category) in model" :key="category">
+          <tr><td colspan="5"><strong>{{label}}</strong></td></tr>
           <tr v-for="({label, perms}, policy) in policies" :key="policy">
             <td class="pl-5">{{label}}</td>
             <td><b-checkbox v-if="perms.view !== undefined" v-model="model[category].policies[policy].perms.view"></b-checkbox></td>

@@ -15,7 +15,6 @@ import {
 import settingsMixin from '@/store/settings.mixin';
 import {QUESTION_UNCHANGED} from "@/constants/strings";
 
-// CONVERTED
 export const questionMixin = {
   mixins: [
     pageMixin,
@@ -228,6 +227,7 @@ export const questionMixin = {
         }), message)
       }
     },
+    // NOTE - needed because of change to vuex json api save
     patchSelectedQuestion(data, message = QUESTION_SAVE_SUCCESS) {
       return this.patchQuestion(this.selectedQuestion, data, message)
     },

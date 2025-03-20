@@ -1,12 +1,12 @@
 <template>
   <dl>
-    <template v-for="(field, i) in fields">
-        <dt :key="'dt-' + i">
+    <template v-for="(field, i) in fields" :key="'dt-' + i">
+        <dt>
           <slot :name="field + '-label'">
             {{PROFILE_FIELD_LABELS[field]}}
           </slot>
         </dt>
-        <dd :key="'dd-' + i" class="ml-2 font-italic">
+        <dd class="ml-2 font-italic">
           <slot :name="field + '-val'" :value="selected[field]">
             <span v-if="selected[field] === undefined" class="text-muted">Restricted</span>
             <span v-else-if="selected[field] === true">{{  yes(field) }}</span>

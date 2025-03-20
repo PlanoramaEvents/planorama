@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import toastMixin from '../shared/toast-mixin';
+import toastMixin from '@/shared/toast-mixin';
 import settingsMixin from "@/store/settings.mixin";
 import { ADMIN_ADD_AGREEMENT_SUCCESS } from '@/constants/strings';
-import ModelField from '../shared/model-field';
-import PlanoEditor from '../components/plano_editor';
+import ModelField from '@/shared/model-field';
+import PlanoEditor from '@/components/plano_editor';
 
 import { mapActions } from 'vuex';
 import { NEW_AGREEMENT } from '@/store/agreement.store';

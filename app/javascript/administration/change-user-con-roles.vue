@@ -14,8 +14,8 @@
 
 <script>
 import UserConventionRole from './user-convention-role.vue'
-import ComboBox from '../components/combo_box'
-import modelMixin from '../store/model.mixin';
+import ComboBox from '@/components/combo_box'
+import modelMixin from '@/store/model.mixin';
 
 export default {
   name: "ChangeUserConventionRoles",

@@ -15,10 +15,14 @@ capybara-*.html
 rerun.txt
 pickle-email-*.html
 */config/sshkeys
+.ruby-lsp
 
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
++/tmp/storage/*
++!/tmp/storage/
++!/tmp/storage/.keep
 !/log/.keep
 !/tmp/.keep
 
@@ -36,11 +40,12 @@ config/master.key
 
 # ##############################################################################
 ## Environment normalisation:
+.bundle
 */.bundle
 */vendor/bundle
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
-.nvmrc
+# .nvmrc
 
 # ##############################################################################
 #
@@ -104,3 +109,11 @@ yarn-debug.log*
 
 # test coverage
 /coverage
+
+# Vite Ruby
+/public/vite*
+node_modules
+# Vite uses dotenv and suggests to ignore local-only env files. See
+# https://vitejs.dev/guide/env-and-mode.html#env-files
+*.local
+
