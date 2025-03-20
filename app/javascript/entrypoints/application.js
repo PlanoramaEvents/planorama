@@ -73,23 +73,6 @@ app.config.errorHandler = (err, vm, info) => {
   }
 };
 
-// See https://v3-migration.vuejs.org/breaking-changes/filters
-Vue.filter('na_if_empty', function (value) {
-  if (value === undefined) return 'Restricted'
-  if (value === true) return "Yes"
-  if (value === false) return "No"
-  if (value === null || value.trim().length == 0) return 'Not Specified'
-  return value
-})
-
-Vue.filter('capitalize', function (value) {
-  if (value && value.length > 0) {
-    return value.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))
-  }
-  return value
-})
-
-
 app.use(VueResizeText)
 app.use(router)   // Set up the router
 app.use(store)    // Set up the store
