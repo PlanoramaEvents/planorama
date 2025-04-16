@@ -63,6 +63,7 @@ export const modelMixinNoProp = {
       this.$store.commit(CLEAR, {model: this.model});
     },
     saveSelected() {
+      // pass original model to the toast as well
       return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, item: this.selected}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
     },
     patchSelected(data, selected = false, success_text = undefined, error_text = undefined) {
@@ -79,6 +80,7 @@ export const modelMixinNoProp = {
     },
     // need a save instance
     save(instance) {
+      // pass original model to the toast as well
       return this.toastPromise(this.$store.dispatch(SAVE, {model: this.model, selected: false, item: instance}), MODEL_SAVE_SUCCESS(this.model), MODEL_SAVE_ERROR(this.model));
     },
     delete_by_id(id) {
