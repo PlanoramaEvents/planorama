@@ -32,7 +32,7 @@
         </single-config-manager>
         <div v-if="currentSettings.env !== 'production'">
           <b-button variant="danger" @click="reset()">Reset for Testing</b-button>
-          <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK</span>
+          <span>THIS DELETES THE SNAPSHOT AND YOU CAN'T EVER GET IT BACK! REFRESH THIS WEBPAGE AFTER CLICKING THE BUTTON.</span>
         </div>
       </div>
     </div>
