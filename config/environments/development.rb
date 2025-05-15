@@ -1,3 +1,5 @@
+require "active_support/core_ext/integer/time"
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -11,7 +13,9 @@ Rails.application.configure do
 
   # Show full error reports.
   config.consider_all_requests_local = true
-
+		 
+  # Enable server timing
+  config.server_timing = true
   config.hosts << "planorama.loophole.site" << "planorama2.loophole.site"
 
   # Enable/disable caching. By default caching is disabled.
@@ -44,25 +48,13 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  # Debug mode disables concatenation and preprocessing of assets.
-  # This option may cause significant delays in view rendering with a large
-  # number of complex assets.
-  config.assets.debug = true
-
   # Suppress logger output for asset requests.
-  config.assets.quiet = true
+  # config.assets.quiet = true
 
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
 
-  # Use an evented file watcher to asynchronously detect changes in source code,
-  # routes, locales, etc. This feature depends on the listen gem.
-  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
-
-  #config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload
-  config.middleware.use(Rack::LiveReload, host: 'localhost', source: :vendored)
-
   config.active_job.queue_adapter = :inline
 
-  config.web_console.permissions = ['172.0.0.0/8','192.168.0.0/16']
+  # config.web_console.permissions = ['172.0.0.0/8','192.168.0.0/16']
 end

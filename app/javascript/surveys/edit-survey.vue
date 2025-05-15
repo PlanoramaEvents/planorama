@@ -17,7 +17,7 @@ import {
   pageMixin,
   questionMixin,
   surveyIdPropMixinId
-}from '@mixins'
+}from '@/mixins'
 
 export default {
   name: "EditSurvey",
