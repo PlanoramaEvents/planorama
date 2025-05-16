@@ -10,7 +10,7 @@ FactoryBot.define do
     pseudonym_sort_by { nil }
 
     after(:create) do |person|
-      create_list(:email_address, 1, person: person, email: Faker::Internet.safe_email(name: "#{person.name}"))
+      create_list(:email_address, 1, person: person, email: Faker::Internet.email(name: "#{person.name}"))
       person.reload
     end
 
