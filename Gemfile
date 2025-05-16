@@ -22,7 +22,7 @@ gem 'puma', '>= 6.3.1'
 
 gem "vite_rails", "3.0.15"
 gem 'vite_plugin_legacy'
-gem 'vite_ruby', '3.3.4'
+gem 'vite_ruby' #, '3.3.4'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.7'

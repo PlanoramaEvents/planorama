@@ -12,9 +12,6 @@
 
     <script src="//cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
 
-    <%= vite_client_tag %>
-    <%= vite_stylesheet_tag 'application.scss' , media: :all %>
-    <%= vite_javascript_tag 'application' %>
     <!-- 
     < % = favicon_link_tag asset_path('p_for_plano.png') %>
     -->
@@ -26,6 +23,7 @@
       CKEDITOR.plugins.addExternal( 'planobuttons', '/ckeditor/plugins/planobuttons/', 'plugin.js' )
     </script>
     <%= vite_client_tag %>
+    <%= vite_stylesheet_tag 'application.scss' , media: :all %>
     <%= vite_javascript_tag 'application' %>
     <!--
       If using a TypeScript entrypoint file:
