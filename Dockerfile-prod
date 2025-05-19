@@ -40,6 +40,8 @@ WORKDIR /opt/planorama
 RUN bin/bundle install --without development
 RUN bin/vite install
 
+# RUN bin/vite build --clear
+
 # The precompile will also deal with the webpacker assets
 # RUN bin/rake assets:precompile --trace
 
