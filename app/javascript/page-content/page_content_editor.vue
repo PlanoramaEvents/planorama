@@ -79,6 +79,7 @@ export default {
     fetch_content() {
       if (this.name) {
         this.clear()
+        this.loading = true;
         this.fetch({ filter: `{"op":"all","queries":[["name", "=", "${this.name}"]]}` }).then(
           (col) => {
             if (this.collection.length > 0) {
@@ -87,6 +88,8 @@ export default {
               this.content = this.starter_content()
               this.content.name = this.name
             }
+
+            this.loading = false;
           }
         )
       }
@@ -97,7 +100,8 @@ export default {
       if (this.draftSchedule && this.name === 'dashboard-default') {
         this.name = 'dashboard-schedule';
       }
-      this.loading = false;
+
+      this.fetch_content()
     })
   }
 }
