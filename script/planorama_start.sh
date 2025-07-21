@@ -5,22 +5,11 @@ export NODE_ENV=${RAILS_ENV}
 
 # Development environment setup runs when RAILS_ENV is not set
 if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
-  gem install bundler:2.2.4
+  gem install bundler:2.3.26
   bin/bundle install --quiet
 
-  # Do not let Yarn change versions of modules (causes problems of we do)
-  bin/yarn install --frozen-lockfile
-  # --check-files
-
-  # NOTE: I moved node_modules to /tmp/node_modules and have a problem with
-  # the webpacker dev server ... TODO to fix
-
-  # It just put the load on rails for now (which still works)
-  bin/rails webpacker:install -n
-
-  # Background webpack watcher for speedy complilation
-  # FIXME Hack, should be it's own process but was done this way so rails doesn't hit webpacker as well
-  bin/webpack-dev-server --host 0.0.0.0 &
+  # Install JS modules
+  bin/vite install
 
   bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
 
@@ -41,6 +30,7 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   # bin/rails db:create
   bin/rails db:seed
 elif [[ $RAILS_ENV = "staging" ]]; then
+  export RAILS_SERVE_STATIC_FILES=true
   bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
 
   bin/rake db:migrate
@@ -56,7 +46,10 @@ elif [[ $RAILS_ENV = "staging" ]]; then
   bin/rake rbac:seed_defaults
 
   bin/rails db:seed
+
+  bin/rake assets:precompile
 else
+  export RAILS_SERVE_STATIC_FILES=true
   until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST" -c 'select current_date'; do
     echo "waiting for postgres..."
     sleep 5
@@ -75,6 +68,12 @@ else
   # bin/rake chicon:init_age_restrictions
   # bin/rake chicon:map_session_to_exclusion
   bin/rake rbac:seed_defaults
+
+  bin/rake assets:precompile
 fi
 
-bin/rails server -b 0.0.0.0
+if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
+  bin/dev
+else
+  bin/rails server -b 0.0.0.0
+fi

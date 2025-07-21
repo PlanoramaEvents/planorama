@@ -1,4 +1,3 @@
-<!-- CONVERTED -->
 <template>
   <!-- The test for survey is here to deal with timing issues to ensure survey is loaded -->
   <div v-if="survey">
@@ -12,7 +11,7 @@
         <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
         <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"></linked-field-icon>{{SURVEY_LINKED_FIELD2}}</b-alert>
         <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
-        <ValidationObserver v-slot="{ handleSubmit, failed }">
+        <v-form as="div" ref="surveyForm" v-slot="{handleSubmit}">
           <form @submit.prevent="handleSubmit(submit)">
             <b-alert show variant="danger" v-if="failed">
               <!-- aka SCROLL UP ASSHAT -->
@@ -50,10 +49,10 @@
                   v-if="nextPageId !== -1 && !lastPage"
                   type="submit"
                   tabindex="1"
-              >Next Page</b-button>
+              >Next Page !!</b-button>
             </div>
           </form>
-        </ValidationObserver>
+        </v-form>
       </div>
     </div>
     <div v-else>
@@ -64,15 +63,15 @@
 
 <script>
 import SurveyQuestion from './survey_question';
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { Form as VForm } from 'vee-validate';
+import { mapMutations, mapState } from 'vuex';
 import {
   pageMixin,
   surveyIdPropMixinSurveyId,
   surveyMixin,
   submissionMixin
-} from '@mixins';
+} from '@/mixins';
 import { SET_PREVIEW_MODE, REDIR_SHOWN } from '@/store/survey';
-import { ValidationObserver } from 'vee-validate';
 import personSessionMixin from '../auth/person_session.mixin';
 import {SURVEY_NOT_ASSIGNED, SURVEY_LINKED_FIELD1, SURVEY_LINKED_FIELD2, SURVEY_REDIRECT} from "@/constants/strings";
 import LinkedFieldIcon from './linked-field-icon';
@@ -91,7 +90,7 @@ export default {
   }),
   components: {
     SurveyQuestion,
-    ValidationObserver,
+    VForm,
     LinkedFieldIcon
   },
   mixins: [

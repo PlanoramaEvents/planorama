@@ -18,7 +18,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'PlanoEditor',
   props: {
@@ -91,6 +90,7 @@ export default {
 
       local_config.enterMode = 2 // This is CKEDITOR.ENTER_BR
       local_config.toolbar = toolbar
+
       // Does not find the scss, leave empty for now
       local_config.contentsCss = ""
 
