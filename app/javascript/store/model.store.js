@@ -395,8 +395,12 @@ export const store = new Vuex.Store({
             commit(SELECT, {model, itemOrId: savedModel});
           }
           if (has_lock_version && (prev_lock_version == savedModel.lock_version)) {
-            // On no change return null - NO=OP
-            res(null);
+            // On no change return put a "204" into the JSON meta data
+            if (!savedModel._jv.json.meta) {
+              savedModel._jv.json.meta = {}
+            }
+            savedModel._jv.json.meta.status = 204
+            res(savedModel);
           } else {
             res(savedModel);
           }

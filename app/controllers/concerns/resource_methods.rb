@@ -100,12 +100,8 @@ module ResourceMethods
     ret = after_update_tx
     return if ret
   
-    # also if relationships changed ....
-    if changed
-      render_object(@object)
-    else
-      render status: :no_content, json: {}.to_json, content_type: 'application/json'
-    end
+    #
+    render_object(@object)
   end
 
   def destroy
