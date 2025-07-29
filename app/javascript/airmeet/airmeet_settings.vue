@@ -35,7 +35,7 @@ import { modelMixinNoProp } from '@/mixins'
 import { FETCH_AIRMEET_INTEGRATION, integrationModel, SET_AIRMEET_INTEGRATION } from '@/store/integration.store'
 import { PATCH_FIELDS, SAVE } from '@/store/model.store'
 import { mapState, mapActions, mapMutations } from 'vuex';
-import toastMixin from '@/shared/toast-mixin';
+import toastMixin from '@/mixins/toast-mixin';
 
 export default {
   name: "AirmeetSettings",

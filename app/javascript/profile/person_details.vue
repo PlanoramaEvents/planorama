@@ -288,7 +288,7 @@ import { modelMixinNoProp } from '@/store/model.mixin';
 import { personModel as model } from "@/store/person.store";
 import { DateTime } from "luxon";
 import personSessionMixin from '@/auth/person_session.mixin';
-import { eventVirtualMixin } from '@/shared/event-virtual.mixin';
+import { eventVirtualMixin } from '@/mixins/event-virtual.mixin';
 import { peopleHiddenFieldsMixin } from '@/configurations/people_hidden_fields.mixin';
 
 export default {

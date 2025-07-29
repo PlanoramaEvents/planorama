@@ -135,7 +135,7 @@ import { scheduledMixin } from './session_fields.mixin';
 import { SESSION_STATUS, SESSION_MUST_UNSCHEDULE } from '@/constants/strings';
 import settingsMixin from "@/store/settings.mixin";
 
-import PlanoEditor from '../components/plano_editor';
+import PlanoEditor from '@/components/plano_editor';
 import { personSessionMixin } from '@/mixins';
 import { publishedSessionEndpoints, publishedSessionModel } from '@/store/published_session.store';
 import { airmeetMixin } from '@/integrations/airmeet.mixin';

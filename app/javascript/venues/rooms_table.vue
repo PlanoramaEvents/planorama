@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue';
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TableVue from '@/components/table_vue';
+import TooltipOverflow from '@/components/tooltip-overflow';
 import { room_columns as columns } from './room';
 import { mapActions } from 'vuex';
 import { NEW_ROOM, roomModel as room} from '../store/room.store';

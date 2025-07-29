@@ -46,7 +46,7 @@
 <script>
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-import dateTimeMixin from '../components/date_time.mixin'
+import dateTimeMixin from '@/components/date_time.mixin'
 
 export default {
   name: "AvailabilityTimePicker",

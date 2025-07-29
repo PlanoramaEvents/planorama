@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import toastMixin from '../shared/toast-mixin';
+import toastMixin from '../mixins/toast-mixin';
 import { ADMIN_ADD_USER_SUCCESS } from '../constants/strings';
-import ModelField from '../shared/model-field';
-import EmailField from '../shared/email_field';
+import ModelField from '@/components/model-field';
+import EmailField from '@/components/email_field';
 
 import { mapActions } from 'vuex';
 import { NEW_PERSON } from '../store/person.store';

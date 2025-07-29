@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue';
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TableVue from '@/components/table_vue';
+import TooltipOverflow from '@/components/tooltip-overflow';
 import { venue_columns as columns } from './venue';
 import { mapActions } from 'vuex';
 import { NEW_VENUE, venueModel as venue} from '../store/venue.store';

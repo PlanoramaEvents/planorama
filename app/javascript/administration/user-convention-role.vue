@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import toastMixin from '@/shared/toast-mixin'
+import toastMixin from '@/mixins/toast-mixin'
 import modelMixin from '@/store/model.mixin'
 
 export default {
