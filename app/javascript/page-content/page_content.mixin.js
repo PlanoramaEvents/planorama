@@ -1,5 +1,5 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
-import toastMixin from '../shared/toast-mixin';
+import toastMixin from '../mixins/toast-mixin';
 import { NEW_PAGE_CONTENT } from '@/store/page_content.store';
 import { PAGE_CONTENT_SAVE_SUCCESS, PAGE_CONTENT_SAVE_ERROR, PAGE_CONTENT_SUCCESS_DELETE, PAGE_CONTENT_ERROR_DELETE } from '../constants/strings'
 import modelUtilsMixin from '../store/model_utils.mixin'

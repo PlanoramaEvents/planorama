@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import SearchVue from '../components/search_vue'
+import SearchVue from '@/components/search_vue'
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'

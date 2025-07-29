@@ -308,7 +308,7 @@
 <script>
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
-import EmailFieldVeevalidate from '../shared/email_field_veevalidate.vue';
+import EmailFieldVeevalidate from '@/components/email_field_veevalidate.vue';
 import {
   questionMixin,
   surveyMixin,

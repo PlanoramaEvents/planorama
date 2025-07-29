@@ -2,7 +2,7 @@ import surveyMixin from './survey.mixin';
 import { pageModel as model, questionModel, NEW_PAGE } from '@/store/survey';
 import { SELECT, SELECTED, DELETE, SAVE, PATCH_FIELDS, PATCH_RELATED, UNSELECT } from '@/store/model.store';
 import { mapGetters, mapActions } from 'vuex';
-import { toastMixin }  from '../shared/toast-mixin';
+import { toastMixin }  from '../mixins/toast-mixin';
 import { PAGE_ADD_ERROR, PAGE_ADD_SUCCESS, PAGE_DELETE_ERROR, PAGE_DELETE_SUCCESS, PAGE_MERGE_ERROR, PAGE_MERGE_SUCCESS, PAGE_SAVE_ERROR, PAGE_SAVE_SUCCESS } from '@/constants/strings';
 import { GET_CACHED_INDEX, GET_CACHED_PAGES, GET_CACHED_QUESTIONS, GET_CACHED_ANSWERS } from '../store/survey/survey.store';
 

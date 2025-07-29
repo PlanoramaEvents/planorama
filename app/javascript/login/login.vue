@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import EmailField from "@/shared/email_field.vue";
+import EmailField from "@/components/email_field.vue";
 import LoginPasswordField from "./login_password_field.vue";
 import LoginSmallPrint from './login_small_print.vue';
 import LoginIntegrations from "./login_integrations.vue";
