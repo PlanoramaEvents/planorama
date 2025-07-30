@@ -31,7 +31,7 @@ export function query_to_rules(query) {
           computed_rules['queries'].push(
             [
               child.query.rule,
-              child.query.operator ? child.query.operator : '=',
+              child.query.selectedOperator ? child.query.selectedOperator : '=',
               child.query.value
             ]
           )
