@@ -33,7 +33,7 @@ import TooltipOverflow from '../shared/tooltip-overflow';
 import { survey_columns as columns } from './survey';
 import { mapActions } from 'vuex';
 import { NEW_SURVEY } from '@/store/survey';
-import { surveyMixin }from '@mixins';
+import { surveyMixin }from '@/mixins';
 
 export default {
   name: 'SurveyTable',

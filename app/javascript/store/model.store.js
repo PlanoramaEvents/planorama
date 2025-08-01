@@ -111,8 +111,6 @@ import { personScheduleApprovalStore, personScheduleApprovalEndpoints } from './
 // publication dates
 import { publicationDatesEndpoints, publicationDatesStore } from './publication_dates.store';
 
-import merge from 'lodash.merge'
-
 const endpoints = {
   ...personEndpoints,
   ...agreementEndpoints,
@@ -317,7 +315,7 @@ export const store = new Vuex.Store({
       const path = `/${model}/update_all`
       const apiConf = { method: 'post', url: path }
       config['data'] = {ids: ids, attrs: attrs}
-      merge(apiConf, config)
+      _.merge(apiConf, config)
 
       // Variation of what the jsonapi-vuex does
       return http(
@@ -397,8 +395,12 @@ export const store = new Vuex.Store({
             commit(SELECT, {model, itemOrId: savedModel});
           }
           if (has_lock_version && (prev_lock_version == savedModel.lock_version)) {
-            // On no change return null - NO=OP
-            res(null);
+            // On no change return put a "204" into the JSON meta data
+            if (!savedModel._jv.json.meta) {
+              savedModel._jv.json.meta = {}
+            }
+            savedModel._jv.json.meta.status = 204
+            res(savedModel);
           } else {
             res(savedModel);
           }

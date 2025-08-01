@@ -92,12 +92,13 @@ import settingsMixin from "@/store/settings.mixin";
 import modelUtilsMixin from '@/store/model_utils.mixin';
 import { scheduleWorkflowMixin, FETCH_WORKFLOWS } from '@/store/schedule_workflow';
 
-const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 
-import VueRouter from 'vue-router';
+// import VueRouter from 'vue-router';
 import { mapActions } from 'vuex';
 import { http } from '@/http';
-const { isNavigationFailure, NavigationFailureType } = VueRouter;
+// const { isNavigationFailure, NavigationFailureType } = VueRouter;
+import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 
 
 export default {
@@ -193,6 +194,7 @@ export default {
       })
     },
     back() {
+      // 
       this.$router.push('/people')
     },
     handleTabActivation(newTab, oldTab, bvEvent) {
@@ -207,6 +209,7 @@ export default {
       if(pathStart === 'people') {
         path += `/${this.person.id}`
       }
+      // 
       this.$router.push(`/${pathStart}/${path}`).catch(error => {
         if(!isNavigationFailure(error, NavigationFailureType.duplicated)) {
           // ignore the duplicates, otherwise -

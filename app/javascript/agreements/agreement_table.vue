@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue';
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TableVue from '@/components/table_vue';
+import TooltipOverflow from '@/shared/tooltip-overflow';
 import { agreement_columns as columns } from './agreement';
 import { mapActions } from 'vuex';
 import { NEW_AGREEMENT, agreementModel as agreement} from '@/store/agreement.store';

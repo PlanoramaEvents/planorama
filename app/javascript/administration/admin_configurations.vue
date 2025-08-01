@@ -2,7 +2,7 @@
 <div class="scrollable">
   <h1>Configurations</h1>
   <b-tabs content-class="mt-3 container-fluid">
-    <b-tab title="Page Content Editor">
+    <b-tab title="Dashboard Content Editor">
       <page-content-editor></page-content-editor>
     </b-tab>
   </b-tabs>

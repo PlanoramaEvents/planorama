@@ -10,6 +10,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -2094,7 +2101,8 @@ CREATE TABLE public.survey_pages (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     survey_id uuid,
-    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum
+    next_page_action public.next_page_action_enum DEFAULT 'next_page'::public.next_page_action_enum,
+    lock_version integer DEFAULT 0
 );
 
 
@@ -3991,6 +3999,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240602172220'),
 ('20240606115218'),
 ('20240622165823'),
-('20240708121706');
+('20240708121706'),
+('20250114163329');
 
 

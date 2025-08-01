@@ -25,8 +25,8 @@
 
 <script>
 import PlanoModal from "@/components/plano_modal.vue";
-import ComboBox from "../components/combo_box";
-import { modelMixinNoProp } from "../store/model.mixin";
+import ComboBox from "@/components/combo_box";
+import { modelMixinNoProp } from "@/store/model.mixin";
 import { personSyncDatumModel as model } from "@/store/person_sync_datum.store";
 
 export default {

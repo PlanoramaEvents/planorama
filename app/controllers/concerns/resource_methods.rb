@@ -100,12 +100,8 @@ module ResourceMethods
     ret = after_update_tx
     return if ret
   
-    # also if relationships changed ....
-    if changed
-      render_object(@object)
-    else
-      render status: :no_content, json: {}.to_json, content_type: 'application/json'
-    end
+    #
+    render_object(@object)
   end
 
   def destroy
@@ -181,7 +177,13 @@ module ResourceMethods
     per_page = params[:perPage]&.to_i || model_class.default_per_page if paginated && do_paginate
     per_page = nil unless paginated && do_paginate
     current_page = params[:current_page]&.to_i || 1 if paginated && do_paginate
-    filters = JSON.parse(params[:filter]) if params[:filter].present?
+    filters = if params[:filter]
+                if params[:filter].kind_of? String
+                  JSON.parse(params[:filter]) 
+                else
+                  params[:filter]
+                end
+              end
 
     return per_page, current_page, filters
   end
@@ -762,8 +764,9 @@ module ResourceMethods
   def paginated
     format = params[:format]
     return false if format == 'xls' || format == 'xlsx'
+    return false unless paginate && !params[:perPage].nil?
 
-    params[:perPage]&.to_i || paginate
+    params[:perPage]&.to_i
   end
 
   def derived_col?(col_name:)

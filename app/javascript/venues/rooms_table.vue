@@ -20,7 +20,7 @@ import TableVue from '../components/table_vue';
 import TooltipOverflow from '../shared/tooltip-overflow';
 import { room_columns as columns } from './room';
 import { mapActions } from 'vuex';
-import { NEW_ROOM, roomModel as room} from '../store/room.store.js';
+import { NEW_ROOM, roomModel as room} from '../store/room.store';
 
 export default {
   name: 'RoomsTable',
