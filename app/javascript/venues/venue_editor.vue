@@ -23,7 +23,7 @@ export default {
   ],
   mixins: [modelMixinNoProp],
   components: { ModelField },
-  data: () => ({ model: "room" }),
+  data: () => ({ model: "venue" }),
   methods: {
     back() {
       this.$router.push('/venues')
@@ -31,7 +31,7 @@ export default {
   },
   mounted() {
     this.select(this.id)
-    this.fetch_selected()
+    this.fetchSelected()
   },
 }
 </script>

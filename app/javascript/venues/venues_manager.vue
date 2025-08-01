@@ -29,13 +29,6 @@ export default {
       columns,
     }
   },
-  watch: {
-    "selected" : function(val) {
-      // alert("in venues_manager.selected: val="+JSON.stringify(val));
-      if(val)
-        this.$refs['venueEditor'].setVenueData(val);
-    }
-  },
   methods: {
     init() {
       this.$refs['venues-table'].init();

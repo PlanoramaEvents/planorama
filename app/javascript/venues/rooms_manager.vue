@@ -29,13 +29,6 @@ export default {
       columns,
     }
   },
-  watch: {
-    "selected" : function(val) {
-      // alert("in rooms_manager.selected: val="+JSON.stringify(val));
-      if(val)
-        this.$refs['roomEditor'].setRoomData(val);
-    }
-  },
   methods: {
     init() {
       this.$refs['rooms-table'].init();

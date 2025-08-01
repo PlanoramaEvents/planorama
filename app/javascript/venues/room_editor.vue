@@ -44,25 +44,10 @@
 <script>
 import { modelMixinNoProp } from '@/mixins';
 import { SELECTED } from '@/store/model.store';
-// import toastMixin from '../shared/toast-mixin';
-// import settingsMixin from "@/store/settings.mixin";
-// import { ADMIN_ADD_ROOM_SUCCESS } from '@/constants/strings';
 import ModelField from '../shared/model-field';
-// import PlanoEditor from '../components/plano_editor';
-
-// import { mapActions } from 'vuex';
-// import { NEW_ROOM } from '@/store/room.store';
 
 export default {
   name: "RoomEditor",
-  // components: {
-  //   ModelField,
-  //   PlanoEditor
-  // },
-  // mixins: [
-  //   toastMixin,
-  //   settingsMixin
-  // ],
   props: [
     'id'
   ],
@@ -76,7 +61,7 @@ export default {
   },
   mounted() {
     this.select(this.id)
-    this.fetch_selected()
+    this.fetchSelected()
   },
 }
 </script>

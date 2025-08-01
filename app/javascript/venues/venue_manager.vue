@@ -31,7 +31,7 @@ export default {
     input() {
       if(!this.activated) {
         this.$refs['rooms-manager'].init();
-        this.$refs['room-sets-manager'].init();
+        // this.$refs['room-sets-manager'].init();
         this.$refs['venues-manager'].init();
         this.activated=true;
       }
