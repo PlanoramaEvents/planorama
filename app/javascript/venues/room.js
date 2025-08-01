@@ -6,6 +6,13 @@ export const room_columns = [
     sortable: true
   },
   {
+    key: 'venue.name',
+    sortKey: 'venues.name',
+    label: 'Venue',
+    type: "text",
+    sortable: true
+  },
+  {
     key: 'floor',
     label: 'Floor',
     type: "text",

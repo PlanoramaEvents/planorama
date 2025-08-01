@@ -48,7 +48,8 @@
                     </dd>
                     <dt>Venue:</dt>
                     <dd class="ml-2">
-                        {{ selected.venue_id }}
+                      <!-- TODO -->
+                      {{ selected.venue.name }}
                     </dd>
                 </dl>
                 <div class="float-right d-flex justify-content-end">
