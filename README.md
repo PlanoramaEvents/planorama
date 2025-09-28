@@ -49,10 +49,10 @@ The dev docker compose uses external volumes so that we can persist data
 between runs. These are created using the following:
 
 ```
-docker volume create --name=pgdata
-docker volume create --name=redis-data
-docker volume create --name=node_modules
-docker volume create --name=node_modules_sidekiq
+docker volume create --name=planorama_pgdata
+docker volume create --name=planorama_redis-data
+docker volume create --name=planorama_node_modules
+docker volume create --name=planorama_node_modules_sidekiq
 ```
 
 Then to start the dev docker instances use
@@ -127,8 +127,8 @@ Now you can delete the volumes. You have to manually recreate them before you ca
 
 ```
 docker volume rm node_modules node_modules_sidekiq
-docker volume create --name=node_modules
-docker volume create --name=node_modules_sidekiq
+docker volume create --name=planorama_node_modules
+docker volume create --name=planorama_node_modules_sidekiq
 ```
 
 Now you can run `docker-compose`
@@ -166,7 +166,7 @@ Redis data needs to be persistent between runs of the docker container. You will
 docker command as follows:
 
 ```
-docker volume create --name=redis-data
+docker volume create --name=planorama_redis-data
 ```
 
 ## Environment

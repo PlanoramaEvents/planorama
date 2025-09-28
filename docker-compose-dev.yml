@@ -4,10 +4,10 @@
 #
 # NOTE:
 # You will need to create volumes for the data to be persistent between runs
-#   docker volume create --name=pgdata
-#   docker volume create --name=redis-data
-#   docker volume create --name=node_modules
-#   docker volume create --name=node_modules_sidekiq
+#   docker volume create --name=planorama_pgdata
+#   docker volume create --name=planorama_redis-data
+#   docker volume create --name=planorama_node_modules
+#   docker volume create --name=planorama_node_modules_sidekiq
 #
 # NOTE:
 # start the docker containers:
@@ -20,13 +20,13 @@
 version: "3.7"
 
 volumes:
-  pgdata:
+  planorama_pgdata:
     external: true
-  redis-data:
+  planorama_redis-data:
     external: true
-  node_modules:
+  planorama_node_modules:
     external: true
-  node_modules_sidekiq:
+  planorama_node_modules_sidekiq:
     external: true
   box: {} # used for the bundler, persistent store between runs
 
@@ -47,7 +47,7 @@ services:
       - SMTP_PORT=1025
       - VITE_RUBY_HOST=0.0.0.0
     volumes:
-      - node_modules:/opt/planorama/node_modules
+      - planorama_node_modules:/opt/planorama/planorama_node_modules
       - .:/opt/planorama
       - box:/var/bundler
       - type: tmpfs
@@ -79,7 +79,7 @@ services:
       - SMTP_PORT=1025
       - VITE_RUBY_HOST=0.0.0.0
     volumes:
-      - node_modules_sidekiq:/opt/planorama/node_modules
+      - planorama_node_modules_sidekiq:/opt/planorama/planorama_node_modules
       - .:/opt/planorama
       - box:/var/bundler
       - type: tmpfs
@@ -100,7 +100,7 @@ services:
     env_file:
       - .envrc
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - planorama_pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -108,7 +108,7 @@ services:
     image: redis:alpine
     restart: always
     volumes:
-      - redis-data:/data
+      - planorama_redis-data:/data
     ports:
       - "6379:6379"
 
