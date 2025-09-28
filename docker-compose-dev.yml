@@ -47,7 +47,7 @@ services:
       - SMTP_PORT=1025
       - VITE_RUBY_HOST=0.0.0.0
     volumes:
-      - planorama_node_modules:/opt/planorama/planorama_node_modules
+      - planorama_node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
       - box:/var/bundler
       - type: tmpfs
@@ -79,7 +79,7 @@ services:
       - SMTP_PORT=1025
       - VITE_RUBY_HOST=0.0.0.0
     volumes:
-      - planorama_node_modules_sidekiq:/opt/planorama/planorama_node_modules
+      - planorama_node_modules_sidekiq:/opt/planorama/node_modules
       - .:/opt/planorama
       - box:/var/bundler
       - type: tmpfs
