@@ -16,7 +16,7 @@ Vue.js
 Apart from GIT and whatever IDE/editor you prefer to use the minimum to
 run a dev env is docker desktop.
 
-You will need to create a `.envrc` file. The minimal contant should have
+You will need to create a `.env` file. The minimal contant should have
 
 ```
 export POSTGRES_USER=yourdbuser
