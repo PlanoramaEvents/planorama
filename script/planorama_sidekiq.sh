@@ -7,7 +7,7 @@ export NODE_ENV=${RAILS_ENV}
 if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   gem install bundler:2.3.26
   bin/bundle install --quiet
-  bin/vite install
+  yarn install
 else
   until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST/$DB_NAME" -c 'select current_date'; do
     echo "waiting for postgres..."
