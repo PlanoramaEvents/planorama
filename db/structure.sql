@@ -2273,15 +2273,6 @@ CREATE TABLE public.tags (
 
 
 --
--- Name: tt; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tt (
-    relkind "char"
-);
-
-
---
 -- Name: venues; Type: TABLE; Schema: public; Owner: -
 --
 

@@ -39,5 +39,15 @@ class RoomSerializer
              :length, :width, :height,
              :venue_id, :room_set_id, :integrations
 
-
+  # what about the venue?
+  has_one :venue, lazy_load_data: true,
+          if: Proc.new { |record| record.venue },
+          links: {
+            self: -> (object, params) {
+              "#{params[:domain]}/room/#{object.id}"
+            },
+            related: -> (object, params) {
+              "#{params[:domain]}/venue/#{object.venue_id}"
+            }
+          }
 end
