@@ -124,6 +124,16 @@ export const router = new createRouter({
           element.scrollIntoView({block: 'start'})
         }
       }, 10)
+    } else {
+      // This is a hack to make sure the survey pages scroll to the top.
+      // We can't use the normal scrollBehavior because the content is nested inside a scrollable container,
+      // so we need to manually set the scrollTop of that container.
+      // The long-term fix is to remove the scrollable container, make the header, sidebar and footer used sticky
+      // positioning, and let the main content scroll normally. Then we could use the normal scrollBehavior.
+      const mainContent = document.querySelector('#main-content.scrollable');
+      if (mainContent) {
+        mainContent.scrollTop = 0;
+      }
     }
   },
   routes: [
