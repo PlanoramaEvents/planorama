@@ -287,6 +287,7 @@ export const surveyStore = {
           answer: a.answer,
           default: a.default,
           other: a.other,
+          value: a.value
         }))
       }
       if (insertAt) {
