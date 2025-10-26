@@ -265,6 +265,7 @@ export const surveyStore = {
             answers_attributes: Object.values(q.answers).sort((a, b) => a.sort_order - b.sort_order).map(a => ({
               other: a.other,
               answer: a.answer,
+              value: a.value
             })),
           })),
         })),
@@ -286,6 +287,7 @@ export const surveyStore = {
           answer: a.answer,
           default: a.default,
           other: a.other,
+          value: a.value
         }))
       }
       if (insertAt) {
