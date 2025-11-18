@@ -1,5 +1,5 @@
 import {mapState, mapActions } from 'vuex';
-import { GET_ROLE_BASED_ACCESS_CONTROL, GET_SESSION_USER }  from "../store/person_session.store";
+import { GET_ROLE_BASED_ACCESS_CONTROL, GET_SESSION_USER }  from "@/store/person_session.store";
 
 export const personSessionMixin = {
   computed: {

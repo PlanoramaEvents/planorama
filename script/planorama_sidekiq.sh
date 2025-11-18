@@ -5,10 +5,9 @@ export NODE_ENV=${RAILS_ENV}
 
 # Development environment setup runs when RAILS_ENV is not set
 if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
-  gem install bundler:2.2.4
+  gem install bundler:2.3.26
   bin/bundle install --quiet
-  bin/yarn install --frozen-lockfile
-  bin/rails webpacker:install -n
+  yarn install
 else
   until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST/$DB_NAME" -c 'select current_date'; do
     echo "waiting for postgres..."

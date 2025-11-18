@@ -44,7 +44,8 @@ export const surveyMixin = {
       if (!newSurvey) {
         newSurvey = this.survey;
       }
-      return this.toastPromise(this.$store.dispatch(SAVE, {model, selected: true, item: newSurvey}), success_text, error_text)
+      let fields = Object.keys(newSurvey._jv.attrs);
+      return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model, selected: true, item: newSurvey, fields: fields}), success_text, error_text)
     },
     selectSurvey(itemOrId) {
       this.$store.commit(SELECT, {model, itemOrId});
