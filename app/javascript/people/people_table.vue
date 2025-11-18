@@ -120,15 +120,15 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue';
-import ModalForm from '../components/modal_form';
-import TooltipOverflow from '../shared/tooltip-overflow';
-import TooltipOverflowKeepNewlines from "@/shared/tooltip-overflow-keep-newlines";
+import TableVue from '@/components/table_vue';
+import ModalForm from '@/components/modal_form';
+import TooltipOverflow from '@/components/tooltip-overflow';
+import TooltipOverflowKeepNewlines from "@/components/tooltip-overflow-keep-newlines";
 import PersonAdd from '../people/person_add.vue';
 import { people_columns as columns } from './people';
 import { personModel as model } from '@/store/person.store'
 import modelUtilsMixin from "@/store/model_utils.mixin";
-import PersonConStateSelector from '../components/person_con_state_selector'
+import PersonConStateSelector from '@/components/person_con_state_selector'
 import PeopleSessionNames from './people_session_names';
 
 import searchStateMixin from '../store/search_state.mixin'

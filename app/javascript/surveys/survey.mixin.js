@@ -1,5 +1,5 @@
 import {mapGetters, mapState, mapActions} from 'vuex';
-import toastMixin from '../shared/toast-mixin';
+import toastMixin from '../mixins/toast-mixin';
 import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE, UNSELECT, PATCH_FIELDS } from '../store/model.store';
 import { SURVEY_SAVE_ERROR, SURVEY_SAVE_ERROR_DELETE, SURVEY_SAVE_SUCCESS, SURVEY_SAVE_SUCCESS_DELETE } from '../constants/strings'
 import { surveyModel as model} from '@/store/survey';

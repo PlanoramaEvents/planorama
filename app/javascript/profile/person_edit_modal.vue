@@ -19,7 +19,7 @@
 import EditModal from '@/components/edit_modal'
 import { PATCH_PERSON_MODEL } from '@/store/person.store';
 import { mapActions } from 'vuex';
-import toastMixin from '@/shared/toast-mixin';
+import toastMixin from '@/mixins/toast-mixin';
 import { FETCH_BY_ID } from '@/store/model.store';
 import { PERSON_SAVE_SUCCESS } from '@/constants/strings';
 import { Form as VForm } from 'vee-validate';

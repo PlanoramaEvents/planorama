@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import NotImplemented from '../shared/not-implemented.vue'
+import NotImplemented from '@/components/not-implemented.vue'
 import surveyMixin from './survey.mixin'
 
 export default {

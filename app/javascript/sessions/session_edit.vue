@@ -166,8 +166,8 @@
 <script>
 import { sessionModel } from '@/store/session.store'
 import modelUtilsMixin from '@/store/model_utils.mixin';
-import ModelSelect from '../components/model_select';
-import ModelTags from '../components/model_tags';
+import ModelSelect from '@/components/model_select';
+import ModelTags from '@/components/model_tags';
 import PlanoEditor from '@/components/plano_editor';
 import { Field as VField, Form as VForm, ErrorMessage } from 'vee-validate';
 import { SESSION_ENVIRONMENT } from '@/constants/strings'

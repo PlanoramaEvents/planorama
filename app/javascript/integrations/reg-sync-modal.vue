@@ -117,7 +117,7 @@ import { mapActions, mapState } from "vuex";
 import { personSyncDatumMixin } from "@/store/person_sync_datum.mixin";
 import IconButton from "@/components/icon_button.vue";
 import RegSyncPersonSearch from "./reg-sync-person-search.vue";
-import SpinnerButton from "@/shared/spinner-button.vue";
+import SpinnerButton from "@/components/spinner-button.vue";
 
 export default {
   name: "RegSyncModal",
