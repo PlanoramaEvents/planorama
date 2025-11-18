@@ -76,8 +76,8 @@ import SurveyThankYou from './surveys/survey-thank-you.vue';
 const surveyRoutes = [
   { path: 'edit/:id/:responses', component: ManageSurvey, props: true, name: 'survey_responses'},
   { path: 'edit/:id', component: ManageSurvey, props: true },
-  { path: ':surveyId/page/:id/:preview', component: SurveyPage, props: true},
-  { path: ':surveyId/page/:id', component: SurveyPage, props: true},
+  { path: ':surveyId/page/:id/:preview', component: SurveyPage, props: true, name: 'survey_page'},
+  { path: ':surveyId/page/:id', component: SurveyPage, props: true, name: 'survey_page'},
   { path: ':id/thankyou', component: SurveyThankYou, props: true},
   { path: ':id/:preview', component: TakeSurvey, props: true },
   { path: ':id', component: TakeSurvey, props: true},
@@ -124,6 +124,16 @@ export const router = new createRouter({
           element.scrollIntoView({block: 'start'})
         }
       }, 10)
+    } else if (to.name === 'survey_page') {
+      // This is a hack to make sure the survey pages scroll to the top.
+      // We can't use the normal scrollBehavior because the content is nested inside a scrollable container,
+      // so we need to manually set the scrollTop of that container.
+      // The long-term fix is to remove the scrollable container, make the header, sidebar and footer used sticky
+      // positioning, and let the main content scroll normally. Then we could use the normal scrollBehavior.
+      let mainContent = document.querySelector('#main-content.scrollable');
+      if (mainContent) {
+        mainContent.scrollTop = 0;
+      }
     }
   },
   routes: [
