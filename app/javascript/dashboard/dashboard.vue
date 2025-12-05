@@ -97,7 +97,7 @@
         </page-content-display>
       </div>
       <div v-if="displayDraftSchedule">
-        <page-content-display name="dashboard-schdule"></page-content-display>
+        <page-content-display name="dashboard-schedule"></page-content-display>
         <person-schedule-display :sessions="sessions" title="Your Draft Schedule">
           <template #message>
             <router-link to="/profile/draft-schedule">Approve your draft schedule<br />or provide change requests.</router-link>

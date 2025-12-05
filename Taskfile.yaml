@@ -42,7 +42,7 @@ tasks:
   psql:
     desc: gives you a psql shell against the running dev database
     dotenv:
-      - '.envrc'
+      - '.env'
     cmds:
       - docker-compose -f docker-compose-dev.yml exec postgres psql -U $POSTGRES_USER -d planorama_development
   rails-console:

@@ -32,7 +32,7 @@ export default {
       model: 'page_content',
       loading: true,
       content: this.starter_content(),
-      name: this.draftSchedule ? 'dashboard-schedule' : 'dashboard-default',
+      name: 'dashboard-default',
       options: [
         { value: 'dashboard-default', text: 'Dashboard - Default' },
         { value: 'dashboard-schedule', text: 'Dashboard - After Draft Publish' }
@@ -46,7 +46,7 @@ export default {
   ],
   watch: {
     name(newVal, oldVal) {
-      if (newVal) {
+      if (newVal != oldVal) {
         // fetch the content
         this.fetch_content()
       }
@@ -78,6 +78,7 @@ export default {
     },
     fetch_content() {
       if (this.name) {
+        this.loading = true;
         this.clear()
         this.fetch({ filter: `{"op":"all","queries":[["name", "=", "${this.name}"]]}` }).then(
           (col) => {
@@ -87,6 +88,8 @@ export default {
               this.content = this.starter_content()
               this.content.name = this.name
             }
+
+            this.loading = false;
           }
         )
       }
@@ -94,10 +97,11 @@ export default {
   },
   mounted() {
     this.fetchScheduleWorkflows().then(() => {
-      if (this.draftSchedule && this.name === 'dashboard-default') {
+      if (this.draftSchedule) {
         this.name = 'dashboard-schedule';
+      } else {
+        this.fetch_content()
       }
-      this.loading = false;
     })
   }
 }

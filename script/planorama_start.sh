@@ -9,9 +9,10 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/bundle install --quiet
 
   # Install JS modules
-  bin/vite install
+  # bin/vite install
+  yarn install
 
-  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
+  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:schema:load)
 
   # bin/rails db:structure:load
   bin/rake views:recreate
