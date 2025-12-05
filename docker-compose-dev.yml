@@ -46,6 +46,7 @@ services:
       - SMTP_SERVER=mailcatcher
       - SMTP_PORT=1025
       - VITE_RUBY_HOST=0.0.0.0
+      - VITE_PLANO_VERSION=development
     volumes:
       - planorama_node_modules:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -78,6 +79,7 @@ services:
       - SMTP_SERVER=mailcatcher
       - SMTP_PORT=1025
       - VITE_RUBY_HOST=0.0.0.0
+      - VITE_PLANO_VERSION=development
     volumes:
       - planorama_node_modules_sidekiq:/opt/planorama/node_modules
       - .:/opt/planorama
@@ -96,7 +98,6 @@ services:
   # The Postgre DB
   postgres:
     image: postgres:12-alpine
-    restart: always
     env_file:
       - .env
     volumes:
@@ -106,7 +107,6 @@ services:
 
   redis:
     image: redis:alpine
-    restart: always
     volumes:
       - planorama_redis-data:/data
     ports:
@@ -115,7 +115,6 @@ services:
   mailcatcher:
     image: schickling/mailcatcher
     entrypoint: "mailcatcher -f --ip 0.0.0.0"
-    restart: always
     ports:
       - 10025:1025
       - 1080:1080
