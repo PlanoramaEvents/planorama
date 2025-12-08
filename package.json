@@ -31,6 +31,7 @@
     "vue-async-computed": "^4.0.1",
     "vue-cal": "^4.10.0",
     "vue-cookies": "^1.8.3",
+    "vue-recaptcha": "^3.0.0-alpha.6",
     "vue-draggable-next": "^2.2.1",
     "vue-pluralize": "^0.0.2",
     "vue-query-builder": "^0.8.2",

@@ -17,6 +17,9 @@ import VuePluralize from 'vue-pluralize';
 import { defineRule } from 'vee-validate';
 import { min, max, min_value, regex, required, numeric, digits, email, integer } from '@vee-validate/rules';
 
+import { VueRecaptchaPlugin } from 'vue-recaptcha/head';
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
 // or the `imagePath` JavaScript helper below.
@@ -61,6 +64,14 @@ Vue.use(CKEditor);
 Vue.use(VuePluralize);
 
 const app = createApp(PlanoramaApp);
+
+if (RECAPTCHA_SITE_KEY) {
+  console.debug("***** HAVE CAPTCHA KEY: ", RECAPTCHA_SITE_KEY)
+  app.use(VueRecaptchaPlugin, {
+    v2SiteKey: RECAPTCHA_SITE_KEY
+    // v3SiteKey: 'YOUR_V3_SITEKEY_HERE',
+  })
+}
 
 // See/review https://enterprisevue.dev/blog/error-handling-in-vue-3/
 app.config.errorHandler = (err, vm, info) => {
