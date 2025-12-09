@@ -100,6 +100,19 @@ import RbacScreen from './rbac/rbac-screen.vue';
 import Dashboard from './dashboard/dashboard.vue';
 
 import VenueManager from './venues/venue_manager.vue';
+import VenueScreen from './venues/venue_screen.vue'
+import RoomEditor from './venues/room_editor.vue'
+import VenueEditor from './venues/venue_editor.vue';
+
+const venueRoutes = [
+  // { path: 'edit/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'edit'}) },
+  // { path: 'assignment/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'assignment'}) },
+  // { path: 'schedule/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'schedule'}) },
+  // { path: 'notes/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'notes'}) },
+  { path: 'edit/room/:id', component: RoomEditor, props: true },
+  { path: 'edit/venue/:id', component: VenueEditor, props: true },
+  { path: '', component: VenueManager },
+]
 
 // main
 import Vue from 'vue';
@@ -256,7 +269,8 @@ export const router = new createRouter({
     },
     {
       path: '/venues',
-      component: VenueManager,
+      component: VenueScreen,
+      children: venueRoutes,
       meta: {
         requiresAuth: true
       }

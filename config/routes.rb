@@ -202,6 +202,10 @@ Rails.application.routes.draw do
   resources :rooms, path: 'room'
   resources :roomsets, path: 'roomset'
   resources :venues, path: 'venue'
+  resources :venues, path: 'venue' do
+    get 'rooms', to: 'rooms#index'
+  end
+
   resources :tag_contexts, path: 'tag_context'
   resources :configurations, path: 'configuration'
   resources :parameter_names, path: 'parameter_name'
