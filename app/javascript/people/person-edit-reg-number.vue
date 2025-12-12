@@ -67,7 +67,7 @@
 import DisplaySyncData from "@/registrations/display_sync_data.vue";
 import EditModal from "@/components/edit_modal.vue";
 import PlanoModal from "@/components/plano_modal.vue";
-import SpinnerButton from "@/shared/spinner-button.vue";
+import SpinnerButton from "@/components/spinner-button.vue";
 import { mapActions } from "vuex";
 import {
   GET_REG_BY_ID,

@@ -48,10 +48,10 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue.vue';
+import TableVue from '@/components/table_vue.vue';
 import { person_sync_columns as columns } from './person_sync_columns';
 import { DISMISS, FETCH_MATCH_COUNT, MATCH, personSyncDatumModel as model } from '@/store/person_sync_datum.store'
-import TooltipOverflow from '../shared/tooltip-overflow.vue';
+import TooltipOverflow from '@/components/tooltip-overflow.vue';
 import DisplaySyncData from './display_sync_data.vue';
 import { registrationSyncStatsMixin } from '@/store/registration_sync_stats.mixin';
 import MagicalReload from '@/components/magical_reload.vue';

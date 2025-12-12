@@ -121,7 +121,7 @@ import { personSessionMixin, toastMixin} from '@/mixins';
 import { mapActions } from 'vuex'; 
 import { FETCH_WORKFLOWS, scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import PersonScheduleDisplay from '@/profile/person_schedule_display.vue';
-import { eventVirtualMixin } from '@/shared/event-virtual.mixin';
+import { eventVirtualMixin } from '@/mixins/event-virtual.mixin';
 import PageContentDisplay from '@/page-content/page_content_display.vue'
 
 export default {

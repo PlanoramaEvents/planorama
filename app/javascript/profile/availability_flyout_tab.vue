@@ -47,7 +47,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import { modelMixinNoProp } from '@/store/model.mixin';
 import { personModel as model} from '@/store/person.store';
-import conventionTimezoneMixin from '@/shared/convention-timezone.mixin';
+import conventionTimezoneMixin from '@/mixins/convention-timezone.mixin';
 import { GET_AVAILABILITY } from '@/store/availability.store';
 import { GET_PERSON_EXCLUSIONS } from '@/store/person_exclusion.store';
 import { settingsMixin } from '@/mixins';
