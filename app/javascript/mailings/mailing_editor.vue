@@ -94,10 +94,10 @@ import PlanoEditor from '@/components/plano_editor';
 import PlanoModal from '@/components/plano_modal.vue';
 import ModelField from '@/components/model-field';
 import ModelSelect from '@/components/model_select';
-import toastMixin from '../mixins/toast-mixin';
+import toastMixin from '@/mixins/toast-mixin';
 import MailingPreview from './mailing_preview';
-import { MAILING_SCHEDULED } from '../constants/strings';
-import { MAILING_TEST_SCHEDULED } from '../constants/strings';
+import { MAILING_SCHEDULED } from '@/constants/strings';
+import { MAILING_TEST_SCHEDULED } from '@/constants/strings';
 
 import { mapActions } from 'vuex';
 import { NEW_MAILING } from '../store/mailing.store';

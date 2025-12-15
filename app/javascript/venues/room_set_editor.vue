@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import toastMixin from '../mixins/toast-mixin';
+import toastMixin from '@/mixins/toast-mixin';
 import settingsMixin from "@/store/settings.mixin";
 import { VENUES_ADD_ROOMSET_SUCCESS } from '@/constants/strings';
 import ModelField from '@/components/model-field';

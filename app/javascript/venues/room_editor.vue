@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import toastMixin from '../mixins/toast-mixin';
+import toastMixin from '@/mixins/toast-mixin';
 import settingsMixin from "@/store/settings.mixin";
 import { ADMIN_ADD_ROOM_SUCCESS } from '@/constants/strings';
 import ModelField from '@/components/model-field';
