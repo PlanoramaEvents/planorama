@@ -89,15 +89,15 @@
 import {http as axios} from '../http';
 import modelMixin from '../store/model.mixin';
 import { mailingModel as model } from '../store/mailing.store'
-import EmailListInput from '../components/email_list_input'
+import EmailListInput from '@/components/email_list_input'
 import PlanoEditor from '@/components/plano_editor';
 import PlanoModal from '@/components/plano_modal.vue';
-import ModelField from '../shared/model-field';
-import ModelSelect from '../components/model_select';
-import toastMixin from '../shared/toast-mixin';
+import ModelField from '@/components/model-field';
+import ModelSelect from '@/components/model_select';
+import toastMixin from '@/mixins/toast-mixin';
 import MailingPreview from './mailing_preview';
-import { MAILING_SCHEDULED } from '../constants/strings';
-import { MAILING_TEST_SCHEDULED } from '../constants/strings';
+import { MAILING_SCHEDULED } from '@/constants/strings';
+import { MAILING_TEST_SCHEDULED } from '@/constants/strings';
 
 import { mapActions } from 'vuex';
 import { NEW_MAILING } from '../store/mailing.store';

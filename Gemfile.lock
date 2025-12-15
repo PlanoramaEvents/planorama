@@ -146,6 +146,7 @@ GEM
       net-http (>= 0.5.0)
     fast_excel (0.5.0)
       ffi (> 1.9, < 2)
+    ffi (1.17.2-aarch64-linux-musl)
     ffi (1.17.2-arm64-darwin)
     ffi (1.17.2-x86_64-linux-musl)
     fugit (1.11.1)
@@ -222,7 +223,9 @@ GEM
       activerecord (>= 4.0.0)
       activesupport (>= 4.0.0)
     nio4r (2.7.4)
-    nokogiri (1.18.9-arm64-darwin)
+    nokogiri (1.18.8-aarch64-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.18.8-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.18.9-x86_64-linux-musl)
       racc (~> 1.4)
@@ -452,7 +455,9 @@ GEM
     zeitwerk (2.6.18)
 
 PLATFORMS
+  aarch64-linux-musl
   arm64-darwin-24
+  arm64-darwin-25
   x86_64-linux-musl
 
 DEPENDENCIES

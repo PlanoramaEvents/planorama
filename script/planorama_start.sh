@@ -9,9 +9,10 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/bundle install --quiet
 
   # Install JS modules
-  bin/vite install
+  # bin/vite install
+  yarn install
 
-  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
+  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:schema:load)
 
   # bin/rails db:structure:load
   bin/rake views:recreate
@@ -27,7 +28,6 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/rake rbac:seed_defaults
 
   # Run migrations and start the server, anything that comes in on 3000 is accepted
-  # bin/rails db:create
   bin/rails db:seed
 elif [[ $RAILS_ENV = "staging" ]]; then
   export RAILS_SERVE_STATIC_FILES=true
@@ -46,8 +46,6 @@ elif [[ $RAILS_ENV = "staging" ]]; then
   bin/rake rbac:seed_defaults
 
   bin/rails db:seed
-
-  bin/rake assets:precompile
 else
   export RAILS_SERVE_STATIC_FILES=true
   until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST" -c 'select current_date'; do
@@ -68,8 +66,6 @@ else
   # bin/rake chicon:init_age_restrictions
   # bin/rake chicon:map_session_to_exclusion
   bin/rake rbac:seed_defaults
-
-  bin/rake assets:precompile
 fi
 
 if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then

@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import SidebarVue from '../components/sidebar_vue';
+import SidebarVue from '@/components/sidebar_vue';
 import {modelMixin} from '@/mixins';
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import DlPerson from "@/profile/dl_person.vue";

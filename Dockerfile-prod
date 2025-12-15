@@ -1,17 +1,22 @@
 # Dockerfile
 
 # Use ruby image to build our own image
-FROM --platform=linux/x86_64 ruby:3.1.4-alpine3.19 as base
+FROM --platform=linux/x86_64 ruby:3.1.4-alpine3.19 AS base
 
 # Ensure that we work in UTF 8
-ENV LANG C.UTF-8 # ensure that the encoding is UTF8
-ENV LANGUAGE C.UTF-8 # ensure that the encoding is UTF8
+ENV LANG='C.UTF-8'
+ENV LANGUAGE='C.UTF-8'
+
+# Let the build process set a version for Plano that we can
+# get at build and runtime
+ARG PLANO_VERSION=''
+ENV VITE_PLANO_VERSION=$PLANO_VERSION
 
 ARG RAILS_ENV=production
 ARG NODE_ENV=production
 
 # Use a persistent volume for the gems installed by the bundler
-ENV BUNDLE_PATH /var/bundler
+ENV BUNDLE_PATH='/var/bundler'
 
 ARG DEVISE_SECRET
 
@@ -36,14 +41,11 @@ RUN gem install bundler:2.3.26
 ADD . /opt/planorama
 WORKDIR /opt/planorama
 
-# Just not use dev here
+# Install Gems without the development packages
 RUN bin/bundle install --without development
-RUN bin/vite install
 
-# RUN bin/vite build --clear
-
-# The precompile will also deal with the webpacker assets
-# RUN bin/rake assets:precompile --trace
+# Build the JS assets (also does the vite/yarn install)
+RUN bin/rake assets:precompile
 
 # We expose the port
 EXPOSE 3000

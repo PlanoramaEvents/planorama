@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import EmailField from "../shared/email_field";
+import EmailField from "@/components/email_field";
 import { http } from "../http";
 import { validateFields } from "../utils";
 import {
