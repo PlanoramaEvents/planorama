@@ -1,4 +1,4 @@
-export { toastMixin } from './shared/toast-mixin';
+export { toastMixin } from './mixins/toast-mixin';
 export * from './store/model.mixin';
 export { personSessionMixin } from './auth/person_session.mixin';
 export { surveyMixin } from './surveys/survey.mixin';
@@ -12,4 +12,4 @@ export { responseMixin } from './surveys/response.mixin';
 export { authMixin } from './auth/auth.mixin';
 export { linkedMixin } from './surveys/linked.mixin';
 export { settingsMixin } from './store/settings.mixin';
-export { conventionTimezoneMixin } from './shared/convention-timezone.mixin';
+export { conventionTimezoneMixin } from './mixins/convention-timezone.mixin';

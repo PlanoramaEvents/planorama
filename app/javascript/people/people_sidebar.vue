@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import SidebarVue from '../components/sidebar_vue.vue';
+import SidebarVue from '@/components/sidebar_vue.vue';
 import {personSessionMixin, modelMixin} from '@/mixins';
 import Detail from './detail.vue';
 import PeopleAdminTab from './people_admin_tab.vue';

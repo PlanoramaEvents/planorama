@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue';
+import TableVue from '@/components/table_vue';
 import { registration_sync_columns as columns } from './registration_sync_columns';
 import { registrationSyncDatumModel as model } from '@/store/registration_sync_datum.store'
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TooltipOverflow from '@/components/tooltip-overflow';
 
 export default {
   name: 'RegistrationSyncTable',

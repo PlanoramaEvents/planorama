@@ -75,8 +75,8 @@
 
 <script>
 import modelMixin from '../store/model.mixin';
-import ModelSelect from '../components/model_select';
-import ModelTags from '../components/model_tags';
+import ModelSelect from '@/components/model_select';
+import ModelTags from '@/components/model_tags';
 import PlanoEditor from '@/components/plano_editor';
 
 export default {
