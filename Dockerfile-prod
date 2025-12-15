@@ -43,9 +43,10 @@ WORKDIR /opt/planorama
 
 # Install Gems without the development packages
 RUN bin/bundle install --without development
+RUN bin/vite install
 
 # Build the JS assets (also does the vite/yarn install)
-RUN bin/rake assets:precompile
+# RUN bin/rake assets:precompile
 
 # We expose the port
 EXPOSE 3000
