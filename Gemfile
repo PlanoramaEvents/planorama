@@ -71,7 +71,8 @@ gem 'jsonapi.rb'
 
 gem 'deep_cloneable', '~> 3.2.0'
 
-gem "nokogiri", ">= 1.13"
+# gem "nokogiri", ">= 1.13"
+gem "nokogiri", ">= 1.18.9"
 gem "roo", "~> 2.8.0"
 
 gem 'truemail'
@@ -95,6 +96,7 @@ group :staging, :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'seedbank'
+  gem "stringio", "3.1.7"
 end
 
 group :development do
