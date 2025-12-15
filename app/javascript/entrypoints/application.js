@@ -66,7 +66,6 @@ Vue.use(VuePluralize);
 const app = createApp(PlanoramaApp);
 
 if (RECAPTCHA_SITE_KEY) {
-  console.debug("***** HAVE CAPTCHA KEY: ", RECAPTCHA_SITE_KEY)
   app.use(VueRecaptchaPlugin, {
     v2SiteKey: RECAPTCHA_SITE_KEY
     // v3SiteKey: 'YOUR_V3_SITEKEY_HERE',
