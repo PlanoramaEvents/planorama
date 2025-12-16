@@ -8,7 +8,8 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  config.cache_classes = false
+  # config.cache_classes = false
+  config.enable_reloading = true
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -18,11 +19,11 @@ Rails.application.configure do
 		 
   # Enable server timing
   config.server_timing = true
-  config.hosts << "planorama.loophole.site" << "planorama2.loophole.site"
+  # config.hosts << "planorama.loophole.site" << "planorama2.loophole.site"
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
@@ -39,7 +40,7 @@ Rails.application.configure do
   config.public_file_server.enabled = true
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  # config.active_storage.service = :local
+  config.active_storage.service = :local
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -55,8 +56,15 @@ Rails.application.configure do
 
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
-
+  config.active_job.verbose_enqueue_logs = true
   config.active_job.queue_adapter = :inline
 
+  config.action_view.annotate_rendered_view_with_filenames = true
+  config.action_controller.raise_on_missing_callback_actions = true
   # config.web_console.permissions = ['172.0.0.0/8','192.168.0.0/16']
+
+  logger           = ActiveSupport::Logger.new(STDOUT)
+  logger.formatter = config.log_formatter
+  config.logger    = ActiveSupport::TaggedLogging.new(logger)
+
 end
