@@ -42,5 +42,14 @@ module Planorama
     end
 
     config.active_record.schema_format = :sql
+
+    # so we can still use secrets.yml for now
+    config.secrets = config_for(:secrets) # loads from config/secrets.yml
+    config.secret_key_base = config.secrets[:secret_key_base]
+
+    def secrets
+      config.secrets
+    end
+
   end
 end
