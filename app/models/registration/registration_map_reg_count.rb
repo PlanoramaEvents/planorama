@@ -7,7 +7,7 @@
 #
 class Registration::RegistrationMapRegCount < ApplicationRecord
   self.table_name = :registration_map_reg_counts
-  self.primary_keys = :reg_id
+  self.primary_key = :reg_id
 
   belongs_to :registration_sync_datum, foreign_key: 'reg_id'
 end

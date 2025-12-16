@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.4'
 
-gem "rails", "~> 7.0.4"
+gem "rails", "~> 7.2.0"
 
 gem "concurrent-ruby", "< 1.3.5"
 
@@ -30,7 +30,7 @@ gem "recaptcha"
 
 gem "bundler-audit"        # checks for insecure gems
 
-gem 'composite_primary_keys', '~> 14.0' # Version 14.x is designed to work with ActiveRecord 7.0.x
+# gem 'composite_primary_keys', '~> 14.0' # Version 14.x is designed to work with ActiveRecord 7.0.x
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
@@ -38,7 +38,7 @@ gem 'composite_primary_keys', '~> 14.0' # Version 14.x is designed to work with 
 # Reduces boot times through caching; required in config/boot.rb
 # gem 'bootsnap', '>= 1.4.4', require: false
 
-gem 'acts-as-taggable-on', '~> 9.0'
+gem 'acts-as-taggable-on' #, '~> 9.0'
 gem 'kaminari'
 gem 'active_model_serializers', '~> 0.10.0'
 
@@ -58,7 +58,7 @@ gem 'request_store'
 
 gem 'ranked-model'
 gem "nilify_blanks"
-gem 'paper_trail'
+gem 'paper_trail', '~> 16'
 gem 'pundit'
 
 gem "sidekiq"
