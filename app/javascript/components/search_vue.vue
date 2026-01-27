@@ -24,7 +24,8 @@
       <b-tabs content-class="mt-3" fill>
         <b-tab title="Advanced">
           <vue-query-builder
-            v-model="query"
+            :model-value="query"
+            @update:model-value="newVal => query = newVal"
             :rules="rules"
             :maxDepth="2"
           >
