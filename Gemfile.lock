@@ -155,6 +155,7 @@ GEM
       net-http (~> 0.5)
     fast_excel (0.5.0)
       ffi (> 1.9, < 2)
+    ffi (1.17.2-aarch64-linux-musl)
     ffi (1.17.2-arm64-darwin)
     fugit (1.12.1)
       et-orbi (~> 1.4)
@@ -230,6 +231,8 @@ GEM
       activerecord (>= 4.0.0)
       activesupport (>= 4.0.0)
     nio4r (2.7.5)
+    nokogiri (1.18.10-aarch64-linux-musl)
+      racc (~> 1.4)
     nokogiri (1.18.10-arm64-darwin)
       racc (~> 1.4)
     oauth2 (2.0.18)
@@ -256,6 +259,7 @@ GEM
     parser (3.3.10.0)
       ast (~> 2.4.1)
       racc
+    pg (1.6.2-aarch64-linux-musl)
     pg (1.6.2-arm64-darwin)
     pp (0.6.3)
       prettyprint
@@ -470,6 +474,7 @@ GEM
     zeitwerk (2.6.18)
 
 PLATFORMS
+  aarch64-linux-musl
   arm64-darwin-25
 
 DEPENDENCIES
