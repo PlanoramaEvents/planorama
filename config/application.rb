@@ -47,6 +47,8 @@ module Planorama
     config.secrets = config_for(:secrets) # loads from config/secrets.yml
     config.secret_key_base = config.secrets[:secret_key_base]
 
+    config.autoload_paths += Dir["#{config.root}/lib/strategies"]
+
     def secrets
       config.secrets
     end
