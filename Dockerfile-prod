@@ -23,6 +23,7 @@ ARG DEVISE_SECRET
 RUN apk add \
       build-base \
       freetds-dev \
+      git \
       less \
       netcat-openbsd \
       postgresql-client \
