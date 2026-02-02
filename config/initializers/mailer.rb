@@ -26,6 +26,7 @@ Rails.application.config.action_mailer.tap do |action_mailer|
     }
 
     action_mailer.delivery_method = :smtp
+    use_ssl = ENV["SMTP_PORT"].to_i == 465
     action_mailer.tap do |action_mailer|
       action_mailer.raise_delivery_errors = true
       action_mailer.smtp_settings = {
@@ -34,8 +35,8 @@ Rails.application.config.action_mailer.tap do |action_mailer|
         user_name:            ENV["SMTP_USER_NAME"],
         password:             ENV["SMTP_PASSWORD"],
         authentication:       "plain",
-        enable_starttls_auto: true,
-        ssl:                  ENV["SMTP_PORT"].to_i == 465
+        enable_starttls_auto: !use_ssl,
+        ssl:                  use_ssl
       }
     end
 
