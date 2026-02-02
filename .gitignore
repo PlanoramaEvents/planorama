@@ -6,7 +6,7 @@ capybara-*.html
 .docker-sync
 .yardoc
 .gitlab
-.envrc
+.env
 */db/*.sqlite3
 */public/system
 */coverage/
@@ -45,7 +45,6 @@ config/master.key
 */vendor/bundle
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
-# .nvmrc
 
 # ##############################################################################
 #

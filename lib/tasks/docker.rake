@@ -41,12 +41,12 @@ namespace :docker do
     puts "run the following command\ndocker run -it --rm --privileged --pid=host planorama:dev nsenter -t 1 -m -u -n -i -- sh -c 'truncate -s0 /var/lib/docker/containers/*/*-json.log'"
   end
 
-  task :psql => :read_envrc do
+  task :psql => :read_env do
     sh "docker", "exec", "-it", "planorama_postgres_1", "psql", "-U", ENV['POSTGRES_USER'], "-d", "planorama_development"
   end
 
-  task :read_envrc do
-    File.open(Rails.root.join('.envrc')) do |f|
+  task :read_env do
+    File.open(Rails.root.join('.env')) do |f|
       f.readlines.each do |line|
         (key, value) = /\w*=\w*/.match(line).to_s.split('=')
         ENV[key] = value

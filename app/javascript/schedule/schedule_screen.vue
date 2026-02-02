@@ -1,6 +1,6 @@
 <template>
-  <div class="container-fluid pl-0">
-    <div class="row">
+  <div class="scrollable">
+    <div class="row mb-3 mr-0">
       <div class="col-3 pt-3 d-flex flex-column" style="max-height: calc(100vh - 150px)">
         <schedulable-sessions
           :model="sessionModel"

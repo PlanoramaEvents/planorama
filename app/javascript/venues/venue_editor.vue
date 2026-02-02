@@ -13,8 +13,11 @@
 
 <script>
 import { modelMixinNoProp } from '@/mixins';
-import { SELECTED } from '@/store/model.store';
-import ModelField from '../shared/model-field';
+import ModelField from '@/components/model-field';
+// import { SELECTED } from '@/store/model.store';
+// import toastMixin from '@/mixins/toast-mixin';
+// import settingsMixin from "@/store/settings.mixin";
+// import { VENUES_ADD_VENUE_SUCCESS } from '@/constants/strings';
 
 export default {
   name: "VenueEditor",

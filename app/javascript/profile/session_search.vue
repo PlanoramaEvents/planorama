@@ -45,8 +45,8 @@
 
 <script>
 import { tagFormatter } from '@/store/tags.mixin';
-import ModelSelect from '../components/model_select';
-import ModelTags from '../components/model_tags';
+import ModelSelect from '@/components/model_select';
+import ModelTags from '@/components/model_tags';
 import searchStateMixin from '../store/search_state.mixin'
 import { personSessionMixin } from '@/mixins';
 

@@ -43,8 +43,14 @@
 
 <script>
 import { modelMixinNoProp } from '@/mixins';
-import { SELECTED } from '@/store/model.store';
-import ModelField from '../shared/model-field';
+import ModelField from '@/components/model-field';
+// import PlanoEditor from '@/components/plano_editor';
+// import toastMixin from '@/mixins/toast-mixin';
+// import settingsMixin from "@/store/settings.mixin";
+// import { ADMIN_ADD_ROOM_SUCCESS } from '@/constants/strings';
+// import { mapActions } from 'vuex';
+// import { SELECTED } from '@/store/model.store';
+// import { NEW_ROOM } from '@/store/room.store';
 
 export default {
   name: "RoomEditor",

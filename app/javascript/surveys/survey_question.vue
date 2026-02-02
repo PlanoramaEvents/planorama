@@ -308,7 +308,7 @@
 <script>
 import MandatoryStar from './mandatory-star.vue';
 import SimpleSocial from '../social-media/simple-social.vue';
-import EmailFieldVeevalidate from '../shared/email_field_veevalidate.vue';
+import EmailFieldVeevalidate from '@/components/email_field_veevalidate.vue';
 import {
   questionMixin,
   surveyMixin,
@@ -427,9 +427,15 @@ export default {
     if (!this.answerable || this.previewMode) {
       // create dummy response so it stops complaining.
       this.createDummyResponse()
-   } else {
+    } else {
       this.localResponse = this.getResponse(this.question, this.selectedSubmission)
-   }
+      if (this.question.branching) {
+        const choice = this.choices.find((c) => this.radioButtonResponse === this.choiceValue(c));
+        if(choice) {
+          this.$emit('nextPage', choice.next_page_id)
+        }
+      }
+    }
   },
   watch: {
     previewMode(newVal) {

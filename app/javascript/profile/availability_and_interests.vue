@@ -75,9 +75,9 @@ import ExclusionsPicker from './exclusions_picker.vue'
 import SessionLimits from './session_limits.vue'
 import SessionLimitEditor from './session_limit_editor.vue'
 import AvailabilityNotesField from './availability_notes_field';
-import TimezoneSelector from "../components/timezone_selector.vue"
+import TimezoneSelector from "@/components/timezone_selector.vue"
 import searchStateMixin from "@/store/search_state.mixin"
-import { eventVirtualMixin } from '@/shared/event-virtual.mixin';
+import { eventVirtualMixin } from '@/mixins/event-virtual.mixin';
 
 import { DateTime } from 'luxon';
 

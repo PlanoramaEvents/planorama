@@ -39,7 +39,7 @@
 <script>
 import { surveyMixin, pageMixin, questionMixin }from '@/mixins';
 import SurveySettingsTab from './survey-settings-tab.vue';
-import NotImplemented from '../shared/not-implemented.vue';
+import NotImplemented from '@/components/not-implemented.vue';
 import ViewResponses from './view-responses';
 import EditSurvey from './edit-survey';
 import { SURVEY_PUBLIC_NO_EDIT } from '@/constants/strings';

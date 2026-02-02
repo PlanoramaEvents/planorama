@@ -1,7 +1,7 @@
 <template>
   <!-- The test for survey is here to deal with timing issues to ensure survey is loaded -->
   <div v-if="survey">
-    <div class="scrollable" v-if="is_assigned">
+    <div id="main-content" class="scrollable" v-if="is_assigned">
       <div class="survey-page" v-if="selectedPage">
         <b-alert :show="redirMessage" dismissible fade class="mt-3 alert-bright d-flex align-items-center" variant="warning" @dismissed="redirShown()">
           <b-icon-exclamation-triangle class="h3 mb-0 mr-3"></b-icon-exclamation-triangle>

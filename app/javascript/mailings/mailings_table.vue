@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue';
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TableVue from '@/components/table_vue';
+import TooltipOverflow from '@/components/tooltip-overflow';
 import { mailing_columns as columns } from './mailing';
 import { mailingModel as model } from '@/store/mailing.store'
 

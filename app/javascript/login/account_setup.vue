@@ -51,7 +51,7 @@ import {
 import LoginPasswordField from "./login_password_field";
 import { validateFields } from "@/utils";
 import settingsMixin from "@/store/settings.mixin";
-import NameField from "@/shared/name_field.vue";
+import NameField from "@/components/name_field.vue";
 import { personSessionMixin } from "@/mixins";
 import PwRequirements from './pw_requirements.vue';
 

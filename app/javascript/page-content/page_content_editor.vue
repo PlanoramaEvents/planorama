@@ -69,6 +69,7 @@ export default {
       );
     },
     saveContent() {
+      this.content.name = this.name
       let res = this.savePageContent(this.content);
       res.then(
         (obj) => {
@@ -83,7 +84,11 @@ export default {
         this.fetch({ filter: `{"op":"all","queries":[["name", "=", "${this.name}"]]}` }).then(
           (col) => {
             if (this.collection.length > 0) {
-              this.content = this.collection[0]
+              // So clear leaves an empty object at the start
+              // of the store for the model, so make sure we
+              // only deal with objects with ids
+              let valid = this.collection.filter(el => el.id)
+              this.content = valid[0]
             } else {
               this.content = this.starter_content()
               this.content.name = this.name

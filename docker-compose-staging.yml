@@ -2,16 +2,16 @@
 # This is sample docker file for use in a staging environment
 #
 # NOTE:
-# You will need to create the pgdata and redis-data volumes:
-#   docker volume create --name=pgdata
-#   docker volume create --name=redis-data
+# You will need to create the planorama_pgdata and planorama_redis-data volumes:
+#   docker volume create --name=planorama_pgdata
+#   docker volume create --name=planorama_redis-data
 #
-version: '3.7'
+version: "3.7"
 
 volumes:
-  redis-data:
+  planorama_redis-data:
     external: true
-  pgdata:
+  planorama_pgdata:
     external: true
 
 services:
@@ -19,7 +19,7 @@ services:
     image: redis:alpine
     restart: always
     volumes:
-      - redis-data:/data
+      - planorama_redis-data:/data
 
   postgres:
     image: postgres:12-alpine
@@ -28,7 +28,7 @@ services:
       # NOTE: this will need to reflect local system
       - "/opt/plano/etc/planorama.env"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - planorama_pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
