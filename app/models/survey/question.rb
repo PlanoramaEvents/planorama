@@ -113,6 +113,7 @@ class Survey::Question < ApplicationRecord
 
   # Check link changes
   def check_linked_update
+    return if [true, "true", "TRUE", "on", "ON"].include? ENV['SURVEY_EDIT_CHECK_LINKED_BYPASS']
     if responses.any? && linked_field_changed?
       raise 'can not change linked field for a question that has responses in the system'
     end
