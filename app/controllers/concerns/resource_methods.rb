@@ -318,7 +318,7 @@ module ResourceMethods
 
   def query_part(filter:)
     q = nil
-    global_op = filter['op'] == 'all' ? :and : :or
+    global_op = filter['op'].downcase == 'all' ? :and : :or
     filter['queries'].each do |query|
       if query.is_a? Hash
         part = query_part(filter: query)
@@ -331,7 +331,7 @@ module ResourceMethods
           get_table(column: key)
         end
 
-        if key == 'all'
+        if key.downcase == 'all'
           # change to allowd limiting to named cols?, pass in list of cols to include based in what is displayed ...
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)
