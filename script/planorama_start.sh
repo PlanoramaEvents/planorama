@@ -31,7 +31,7 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/rails db:seed
 elif [[ $RAILS_ENV = "staging" ]]; then
   export RAILS_SERVE_STATIC_FILES=true
-  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
+  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:schema:load)
 
   bin/rake db:migrate
   bin/rake views:recreate
@@ -53,7 +53,7 @@ else
     sleep 5
   done
 
-  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:structure:load)
+  bin/rake db:db_missing || (bin/rails db:create; bin/rails db:schema:load)
 
   bin/rake db:migrate
   bin/rake views:recreate
