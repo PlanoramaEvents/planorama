@@ -2,9 +2,8 @@
   <table-vue
     :model="room"
     :columns="columns"
-    :show-add="false"
+    :show-add="true"
     :show-settings="false"
-    :show-search="false"
     ref="rooms-table"
   >
     <template #cell(name)="{ item }">
@@ -39,9 +38,9 @@ export default {
     init() {
       this.$refs['rooms-table'].fetchPaged()
     }
-  // },
-  // mounted() {
-  //   this.init()
+  },
+  mounted() {
+    this.init();
   }
 }
 </script>

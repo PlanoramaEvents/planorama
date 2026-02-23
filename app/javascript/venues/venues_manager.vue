@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="pb-4">
-      <VenuesTable
-          defaultFilter=''
-          ref="venues-table"
-      ></VenuesTable>
+      <venues-table
+        defaultFilter=''
+        ref="venues-table"
+      ></venues-table>
     </div>
     <venues-sidebar></venues-sidebar>
   </div>
@@ -12,11 +12,11 @@
 
 
 <script>
-import VenuesTable from "./venues_table";
-import VenueEditor from "./venue_editor";
-import modelMixin from '../store/model.mixin'
-import {venue_columns as columns} from "./venue";
-import VenuesSidebar from "./venues_sidebar.vue";
+import VenuesTable from "@/venues/venues_table";
+import VenueEditor from "@/venues/venue_editor";
+import VenuesSidebar from "@/venues/venues_sidebar.vue";
+import modelMixin from '@/store/model.mixin'
+import {venue_columns as columns} from "@/venues/venue";
 
 export default {
   name: "VenuesManager",
@@ -28,11 +28,6 @@ export default {
     return {
       columns,
     }
-  },
-  methods: {
-    init() {
-      this.$refs['venues-table'].init();
-    },
   }
 }
 </script>

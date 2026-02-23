@@ -40,4 +40,25 @@ class RoomsController < ResourceController
   # def paginate
   #   false
   # end
+  def allowed_params
+    %i[
+      id
+      lock_version
+      name
+      venue_id
+      capacity
+      floor
+      comment
+      is_virtual
+      open_for_schedule
+      purpose
+      sort_order
+      integrations
+      room_set_id
+      area_of_space
+      height
+      length
+      width
+    ]
+  end
 end

@@ -1,6 +1,8 @@
 export const room_columns = [
   {
     key: 'name',
+    search_key: 'rooms.name',
+    sortKey: 'rooms.name',
     label: 'Name',
     type: "text",
     sortable: true
@@ -41,45 +43,14 @@ export const room_columns = [
     choices: [{label: "Yes", value: "true"}, {label: "No", value: "false"}],
   },
   {
-    key: 'length',
-    label: 'Length',
-    // type: 'number',
-  },
-  {
-    key: 'width',
-    label: 'Width',
-    // type: 'number',
-  },
-  {
-    key: 'height',
-    label: 'Height',
-    type: 'number',
-  },
-  {
-    key: 'linear_units',
-    label: 'Linear Units',
-    type: 'text',
-  },
-  {
-    key: 'area',
-    label: 'Area',
-    // type: 'number',
-    sortable: true,
-  },
-  {
-    key: 'area_units',
-    label: 'Area Units',
-    type: 'text',
-  },
-  {
     key: 'capacity',
     label: 'Capacity',
-    // type: 'number',
+    // type: 'integer',
     sortable: true,
   },
   {
     key: 'room_set',
     label: 'Room Setup',
     type: 'text',
-  },
+  }
 ];

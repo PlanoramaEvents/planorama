@@ -1,23 +1,20 @@
 <template>
   <div>
     <b-button variant="link" @click="back">Back</b-button>
-    <div v-if="selected">{{ selected.id }}</div>
-    <b-form-group id="name-group" label="Name" label-for="name-input">
-      <b-form-input type="text" id="name-input" v-model="selected.name" @blur="saveSelected()"></b-form-input>
-    </b-form-group>
-    <b-form-group id="address-group" label="Address" label-for="address-input">
-      <b-form-textarea id="address-input" v-model="selected.address" @blur="saveSelected()"></b-form-textarea>
-    </b-form-group>
+    <div v-if="selected">
+      <b-form-group id="name-group" label="Name" label-for="name-input">
+        <b-form-input type="text" id="name-input" v-model="selected.name" @blur="saveSelected()"></b-form-input>
+      </b-form-group>
+      <b-form-group id="address-group" label="Address" label-for="address-input">
+        <b-form-textarea id="address-input" v-model="selected.address" @blur="saveSelected()"></b-form-textarea>
+      </b-form-group>
+    </div>
   </div>
 </template>
 
 <script>
 import { modelMixinNoProp } from '@/mixins';
 import ModelField from '@/components/model-field';
-// import { SELECTED } from '@/store/model.store';
-// import toastMixin from '@/mixins/toast-mixin';
-// import settingsMixin from "@/store/settings.mixin";
-// import { VENUES_ADD_VENUE_SUCCESS } from '@/constants/strings';
 
 export default {
   name: "VenueEditor",
@@ -29,7 +26,7 @@ export default {
   data: () => ({ model: "venue" }),
   methods: {
     back() {
-      this.$router.push('/venues')
+      this.$router.push('/venues/venues')
     },
   },
   mounted() {

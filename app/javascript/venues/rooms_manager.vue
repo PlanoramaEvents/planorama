@@ -1,22 +1,22 @@
 <template>
   <div>
     <div class="pb-4">
-      <RoomsTable
-          defaultFilter=''
-          ref="rooms-table"
-      ></RoomsTable>
-      <rooms-sidebar></rooms-sidebar>
+      <rooms-table
+        defaultFilter=''
+        ref="rooms-table"
+      ></rooms-table>
     </div>
+    <rooms-sidebar></rooms-sidebar>
   </div>
 </template>
 
 
 <script>
-import RoomsTable from "./rooms_table";
-import RoomEditor from "./room_editor";
-import RoomsSidebar from "./rooms_sidebar.vue"
-import modelMixin from '../store/model.mixin'
-import {room_columns as columns} from "./room";
+import RoomsTable from "@/venues/rooms_table";
+import RoomEditor from "@/venues/room_editor";
+import RoomsSidebar from "@/venues/rooms_sidebar.vue"
+import modelMixin from '@/store/model.mixin'
+import {room_columns as columns} from "@/venues/room";
 
 export default {
   name: "RoomsManager",
@@ -28,11 +28,6 @@ export default {
     return {
       columns,
     }
-  },
-  methods: {
-    init() {
-      this.$refs['rooms-table'].init();
-    },
   }
 }
 </script>
