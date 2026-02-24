@@ -12,7 +12,6 @@
       :show-refresh="true"
       :show-clone="true"
       :show-view="true"
-      :showFullTotalCaption="false"
       @view="$emit('view')"
       @clone="$emit('clone')"
       ref="mailings-table"

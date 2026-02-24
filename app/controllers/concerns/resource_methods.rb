@@ -177,6 +177,13 @@ module ResourceMethods
     per_page = params[:perPage]&.to_i || model_class.default_per_page if paginated && do_paginate
     per_page = nil unless paginated && do_paginate
     current_page = params[:current_page]&.to_i || 1 if paginated && do_paginate
+    default_filter = if params[:default_filter]
+                        if params[:default_filter].kind_of? String
+                          JSON.parse(params[:default_filter]) 
+                        else
+                          params[:default_filter]
+                        end
+                      end
     filters = if params[:filter]
                 if params[:filter].kind_of? String
                   JSON.parse(params[:filter]) 
@@ -185,7 +192,7 @@ module ResourceMethods
                 end
               end
 
-    return per_page, current_page, filters
+    return per_page, current_page, filters, default_filter
   end
 
   def order_string(order_by: nil)
@@ -232,7 +239,7 @@ module ResourceMethods
              model_class
            end
 
-    @per_page, @current_page, @filters = collection_params
+    @per_page, @current_page, @filters, @default_filters = collection_params
 
 
     q = if select_fields
@@ -249,9 +256,9 @@ module ResourceMethods
          .references(references)
          .eager_load(eager_load)
          .joins(join_tables)
+         .where(query(@default_filters))
          .where(query(@filters))
          .where(collection_where)
-        #  anpther where?
 
     q = q.distinct if (join_tables && !join_tables.empty?) || make_distinct?
 
