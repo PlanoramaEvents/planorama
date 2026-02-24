@@ -12,7 +12,9 @@ export const modelMixinNoProp = {
       return this.$store.getters[SELECTED]({model: this.model})
     },
     collection() {
-      return Object.values(this.$store.getters['jv/get']({_jv: { type: this.model }}))
+      // NOTE: the filter(el => el.id) is in there because vuex now adds an non-id
+      // object to the collection with the type set ...
+      return Object.values(this.$store.getters['jv/get']({_jv: { type: this.model }})).filter(el => el.id)
     },
     fullTotal() {
       return this.$store.getters[FULL_TOTAL]({model: this.model})
@@ -137,43 +139,4 @@ export const makeSelectedFieldMixin = (field) => ({
   }
 })
 
-/* obsolete
-const mapStateHelper = (mapState) => {
-  let states = mapState;
-  if (Array.isArray(mapState)) {
-    states = mapState.reduce((p, c) => ({...p, [c]: c}), {})
-  }
-  return Object.keys(states).reduce((p, c) => ({...p, [c]: function() {
-    let baseState = this.$store.state;
-    if (this.namespace) {
-      let namespaceBits = this.namespace.split('/');
-      baseState = namespaceBits.reduce((p, c) => p[c], baseState)
-    }
-    return baseState[c];
-  }}), {})
-}
-
-const mapMutationsHelper = (mapMutations) => {
-  let mutations = mapMutations;
-  if (Array.isArray(mapMutations)) {
-    mutations = mapMutations.reduce((p, c) => ({...p, [c]: c}), {})
-  }
-  return Object.keys(mutations).reduce((p, c) => ({...p, [c]: function() {
-    console.log("i get here", "arguments", arguments, "this", this)
-    let mutationName = this.namespace ? `${this.namespace}/${c}` : c;
-    return this.commit(mutationName, ...arguments);
-  }}), {})
-}
-
-const mapActionsHelper = (mapActions) => {
-  let actions = mapActions;
-  if (Array.isArray(mapActions)) {
-    actions = mapActions.reduce((p, c) => ({...p, [c]: c}), {})
-  }
-  return Object.keys(actions).reduce((p, c) => ({...p, [c]: function(...args) {
-    let actionName = this.namespace ? `${this.namespace}/${c}` : c;
-    return this.dispatch(actionName, ...args);
-  }}), {})
-}
-*/
 export default modelMixin;
