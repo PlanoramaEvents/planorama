@@ -177,6 +177,7 @@ class PeopleController < ResourceController
 
       # return the updated people back to the caller
       options = {
+        include: filtered_serializer_includes(fields: fields),
         params: {
           domain: "#{request.base_url}",
           current_person: current_person
