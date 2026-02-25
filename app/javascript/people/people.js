@@ -45,7 +45,8 @@ export const people_columns = [
   },
   {
     key: 'attendance_type',
-    label: 'Attendance Type'
+    label: 'Attendance Type',
+    sortable: true
   },
   {
     key: 'session_count',
