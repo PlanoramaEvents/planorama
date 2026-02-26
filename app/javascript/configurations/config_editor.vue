@@ -142,6 +142,7 @@ export default {
     onChange(arg) {
       this.$refs.configForm.validate().then(
         (result) => {
+          console.debug("***** CHANGE WAS: ", arg)
           if (result) {
             let new_val = arg
             if (this.parameter.parameter_type === 'DateTime') {
@@ -170,7 +171,7 @@ export default {
               )
             } else if (this.parameter.parameter_type === 'JSON') {
               this.configuration.parameter_json = new_val;
-              this.patchConfiguration(this.configuration, ['parameter_value']).then((res) => {
+              this.patchConfiguration(this.configuration, ['parameter_json']).then((res) => {
                 this.configuration = res
                 return;
               })
