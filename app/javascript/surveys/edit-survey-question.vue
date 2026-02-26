@@ -167,16 +167,18 @@
         <b-button variant="info" @click="deleteSelectedQuestion" title="Delete" v-b-tooltip.bottom><b-icon-trash></b-icon-trash></b-button>
       </div>
     </div>
-    <b-modal id='unlink-question-modal' size="lg"
+    <!-- NOTE: it appears that this is not used -->
+    <plano-modal id='unlink-question-modal' size="lg"
              hide-header-close no-close-on-backdrop no-close-on-esc
              title="Really??" @cancel="unlinkQuestion" @ok="restoreOldValues"
              cancel-title="Yes, unlink" ok-title="Leave question type as it was">
       <div>{{QUESTION_MODAL_MESSAGE}}</div>
-    </b-modal>
+    </plano-modal>
   </div>
 </template>
 
 <script>
+import PlanoModal from '@/components/plano_modal.vue';
 import OptionsQuestion from './options-question.vue';
 import PlanoEditor from '@/components/plano_editor';
 import LinkedField from './linked-field';
@@ -196,6 +198,7 @@ export default {
     PlanoEditor,
     LinkedField,
     MandatoryStar,
+    PlanoModal
   },
   data: () => ({
     SURVEY_YESNOMAYBE_PLACEHOLDER,

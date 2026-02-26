@@ -8,6 +8,7 @@ import CreateAccount from './login/create_account.vue';
 import AccountSetup from './login/account_setup.vue'
 import LoginClyde from './login/login_clyde.vue'
 import ErrorScreen from './errors/error_screen.vue'
+import { inject } from 'vue'
 
 const loginRoutes = [
   { path: 'forgot', component: ForgotPassword },
@@ -271,6 +272,7 @@ export const router = new createRouter({
 import { http } from './http';
 
 router.beforeEach((to, from, next) => {
+  const planoApp = inject('PlanoramaApp');
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // GET SESSION USER only fetches if we don't have one :)
     // TODO this might mess up auto-logout we'll see
@@ -313,8 +315,8 @@ router.beforeEach((to, from, next) => {
               query: { redirect: to.fullPath }
             })
           } else {
-            // TODO: upgrade
-            // router.app.$refs.planorama.check_signatures()
+            // TODO: check that this is future proof
+            planoApp._instance.ctx.check_signatures()
             next()
           }
         } else {

@@ -26,10 +26,10 @@
       After page {{i + 1}}
       <next-page-picker :for-page="page.id" :id="pagePickerId" class="ml-1" v-model="page.next_page_id"  @change="updatePage"></next-page-picker>
     </div>
-    <b-modal v-if="isSelected" :id="deleteModalId" @ok="deletePage(page)" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
+    <plano-modal v-if="isSelected" :id="deleteModalId" @ok="deletePage(page)" ok-title="Yes" cancel-variant="link" title="Delete page and questions?">
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_1}}</p>
       <p>{{SURVEY_CONFIRM_DELETE_PAGE_2}}</p>
-    </b-modal>
+    </plano-modal>
   </div>
 </template>
 
@@ -38,6 +38,7 @@ import EditSurveyQuestion from './edit-survey-question.vue';
 import { VueDraggableNext } from 'vue-draggable-next'
 import NextPagePicker from './next-page-picker';
 import { SAVE } from '../store/model.store'
+import PlanoModal from '@/components/plano_modal.vue';
 
 import {
   SURVEY_CONFIRM_DELETE_PAGE_1,
@@ -59,6 +60,7 @@ export default {
     EditSurveyQuestion,
     draggable: VueDraggableNext,
     NextPagePicker,
+    PlanoModal
   },
   mixins: [
     surveyMixin,
