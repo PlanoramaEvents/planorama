@@ -93,12 +93,10 @@ class SessionsController < ResourceController
       areas = row[0].split(",")
       title = row[1]
       description = row[2]
-      # format = row[3]
       goh_notes = row[4]
       interest_open = row[5]
       interest_instructions = row[6]
-      tags = row[7]
-      notes = row[8]
+      notes = row[7]
 
       # Rails.logger.debug("***** ROW #{row}")
       # Rails.logger.debug("***** ROW #{row[4]} - #{row[5]}")
