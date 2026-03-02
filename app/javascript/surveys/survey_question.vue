@@ -30,6 +30,7 @@
             :disabled="!answerable"
             @blur="validateField"
           ></b-form-input>
+          <!-- CRAP -->
           <b-form-radio-group
             :class="{'w-50': answerable}"
             stacked
@@ -382,8 +383,13 @@ export default {
   },
   methods: {
     validateField(ev) {
-      // First set the field without validation
-      this.$refs.questionField.handleChange(ev.target.value, false);
+      // First set the field without
+      // If the question is a radio button then we do not have a ev with the value
+      if ( this.radioButtonResponse ) {
+        this.$refs.questionField.handleChange(this.radioButtonResponse, false);
+      } else {
+        this.$refs.questionField.handleChange(ev.target.value, false);
+      }
       // Then we do the actual validation
       this.$refs.questionField.validate().then(
         (result) => {
