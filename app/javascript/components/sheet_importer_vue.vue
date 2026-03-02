@@ -84,6 +84,7 @@
         this.errorMessage = null
         this.importMessage = null
         this.ignoreFirstLine = false
+        this.$refs.files.value = null
       },
       submitData(event) {
         event.preventDefault()
