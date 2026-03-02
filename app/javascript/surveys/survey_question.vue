@@ -14,7 +14,7 @@
             :class="{'w-50': answerable}"
             v-if="textbox"
             v-model="localResponse.response.text"
-            :state="!(meta.dirty && !meta.valid)"
+            :state="meta.dirty ? meta.valid : null "
             :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
             @blur="validateField"
@@ -25,7 +25,7 @@
             :class="{'w-50': answerable}"
             v-if="textfield"
             v-model="localResponse.response.text"
-            :state="!(meta.dirty && !meta.valid)"
+            :state="meta.dirty ? meta.valid : null "
             :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
             @blur="validateField"
@@ -37,12 +37,12 @@
             v-if="yesnomaybe"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="!(meta.dirty && !meta.valid)"
+            :state="meta.dirty ? meta.valid : null "
             @change="validateField"
           >
-            <b-form-radio :disabled="!answerable" :value="yesLabel.value" :state="!(meta.dirty && !meta.valid)">{{yesLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="noLabel.value" :state="!(meta.dirty && !meta.valid)">{{noLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="maybeLabel.value" :state="!(meta.dirty && !meta.valid)">{{maybeLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="yesLabel.value" :state="meta.dirty ? meta.valid : null">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="noLabel.value" :state="meta.dirty ? meta.valid : null">{{noLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="maybeLabel.value" :state="meta.dirty ? meta.valid : null">{{maybeLabel.label}}</b-form-radio>
             <div class="ml-4 mt-1 mb-3">
               <b-form-textarea
                 :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
@@ -59,11 +59,11 @@
             v-if="boolean"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="!(meta.dirty && !meta.valid)"
+            :state="meta.dirty ? meta.valid : null"
             @change="validateField"
           >
-            <b-form-radio :disabled="!answerable" :value="bYesLabel.value" :state="!(meta.dirty && !meta.valid)">{{bYesLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="bNoLabel.value" :state="!(meta.dirty && !meta.valid)">{{bNoLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="bYesLabel.value" :state="meta.dirty ? meta.valid : null">{{bYesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="bNoLabel.value" :state="meta.dirty ? meta.valid : null">{{bNoLabel.label}}</b-form-radio>
           </b-form-radio-group>
           <b-form-radio-group
             :class="{'w-50': answerable}"
@@ -74,9 +74,9 @@
             :state="!(meta.dirty && !meta.valid)"
             @change="validateField"
           >
-            <b-form-radio :disabled="!answerable" :value="inPersonLabel.value" :state="!(meta.dirty && !meta.valid)">{{inPersonLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="virtualLabel.value" :state="!(meta.dirty && !meta.valid)">{{virtualLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="hybridLabel.value" :state="!(meta.dirty && !meta.valid)">{{hybridLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="inPersonLabel.value" :state="meta.dirty ? meta.valid : null">{{inPersonLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="virtualLabel.value" :state="meta.dirty ? meta.valid : null">{{virtualLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="hybridLabel.value" :state="meta.dirty ? meta.valid : null">{{hybridLabel.label}}</b-form-radio>
           </b-form-radio-group>
           <b-form-radio-group
             :class="{'w-50': answerable}"
@@ -84,7 +84,7 @@
             v-if="singlechoice"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="!(meta.dirty && !meta.valid)"
+            :state="meta.dirty ? meta.valid : null"
             @change="validateField"
           >
             <b-form-radio
@@ -92,7 +92,7 @@
               :key="choice.id"
               :value="choiceValue(choice)"
               :disabled="!answerable"
-              :state="!(meta.dirty && !meta.valid)"
+              :state="meta.dirty ? meta.valid : null"
               @input="changeNextPage($event, choice)"
             ><span v-html="choice.answer"></span></b-form-radio>
             <b-form-radio
@@ -101,7 +101,7 @@
               :value="choiceValue(otherFromQuestion)"
               v-model="otherChecked"
               :disabled="!answerable"
-              :state="!(meta.dirty && !meta.valid)"
+              :state="meta.dirty ? meta.valid : null"
               @input="changeNextPage($event, otherFromQuestion)"
             >
               <b-form-group
@@ -126,21 +126,21 @@
             v-if="multiplechoice"
             v-model="localResponse.response.answers"
             :aria-describedBy="ariaDescribedBy"
-            :state="!(meta.dirty && !meta.valid)"
+            :state="meta.dirty ? meta.valid : null"
             @change="validateField"
           >
            <b-form-checkbox
               v-for="choice in choices.filter(a => !a.other)"
               :key="choice.id"
               :value="choiceValue(choice)"
-              :state="!(meta.dirty && !meta.valid)"
+              :state="meta.dirty ? meta.valid : null"
               :disabled="!answerable"
             ><span v-html="choice.answer"></span></b-form-checkbox>
             <b-form-checkbox
               class="mt-2"
               v-if="otherFromQuestion"
               :value="choiceValue(otherFromQuestion)"
-              :state="!(meta.dirty && !meta.valid)"
+              :state="meta.dirty ? meta.valid : null"
               :disabled="!answerable"
               v-model="otherChecked"
             >
@@ -165,7 +165,7 @@
             v-if="dropdown"
             v-model="localResponse.response.text"
             :aria-describedby="ariaDescribedBy"
-            :state="!(meta.dirty && !meta.valid)"
+            :state="meta.dirty ? meta.valid : null"
             @change="validateField"
           >
             <b-form-select-option
