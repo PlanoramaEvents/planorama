@@ -14,7 +14,7 @@
             :class="{'w-50': answerable}"
             v-if="textbox"
             v-model="localResponse.response.text"
-            :state="meta.dirty ? meta.valid : null "
+            :state="calcValid(meta)"
             :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
             @blur="validateField"
@@ -25,24 +25,23 @@
             :class="{'w-50': answerable}"
             v-if="textfield"
             v-model="localResponse.response.text"
-            :state="meta.dirty ? meta.valid : null "
+            :state="calcValid(meta)"
             :aria-describedBy="ariaDescribedBy"
             :disabled="!answerable"
             @blur="validateField"
           ></b-form-input>
-          <!-- CRAP -->
           <b-form-radio-group
             :class="{'w-50': answerable}"
             stacked
             v-if="yesnomaybe"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="meta.dirty ? meta.valid : null "
+            :state="calcValid(meta)"
             @change="validateField"
           >
-            <b-form-radio :disabled="!answerable" :value="yesLabel.value" :state="meta.dirty ? meta.valid : null">{{yesLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="noLabel.value" :state="meta.dirty ? meta.valid : null">{{noLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="maybeLabel.value" :state="meta.dirty ? meta.valid : null">{{maybeLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="yesLabel.value" :state="calcValid(meta)">{{yesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="noLabel.value" :state="calcValid(meta)">{{noLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="maybeLabel.value" :state="calcValid(meta)">{{maybeLabel.label}}</b-form-radio>
             <div class="ml-4 mt-1 mb-3">
               <b-form-textarea
                 :placeholder="SURVEY_YESNOMAYBE_PLACEHOLDER"
@@ -59,11 +58,11 @@
             v-if="boolean"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="meta.dirty ? meta.valid : null"
+            :state="calcValid(meta)"
             @change="validateField"
           >
-            <b-form-radio :disabled="!answerable" :value="bYesLabel.value" :state="meta.dirty ? meta.valid : null">{{bYesLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="bNoLabel.value" :state="meta.dirty ? meta.valid : null">{{bNoLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="bYesLabel.value" :state="calcValid(meta)">{{bYesLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="bNoLabel.value" :state="calcValid(meta)">{{bNoLabel.label}}</b-form-radio>
           </b-form-radio-group>
           <b-form-radio-group
             :class="{'w-50': answerable}"
@@ -74,9 +73,9 @@
             :state="!(meta.dirty && !meta.valid)"
             @change="validateField"
           >
-            <b-form-radio :disabled="!answerable" :value="inPersonLabel.value" :state="meta.dirty ? meta.valid : null">{{inPersonLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="virtualLabel.value" :state="meta.dirty ? meta.valid : null">{{virtualLabel.label}}</b-form-radio>
-            <b-form-radio :disabled="!answerable" :value="hybridLabel.value" :state="meta.dirty ? meta.valid : null">{{hybridLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="inPersonLabel.value" :state="calcValid(meta)">{{inPersonLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="virtualLabel.value" :state="calcValid(meta)">{{virtualLabel.label}}</b-form-radio>
+            <b-form-radio :disabled="!answerable" :value="hybridLabel.value" :state="calcValid(meta)">{{hybridLabel.label}}</b-form-radio>
           </b-form-radio-group>
           <b-form-radio-group
             :class="{'w-50': answerable}"
@@ -84,7 +83,7 @@
             v-if="singlechoice"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="meta.dirty ? meta.valid : null"
+            :state="calcValid(meta)"
             @change="validateField"
           >
             <b-form-radio
@@ -92,7 +91,7 @@
               :key="choice.id"
               :value="choiceValue(choice)"
               :disabled="!answerable"
-              :state="meta.dirty ? meta.valid : null"
+              :state="calcValid(meta)"
               @input="changeNextPage($event, choice)"
             ><span v-html="choice.answer"></span></b-form-radio>
             <b-form-radio
@@ -101,7 +100,7 @@
               :value="choiceValue(otherFromQuestion)"
               v-model="otherChecked"
               :disabled="!answerable"
-              :state="meta.dirty ? meta.valid : null"
+              :state="calcValid(meta)"
               @input="changeNextPage($event, otherFromQuestion)"
             >
               <b-form-group
@@ -126,21 +125,21 @@
             v-if="multiplechoice"
             v-model="localResponse.response.answers"
             :aria-describedBy="ariaDescribedBy"
-            :state="meta.dirty ? meta.valid : null"
+            :state="calcValid(meta)"
             @change="validateField"
           >
            <b-form-checkbox
               v-for="choice in choices.filter(a => !a.other)"
               :key="choice.id"
               :value="choiceValue(choice)"
-              :state="meta.dirty ? meta.valid : null"
+              :state="calcValid(meta)"
               :disabled="!answerable"
             ><span v-html="choice.answer"></span></b-form-checkbox>
             <b-form-checkbox
               class="mt-2"
               v-if="otherFromQuestion"
               :value="choiceValue(otherFromQuestion)"
-              :state="meta.dirty ? meta.valid : null"
+              :state="calcValid(meta)"
               :disabled="!answerable"
               v-model="otherChecked"
             >
@@ -165,7 +164,7 @@
             v-if="dropdown"
             v-model="localResponse.response.text"
             :aria-describedby="ariaDescribedBy"
-            :state="meta.dirty ? meta.valid : null"
+            :state="calcValid(meta)"
             @change="validateField"
           >
             <b-form-select-option
@@ -382,6 +381,15 @@ export default {
     },
   },
   methods: {
+    calcValid(meta) {
+      console.debug("---> no rules? ", this.rules)
+      if (this.rules == '') {
+        return null
+      }
+
+      let v = meta.dirty ? meta.valid : null
+      return v;
+    },
     validateField(ev) {
       // First set the field without
       // If the question is a radio button then we do not have a ev with the value
