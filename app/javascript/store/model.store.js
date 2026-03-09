@@ -111,6 +111,8 @@ import { personScheduleApprovalStore, personScheduleApprovalEndpoints } from './
 // publication dates
 import { publicationDatesEndpoints, publicationDatesStore } from './publication_dates.store';
 
+import {merge} from "lodash";
+
 const endpoints = {
   ...personEndpoints,
   ...agreementEndpoints,
@@ -315,7 +317,7 @@ export const store = new Vuex.Store({
       const path = `/${model}/update_all`
       const apiConf = { method: 'post', url: path }
       config['data'] = {ids: ids, attrs: attrs}
-      _.merge(apiConf, config)
+      merge(apiConf, config)
 
       // Variation of what the jsonapi-vuex does
       return http(
