@@ -12,10 +12,12 @@ module ResourceMethods
     authorize model_class, policy_class: policy_class
 
     meta = {}
-    meta[:total] = @collection_total if paginated
-    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total if paginated
+    meta[:total] = @collection_total #if paginated
+    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total #if paginated
     meta[:current_page] = @current_page if @current_page.present? && paginated
     meta[:perPage] = @per_page if @per_page.present? && paginated
+    meta[:current_page] = 1 if !paginated
+    meta[:perPage] = @collection_total if !paginated
     format = params[:format]
 
     if format == 'xls' || format == 'xlsx'
