@@ -1,6 +1,6 @@
 # Worldcon Programme Planning System
-![Production version](https://img.shields.io/github/v/release/ChicagoWorldcon/planorama?label=production)
-![Staging version](https://img.shields.io/github/v/release/ChicagoWorldcon/planorama?include_prereleases&label=staging)
+![Production version](https://img.shields.io/github/v/release/PlanoramaEvents/planorama?label=production)
+![Staging version](https://img.shields.io/github/v/release/PlanoramaEvents/planorama?include_prereleases&label=staging)
 
 # Getting Started
 
