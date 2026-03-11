@@ -127,7 +127,7 @@ export default {
     }),
     submit() {
       if (this.nextPageId !== -1 && !this.lastPage) {
-        this.$router.push(this.next_page);
+        this.next();
       } else {
         console.log("attempting to submit", this.selectedSubmission);
         if(!this.submit_disabled) {
