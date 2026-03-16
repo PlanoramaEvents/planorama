@@ -393,8 +393,8 @@ export default {
     validateField(ev) {
       // First set the field without
       // If the question is a radio button then we do not have a ev with the value
-      if ( this.radioButtonResponse ) {
-        this.$refs.questionField.handleChange(this.radioButtonResponse, false);
+      if ( typeof ev.target === 'undefined') {
+        this.$refs.questionField.handleChange(ev, false);
       } else {
         this.$refs.questionField.handleChange(ev.target.value, false);
       }
