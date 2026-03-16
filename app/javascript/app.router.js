@@ -79,7 +79,7 @@ const surveyRoutes = [
   // Need to the :preview to indicate it is optional as we can then match
   // :surveyId/page/:id and :surveyId/page/:id/:preview
   { path: ':surveyId/page/:id/:preview?', component: SurveyPage, props: true, name: 'survey_page'},
-  { path: ':id/thankyou?', component: SurveyThankYou, props: true},
+  { path: ':id/thankyou', component: SurveyThankYou, props: true},
   { path: ':id/:preview?', component: TakeSurvey, props: true },
   { path: '', component: SurveyList },
 ]
