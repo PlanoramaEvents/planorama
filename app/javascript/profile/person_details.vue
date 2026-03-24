@@ -127,7 +127,7 @@
               <b-form-radio :value="maybeLabel.value">{{maybeLabel.label}}</b-form-radio>
             </b-form-radio-group>
           </Field>
-          <Field>
+          <Field name="Can Stream Exceptions">
             <b-textarea v-model="fields.can_stream_exceptions"></b-textarea>
           </Field>
         </b-form-group>
