@@ -12,7 +12,7 @@
         <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"></linked-field-icon>{{SURVEY_LINKED_FIELD2}}</b-alert>
         <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
         <v-form as="div" ref="surveyForm" v-slot="{handleSubmit}">
-          <form @submit.prevent="handleSubmit(submit)">
+          <form @submit.prevent="handleSubmit($event, submit)">
             <b-alert show variant="danger" v-if="failed">
               <!-- aka SCROLL UP ASSHAT -->
               <b-icon-exclamation-triangle></b-icon-exclamation-triangle> You must correct all errors on the page to proceed.
@@ -127,7 +127,6 @@ export default {
     }),
     submit() {
       if (this.nextPageId !== -1 && !this.lastPage) {
-        // this.$router.push(this.next_page);
         this.next();
       } else {
         console.log("attempting to submit", this.selectedSubmission);
