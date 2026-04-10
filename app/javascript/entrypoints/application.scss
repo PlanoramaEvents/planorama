@@ -3,3 +3,33 @@
 
 @import 'bootstrap/scss/bootstrap.scss';
 @import 'bootstrap-vue/dist/bootstrap-vue.css';
+
+.custom-control-input.is-invalid:focus ~ .custom-control-label::before,
+.custom-control-input.is-valid:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.075);
+}
+
+.custom-control-input.is-valid:focus:not(:checked) ~ .custom-control-label::before,
+.custom-control-input.is-invalid:focus:not(:checked) ~ .custom-control-label::before,
+.custom-control-input.is-valid ~ .custom-control-label::before {
+  border-color: rgba(60,60,60,0.26);
+}
+// box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #8a92df;
+
+.custom-control-input.is-invalid ~ .custom-control-label,
+.custom-control-input.is-valid ~ .custom-control-label {
+  color: #212529;
+}
+
+.custom-control-input.is-invalid ~ .custom-control-label::before,
+.custom-control-input.is-valid ~ .custom-control-label::before {
+  border-color: rgba(60,60,60,0.26);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #8a92df;
+}
+
+.was-validated .custom-control-input:valid:checked ~ .custom-control-label::before,
+.custom-control-input.is-invalid:checked ~ .custom-control-label::before,
+.custom-control-input.is-valid:checked ~ .custom-control-label::before {
+  border-color: rgba(60,60,60,0.26);
+  background-color: #646eca;
+}
