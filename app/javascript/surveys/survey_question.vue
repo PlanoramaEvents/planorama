@@ -70,7 +70,7 @@
             v-if="attendance_type"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
-            :state="!(meta.dirty && !meta.valid)"
+            :state="calcValid(meta)"
             @change="validateField"
           >
             <b-form-radio :disabled="!answerable" :value="inPersonLabel.value" :state="calcValid(meta)">{{inPersonLabel.label}}</b-form-radio>
@@ -179,14 +179,15 @@
           </error-message>
         </v-field>
         <email-field-veevalidate
+          ref="questionField"
           :answerable="answerable"
           v-if="email"
           label-sr-only
           v-model="localResponse.response.text"
           :disabled="!answerable"
           :aria-describedBy="ariaDescribedBy"
-          :required="question.mandatory"
-          @blur="saveResponse(localResponse, selectedSubmission)"
+          :mandatory="question.mandatory"
+          @change="saveResponse(localResponse, selectedSubmission)"
         ></email-field-veevalidate>
       </template>
     </b-form-group>
@@ -381,8 +382,14 @@ export default {
     },
   },
   methods: {
+    doValidate() {
+      if (typeof this.$refs['questionField'] != 'undefined') {
+        return this.$refs['questionField'].validate();
+      } else {
+        return null
+      }
+    },
     calcValid(meta) {
-      console.debug("---> no rules? ", this.rules)
       if (this.rules == '') {
         return null
       }

@@ -52,7 +52,6 @@ defineRule('min_value', min_value);
 
 // We need required to allow false as a valid value
 defineRule('required', value => {
-  console.debug("*** TST REQ: ", value)
   if (typeof value == "boolean") {
     return true
   }
