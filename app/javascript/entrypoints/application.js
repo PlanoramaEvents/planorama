@@ -49,7 +49,20 @@ defineRule('numeric', numeric);
 defineRule('digits', digits);
 defineRule('integer', integer);
 defineRule('min_value', min_value);
-defineRule('required', required);
+
+// We need required to allow false as a valid value
+defineRule('required', value => {
+  if (typeof value == "boolean") {
+    return true
+  }
+
+  if (!value || !value.length) {
+    return false
+    // return 'This field is required';
+  }
+
+  return true;
+});
 
 // NOTE: this is needed while the app is using vue compat for vue2 components
 // the draggable component needs the vue3 rendering ...

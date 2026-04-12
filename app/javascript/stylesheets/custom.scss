@@ -39,26 +39,3 @@ $color-primary-disabled: rgba(100, 110, 202, 0.5);
    font-size: 14px;
    line-height: 1.428;
 }
-
-
-// Reset the Bootstrap form controls coloring
-.form-control.is-valid, 
-.custom-select.is-valid, 
-.form-control.is-valid:focus,
-.custom-select.is-valid:focus {
-  border-color: rgb(206, 212, 218);
-  background-image: none !important;
-  padding-right: 0.75rem !important;
-}
-
-// Change the shadow to use the primary 2 color
-// like the rest of the controls
-.form-control.is-valid:focus,
-.custom-select.is-valid:focus {
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #8a92df;
-}
-
-.custom-checkbox .custom-control-input.is_valid ~ .custom-control-label::before {
-  background-color: transparent !important;
-  border-color: #ced4da !important;
-}
