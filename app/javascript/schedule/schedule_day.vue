@@ -55,12 +55,12 @@
 <script>
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-import dateTimeMixin from '../components/date_time.mixin'
+import dateTimeMixin from '@/components/date_time.mixin'
 import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
 import tableMixin from '../store/table.mixin';
 
-const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 
 export default {
   name: "ScheduleDay",

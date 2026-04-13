@@ -8,7 +8,7 @@ export async function validateFields(...fields) {
 }
 
 import Vue from 'vue';
-import RenderString from '../components/render_string.vue'
+import RenderString from '@/components/render_string.vue'
 export function renderString(template, data) {
     const ComponentClass = Vue.extend(RenderString);
     const instance = new ComponentClass({
@@ -31,7 +31,7 @@ export function query_to_rules(query) {
           computed_rules['queries'].push(
             [
               child.query.rule,
-              child.query.operator ? child.query.operator : '=',
+              child.query.selectedOperator ? child.query.selectedOperator : '=',
               child.query.value
             ]
           )

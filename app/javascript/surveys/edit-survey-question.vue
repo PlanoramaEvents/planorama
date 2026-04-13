@@ -177,7 +177,6 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
 import OptionsQuestion from './options-question.vue';
 import PlanoEditor from '@/components/plano_editor';
 import LinkedField from './linked-field';
@@ -186,14 +185,13 @@ import {
   surveyMixin,
   pageMixin,
   questionMixin
-} from '@mixins';
+} from '@/mixins';
 import { LINKED_FIELD_LABELS, SURVEY_YESNOMAYBE_PLACEHOLDER, QUESTION_MODAL_MESSAGE } from '@/constants/strings';
 
 
 export default {
   name: "EditSurveyQuestion",
   components: {
-    draggable,
     OptionsQuestion,
     PlanoEditor,
     LinkedField,

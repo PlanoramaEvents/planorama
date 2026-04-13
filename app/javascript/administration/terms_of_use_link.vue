@@ -12,7 +12,7 @@ export default {
     ],
     computed: {
         termsOfUseLink() {
-            return this.configByName('terms_of_use_link') || "https://chicagoworldcon.github.io/planorama/tandc"; 
+            return this.configByName('terms_of_use_link') || "https://planoramaevents.github.io/planorama/tandc"; 
         }
     }
 }

@@ -99,11 +99,11 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue';
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TableVue from '@/components/table_vue';
+import TooltipOverflow from '@/components/tooltip-overflow';
 import { session_columns as columns } from './session';
 import { NEW_SESSION, sessionModel as model } from '@/store/session.store'
-import dateTimeMixin from '../components/date_time.mixin'
+import dateTimeMixin from '@/components/date_time.mixin'
 import { areaMixin, sessionStatusMixin } from './session_fields.mixin';
 import PlanoModal from '@/components/plano_modal.vue';
 import { mapActions } from 'vuex';

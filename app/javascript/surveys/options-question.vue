@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
+import { VueDraggableNext } from 'vue-draggable-next'
 
 import {
   surveyMixin,
@@ -60,7 +60,7 @@ import {
   questionMixin,
   answerMixin,
   toastMixin
-} from '@mixins';
+} from '@/mixins';
 import DropdownItem from './dropdown-item';
 import NextPagePicker from './next-page-picker.vue';
 import { answerModel, questionModel } from '@/store/survey'
@@ -88,7 +88,7 @@ export default {
     toastMixin
   ],
   components: {
-    draggable,
+    draggable: VueDraggableNext,
     DropdownItem,
     NextPagePicker,
     PlanoEditor

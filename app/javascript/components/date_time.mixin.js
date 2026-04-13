@@ -1,6 +1,6 @@
 import { conventionTimezoneMixin } from "@/mixins";
 
-const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 
 export const dateTimeMixin = {
   mixins: [

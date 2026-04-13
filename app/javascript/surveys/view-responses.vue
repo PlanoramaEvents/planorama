@@ -38,8 +38,8 @@ import {
   surveyMixin,
   submissionMixin,
 } from '@/mixins';
-import TableVue from '../components/table_vue';
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TableVue from '@/components/table_vue';
+import TooltipOverflow from '@/components/tooltip-overflow';
 import {http as axios} from '../http';
 import pageMixin from './page.mixin';
 import { spinnerMixin } from '@/store/spinner.mixin';

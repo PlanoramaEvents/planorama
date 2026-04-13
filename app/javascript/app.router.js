@@ -76,11 +76,11 @@ import SurveyThankYou from './surveys/survey-thank-you.vue';
 const surveyRoutes = [
   { path: 'edit/:id/:responses', component: ManageSurvey, props: true, name: 'survey_responses'},
   { path: 'edit/:id', component: ManageSurvey, props: true },
-  { path: ':surveyId/page/:id/:preview', component: SurveyPage, props: true, name: 'survey_page'},
-  { path: ':surveyId/page/:id', component: SurveyPage, props: true, name: 'survey_page'},
+  // Need to the :preview to indicate it is optional as we can then match
+  // :surveyId/page/:id and :surveyId/page/:id/:preview
+  { path: ':surveyId/page/:id/:preview?', component: SurveyPage, props: true, name: 'survey_page'},
   { path: ':id/thankyou', component: SurveyThankYou, props: true},
-  { path: ':id/:preview', component: TakeSurvey, props: true },
-  { path: ':id', component: TakeSurvey, props: true},
+  { path: ':id/:preview?', component: TakeSurvey, props: true },
   { path: '', component: SurveyList },
 ]
 
@@ -103,13 +103,18 @@ import VenueManager from './venues/venue_manager.vue';
 
 // main
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+// import VueRouter from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router'
+// for locale
+// RouterView
+import { store } from '@/store/model.store';
 import { GET_SESSION_USER, SET_SESSION_USER } from './store/person_session.store';
-Vue.use(VueRouter);
+// Vue.use(VueRouter);
 // var ua='', signed_agreements={}, doing_agreements=false;
 var con_roles=[], isAdmin=false, hasPowers=false;
 
-export const router = new VueRouter({
+export const router = new createRouter({
+  history: createWebHashHistory(), //(process.env.BASE_URL),
   scrollBehavior(to) {
     // console.log(to)
     if (to.hash) {
@@ -269,7 +274,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // GET SESSION USER only fetches if we don't have one :)
     // TODO this might mess up auto-logout we'll see
-    router.app.$store.dispatch(GET_SESSION_USER).then((session) => {
+    store.dispatch(GET_SESSION_USER).then((session) => {
       if (!session.id) {
         next({
           path: '/login',
@@ -280,7 +285,7 @@ router.beforeEach((to, from, next) => {
           body.append("_method", "delete")
           // const headers = {'Authorization': jwtToken()}
           http.post('/auth/sign_out', body).then(() => {
-            router.app.$store.commit(SET_SESSION_USER, {});
+            store.commit(SET_SESSION_USER, {});
             next({
               path: '/login',
               query: {redirect: to.fullPath, alert: "no_role"}
@@ -308,7 +313,8 @@ router.beforeEach((to, from, next) => {
               query: { redirect: to.fullPath }
             })
           } else {
-            router.app.$refs.planorama.check_signatures()
+            // TODO: upgrade
+            // router.app.$refs.planorama.check_signatures()
             next()
           }
         } else {

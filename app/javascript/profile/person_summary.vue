@@ -21,11 +21,6 @@
       <person-edit-modal id="person-top-modal" body-class="formscroll" :person="selected" :data="editData" :validate="true">
         <template #modal-title>Edit Profile - {{selected.published_name}}</template>
         <template #default="{fields}">
-          <validation-provider
-            name="Name"
-            rules="required"
-            v-slot="{errors, dirty, validated, valid}"
-          >
           <b-form-group label="Name">
             <b-form-input 
               type="text" 
@@ -34,31 +29,23 @@
               :state="dirty || validated ? valid ? null : false : null"
               required
             ></b-form-input>
-            <b-form-invalid-feedback id="name-invalid-feedback">{{errors[0]}}</b-form-invalid-feedback>
           </b-form-group>
-          </validation-provider>
-          <validation-provider name="Pseudonym">
-            <b-form-group label="Pseudonym">
-              <b-form-input type="text" v-model="fields.pseudonym"></b-form-input>
-            </b-form-group>
-          </validation-provider>
-          <validation-provider name="Pronouns">
-            <b-form-group label="Pronouns">
-              <b-form-input type="text" v-model="fields.pronouns"></b-form-input>
-            </b-form-group>
-          </validation-provider>
-          <validation-provider name="Willing to moderate">
-            <b-form-group>
-              <b-form-checkbox switch v-model="fields.willing_to_moderate">Willing to moderate session</b-form-checkbox>
-            </b-form-group>
-          </validation-provider>
+          <b-form-group label="Pseudonym">
+            <b-form-input type="text" v-model="fields.pseudonym"></b-form-input>
+          </b-form-group>
+          <b-form-group label="Pronouns">
+            <b-form-input type="text" v-model="fields.pronouns"></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-checkbox switch v-model="fields.willing_to_moderate">Willing to moderate session</b-form-checkbox>
+          </b-form-group>
         </template>
       </person-edit-modal>
     </div>
 </template>
 
 <script>
-const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 import EditButton from '@/components/edit_button';
 import PersonEditModal from './person_edit_modal';
 import { modelMixinNoProp } from '@/store/model.mixin';
@@ -66,7 +53,6 @@ import { personEndpoints, personModel } from '@/store/person.store';
 import {PERSON_NEVER_LOGGED_IN} from "@/constants/strings";
 import { toastMixin, personSessionMixin } from '@/mixins';
 import { airmeetMixin } from '@/integrations/airmeet.mixin';
-import {ValidationProvider} from 'vee-validate';
 import LoginIntegrations from "@/login/login_integrations.vue";
 
 export default {
@@ -80,7 +66,6 @@ export default {
   components: {
     EditButton,
     PersonEditModal,
-    ValidationProvider,
     LoginIntegrations
   },
   data: () => ({

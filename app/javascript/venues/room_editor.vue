@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import toastMixin from '../shared/toast-mixin';
+import toastMixin from '@/mixins/toast-mixin';
 import settingsMixin from "@/store/settings.mixin";
 import { ADMIN_ADD_ROOM_SUCCESS } from '@/constants/strings';
-import ModelField from '../shared/model-field';
-import PlanoEditor from '../components/plano_editor';
+import ModelField from '@/components/model-field';
+import PlanoEditor from '@/components/plano_editor';
 
 import { mapActions } from 'vuex';
 import { NEW_ROOM } from '@/store/room.store';

@@ -17,7 +17,7 @@
 import RoomSetsTable from "./room_sets_table";
 import RoomSetEditor from "./room_set_editor";
 import modelMixin from '../store/model.mixin'
-import {room_set_columns as columns} from "./room_set.js";
+import {room_set_columns as columns} from "./room_set";
 
 export default {
   name: "RoomSetsManager",

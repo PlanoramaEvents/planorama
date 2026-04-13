@@ -58,11 +58,11 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../store/model.store';
+import { DELETE, UNSELECT } from '../store/model.store';
 import SurveyQuestion from './survey_question';
 import surveyMixin from './survey.mixin';
 import SurveySettingsTab from './survey-settings-tab';
-import SidebarVue from '../components/sidebar_vue';
+import SidebarVue from '@/components/sidebar_vue';
 import IconButton from '@/components/icon_button.vue';
 import {
   SURVEY_RESULTS_CLEAR_CONFIRM,

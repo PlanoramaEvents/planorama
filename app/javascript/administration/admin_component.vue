@@ -65,11 +65,11 @@
 
 <script>
 import AdminAccordion from './admin_accordion.vue'
-import PersonAdd from '../people/person_add.vue';
+import PersonAdd from '@/people/person_add.vue';
 import ChangeUserConventionRoles from './change-user-con-roles.vue';
-import MailingsManager from '../mailings/mailings_manager.vue';
-import ConfigurationsManager from '../configurations/configurations_manager.vue';
-import SheetImporterVue from '../components/sheet_importer_vue.vue';
+import MailingsManager from '@/mailings/mailings_manager.vue';
+import ConfigurationsManager from '@/configurations/configurations_manager.vue';
+import SheetImporterVue from "@/components/sheet_importer_vue.vue";
 import AgreementManager from "@/agreements/agreement_manager.vue";
 import ScheduleSettings from "@/schedule/schedule_settings.vue";
 import IntegrationSettings from "@/integrations/integration_settings.vue"

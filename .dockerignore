@@ -1,5 +1,5 @@
 .git*
-.envrc
+.env
 .DS_Store
 .storybook
 db/*.sqlite3

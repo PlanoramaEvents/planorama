@@ -58,7 +58,7 @@
 
 <script>
 import {http as axios} from '../http';
-import ComboBox from '../components/combo_box';
+import ComboBox from '@/components/combo_box';
 import modelMixin from '../store/model.mixin';
 import MailingsTable from './mailings_table.vue';
 import MailingEditor from './mailing_editor.vue'

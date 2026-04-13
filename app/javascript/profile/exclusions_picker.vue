@@ -29,9 +29,9 @@ export default {
     personSessionMixin,
     personExclusionMixin
   ],
-  model: {
-    prop: 'person'
-  },
+  // model: {
+  //   prop: 'person'
+  // },
   props: {
     person: {
       type: Object,

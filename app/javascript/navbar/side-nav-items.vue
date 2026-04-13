@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import personSessionMixin from "../auth/person_session.mixin.js";
+import personSessionMixin from "../auth/person_session.mixin";
 
 export default {
   name: "SideNavItems",

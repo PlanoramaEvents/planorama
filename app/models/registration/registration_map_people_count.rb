@@ -7,7 +7,7 @@
 #
 class Registration::RegistrationMapPeopleCount < ApplicationRecord
   self.table_name = :registration_map_people_counts
-  self.primary_keys = :pid
+  self.primary_key = :pid
 
   belongs_to :person, foreign_key: 'pid'
 end

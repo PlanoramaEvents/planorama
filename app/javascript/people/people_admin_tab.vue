@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import personSessionMixin from '../auth/person_session.mixin.js';
+import personSessionMixin from '../auth/person_session.mixin';
 import { makeSelectedFieldMixin } from "@/mixins";
 import { modelMixinNoProp } from "@/store/model.mixin";
 import {

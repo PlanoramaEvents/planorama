@@ -59,7 +59,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 // import { FETCH_IEA, SIGN_IEA, GET_IEA_UNSIGNED } from '../administration/agreement.store'
-import toastMixin from '../shared/toast-mixin'
+import toastMixin from '@/mixins/toast-mixin'
 export default {
   name: "IeaModal",
   computed: {

@@ -38,8 +38,9 @@
 </template>
 
 <script>
-import VueRouter from 'vue-router';
-const { isNavigationFailure, NavigationFailureType } = VueRouter;
+// import VueRouter from 'vue-router';
+// const { isNavigationFailure, NavigationFailureType } = VueRouter;
+import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 import { sessionModel } from '@/store/session.store'
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import modelUtilsMixin from '@/store/model_utils.mixin';
