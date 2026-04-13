@@ -35,6 +35,11 @@ class Survey::Response < ApplicationRecord
 
   attr_accessor :check_update_linked
 
+  def response_sanitized_text
+    candidate = Nokogiri::HTML.parse response_as_text
+    candidate.text
+  end
+
   #
   # Deal with linked_field from question
   #
