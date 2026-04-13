@@ -45,7 +45,6 @@ import {
 } from "../constants/strings";
 import settingsMixin from "@/store/settings.mixin";
 import { Checkbox as CaptchaBox, useRecaptchaProvider } from 'vue-recaptcha/head'
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 export default {
   name: "CreateAccount",
@@ -82,7 +81,7 @@ export default {
       }
     },
     captchaKey: function() {
-      return RECAPTCHA_SITE_KEY
+      return this.currentSettings.recaptcha_site_key
     }
   },
   methods: {

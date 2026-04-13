@@ -18,7 +18,6 @@ import { defineRule } from 'vee-validate';
 import { min, max, min_value, regex, required, numeric, digits, email, integer } from '@vee-validate/rules';
 
 import { VueRecaptchaPlugin } from 'vue-recaptcha/head';
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
