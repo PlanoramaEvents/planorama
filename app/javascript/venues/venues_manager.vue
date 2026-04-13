@@ -1,27 +1,26 @@
 <template>
   <div>
     <div class="pb-4">
-      <VenuesTable
-          defaultFilter=''
-          ref="venues-table"
-      ></VenuesTable>
+      <venues-table
+        defaultFilter=''
+        ref="venues-table"
+      ></venues-table>
     </div>
-    <div class="border p-2 mb-2">
-      <VenueEditor @saved="init" ref="venueEditor"/>
-    </div>
+    <venues-sidebar></venues-sidebar>
   </div>
 </template>
 
 
 <script>
-import VenuesTable from "./venues_table";
-import VenueEditor from "./venue_editor";
-import modelMixin from '../store/model.mixin'
-import {venue_columns as columns} from "./venue";
+import VenuesTable from "@/venues/venues_table";
+import VenueEditor from "@/venues/venue_editor";
+import VenuesSidebar from "@/venues/venues_sidebar.vue";
+import modelMixin from '@/store/model.mixin'
+import {venue_columns as columns} from "@/venues/venue";
 
 export default {
   name: "VenuesManager",
-  components: {VenueEditor, VenuesTable},
+  components: {VenueEditor, VenuesTable, VenuesSidebar},
   mixins: [
     modelMixin,
   ],
@@ -29,18 +28,6 @@ export default {
     return {
       columns,
     }
-  },
-  watch: {
-    "selected" : function(val) {
-      // alert("in venues_manager.selected: val="+JSON.stringify(val));
-      if(val)
-        this.$refs['venueEditor'].setVenueData(val);
-    }
-  },
-  methods: {
-    init() {
-      this.$refs['venues-table'].init();
-    },
   }
 }
 </script>
