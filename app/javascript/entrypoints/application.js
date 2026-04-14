@@ -76,6 +76,9 @@ Vue.use(CKEditor);
 Vue.use(VuePluralize);
 
 const app = createApp(PlanoramaApp);
+// This is done to get a handle on the
+// app from within the router
+app.provide('PlanoramaApp', app)
 
 if (RECAPTCHA_SITE_KEY) {
   app.use(VueRecaptchaPlugin, {

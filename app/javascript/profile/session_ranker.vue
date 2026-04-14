@@ -77,7 +77,7 @@
         </div>
       </div>
 
-     <b-modal
+     <plano-modal
        title="Confirm Not Interested"
        ref="unexpress-interest-modal"
        @hidden="stillInterested"
@@ -86,7 +86,7 @@
        <p class="my-4">
          Confirm that you are no longer interested in that session.
        </p>
-     </b-modal>
+     </plano-modal>
   </div>
 </template>
 
@@ -99,6 +99,7 @@ import sessionAssignmentMixin from '../sessions/session_assignment.mixin';
 import { sessionAssignmentModel } from '@/store/session_assignment.store'
 import SessionAssignmentMonitor from './session_assignment_monitor.vue'
 import {tagsMixin} from '@/store/tags.mixin';
+import PlanoModal from '@/components/plano_modal.vue';
 import { personModel } from '@/store/person.store'
 
 import { SESSION_RANKING_ERROR } from '../constants/strings';
@@ -106,7 +107,8 @@ import { SESSION_RANKING_ERROR } from '../constants/strings';
 export default {
   name: "SessionRanker",
   components: {
-    SessionAssignmentMonitor
+    SessionAssignmentMonitor,
+    PlanoModal
   },
   mixins: [
     personSessionMixin,
