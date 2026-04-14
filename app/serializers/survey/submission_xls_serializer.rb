@@ -17,7 +17,7 @@ class Survey::SubmissionXlsSerializer < ActiveModel::Serializer #< Survey::Submi
   # this is handled by the can_access_response
   has_many :responses do |rec|
     object.responses.collect { |v|
-      {v.question_id => Survey::SubmissionXlsSerializer.can_access_response?(v,rec.current_person) ? v.response_as_text : ''}
+      {v.question_id => Survey::SubmissionXlsSerializer.can_access_response?(v,rec.current_person) ? v.response_clean_text : ''}
     }.reduce({}, :merge)
   end
 
