@@ -27,9 +27,12 @@ module Aggregates
         .join(
           taggings,
           Arel::Nodes::OuterJoin
-        ).on(sessions[id].eq(taggings[:taggable_id]).and(taggings[:taggable_type].eq(taggable_type)))
+        ).on(
+          sessions[id].eq(taggings[:taggable_id])
+          .and(taggings[:taggable_type].eq(taggable_type))
+          .and(taggings[:context].eq('tags'))
+        )
         .join(tags, Arel::Nodes::OuterJoin).on(taggings[:tag_id].eq(tags[:id]))
-        .where(taggings[:context].eq('tags'))
         .group(sessions[id])
     end
 
@@ -42,9 +45,12 @@ module Aggregates
       id = (self == Session) ? :id : :session_id
       taggable_type = (self == PublishedSession) ? 'PublishedSession' : 'Session'
       sessions.project(sessions[id].as('session_id'), array_aggregate_fn( tags[:name] ).as('labels_array'))
-        .join(taggings, Arel::Nodes::OuterJoin).on(sessions[id].eq(taggings[:taggable_id]).and(taggings[:taggable_type].eq(taggable_type)))
+        .join(taggings, Arel::Nodes::OuterJoin).on(
+          sessions[id].eq(taggings[:taggable_id])
+          .and(taggings[:taggable_type].eq(taggable_type))
+          .and(taggings[:context].eq('labels'))
+        )
         .join(tags, Arel::Nodes::OuterJoin).on(taggings[:tag_id].eq(tags[:id]))
-        .where(taggings[:context].eq('labels'))
         .group(sessions[id])
     end
     
