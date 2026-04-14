@@ -36,10 +36,6 @@ import PersonTabs from './people/person_tabs.vue';
 import ProfileScreen from './profile/profile-screen.vue';
 
 const profileRoutes = [
-  // { path: 'session-selection', component: PersonTabs, props: {tab: 'session-selection'} },
-  // { path: 'session-ranking', component: PersonTabs, props: {tab: 'session-ranking'} },
-  // { path: 'availability', component: PersonTabs, props: {tab: 'availability'} },
-  // { path: 'other', component: PersonTabs, props: {tab: 'other'} },
   { path: ':tab', component: PersonTabs, props: true },
   { path: '', component: PersonTabs, props: true }
 ]
@@ -47,10 +43,6 @@ const profileRoutes = [
 const personRoutes = [
   { path: 'edit/:id', component: PersonTabs, props: true },
   { path: ':tab/:id', component: PersonTabs, props: true },
-  // { path: 'session-selection/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-selection'}) },
-  // { path: 'session-ranking/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'session-ranking'}) },
-  // { path: 'availability/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'availability'}) },
-  // { path: 'other/:id', component: PersonTabs, props: route => ({id: route.params.id, tab: 'other'}) },
   { path: '', component: PeopleList }
 ]
 
@@ -77,19 +69,15 @@ import SurveyThankYou from './surveys/survey-thank-you.vue';
 const surveyRoutes = [
   { path: 'edit/:id/:responses', component: ManageSurvey, props: true, name: 'survey_responses'},
   { path: 'edit/:id', component: ManageSurvey, props: true },
-  { path: ':surveyId/page/:id/:preview', component: SurveyPage, props: true, name: 'survey_page'},
-  { path: ':surveyId/page/:id', component: SurveyPage, props: true, name: 'survey_page'},
+  // Need to the :preview to indicate it is optional as we can then match
+  // :surveyId/page/:id and :surveyId/page/:id/:preview
+  { path: ':surveyId/page/:id/:preview?', component: SurveyPage, props: true, name: 'survey_page'},
   { path: ':id/thankyou', component: SurveyThankYou, props: true},
-  { path: ':id/:preview', component: TakeSurvey, props: true },
-  { path: ':id', component: TakeSurvey, props: true},
+  { path: ':id/:preview?', component: TakeSurvey, props: true },
   { path: '', component: SurveyList },
 ]
 
 const sessionRoutes = [
-  // { path: 'edit/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'edit'}) },
-  // { path: 'assignment/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'assignment'}) },
-  // { path: 'schedule/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'schedule'}) },
-  // { path: 'notes/:id', component: SessionTabs, props: route => ({id: route.params.id, tab: 'notes'}) },
   { path: ':tab/:id', component: SessionTabs, props: true },
   { path: '', component: SessionList },
 ]
@@ -100,18 +88,24 @@ import RbacScreen from './rbac/rbac-screen.vue';
 // dashboard
 import Dashboard from './dashboard/dashboard.vue';
 
-import VenueManager from './venues/venue_manager.vue';
+import VenueAndRoomManager from './venues/venue_and_room_manager.vue';
+import VenueScreen from './venues/venue_screen.vue'
+import RoomEditor from './venues/room_editor.vue'
+import VenueEditor from './venues/venue_editor.vue';
+
+const venueRoutes = [
+  { path: 'edit/room/:id', component: RoomEditor, props: true },
+  { path: 'edit/venue/:id', component: VenueEditor, props: true },
+  { path: ':tab', component: VenueAndRoomManager, props: true },
+  { path: '', component: VenueAndRoomManager },
+]
 
 // main
-import Vue from 'vue';
-// import VueRouter from 'vue-router';
 import { createRouter, createWebHashHistory } from 'vue-router'
 // for locale
 // RouterView
 import { store } from '@/store/model.store';
 import { GET_SESSION_USER, SET_SESSION_USER } from './store/person_session.store';
-// Vue.use(VueRouter);
-// var ua='', signed_agreements={}, doing_agreements=false;
 var con_roles=[], isAdmin=false, hasPowers=false;
 
 export const router = new createRouter({
@@ -155,13 +149,6 @@ export const router = new createRouter({
       },
       props: true
     },
-    // {
-    //   path: '/agreements',
-    //   component: Agreements,
-    //   meta: {
-    //     // requiresAuth: true
-    //   }
-    // },
     {
       path: '/playground',
       component: PlayGroundComponent,
@@ -257,7 +244,8 @@ export const router = new createRouter({
     },
     {
       path: '/venues',
-      component: VenueManager,
+      component: VenueScreen,
+      children: venueRoutes,
       meta: {
         requiresAuth: true
       }

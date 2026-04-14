@@ -1,27 +1,26 @@
 <template>
   <div>
     <div class="pb-4">
-      <RoomsTable
-          defaultFilter=''
-          ref="rooms-table"
-      ></RoomsTable>
+      <rooms-table
+        defaultFilter=''
+        ref="rooms-table"
+      ></rooms-table>
     </div>
-    <div class="border p-2 mb-2">
-      <RoomEditor @saved="init" ref="roomEditor"/>
-    </div>
+    <rooms-sidebar></rooms-sidebar>
   </div>
 </template>
 
 
 <script>
-import RoomsTable from "./rooms_table";
-import RoomEditor from "./room_editor";
-import modelMixin from '../store/model.mixin'
-import {room_columns as columns} from "./room";
+import RoomsTable from "@/venues/rooms_table";
+import RoomEditor from "@/venues/room_editor";
+import RoomsSidebar from "@/venues/rooms_sidebar.vue"
+import modelMixin from '@/store/model.mixin'
+import {room_columns as columns} from "@/venues/room";
 
 export default {
   name: "RoomsManager",
-  components: {RoomEditor, RoomsTable},
+  components: {RoomEditor, RoomsTable, RoomsSidebar},
   mixins: [
     modelMixin,
   ],
@@ -29,18 +28,6 @@ export default {
     return {
       columns,
     }
-  },
-  watch: {
-    "selected" : function(val) {
-      // alert("in rooms_manager.selected: val="+JSON.stringify(val));
-      if(val)
-        this.$refs['roomEditor'].setRoomData(val);
-    }
-  },
-  methods: {
-    init() {
-      this.$refs['rooms-table'].init();
-    },
   }
 }
 </script>

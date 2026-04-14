@@ -1,7 +1,7 @@
 <template>
   <v-field
+    ref="emailQuestionField"
     :name="label"
-    type="text"
     :rules="rules"
     v-slot="{ handleChange, errors, meta }"
   >
@@ -9,26 +9,21 @@
       :id="groupId"
       :label="label"
       :label-for="id"
-      :invalid-feedback="errors[0]"
-      :state="!meta.dirty || meta.valid"
       :label-sr-only="labelSrOnly"
       :class="{'w-50': answerable}"
     >
       <b-form-input
         :id="id"
-        :value="value"
-        type="text"
-        :state="!meta.dirty || meta.valid"
-        :class="{'is-invalid': meta.dirty && !meta.valid }"
+        v-model="localValue"
+        :state="calcValid(meta)"
         :disabled="disabled"
         :aria-describedBy="ariaDescribedBy || groupId"
-        @input="(event) => { handleChange(event); $emit('input', $event); }"
-        @blur="(event) => { handleChange(event); $emit('blur', $event); }"
+        @blur="validateField"
       ></b-form-input>
     </b-form-group>
-    <!-- <error-message as="div" :name="label" v-slot="{message}">
+    <error-message as="div" :name="label" v-slot="{message}">
       <div class="invalid-message">{{ message }}</div>
-    </error-message> -->
+    </error-message>
   </v-field>    
 </template>
 
@@ -55,8 +50,8 @@ export default {
     },
     ariaDescribedBy: {
     },
-    required: {
-      default: true
+    mandatory: {
+      default: false
     },
     labelSrOnly: {
       type: Boolean,
@@ -67,28 +62,77 @@ export default {
       default: false
     }
   },
+  data: () => ({
+    internalValue: null
+  }),
+  emits: ["blur"],
   components: {
     VField,
     ErrorMessage
   },
   computed: {
+    localValue: {
+      get() {
+        return this.internalValue ? this.internalValue : this.value; //?? this.internalValue;
+      }, 
+      set(val) {
+        this.internalValue = val;
+        this.$emit('input', val);
+      }
+    },
     groupId() {
       return `${this.id}-group`
     },
-
     rules() {
-      if (this.required) {
+        // return ""
+      if (this.mandatory) {
+        // return { required: true }; //'required'
         return {
-          regex: /.+@.+\..+/,
-          required: true
+          required: true,
+          // regex: /^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/gm
+          regex: /.+@.+\..+/
         }
       } else {
-        return {
-          regex: /^$|.+@.+\..+/
-        }
+        return ""
+        // {
+        //   regex: /.+@.+\..+/
+        // }
       }
     }
+  },
+  methods: {
+    validateField(ev) {
+      // First set the field without
+      // If the question is a radio button then we do not have a ev with the value
+      if ( typeof ev.target === 'undefined') {
+        this.$refs.emailQuestionField.handleChange(ev, false);
+      } else {
+        this.$refs.emailQuestionField.handleChange(ev.target.value, false);
+      }
+      // Then we do the actual validation
+      this.$refs.emailQuestionField.validate().then(
+        (result) => {
+          // If there are no errors then save the response
+          if (result.errors.length == 0) {
+            this.$emit('change', ev.target.value);
+          }
+        }
+      );
+    },
+    calcValid(meta) {
+      if (this.rules == '') {
+        return null
+      }
+
+      let v = meta.dirty ? meta.valid : null
+      return v;
+    },
+    validate() {
+      let res = this.$refs['emailQuestionField'].validate();
+      return res
+    },
   }
+
 };
 </script>
 

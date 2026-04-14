@@ -18,7 +18,6 @@ import { defineRule } from 'vee-validate';
 import { min, max, min_value, regex, required, numeric, digits, email, integer } from '@vee-validate/rules';
 
 import { VueRecaptchaPlugin } from 'vue-recaptcha/head';
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
@@ -49,7 +48,20 @@ defineRule('numeric', numeric);
 defineRule('digits', digits);
 defineRule('integer', integer);
 defineRule('min_value', min_value);
-defineRule('required', required);
+
+// We need required to allow false as a valid value
+defineRule('required', value => {
+  if (typeof value == "boolean") {
+    return true
+  }
+
+  if (!value || !value.length) {
+    return false
+    // return 'This field is required';
+  }
+
+  return true;
+});
 
 // NOTE: this is needed while the app is using vue compat for vue2 components
 // the draggable component needs the vue3 rendering ...

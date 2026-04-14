@@ -1,111 +1,72 @@
 <template>
-  <b-form ref='add-room-form'>
-    <model-field label="Name" v-model="roomData.name" type="text" stateless></model-field>
-    <model-field label="Floor" v-model="roomData.floor" type="text" stateless></model-field>
-    <model-field label="Purpose" v-model="roomData.purpose" type="text" stateless></model-field>
-    <div class="d-flex justify-content-end" v-if='showButtons'>
-      <b-button variant="link" @click="clear">Cancel</b-button>
-      <b-button variant="primary" @click="saveRoom">Save</b-button>
+  <div>
+    <b-button variant="link" @click="back">Back</b-button>
+    <div v-if="selected">
+      <b-form-group id="name-group" label="Name" label-for="name-input">
+        <b-form-input type="text" id="name-input" v-model="selected.name" @blur="saveSelected()"></b-form-input>
+      </b-form-group>
+      <b-form-group
+        label="Venue"
+      >
+        <model-select
+          id="room-venue"
+          v-model="selected.venue_id"
+          model="venue"
+          field="name"
+          :multiple="false"
+          @change="saveSelected()"
+          :selectSize="4"
+        ></model-select>
+      </b-form-group>
+      <b-form-group id="floor-group" label="Floor" label-for="floor-input">
+        <b-form-input type="number" id="floor-input" v-model="selected.floor" @blur="saveSelected()"></b-form-input>
+      </b-form-group>
+      <b-form-group>
+        <b-form-checkbox switch v-model="selected.is_virtual" @change="saveSelected">
+          Is Online
+        </b-form-checkbox>
+      </b-form-group>
+      <b-form-group id="capacity-group" label="Capacity" label-for="capacity-input">
+        <b-form-input type="number" id="capacity-input" v-model="selected.capacity" @blur="saveSelected()"></b-form-input>
+      </b-form-group>
+      <b-form-group>
+        <b-form-checkbox switch v-model="selected.open_for_schedule" @change="saveSelected">
+          Open for Scheduling
+        </b-form-checkbox>
+      </b-form-group>
+      <b-form-group id="purpose-group" label="Purpose" label-for="purpose-input">
+        <b-form-textarea id="purpose-input" v-model="selected.purpose" @blur="saveSelected()"></b-form-textarea>
+      </b-form-group>
+      <b-form-group id="purpose-group" label="Comment" label-for="purpose-input">
+        <b-form-textarea id="purpose-input" v-model="selected.comment" @blur="saveSelected()"></b-form-textarea>
+      </b-form-group>
     </div>
-  </b-form>
+  </div>
 </template>
 
 <script>
-import toastMixin from '@/mixins/toast-mixin';
-import settingsMixin from "@/store/settings.mixin";
-import { ADMIN_ADD_ROOM_SUCCESS } from '@/constants/strings';
+import { modelMixinNoProp } from '@/mixins';
 import ModelField from '@/components/model-field';
-import PlanoEditor from '@/components/plano_editor';
-
-import { mapActions } from 'vuex';
-import { NEW_ROOM } from '@/store/room.store';
+import ModelSelect from '@/components/model_select';
 
 export default {
   name: "RoomEditor",
-  components: {
-    ModelField,
-    PlanoEditor
-  },
-  mixins: [
-    toastMixin,
-      settingsMixin
+  props: [
+    'id'
   ],
-  props: {
-    showButtons: {
-      default: true,
-      type: Boolean
-    },
-    readOnly: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      roomData: {
-        name: '',
-        floor: '',
-        purpose: '',
-      },
-    }
-  },
-  emits: ["saved"],
-  computed: {
-    // room_enums: {
-    //   get: function() {
-    //     if (this.currentSettings && this.currentSettings.enums) {
-    //       return this.currentSettings.enums.Room.target
-    //     } else {
-    //       return []
-    //     }
-    //   }
-    // }
-  },
+  mixins: [modelMixinNoProp],
+  components: { ModelField, ModelSelect },
+  data: () => ({ model: "room" }),
   methods: {
-    ...mapActions({newRoomAction: NEW_ROOM}),
-    clear() {
-      this.roomData.name = '';
-      this.roomData.floor = '';
-      this.roomData.purpose = '';
+    back() {
+      this.$router.push('/venues/rooms')
     },
-    setRoomData(data) {
-      //console.log("setRoomData: ", data);
-      if(data && data.name) {
-        this.roomData.name = data.name;
-        this.roomData.floor = data['floor'];
-        this.roomData.purpose = data.purpose;
-      }
-    },
-    saveRoom() {
-      let res = this.newRoomAction(this.roomData);
-      res.then(
-        (obj) => {
-          this.$bvToast.toast(
-            ADMIN_ADD_ROOM_SUCCESS(obj.title),
-            {
-              variant: 'success',
-              title: 'Room Created'
-            }
-          )
-          this.clear()
-          this.$emit("saved");
-        }
-      ).catch(
-        (err) => {
-          this.$bvToast.toast(
-            err.response.data.errors[0].title,
-            {
-              variant: 'danger',
-              title: err.response.data.errors[0].title
-            }
-          )
-        }
-      );
-    }
-  }
+  },
+  mounted() {
+    this.select(this.id)
+    this.fetchSelected()
+  },
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
