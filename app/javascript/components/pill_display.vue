@@ -64,6 +64,7 @@ export default {
       },
       set(val) {
         this.imutableValue = val;
+        this.$emit('input', val)
       }
     }
   },

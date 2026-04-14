@@ -1,10 +1,10 @@
 <template>
-  <div class="d-flex flex-row w-100">
-    <v-form as="div" ref="emailForm">
+  <div class="d-flex flex-row w-100" v-if="value">
+    <v-form as="span" ref="emailForm" class="mt-2 mr-3" style="flex-basis: 75%;">
       <v-field name="emailfield" type="email" :rules="emailRules" v-slot="{ handleChange, errors }">
         <b-form-input
           :disabled='disabled'
-          v-model.trim="value.email"
+          v-model.trim="localValue.email"
           @change="(event) => {let res = handleChange(event); emitChange(res); }"
           :class="{'is-invalid': !!errors.length }"
         ></b-form-input>
@@ -16,10 +16,10 @@
     <div style="flex-basis: 25%;">
       <div class="d-flex flex-row justify-content-end">
         <b-form-radio
-          switch size="lg"
+          v-model="localValue.isdefault"
           value="true"
           @change="onCheck"
-          :checked="isdefault"
+          switch size="lg"
           class="mt-2 pt-1 mr-5"
           :disabled='disabled'
           :name="radioGroup"
@@ -34,6 +34,9 @@
 </template>
 
 <script>
+// NOTE: there is a bug in here (which has been around for a long time)
+// Making the other email primary works and moves it on screen but the
+// radios are all unchecked
 
 import { Field as VField, Form as VForm, ErrorMessage } from 'vee-validate';
 
@@ -59,14 +62,14 @@ export default {
       default: 'email-address-make-primary'
     }
   },
+  data: () => ({
+    ivalue: null
+  }),
   computed: {
-    isdefault: {
+    localValue: {
       get: function() {
-        if (this.value.isdefault) {
-          return this.value.isdefault
-        } else {
-          return null
-        }
+        this.ivalue = this.value;
+        return this.ivalue;
       },
       set: function(val) {
         // Vue complains if there is no set
@@ -74,23 +77,23 @@ export default {
         // it is an artifact of using radio buttons in a "fake" group
         // and relying on server side sync to set things
       }
-    }
+    },
   },
   methods: {
     onCheck(arg) {
-      this.value.isdefault = arg == 'true'
+      this.ivalue.isdefault = arg == 'true';
       this.emitChange()
     },
     onDelete(arg) {
       this.$emit('delete', this.value)
     },
     emitChange() {
-      if (this.value.email == '') return;
+      if (this.localValue.email == '') return;
 
       this.$refs.emailForm.validate().then(
         (result) => {
           if (result) {
-            this.$emit('input', this.value)
+            this.$emit('input', this.localValue)
           }
         }
       )

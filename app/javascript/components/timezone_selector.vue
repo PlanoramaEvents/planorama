@@ -35,12 +35,10 @@ export default {
   computed: {
     localValue: {
       get() {
-        console.debug("**** GET LOCAL VAL: ", this.value, this.internalValue)
         let v = this.internalValue ? this.internalValue : this.value;
-        return v; //?? this.internalValue;
+        return v;
       }, 
       set(val) {
-        console.debug("**** SET LOCAL VAL: ", val)
         this.internalValue = val;
       }
     },
