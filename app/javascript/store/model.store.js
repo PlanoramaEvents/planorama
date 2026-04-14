@@ -112,8 +112,6 @@ import { personScheduleApprovalStore, personScheduleApprovalEndpoints } from './
 import { publicationDatesEndpoints, publicationDatesStore } from './publication_dates.store';
 import {merge} from "lodash";
 
-import {merge} from "lodash";
-
 const endpoints = {
   ...personEndpoints,
   ...agreementEndpoints,
