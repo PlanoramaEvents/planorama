@@ -25,7 +25,7 @@ if [[ -z $RAILS_ENV ]] || [[ $RAILS_ENV = "development" ]]; then
   bin/rails db:seed
 elif [[ $RAILS_ENV = "staging" ]]; then
   export RAILS_SERVE_STATIC_FILES=true
-  until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST" -c 'select current_date'; do
+  until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST/postgres" -c 'select current_date'; do
     echo "waiting for postgres..."
     sleep 5
   done
@@ -41,7 +41,7 @@ elif [[ $RAILS_ENV = "staging" ]]; then
   bin/rails db:seed
 else
   export RAILS_SERVE_STATIC_FILES=true
-  until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST" -c 'select current_date'; do
+  until psql -Atx "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$DB_HOST/postgres" -c 'select current_date'; do
     echo "waiting for postgres..."
     sleep 5
   done
