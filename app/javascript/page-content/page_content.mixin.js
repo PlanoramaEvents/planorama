@@ -11,16 +11,14 @@ export const pageContentMixin = {
     ...mapActions({
       new_page_content: NEW_PAGE_CONTENT
     }),
-    // Do we need a delete ?
+    newPageContent(newPageContent, success_text = PAGE_CONTENT_SAVE_SUCCESS, error_text = PAGE_CONTENT_SAVE_ERROR) {
+      return this.toastPromise(
+        this.new_page_content(newPageContent),
+        success_text, error_text
+      )
+    },
     savePageContent(newPageContent, success_text = PAGE_CONTENT_SAVE_SUCCESS, error_text = PAGE_CONTENT_SAVE_ERROR) {
-      if (newPageContent.id) {
-        return this.save_model('page_content', newPageContent)
-      } else {
-        return this.toastPromise(
-          this.new_page_content(newPageContent),
-          success_text, error_text
-        )
-      }
+      return this.save_model('page_content', newPageContent)
     },
     deletePageContent(itemOrId, success_text = PAGE_CONTENT_SUCCESS_DELETE, error_text = PAGE_CONTENT_ERROR_DELETE) {
       return this.toastPromise(this.$store.dispatch(DELETE, { model: 'page_content', itemOrId: itemOrId }), success_text, error_text);
