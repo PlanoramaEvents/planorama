@@ -28,6 +28,7 @@ module Aggregates
           taggings,
           Arel::Nodes::OuterJoin
         ).on(
+          # NOTE: add context in join so we get blanks as well
           sessions[id].eq(taggings[:taggable_id])
           .and(taggings[:taggable_type].eq(taggable_type))
           .and(taggings[:context].eq('tags'))
