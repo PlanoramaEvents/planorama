@@ -72,7 +72,7 @@ class Survey::Question < ApplicationRecord
   before_destroy :check_if_published
   before_update :check_linked_update, :check_if_published
 
-  def sanitized_question
+  def clean_question
     candidate = Nokogiri::HTML.parse question
     candidate.text
   end

@@ -14,7 +14,7 @@ class Survey::SubmissionFlatSerializer
   attribute :responses do |object, params|
     res = {}
     object.responses.each do |r|
-      res[r.question.id] = r.response_sanitized_text if self.can_access_response?(r,params[:current_person])
+      res[r.question.id] = r.response_clean_text if self.can_access_response?(r,params[:current_person])
     end
     res
   end

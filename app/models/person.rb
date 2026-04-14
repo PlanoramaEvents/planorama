@@ -292,7 +292,7 @@ class Person < ApplicationRecord
 
   # Provide the text sans HTML elements and convert
   # encoded elememts to their utf8 equivalents
-  def sanitized_bio
+  def clean_bio
     candidate = Nokogiri::HTML.parse bio
     candidate.text
   end

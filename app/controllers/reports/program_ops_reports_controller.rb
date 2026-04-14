@@ -79,7 +79,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
           session.title,
           session.tags_array&.join("; "),
           session.labels_array&.join("; "),
-          session.sanitized_description,
+          session.clean_description,
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
           session.room&.name,
           session.age_restriction&.name,
@@ -162,7 +162,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
               session.tags_array&.join("; "),
               session.labels_array&.join("; "),
               session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
-              session.sanitized_description,
+              session.clean_description,
               session.published_session_assignments.select{|a| a.session_assignment_role_type_id == moderator.id}.collect{|a| a.person.published_name}.join("; "),
               session.published_session_assignments.select{|a| a.session_assignment_role_type_id == participant.id}.collect{|a| a.person.published_name}.join("; "),
         ]
@@ -215,7 +215,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
       worksheet.append_row(
         [
           session.title,
-          session.sanitized_description,
+          session.clean_description,
           session.room&.name,
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
           session.duration,
@@ -267,7 +267,7 @@ class Reports::ProgramOpsReportsController < ApplicationController
             session.room&.name,
             FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset),
             pa.person.published_name,
-            session.sanitized_description,
+            session.clean_description,
             session.participant_notes,
             session.published_session_assignments.role(moderator).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n"),
             session.published_session_assignments.role(participant).collect{|p| "#{p.person.published_name}#{p.person.pronouns && !p.person.pronouns.empty? ? ' (' + p.person.pronouns + ')' : ''}" }.join(",\n")

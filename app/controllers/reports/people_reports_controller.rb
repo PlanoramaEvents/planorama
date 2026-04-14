@@ -37,7 +37,7 @@ class Reports::PeopleReportsController < ApplicationController
           person.published_name,
           person.attendance_type,
           person.con_state,
-          person.sanitized_bio,
+          person.clean_bio,
           social.join(",\n")
         ]
       )

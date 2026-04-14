@@ -201,7 +201,7 @@ class Session < ApplicationRecord
 
   # Provide the text sans HTML elements and convert
   # encoded elememts to their utf8 equivalents
-  def sanitized_description
+  def clean_description
     candidate = Nokogiri::HTML.parse description
     candidate.text
   end

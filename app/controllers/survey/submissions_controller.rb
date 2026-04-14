@@ -120,7 +120,7 @@ class Survey::SubmissionsController < ResourceController
       next if [:hr, :textonly].include? question.question_type
       next unless can_access_question?(question, current_person)
 
-      header << question.sanitized_question
+      header << question.clean_question
 
       response_columns[question.id] = posn
       posn += 1
@@ -132,7 +132,7 @@ class Survey::SubmissionsController < ResourceController
       row.concat Array.new(response_columns.size)
       submission.responses.each do |response|
         if response_columns[response.question_id] && can_access_response?(response, current_person)
-          row[response_columns[response.question_id]] = response.response_sanitized_text
+          row[response_columns[response.question_id]] = response.response_clean_text
         end
       end
       worksheet.append_row(
