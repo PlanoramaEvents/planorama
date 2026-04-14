@@ -52,8 +52,7 @@
         </b-form-radio-group>
         <b-form-group label="At the time of the convention I will be at UTC Offset">
           <timezone-selector
-            v-model="selected.timezone"
-            @input="saveSelected()"
+            v-model="timezone"
             class="mb-2"
             :disabled="disabled || selected.attendance_type != 'virtual'"
           ></timezone-selector>
@@ -353,6 +352,15 @@ export default {
     PROFILE_FIELD_LABELS,
   }),
   computed: {
+    timezone: {
+      get() {
+        return this.selected.timezone;
+      }, 
+      set(val) {
+        this.selected.timezone = val;
+        this.saveSelected()
+      }
+    },
     showAdditionalInfo() {
       return (this.configByName('profile_show_info_demographic_community') !== "false")
     },
