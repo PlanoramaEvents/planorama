@@ -64,13 +64,17 @@
             <b-form-select
               v-model="item.interest_ranking"
               :state="errored(item)"
-              :options="rankOptions">
+              :options="rankOptions"
+              @change="changeAssignment(item)"
+            >
             </b-form-select>
           </b-form-group>
           <b-form-group label="Override default moderating preferences for this session only?">
             <b-form-select
               v-model="item.interest_role"
-              :options="moderatorOptions">
+              :options="moderatorOptions"
+              @change="changeAssignment(item)"
+            >
             </b-form-select>
           </b-form-group>
           <b-button variant="primary" @click="notInterested(item)"><b-icon-trash></b-icon-trash></b-button>
@@ -96,18 +100,12 @@ import modelUtilsMixin from '../store/model_utils.mixin';
 import tableMixin from '../store/table.mixin';
 import personSessionMixin from '../auth/person_session.mixin';
 import sessionAssignmentMixin from '../sessions/session_assignment.mixin';
-import { sessionAssignmentModel } from '@/store/session_assignment.store'
-import SessionAssignmentMonitor from './session_assignment_monitor.vue'
 import {tagsMixin} from '@/store/tags.mixin';
-import { personModel } from '@/store/person.store'
 
 import { SESSION_RANKING_ERROR } from '../constants/strings';
 
 export default {
   name: "SessionRanker",
-  components: {
-    SessionAssignmentMonitor
-  },
   mixins: [
     personSessionMixin,
     modelMixin,
@@ -178,7 +176,7 @@ export default {
         return false
       }
 
-      return true
+      return null
     },
     notInterested(arg) {
       this.assignment = arg
