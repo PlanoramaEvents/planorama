@@ -1,5 +1,5 @@
 <template>
-  <b-modal
+  <plano-modal
     size="xl"
     :title="title"
     id="mailing-preview"
@@ -22,14 +22,18 @@
       Subject: {{ preview.subject }}<br />
       <p v-html="preview.content"></p>
     </div>
-  </b-modal>
+  </plano-modal>
 </template>
 
 <script>
+import PlanoModal from '@/components/plano_modal.vue';
 import {http as axios} from '../http';
 
 export default {
   name: "MailingPreview",
+  components: {
+    PlanoModal
+  },
   props: {
     title: {
       type: String,

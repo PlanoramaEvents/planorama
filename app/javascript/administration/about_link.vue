@@ -1,18 +1,22 @@
 <template>
   <div>
     <b-button variant="link" class="text-light" v-b-modal.about-modal>About</b-button>
-    <b-modal id="about-modal" title="About" modal-class="about-modal" ok-only>
+    <plano-modal id="about-modal" title="About" modal-class="about-modal" ok-only>
       <p>Version: {{ version }}</p>
       <p><a href="https://planoramaevents.github.io/planorama">About the Planorama Team &amp; Give Feedback</a></p>
-    </b-modal>
+    </plano-modal>
   </div>
 </template>
 
 <script>
+import PlanoModal from '@/components/plano_modal.vue';
 import settingsMixin from "@/store/settings.mixin";
 
 export default {
   name: "AboutLink",
+  components: {
+    PlanoModal
+  },
   mixins: [settingsMixin],
   computed: {
     email() {

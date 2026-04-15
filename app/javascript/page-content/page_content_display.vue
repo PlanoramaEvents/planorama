@@ -39,7 +39,14 @@ export default {
     // get the content from the backend
     // backend restricts content to 1 for any given name anyway
     this.clear();
-    this.fetch({filter: `{"op":"all","queries":[["name", "=", "${this.name}"]]}`});
+    this.fetch({filter: `{"op":"all","queries":[["name", "=", "${this.name}"]]}`}).then(
+      (content) => {
+        // get starter if this is empty
+        if (this.collection.length == 0) {
+          this.fetch({filter: `{"op":"all","queries":[["name", "=", "${this.name}-starter"]]}`})
+        }
+      }
+    )
   }
 }
 </script>

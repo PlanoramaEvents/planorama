@@ -290,6 +290,13 @@ class Person < ApplicationRecord
 
   validates :name, presence: true
 
+  # Provide the text sans HTML elements and convert
+  # encoded elememts to their utf8 equivalents
+  def clean_bio
+    candidate = Nokogiri::HTML.parse bio
+    candidate.text
+  end
+
   def email
     addr = primary_email || email_addresses.first
 

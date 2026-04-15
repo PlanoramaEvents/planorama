@@ -30,10 +30,10 @@
       <survey-setting text v-model="survey.thank_you" field="thank_you">
         Confirmation message
       </survey-setting>
-      <b-modal v-if="survey" id="confirmPublish" @ok="togglePublish" @cancel="cancelPublish" ok-title="Yes" cancel-variant="link">
+      <plano-modal v-if="survey" id="confirmPublish" @ok="togglePublish" @cancel="cancelPublish" ok-title="Yes" cancel-variant="link">
         <p v-if="survey.public">{{SURVEY_CONFIRM_CLOSE}}</p>
         <p v-if="!survey.public">{{SURVEY_CONFIRM_PUBLISH}}</p>
-      </b-modal>
+      </plano-modal>
     </div>
     <div v-if="!survey">
       <h3>Loading...</h3>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import PlanoModal from '@/components/plano_modal.vue';
 import surveyMixin from './survey.mixin';
 import {
   SURVEY_CONFIRM_CLOSE,
@@ -55,6 +56,7 @@ export default {
   name: "SurveySettingsTab",
   components: {
     SurveySetting,
+    PlanoModal
   },
   data: () => ({
     SURVEY_CONFIRM_CLOSE,

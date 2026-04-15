@@ -36,7 +36,8 @@ class Room < ApplicationRecord
   include RankedModel
   ranks :sort_order, with_same: :venue_id
 
-  belongs_to :venue, optional: true
+  # belonging to venue should not be optional
+  belongs_to :venue
   belongs_to :room_set, optional: true
 
   has_many :sessions
