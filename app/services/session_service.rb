@@ -1,4 +1,34 @@
 module SessionService
+
+  # Get a count of the labels by areas for sessions
+  def self.labels_by_area
+    session_areas = SessionArea.arel_table
+    areas = Area.arel_table
+    tags = Arel::Table.new(ActsAsTaggableOn::Tag.table_name)
+    taggings = Arel::Table.new(ActsAsTaggableOn::Tagging.table_name)
+
+    q = session_areas.project(
+      # SessionArea.arel_table[Arel.star],
+      tags[:name].as('label'),
+      areas[:name].as('area'),
+      session_areas[:id].count.as('count'),
+    )
+    .join(taggings, Arel::Nodes::OuterJoin).on(
+      taggings[:taggable_id].eq(session_areas[:session_id])
+      .and(taggings[:context].eq("labels"))
+    )
+    .join(tags, Arel::Nodes::FullOuterJoin).on(
+      tags[:id].eq(taggings[:tag_id])
+    )
+    .join(areas, Arel::Nodes::FullOuterJoin).on(
+      areas[:id].eq(session_areas[:area_id])
+    )
+    .group(areas[:name], tags[:name])
+    .order("tags.name")
+
+    SessionArea.lease_connection.select_all(q.to_sql)
+  end
+
   def self.participant_schedule_url
     workflow = ScheduleWorkflow.order("updated_at desc").first
 

@@ -15,7 +15,14 @@ class SessionsController < ResourceController
   def has_open_for_interest
     authorize current_person, policy_class: policy_class
       render json: {open_for_interest: Session.where(open_for_interest: true).count() > 0}
-    end
+  end
+
+  # 
+  # Get a count of the admin labels by area
+  # 
+  def labels_by_area
+    res = SessionService.labels_by_area
+  end
 
   # Mass update for the sessions (given ids and params)
   def update_all
