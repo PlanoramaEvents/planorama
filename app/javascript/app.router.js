@@ -52,6 +52,7 @@ import SessionList from './sessions/sessions-list.vue';
 import SessionTabs from  './sessions/session_tabs.vue';
 import SessionScreen from './sessions/session_screen.vue';
 
+import SessionReportsScreen from './session-reports/session-reports-screen.vue';
 //
 import ScheduleScreen from './schedule/schedule_screen.vue';
 
@@ -201,6 +202,14 @@ export const router = new createRouter({
       path: '/sessions',
       component: SessionScreen,
       children: sessionRoutes,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/session-reports',
+      component: SessionReportsScreen,
+      // children: sessionRoutes,
       meta: {
         requiresAuth: true
       }

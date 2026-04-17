@@ -161,6 +161,7 @@ namespace :rbac do
           "update": false,
           "update_all": false,
           "schedule_publish": false,
+          "labels_by_area": false
       },
       "format": {
           "create": false,
@@ -453,6 +454,7 @@ namespace :rbac do
           "update": true,
           "update_all": true,
           "schedule_publish": false,
+          "labels_by_area": true
       },
       "format": {
           "create": true,
@@ -804,6 +806,7 @@ namespace :rbac do
           "update": true,
           "update_all": true,
           "schedule_publish": true,
+          "labels_by_area": true
       },
       "format": {
           "create": true,

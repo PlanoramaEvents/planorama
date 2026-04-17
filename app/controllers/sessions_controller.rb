@@ -20,8 +20,29 @@ class SessionsController < ResourceController
   # 
   # Get a count of the admin labels by area
   # 
+  # http://localhost:5100/session/labels_by_area
   def labels_by_area
+    authorize current_person, policy_class: policy_class
+    
+    # Get list of labels with counts > 0
+    label_counts = Session.label_counts
+    header = label_counts.map{|a| a.name}.sort
+    header = header.prepend("area").append("none")
+    # Get the area with labels along with their counts
     res = SessionService.labels_by_area
+    # group by area
+    grouped_res = res.group_by{|e| e['area']}
+    # convert to array of hashes
+    result = grouped_res.map{
+      |e| {area: (e[0] ? e[0] : 'none')}.merge!(
+        e[1].map{
+          |i| {(i['label'] ? i['label'] : 'none')  => (i['scount'] == 0 ? i['acount'] : i['scount'])}
+        }.reduce(Hash.new, :merge)) }
+
+    render json: {
+      header: header,
+      labels_by_area: result
+    }
   end
 
   # Mass update for the sessions (given ids and params)

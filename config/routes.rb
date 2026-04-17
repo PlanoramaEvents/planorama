@@ -178,6 +178,7 @@ Rails.application.routes.draw do
   # TODO: check
   resources :tags, path: 'tag'
 
+  get 'session/labels_by_area', to: 'sessions#labels_by_area'
   get 'session/tags', to: 'sessions#tags'
   get 'session/labels', to: 'sessions#labels'
   get 'session/schedule_publish', to: 'sessions#schedule_publish'
