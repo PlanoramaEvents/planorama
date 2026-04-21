@@ -2168,7 +2168,7 @@ CREATE TABLE public.survey_report_configs (
     name character varying(100),
     description text,
     sort_order integer,
-    survey_id bigint NOT NULL,
+    survey_id uuid NOT NULL,
     query jsonb DEFAULT '{}'::jsonb NOT NULL,
     question_ids uuid[],
     lock_version integer,
@@ -3819,6 +3819,14 @@ ALTER TABLE ONLY public.survey_submissions
 
 ALTER TABLE ONLY public.survey_responses
     ADD CONSTRAINT fk_rails_7fc628646e FOREIGN KEY (submission_id) REFERENCES public.survey_submissions(id);
+
+
+--
+-- Name: survey_report_configs fk_rails_a80847c82a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_report_configs
+    ADD CONSTRAINT fk_rails_a80847c82a FOREIGN KEY (survey_id) REFERENCES public.surveys(id);
 
 
 --

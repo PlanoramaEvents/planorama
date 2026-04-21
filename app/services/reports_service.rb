@@ -1,5 +1,37 @@
 module ReportsService
 
+  # Get the survey responses for the given config
+  def self.survey_report(report_config:)
+    submissions_table = ::Survey::Submission.arel_table
+    responses_table = ::Survey::Response.arel_table.alias("sr1")
+    joins = [
+      submissions_table.create_join(
+        responses_table,
+        submissions_table.create_on(
+          responses_table[:submission_id].eq(submissions_table[:id])
+        ),
+        Arel::Nodes::OuterJoin
+      )
+    ]
+    survey = Survey.find report_config.survey_id
+    if report_config.query.class == Array
+      query = ""
+      count = 1
+      report_config.query.each do |q|
+        query += " AND " if count > 1
+        query += "#{q['field'].sub('survey_responses', "sr1")} #{q['op']} '#{q['value']}'"
+        count += 1
+      end
+    else #    c.query.class == Hash
+      query = "#{report_config.query['field'].sub('survey_responses', 'sr1')} #{report_config.query['op']} '#{report_config.query['value']}'"
+    end
+
+    Survey::Submission
+              .eager_load(:responses, :person)
+              .joins(joins)
+              .where(query)
+  end
+
   # Person published names, primary email, attendance type, participant status,
   # draft approval (yes/no), draft comment IF no, draft last edited timestamp (like on profile tab),
   # firm approval yes/no, firm comment IF no, firm last edited timestamp (like on profile tab)

@@ -102,6 +102,65 @@ class Survey::SubmissionsController < ResourceController
     end
   end
 
+  # 
+  # Use a report config to get the submissions from a survey
+  # based on a query AND only a subset of the questions
+  # http://localhost:5100/submissions/filtered_submissions/dfaf8aa3-cdfa-4fd6-8b95-18f6d586eb0d
+  # http://localhost:5100/submissions/filtered_submissions/e8d5d1dd-360c-4c38-95fe-17d667155fe1
+  # 
+  # 
+   def filtered_submissions
+    authorize model_class, policy_class: policy_class
+
+    # Get the report config
+    report_config_id = params[:report_config_id]
+    report_config = Survey::ReportConfig.find report_config_id
+
+    raise "No custom submission report" unless report_config
+
+    workbook = FastExcel.open(constant_memory: true) # creates tmp file
+    worksheet = workbook.add_worksheet("Export")
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [date_time_style,date_time_style]
+    # Get submissions
+    submisisons = ReportsService.survey_report(report_config: report_config)
+    # Convert to XLS
+    survey = report_config.survey
+    # updated_at, email (from person), status (from person), name (from person)
+    header = ['Updated At', 'Email', 'Status', 'Name'] # TODO: need person parameters
+    posn = 4
+    response_columns = {}
+    questions = Survey::Question.where("id in (?)", report_config.question_ids)
+    questions.each do |question|
+      next if [:hr, :textonly].include? question.question_type
+      next unless can_access_question?(question, current_person)
+
+      header << question.clean_question
+      response_columns[question.id] = posn
+      posn += 1
+    end
+    worksheet.append_row(header)
+
+    submisisons.each do |submission|
+      row = [submission.person.updated_at, submission.person.email, submission.person.con_state, submission.person.name]
+      row.concat Array.new(response_columns.size)
+      submission.responses.each do |response|
+        if response_columns[response.question_id] && can_access_response?(response, current_person)
+          row[response_columns[response.question_id]] = response.response_clean_text
+        end
+      end
+      worksheet.append_row(
+        row,
+        styles
+      )
+    end
+
+    # TODO - use name from config in the filename
+    send_data workbook.read_string,
+        filename: "#{report_config.name.gsub(/\s/,'_')}_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+        disposition: 'attachment'
+  end
+
   # faster collection to Excel
   def collection_to_xls
     workbook = FastExcel.open(constant_memory: true) # creates tmp file

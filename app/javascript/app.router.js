@@ -57,6 +57,11 @@ import ScheduleScreen from './schedule/schedule_screen.vue';
 
 //
 import ReportsScreen from './reports/reports_screen.vue'
+import ReportsTabs from './reports/reports_tabs.vue'
+const reportsRoutes = [
+  { path: ':tab', component: ReportsTabs, props: true },
+  { path: '', component: ReportsTabs },
+]
 
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
@@ -224,6 +229,7 @@ export const router = new createRouter({
     {
       path: '/reports',
       component: ReportsScreen,
+      children: reportsRoutes,
       meta: {
         requiresAuth: true
       }
