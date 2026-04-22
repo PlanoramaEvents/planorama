@@ -7,9 +7,19 @@
       :items="labelsByArea"
       :fields="fields"
     >
+      <!-- sessions_url(area, label) -->
       <template #head()="scope">
         <div style="writing-mode: sideways-rl;">
           {{ scope.label }}
+        </div>
+      </template>
+      <template #cell()="scope">
+        <div v-if="typeof scope.value === 'string'">
+          {{scope.value}}
+        </div>
+        <div v-else-if="typeof scope.value === 'number'">
+          <a :href="sessions_url(scope.item.area, scope.field.key)">{{scope.value}}</a>
+          <!-- {{ sessions_url(scope.item.area, scope.field.key) }} -->
         </div>
       </template>
     </b-table>
@@ -26,6 +36,46 @@ export default {
     labelsByArea: []
   }),
   methods: {
+    sessions_url(area, label) {
+      let base = "/#/sessions?q="
+      // if none then query is "is empty"
+      let query = {
+          "filter": {
+            "op":"All",
+            "queries": [
+              ["area_list",(area == 'none' ? 'is empty' : 'is'),`${area}`],
+              ["labels_list_table.labels_array",(label == 'none' ? 'is empty' : 'is'),`${label}`
+              ]
+            ]
+          },
+          "query": {
+            "logicalOperator":"All",
+            "children":[
+              {
+                "type":"query-builder-rule",
+                "query":{
+                  "rule":"area_list",
+                  "selectedOperator": (area == 'none' ? 'is empty' : 'is'),
+                  "selectedOperand":"Area",
+                  "value":`${area}`
+                }
+              },
+              {
+                "type":"query-builder-rule",
+                "query":{
+                  "rule": "labels_list_table.labels_array",
+                  "selectedOperator": (label == 'none' ? 'is empty' : 'is'),
+                  "selectedOperand":"Admin Labels",
+                  "value":`${label}`
+                }
+              }
+            ]
+          }
+        }
+      let qs = encodeURIComponent(JSON.stringify(query))
+
+      return `${base}${qs}`
+    },
     init() {
       console.debug("GET THE TTTT")
       http.get("/session/labels_by_area").then(
