@@ -485,7 +485,7 @@ namespace :lacon do
         {
           field: "survey_responses.question_id",
           op: '=',
-          value: '5bb76d87-cf7c-4053-a7e8-68b1b3ac459e'
+          value: '8dc15c3f-e75a-47a3-933c-9cd11c8e1725'
         },
         {
           field: "survey_responses.response_as_text",
