@@ -48,7 +48,7 @@ class Survey::Response < ApplicationRecord
   #
   #
   def get_linked
-    if question.linked_field && submission.person
+    if question.linked_field && submission.person && question.question_type != :socialmedia
       details = question.linked_field.split('.',2)
       if details[0] == 'Person'
         submission.person.send("#{details[1]}")

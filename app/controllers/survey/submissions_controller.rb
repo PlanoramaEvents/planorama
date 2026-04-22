@@ -130,7 +130,11 @@ class Survey::SubmissionsController < ResourceController
     header = ['Updated At', 'Email', 'Status', 'Name'] # TODO: need person parameters
     posn = 4
     response_columns = {}
-    questions = Survey::Question.where("id in (?)", report_config.question_ids)
+    # NOTE: this query makes sure that the order of the questions is maintained
+    questions = Survey::Question.find_by_sql([
+      "select * from survey_questions where survey_questions.id in (?) order by array_position(ARRAY[?], TEXT(survey_questions.id))",
+      report_config.question_ids, report_config.question_ids
+    ])
     questions.each do |question|
       next if [:hr, :textonly].include? question.question_type
       next unless can_access_question?(question, current_person)
