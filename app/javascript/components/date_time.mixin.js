@@ -18,6 +18,11 @@ export const dateTimeMixin = {
     }
   },
   methods: {
+    // test to see if string etc is a valid datetime
+    isDateTime(date) {
+      let res = DateTime.fromISO(date, {zone: this.tz})
+      return res.isValid
+    },
     formatLocaleDate(date) {
       let res = DateTime.fromISO(date, {zone: this.tz}).toLocaleString(DateTime.DATETIME_FULL)
       return res

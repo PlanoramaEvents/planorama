@@ -15,6 +15,7 @@
     </bulk-edit-modal>
 
     <table-vue
+      showDownload="true"
       @new="openNewModal"
       defaultSortBy='sessions.title'
       :model="model"
