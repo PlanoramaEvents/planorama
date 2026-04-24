@@ -235,11 +235,15 @@ namespace :rbac do
       "submission": {
           "create": true,
           "delete_all": false,
+          "filtered_submissions": false,
           "flat": false,
           "show": true,
           "update": true,
           "destroy": false,
           "index": true
+      },
+      "report_config": {
+          "index": false
       },
       "response": {
           "create": true,
@@ -528,10 +532,14 @@ namespace :rbac do
       "submission": {
           "create": true,
           "delete_all": false,
+          "filtered_submissions": true,
           "flat": true,
           "show": true,
           "update": true,
           "destroy": false,
+          "index": true
+      },
+      "report_config": {
           "index": true
       },
       "response": {
@@ -880,10 +888,14 @@ namespace :rbac do
       "submission": {
           "create": true,
           "delete_all": true,
+          "filtered_submissions": true,
           "flat": true,
           "show": true,
           "update": true,
           "destroy": true,
+          "index": true
+      },
+      "report_config": {
           "index": true
       },
       "response": {

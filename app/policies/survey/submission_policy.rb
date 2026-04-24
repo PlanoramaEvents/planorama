@@ -4,6 +4,10 @@ class Survey::SubmissionPolicy < PlannerPolicy
     return true #if @person
   end
 
+  def filtered_submissions?
+    allowed?(action: :filtered_submissions)
+  end
+
   def flat?
     # Rails.logger.debug "********* #{@record} #{@person}"
     # return true if @record.class != Symbol && @record && @record.person_id == @person.id

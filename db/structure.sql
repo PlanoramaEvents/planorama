@@ -10,13 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -1056,14 +1049,14 @@ UNION
 --
 
 CREATE VIEW public.filtered_registration_sync_matches AS
- SELECT rsm.name,
-    rsm.email,
-    rsm.pid,
-    rsm.reg_id,
-    rsm.rid,
-    rsm.mtype
+ SELECT name,
+    email,
+    pid,
+    reg_id,
+    rid,
+    mtype
    FROM public.registration_sync_matches rsm
-  WHERE (NOT ((rsm.reg_id)::text IN ( SELECT p2.reg_id
+  WHERE (NOT ((reg_id)::text IN ( SELECT p2.reg_id
            FROM public.people p2
           WHERE (p2.reg_id IS NOT NULL))));
 
@@ -1708,14 +1701,14 @@ CREATE TABLE public.published_sessions (
 --
 
 CREATE VIEW public.registration_map_counts AS
- SELECT rsm.reg_id,
-    rsm.pid,
-    count(rsm.pid) AS sub_count
+ SELECT reg_id,
+    pid,
+    count(pid) AS sub_count
    FROM public.registration_sync_matches rsm
-  WHERE ((NOT (rsm.pid IN ( SELECT dismissed_reg_sync_matches.person_id
-           FROM public.dismissed_reg_sync_matches))) AND (NOT ((rsm.reg_id)::text IN ( SELECT dismissed_reg_sync_matches.reg_id
+  WHERE ((NOT (pid IN ( SELECT dismissed_reg_sync_matches.person_id
+           FROM public.dismissed_reg_sync_matches))) AND (NOT ((reg_id)::text IN ( SELECT dismissed_reg_sync_matches.reg_id
            FROM public.dismissed_reg_sync_matches))))
-  GROUP BY rsm.reg_id, rsm.pid;
+  GROUP BY reg_id, pid;
 
 
 --
@@ -1723,10 +1716,10 @@ CREATE VIEW public.registration_map_counts AS
 --
 
 CREATE VIEW public.registration_map_people_counts AS
- SELECT registration_map_counts.pid,
-    count(registration_map_counts.pid) AS count
+ SELECT pid,
+    count(pid) AS count
    FROM public.registration_map_counts
-  GROUP BY registration_map_counts.pid;
+  GROUP BY pid;
 
 
 --
@@ -1734,10 +1727,10 @@ CREATE VIEW public.registration_map_people_counts AS
 --
 
 CREATE VIEW public.registration_map_reg_counts AS
- SELECT registration_map_counts.reg_id,
-    count(registration_map_counts.reg_id) AS count
+ SELECT reg_id,
+    count(reg_id) AS count
    FROM public.registration_map_counts
-  GROUP BY registration_map_counts.reg_id;
+  GROUP BY reg_id;
 
 
 --
@@ -2167,6 +2160,24 @@ CREATE TABLE public.survey_questions (
 
 
 --
+-- Name: survey_report_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_report_configs (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    name character varying(100),
+    description text,
+    sort_order integer,
+    survey_id uuid NOT NULL,
+    query jsonb DEFAULT '{}'::jsonb NOT NULL,
+    question_ids uuid[],
+    lock_version integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: survey_responses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2269,6 +2280,15 @@ CREATE TABLE public.tags (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name character varying(191),
     taggings_count integer DEFAULT 0
+);
+
+
+--
+-- Name: tt; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tt (
+    relkind "char"
 );
 
 
@@ -2889,6 +2909,14 @@ ALTER TABLE ONLY public.survey_query_predicates
 
 ALTER TABLE ONLY public.survey_questions
     ADD CONSTRAINT survey_questions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: survey_report_configs survey_report_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_report_configs
+    ADD CONSTRAINT survey_report_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -3558,6 +3586,13 @@ CREATE INDEX index_survey_questions_on_page_id ON public.survey_questions USING 
 
 
 --
+-- Name: index_survey_report_configs_on_survey_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_report_configs_on_survey_id ON public.survey_report_configs USING btree (survey_id);
+
+
+--
 -- Name: index_survey_responses_on_submission_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3787,6 +3822,14 @@ ALTER TABLE ONLY public.survey_responses
 
 
 --
+-- Name: survey_report_configs fk_rails_a80847c82a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_report_configs
+    ADD CONSTRAINT fk_rails_a80847c82a FOREIGN KEY (survey_id) REFERENCES public.surveys(id);
+
+
+--
 -- Name: survey_pages fk_rails_c9027d3929; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3817,6 +3860,7 @@ ALTER TABLE ONLY public.rooms
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260418150207'),
 ('20251216164360'),
 ('20251216164359'),
 ('20251216164358'),

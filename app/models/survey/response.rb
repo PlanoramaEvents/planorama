@@ -36,8 +36,28 @@ class Survey::Response < ApplicationRecord
   attr_accessor :check_update_linked
 
   def response_clean_text
-    candidate = Nokogiri::HTML.parse response_as_text
+    # Get the latest from the person
+    result = get_linked
+    # Get the survey test if there was no linked field
+    result = response_as_text unless result
+    candidate = Nokogiri::HTML.parse result
     candidate.text
+  end
+
+  #
+  #
+  #
+  def get_linked
+    if question.linked_field && submission.person && question.question_type != :socialmedia
+      details = question.linked_field.split('.',2)
+      if details[0] == 'Person'
+        submission.person.send("#{details[1]}")
+      else
+        nil
+      end
+    else
+      nil
+    end
   end
 
   #
@@ -71,7 +91,7 @@ class Survey::Response < ApplicationRecord
               end
 
         submission.person.reload
-        Rails.logger.debug("submission.person #{submission.person.id} #{submission.person.lock_version}")
+        # Rails.logger.debug("submission.person #{submission.person.id} #{submission.person.lock_version}")
         if question.question_type == :yesnomaybe
           # Yes not maybe and attendance should only have one answer
           exception_val = response['text']

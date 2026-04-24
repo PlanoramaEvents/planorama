@@ -141,6 +141,8 @@ Rails.application.routes.draw do
   get 'session_conflict/conflicts_for/:session_id', to: 'conflicts/session_conflicts#conflicts_for'
   get 'session_conflict/conflicts_with/:session_id', to: 'conflicts/session_conflicts#conflicts_with'
 
+  # The config for custom survey reports
+  get 'survey/report_config', to: 'survey/report_configs#index'
   # Surveys and their nested resources
   post 'survey/:survey_id/assign_people', to: 'surveys#assign_people'
   post 'survey/:survey_id/unassign_people', to: 'surveys#unassign_people'
@@ -161,6 +163,8 @@ Rails.application.routes.draw do
   end
   resources :answers, controller: 'survey/page/question/answers', path: 'answer', except: [:index]
 
+  # filtered_submissions
+  get 'submissions/filtered_submissions(/:report_config_id)', to: 'survey/submissions#filtered_submissions'
   resources :submissions, path: 'submission', controller: 'survey/submissions',  except: [:index] do
     get 'responses', to: 'submission/responses#index'
   end
