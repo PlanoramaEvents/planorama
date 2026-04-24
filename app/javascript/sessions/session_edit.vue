@@ -17,10 +17,8 @@
     </div>
     <div class="row">
       <div class="col-6">
-
         <pill-display 
           v-model="session_areas"
-          @input="saveSession()"
           label="Areas"
           color="primary"
           :modalOptions="areaOptions"
@@ -100,8 +98,7 @@
       </div>
       <div class="col-6">
         <pill-display 
-          v-model="session.tag_list"
-          @input="saveSession()"
+          v-model="tag_list"
           label="Public Tags"
           color="warning"
           :modalOptions="sessionTagsOptions"
@@ -116,8 +113,7 @@
       </div>
       <div class="col-6">
         <pill-display
-          v-model="session.label_list"
-          @input="saveSession()"
+          v-model="label_list"
           label="Admin Labels"
           color="info"
           :modalOptions="sessionLabelsOptions"
@@ -204,6 +200,24 @@ export default {
     session() {
       return this.selected_model(sessionModel)
     },
+    label_list: {
+      get() {
+        return this.session.label_list;
+      },
+      set(val) {
+        this.session.label_list = val;
+        this.saveSession()
+      }
+    },
+    tag_list: {
+      get() {
+        return this.session.tag_list;
+      },
+      set(val) {
+        this.session.tag_list = val;
+        this.saveSession()
+      }
+    },
     session_areas: {
       get() {
         let res = Object.values(this.session.session_areas).filter(
@@ -235,6 +249,8 @@ export default {
         }
 
         this.session.session_areas_attributes = areasForSaving
+        // Save the session when the areas are set
+        this.saveSession()
       }
     },
   },
@@ -249,9 +265,11 @@ export default {
       }
     },
     saveSession() {
+      console.debug("*** SAVE SESSION", this.session.tag_list)
       this.save_model(sessionModel, this.session)
     },
     saveValidatedSession(arg) {
+      console.debug("*** SAVE VALIDATE")
       this.$refs.maxOpenings.validate().then(
         (result) => {
           if (result) {
