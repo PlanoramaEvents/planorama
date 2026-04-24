@@ -180,12 +180,13 @@ class SessionsController < ResourceController
       end
     end
 
+    skipped_count = sheet_length - count
     count = count - 1 if ignore_first_line
-    message = "Imported #{count} sessions, skipped #{sheet_length - count}"
+    message = "Imported #{count} sessions, skipped #{skipped_count}"
 
     message = {
       imported: "#{count}",
-      skipped: "#{sheet_length - count}",
+      skipped: "#{skipped_count}",
       no_title: "#{no_title}",
       duplicate_session: "#{duplicate_session}",
       other: "",
