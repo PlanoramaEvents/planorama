@@ -15,7 +15,43 @@ class SessionsController < ResourceController
   def has_open_for_interest
     authorize current_person, policy_class: policy_class
       render json: {open_for_interest: Session.where(open_for_interest: true).count() > 0}
-    end
+  end
+
+  # 
+  # Get a count of the admin labels by area
+  # 
+  # http://localhost:5100/session/labels_by_area
+  def labels_by_area
+    authorize current_person, policy_class: policy_class
+    
+    # Get list of labels with counts > 0
+    label_counts = Session.label_counts
+    header = label_counts.map{|a| a.name}.sort
+    header = header.prepend("area").append("none")
+    # Get the area with labels along with their counts
+    res = SessionService.labels_by_area
+    # group by area
+    grouped_res = res.group_by{|e| e['area']}
+    # convert to array of hashes
+    result = grouped_res.map{
+      |e| {area: (e[0] ? e[0] : 'none')}.merge!(
+        e[1].map{
+          |i| {(i['label'] ? i['label'] : 'none')  => (i['scount'] == 0 ? i['acount'] : i['scount'])}
+        }.reduce(Hash.new, :merge)) }
+
+    # Get count of sessions with no label or area (which above query does not do)
+    sessions_no_labels_areas = Session.where("id not in (?)", SessionArea.select(:session_id).map(&:session_id).uniq).where(
+      "id not in (?)", ActsAsTaggableOn::Tagging.where(context: 'labels').map(&:taggable_id).uniq
+    ).count
+    # and add that to the results
+    el = result.find{|entry| entry[:area] == 'none'}
+    el['none'] = sessions_no_labels_areas
+
+    render json: {
+      header: header,
+      labels_by_area: result
+    }
+  end
 
   # Mass update for the sessions (given ids and params)
   def update_all

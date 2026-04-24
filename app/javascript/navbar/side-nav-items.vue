@@ -14,6 +14,10 @@
       ><b-icon-calendar2-range-fill class="mr-2"></b-icon-calendar2-range-fill
       >Sessions</b-nav-item
     >
+    <b-nav-item v-if="can_see_this" to="/session-reports" active-class="active"
+      ><b-icon-calendar2-range-fill class="mr-2"></b-icon-calendar2-range-fill
+      >Session Reports</b-nav-item
+    >    
     <b-nav-item v-if="can_see_this" to="/schedule" active-class="active"
       ><b-icon-calendar2-date class="mr-2"></b-icon-calendar2-date
       >Schedule</b-nav-item
