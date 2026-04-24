@@ -45,6 +45,10 @@ class SessionsController < ResourceController
     ).count
     # and add that to the results
     el = result.find{|entry| entry[:area] == 'none'}
+    if !el
+      el = {area: 'none'}
+      result.append(el) 
+    end
     el['none'] = sessions_no_labels_areas
 
     render json: {
