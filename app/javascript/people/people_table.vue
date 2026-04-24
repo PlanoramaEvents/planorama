@@ -33,6 +33,7 @@
       </template>
     </modal-form>
     <table-vue
+      showDownload="true"
       @new="onNew"
       defaultSortBy='people.name'
       :model="model"

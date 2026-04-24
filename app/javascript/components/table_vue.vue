@@ -46,6 +46,11 @@
             <b-icon-eye></b-icon-eye>
           </b-button>
         </div>
+        <div class="d-inline mx-1" title="download" v-if="showDownload">
+          <b-button @click="onDownload" variant="primary" title="View">
+            <b-icon-download></b-icon-download>
+          </b-button>
+        </div>
         <div class="d-inline" title="Settings" v-if="showSettings">
           <b-button disabled>
             <b-icon-gear-fill></b-icon-gear-fill>
@@ -158,6 +163,8 @@
 </template>
 
 <script>
+import XLSX from 'xlsx';
+import dateTimeMixin from '@/components/date_time.mixin'
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import SearchVue from './search_vue'
@@ -168,6 +175,7 @@ export default {
     SearchVue
   },
   mixins: [
+    dateTimeMixin,
     modelMixin,
     tableMixin, // covers pagination and sorting
   ],
@@ -191,7 +199,7 @@ export default {
     },
     showSettings: {
       type: Boolean,
-      default: true
+      default: false
     },
     showRefresh: {
       type: Boolean,
@@ -202,6 +210,10 @@ export default {
       default: false
     },
     showView: {
+      type: Boolean,
+      default: false
+    },
+    showDownload: {
       type: Boolean,
       default: false
     },
@@ -305,6 +317,45 @@ export default {
       this.selected_items = []
       this.editable_ids = []
       this.$refs.table.refresh()
+    },
+    onDownload() {
+      // Get the data and put it into a spreadsheet
+      this.fetchNoStore().then(
+        (data) => {
+          // see https://docs.sheetjs.com/
+          let rows = []
+          data.forEach(
+            (el) => {
+              let row = {}
+              this.tableColumns.forEach(
+                (col) => {
+                  if (col.key != 'selected') {
+                    let v = el[col.key]
+                    if (typeof v === 'boolean') {
+                      row[col.label] = el[col.key] ? 'Yes' : 'No'
+                    } else if (Array.isArray(el[col.key])) {
+                      row[col.label] = el[col.key].join(", ")
+                    } else {
+                      if (this.isDateTime(el[col.key])) {
+                        row[col.label] = this.formatLocaleDate(el[col.key])
+                      } else {
+                        row[col.label] = el[col.key]
+                      }                  
+                    }
+                  }
+                }
+              )
+              rows.push(row)
+            }
+          )
+          // Use the path for the name of the sheet and file
+          let fname = this.$route.path.replace("/", "");
+          const worksheet = XLSX.utils.json_to_sheet(rows);
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, fname);
+          XLSX.writeFile(workbook, `${fname}.xlsx`, { compression: true });
+        }
+      )
     },
     onRowSelected(items) {
       this.selected_items = items
