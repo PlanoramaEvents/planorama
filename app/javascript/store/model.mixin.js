@@ -12,9 +12,9 @@ export const modelMixinNoProp = {
       return this.$store.getters[SELECTED]({model: this.model})
     },
     collection() {
-      // NOTE: the filter(el => el.id) is in there because vuex now adds an non-id
+      // NOTE: the filter(el => (el.id || el.parameter_name)) is in there because vuex now adds an non-id element
       // object to the collection with the type set ...
-      return Object.values(this.$store.getters['jv/get']({_jv: { type: this.model }})).filter(el => el.id)
+      return Object.values(this.$store.getters['jv/get']({_jv: { type: this.model }})).filter(el => (el.id || el.parameter_name))
     },
     fullTotal() {
       return this.$store.getters[FULL_TOTAL]({model: this.model})
