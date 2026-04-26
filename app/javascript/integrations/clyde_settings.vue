@@ -14,6 +14,7 @@
         <li>Records not found: {{ stats.not_found }}</li>
         </ul>
         <h4 class="mt-3">Configuration</h4>
+        <!-- TODO -->
         <b-form-group label-cols="auto" label="Enable Clyde" class="configuration enable ml-2">
           <b-form-checkbox switch v-model="clydeEnabled" @change="patchClydeConfig()"></b-form-checkbox>
         </b-form-group>

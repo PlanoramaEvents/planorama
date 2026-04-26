@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     patch 'person_exclusion', to: 'person_exclusions#replace'
     resources :session_limits, path: 'session_limit', only: [:index]
     # patch 'session_limit', to: 'session_limits#replace'
+    # TODO:
     post 'clyde_sync', to: 'people#clyde_sync'
     post 'unlink_registration', to: 'people#unlink_registration'
   end

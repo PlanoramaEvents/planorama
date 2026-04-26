@@ -393,6 +393,7 @@ namespace :rbac do
           "create": true,
           "destroy": true,
           "resync_airmeet": false,
+          # TODO
           "clyde_sync": false,
           "unlink_registration": true
       },
@@ -744,6 +745,7 @@ namespace :rbac do
           "create": true,
           "destroy": true,
           "resync_airmeet": true,
+          # TODO
           "clyde_sync": true,
           "unlink_registration": true
       },

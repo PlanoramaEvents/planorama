@@ -83,6 +83,9 @@ gem 'webdack-uuid_migration'
 # for integrations!
 gem "httparty"
 gem "json-diff"
+# For the Authentik API
+# gem "authentik-api"
+# gem "authentik-client"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

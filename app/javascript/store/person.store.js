@@ -62,6 +62,7 @@ export const personStore = {
         }
       }
       return new Promise((res, rej) => {
+        // TODO: refactor
         dispatch('jv/post', [smallItem, { url: `/person/${person.id}/clyde_sync` }]).then((savedModel) => {
           // person should always be selected at this point so we shouldn't check, we should just select.
           commit(SELECT, { model, itemOrId: savedModel });

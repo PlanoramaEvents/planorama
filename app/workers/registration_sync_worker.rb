@@ -42,7 +42,7 @@ class RegistrationSyncWorker
   # for matching
   def load_phase(page_size: 500)
     # Get the clyde service and use the AUTH key that we have
-    svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
+    svc = Members::MemberServices.get_svc(service: 'clyde', token: ENV['CLYDE_AUTH_KEY'])
     if !svc.token
       raise "Missing auth token! abort abort abort!"
     end

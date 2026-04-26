@@ -24,6 +24,7 @@ class PeopleController < ResourceController
   end
 
   # Need method to sync clyde for given person ...
+  # TODO - refactor
   def clyde_sync
     authorize current_person, policy_class: policy_class
 
@@ -38,7 +39,7 @@ class PeopleController < ResourceController
       
       raise "No Clyde Reg for given person" unless reg_id
 
-      svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
+      svc = Members::MemberServices.get_svc(service: 'clyde', token: ENV['CLYDE_AUTH_KEY'])
       details = svc.person(id: reg_id)
 
       IdentityService.update_reg_info(person: person, details: details['data'])
