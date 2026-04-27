@@ -56,8 +56,3 @@ module Members
     end
   end
 end
-
-# svc = Members::AuthentikService.get_svc(token: 'Qf6NuSntI4HP2ixTS5cw1TJXM3HgfLbppTtF4kzsblHgovDZmsUn5uXHvZeU')
-# res = svc.people_by_page
-# res = svc.person(id: '58559913')
-
