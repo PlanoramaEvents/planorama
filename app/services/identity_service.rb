@@ -5,7 +5,7 @@ module IdentityService
     credentials = auth_info[:credentials]
     # Get Participant Details
     # TODO: maybe we want to pass refresh token, but time should not be that long...
-    svc = ClydeService.get_svc(token: credentials[:token])
+    svc = Members::MemberServices.get_svc(service: 'clyde', token: ENV['CLYDE_AUTH_KEY'])
     details = svc.me
 
     # Create or find the Identity

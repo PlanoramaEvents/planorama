@@ -71,8 +71,8 @@ class PersonPolicy < PlannerPolicy
     allowed?(action: :mailed_surveys)
   end
 
-  def clyde_sync?
-    allowed?(action: :clyde_sync)
+  def registration_sync?
+    allowed?(action: :registration_sync)
   end
 
   def completed_surveys?

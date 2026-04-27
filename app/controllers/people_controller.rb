@@ -23,8 +23,8 @@ class PeopleController < ResourceController
     )
   end
 
-  # Need method to sync clyde for given person ...
-  def clyde_sync
+  # Need method to sync with registration for given person ...
+  def registration_sync
     authorize current_person, policy_class: policy_class
 
     person = Person.find params[:person_id]
@@ -32,13 +32,15 @@ class PeopleController < ResourceController
     raise "No such person" unless person
     
     Person.transaction do
-      identity = person.oauth_identities.where(provider: 'clyde').first
+      # get the registration provider name
+      provider = ENV['REGISTRATION_PROVIDER']
+      identity = person.oauth_identities.where(provider: provider).first
 
       reg_id = person.reg_id || identity&.reg_id
       
-      raise "No Clyde Reg for given person" unless reg_id
+      raise "No Registration id for given person" unless reg_id
 
-      svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
+      svc = Members::MemberServices.get_svc(service: provider, token: ENV['REGISTRATION_TOKEN'])
       details = svc.person(id: reg_id)
 
       IdentityService.update_reg_info(person: person, details: details['data'])
