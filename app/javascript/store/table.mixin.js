@@ -122,6 +122,8 @@ export const tableMixin = {
 
       if (typeof this.defaultFilter != 'string') {
         _default_filter = JSON.stringify(this.defaultFilter)
+      } else {
+        _default_filter = this.defaultFilter
       }
 
       return new Promise((res, rej) => {
