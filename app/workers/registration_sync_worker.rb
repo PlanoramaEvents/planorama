@@ -10,7 +10,7 @@ class RegistrationSyncWorker
   include Sidekiq::Worker
 
   def perform
-    # get the data from Clyde and store it
+    # get the data from Reg and store it
     puts "--- Sync Load Phase #{Time.now}"
     load_phase(page_size: 500)
 
@@ -41,8 +41,9 @@ class RegistrationSyncWorker
   # Phase 1 is to suck up the data from Reg and put it into a temp store
   # for matching
   def load_phase(page_size: 500)
-    # Get the clyde service and use the AUTH key that we have
-    svc = Members::MemberServices.get_svc(service: 'clyde', token: ENV['CLYDE_AUTH_KEY'])
+    # Get the reg service and use the AUTH token that we have
+    provider = ENV['REGISTRATION_PROVIDER']
+    svc = Members::MemberServices.get_svc(service: provider, token: ENV['REGISTRATION_TOKEN'])
     if !svc.token
       raise "Missing auth token! abort abort abort!"
     end
@@ -51,6 +52,7 @@ class RegistrationSyncWorker
       RegistrationSyncDatum.connection.truncate(RegistrationSyncDatum.table_name)
       results = svc.people_by_page(page: 1, page_size: page_size)
 
+      # TODO: check that this is ok
       store_reg_data(data: results['data'])
 
       last_page = results.dig('meta', 'last_page')&.to_i || 0
@@ -59,7 +61,7 @@ class RegistrationSyncWorker
         if !results["message"]
           store_reg_data(data: results['data'])
         else
-          puts "We had an issue with the Clyde ... people by page #{page}, #{page_size}, #{last_page}, #{results["message"]}"
+          puts "We had an issue with the Registration Service ... people by page #{page}, #{page_size}, #{last_page}, #{results["message"]}"
         end
       end
     end

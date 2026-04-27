@@ -8,8 +8,6 @@ module Members
     end
 
     class Client < Members::MemberServices
-      # export AUTHENTIK_URL=http://localhost:9000
-      # export AUTHENTIK_TOKEN=Qf6NuSntI4HP2ixTS5cw1TJXM3HgfLbppTtF4kzsblHgovDZmsUn5uXHvZeU
       attr_accessor :token
 
       def initialize(token)
@@ -17,17 +15,20 @@ module Members
       end
 
       def person(id:)
-        # auth_client = Authentik::Client.new(
-        #   host: ENV['AUTHENTIK_URL'],
-        #   token: token
-        # )
-        # attributes_filter = {"worldcon.org/reg-id": id}
-        # users = auth_client.core_api.core_users_list(
-        #   attributes=attributes_filter, page_size=1
-        # )
+        url = "/api/v3/core/users/"
 
-        # # result
-        # users
+        response = HTTParty.get(
+          "#{Members::AuthentikService.base_url}#{url}",
+          headers: {
+            'Authorization' => "Bearer #{token}",
+            'Accept' => 'application/json'
+          },
+          query: { username: id, page_size: 1}
+        )
+
+        result = JSON.parse(response.body)
+
+        result
       end
 
 
@@ -35,23 +36,28 @@ module Members
       #  enables us to page through the members
       # 
       def people_by_page(page: 1, page_size: 20)
-        # response = HTTParty.get(
-        #   "#{AuthentikService.base_url}/XXX?page=#{page}&page_size=#{page_size}",
-        #   # TODO - Auth mechanism may not be bearer
-        #   headers: {
-        #     'Authorization' => "Bearer #{token}",
-        #     'Accept' => 'application/json'
-        #   }
-        # )
-        # result = JSON.parse(response.body)
+        url = "/api/v3/core/users/"
+        response = HTTParty.get(
+          "#{Members::AuthentikService.base_url}#{url}?page=#{page}&page_size=#{page_size}",
+          headers: {
+            'Authorization' => "Bearer #{token}",
+            'Accept' => 'application/json'
+          }
+        )
+        result = JSON.parse(response.body)
 
-        # result
+        result
       end
 
     end
 
     def self.get_svc(token:)
-      AuthentikService::Client.new(token)
+      Members::AuthentikService::Client.new(token)
     end
   end
 end
+
+# svc = Members::AuthentikService.get_svc(token: 'Qf6NuSntI4HP2ixTS5cw1TJXM3HgfLbppTtF4kzsblHgovDZmsUn5uXHvZeU')
+# res = svc.people_by_page
+# res = svc.person(id: '58559913')
+

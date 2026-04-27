@@ -24,7 +24,7 @@ module Members
         url ||= "/api/v1/participants"
 
         response = HTTParty.get(
-          "#{ClydeService.base_url}#{url}",
+          "#{Members::ClydeService.base_url}#{url}",
           headers: { 'Authorization' => "Bearer #{token}" }
         )
         result = JSON.parse(response.body)
@@ -37,7 +37,7 @@ module Members
       # svc.participant(id: '918')
       def person(id:)
         response = HTTParty.get(
-          "#{ClydeService.base_url}/api/v1/participants/#{id}",
+          "#{Members::ClydeService.base_url}/api/v1/participants/#{id}",
           headers: {
             'Authorization' => "Bearer #{token}",
             'Accept' => 'application/json'
@@ -53,7 +53,7 @@ module Members
       # 
       def people(ids:)
         response = HTTParty.get(
-          "#{ClydeService.base_url}/api/v1/participants?ids=#{ids.join(',')}",
+          "#{Members::ClydeService.base_url}/api/v1/participants?ids=#{ids.join(',')}",
           headers: {
             'Authorization' => "Bearer #{token}",
             'Accept' => 'application/json'
@@ -69,7 +69,7 @@ module Members
       # 
       def people_by_page(page: 1, page_size: 20)
         response = HTTParty.get(
-          "#{ClydeService.base_url}/api/v1/participants?page=#{page}&page_size=#{page_size}",
+          "#{Members::ClydeService.base_url}/api/v1/participants?page=#{page}&page_size=#{page_size}",
           headers: {
             'Authorization' => "Bearer #{token}",
             'Accept' => 'application/json'
@@ -83,7 +83,7 @@ module Members
       # My Details
       def me
         response = HTTParty.get(
-          "#{ClydeService.base_url}/api/v1/me",
+          "#{Members::ClydeService.base_url}/api/v1/me",
           headers: {
             'Authorization' => "Bearer #{token}",
             'Accept' => 'application/json'
@@ -98,7 +98,7 @@ module Members
     end
 
     def self.get_svc(token:)
-      ClydeService::Client.new(token)
+      Members::ClydeService::Client.new(token)
     end
   end
 end

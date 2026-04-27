@@ -62,8 +62,7 @@ export const personStore = {
         }
       }
       return new Promise((res, rej) => {
-        // TODO: refactor
-        dispatch('jv/post', [smallItem, { url: `/person/${person.id}/clyde_sync` }]).then((savedModel) => {
+        dispatch('jv/post', [smallItem, { url: `/person/${person.id}/registration_sync` }]).then((savedModel) => {
           // person should always be selected at this point so we shouldn't check, we should just select.
           commit(SELECT, { model, itemOrId: savedModel });
           res(savedModel);
@@ -73,20 +72,7 @@ export const personStore = {
     },
     [GET_PERSON_SURVEYS] ({dispatch, commit}, {person}) {
       return new Promise((res, rej) => {
-        // todo actually get the data here
-        // or does this work?
-        // answer - no, it doesn't. we don't know why
-        // TODO figure out why getRelated doesn't work
-        // dispatch('jv/getRelated', 
-        // `${personModel}/${person.id}/completed_surveys`
-
-        // ).then((data) => {
-        //   console.log(person.completed_surveys);
-        //   console.log("i got data back", data)
-        //   res(data);
-        // }).catch(rej);
-
-        // instead do something else that does work
+        // do something else that does work
         dispatch('jv/get', `/${personModel}/${person.id}/completed_surveys`).then((data) => {
             commit('jv/mergeRecords', {
               _jv: {
@@ -100,19 +86,6 @@ export const personStore = {
               }
             });
             res(data)
-
-            // "doohickeys": {
-            //   "data": [
-            //     {
-            //       "type": "doohickey",
-            //       "id": "20"
-            //     }
-            //   ]
-            // }
-              // let {_jv, ...filteredMailings} = data;
-              // let sortableMailings = Object.values(filteredMailings);
-              // sortableMailings.sort((a, b) => DateTime.fromISO(b.date_sent) - DateTime.fromISO(a.date_sent));
-              // this.fetchedMailings = sortableMailings
           }).catch(rej);
       })
     }

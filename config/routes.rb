@@ -55,8 +55,7 @@ Rails.application.routes.draw do
     patch 'person_exclusion', to: 'person_exclusions#replace'
     resources :session_limits, path: 'session_limit', only: [:index]
     # patch 'session_limit', to: 'session_limits#replace'
-    # TODO:
-    post 'clyde_sync', to: 'people#clyde_sync'
+    post 'registration_sync', to: 'people#registration_sync'
     post 'unlink_registration', to: 'people#unlink_registration'
   end
   get 'person/:person_id(/survey/:survey_id)/submissions', to: 'people#submissions'
@@ -120,7 +119,7 @@ Rails.application.routes.draw do
   resources :publication_dates, path: 'publication_date', only: [:index, :update]
   resources :integrations, path: 'integration', only: [:index, :update]
   get 'integration/airmeet', to: 'integrations#airmeet'
-  get 'integration/clyde', to: 'integrations#clyde'
+  get 'integration/registration', to: 'integrations#registration'
   get 'integration/g24rce', to: 'integrations#g24rce'
 
   get 'rce/schedule', to: 'rce#schedule'
