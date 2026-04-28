@@ -346,10 +346,11 @@ export default {
           // NOTE: we can not format (wrap) the cells in the sheet
           // unless we upgrade to a paid version of sheetjs
           let fname = this.$route.path.replace("/", "");
+          let dateString = this.dateNowAsString();
           const worksheet = XLSX.utils.json_to_sheet(rows);
           const workbook = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(workbook, worksheet, fname);
-          XLSX.writeFile(workbook, `${fname}.xlsx`, { compression: true });
+          XLSX.writeFile(workbook, `${fname}-${dateString}.xlsx`, { compression: true });
         }
       ).finally(
         () => {
