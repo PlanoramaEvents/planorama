@@ -38,7 +38,6 @@ export default {
   ],
   methods: {
     handleTabActivation(newTab, oldTab, bvEvent) {
-      console.debug("************ TAB", newTab)
       let path = '';
       switch(newTab) {
         case 0:
@@ -46,6 +45,7 @@ export default {
           break;
         case 1:
           path = `area-label-report`
+          break;
         case 2:
           path = `survey-reports`;
           break;
