@@ -121,6 +121,7 @@ class Survey::SubmissionsController < ResourceController
     workbook = FastExcel.open(constant_memory: true) # creates tmp file
     worksheet = workbook.add_worksheet("Export")
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    # WRAP TEXT ...????
     styles = [date_time_style,date_time_style]
     # Get submissions
     submisisons = ReportsService.survey_report(report_config: report_config)
@@ -170,6 +171,7 @@ class Survey::SubmissionsController < ResourceController
     workbook = FastExcel.open(constant_memory: true) # creates tmp file
     worksheet = workbook.add_worksheet("Export")
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    # TODO: wrap text
     styles = [date_time_style,date_time_style]
     # Get the survey questions
     submission = @collection.first
