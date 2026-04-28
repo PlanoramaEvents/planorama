@@ -169,6 +169,7 @@ import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import SearchVue from './search_vue'
 import tableCellFormatterMixin from '@/mixins/table-cell-formatter.mixin'
+import { spinnerMixin } from '@/store/spinner.mixin';
 
 export default {
   name: 'TableVue',
@@ -176,6 +177,7 @@ export default {
     SearchVue
   },
   mixins: [
+    spinnerMixin,
     tableCellFormatterMixin,
     dateTimeMixin,
     modelMixin,
@@ -322,6 +324,7 @@ export default {
     },
     onDownload() {
       // Get the data and put it into a spreadsheet
+      this.showSpinner()
       this.fetchNoStore().then(
         (data) => {
           // see https://docs.sheetjs.com/
@@ -347,6 +350,10 @@ export default {
           const workbook = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(workbook, worksheet, fname);
           XLSX.writeFile(workbook, `${fname}.xlsx`, { compression: true });
+        }
+      ).finally(
+        () => {
+          this.hideSpinner()
         }
       )
     },
