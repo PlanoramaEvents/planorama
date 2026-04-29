@@ -4,7 +4,7 @@
       <div class="column flex-grow-1">
         <h4 class="mt-3 mb-2">Registration Sync Management</h4>
         <div class="d-flex justify-content-between m-2">
-        <b-button variant="primary" size="sm" v-b-modal.confirm-reg-sync>Run Registration Data Sync</b-button>
+        <b-button :disabled="!registrationEnabled" variant="primary" size="sm" v-b-modal.confirm-reg-sync>Run Registration Data Sync</b-button>
         <reg-sync-modal></reg-sync-modal>
         </div>
         <ul class="list-unstyled ml-2 mb-2">

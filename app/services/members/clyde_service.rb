@@ -14,6 +14,14 @@ module Members
         self.token = token
       end
 
+      def last_page(results:)
+        results.dig('meta', 'last_page')&.to_i || 0
+      end
+
+      def data(results:)
+        results['data']
+      end
+
       # NOTE: a search would be useful. Need to ask STAXO about that
       # change per_page
       # svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
@@ -45,7 +53,7 @@ module Members
         )
         result = JSON.parse(response.body)
 
-        result
+        result['data']
       end
 
       # 

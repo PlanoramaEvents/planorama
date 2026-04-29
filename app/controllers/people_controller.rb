@@ -40,31 +40,22 @@ class PeopleController < ResourceController
       
       raise "No Registration id for given person" unless reg_id
 
-      svc = Members::MemberServices.get_svc(service: provider, token: ENV['REGISTRATION_TOKEN'])
+      svc = Members::MemberServices.get_member_service(service: provider, token: ENV['REGISTRATION_TOKEN'])
       details = svc.person(id: reg_id)
 
-      IdentityService.update_reg_info(person: person, details: details['data'])
+      IdentityService.update_reg_info(person: person, details: details)
 
       # Also need to update the datum
-      update_datum(details['data'])
+      data = svc.data(results: details)
+      update_datum(data: data)
 
       render_object(person)
     end
   end
 
   def update_datum(data)
-      datum = RegistrationSyncDatum.find_by reg_id: data['id']
-      if datum
-        datum.update(
-            name: data['full_name']&.strip,
-            email: data['email']&.strip,
-            registration_number: data['ticket_number']&.strip,
-            preferred_name: data['preferred_name']&.strip,
-            alternative_email: data['alternative_email']&.strip,
-            badge_name: data['badge']&.strip,
-            raw_info: data
-          )
-      end
+    adapter = Adapters::MemberAdapter.get_adapter(service: ENV['REGISTRATION_PROVIDER'])
+    adapter.update_datum(data: data)
   end
 
   def unlink_registration 

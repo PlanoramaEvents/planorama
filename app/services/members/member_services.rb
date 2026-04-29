@@ -1,6 +1,13 @@
 module Members
   class MemberServices
     
+    def last_page(results:)
+      raise Members::ServiceError.new("last_page not implemented")
+    end
+
+    def data(results:)
+      raise Members::ServiceError.new("data not implemented")
+    end
 
     def participants(page: nil)
       raise Members::ServiceError.new("participants not implemented")

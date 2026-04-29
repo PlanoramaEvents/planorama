@@ -110,6 +110,44 @@ module IdentityService
   end
 
   def self.update_reg_info(person:, details:, reg_match: Person.reg_matches[:self])
+    if ENV['REGISTRATION_PROVIDER'] == 'authentik'
+      self.update_reg_info_from_authentik(person:, details:, reg_match: Person.reg_matches[:self])
+    elsif ENV['REGISTRATION_PROVIDER'] == 'clyde'
+      self.update_reg_info_from_clyde(person:, details:, reg_match: Person.reg_matches[:self])
+    end
+  end
+
+  def self.update_reg_info_from_authentik(person:, details:, reg_match: Person.reg_matches[:self])
+    # If the Ticket Numbers do not match then we reset cause there may be an issue
+    if person.registration_number && person.registration_number != details['attributes']['worldcon.org/reg-id']
+      clear_person_reg_info(person: person)
+    # If the Reg numbers do not match then we reset cause there may be an issue
+    elsif person.reg_id && person.reg_id != details['pk'].to_s
+      clear_person_reg_info(person: person)
+    else
+      person.reg_id = details['pk'] unless person.reg_id
+      person.registration_number = details['attributes']['worldcon.org/reg-id']&.strip unless person.registration_number
+      # Based on the products that they have
+      person.registration_type = details['attributes']['worldcon.org/membership-type']
+      person.registered = !details['attributes']['worldcon.org/membership-type'].nil?
+      person.reg_attending_status = details['attributes']['worldcon.org/membership-type'] != 'wsfsMembershipOnly'
+      # How the registration match was done
+      person.reg_match = reg_match
+
+      # This will ensure update is done only any of the reg data has changed
+      if person.changed?
+        person.date_reg_synced = Time.now
+      end
+      # Attendance type in Plano is one of
+      # in_person, hybrid, virtual
+      # Authentik does not map to these well. Recommend that we get this from survey and Person profile
+      # in Plano instead.
+      # person.attendance_type = 
+    end
+    person.changed? ? person.save! : false
+  end
+
+  def self.update_reg_info_from_clyde(person:, details:, reg_match: Person.reg_matches[:self])
     # If the Ticket Numbers do not match then we reset cause there may be an issue
     if person.registration_number && person.registration_number != details['ticket_number']
       clear_person_reg_info(person: person)

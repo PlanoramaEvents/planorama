@@ -43,7 +43,7 @@ class RegistrationSyncWorker
   def load_phase(page_size: 500)
     # Get the reg service and use the AUTH token that we have
     provider = ENV['REGISTRATION_PROVIDER']
-    svc = Members::MemberServices.get_svc(service: provider, token: ENV['REGISTRATION_TOKEN'])
+    svc = Members::MemberServices.get_member_service(service: provider, token: ENV['REGISTRATION_TOKEN'])
     if !svc.token
       raise "Missing auth token! abort abort abort!"
     end
@@ -52,14 +52,13 @@ class RegistrationSyncWorker
       RegistrationSyncDatum.connection.truncate(RegistrationSyncDatum.table_name)
       results = svc.people_by_page(page: 1, page_size: page_size)
 
-      # TODO: check that this is ok
-      store_reg_data(data: results['data'])
+      store_reg_data(data: svc.data(results: results))
 
-      last_page = results.dig('meta', 'last_page')&.to_i || 0
+      last_page = svc.last_page(results: results)
       for page in (2..last_page) do
         results = svc.people_by_page(page: page, page_size: page_size)
         if !results["message"]
-          store_reg_data(data: results['data'])
+          store_reg_data(data: svc.data(results: results))
         else
           puts "We had an issue with the Registration Service ... people by page #{page}, #{page_size}, #{last_page}, #{results["message"]}"
         end
@@ -117,34 +116,11 @@ class RegistrationSyncWorker
   end
 
   def store_reg_data(data:)
+    adapter = Adapters::MemberAdapter.get_adapter(service: ENV['REGISTRATION_PROVIDER'])
     RegistrationSyncDatum.transaction do
       if data
         data.each do |d|
-          # puts "#{d['id']} -> #{d['full_name']} -> #{d['email']}"
-          # preferred_name, alternative_email
-          # TODO: move to an adapter when we have to support multiple reg services
-          next unless d['attending_status'] != 'Not Attending'
-          # Products to exclude from matching
-          next if [
-            'Chengdu',
-            'Volunteer',
-            'Apocryphal',
-            'Infant',
-            'Installment',
-            'Hall Pass',
-            'Staff',
-          ].include? d['product_list_name']
-
-          RegistrationSyncDatum.create(
-            reg_id: d['id'],
-            name: d['full_name']&.strip,
-            email: d['email']&.strip,
-            registration_number: d['ticket_number']&.strip,
-            preferred_name: d['preferred_name']&.strip,
-            alternative_email: d['alternative_email']&.strip,
-            badge_name: d['badge']&.strip,
-            raw_info: d
-          )
+          adapter.create_datum(data: d)
         end
       else
         puts "There was an error! Data is empty"

@@ -14,16 +14,24 @@ module Members
         self.token = token
       end
 
+      def last_page(results:)
+        results.dig('pagination', 'total_pages')&.to_i || 0
+      end
+
+      def data(results:)
+        results['results']
+      end
+
       def person(id:)
-        url = "/api/v3/core/users/"
+        url = "/api/v3/core/users/#{id}/"
 
         response = HTTParty.get(
           "#{Members::AuthentikService.base_url}#{url}",
           headers: {
             'Authorization' => "Bearer #{token}",
             'Accept' => 'application/json'
-          },
-          query: { username: id, page_size: 1}
+          }
+          # query: { username: id, page_size: 1}
         )
 
         result = JSON.parse(response.body)
