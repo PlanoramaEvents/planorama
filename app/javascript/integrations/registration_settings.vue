@@ -14,13 +14,12 @@
         <li>Records not found: {{ stats.not_found }}</li>
         </ul>
         <h4 class="mt-3">Configuration</h4>
-        <!-- TODO -->
         <b-form-group label-cols="auto" label="Enable Registration" class="configuration enable ml-2">
           <b-form-checkbox switch v-model="registrationEnabled" @change="patchRegistrationConfig()"></b-form-checkbox>
         </b-form-group>
-        <b-form-group label-cols="auto" label="Use a Registration Integration" class="configuration enable ml-2">
+        <!-- <b-form-group label-cols="auto" label="Use a Registration Integration" class="configuration enable ml-2">
           <b-form-checkbox switch v-model="registrationReg" @change="patchRegistrationConfig()" :disabled="!registrationEnabled"></b-form-checkbox>
-        </b-form-group>
+        </b-form-group> -->
         <b-form-group label="Base URL for Registration" class="ml-2">
           <b-form-input type="text" v-model="registrationBaseUrl" @blur="patchRegistrationConfig()" :disabled="!registrationEnabled"></b-form-input>
         </b-form-group>
