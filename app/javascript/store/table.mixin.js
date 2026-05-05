@@ -1,9 +1,10 @@
 import modelMixin from "./model.mixin";
 import { mapState, mapMutations } from 'vuex';
 import { SET_PER_PAGE } from "./app.store";
+import spinnerMixin from "@/store/spinner.mixin"
 
 export const tableMixin = {
-  mixins: [modelMixin],
+  mixins: [modelMixin, spinnerMixin],
   props: {
     defaultSortBy: {
       type: String,
@@ -128,7 +129,10 @@ export const tableMixin = {
       })
     },
     fetchPaged(clear=true) {
-      this.fetchAll(clear, this.perPage);
+      this.showSpinner()
+      this.fetchAll(clear, this.perPage).finally(
+        () => { this.hideSpinner() }
+      );
     }
   },
   mounted() {
