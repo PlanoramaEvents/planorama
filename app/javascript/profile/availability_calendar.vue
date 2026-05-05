@@ -40,7 +40,7 @@ import {
   AVAILABILITY_DESCRIPTION
 } from '@/constants/strings';
 
-const { DateTime } = require("luxon");
+import { DateTime } from 'luxon';
 
 export default {
   name: "AvailabilityCalendar",
@@ -48,9 +48,9 @@ export default {
   components: {
     AvailabilityTimePicker
   },
-  model: {
-    prop: 'person'
-  },
+  // model: {
+  //   prop: 'person'
+  // },
   props: {
     person: {
       type: Object,

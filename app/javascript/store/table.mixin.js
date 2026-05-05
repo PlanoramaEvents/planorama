@@ -93,28 +93,24 @@ export const tableMixin = {
       this.tableBusy = true;
       this.shall_clear = clear
       let _filter = JSON.stringify(this.filter)
+      let _default_filter = null
 
-      if (!this.filter && this.defaultFilter) {
-        _filter = this.defaultFilter
-      }
-
-      // if this.filter AND this.defaultFilter then we merge
-      if (this.filter && this.defaultFilter) {
-        let merged = this.mergeFilters(this.defaultFilter, _filter)
-        _filter = merged
+      if (typeof this.defaultFilter != 'string') {
+        _default_filter = JSON.stringify(this.defaultFilter)
+      } else {
+        _default_filter = this.defaultFilter
       }
 
       return new Promise((res, rej) => {
         if (clear) this.clear() // NOTE: clear is a sync call
         this.correctOrder = [] // we need to clear otherwise the order in the computed sorted gets weird
-        // What URL does this use
         this.fetch(
           {
-            // THIS IS THE PROBLEM
             perPage: perPage,
             sortOrder: this.sortDesc ? 'desc' : 'asc',
             sortBy: this.sortBy,
             filter: _filter,
+            default_filter: _default_filter,
             current_page: this.currentPage,
             nullsFirst: this.nullsFirst
           },

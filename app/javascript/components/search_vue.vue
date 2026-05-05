@@ -27,6 +27,7 @@
             v-model="query"
             :rules="rules"
             :maxDepth="2"
+            :styled="true"
           >
           </vue-query-builder>
           <b-button variant="primary" @click="onQuerySearch">Search</b-button>

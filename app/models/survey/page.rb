@@ -3,6 +3,7 @@
 # Table name: survey_pages
 #
 #  id               :uuid             not null, primary key
+#  lock_version     :integer          default(0)
 #  next_page_action :enum             default("next_page")
 #  sort_order       :integer
 #  title            :string

@@ -179,7 +179,7 @@ class Reports::SessionReportsController < ApplicationController
       worksheet.append_row(
         [
           session.title,
-          session.description, # NOTE: there is no mechanism for format HTML for excel so put the desc in and see what happens
+          session.clean_description, # NOTE: there is no mechanism for format HTML for excel so put the desc in and see what happens
           session.area_list.sort.join(';'),
           session.tags_array&.join("; "),
           session.labels_array&.join("; "),
@@ -407,7 +407,7 @@ class Reports::SessionReportsController < ApplicationController
           person.published_name,
           person.con_state,
           person.attendance_type,
-          person.bio
+          person.clean_bio
         ]
       )
     end

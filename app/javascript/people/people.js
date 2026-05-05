@@ -41,11 +41,12 @@ export const people_columns = [
       "invited", "probable", "accepted", "declined", "rejected"
     ].map(value => ({label: PERSON_CON_STATE[value], value})),
     operators: ["equals", "does not equal"],
-    sortable: false
+    sortable: true
   },
   {
     key: 'attendance_type',
-    label: 'Attendance Type'
+    label: 'Attendance Type',
+    sortable: true
   },
   {
     key: 'session_count',

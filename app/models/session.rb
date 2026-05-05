@@ -199,6 +199,13 @@ class Session < ApplicationRecord
 
   # TODO: need to add required setup (allowed to be null)
 
+  # Provide the text sans HTML elements and convert
+  # encoded elememts to their utf8 equivalents
+  def clean_description
+    candidate = Nokogiri::HTML.parse description
+    candidate.text
+  end
+
   def published?
     # No need to load the whole record ...
     PublishedSession.exists?(session_id: self.id)

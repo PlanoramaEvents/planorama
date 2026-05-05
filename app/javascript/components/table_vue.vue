@@ -75,6 +75,7 @@
       </div>
     <div class="d-flex mb-1">
       <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
+      <!-- Simplec count caption -->
       <span class="ml-auto">{{countCaption}}</span>
     </div>
     <b-table
@@ -124,8 +125,12 @@
           </b-form-checkbox>
       </template>
 
-      <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
+      <!-- <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
       <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
+        <slot :name="name" v-bind="slotData" />
+      </template> -->
+      <slot v-for="(_, name) in $slots" :name="name" />
+      <template v-for="(_, name) in $slots" v-slot:[name]="slotData">
         <slot :name="name" v-bind="slotData" />
       </template>
     </b-table>
@@ -210,6 +215,10 @@ export default {
     showBottomControls: {
       type: Boolean,
       default: true
+    },
+    showFullTotalCaption: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -229,7 +238,11 @@ export default {
       }
       if (this.totalRows == 0) from = 0 
 
-      return `Showing ${from} to ${to} of ${this.totalRows} (${this.fullTotalRows} total records)`
+      if (this.showFullTotalCaption) {
+        return `Showing ${from} to ${to} of ${this.totalRows} (${this.fullTotalRows} total records)`
+      } else {
+        return `Showing ${from} to ${to} of ${this.totalRows}`
+      }
     },
     useSelectMode() {
       if (this.selectMode == 'multi') {

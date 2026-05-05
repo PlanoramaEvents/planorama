@@ -16,7 +16,7 @@
 <script>
 import AgreementTable from "@/agreements/agreement_table";
 import AgreementEditor from "@/agreements/agreement_editor";
-import modelMixin from '../store/model.mixin'
+import modelMixin from '@/store/model.mixin'
 import {agreement_columns as columns} from "@/agreements/agreement";
 
 export default {

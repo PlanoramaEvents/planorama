@@ -47,7 +47,11 @@ export const toastMixin = {
             rej(item)
           } else {
             // we put the 204 (no change) into the JSON metadata for now
-            if(!(item._jv.json.meta && item._jv.json.meta.status && item._jv.json.meta.status == 204)) {
+            if ( typeof item._jv !== 'undefined') {
+              if(!(item._jv.json.meta && item._jv.json.meta.status && item._jv.json.meta.status == 204)) {
+                this.success_toast(success_text);
+              }
+            } else {
               this.success_toast(success_text);
             }
             res(item);

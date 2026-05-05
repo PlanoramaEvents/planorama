@@ -31,11 +31,11 @@
 </template>
 
 <script>
-import sessionConflictMixin from '../store/session_conflict.mixin';
-import modelMixin from '../store/model.mixin';
+import sessionConflictMixin from '@/store/session_conflict.mixin';
+import modelMixin from '@/store/model.mixin';
 import modelUtilsMixin from "@/store/model_utils.mixin"
 import { sessionModel } from '@/store/session.store'
-import dateTimeMixin from '../components/date_time.mixin'
+import dateTimeMixin from '@/components/date_time.mixin'
 import IgnoreButton from './ignore_button.vue';
 
 export default {

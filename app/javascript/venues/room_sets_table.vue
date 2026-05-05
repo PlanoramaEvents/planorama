@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import TableVue from '../components/table_vue';
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TableVue from '@/components/table_vue';
+import TooltipOverflow from '@/components/tooltip-overflow';
 import { room_set_columns as columns } from './room_set';
 import { mapActions } from 'vuex';
-import { NEW_ROOMSET, roomSetModel as roomSetModel} from '../store/room_set.store.js';
+import { NEW_ROOMSET, roomSetModel as roomSetModel} from '../store/room_set.store';
 
 export default {
   name: 'RoomSetsTable',

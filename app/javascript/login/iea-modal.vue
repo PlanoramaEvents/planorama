@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- iea-modal.vue -->
-    <b-modal id='iea-modal' size="lg" @show="onShow"
+    <plano-modal id='iea-modal' size="lg" @show="onShow"
       hide-header-close no-close-on-backdrop no-close-on-esc
       @ok="okAction" @cancel="$emit('cancel', $event)"
       ok-title="I Agree" cancel-variant="link">
@@ -52,16 +52,20 @@
         <p>I understand that there may be personal, business, and legal implications if I use this system inappropriately. The above is not an exhaustive list of things I am not allowed to do. I will use my best judgement in deciding what actions are appropriate.</p>
         -->
       </div>
-    </b-modal>
+    </plano-modal>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 // import { FETCH_IEA, SIGN_IEA, GET_IEA_UNSIGNED } from '../administration/agreement.store'
-import toastMixin from '../shared/toast-mixin'
+import toastMixin from '@/mixins/toast-mixin'
+import PlanoModal from '@/components/plano_modal.vue';
 export default {
   name: "IeaModal",
+  components: {
+    PlanoModal
+  },
   computed: {
     ...mapState('admin/agreements', ['information_ethics', 'ieaUnsigned']),
   },

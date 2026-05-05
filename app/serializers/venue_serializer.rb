@@ -15,4 +15,16 @@ class VenueSerializer
 
   attributes :id, :lock_version, :created_at, :updated_at,
              :name, :sort_order, :address
+
+  # Include list of rooms
+  has_many :rooms, lazy_load_data: true, serializer: RoomSerializer,
+            links: {
+              self: -> (object, params) {
+                "#{params[:domain]}/venue/#{object.id}"
+              },
+              related: -> (object, params) {
+                "#{params[:domain]}/venue/#{object.id}/rooms"
+              }
+            }
+
 end

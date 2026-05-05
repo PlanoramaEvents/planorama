@@ -12,10 +12,12 @@ module ResourceMethods
     authorize model_class, policy_class: policy_class
 
     meta = {}
-    meta[:total] = @collection_total if paginated
-    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total if paginated
+    meta[:total] = @collection_total #if paginated
+    meta[:full_total] = @full_collection_total ? @full_collection_total : @collection_total #if paginated
     meta[:current_page] = @current_page if @current_page.present? && paginated
     meta[:perPage] = @per_page if @per_page.present? && paginated
+    meta[:current_page] = 1 if !paginated
+    meta[:perPage] = @collection_total if !paginated
     format = params[:format]
 
     if format == 'xls' || format == 'xlsx'
@@ -177,9 +179,22 @@ module ResourceMethods
     per_page = params[:perPage]&.to_i || model_class.default_per_page if paginated && do_paginate
     per_page = nil unless paginated && do_paginate
     current_page = params[:current_page]&.to_i || 1 if paginated && do_paginate
-    filters = JSON.parse(params[:filter]) if params[:filter].present?
+    default_filter = if params[:default_filter]
+                        if params[:default_filter].kind_of? String
+                          JSON.parse(params[:default_filter]) 
+                        else
+                          params[:default_filter]
+                        end
+                      end
+    filters = if params[:filter]
+                if params[:filter].kind_of? String
+                  JSON.parse(params[:filter]) 
+                else
+                  params[:filter]
+                end
+              end
 
-    return per_page, current_page, filters
+    return per_page, current_page, filters, default_filter
   end
 
   def order_string(order_by: nil)
@@ -226,7 +241,7 @@ module ResourceMethods
              model_class
            end
 
-    @per_page, @current_page, @filters = collection_params
+    @per_page, @current_page, @filters, @default_filters = collection_params
 
 
     q = if select_fields
@@ -243,9 +258,9 @@ module ResourceMethods
          .references(references)
          .eager_load(eager_load)
          .joins(join_tables)
+         .where(query(@default_filters))
          .where(query(@filters))
          .where(collection_where)
-        #  anpther where?
 
     q = q.distinct if (join_tables && !join_tables.empty?) || make_distinct?
 
@@ -312,7 +327,7 @@ module ResourceMethods
 
   def query_part(filter:)
     q = nil
-    global_op = filter['op'] == 'all' ? :and : :or
+    global_op = filter['op'].downcase == 'all' ? :and : :or
     filter['queries'].each do |query|
       if query.is_a? Hash
         part = query_part(filter: query)
@@ -325,7 +340,7 @@ module ResourceMethods
           get_table(column: key)
         end
 
-        if key == 'all'
+        if key.downcase == 'all'
           # change to allowd limiting to named cols?, pass in list of cols to include based in what is displayed ...
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)

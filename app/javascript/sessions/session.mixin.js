@@ -1,8 +1,8 @@
 import {mapGetters, mapState, mapActions} from 'vuex';
-import toastMixin from '../shared/toast-mixin';
-import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE, UNSELECT, PATCH_FIELDS } from '../store/model.store';
-import { SESSION_SAVE_SUCCESS_DELETE, SESSION_SAVE_ERROR_DELETE, SESSION_SAVE_SUCCESS, SESSION_SAVE_ERROR } from '../constants/strings'
-import { sessionModel as model } from '../store/session.store';
+import toastMixin from '@/mixins/toast-mixin';
+import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE, UNSELECT, PATCH_FIELDS } from '@/store/model.store';
+import { SESSION_SAVE_SUCCESS_DELETE, SESSION_SAVE_ERROR_DELETE, SESSION_SAVE_SUCCESS, SESSION_SAVE_ERROR } from '@/constants/strings'
+import { sessionModel as model } from '@/store/session.store';
 
 export const sessionMixin = {
   mixins: [toastMixin],

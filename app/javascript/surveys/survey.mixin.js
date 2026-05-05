@@ -1,9 +1,9 @@
 import {mapGetters, mapState, mapActions} from 'vuex';
-import toastMixin from '../shared/toast-mixin';
-import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE, UNSELECT, PATCH_FIELDS } from '../store/model.store';
-import { SURVEY_SAVE_ERROR, SURVEY_SAVE_ERROR_DELETE, SURVEY_SAVE_SUCCESS, SURVEY_SAVE_SUCCESS_DELETE } from '../constants/strings'
+import toastMixin from '@/mixins/toast-mixin';
+import { SAVE, SELECT, SELECTED, FETCH_SELECTED, DELETE, UNSELECT, PATCH_FIELDS } from '@/store/model.store';
+import { SURVEY_SAVE_ERROR, SURVEY_SAVE_ERROR_DELETE, SURVEY_SAVE_SUCCESS, SURVEY_SAVE_SUCCESS_DELETE } from '@/constants/strings'
 import { surveyModel as model} from '@/store/survey';
-import { GET_CACHED_INDEX, GET_CACHED_PAGES, GET_CACHED_QUESTIONS, GET_CACHED_ANSWERS } from '../store/survey/survey.store';
+import { GET_CACHED_INDEX, GET_CACHED_PAGES, GET_CACHED_QUESTIONS, GET_CACHED_ANSWERS } from '@/store/survey/survey.store';
 
 export const surveyMixin = {
   mixins: [toastMixin],
@@ -44,7 +44,8 @@ export const surveyMixin = {
       if (!newSurvey) {
         newSurvey = this.survey;
       }
-      return this.toastPromise(this.$store.dispatch(SAVE, {model, selected: true, item: newSurvey}), success_text, error_text)
+      let fields = Object.keys(newSurvey._jv.attrs);
+      return this.toastPromise(this.$store.dispatch(PATCH_FIELDS, {model, selected: true, item: newSurvey, fields: fields}), success_text, error_text)
     },
     selectSurvey(itemOrId) {
       this.$store.commit(SELECT, {model, itemOrId});

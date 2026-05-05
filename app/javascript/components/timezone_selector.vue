@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-form-select
-      v-bind:value="value"
+      v-model="localValue"
       @change="onChange"
       :options="currentSettings.timezones"
       :disabled='disabled'
@@ -28,6 +28,20 @@ export default {
     //   type: Boolean,
     //   default: true
     // }
+  },
+  data: () => ({
+    internalValue: null
+  }),
+  computed: {
+    localValue: {
+      get() {
+        let v = this.internalValue ? this.internalValue : this.value;
+        return v;
+      }, 
+      set(val) {
+        this.internalValue = val;
+      }
+    },
   },
   methods: {
     onChange(selected) {

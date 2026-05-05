@@ -28,12 +28,12 @@
 
 <script>
 import { SAVE } from '../store/model.store';
-import TableVue from '../components/table_vue';
-import TooltipOverflow from '../shared/tooltip-overflow';
+import TableVue from '@/components/table_vue';
+import TooltipOverflow from '@/components/tooltip-overflow';
 import { survey_columns as columns } from './survey';
 import { mapActions } from 'vuex';
 import { NEW_SURVEY } from '@/store/survey';
-import { surveyMixin }from '@mixins';
+import { surveyMixin }from '@/mixins';
 
 export default {
   name: 'SurveyTable',

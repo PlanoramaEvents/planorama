@@ -13,7 +13,7 @@
 <script>
 import { DateTime } from 'luxon';
 import { settingsMixin } from '@/mixins';
-import conventionTimezoneMixin from '@/shared/convention-timezone.mixin';
+import conventionTimezoneMixin from '@/mixins/convention-timezone.mixin';
 
 export default {
   name: "DatetimePicker",

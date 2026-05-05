@@ -1,27 +1,31 @@
 <template>
-  <b-modal id='agreements-modal' size="lg"
-         hide-header-close no-close-on-backdrop no-close-on-esc
-         :title="title" @ok="onAgree" @cancel="onRefuse"
-         ok-title="I Agree" cancel-title="I Refuse">
+  <plano-modal id='agreements-modal' size="lg"
+          hide-header-close no-close-on-backdrop no-close-on-esc
+          :title="title" @ok="onAgree" @cancel="onRefuse"
+          ok-title="I Agree" cancel-title="I Refuse">
     <div class="agreements-terms" v-html="terms"></div>
     <div>
       <footer class="modal-footer">
         <p>By clicking ‘Agree’ below I do hereby agree to abide by the above usage restrictions. I acknowledge that there may be personal, business, and legal implications if I use this system inappropriately.</p>
       </footer>
     </div>
-  </b-modal>
+  </plano-modal>
 </template>
 
 
 <script>
-import personSessionMixin from '../auth/person_session.mixin';
-import authMixin from '../auth/auth.mixin';
-import {http as axios} from '../http';
+import PlanoModal from '@/components/plano_modal.vue';
+import personSessionMixin from '@/auth/person_session.mixin';
+import authMixin from '@/auth/auth.mixin';
+import {http as axios} from '@/http';
 let signedAgreements={};
 
 export default {
   name: "SignAgreements",
   mixins: [personSessionMixin, authMixin],
+  components: {
+    PlanoModal
+  },
   data() {
     return {
       ua:'',
@@ -31,6 +35,8 @@ export default {
   },
   methods: {
     check_signatures() {
+      // console.debug("*&**** <AP: ", this.currentPersonSession)
+      // console.debug("*** CHECK SIGS", user)
       for (this.ua in this.currentUser.unsigned_agreements) {
         if(!signedAgreements[this.ua]) {
           this.title=this.currentUser.unsigned_agreements[this.ua].title;
@@ -50,6 +56,14 @@ export default {
         window.location.href="/";
       });
     }
+  // },
+  // mounted() {
+  //   this.$nextTick(
+  //     () => {
+  //       console.debug("**** AGREEMENTS MOUNTED")
+  //       this.check_signatures()
+  //     }
+  //   )
   }
 }
 </script>

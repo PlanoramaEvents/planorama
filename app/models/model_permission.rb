@@ -14,7 +14,7 @@
 #  index_model_permissions_on_application_role_id  (application_role_id)
 #
 class ModelPermission < ApplicationRecord
-  self.primary_keys = :mdl_name, :application_role_id
+  self.primary_key = %w[mdl_name application_role_id]
 
   belongs_to :application_role
 end

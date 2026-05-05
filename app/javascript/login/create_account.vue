@@ -20,14 +20,8 @@
         :validateNow="form.email.validate"
       ></email-field>
       <div class="d-flex mb-2" v-if="captchaKey">
-        <vue-recaptcha
-            ref="recaptcha"
-            :sitekey="captchaKey"
-            :loadRecaptchaScript="true"
-            @verify="onVerifyCaptcha"
-            @expired="onCaptchaError"
-            @error="onCaptchaError"
-        ></vue-recaptcha>
+        <!-- TODO: replace success event with v-model when vue3 full upgrade is done -->
+        <CaptchaBox @success="captchaSuccess"/>
       </div>
       <div class="d-flex flex-row-reverse">
         <b-button
@@ -43,16 +37,14 @@
 </template>
 
 <script>
-import EmailField from "../shared/email_field";
+import EmailField from "@/components/email_field";
 import { http } from "../http";
 import { validateFields } from "../utils";
 import {
-  LOGIN_INVALID_FIELDS,
   SOMETHING_WENT_WRONG,
-  VALID_CAPTCHA_REQUIRED,
 } from "../constants/strings";
 import settingsMixin from "@/store/settings.mixin";
-import VueRecaptcha from 'vue-recaptcha';
+import { Checkbox as CaptchaBox, useRecaptchaProvider } from 'vue-recaptcha/head'
 
 export default {
   name: "CreateAccount",
@@ -74,19 +66,17 @@ export default {
         validate: null,
       },
     },
-    captcha_response: null,
-    captcha_errored: false
+    captcha_response: null
   }),
   components: {
     EmailField,
-    VueRecaptcha
+    CaptchaBox
   },
   computed: {
     submitDisabled: function () {
-      if (this.currentSettings.recaptcha_site_key) {
-        return this.captcha_errored || this.captcha_response == null || this.form.email.valid === false
+      if (this.captchaKey) {
+        return this.captcha_response == null || this.form.email.valid === false
       } else {
-        console.log('submitDisabled: check email')
         return this.form.email.valid === false;
       }
     },
@@ -95,14 +85,8 @@ export default {
     }
   },
   methods: {
-    onVerifyCaptcha: function (response) {
-      console.log('Verify: ' + response)
-      this.captcha_response = response;
-      this.captcha_errored = false;
-    },
-    onCaptchaError: function() {
-      // We got an error from captcha
-      this.captcha_errored = true;
+    captchaSuccess: function(response) {
+      this.captcha_response = response
     },
     onSubmit: async function (event) {
       event.preventDefault();
@@ -150,6 +134,11 @@ export default {
           });
       }
     },
+  },
+  beforeCreate() {
+    if (RECAPTCHA_SITE_KEY) {
+      useRecaptchaProvider();
+    }
   }
 };
 </script>

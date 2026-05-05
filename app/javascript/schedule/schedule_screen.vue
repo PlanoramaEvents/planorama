@@ -1,6 +1,6 @@
 <template>
-  <div class="container-fluid pl-0">
-    <div class="row">
+  <div class="scrollable">
+    <div class="row mb-3 mr-0">
       <div class="col-3 pt-3 d-flex flex-column" style="max-height: calc(100vh - 150px)">
         <schedulable-sessions
           :model="sessionModel"
@@ -49,7 +49,7 @@ import SchedulableSessions from './schedulable_sessions'
 import ScheduleCalendar from './schedule_calendar'
 import modelUtilsMixin from "@/store/model_utils.mixin";
 import settingsMixin from "@/store/settings.mixin";
-import { roomModel, SET_ROOMS_FOR_SCHEDULING } from '../store/room.store.js';
+import { roomModel, SET_ROOMS_FOR_SCHEDULING } from '../store/room.store';
 import { sessionModel } from '@/store/session.store'
 import { sessionConflictModel } from '@/store/session_conflict.store'
 import SessionSidebar from '../sessions/session_sidebar.vue';

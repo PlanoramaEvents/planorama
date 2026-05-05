@@ -47,22 +47,22 @@
         </b-tabs>
       </template>
     </sidebar-vue>
-    <b-modal id="confirmClearResponses" @ok="clearResponses" ok-title="Yes" cancel-variant="link">
+    <plano-modal id="confirmClearResponses" @ok="clearResponses" ok-title="Yes" cancel-variant="link">
       <p>{{SURVEY_RESULTS_CLEAR_CONFIRM}}</p>
-    </b-modal>
-    <b-modal id="confirmDelete" @ok="destroy" ok-title="Yes" cancel-variant="link" title="Delete survey?">
+    </plano-modal>
+    <plano-modal id="confirmDelete" @ok="destroy" ok-title="Yes" cancel-variant="link" title="Delete survey?">
       <p>{{SURVEY_CONFIRM_DELETE}}</p>
-    </b-modal>
+    </plano-modal>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
-import { EDIT, DELETE, DUPLICATE, UNSELECT } from '../store/model.store';
+import { DELETE, UNSELECT } from '../store/model.store';
 import SurveyQuestion from './survey_question';
 import surveyMixin from './survey.mixin';
 import SurveySettingsTab from './survey-settings-tab';
-import SidebarVue from '../components/sidebar_vue';
+import SidebarVue from '@/components/sidebar_vue';
 import IconButton from '@/components/icon_button.vue';
 import {
   SURVEY_RESULTS_CLEAR_CONFIRM,
@@ -77,6 +77,7 @@ SURVEY_PUBLIC_NO_DELETE
 } from '../constants/strings';
 import { DUPLICATE_SURVEY } from '@/store/survey';
 import { CLEAR_SURVEY_SUBMISSIONS } from '../store/survey/survey.actions';
+import PlanoModal from '@/components/plano_modal.vue';
 
 export default {
   name: 'SurveySidebar',
@@ -84,7 +85,8 @@ export default {
     SidebarVue,
     SurveyQuestion,
     SurveySettingsTab,
-    IconButton
+    IconButton,
+    PlanoModal
   },
   mixins: [
     surveyMixin

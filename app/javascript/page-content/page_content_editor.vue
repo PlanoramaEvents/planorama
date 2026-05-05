@@ -2,15 +2,17 @@
 <div class="mr-3">
   <b-form-select v-model="name" :options="options" class="w-50 mb-2">
   </b-form-select>
-  <loading-overlay :loading="loading"> 
+  <loading-overlay :loading="loading">
     <plano-editor
       v-model="content.html"
       type='classic'
+      v-if="content"
     ></plano-editor>
   </loading-overlay>
-  <!-- TODO - do we want a delete? -->
-  <b-button variant="primary" @click="saveContent" class="mt-2">Save</b-button>
-  <!-- <b-button variant="danger" @click="clearContent">Reset To Default</b-button> -->
+  <div class="mt-2">
+    <b-button variant="primary" @click="saveContent" class="mr-2">Save</b-button>
+    <b-button variant="danger" @click="clearContent" :disabled="starter">Reset To Default</b-button>
+  </div>
 </div>
 </template>
 
@@ -20,6 +22,7 @@ import pageContentMixin from '@/page-content/page_content.mixin'
 import PlanoEditor from '@/components/plano_editor';
 import { scheduleWorkflowMixin } from '@/store/schedule_workflow';
 import LoadingOverlay from '@/components/loading_overlay.vue';
+export const pageContentModel = 'page_content';
 
 export default {
   name: "PageContentEditor",
@@ -31,7 +34,8 @@ export default {
     return {
       model: 'page_content',
       loading: true,
-      content: this.starter_content(),
+      content: null,
+      starter: false,
       name: 'dashboard-default',
       options: [
         { value: 'dashboard-default', text: 'Dashboard - Default' },
@@ -53,40 +57,50 @@ export default {
     },
   },
   methods: {
-    starter_content() {
-      return {
-        id: null,
-        name: '',
-        html: ''
-      }
-    },
     clearContent() {
-      console.debug("**** DELETE", this.content)
       this.deletePageContent(this.content).then(
         () => {
-          this.content = this.starter_content()
+          this.fetch_content(true)
         }
       );
     },
     saveContent() {
-      let res = this.savePageContent(this.content);
-      res.then(
-        (obj) => {
-          this.content = obj
+      let _content = this.content
+      if (this.starter) {
+        _content = {
+          name: this.name,
+          html: this.content.html,
+          _jv: {
+            type: pageContentModel,            
+          }
         }
-      )
+        this.newPageContent(_content).then(
+          (obj) => {
+            this.starter = false
+            this.content = obj
+          }
+        )
+      } else {
+        _content.name = this.name
+        this.savePageContent(_content).then(
+          (obj) => {
+            this.content = obj
+          }
+        )
+      }
     },
-    fetch_content() {
+    fetch_content(starter = false) {
       if (this.name) {
+        this.starter = starter
         this.loading = true;
         this.clear()
-        this.fetch({ filter: `{"op":"all","queries":[["name", "=", "${this.name}"]]}` }).then(
+        let content_name = (starter) ? `${this.name}-starter` : `${this.name}`
+        this.fetch({ filter: `{"op":"all","queries":[["name", "=", "${content_name}"]]}` }).then(
           (col) => {
             if (this.collection.length > 0) {
               this.content = this.collection[0]
-            } else {
-              this.content = this.starter_content()
-              this.content.name = this.name
+            } else if (!starter) {
+              this.fetch_content(true)
             }
 
             this.loading = false;

@@ -12,7 +12,7 @@ export default {
     ],
     computed: {
         privacyPolicyLink() {
-            return this.configByName('privacy_policy_link') || "https://chicagoworldcon.github.io/planorama/privacy" 
+            return this.configByName('privacy_policy_link') || "https://planoramaevents.github.io/planorama/privacy" 
         }
     }
 }

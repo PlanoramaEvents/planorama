@@ -52,10 +52,12 @@ class ApplicationRole < ApplicationRecord
       entry = {
         mdl_name: k,
         actions: v,
-        application_role_id: self.id
+        application_role_id: self.id,
       }
-      cpk = CompositePrimaryKeys::CompositeKeys[k, self.id]
-      entry[:id] = cpk if ModelPermission.exists? cpk
+
+      # Need to change because of Rails now managing composite keys
+      existing = ModelPermission.where(ModelPermission.primary_key => [[k, self.id]]).first
+      entry[:id] = [k, self.id] if existing
 
       perms << entry
     end

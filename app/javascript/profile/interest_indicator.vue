@@ -7,7 +7,7 @@
     >
     </b-form-checkbox>
 
-    <b-modal
+    <plano-modal
       title="Confirm Not Interested"
       ref="unexpress-interest-modal"
       @hidden="stillInterested"
@@ -16,12 +16,12 @@
       <p class="my-4">
         Confirm that you are no longer interested in that session.
       </p>
-    </b-modal>
+    </plano-modal>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import PlanoModal from '@/components/plano_modal.vue';
 import sessionAssignmentMixin from '../sessions/session_assignment.mixin';
 
 export default {
@@ -29,6 +29,9 @@ export default {
   mixins: [
     sessionAssignmentMixin
   ],
+  components: {
+    PlanoModal
+  },
   props: {
     session: { // TODO: this gets changed by the edit, which is a problem???
       type: Object,
