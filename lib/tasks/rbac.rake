@@ -161,6 +161,7 @@ namespace :rbac do
           "update": false,
           "update_all": false,
           "schedule_publish": false,
+          "labels_by_area": false
       },
       "format": {
           "create": false,
@@ -234,11 +235,15 @@ namespace :rbac do
       "submission": {
           "create": true,
           "delete_all": false,
+          "filtered_submissions": false,
           "flat": false,
           "show": true,
           "update": true,
           "destroy": false,
           "index": true
+      },
+      "report_config": {
+          "index": false
       },
       "response": {
           "create": true,
@@ -453,6 +458,7 @@ namespace :rbac do
           "update": true,
           "update_all": true,
           "schedule_publish": false,
+          "labels_by_area": true
       },
       "format": {
           "create": true,
@@ -526,10 +532,14 @@ namespace :rbac do
       "submission": {
           "create": true,
           "delete_all": false,
+          "filtered_submissions": true,
           "flat": true,
           "show": true,
           "update": true,
           "destroy": false,
+          "index": true
+      },
+      "report_config": {
           "index": true
       },
       "response": {
@@ -804,6 +814,7 @@ namespace :rbac do
           "update": true,
           "update_all": true,
           "schedule_publish": true,
+          "labels_by_area": true
       },
       "format": {
           "create": true,
@@ -877,10 +888,14 @@ namespace :rbac do
       "submission": {
           "create": true,
           "delete_all": true,
+          "filtered_submissions": true,
           "flat": true,
           "show": true,
           "update": true,
           "destroy": true,
+          "index": true
+      },
+      "report_config": {
           "index": true
       },
       "response": {

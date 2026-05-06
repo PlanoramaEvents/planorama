@@ -102,12 +102,82 @@ class Survey::SubmissionsController < ResourceController
     end
   end
 
+  # 
+  # Use a report config to get the submissions from a survey
+  # based on a query AND only a subset of the questions
+  # 
+   def filtered_submissions
+    authorize model_class, policy_class: policy_class
+
+    # Get the report config
+    report_config_id = params[:report_config_id]
+    report_config = Survey::ReportConfig.find report_config_id
+
+    raise "No custom submission report" unless report_config
+
+    workbook = FastExcel.open(constant_memory: true) # creates tmp file
+    worksheet = workbook.add_worksheet("Export")
+    
+    #  Get Styles for the sheets
+    wrap_style = workbook.add_format()
+    wrap_style.set_text_wrap()
+    date_time_style = workbook.number_format("d mmm yyyy h:mm")
+    styles = [date_time_style,date_time_style, nil, nil]
+    # Get submissions
+    submisisons = ReportsService.survey_report(report_config: report_config)
+    # Convert to XLS
+    survey = report_config.survey
+    # updated_at, email (from person), status (from person), name (from person)
+    header = ['Updated At', 'Email', 'Status', 'Name'] # TODO: need person parameters
+    posn = 4
+    response_columns = {}
+    # NOTE: this query makes sure that the order of the questions is maintained
+    questions = Survey::Question.find_by_sql([
+      "select * from survey_questions where survey_questions.id in (?) order by array_position(ARRAY[?], TEXT(survey_questions.id))",
+      report_config.question_ids, report_config.question_ids
+    ])
+    questions.each do |question|
+      next if [:hr, :textonly].include? question.question_type
+      next unless can_access_question?(question, current_person)
+      styles << wrap_style
+
+      header << question.clean_question.strip
+      response_columns[question.id] = posn
+      posn += 1
+    end
+    worksheet.set_columns_width(0, posn -1, width = 50)
+    worksheet.append_row(header)
+
+    submisisons.each do |submission|
+      row = [submission.person.updated_at, submission.person.email, submission.person.con_state, submission.person.name]
+      row.concat Array.new(response_columns.size)
+      submission.responses.each do |response|
+        if response_columns[response.question_id] && can_access_response?(response, current_person)
+          row[response_columns[response.question_id]] = response.response_clean_text.strip
+        end
+      end
+      worksheet.append_row(
+        row,
+        styles
+      )
+    end
+
+    # TODO - use name from config in the filename
+    send_data workbook.read_string,
+        filename: "#{report_config.name.gsub(/\s/,'_')}_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
+        disposition: 'attachment'
+  end
+
   # faster collection to Excel
   def collection_to_xls
     workbook = FastExcel.open(constant_memory: true) # creates tmp file
     worksheet = workbook.add_worksheet("Export")
+
+    #  Get Styles for the sheets
+    wrap_style = workbook.add_format()
+    wrap_style.set_text_wrap()
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
-    styles = [date_time_style,date_time_style]
+    styles = [date_time_style,date_time_style, nil]
     # Get the survey questions
     submission = @collection.first
 
@@ -119,12 +189,14 @@ class Survey::SubmissionsController < ResourceController
     survey.questions.sorted.each do |question|
       next if [:hr, :textonly].include? question.question_type
       next unless can_access_question?(question, current_person)
-
-      header << question.clean_question
+      styles << wrap_style
+      
+      header << question.clean_question.strip
 
       response_columns[question.id] = posn
       posn += 1
     end
+    worksheet.set_columns_width(0, posn -1, width = 50)
     worksheet.append_row(header)
 
     @collection.each do |submission|
@@ -132,7 +204,7 @@ class Survey::SubmissionsController < ResourceController
       row.concat Array.new(response_columns.size)
       submission.responses.each do |response|
         if response_columns[response.question_id] && can_access_response?(response, current_person)
-          row[response_columns[response.question_id]] = response.response_clean_text
+          row[response_columns[response.question_id]] = response.response_clean_text.strip
         end
       end
       worksheet.append_row(

@@ -104,69 +104,88 @@ export default {
     },
     onSearch: function (event) {
       let filter = this.filter_by_value()
+      let query = null
 
       if (this.stateName) {
         if (this.value) {
-          this.setSearchState({
+          query = {
             key: this.stateName,
             setting: {
               filter: filter,
               value: this.value
             }
-          })
+          }
         } else {
-          this.setSearchState({
+          query = {
             key: this.stateName,
             setting: {}
-          })
+          }
         }
       }
 
-      this.$emit('change', filter)
+      // Add query to URL
+      if (query) {
+        this.setSearchState(query)
+        this.$router.push({ path: this.$route.path, query: {q: JSON.stringify(query.setting)} })
+        this.$emit('change', filter)
+      }
     },
-    // onSearchClear: function (event) {
-    //   this.value = null
-    //   this.$emit('change', null)
-    // },
     onQuerySearch: function() {
       let filter = this.filter_by_query()
+      let query = null
 
       if (this.stateName) {
         if (this.query) {
-          this.setSearchState({
+          query = {
             key: this.stateName,
             setting: {
               filter: filter,
               query: this.query
             }
-          })
+          }
         } else {
-          this.setSearchState({
+          query = {
             key: this.stateName,
             setting: {}
-          })
-        }
-      }
-
-      this.$emit('change', filter)
-    }
-  },
-  mounted() {
-    if (this.stateName) {
-      let saved = this.getSearchState()(this.stateName)
-      if (saved) {
-        if (saved.value) {
-          this.value = saved.value
-        }
-        if (saved.query) {
-          this.query = saved.query
-
-          if (saved.filter.queries.length > 0) {
-            this.$root.$emit('bv::toggle::collapse', 'advanced-search')
           }
         }
-        this.$emit('change', saved.filter)
       }
+
+      // Add the query to the URL
+      if (query) {
+        this.setSearchState(query)
+        this.$router.push({ path: this.$route.path, query: {q: JSON.stringify(query.setting)} })
+        this.$emit('change', filter)
+      }
+    }
+  },
+  activated() {
+  },
+  mounted() {
+    let saved = null;
+    if (typeof this.$route.query.q != "undefined") {
+      let param = this.$route.query.q
+      saved = JSON.parse(param)
+      this.setSearchState({key: this.stateName, setting: saved})
+      this.$router.push({ path: this.$route.path, query: {q: param} })
+    } else if (this.stateName) {
+      saved = this.getSearchState()(this.stateName)
+    }
+
+    if (saved) {
+      this.$router.push({ path: this.$route.path, query: {q: JSON.stringify(saved)} })
+
+      if (saved.value) {
+        this.value = saved.value
+      }
+      if (saved.query) {
+        this.query = saved.query
+
+        if (saved.filter.queries.length > 0) {
+          this.$root.$emit('bv::toggle::collapse', 'advanced-search')
+        }
+      }
+      this.$emit('change', saved.filter)
     }
   }
 }

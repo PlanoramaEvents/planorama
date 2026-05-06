@@ -33,6 +33,7 @@
       </template>
     </modal-form>
     <table-vue
+      showDownload="true"
       @new="onNew"
       defaultSortBy='people.name'
       :model="model"
@@ -40,6 +41,7 @@
       selectMode='multi'
       ref="people-table"
       stateName="people-table-search-state"
+      :formatters="formatters"
     >
       <template v-slot:alternate-search-title>Seach by Email(s)</template>
       <template v-slot:alternate-search>
@@ -169,12 +171,52 @@ export default {
   computed: {
     declinedRejected() {
       return this.selectedConState === "declined" || this.selectedConState === "rejected"
+    },
+    formatters() {
+      return {
+        draft_approval: this.formatDraftApproval,
+        draft_comments: this.formatDraftComments,
+        firm_approval: this.formatFirmApproval,
+        firm_comments: this.formatFirmComments
+      }
     }
   },
   methods: {
     ...mapActions({
       fetchScheduleWorkflows: FETCH_WORKFLOWS,
     }),
+    formatDraftApproval(item) {
+      if (item) {
+        if (this.draftSchedule) {
+          return this.approved(item.person_schedule_approvals, 'draft')
+        }
+      }
+      return "—";
+    },
+    formatDraftComments(item) {
+      if (item) {
+        if (this.draftSchedule) {
+          return this.comments(item.person_schedule_approvals, 'draft')
+        }
+      }
+      return "—";
+    },
+    formatFirmApproval(item) {
+      if (item) {
+        if (this.firmSchedule) {
+          return this.approved(item.person_schedule_approvals, 'firm')
+        }
+      }
+      return "—";
+    },
+    formatFirmComments(item) {
+      if (item) {
+        if (this.firmSchedule) {
+          return this.comments(item.person_schedule_approvals, 'firm')
+        }
+      }
+      return "—";
+    },
     approved(approvals, state) {
       let v = Object.values(approvals).find( o => o.workflow_state == state);
       return formatPersonScheduleApprovalState(v?.approved)
