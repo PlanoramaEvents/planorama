@@ -106,10 +106,8 @@ export default {
       let filter = this.filter_by_value()
       let query = null
 
-      if (this.stateName) {
         if (this.value) {
           query = {
-            key: this.stateName,
             setting: {
               filter: filter,
               value: this.value
@@ -117,15 +115,16 @@ export default {
           }
         } else {
           query = {
-            key: this.stateName,
             setting: {}
           }
         }
+      if (this.stateName) {
+        query['key'] = this.stateName
+        this.setSearchState(query)
       }
 
       // Add query to URL
       if (query) {
-        this.setSearchState(query)
         this.$router.push({ path: this.$route.path, query: {q: JSON.stringify(query.setting)} })
         this.$emit('change', filter)
       }
