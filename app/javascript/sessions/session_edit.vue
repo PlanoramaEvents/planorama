@@ -17,10 +17,9 @@
     </div>
     <div class="row">
       <div class="col-6">
-
         <pill-display 
           v-model="session_areas"
-          @input="saveSession()"
+          @save="saveSession()"
           label="Areas"
           color="primary"
           :modalOptions="areaOptions"
@@ -101,7 +100,7 @@
       <div class="col-6">
         <pill-display 
           v-model="session.tag_list"
-          @input="saveSession()"
+          @save="saveSession()"
           label="Public Tags"
           color="warning"
           :modalOptions="sessionTagsOptions"
@@ -117,7 +116,7 @@
       <div class="col-6">
         <pill-display
           v-model="session.label_list"
-          @input="saveSession()"
+          @save="saveSession()"
           label="Admin Labels"
           color="info"
           :modalOptions="sessionLabelsOptions"
