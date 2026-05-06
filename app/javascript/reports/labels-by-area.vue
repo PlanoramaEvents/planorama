@@ -77,7 +77,6 @@ export default {
       return `${base}${qs}`
     },
     init() {
-      console.debug("GET THE TTTT")
       http.get("/session/labels_by_area").then(
         (res) => {
           let header = res.data.header

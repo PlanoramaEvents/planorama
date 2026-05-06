@@ -168,6 +168,8 @@ import dateTimeMixin from '@/components/date_time.mixin'
 import modelMixin from '../store/model.mixin';
 import tableMixin from '../store/table.mixin';
 import SearchVue from './search_vue'
+import tableCellFormatterMixin from '@/mixins/table-cell-formatter.mixin'
+import { spinnerMixin } from '@/store/spinner.mixin';
 
 export default {
   name: 'TableVue',
@@ -175,6 +177,8 @@ export default {
     SearchVue
   },
   mixins: [
+    spinnerMixin,
+    tableCellFormatterMixin,
     dateTimeMixin,
     modelMixin,
     tableMixin, // covers pagination and sorting
@@ -320,6 +324,7 @@ export default {
     },
     onDownload() {
       // Get the data and put it into a spreadsheet
+      this.showSpinner()
       this.fetchNoStore().then(
         (data) => {
           // see https://docs.sheetjs.com/
@@ -330,18 +335,7 @@ export default {
               this.tableColumns.forEach(
                 (col) => {
                   if (col.key != 'selected') {
-                    let v = el[col.key]
-                    if (typeof v === 'boolean') {
-                      row[col.label] = el[col.key] ? 'Yes' : 'No'
-                    } else if (Array.isArray(el[col.key])) {
-                      row[col.label] = el[col.key].join(", ")
-                    } else {
-                      if (this.isDateTime(el[col.key])) {
-                        row[col.label] = this.formatLocaleDate(el[col.key])
-                      } else {
-                        row[col.label] = el[col.key]
-                      }                  
-                    }
+                    row[col.label] = this.format_cell(col, el) 
                   }
                 }
               )
@@ -349,11 +343,18 @@ export default {
             }
           )
           // Use the path for the name of the sheet and file
+          // NOTE: we can not format (wrap) the cells in the sheet
+          // unless we upgrade to a paid version of sheetjs
           let fname = this.$route.path.replace("/", "");
+          let dateString = this.dateNowAsString();
           const worksheet = XLSX.utils.json_to_sheet(rows);
           const workbook = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(workbook, worksheet, fname);
-          XLSX.writeFile(workbook, `${fname}.xlsx`, { compression: true });
+          XLSX.writeFile(workbook, `${fname}-${dateString}.xlsx`, { compression: true });
+        }
+      ).finally(
+        () => {
+          this.hideSpinner()
         }
       )
     },

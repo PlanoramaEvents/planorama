@@ -105,9 +105,6 @@ class Survey::SubmissionsController < ResourceController
   # 
   # Use a report config to get the submissions from a survey
   # based on a query AND only a subset of the questions
-  # http://localhost:5100/submissions/filtered_submissions/dfaf8aa3-cdfa-4fd6-8b95-18f6d586eb0d
-  # http://localhost:5100/submissions/filtered_submissions/e8d5d1dd-360c-4c38-95fe-17d667155fe1
-  # 
   # 
    def filtered_submissions
     authorize model_class, policy_class: policy_class
@@ -120,8 +117,12 @@ class Survey::SubmissionsController < ResourceController
 
     workbook = FastExcel.open(constant_memory: true) # creates tmp file
     worksheet = workbook.add_worksheet("Export")
+    
+    #  Get Styles for the sheets
+    wrap_style = workbook.add_format()
+    wrap_style.set_text_wrap()
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
-    styles = [date_time_style,date_time_style]
+    styles = [date_time_style,date_time_style, nil, nil]
     # Get submissions
     submisisons = ReportsService.survey_report(report_config: report_config)
     # Convert to XLS
@@ -138,11 +139,13 @@ class Survey::SubmissionsController < ResourceController
     questions.each do |question|
       next if [:hr, :textonly].include? question.question_type
       next unless can_access_question?(question, current_person)
+      styles << wrap_style
 
-      header << question.clean_question
+      header << question.clean_question.strip
       response_columns[question.id] = posn
       posn += 1
     end
+    worksheet.set_columns_width(0, posn -1, width = 50)
     worksheet.append_row(header)
 
     submisisons.each do |submission|
@@ -150,7 +153,7 @@ class Survey::SubmissionsController < ResourceController
       row.concat Array.new(response_columns.size)
       submission.responses.each do |response|
         if response_columns[response.question_id] && can_access_response?(response, current_person)
-          row[response_columns[response.question_id]] = response.response_clean_text
+          row[response_columns[response.question_id]] = response.response_clean_text.strip
         end
       end
       worksheet.append_row(
@@ -169,8 +172,12 @@ class Survey::SubmissionsController < ResourceController
   def collection_to_xls
     workbook = FastExcel.open(constant_memory: true) # creates tmp file
     worksheet = workbook.add_worksheet("Export")
+
+    #  Get Styles for the sheets
+    wrap_style = workbook.add_format()
+    wrap_style.set_text_wrap()
     date_time_style = workbook.number_format("d mmm yyyy h:mm")
-    styles = [date_time_style,date_time_style]
+    styles = [date_time_style,date_time_style, nil]
     # Get the survey questions
     submission = @collection.first
 
@@ -182,12 +189,14 @@ class Survey::SubmissionsController < ResourceController
     survey.questions.sorted.each do |question|
       next if [:hr, :textonly].include? question.question_type
       next unless can_access_question?(question, current_person)
-
-      header << question.clean_question
+      styles << wrap_style
+      
+      header << question.clean_question.strip
 
       response_columns[question.id] = posn
       posn += 1
     end
+    worksheet.set_columns_width(0, posn -1, width = 50)
     worksheet.append_row(header)
 
     @collection.each do |submission|
@@ -195,7 +204,7 @@ class Survey::SubmissionsController < ResourceController
       row.concat Array.new(response_columns.size)
       submission.responses.each do |response|
         if response_columns[response.question_id] && can_access_response?(response, current_person)
-          row[response_columns[response.question_id]] = response.response_clean_text
+          row[response_columns[response.question_id]] = response.response_clean_text.strip
         end
       end
       worksheet.append_row(

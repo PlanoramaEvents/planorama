@@ -1,16 +1,16 @@
 <template>
   <div class="mt-3">
-    <b-tabs content-class="mt-3" @activate-tab="handleTabActivation" v-if="collection.length">
+    <b-tabs content-class="mt-3" @activate-tab="handleTabActivation">
       <b-tab title="Reports" :active="tab === 'reports'" lazy>
         <Reports ref="reports"></Reports>
       </b-tab>
-      <b-tab title="Survey Reports" :active="tab === 'survey-reports'" lazy>
+      <b-tab title="Area Label Report" :active="tab === 'area-label-report'" lazy>
+        <labels-by-area></labels-by-area>
+      </b-tab>
+      <b-tab title="Survey Reports" :active="tab === 'survey-reports'" lazy v-if="collection.length">
         <survey-reports :report-configs="collection"></survey-reports>
       </b-tab>
     </b-tabs>
-    <div v-else>
-      <Reports ref="reports"></Reports>
-    </div>
   </div>
 </template>
 
@@ -20,10 +20,11 @@ import SurveyReports from "@/reports/survey_reports.vue"
 import Reports from "@/reports/reports.vue"
 import { modelMixinNoProp } from '@/store/model.mixin';
 import { reportConfigModel } from '@/store/survey/report_config.store'
+import LabelsByArea from '@/reports/labels-by-area.vue';
 
 export default {
   name: "ReportsTabs",
-  components: {Reports, SurveyReports},
+  components: {Reports, SurveyReports, LabelsByArea},
   props: [
     'tab'
   ],
@@ -43,6 +44,9 @@ export default {
           path = `reports`;
           break;
         case 1:
+          path = `area-label-report`
+          break;
+        case 2:
           path = `survey-reports`;
           break;
       }
