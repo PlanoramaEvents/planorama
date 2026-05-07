@@ -192,6 +192,8 @@ export const tableMixin = {
     filter(newVal, oldVal) {
       // console.debug("filter changed:", newVal, oldVal)
       if(newVal != oldVal) {
+        // reset current page on a new search
+        this.currentPage = 1;
         this.fetchPaged(this.shall_clear);
       }
     },
