@@ -11,8 +11,8 @@
         <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
         <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"></linked-field-icon>{{SURVEY_LINKED_FIELD2}}</b-alert>
         <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
-        <v-form as="div" ref="surveyForm" :initial-values="formValues">
-            <b-alert show variant="danger" v-if="failed">
+        <v-form ref="surveyForm" :initial-values="formValues" v-slot="{errors, meta }">
+            <b-alert show variant="danger" v-if="Object.keys(errors).length">
               <!-- aka SCROLL UP ASSHAT -->
               <b-icon-exclamation-triangle></b-icon-exclamation-triangle> You must correct all errors on the page to proceed.
             </b-alert>
@@ -25,7 +25,7 @@
                 ref="SurveyQuestion"
             ></survey-question>
             <p class="float-right mt-2" v-if="submitted">You submitted the survey! YAY!</p>
-            <b-alert show variant="danger" v-if="failed">
+            <b-alert show variant="danger" v-if="Object.keys(errors).length">
               <!-- aka SCROLL UP ASSHAT -->
               <b-icon-exclamation-triangle></b-icon-exclamation-triangle> You must correct all errors on the page to proceed.
             </b-alert>
@@ -149,6 +149,9 @@ export default {
       setPreviewMode: SET_PREVIEW_MODE,
       redirShown: REDIR_SHOWN
     }),
+    // onInvalidSubmit() {
+    //   console.debug("********** SUB FAILED")
+    // },
     // We need to deal with the validations on submit for back with validation to work
     onSubmit() {
       Promise.all(this.$refs['SurveyQuestion'].map(q => q.doValidate())).then(
