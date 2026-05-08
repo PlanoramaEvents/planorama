@@ -9,7 +9,7 @@
         <linked-field-icon :linked_field="question.linked_field"></linked-field-icon>
       </template>
       <template #default="{ ariaDescribedBy }">
-        <v-field ref="questionField" :name="question.question" :rules="rules" v-slot="{errors, meta }" v-if="!email">
+        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-if="!email">
           <b-form-textarea
             :class="{'w-50': answerable}"
             v-if="textbox"
@@ -174,8 +174,8 @@
               :disabled="!answerable"
             >{{choice.answer}}</b-form-select-option>
           </b-form-select>
-          <error-message as="div" :name="question.question" v-slot="{message}">
-            <div class="invalid-message">{{ message }}</div>
+          <error-message as="div" :name="question.id" v-slot="{message}">
+            <div class="invalid-message">Field is Required</div>
           </error-message>
         </v-field>
         <email-field-veevalidate
