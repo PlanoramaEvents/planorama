@@ -4,7 +4,7 @@
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "^0.11.0",
     "@popperjs/core": "^2.11.7",
-    "@vee-validate/rules": "~4.0.0",
+    "@vee-validate/rules": "^4.15.1",
     "@vitejs/plugin-vue": "^4.2.1",
     "@vue/compat": "3.3.4",
     "actioncable-vue": "^2.5.1",
@@ -27,7 +27,7 @@
     "url-parse": "^1.5.9",
     "uuid": "^8.3.2",
     "validator": "^13.7.0",
-    "vee-validate": "~4.10",
+    "vee-validate": "^4.15.1",
     "vue": "3.3.4",
     "vue-async-computed": "^4.0.1",
     "vue-cal": "^4.10.0",
