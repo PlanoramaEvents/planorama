@@ -9,10 +9,24 @@
         <linked-field-icon :linked_field="question.linked_field"></linked-field-icon>
       </template>
       <template #default="{ ariaDescribedBy }">
-        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-if="!email">
+        <!-- 
+          NOTE: we need the v-model in the v-field for the validation to work
+          ideally we would also use the field slot but that does not work with
+          our model. So there is also a v-model in the inputs.
+         -->
+        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-model="localResponse.response.text" v-if="textfield">
+          <b-form-input
+            :class="{'w-50': answerable}"
+            v-model="localResponse.response.text"
+            :state="calcValid(meta)"
+            :aria-describedBy="ariaDescribedBy"
+            :disabled="!answerable"
+            @blur="validateField"
+          ></b-form-input>
+        </v-field>
+        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-model="localResponse.response.text" v-if="textbox">
           <b-form-textarea
             :class="{'w-50': answerable}"
-            v-if="textbox"
             v-model="localResponse.response.text"
             :state="calcValid(meta)"
             :aria-describedBy="ariaDescribedBy"
@@ -21,19 +35,11 @@
           >
             {{localResponse.response.text}}
           </b-form-textarea>
-          <b-form-input
-            :class="{'w-50': answerable}"
-            v-if="textfield"
-            v-model="localResponse.response.text"
-            :state="calcValid(meta)"
-            :aria-describedBy="ariaDescribedBy"
-            :disabled="!answerable"
-            @blur="validateField"
-          ></b-form-input>
+        </v-field>
+        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-model="radioButtonResponse" v-if="yesnomaybe">
           <b-form-radio-group
             :class="{'w-50': answerable}"
             stacked
-            v-if="yesnomaybe"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
             :state="calcValid(meta)"
@@ -52,10 +58,11 @@
               </b-form-textarea>
             </div>
           </b-form-radio-group>
+        </v-field>
+        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-model="radioButtonResponse" v-if="boolean">
           <b-form-radio-group
             :class="{'w-50': answerable}"
             stacked
-            v-if="boolean"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
             :state="calcValid(meta)"
@@ -64,10 +71,11 @@
             <b-form-radio :disabled="!answerable" :value="bYesLabel.value" :state="calcValid(meta)">{{bYesLabel.label}}</b-form-radio>
             <b-form-radio :disabled="!answerable" :value="bNoLabel.value" :state="calcValid(meta)">{{bNoLabel.label}}</b-form-radio>
           </b-form-radio-group>
+        </v-field>
+        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-model="radioButtonResponse" v-if="attendance_type">
           <b-form-radio-group
             :class="{'w-50': answerable}"
             stacked
-            v-if="attendance_type"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
             :state="calcValid(meta)"
@@ -77,10 +85,11 @@
             <b-form-radio :disabled="!answerable" :value="virtualLabel.value" :state="calcValid(meta)">{{virtualLabel.label}}</b-form-radio>
             <b-form-radio :disabled="!answerable" :value="hybridLabel.value" :state="calcValid(meta)">{{hybridLabel.label}}</b-form-radio>
           </b-form-radio-group>
+        </v-field>
+        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-model="radioButtonResponse" v-if="singlechoice">
           <b-form-radio-group
             :class="{'w-50': answerable}"
             stacked
-            v-if="singlechoice"
             v-model="radioButtonResponse"
             :aria-describedBy="ariaDescribedBy"
             :state="calcValid(meta)"
@@ -119,10 +128,11 @@
               </b-form-group>
             </b-form-radio>
           </b-form-radio-group>
+        </v-field>
+        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-model="localResponse.response.answers" v-if="multiplechoice">
           <b-form-checkbox-group
             :class="{'w-50': answerable}"
             stacked
-            v-if="multiplechoice"
             v-model="localResponse.response.answers"
             :aria-describedBy="ariaDescribedBy"
             :state="calcValid(meta)"
@@ -159,6 +169,8 @@
               </b-form-group>
             </b-form-checkbox>
           </b-form-checkbox-group>
+        </v-field>
+        <v-field ref="questionField" :name="question.id" :rules="rules" v-slot="{errors, meta }" v-model="localResponse.response.text" v-if="dropdown">
           <b-form-select
             :class="{'w-50': answerable}"
             v-if="dropdown"
@@ -174,9 +186,6 @@
               :disabled="!answerable"
             >{{choice.answer}}</b-form-select-option>
           </b-form-select>
-          <error-message as="div" :name="question.id" v-slot="{message}">
-            <div class="invalid-message">Field is Required</div>
-          </error-message>
         </v-field>
         <email-field-veevalidate
           ref="questionField"
@@ -189,6 +198,9 @@
           :mandatory="question.mandatory"
           @change="saveResponse(localResponse, selectedSubmission)"
         ></email-field-veevalidate>
+        <error-message as="div" :name="question.id" v-slot="{message}">
+          <div class="invalid-message">Field is Required</div>
+        </error-message>
       </template>
     </b-form-group>
     <div v-if="textonly" v-html="question.question"></div>

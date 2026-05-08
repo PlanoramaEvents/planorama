@@ -4,6 +4,7 @@
     :name="label"
     :rules="rules"
     v-slot="{ handleChange, errors, meta }"
+    v-model="localValue"
   >
     <b-form-group
       :id="groupId"
@@ -93,10 +94,9 @@ export default {
           regex: /.+@.+\..+/
         }
       } else {
-        return ""
-        // {
-        //   regex: /.+@.+\..+/
-        // }
+        return {
+          regex: /.+@.+\..+/
+        }
       }
     }
   },
