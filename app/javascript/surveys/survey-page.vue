@@ -11,8 +11,7 @@
         <h1 v-if="selectedSurveyFirstPage" >{{ selectedSurveyFirstPage.title }}</h1>
         <b-alert show variant="info">{{SURVEY_LINKED_FIELD1}}<linked-field-icon :linked_field="true"></linked-field-icon>{{SURVEY_LINKED_FIELD2}}</b-alert>
         <h2 v-if="!firstPage">{{selectedPage.title}}</h2>
-        <!-- :validateOnMount="true" -->
-        <v-form as="div" ref="personEditForm" :initialValues="formValues" v-slot="{ handleSubmit, errors, meta }">
+        <v-form as="div" ref="personEditForm" v-slot="{ handleSubmit, errors, meta }">
             <b-alert show variant="danger" v-if="Object.keys(errors).length">
               <!-- aka SCROLL UP ASSHAT -->
               <b-icon-exclamation-triangle></b-icon-exclamation-triangle> You must correct all errors on the page to proceed.
@@ -35,7 +34,7 @@
               <div v-b-tooltip="{disabled: !submit_disabled}" :title="submit_disabled_tooltip">
                 <b-button
                     variant="primary"
-                    @click="onSubmit"
+                    @click="(event) => { handleSubmit(event, submit); }"
                     :disabled="submit_disabled"
                     v-if="(nextPageId === -1 || !nextPageId && lastPage) && !submitted"
                 >{{survey.submit_string || 'Submit'}}</b-button>
@@ -44,11 +43,10 @@
                    so we can plugin validation. What happens (submit or next)
                    is handled in the action
               -->
-              <!-- @click="(event) => { handleSubmit(event, onSubmit); }" -->
               <b-button
                   variant="primary"
                   v-if="nextPageId !== -1 && !lastPage"
-                  @click="onSubmit"
+                  @click="(event) => { handleSubmit(event, submit); }"
                   tabindex="1"
               >Next Page !!</b-button>
             </div>
@@ -120,31 +118,6 @@ export default {
           : this.submit_disabled
           ? "You cannot submit an unpublished survey. Publish the survey to enable."
           : '';
-    },
-    // NOTE: we need initial values for the form validation to work
-    formValues() {
-      let questions = this.selectedPageQuestions
-      let res = {}
-      questions.forEach(
-        (q) => {
-          let resp = this.getResponse(q, this.selectedSubmission)
-          if (resp) {
-            if (q.question_type != 'textonly') {
-              if (q.question_type == "textbox" || q.question_type == "textfield" || q.question_type == "dropdown" || q.question_type == "email") {
-                res[q.id] = resp.response.text
-              } else if (q.question_type == "attendance_type") {            
-                res[q.id] = resp.response.answers
-              } else if (q.question_type == "socialmedia") {
-                res[q.id] = resp.response.answers
-              } else {
-                // console.debug("QUEST: ", q)
-                res[q.id] = resp.response.answers
-              }
-            }
-          }
-        }
-      )
-      return res;
     }
   },
   // this.getResponse(this.question, this.selectedSubmission)
@@ -153,33 +126,11 @@ export default {
       setPreviewMode: SET_PREVIEW_MODE,
       redirShown: REDIR_SHOWN
     }),
-    // We need to deal with the validations on submit for back with validation to work
-    onSubmit() {
-      Promise.all(this.$refs['SurveyQuestion'].map(q => q.doValidate())).then(
-        (vals) => {
-          let grp_valid = vals.filter(v => v != null).reduce((prev, curr) => (prev?.valid ? prev.valid : true) && curr.valid)
-
-          // instead of form.validate we look at each of the field
-          // as it appears form.validate has a side effect of invalidating some
-          // already valid fields
-          if (grp_valid) {
-            this.submit();
-          }
-          // this.$refs['surveyForm'].validate().then(
-          //   (res) => {
-          //     if (res.valid) {
-          //       this.submit();
-          //     }
-          //   }
-          // )
-        }
-      )
-    },
     submit() {
       if (this.nextPageId !== -1 && !this.lastPage) {
         this.next();
       } else {
-        console.log("attempting to submit", this.selectedSubmission);
+        // console.log("attempting to submit", this.selectedSubmission);
         if(!this.submit_disabled) {
           this.submitSelectedSubmission().then(() => {
             this.submitted = true;
@@ -219,7 +170,7 @@ export default {
     next();
   },
   mounted() {
-    console.debug('mounting page...')
+    // console.debug('mounting page...')
     this.surveyLoadedPromise.then((surveyLoaded) => {
       // console.debug("i get here! and should have a survey", this.survey)
       // this.setPreviewMode(!!this.preview);
