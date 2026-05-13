@@ -7,7 +7,7 @@
 #  lock_version :integer
 #  name         :string(100)
 #  query        :jsonb            not null
-#  question_ids :uuid             is an Array
+#  questions    :jsonb            is an Array
 #  sort_order   :integer
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
@@ -23,4 +23,18 @@
 #
 class Survey::ReportConfig < ApplicationRecord
   belongs_to :survey
+
+  # Return ordered array of the question ids
+  def question_ids
+    questions.collect{|q| q.is_a?(Hash) ? q['id'] : q }
+  end
+
+  # Return a hash from question id to the label
+  def question_labels
+    if questions.first.is_a?(Hash)
+      questions.map{|q| {q['id'] => q['label']} }.reduce(Hash.new, :update)
+    else
+      nil
+    end
+  end
 end
