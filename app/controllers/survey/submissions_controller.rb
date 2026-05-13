@@ -138,7 +138,6 @@ class Survey::SubmissionsController < ResourceController
     ])
     questions.each do |question|
       next if [:hr, :textonly].include? question.question_type
-      next unless can_access_question?(question, current_person)
       styles << wrap_style
 
       header << question.clean_question.strip
@@ -152,8 +151,12 @@ class Survey::SubmissionsController < ResourceController
       row = [submission.person.updated_at, submission.person.email, submission.person.con_state, submission.person.name]
       row.concat Array.new(response_columns.size)
       submission.responses.each do |response|
-        if response_columns[response.question_id] && can_access_response?(response, current_person)
-          row[response_columns[response.question_id]] = response.response_clean_text.strip
+        if response_columns[response.question_id]
+          if can_access_response?(response, current_person)
+            row[response_columns[response.question_id]] = response.response_clean_text.strip
+          else
+            row[response_columns[response.question_id]] = "Restricted"
+          end
         end
       end
       worksheet.append_row(
@@ -188,7 +191,6 @@ class Survey::SubmissionsController < ResourceController
     posn = 3
     survey.questions.sorted.each do |question|
       next if [:hr, :textonly].include? question.question_type
-      next unless can_access_question?(question, current_person)
       styles << wrap_style
       
       header << question.clean_question.strip
@@ -203,8 +205,12 @@ class Survey::SubmissionsController < ResourceController
       row = [submission.created_at, submission.updated_at, submission.person.email]
       row.concat Array.new(response_columns.size)
       submission.responses.each do |response|
-        if response_columns[response.question_id] && can_access_response?(response, current_person)
-          row[response_columns[response.question_id]] = response.response_clean_text.strip
+        if response_columns[response.question_id]
+          if can_access_response?(response, current_person)
+            row[response_columns[response.question_id]] = response.response_clean_text.strip
+          else
+            row[response_columns[response.question_id]] = "Restricted"
+          end
         end
       end
       worksheet.append_row(
