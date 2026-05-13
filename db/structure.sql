@@ -2170,10 +2170,10 @@ CREATE TABLE public.survey_report_configs (
     sort_order integer,
     survey_id uuid NOT NULL,
     query jsonb DEFAULT '{}'::jsonb NOT NULL,
-    question_ids uuid[],
     lock_version integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    questions jsonb[]
 );
 
 
@@ -3860,6 +3860,7 @@ ALTER TABLE ONLY public.rooms
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260512154932'),
 ('20260418150207'),
 ('20251216164360'),
 ('20251216164359'),

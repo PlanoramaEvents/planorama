@@ -37,8 +37,8 @@ class Survey::Response < ApplicationRecord
 
   def response_clean_text
     # Get the latest from the person
-    result = get_linked
-    # Get the survey test if there was no linked field
+    result = get_linked.to_s if get_linked
+    # Get the survey text if there was no linked field
     result = response_as_text unless result
     candidate = Nokogiri::HTML.parse result
     candidate.text

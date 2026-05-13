@@ -3,33 +3,27 @@ module ReportsService
   # Get the survey responses for the given config
   def self.survey_report(report_config:)
     submissions_table = ::Survey::Submission.arel_table
-    responses_table = ::Survey::Response.arel_table.alias("sr1")
-    joins = [
-      submissions_table.create_join(
-        responses_table,
-        submissions_table.create_on(
-          responses_table[:submission_id].eq(submissions_table[:id])
-        ),
-        Arel::Nodes::OuterJoin
-      )
-    ]
-    survey = Survey.find report_config.survey_id
+
     if report_config.query.class == Array
       query = ""
       count = 1
       report_config.query.each do |q|
         query += " AND " if count > 1
-        query += "#{q['field'].sub('survey_responses', "sr1")} #{q['op']} '#{q['value']}'"
+        query += "#{q['field']} #{q['op']} '#{q['value']}'"
         count += 1
       end
-    else #    c.query.class == Hash
-      query = "#{report_config.query['field'].sub('survey_responses', 'sr1')} #{report_config.query['op']} '#{report_config.query['value']}'"
+    else
+      query = "#{report_config.query['field']} #{report_config.query['op']} '#{report_config.query['value']}'"
     end
 
     Survey::Submission
-              .eager_load(:responses, :person)
-              .joins(joins)
-              .where(query)
+            .eager_load(:responses, :person)
+            .where(submission_state: 'submitted')
+            .where(
+              submissions_table[:id].in(
+                Survey::Response.select('submission_id').where(query).distinct.collect{|r| r.submission_id}
+              )
+            )
   end
 
   # Person published names, primary email, attendance type, participant status,
@@ -263,5 +257,71 @@ module ReportsService
         )
       )
       .group('sessions.id')
+  end
+
+  def self.translate_operator(operation:)
+    # Fix does not match, in (not in), is not empty etc
+    case operation.downcase
+    when 'does not contain'
+      :'does_not_match' # "%val%"
+    when 'contains'
+      # depend on type of the search
+      :'matches' # "%val%"
+    when 'like'
+      :'matches' # "%val%"
+    when 'in'
+      :in
+    when 'not in'
+      :not_in
+    when 'equals'
+      :eq
+    when 'equal'
+      :eq
+    when '='
+      :eq
+    when 'does not equal'
+      # does not return blanks or nulls
+      :not_eq
+    when '<>'
+      :not_eq
+    when '!='
+      :not_eq
+    when 'is less than'
+      :lt
+    when '<'
+      :lt
+    when 'is greater than'
+      :gt
+    when '>'
+      :gt
+    when 'is less than or equal to'
+      :lteq
+    when '<='
+      :lteq
+    when 'is greater than or equal to'
+      :gteq
+    when '>='
+      :gteq
+    when 'is'
+      :eq
+    when 'is not'
+      :not_eq
+    when 'is empty'
+      :eq
+    when 'is not empty'
+      :not_eq
+    when 'begins with'
+      :'matches'
+    when 'ends with'
+      :'matches'
+    when 'is null'
+      :eq
+    when 'is not null'
+      :not_eq
+    else
+      :eq
+    end
+    # does_not_match, #does_not_match_all, #does_not_match_any, #does_not_match_regexp,
+    # in, not_in etc
   end
 end

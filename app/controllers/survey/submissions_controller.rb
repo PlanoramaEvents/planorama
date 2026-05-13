@@ -132,15 +132,21 @@ class Survey::SubmissionsController < ResourceController
     posn = 4
     response_columns = {}
     # NOTE: this query makes sure that the order of the questions is maintained
+    question_ids = report_config.question_ids
+    question_labels = report_config.question_labels
     questions = Survey::Question.find_by_sql([
       "select * from survey_questions where survey_questions.id in (?) order by array_position(ARRAY[?], TEXT(survey_questions.id))",
-      report_config.question_ids, report_config.question_ids
+      question_ids, question_ids
     ])
     questions.each do |question|
       next if [:hr, :textonly].include? question.question_type
       styles << wrap_style
 
-      header << question.clean_question.strip
+      if question_labels
+        header << question_labels[question.id]
+      else
+        header << question.clean_question.strip
+      end
       response_columns[question.id] = posn
       posn += 1
     end
@@ -153,7 +159,7 @@ class Survey::SubmissionsController < ResourceController
       submission.responses.each do |response|
         if response_columns[response.question_id]
           if can_access_response?(response, current_person)
-            row[response_columns[response.question_id]] = response.response_clean_text.strip
+            row[response_columns[response.question_id]] = response.response_clean_text #.strip
           else
             row[response_columns[response.question_id]] = "Restricted"
           end
@@ -165,7 +171,7 @@ class Survey::SubmissionsController < ResourceController
       )
     end
 
-    # TODO - use name from config in the filename
+    # Use name from config in the filename
     send_data workbook.read_string,
         filename: "#{report_config.name.gsub(/\s/,'_')}_#{Time.now.strftime('%m-%d-%Y')}.xlsx",
         disposition: 'attachment'
