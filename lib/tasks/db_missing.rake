@@ -3,7 +3,7 @@ namespace :db do
   task :db_missing do
     begin
       Rake::Task['environment'].invoke
-      ActiveRecord::Base.connection
+      ActiveRecord::Base.connection.connect!
     rescue
       exit 1
     else

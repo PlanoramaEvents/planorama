@@ -297,6 +297,7 @@ module ResourceMethods
       fq = default_scope(query: fq)
     end      
     fq.where(exclude_deleted_clause)
+      .where(query(@default_filters))
       .includes(includes)
       .references(references)
       .eager_load(eager_load)
