@@ -23,8 +23,8 @@ class PeopleController < ResourceController
     )
   end
 
-  # Need method to sync clyde for given person ...
-  def clyde_sync
+  # Need method to sync with registration for given person ...
+  def registration_sync
     authorize current_person, policy_class: policy_class
 
     person = Person.find params[:person_id]
@@ -32,37 +32,30 @@ class PeopleController < ResourceController
     raise "No such person" unless person
     
     Person.transaction do
-      identity = person.oauth_identities.where(provider: 'clyde').first
+      # get the registration provider name
+      provider = ENV['REGISTRATION_PROVIDER']
+      identity = person.oauth_identities.where(provider: provider).first
 
       reg_id = person.reg_id || identity&.reg_id
       
-      raise "No Clyde Reg for given person" unless reg_id
+      raise "No Registration id for given person" unless reg_id
 
-      svc = ClydeService.get_svc(token: ENV['CLYDE_AUTH_KEY'])
+      svc = Members::MemberServices.get_member_service(service: provider, token: ENV['REGISTRATION_TOKEN'])
       details = svc.person(id: reg_id)
 
-      IdentityService.update_reg_info(person: person, details: details['data'])
+      IdentityService.update_reg_info(person: person, details: details)
 
       # Also need to update the datum
-      update_datum(details['data'])
+      data = svc.data(results: details)
+      update_datum(data: data)
 
       render_object(person)
     end
   end
 
   def update_datum(data)
-      datum = RegistrationSyncDatum.find_by reg_id: data['id']
-      if datum
-        datum.update(
-            name: data['full_name']&.strip,
-            email: data['email']&.strip,
-            registration_number: data['ticket_number']&.strip,
-            preferred_name: data['preferred_name']&.strip,
-            alternative_email: data['alternative_email']&.strip,
-            badge_name: data['badge']&.strip,
-            raw_info: data
-          )
-      end
+    adapter = Adapters::MemberAdapter.get_adapter(service: ENV['REGISTRATION_PROVIDER'])
+    adapter.update_datum(data: data)
   end
 
   def unlink_registration 

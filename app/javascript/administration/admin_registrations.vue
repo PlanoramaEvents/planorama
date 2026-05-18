@@ -3,7 +3,6 @@
     <h1>Registration Sync Management</h1>
     <b-button variant="primary" size="sm" v-b-modal.confirm-reg-sync>Registration Synchronize</b-button>
     <!--  -->
-    <!-- <h2>Registration Info (from Reg/clyde)</h2> -->
     <person-sync-table></person-sync-table>
 
     <!--  -->

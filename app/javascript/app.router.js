@@ -6,7 +6,7 @@ import PlanLogin from './login/login.vue';
 import NewPassword from './login/new_password.vue';
 import CreateAccount from './login/create_account.vue';
 import AccountSetup from './login/account_setup.vue'
-import LoginClyde from './login/login_clyde.vue'
+// import LoginClyde from './login/login_clyde.vue'
 import ErrorScreen from './errors/error_screen.vue'
 import { inject } from 'vue'
 
@@ -15,7 +15,8 @@ const loginRoutes = [
   { path: 'new', component: CreateAccount},
   { path: 'password-reset', component: NewPassword },
   { path: 'setup', component: AccountSetup },
-  { path: 'clyde', component: LoginClyde },
+  // TODO
+  // { path: 'clyde', component: LoginClyde },
   { path: '', component: PlanLogin, name: "login" },
 ]
 

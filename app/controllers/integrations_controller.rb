@@ -16,15 +16,14 @@ class IntegrationsController < ResourceController
       content_type: 'application/json'
   end
 
-  def clyde
+  def registration
+    provider = ENV['REGISTRATION_PROVIDER']
     authorize model_class, policy_class: policy_class
+    reg = Integration.find_or_create_by({name: provider})
 
-    # different from airmeet because not using an external mechanism to make this config beforehand
-    clyde = Integration.find_or_create_by({name: 'clyde'})
+    reg.config["type"] ||= "login" if !reg.config["type"]
     
-    clyde.config["type"] ||= "login" if !clyde.config["type"]
-
-    render json: serializer_class.new(clyde,
+    render json: serializer_class.new(reg,
         {
           include: serializer_includes,
           params: {domain: "#{request.base_url}"}
