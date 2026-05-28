@@ -47,7 +47,7 @@
           </b-button>
         </div>
         <div class="d-inline mx-1" title="download" v-if="showDownload">
-          <b-button @click="onDownload" variant="primary" title="View">
+          <b-button @click="onDownload" variant="primary" title="Download">
             <b-icon-download></b-icon-download>
           </b-button>
         </div>
