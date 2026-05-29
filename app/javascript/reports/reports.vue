@@ -7,6 +7,7 @@
       <li><router-link to="#conflicts">Conflicts</router-link></li>
       <li><router-link to="#schedule">Schedule</router-link></li>
       <li><router-link to="#prog-ops">Program Ops</router-link></li>
+      <li v-if="collection"><router-link to="#survey-reports">Survey Reports</router-link></li>
     </ul>
     <h5><a id="participants"></a>Participants</h5>
     <ul>
@@ -402,6 +403,10 @@
         </p>
       </li>
     </ul>
+    <div v-if="collection">
+    <h5><a id="survey-reports"></a>Survey Reports</h5>
+    <survey-reports :report-configs="collection"></survey-reports>
+    </div>
     <div style="clear: both; height: 5rem;">&nbsp;</div>
         <span v-if="!currentUserIsAdmin" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>User Privileges</span>
         <a href="/report/program_ops_reports/user_privileges" target="_blank" v-if="currentUserIsAdmin">User Privileges</a>
@@ -415,12 +420,25 @@
 
 <script>
 import personSessionMixin from '@/auth/person_session.mixin'
+import { modelMixinNoProp } from '@/store/model.mixin';
+import { reportConfigModel } from '@/store/survey/report_config.store'
+import SurveyReports from "@/reports/survey_reports.vue"
 
 export default {
   name: "Reports",
+  components: {SurveyReports},
+  data() {
+    return {
+      model: reportConfigModel
+    }
+  },
   mixins: [
-    personSessionMixin
-  ]
+    personSessionMixin,
+    modelMixinNoProp
+  ],
+  mounted() {
+    this.fetch()
+  }
 }
 </script>
 
