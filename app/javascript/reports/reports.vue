@@ -411,8 +411,10 @@
       </li>
     </ul>
     <div v-if="collection">
-    <h5><a id="survey-reports"></a>Survey Reports</h5>
-    <survey-reports :report-configs="collection"></survey-reports>
+      <h5><a id="survey-reports"></a>Survey Reports</h5>
+      <!-- This is hard-coded and it shouldn't be but Anna insisted on the name being somewhere and we needed it quickly -->
+      <p>Survey: LAcon V Program Participant Main Survey</p>
+      <survey-reports :report-configs="collection"></survey-reports>
     </div>
     <div style="clear: both; height: 5rem;">&nbsp;</div>
         <span v-if="!currentUserIsAdmin" class="text-muted font-italic" title="You do not have the right set of permissions to run this report." v-b-tooltip>User Privileges</span>
