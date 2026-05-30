@@ -448,12 +448,12 @@ namespace :lacon do
       ],
       sort_order: 18
     },
-    # Lightening Talks
+    # Lightning Talks
     # 5d4ccdd8-4b2d-4eb4-94ae-c70984b82154
     {
       survey_id: '74436fe3-e61b-4a8c-91c3-c32a4238df71',
-      name: 'Lightening Talks',
-      description: 'Survey - People wanting to do Lightening Talks',
+      name: 'Lightning Talks',
+      description: 'Survey - People wanting to do Lightning Talks',
       query: {
         field: "response ->> 'answers'",
         op: 'ilike',
@@ -549,7 +549,7 @@ namespace :lacon do
     {
       survey_id: '74436fe3-e61b-4a8c-91c3-c32a4238df71',
       name: 'Moderating Panels',
-      description: 'Survey - People in or from So Cal',
+      description: 'Survey - People who are interested in moderating panels',
       query: [
         {
           field: "question_id",
