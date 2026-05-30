@@ -1,5 +1,6 @@
 <template>
   <div class="mb-3">
+    <h2>Reports</h2>
     <p class="mt-2">These are interim reports.</p>
     <ul>
       <li><router-link to="#participants">Participants</router-link></li>
@@ -132,6 +133,12 @@
 
     <h5><a id="sessions"></a>Sessions</h5>
     <ul>
+      <li>
+        <router-link to="/reports/labels-by-area">Admin Label Counts By Area</router-link></li>
+        <p class="ml-2">
+          <strong><em>Description</em></strong>: A table with admin labels on one axis and areas on another, with counts. Each count links to the session table showing only those sessions.<br />
+          <strong><em>Session data included</em></strong>: all sessions<br />
+        </p>
       <li>
         <a href="/report/session_selections" target="_blank">Session Selections</a>
         <p class="ml-2">
