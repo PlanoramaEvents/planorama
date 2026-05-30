@@ -533,6 +533,11 @@ namespace :lacon do
           field: "response_as_text",
           op: '!=',
           value: ""
+        },
+        {
+          field: "response_as_text",
+          op: '!=',
+          value: "false"
         }
       ],
       questions: [
