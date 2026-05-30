@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>Admin Labels and Areas</h1>
+    <b-button variant="link" @click="back">Back</b-button>
+    <h2>Admin Label Counts By Area</h2>
     <b-table
       hover bordered responsive small striped
       sticky-header="70vh"    
@@ -9,17 +10,20 @@
     >
       <!-- sessions_url(area, label) -->
       <template #head()="scope">
-        <div style="writing-mode: sideways-rl;">
-          {{ scope.label }}
+        <div class="sideways-text">
+          <span :title="scope.label">{{ scope.label }}</span>
         </div>
       </template>
       <template #cell()="scope">
-        <div v-if="typeof scope.value === 'string'">
+        <div v-if="typeof scope.value === 'string' && scope.value">
           {{scope.value}}
         </div>
         <div v-else-if="typeof scope.value === 'number'">
           <a :href="sessions_url(scope.item.area, scope.field.key)">{{scope.value}}</a>
           <!-- {{ sessions_url(scope.item.area, scope.field.key) }} -->
+        </div>
+        <div v-else>
+          <span class="text-muted">&mdash;</span>
         </div>
       </template>
     </b-table>
@@ -36,6 +40,9 @@ export default {
     labelsByArea: []
   }),
   methods: {
+    back() {
+      this.$router.push('/reports');
+    },
     sessions_url(area, label) {
       let base = "/#/sessions?q="
       // if none then query is "is empty"
@@ -95,3 +102,13 @@ export default {
 }
 
 </script>
+
+<style lang="css" scoped>
+.sideways-text {
+  writing-mode: sideways-lr;
+}
+
+th:first-of-type .sideways-text, th:last-of-type .sideways-text {
+  writing-mode: unset;
+}
+</style>
