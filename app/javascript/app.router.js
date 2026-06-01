@@ -56,7 +56,6 @@ import ScheduleScreen from './schedule/schedule_screen.vue';
 
 //
 import ReportsScreen from './reports/reports_screen.vue'
-import ReportsTabs from './reports/reports_tabs.vue'
 import LabelsByArea from './reports/labels-by-area.vue';
 import ReportsPage from './reports/reports.vue'
 const reportsRoutes = [
