@@ -589,12 +589,12 @@ namespace :lacon do
         {
           field: "question_id",
           op: '=',
-          value: '585b5aae-fef9-40ec-a5dd-e3c2028935db'
+          value: '89794376-82f7-4d3a-8e0a-489b88907169'
         },
         {
           field: "response_as_text",
-          op: '!=',
-          value: ""
+          op: '=',
+          value: "true"
         }
       ],
       questions: [
