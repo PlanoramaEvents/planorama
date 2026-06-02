@@ -8,7 +8,7 @@
       <li><router-link to="#conflicts">Conflicts</router-link></li>
       <li><router-link to="#schedule">Schedule</router-link></li>
       <li><router-link to="#prog-ops">Program Ops</router-link></li>
-      <li v-if="collection"><router-link to="#survey-reports">Survey Reports</router-link></li>
+      <li v-if="collection.length"><router-link to="#survey-reports">Survey Reports</router-link></li>
     </ul>
     <h5><a id="participants"></a>Participants</h5>
     <ul>
@@ -410,10 +410,10 @@
         </p>
       </li>
     </ul>
-    <div v-if="collection">
+    <div v-if="collection.length">
       <h5><a id="survey-reports"></a>Survey Reports</h5>
       <!-- This is hard-coded and it shouldn't be but Anna insisted on the name being somewhere and we needed it quickly -->
-      <p>Survey: LAcon V Program Participant Main Survey</p>
+      <p>Survey: Program Participant Main Survey</p>
       <survey-reports :report-configs="collection"></survey-reports>
     </div>
     <div style="clear: both; height: 5rem;">&nbsp;</div>
