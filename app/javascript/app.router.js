@@ -47,7 +47,6 @@ const personRoutes = [
 ]
 
 //
-//import SessionsScreen from './sessions/session_screen.vue';
 import SessionList from './sessions/sessions-list.vue';
 import SessionTabs from  './sessions/session_tabs.vue';
 import SessionScreen from './sessions/session_screen.vue';
@@ -57,6 +56,12 @@ import ScheduleScreen from './schedule/schedule_screen.vue';
 
 //
 import ReportsScreen from './reports/reports_screen.vue'
+import LabelsByArea from './reports/labels-by-area.vue';
+import ReportsPage from './reports/reports.vue'
+const reportsRoutes = [
+  { path: 'labels-by-area', component: LabelsByArea},
+  { path: '', component: ReportsPage },
+]
 
 // surveys
 import SurveyScreen from './surveys/survey-screen.vue';
@@ -224,6 +229,7 @@ export const router = new createRouter({
     {
       path: '/reports',
       component: ReportsScreen,
+      children: reportsRoutes,
       meta: {
         requiresAuth: true
       }

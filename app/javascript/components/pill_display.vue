@@ -3,8 +3,13 @@
     <p>{{ label  }} <edit-button v-b-modal:[modalId]></edit-button></p>
     <span :class="clazz" v-for="item in value" :key="item">{{formatter(item)}}</span>
     <span v-if="!value.length" class="text-muted font-italic">{{ SESSION_NO_TAGS(label) }}</span>
-    <edit-modal :id="modalId" :title="modalTitle" @ok="onOk()" @hide="clearValue()" @show="initValue()">
-      <b-form-select
+    <edit-modal
+      :id="modalId"
+      :title="modalTitle" 
+      @ok="saveVals"
+      @show="initValue()"
+    >
+        <b-form-select
         v-model="mutableValue"
         :options="modalOptions"
         :multiple="true"
@@ -63,14 +68,16 @@ export default {
         return this.imutableValue;
       },
       set(val) {
+        console.debug("---- SET: ", val)
         this.imutableValue = val;
-        this.$emit('input', val)
+        // this.$emit('input', val)
       }
     }
   },
   methods: {
-    onOk() {
-      this.$emit('save', this.mutableValue)
+    saveVals(vals) {
+      console.debug("**** SAVE: ", this.imutableValue, this.mutableValue)
+      this.$emit('input', this.imutableValue)
     },
     clearValue() {
       this.imutableValue = [];
