@@ -345,6 +345,15 @@ module ResourceMethods
           # change to allowd limiting to named cols?, pass in list of cols to include based in what is displayed ...
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)
+
+            # check if sensitive field ... if so do not use it unless
+            # person is allowed access
+            next unless AccessControlService.sensitive_access?(
+                          person: current_person,
+                          model: model_class.name,
+                          attribute: col.name.to_sym,
+                        )
+
             query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value, key: key)
             part = part ? part.or(query_part) : query_part
           end
