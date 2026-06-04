@@ -1,6 +1,29 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "189e77635e4f652f313f8ad71cebf85cfb10a7c534ecff4fb1e92989d4d9f1aa",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/services/reports_service.rb",
+      "line": 24,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Survey::Response.select(\"submission_id\").where(((\" AND \" + \"#{q[\"field\"]} #{q[\"op\"]} '#{q[\"value\"]}'\") or \"#{report_config.query[\"field\"]} #{report_config.query[\"op\"]} '#{report_config.query[\"value\"]}'\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ReportsService",
+        "method": "s(:self).survey_report"
+      },
+      "user_input": "q[\"field\"]",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 70,
       "fingerprint": "293c7e87978c80406e8c9e704de08af28ea1cc5ec235accf649c8e95fcd6ad74",
@@ -99,7 +122,7 @@
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `Survey#find_by`",
       "file": "app/controllers/survey/submissions_controller.rb",
-      "line": 202,
+      "line": 286,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
       "code": "Survey.find_by(:id => params[:survey_id])",
       "render_path": null,
@@ -122,7 +145,7 @@
       "check_name": "MassAssignment",
       "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
       "file": "app/controllers/concerns/resource_methods.rb",
-      "line": 759,
+      "line": 826,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.require(model).permit!",
       "render_path": null,
@@ -145,7 +168,7 @@
       "check_name": "MassAssignment",
       "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
       "file": "app/controllers/login_controller.rb",
-      "line": 63,
+      "line": 69,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.permit!",
       "render_path": null,
@@ -158,6 +181,29 @@
       "confidence": "Medium",
       "cwe_id": [
         915
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "d693adf74c4f6dd9b43053883465890ce59c88ce01d8f3e9eca16e0e4d26345b",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Survey::ReportConfig#find`",
+      "file": "app/controllers/survey/submissions_controller.rb",
+      "line": 114,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Survey::ReportConfig.find(params[:report_config_id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Survey::SubmissionsController",
+        "method": "filtered_submissions"
+      },
+      "user_input": "params[:report_config_id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
       ],
       "note": ""
     },
@@ -191,7 +237,7 @@
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `Survey#find`",
       "file": "app/controllers/survey/submissions_controller.rb",
-      "line": 114,
+      "line": 193,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
       "code": "Survey.find(params[:survey_id])",
       "render_path": null,
@@ -212,7 +258,7 @@
       "warning_code": 121,
       "fingerprint": "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
       "check_name": "EOLRuby",
-      "message": "Support for Ruby 2.7.3 ended on 2023-03-31",
+      "message": "Support for Ruby 3.1.4 ended on 2025-03-31",
       "file": ".ruby-version",
       "line": 1,
       "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
@@ -296,6 +342,5 @@
       "note": ""
     }
   ],
-  "updated": "2023-04-28 08:28:25 -0400",
-  "brakeman_version": "5.4.1"
+  "brakeman_version": "7.1.1"
 }
