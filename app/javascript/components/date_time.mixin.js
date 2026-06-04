@@ -18,6 +18,15 @@ export const dateTimeMixin = {
     }
   },
   methods: {
+    // test to see if string etc is a valid datetime
+    isDateTime(date) {
+      let res = DateTime.fromISO(date, {zone: this.tz})
+      return res.isValid
+    },
+    dateNowAsString() {
+      let date = DateTime.now();
+      return date.toFormat('yyyy-LL-dd')
+    },
     formatLocaleDate(date) {
       let res = DateTime.fromISO(date, {zone: this.tz}).toLocaleString(DateTime.DATETIME_FULL)
       return res
@@ -47,6 +56,7 @@ export const dateTimeMixin = {
     // Take the datetime used in the UI and treat it as a datetime in the
     // timezone. i.e. ignofe the browser's default TZ if we have a preferred one
     // and treat all datetimes as if they are in the preferred TZ.
+
     uiDateToTZDate(date) {
       return DateTime.fromObject({
         year: date.getFullYear(),

@@ -52,6 +52,9 @@ import { venueStore, venueEndpoints} from "@/store/venue.store";
 // Page content (html)
 import { pageContentStore, pageContentEndpoints } from "@/store/page_content.store";
 
+//
+import { reportConfigStore, reportConfigEndpoints } from "@/store/survey/report_config.store";
+
 // Registration Sync Datum/Data
 import { registrationSyncDatumStore, registrationSyncDatumEndpoints } from "@/store/registration_sync_datum.store";
 import { personSyncDatumStore, personSyncDatumEndpoints, personSyncDatumPageSize } from "@/store/person_sync_datum.store";
@@ -140,6 +143,7 @@ const endpoints = {
   ...publishedSessionEndpoints,
   ...integrationEndpoints,
   ...publicationDatesEndpoints,
+  ...reportConfigEndpoints,
 }
 
 const pageSize = {
@@ -186,6 +190,7 @@ export const store = new Vuex.Store({
       ...personScheduleApprovalStore.selected,
       ...publishedSessionStore.selected,
       ...publicationDatesStore.selected,
+      ...reportConfigStore.selected
     },
     page: {
       ...personSyncDatumStore.page,

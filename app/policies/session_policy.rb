@@ -3,6 +3,10 @@ class SessionPolicy < PlannerPolicy
     !Rails.env.production? && allowed?(action: :delete_snapshot)
   end
 
+  def labels_by_area?
+    allowed?(action: :labels_by_area)
+  end
+
   def schedule_publish?
     allowed?(action: :schedule_publish)
   end

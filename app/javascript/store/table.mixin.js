@@ -90,6 +90,31 @@ export const tableMixin = {
         this.tempCurrentPage = this.currentPage;
       }
     },
+    // Get the data without putting it in the store
+    fetchNoStore() {
+      let _filter = JSON.stringify(this.filter)
+      let _default_filter = null
+
+      if (typeof this.defaultFilter != 'string') {
+        _default_filter = JSON.stringify(this.defaultFilter)
+      }
+
+      return new Promise((res, rej) => {
+        this.search(
+          {
+            sortOrder: this.sortDesc ? 'desc' : 'asc',
+            sortBy: this.sortBy,
+            filter: _filter,
+            default_filter: _default_filter,
+            nullsFirst: this.nullsFirst
+          },
+          this.url
+        ).then(result => {
+          let data = Object.values(result).filter(obj => (typeof obj.json === 'undefined'))
+          res(data);
+        }).catch(rej)
+      })
+    },
     fetchAll(clear=true, perPage=null) {
       this.tableBusy = true;
       this.shall_clear = clear
@@ -167,6 +192,8 @@ export const tableMixin = {
     filter(newVal, oldVal) {
       // console.debug("filter changed:", newVal, oldVal)
       if(newVal != oldVal) {
+        // reset current page on a new search
+        this.currentPage = 1;
         this.fetchPaged(this.shall_clear);
       }
     },
