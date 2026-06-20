@@ -17,17 +17,7 @@ export const tableCellFormatterMixin = {
           res = this.formatters[column.key](data)
         }
         if (!res) {
-          // console.debug("******* RES ", column.key, data)
-          if (typeof data[column.key] === 'undefined') {
-            const keys = column.key.split(".")
-            if (keys.length == 2) {
-              // console.debug("**** keys ", keys)
-              let obj = data[keys[0]]
-              if (obj) {
-                res = obj[keys[1]]
-              }
-            }
-          } else if (typeof data[column.key] === 'boolean') {
+          if (typeof v === 'boolean') {
             res = data[column.key] ? 'Yes' : 'No'
           } else if (Array.isArray(data[column.key])) {
             res = data[column.key].join(", ")
