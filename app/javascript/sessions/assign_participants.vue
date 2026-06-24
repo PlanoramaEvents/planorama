@@ -20,7 +20,7 @@
       <div class="col-2">
         <assignment-state
           :session-assignment="item"
-          @input="saveAssignment"
+          @input="(v) => saveAssignment(v)"
         ></assignment-state>
       </div>
       <assignee :assignment="item"></assignee>

@@ -37,6 +37,7 @@
 
 <script>
 import settingsMixin from "@/store/settings.mixin";
+import { utils } from 'jsonapi-vuex'
 
 export default {
   name: "AssignmentState",
@@ -76,41 +77,42 @@ export default {
         return null
       },
       set(val) {
+        // need a deepCopy to emit for the change
+        let assignment = utils.deepCopy(this.sessionAssignment);
         switch(val) {
           case null:
-            // TODO: if this was not an assignment that was marked for interest we will delete it
-            this.sessionAssignment.state = 'proposed'
-            this.sessionAssignment.visibility = 'is_private'
-            this.sessionAssignment.session_assignment_role_type_id = null
+            assignment.state = 'proposed'
+            assignment.visibility = 'is_private'
+            assignment.session_assignment_role_type_id = null
             break;
           case 'participant':
-            this.sessionAssignment.state = 'accepted'
-            this.sessionAssignment.visibility = 'is_public'
-            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Participant')?.id
+            assignment.state = 'accepted'
+            assignment.visibility = 'is_public'
+            assignment.session_assignment_role_type_id = this.sessionRoleByName('Participant')?.id
             break;
           case 'invisible':
-            this.sessionAssignment.state = 'accepted'
-            this.sessionAssignment.visibility = 'is_private'
-            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Invisible')?.id
+            assignment.state = 'accepted'
+            assignment.visibility = 'is_private'
+            assignment.session_assignment_role_type_id = this.sessionRoleByName('Invisible')?.id
             break;
           case 'moderator':
-            this.sessionAssignment.state = 'accepted'
-            this.sessionAssignment.visibility = 'is_public'
-            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Moderator')?.id
+            assignment.state = 'accepted'
+            assignment.visibility = 'is_public'
+            assignment.session_assignment_role_type_id = this.sessionRoleByName('Moderator')?.id
             break;
           case 'reserved':
-            this.sessionAssignment.state = 'accepted'
-            this.sessionAssignment.visibility = 'is_private'
-            this.sessionAssignment.session_assignment_role_type_id = this.sessionRoleByName('Reserve')?.id
+            assignment.state = 'accepted'
+            assignment.visibility = 'is_private'
+            assignment.session_assignment_role_type_id = this.sessionRoleByName('Reserve')?.id
             break;
           case 'rejected':
-            this.sessionAssignment.state = 'rejected'
-            this.sessionAssignment.visibility = 'is_private'
-            this.sessionAssignment.session_assignment_role_type_id = null
+            assignment.state = 'rejected'
+            assignment.visibility = 'is_private'
+            assignment.session_assignment_role_type_id = null
             break;
         }
         // emit a change
-        this.$emit('input',this.sessionAssignment)
+        this.$emit('input',assignment)
       }
     }
   }
