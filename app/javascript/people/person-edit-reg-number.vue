@@ -11,7 +11,7 @@
       <form @submit.prevent="searchRegId()">
         <label for="reg-id-input">Ticket Number</label>
         <div class="d-flex align-items-center input-line">
-          <b-input-group prepend="#"
+          <b-input-group
             ><b-form-input
               type="text"
               id="reg-id-input"
@@ -108,7 +108,7 @@ export default {
   }),
   computed: {
     regId() {
-      return `#${this.partialRegId}`;
+      return `${this.partialRegId}`;
     },
     matchedPerson() {
       return this.selected?.matched_person?.published_name;
