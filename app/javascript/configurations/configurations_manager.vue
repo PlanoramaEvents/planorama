@@ -27,8 +27,7 @@ export default {
     parameters: [],
     loading: true,
     EVENT_SETTINGS_MUST_RELOAD,
-    // TODO
-    exclusions: ['clyde_base_url', 'show_join_links']
+    exclusions: ['reg_base_url', 'show_join_links']
   }),
   mixins: [
     modelMixin,

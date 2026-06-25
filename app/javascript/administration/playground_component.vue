@@ -1,7 +1,7 @@
 <template>
 <div class="container-fluid scrollable">
   <h1>Preview features</h1>
-  <h2>Registration Info (from Reg/clyde)</h2>
+  <h2>Registration Info (from Reg)</h2>
   <person-sync-table></person-sync-table>
 </div>
 </template>

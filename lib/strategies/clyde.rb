@@ -13,7 +13,7 @@ module OmniAuth
       # dyanmic based on the value from the ClydeService
       def client
         opt = deep_symbolize(options.client_options)
-        opt[:site] = ::ClydeService.base_url
+        opt[:site] = Members::ClydeService.base_url
         # The token endpoint was changed ...
         opt[:token_url] = "#{opt[:site]}/api/v1/oauth/token"
 
