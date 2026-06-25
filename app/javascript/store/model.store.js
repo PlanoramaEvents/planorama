@@ -344,7 +344,7 @@ export const store = new Vuex.Store({
      * right now it only works on one to many
      */
     [PATCH_RELATED] ({dispatch, state}, {item, parentRelName, childIdName}) {
-      state.wholePageSpinner = true
+      this.state.wholePageSpinner = true
       let relId = item?._jv?.id
       let rels = item?._jv?.relationships?.[parentRelName]?.data
       if(!rels || !rels.length) {
@@ -357,7 +357,7 @@ export const store = new Vuex.Store({
         _jv: r
       }));
       return Promise.all(itemsToSend.map(i => dispatch('jv/patch', i))).finally(
-          () => { state.wholePageSpinner = false }
+          () => { this.state.wholePageSpinner = false }
         );
     },
     /*
@@ -367,7 +367,7 @@ export const store = new Vuex.Store({
       Because: this means you could call [NEW]({model, selected: true, arbitrary: 'attributes' })
     */
     [NEW] ({commit, dispatch, state}, {model, selected = false, relationships = {}, ...attrs}) {
-      state.wholePageSpinner = true
+      this.state.wholePageSpinner = true
       let newModel = {
         ...attrs,
         _jv: {
@@ -383,12 +383,12 @@ export const store = new Vuex.Store({
           }
           res(savedModel);
         }).catch(rej).finally(
-          () => { state.wholePageSpinner = false }
+          () => { this.state.wholePageSpinner = false }
         );
       });
     },
     [SAVE] ({commit, dispatch, state}, {model, selected = true, item, params}) {
-      state.wholePageSpinner = true
+      this.state.wholePageSpinner = true
       if(item._jv) {
         if(!item._jv.type) {
           _jv.type = model
@@ -418,12 +418,12 @@ export const store = new Vuex.Store({
             res(savedModel);
           }
         }).catch(rej).finally(
-          () => { state.wholePageSpinner = false }
+          () => { this.state.wholePageSpinner = false }
         );
       });
     },
     [DELETE] ({dispatch, commit, state}, {model, itemOrId, unselect = true}) {
-      state.wholePageSpinner = true
+      this.state.wholePageSpinner = true
       return new Promise((res, rej) => {
         dispatch('jv/delete', `${endpoints[model]}/${getId(itemOrId)}`).then((data) => {
           if (unselect && state.selected[model]) {
@@ -431,7 +431,7 @@ export const store = new Vuex.Store({
           }
           res(data)
         }).catch(rej).catch(rej).finally(
-          () => { state.wholePageSpinner = false }
+          () => { this.state.wholePageSpinner = false }
         );
       })
     },
@@ -591,7 +591,7 @@ export const store = new Vuex.Store({
       // todo what should i be returning here
     },
     [PATCH_FIELDS] ({dispatch, commit}, {model, item, fields=[], selected = true}) {
-      state.wholePageSpinner = true
+      this.state.wholePageSpinner = true
       // limited field selection
       let smallItem = {
         // always include lock version so that we have optimistic locking
@@ -610,7 +610,7 @@ export const store = new Vuex.Store({
           }
           res(savedModel);
         }).catch(rej).finally(
-          () => { state.wholePageSpinner = false }
+          () => { this.state.wholePageSpinner = false }
         );
       });
     },
