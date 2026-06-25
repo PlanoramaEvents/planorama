@@ -345,8 +345,9 @@ module ResourceMethods
           # change to allowd limiting to named cols?, pass in list of cols to include based in what is displayed ...
           model_class.columns.each do |col|
             next unless [:text, :string].include?(col.type)
+
             query_part = get_query_part(table: col_table, column: col.name, operation: 'like', value: value, key: key)
-            part = part ? part.or(query_part) : query_part
+            part = part ? part.or(query_part) : query_part if query_part
           end
           # This for survey submissions ....
           if model_class == Survey::Submission
@@ -418,6 +419,14 @@ module ResourceMethods
   end
 
   def get_query_part(table:, column:, operation:, value:, top: false, key: nil)
+    # If person is not allowed acces to the field then it is not part of
+    # the query
+    return nil unless AccessControlService.sensitive_access?(
+              person: current_person,
+              model: model_class.name,
+              attribute: column.to_sym,
+            )
+
     op = translate_operator(operation: operation)
 
     return nil if value.kind_of?(String) && value.blank?

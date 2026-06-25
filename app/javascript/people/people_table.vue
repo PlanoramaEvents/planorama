@@ -117,6 +117,10 @@
         </div>
         <div v-else class="text-muted text-center"> &mdash; </div>
       </template>
+      <template v-slot:search-message>
+        <!-- TODO: change message and style -->
+        <em>Search results may not contain sensitive data depending on your role</em>
+      </template>
     </table-vue>
   </div>
 </template>
