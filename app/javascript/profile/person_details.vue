@@ -214,7 +214,7 @@
           v-if="!isHidden('youtube')"
           :label="PROFILE_FIELD_LABELS.youtube"
           prepend="youtube.com/"
-          :validation_rules="{ regex: /^$|^[a-zA-Z0-9\/_]+([\-\.]{1}[a-zA-Z0-9\/_]+)*$/ }"
+          :validation_rules="{ regex: /^$|^[@]{0,1}[a-zA-Z0-9\/_]+([\-\.]{1}[a-zA-Z0-9\/_]+)*$/ }"
           v-model="fields.youtube"
           :disabled="disabled"
         ></simple-social>
