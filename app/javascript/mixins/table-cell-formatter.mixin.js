@@ -31,8 +31,9 @@ export const tableCellFormatterMixin = {
             res = data[column.key] ? 'Yes' : 'No'
           } else if (Array.isArray(data[column.key])) {
             res = data[column.key].join(", ")
-          } else {
-            if (this.isDateTime(data[column.key])) {
+          } else if (data[column.key] != null) {
+            // ISO dates are long strings ending with "Z"
+            if (data[column.key].length > 20 && data[column.key].endsWith("Z") && this.isDateTime(data[column.key])) {
               res = this.formatLocaleDate(data[column.key])
             } else if (data[column.key] && typeof data[column.key].email !== 'undefined') {
               res = data[column.key].email
