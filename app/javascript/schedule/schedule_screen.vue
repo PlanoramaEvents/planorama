@@ -24,7 +24,6 @@
           <room-selector></room-selector>
         </div>
         <div class="scrollable minus31">
-          <div>rooms {{selectedRooms}} - {{ days }}</div>
           <schedule-calendar
             :rooms="rooms"
             :selectedRooms="selectedRooms"
