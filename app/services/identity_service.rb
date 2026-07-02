@@ -129,8 +129,11 @@ module IdentityService
       person.registration_number = details['attributes']['worldcon.org/reg-id']&.strip unless person.registration_number
       # Based on the products that they have
       person.registration_type = details['attributes']['worldcon.org/membership-type']
+      # map option1 and 2 because intial RegFox setup was wonky
+      person.registration_type = "Full Attending Adult" if person.registration_type == 'option1'
+      person.registration_type = "Full Attending Adult - First Worldcon" if person.registration_type == 'option2'
       person.registered = !details['attributes']['worldcon.org/membership-type'].nil?
-      person.reg_attending_status = details['attributes']['worldcon.org/membership-type'] != 'wsfsMembershipOnly'
+      person.reg_attending_status = details['attributes']['worldcon.org/membership-type'] != 'wsfsMembershipOnly' ? 'Yes' : 'No'
       # How the registration match was done
       person.reg_match = reg_match
 
