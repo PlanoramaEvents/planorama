@@ -23,7 +23,8 @@ export const roomStore = {
   },
   getters: {
     fetchedRooms(state, getters) {
-      return Object.values(getters['jv/get']({_jv: { type: roomModel }}))
+      // return the rooms in their sorted order
+      return Object.values(getters['jv/get']({_jv: { type: roomModel }})).sort((a, b) => a.sort_order > b.sort_order)
     }
   },
   mutations: {

@@ -361,7 +361,7 @@ export const    SPECIFIC_MODEL_SAVE_ERROR = {
 export const    EVENT_SETTINGS_MUST_RELOAD = "*** Changes to these settings will only take effect after you reload your browser page. ***";
 export const    CONFIGURATION_LABEL_OVERRIDES = {
         event_virtual: "Does this event include an online component?",
-        clyde_base_url: "Base URL for Clyde",
+        reg_base_url: "Base URL for Reg",
         profile_show_info_demographic_community: "Show Demographics, Community, and Info in Profile"
     };
 export const    PROFILE_LINK_EXPLAINATION_1 = "When you link your Planorama account to your registration account they are matched, and you will be asked to confirm the correct registration account.";

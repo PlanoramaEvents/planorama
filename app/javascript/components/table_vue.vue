@@ -141,7 +141,7 @@
     </b-table>
 
     <div class="d-flex mb-1" v-if="showBottomControls">
-      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}}</span>
+      <span v-if="totalRows != fullTotalRows">Search Results: {{totalRows}} <slot name="search-message"></slot></span>
       <span class="ml-auto">{{countCaption}}</span>
     </div>
     <b-pagination class="d-flex justify-content-end"

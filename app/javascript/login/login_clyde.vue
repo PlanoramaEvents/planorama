@@ -14,18 +14,18 @@
 </template>
 
 <script>
-import { loginIntegrationsMixin } from '@/store/login_integrations.mixin'
-import LoginSmallPrint from './login_small_print.vue'
-export default {
-  export: "LoginClyde",
-  props: ["redirect"],
-  mixins: [
-    loginIntegrationsMixin
-  ],
-  components: {
-    LoginSmallPrint
-  }
-}
+// import { loginIntegrationsMixin } from '@/store/login_integrations.mixin'
+// import LoginSmallPrint from './login_small_print.vue'
+// export default {
+//   export: "LoginClyde",
+//   props: ["redirect"],
+//   mixins: [
+//     loginIntegrationsMixin
+//   ],
+//   components: {
+//     LoginSmallPrint
+//   }
+// }
 </script>
 
 <style>
