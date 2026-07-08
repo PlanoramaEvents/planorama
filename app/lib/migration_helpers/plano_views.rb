@@ -522,6 +522,7 @@ module MigrationHelpers
               id as conflict_id,
               'person_exclusion_conflict' as conflict_type
             from person_exclusion_conflicts
+            where session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')
           UNION
           select
             session_id,
@@ -544,6 +545,7 @@ module MigrationHelpers
             id as conflict_id,
             'availability_conflict' as conflict_type
           from availability_conflicts
+          where session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')
           UNION
           select
             session_id,
@@ -589,6 +591,8 @@ module MigrationHelpers
             id as conflict_id,
             'person_schedule_conflict' as conflict_type
           from person_schedule_conflicts
+          where session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')
+          and conflict_session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')
           UNION
         select
             session_id,
@@ -611,6 +615,8 @@ module MigrationHelpers
             id as conflict_id,
             'person_back_to_back' as conflict_type
           from person_back_to_back
+          where session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible')
+          and conflict_session_assignment_name is null or session_assignment_name in ('Moderator', 'Participant', 'Invisible');
       SQL
       ActiveRecord::Base.connection.execute(query)
     end
