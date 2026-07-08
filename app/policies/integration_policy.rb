@@ -7,8 +7,8 @@ class IntegrationPolicy < PlannerPolicy
     allowed?(action: :airmeet)
   end
 
-  def clyde?
-    allowed?(action: :clyde)
+  def registration?
+    allowed?(action: :registration)
   end
 
   def g24rce?

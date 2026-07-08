@@ -23,9 +23,6 @@ export const loginIntegrationsMixin = {
     registrationIntegration() {
       return this.enabledIntegrations.find(i => i.registration);
     },
-    clydeIntegration() {
-      return this.enabledIntegrations.find(i => i.name === "clyde");
-    },
     csrfToken() {
       let token = $cookies.get('XSRF-TOKEN')
       return token

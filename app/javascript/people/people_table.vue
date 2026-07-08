@@ -117,6 +117,9 @@
         </div>
         <div v-else class="text-muted text-center"> &mdash; </div>
       </template>
+      <template v-slot:search-message>
+        <em class="text-muted">(Search results may have some data redacted depending on your permissions)</em>
+      </template>
     </table-vue>
   </div>
 </template>

@@ -10,7 +10,7 @@
           ref="select-all"
         >Select All</b-form-checkbox>
         <hr />
-        <div v-for="room in collection" :key="room.id">
+        <div v-for="room in sortedRooms" :key="room.id">
           <b-form-checkbox
             v-model="selectedRooms"
             :value="room.id"
@@ -47,6 +47,10 @@ export default {
   }),
   computed: {
     ...mapState(['roomsForScheduling']),
+    sortedRooms() {
+      // ensure the sorted order is used
+      return this.collection.sort((a, b) => a.sort_order > b.sort_order)
+    }
   },
   methods: {
     ...mapMutations({
