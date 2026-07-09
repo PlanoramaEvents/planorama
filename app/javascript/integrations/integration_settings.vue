@@ -9,6 +9,9 @@
           <b-tab title="Registration">
             <registration-settings></registration-settings>
           </b-tab>
+          <b-tab title="Zoom">
+            <zoom-settings></zoom-settings>
+          </b-tab>
         </b-tabs>
       </div>
     </div>
@@ -18,12 +21,14 @@
 <script>
 import AirmeetSettings from '@/airmeet/airmeet_settings.vue'
 import RegistrationSettings from './registration_settings.vue'
+import zoomSettings from './zoom_settings.vue'
 
 export default {
   name: "IntegrationSettings",
   components: {
     AirmeetSettings,
-    RegistrationSettings
+    RegistrationSettings,
+    zoomSettings
   }
 }
 </script>
