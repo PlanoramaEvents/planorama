@@ -120,6 +120,7 @@ Rails.application.routes.draw do
   resources :integrations, path: 'integration', only: [:index, :update]
   get 'integration/airmeet', to: 'integrations#airmeet'
   get 'integration/registration', to: 'integrations#registration'
+  get 'integration/zoom', to: 'integrations#zoom'
   get 'integration/g24rce', to: 'integrations#g24rce'
 
   get 'rce/schedule', to: 'rce#schedule'
