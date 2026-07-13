@@ -15,14 +15,17 @@ namespace :la_zoom do
       "a3c5939b-5d32-4268-ab85-341882f93889",
       "76e38998-0350-4463-89fb-e41de09f2299",
       "cba3da72-726c-482f-beea-132917f812d0",
-      "7409f799-9434-4cfa-b7ba-c1a9d7fcdff5",
-      "cda6c471-2abf-4f79-8c1c-e917a59624fc",
-      "b46a0a34-ff35-4351-85f5-cfbd8cffc605",
-      "0c1df9dd-fcaa-45af-b1cb-1057ccb23c8b"
+      "cf07d6fc-ac66-487b-a1ae-ab8ee8566ec3",
+      "1b6defe6-7b4a-47dd-bc26-4f68179930d1",
+      "10a9cd9d-14fe-44f1-bb71-5756eadb30ab"
     ]
     # ids of rooms that are for meetings
     # This is a room that is online only
     always_webinar = [
+      "7409f799-9434-4cfa-b7ba-c1a9d7fcdff5",
+      "b46a0a34-ff35-4351-85f5-cfbd8cffc605",
+      "cda6c471-2abf-4f79-8c1c-e917a59624fc",
+      "0c1df9dd-fcaa-45af-b1cb-1057ccb23c8b",
       "a2016003-d94b-477a-bb17-6d5aa14ae16a"
     ]
     meeting_rooms = [
@@ -34,6 +37,8 @@ namespace :la_zoom do
       "0df786c9-4ff3-470a-b609-114f2a04991b"
     ]
 
+    alternate_host_count = 1
+
     # Add integrations to session
     # Meeting type is either a zoom meeting type of discord
     # virtual_room true means all sessions in the room will be online regardless of session streaming flag
@@ -42,7 +47,12 @@ namespace :la_zoom do
       room = Room.find id
       next unless room
 
-      room.integrations["zoom"] = { MeetingType: :webinar, virtual_room: false }
+      room.integrations["zoom"] = { 
+        meeting_type: :webinar,
+        virtual_room: false, 
+        alternate_host: "zoomhost+#{alternate_host_count}@lacon.org"
+      }
+      alternate_host_count += 1
       room.save!
     end
 
@@ -50,7 +60,12 @@ namespace :la_zoom do
       room = Room.find id
       next unless room
 
-      room.integrations["zoom"] = { MeetingType: :webinar, virtual_room: true }
+      room.integrations["zoom"] = {
+        meeting_type: :webinar,
+        virtual_room: true, 
+        alternate_host: "zoomhost+#{alternate_host_count}@lacon.org"
+      }
+      alternate_host_count += 1
       room.save!
     end
 
@@ -58,7 +73,7 @@ namespace :la_zoom do
       room = Room.find id
       next unless room
 
-      room.integrations["zoom"] = { MeetingType: :discord }
+      room.integrations["zoom"] = { meeting_type: :discord }
       room.save!
     end
 
@@ -66,7 +81,12 @@ namespace :la_zoom do
       room = Room.find id
       next unless room
 
-      room.integrations["zoom"] = { MeetingType: :meeting, virtual_room: true }
+      room.integrations["zoom"] = {
+        meeting_type: :meeting,
+        virtual_room: true,
+        alternate_host: "zoomhost+#{alternate_host_count}@lacon.org"
+      }
+      alternate_host_count += 1
       room.save!
     end
 

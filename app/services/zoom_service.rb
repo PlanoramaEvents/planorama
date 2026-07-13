@@ -10,20 +10,24 @@ class ZoomService
   ZOOM_HOST="https://api.zoom.us"
   ZOOM_EVENTS_ENPOINT="/v2/zoom_events"
 
+  def self.zoom_enabled
+    ::Integration.find_by({name: "zoom"})&.config ? ::Integration.find_by({name: "zoom"})&.config["enabled"] : false
+  end
+
   def self.event_id
-    ::Integration.find_by({name: "zoom"})&.config ? ::Integration.find_by({name: "zoom"})&.config["event_id"] : ''
+    ::Integration.find_by({name: "zoom"})&.config ? ::Integration.find_by({name: "zoom"})&.config["event_id"] : nil
   end
 
   def self.account_id
-    ::Integration.find_by({name: "zoom"})&.config ? ::Integration.find_by({name: "zoom"})&.config["account_id"] : ''
+    ::Integration.find_by({name: "zoom"})&.config ? ::Integration.find_by({name: "zoom"})&.config["account_id"] : nil
   end
 
   def self.client_id
-    ::Integration.find_by({name: "zoom"})&.config ? ::Integration.find_by({name: "zoom"})&.config["client_id"] : ''
+    ::Integration.find_by({name: "zoom"})&.config ? ::Integration.find_by({name: "zoom"})&.config["client_id"] : nil
   end
 
   def self.client_secret
-    ::Integration.find_by({name: "zoom"})&.config ? ::Integration.find_by({name: "zoom"})&.config["client_secret"] : ''
+    ::Integration.find_by({name: "zoom"})&.config ? ::Integration.find_by({name: "zoom"})&.config["client_secret"] : nil
   end
 
   # Implementation of a zoom events client
@@ -84,12 +88,10 @@ class ZoomService
     # Only rooms that are online and sessions that are virtual/hybrid get zoom sessions
     # Based on the given session create a zoom meeting for the event
     # 
-    def schedule_session(session:)
+    def schedule_session(session:, meeting_type:)
       event_id = ZoomService.event_id
       url = "#{ZOOM_HOST}/#{ZOOM_EVENTS_ENPOINT}/events/#{event_id}/sessions"
       timezone = ConfigService.value('convention_timezone')
-
-      # TODO: check the session and the room
 
       response = HTTParty.post(
           url,
@@ -104,8 +106,7 @@ class ZoomService
             start_time: session.start_time.strftime("%Y-%m-%dT%H:%M:%SZ"), # as UTC
             end_time: (session.start_time + session.duration.minutes).strftime("%Y-%m-%dT%H:%M:%SZ"),
             timezone: "America/Los_Angeles",
-            # TODO
-            type: 2, # base on room + format, 2 for meeting, 4 for webinar
+            type: (meeting_type == "webinar" ? 2 : 0), # 0 for meeting, 2 for webinar
             description: session.description,
             featured: false,
             visible_in_landing_page: false,
@@ -115,16 +116,29 @@ class ZoomService
             chat_channel: false,
             led_by_sponsor: false,
             attendance_type: "virtual", # All sessions are "virtual"
-            # TODO: tags? "room"?
+            # Use the track as the room
+            track_labels: [
+              session.room.name
+            ],
+            # Use the public tags as the "product" labels
+            product_labels: session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name),
+            # Set of alternate hosts
+            alternative_host: [session.room.integrations['zoom']['alternate_host']]
           }.to_json
         )
 
-        # TODO: add the zoom info to the session
+        # add the zoom info to the session
+        result = JSON.parse(response.body)
+        session.integrations = {zoom_session_id: result["session_id"], zoom_meeting_type: meeting_type}
+        session.save!
     end
 
     # remove the given session from zoom events
     def unschedule_session(session:)
-      session_id = "SwiGAF2pQKqz544C2l1ojg"
+      session_id = session.integrations['zoom_session_id']
+
+      raise "There is no zoom session for #{session.title}" unless session_id
+
       event_id = ZoomService.event_id
       url = "#{ZOOM_HOST}/#{ZOOM_EVENTS_ENPOINT}/events/#{event_id}/sessions/#{session_id}"
 
@@ -137,11 +151,19 @@ class ZoomService
           "Content-Type" => "application/json"
         }
       )
-      # TODO: remove the zoom info from the session
+
+      # remove the zoom info from the session
+      session.integrations = {}
+      session.save!
     end
 
     # update the given sesion in zoom events
+    # NOTE: we can not change the type of the session
     def update_session(session:)
+      session_id = session.integrations['zoom_session_id']
+
+      raise "There is no zoom session for #{session.title}" unless session_id
+
       event_id = ZoomService.event_id
       url = "#{ZOOM_HOST}/#{ZOOM_EVENTS_ENPOINT}/events/#{event_id}/sessions/#{session_id}"
 
@@ -160,6 +182,14 @@ class ZoomService
           end_time: (session.start_time + session.duration.minutes).strftime("%Y-%m-%dT%H:%M:%SZ"),
           timezone: "America/Los_Angeles",
           description: session.description,
+          # Use the track as the room
+          track_labels: [
+            session.room.name
+          ],
+          # Use the public tags as the "product" labels
+          product_labels: session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name),
+          # Set of alternate hosts
+          alternative_host: [session.room.integrations['zoom']['alternate_host']]
         }.to_json
       )
     end

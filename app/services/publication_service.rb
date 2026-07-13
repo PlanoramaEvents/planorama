@@ -40,7 +40,6 @@ module PublicationService
   end
 
   #  POST published - create a cache for the published schedule
-
   def self.publish_sessions(sessions:, since:)
     candidates = if since
                    sessions.where("sessions.updated_at >= ?", since)
@@ -91,8 +90,27 @@ module PublicationService
     candidates.each do |session|
       pub_session = self.publish_session(session: session, update: false)
       pub_session.save! if pub_session
+      publish_to_zoom(session: pub_session) if pub_session
     end
     count
+  end
+
+  def self.publish_to_zoom(session:)
+    return unless ZoomService.zoom_enabled
+    room = session.room
+    return unless room.integrations['zoom']
+    zoom_svc = ZoomService.get_svc if ZoomService.zoom_enabled
+
+    if room.integrations['zoom']['meeting_type'] == "webinar" || room.integrations['zoom']['meeting_type'] == "meeting"
+      if room.integrations['zoom']['virtual_room'] || session.streamed
+        # get if pub_session has a zoom id then it is an update
+        if session.integrations[:zoom_id]
+          zoom_svc.update_session(session: session)
+        else # it is a new session in zoom
+          zoom_svc.schedule_session(session: session, meeting_type: room.integrations['zoom']['meeting_type'])
+        end
+      end
+    end
   end
 
   def self.publish_updated_sessions(sessions)
@@ -102,6 +120,7 @@ module PublicationService
     candidates.each do |session|
       pub_session = self.publish_session(session: session)
       pub_session.save!
+      publish_to_zoom(session: pub_session) if pub_session
     end
 
     count
@@ -109,6 +128,15 @@ module PublicationService
 
   def self.remove_dropped_sessions(sessions)
     candidates = PublishedSession.where("session_id not in (?)", sessions.collect(&:id))
+    # Remove any dropped session from zoom
+    if ZoomService.zoom_enabled
+      zoom_svc = ZoomService.get_svc
+      candidates.each do |session|
+        if session.integrations['zoom_session_id']
+          zoom_svc.unschedule_session(session: session)
+        end
+      end
+    end
     count = candidates.count
     candidates.destroy_all
     count
