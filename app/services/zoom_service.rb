@@ -94,7 +94,7 @@ class ZoomService
       timezone = ConfigService.value('convention_timezone')
 
       tags = session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name)
-      tags << (session.recorded ? "Replay" : "No Replay")
+      tags << "Replay" if session.recorded
 
       response = HTTParty.post(
           url,
@@ -171,7 +171,7 @@ class ZoomService
       url = "#{ZOOM_HOST}/#{ZOOM_EVENTS_ENPOINT}/events/#{event_id}/sessions/#{session_id}"
 
       tags = session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name)
-      tags << (session.recorded ? "Replay" : "No Replay")
+      tags << "Replay" if session.recorded
 
       # Only patch the pieces that may have change, title, description and time
       response = HTTParty.patch(
