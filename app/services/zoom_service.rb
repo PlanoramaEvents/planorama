@@ -93,6 +93,9 @@ class ZoomService
       url = "#{ZOOM_HOST}/#{ZOOM_EVENTS_ENPOINT}/events/#{event_id}/sessions"
       timezone = ConfigService.value('convention_timezone')
 
+      tags = session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name)
+      tags << (session.recorded ? "Replay" : "No Replay")
+
       response = HTTParty.post(
           url,
           headers: {
@@ -121,7 +124,7 @@ class ZoomService
               session.room.name
             ],
             # Use the public tags as the "product" labels
-            product_labels: session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name),
+            product_labels: tags,
             # Set of alternate hosts
             alternative_host: [session.room.integrations['zoom']['alternate_host']]
           }.to_json
@@ -167,6 +170,9 @@ class ZoomService
       event_id = ZoomService.event_id
       url = "#{ZOOM_HOST}/#{ZOOM_EVENTS_ENPOINT}/events/#{event_id}/sessions/#{session_id}"
 
+      tags = session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name)
+      tags << (session.recorded ? "Replay" : "No Replay")
+
       # Only patch the pieces that may have change, title, description and time
       response = HTTParty.patch(
         url,
@@ -187,7 +193,7 @@ class ZoomService
             session.room.name
           ],
           # Use the public tags as the "product" labels
-          product_labels: session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name),
+          product_labels: tags,
           # Set of alternate hosts
           alternative_host: [session.room.integrations['zoom']['alternate_host']]
         }.to_json
