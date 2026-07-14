@@ -31,7 +31,7 @@ class ZoomService
   end
 
   # Implementation of a zoom events client
-  class Client < Members::MemberServices
+  class Client
     attr_accessor :access_token
 
     def initialize

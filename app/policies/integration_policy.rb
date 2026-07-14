@@ -19,6 +19,10 @@ class IntegrationPolicy < PlannerPolicy
     allowed?(action: :zoom)
   end
 
+  def portal?
+    allowed?(action: :portal)
+  end
+
   def update?
     allowed?(action: :update)
   end

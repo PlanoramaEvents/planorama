@@ -73,14 +73,12 @@ module SessionService
       .where("session_assignment_name in (?)",['Moderator', 'Participant', 'Invisible'])
 
 
-    # PersonScheduleSerializer is the place
-    g24rce = Integration.find_by({name: 'g24rce'})
     PersonScheduleSerializer.new(
       schedule, 
       {
         params: {
           show_links: show_links,
-          g24rce: (g24rce && g24rce[:config]) ? g24rce[:config]['base_portal_url'] : nil
+          base_portal_url: PortalService.base_url
         }
       }
     ).serializable_hash
@@ -97,14 +95,13 @@ module SessionService
   def self.cache_published_sessions(publication_date:)
     sessions = self.published_sessions
 
-    g24rce = Integration.find_by({name: 'g24rce'})
     snapshot = ActiveModel::Serializer::CollectionSerializer.new(
                   sessions,
                   {
                     serializer: Conclar::SessionSerializer,
-                    g24rce: g24rce[:config] ? g24rce[:config]['base_portal_url'] : nil
+                    base_portal_url: PortalService.base_url
                   }
-                ) #.serializable_hash
+                )
 
     PublishSnapshot.create!(
       snapshot: snapshot,

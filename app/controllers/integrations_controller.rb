@@ -46,6 +46,20 @@ class IntegrationsController < ResourceController
       content_type: 'application/json'
   end
 
+  def portal
+    authorize model_class, policy_class: policy_class
+
+    portal = Integration.find_or_create_by({name: 'portal'})
+    
+    render json: serializer_class.new(portal,
+        {
+          include: serializer_includes,
+          params: {domain: "#{request.base_url}"}
+        }
+      ).serializable_hash(),
+      content_type: 'application/json'
+  end
+
   def g24rce
     authorize model_class, policy_class: policy_class
     g24rce = Integration.find_or_create_by({name: 'g24rce'})

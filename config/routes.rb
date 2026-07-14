@@ -121,6 +121,7 @@ Rails.application.routes.draw do
   get 'integration/airmeet', to: 'integrations#airmeet'
   get 'integration/registration', to: 'integrations#registration'
   get 'integration/zoom', to: 'integrations#zoom'
+  get 'integration/portal', to: 'integrations#portal'
   get 'integration/g24rce', to: 'integrations#g24rce'
 
   get 'rce/schedule', to: 'rce#schedule'

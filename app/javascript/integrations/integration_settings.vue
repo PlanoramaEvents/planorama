@@ -12,6 +12,9 @@
           <b-tab title="Zoom">
             <zoom-settings></zoom-settings>
           </b-tab>
+          <b-tab title="Portal">
+            <portal-settings></portal-settings>
+          </b-tab>
         </b-tabs>
       </div>
     </div>
@@ -22,13 +25,15 @@
 import AirmeetSettings from '@/airmeet/airmeet_settings.vue'
 import RegistrationSettings from './registration_settings.vue'
 import zoomSettings from './zoom_settings.vue'
+import portalSettings from './potal_settings.vue'
 
 export default {
   name: "IntegrationSettings",
   components: {
     AirmeetSettings,
     RegistrationSettings,
-    zoomSettings
+    zoomSettings,
+    portalSettings
   }
 }
 </script>
