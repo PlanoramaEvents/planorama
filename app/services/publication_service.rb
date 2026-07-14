@@ -109,6 +109,9 @@ module PublicationService
         else # it is a new session in zoom
           zoom_svc.schedule_session(session: session, meeting_type: room.integrations['zoom']['meeting_type'])
         end
+      else session.integrations['zoom_session_id'] && !session.streamed
+        # The session is no longer streamed and is not in a virtual only room
+        zoom_svc.unschedule_session(session: session)
       end
     end
   end
