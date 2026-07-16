@@ -4,7 +4,7 @@ require "base64"
 # Provides a way to absract the Zoom API used by the server side components.
 # This is for Zoom events - meetings and webinars
 #
-class ZoomService
+class ZoomEventsService
   include HTTParty
 
   ZOOM_HOST="https://api.zoom.us"
@@ -35,9 +35,9 @@ class ZoomService
     attr_accessor :access_token
 
     def initialize
-      account_id = ZoomService.account_id
-      client_id = ZoomService.client_id
-      client_secret = ZoomService.client_secret
+      account_id = ZoomEventsService.account_id
+      client_id = ZoomEventsService.client_id
+      client_secret = ZoomEventsService.client_secret
       self.access_token = get_access_token(account_id: account_id, client_id: client_id, client_secret: client_secret)
     end
 
@@ -45,7 +45,7 @@ class ZoomService
     # Get the access token needed to make API calls to Zoom
     # 
     def get_access_token(account_id:, client_id:, client_secret:)
-      encoded_secret = ZoomService.encode_secret(client_id: client_id, client_secret: client_secret)
+      encoded_secret = ZoomEventsService.encode_secret(client_id: client_id, client_secret: client_secret)
       url = "https://zoom.us/oauth/token"
 
       response = HTTParty.post(
@@ -89,7 +89,7 @@ class ZoomService
     # Based on the given session create a zoom meeting for the event
     # 
     def schedule_session(session:, meeting_type:)
-      event_id = ZoomService.event_id
+      event_id = ZoomEventsService.event_id
       url = "#{ZOOM_HOST}/#{ZOOM_EVENTS_ENPOINT}/events/#{event_id}/sessions"
       timezone = ConfigService.value('convention_timezone')
 
@@ -142,7 +142,7 @@ class ZoomService
 
       raise "There is no zoom session for #{session.title}" unless session_id
 
-      event_id = ZoomService.event_id
+      event_id = ZoomEventsService.event_id
       url = "#{ZOOM_HOST}/#{ZOOM_EVENTS_ENPOINT}/events/#{event_id}/sessions/#{session_id}"
 
       response = HTTParty.delete(
@@ -167,7 +167,7 @@ class ZoomService
 
       raise "There is no zoom session for #{session.title}" unless session_id
 
-      event_id = ZoomService.event_id
+      event_id = ZoomEventsService.event_id
       url = "#{ZOOM_HOST}/#{ZOOM_EVENTS_ENPOINT}/events/#{event_id}/sessions/#{session_id}"
 
       tags = session.taggings.select{|t| t.context == 'tags'}.collect(&:tag).collect(&:name)
@@ -205,7 +205,7 @@ class ZoomService
   # Instantiate an instance of the Zoom service
   #
   def self.get_svc
-    ZoomService::Client.new
+    ZoomEventsService::Client.new
   end
 
   private

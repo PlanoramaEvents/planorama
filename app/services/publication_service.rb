@@ -54,6 +54,10 @@ module PublicationService
     # dropped
     dropped_sessions = self.remove_dropped_sessions(sessions)
 
+    # Ensure any published sessions are also on the portal
+    candidates = PublishedSession.all
+    publish_to_portal(sessions: candidates)
+
     {
       new_sessions: new_sessions,
       updated_sessions: updated_sessions,
@@ -96,24 +100,53 @@ module PublicationService
   end
 
   def self.publish_to_zoom(session:)
-    return unless ZoomService.zoom_enabled
+    return unless ZoomEventsService.zoom_enabled
     room = session.room
     return unless room.integrations['zoom']
-    zoom_svc = ZoomService.get_svc if ZoomService.zoom_enabled
+    zoom_svc = ZoomEventsService.get_svc if ZoomEventsService.zoom_enabled
 
     if room.integrations['zoom']['meeting_type'] == "webinar" || room.integrations['zoom']['meeting_type'] == "meeting"
       if room.integrations['zoom']['virtual_room'] || session.streamed
         # get if pub_session has a zoom id then it is an update
-        if session.integrations[:zoom_id]
+        if session.integrations['zoom_session_id']
           zoom_svc.update_session(session: session)
         else # it is a new session in zoom
           zoom_svc.schedule_session(session: session, meeting_type: room.integrations['zoom']['meeting_type'])
         end
-      else session.integrations['zoom_session_id'] && !session.streamed
+      elsif session.integrations['zoom_session_id'] && !session.streamed
         # The session is no longer streamed and is not in a virtual only room
         zoom_svc.unschedule_session(session: session)
       end
     end
+  end
+
+  def self.publish_to_portal(sessions:)
+    svc = PortalService.get_svc
+    details = []
+    sessions.each do |session|
+      if session.integrations['zoom_session_id']
+        details << {
+          itemId: session.id,
+          title: session.title,
+          destination: session.integrations['zoom_session_id'],
+          handler: "zoomevents" 
+        }
+      end
+    end
+    svc.add_sessions(details: details)
+  rescue => e
+    Rails.logger.error "ERROR: publish to portal failed #{e}"
+  end
+
+  def self.remove_from_portal(sessions:)
+    svc = PortalService.get_svc
+    details = []
+    sessions.each do |session|
+      details << session.id
+    end
+    svc.remove_session(session_ids: details)
+  rescue => e
+    Rails.logger.error "ERROR: remove from portal failed #{e}"
   end
 
   def self.publish_updated_sessions(sessions)
@@ -132,8 +165,8 @@ module PublicationService
   def self.remove_dropped_sessions(sessions)
     candidates = PublishedSession.where("session_id not in (?)", sessions.collect(&:id))
     # Remove any dropped session from zoom
-    if ZoomService.zoom_enabled
-      zoom_svc = ZoomService.get_svc
+    if ZoomEventsService.zoom_enabled
+      zoom_svc = ZoomEventsService.get_svc
       candidates.each do |session|
         if session.integrations['zoom_session_id']
           zoom_svc.unschedule_session(session: session)
@@ -141,6 +174,7 @@ module PublicationService
       end
     end
     count = candidates.count
+    remove_from_portal(sessions: candidates)
     candidates.destroy_all
     count
   end
