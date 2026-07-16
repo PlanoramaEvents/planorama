@@ -9,10 +9,10 @@
           <b-tab title="Registration">
             <registration-settings></registration-settings>
           </b-tab>
-          <b-tab title="Zoom">
+          <b-tab title="Zoom Events">
             <zoom-settings></zoom-settings>
           </b-tab>
-          <b-tab title="Portal">
+          <b-tab title="Concourse">
             <portal-settings></portal-settings>
           </b-tab>
         </b-tabs>
