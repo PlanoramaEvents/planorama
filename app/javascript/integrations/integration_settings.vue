@@ -12,6 +12,9 @@
           <b-tab title="Zoom Events">
             <zoom-settings></zoom-settings>
           </b-tab>
+          <b-tab title="Zoom Events Rooms">
+            <room-zoom-integrations></room-zoom-integrations>
+          </b-tab>
           <b-tab title="Concourse">
             <portal-settings></portal-settings>
           </b-tab>
@@ -26,6 +29,7 @@ import AirmeetSettings from '@/airmeet/airmeet_settings.vue'
 import RegistrationSettings from './registration_settings.vue'
 import zoomSettings from './zoom_settings.vue'
 import portalSettings from './potal_settings.vue'
+import RoomZoomIntegrations from '@/venues/room_zoom_integrations.vue'
 
 export default {
   name: "IntegrationSettings",
@@ -33,7 +37,8 @@ export default {
     AirmeetSettings,
     RegistrationSettings,
     zoomSettings,
-    portalSettings
+    portalSettings,
+    RoomZoomIntegrations
   }
 }
 </script>
