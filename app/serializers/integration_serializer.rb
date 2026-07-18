@@ -27,6 +27,20 @@ class IntegrationSerializer
         enabled: integration.config["enabled"],
         ticket_name: integration.config["ticket_name"]
       }
+    elsif integration.name === 'zoom'
+      {
+        enabled: integration.config["enabled"],
+        event_id: integration.config["event_id"],
+        account_id: integration.config["account_id"],
+        client_id: integration.config["client_id"],
+        client_secret: integration.config["client_secret"]        
+      }
+    elsif integration.name == 'portal'
+      {
+        enabled: integration.config["enabled"],
+        base_url: integration.config["base_url"],
+        api_key: integration.config["api_key"]        
+      }
     else
       integration.config
     end

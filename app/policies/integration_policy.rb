@@ -15,6 +15,14 @@ class IntegrationPolicy < PlannerPolicy
     allowed?(action: :g24rce)
   end
 
+  def zoom?
+    allowed?(action: :zoom)
+  end
+
+  def portal?
+    allowed?(action: :portal)
+  end
+
   def update?
     allowed?(action: :update)
   end

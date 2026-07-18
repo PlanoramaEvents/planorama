@@ -17,6 +17,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Session Duration',
         'Room',
         'Person',
+        'Role',
         'Conflict Type'
       ]
     )
@@ -33,6 +34,7 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.session&.duration,
           conflict.room&.name,
           conflict.person_published_name,
+          conflict.session_assignment_name,
           conflict.conflict_type,
         ],
         styles
@@ -60,6 +62,7 @@ class Reports::ConflictReportsController < ApplicationController
         'Session Duration',
         'Room',
         'Person',
+        'Role',
         'Conflict Type'
       ]
     )
@@ -76,6 +79,7 @@ class Reports::ConflictReportsController < ApplicationController
           conflict.session_duration,
           conflict.room&.name,
           conflict.person_published_name,
+          conflict.session_assignment_name,
           conflict.conflict_type
         ],
         styles

@@ -278,7 +278,7 @@
         <a href="/report/conflict_reports/all_ignored_conflicts" target="_blank">Ignored Person Conflicts</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: Ignored conflicts in these categories: people outside of availability, people double booked, person scheduled against a conflict item, back to back), one line per ignored conflict<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, person name, conflict type<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, person name, person's role, conflict type<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions
         </p>
       </li>
@@ -286,7 +286,7 @@
         <a href="/report/conflict_reports/all_conflicts" target="_blank">All Conflicts</a>
         <p class="ml-2">
           <strong><em>Description</em></strong>: All conflicts in these categories: people outside of availability, people double booked, person scheduled against a conflict item, back to back), one line per conflict<br />
-          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, person name, conflict type<br />
+          <strong><em>Fields</em></strong>: Session title, area(s) of session, session start time, session duration, room, person name, person's role, conflict type<br />
           <strong><em>Session data included</em></strong>: all scheduled sessions<br />
           <strong><em>Person data included</em></strong>: moderators, participants, invisible participants
         </p>
