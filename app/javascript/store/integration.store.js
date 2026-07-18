@@ -12,12 +12,18 @@ export const FETCH_REGISTRATION_INTEGRATION = 'FETCH REGISTRATION INTEGRATION'
 export const SET_REGISTRATION_INTEGRATION = 'SET REGISTRATION INTEGRATION'
 export const FETCH_G24RCE_INTEGRATION = 'FETCH G24RCE INTEGRATION'
 export const SET_G24RCE_INTEGRATION = 'SET G24RCE INTEGRATION'
+export const SET_ZOOM_INTEGRATION = 'SET ZOOM INTEGRATION'
+export const FETCH_ZOOM_INTEGRATION = 'FETCH ZOOM INTEGRATION'
+export const SET_PORTAL_INTEGRATION = 'SET PORTAL INTEGRATION'
+export const FETCH_PORTAL_INTEGRATION = 'FETCH PORTAL INTEGRATION'
 
 export const integrationStore = {
   state: {
     airmeet: {},
     registration: {},
-    g24rce: {}
+    g24rce: {},
+    zoom: {},
+    portal: {}
   },
   getters: {
     airmeetEnabled(state) {
@@ -30,6 +36,12 @@ export const integrationStore = {
     },
     [SET_REGISTRATION_INTEGRATION] (state, integration) {
       state.registration = integration;
+    },
+    [SET_ZOOM_INTEGRATION] (state, integration) {
+      state.zoom = integration;
+    },
+    [SET_PORTAL_INTEGRATION] (state, integration) {
+      state.portal = integration;
     },
     [SET_G24RCE_INTEGRATION](state, integration) {
       state.g24rce = integration;
@@ -44,6 +56,16 @@ export const integrationStore = {
     [FETCH_REGISTRATION_INTEGRATION] ({dispatch, commit}) {
       dispatch(FETCH, {url: 'integration/registration'}).then(data => {
         commit(SET_REGISTRATION_INTEGRATION, data)
+      })
+    },
+    [FETCH_ZOOM_INTEGRATION] ({dispatch, commit}) {
+      dispatch(FETCH, {url: 'integration/zoom'}).then(data => {
+        commit(SET_ZOOM_INTEGRATION, data);
+      })
+    },
+    [FETCH_PORTAL_INTEGRATION] ({dispatch, commit}) {
+      dispatch(FETCH, {url: 'integration/portal'}).then(data => {
+        commit(SET_PORTAL_INTEGRATION, data);
       })
     },
     [FETCH_G24RCE_INTEGRATION]({ dispatch, commit }) {

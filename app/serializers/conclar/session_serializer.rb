@@ -138,28 +138,27 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   # links is an array that contains a set of url links for the programme item.
   # Currently, signup, meeting and recording are the valid link types.
   attribute :links do
-    if instance_options[:g24rce]
+    if instance_options[:base_url]
       res = {}
-      if object.environment == 'virtual' || object.streamed
+      if object.environment == 'virtual' || object.streamed || object.integrations['zoom_session_id']
         if object.room.integrations["rce"] && object.room.integrations["rce"]["SegmentType"]
           res = if object.room.integrations["rce"]["SegmentType"] == "stage"
             {
-              stage: "#{instance_options[:g24rce]}deep-link/stage?room_id=#{object.room.id}",
+              stage: "#{instance_options[:base_url]}/deep-link/stage?room_id=#{object.room.id}",
             }
           else # session
             {
-              session: "#{instance_options[:g24rce]}deep-link/session?item_id=#{object.id}"
+              session: "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
             }
           end
+        elsif PortalService.portal_enabled
+          res[:session] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
+          # res[:recording] = "#{instance_options[:base_url]}/deep-link/replay?item_id=#{object.id}" if object.recorded        
+          res[:recording] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}" if object.recorded        
         end
       end
 
-      # replay link for recorded session
-      if object.recorded
-        res[:replay] = "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
-      end
-
-      res[:chat] = "#{instance_options[:g24rce]}deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
+      res[:chat] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
       res
     end
   end
