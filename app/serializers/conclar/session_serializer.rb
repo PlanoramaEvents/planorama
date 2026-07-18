@@ -153,7 +153,8 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
           end
         elsif PortalService.portal_enabled
           res[:session] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
-          res[:recording] = "#{instance_options[:base_url]}/deep-link/replay?item_id=#{object.id}" if object.recorded        
+          # res[:recording] = "#{instance_options[:base_url]}/deep-link/replay?item_id=#{object.id}" if object.recorded        
+          res[:recording] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}" if object.recorded        
         end
       end
 
