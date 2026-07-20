@@ -46,10 +46,15 @@ module Members
       def people_by_page(page: 1, page_size: 20)
         url = "/api/v3/core/users/"
         response = HTTParty.get(
-          "#{Members::AuthentikService.base_url}#{url}?page=#{page}&page_size=#{page_size}",
+          "#{Members::AuthentikService.base_url}#{url}",
           headers: {
             'Authorization' => "Bearer #{token}",
             'Accept' => 'application/json'
+          },
+          query: { 
+            is_active: true,
+            page: page,
+            page_size: page_size
           }
         )
         result = JSON.parse(response.body)
