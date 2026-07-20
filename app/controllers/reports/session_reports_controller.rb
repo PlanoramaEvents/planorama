@@ -15,6 +15,7 @@ class Reports::SessionReportsController < ApplicationController
 
     worksheet.append_row(
       [
+        'ID',
         'Session',
         'Start Time',
         'Duration',
@@ -35,6 +36,7 @@ class Reports::SessionReportsController < ApplicationController
     sessions.each do |session|
       worksheet.append_row(
         [
+          session.id,
           session.title,
           session.start_time ? FastExcel.date_num(session.start_time, session.start_time.in_time_zone.utc_offset) : nil,
           session.duration,
