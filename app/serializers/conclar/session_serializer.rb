@@ -42,8 +42,17 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       res << a
     end
 
-    # TODO: change
-    # In Person, Online, both
+    if object.room && object.room.integrations['zoom']
+      if object.room.integrations['zoom']['virtual_room'] || object.room.integrations['zoom']['meeting_type'] == 'discord'
+        t = {
+          value: "session_online",
+          category: "Environment",
+          label: 'Virtual'
+        }
+        res << t
+      end
+    end
+
     case object.environment
     when 'in_person'
       t = {
@@ -63,7 +72,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       t = {
         value: "session_online",
         category: "Environment",
-        label: 'Online'
+        label: 'Virtual'
       }
       res << t
     else
@@ -72,7 +81,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     if object.age_restriction
       t = {
         value: "session_".concat(object.age_restriction.name),
-        category: "Note",
+        category: "Availability",
         label: object.age_restriction.name
       }
       res << t
@@ -81,7 +90,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     if object.require_signup
       t = {
         value: "session_require_signup",
-        category: "Note",
+        category: "Availability",
         label: "Requires Signup"
       }
       res << t
@@ -90,32 +99,40 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     if object.recorded
       t = {
         value: "session_replay",
-        category: "Note",
-        label: "Replay"
+        category: "Availability",
+        label: "Recorded"
       }
       res << t
     else
       t = {
         value: "session_no_replay",
-        category: "Note",
-        label: "No Replay"
+        category: "Availability",
+        label: "Not Recorded"
       }
       res << t
     end
 
-    if object.streamed
+    streamed_zoom = (object.room.integrations['zoom'] && object.room.integrations['zoom']['virtual_room'])
+    # If a zoom room is in one of these formats then it is not streamed to the public
+    # i.e. only the attendees participate and can see what is happening
+    if object.format
+      streamed_zoom &&= ['Reading','Table Talk','Workshop','Party','Discussion Circle','Meetup'].exclude?  object.format.name
+    end
+
+    if object.streamed || streamed_zoom
       t = {
-        value: "session_online",
-        category: "Environment",
-        label: 'Online'
+        value: "session_streamed",
+        category: "Availability",
+        label: 'Streamed'
       }
       res << t
-      # t = {
-      #   value: "session_streamed",
-      #   category: "Environment",
-      #   label: "Streamed"
-      # }
-      # res << t
+    else
+      t = {
+        value: "session_not_streamed",
+        category: "Availability",
+        label: 'Not Streamed'
+      }
+      res << t
     end
 
     res
@@ -152,9 +169,12 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
             }
           end
         elsif PortalService.portal_enabled
-          res[:session] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
-          # res[:recording] = "#{instance_options[:base_url]}/deep-link/replay?item_id=#{object.id}" if object.recorded        
-          res[:recording] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}" if object.recorded        
+          if object.environment == 'virtual' || object.streamed || 
+                (object.room.integrations['zoom'] && object.room.integrations['zoom']['meeting_type'] != 'discord')
+            res[:session] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
+            res[:recording] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}" if object.recorded        
+            # res[:recording] = "#{instance_options[:base_url]}/deep-link/replay?item_id=#{object.id}" if object.recorded        
+          end
         end
       end
 
