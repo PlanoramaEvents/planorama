@@ -54,6 +54,12 @@ module PublicationService
     # dropped
     dropped_sessions = self.remove_dropped_sessions(sessions)
 
+    # 
+    if ZoomEventsService.zoom_enabled
+      rooms = Room.where("rooms.updated_at >= ?", since)
+      self.update_rooms(rooms: rooms)
+    end
+
     # Ensure any published sessions are also on the portal
     candidates = PublishedSession.all
     publish_to_portal(sessions: candidates)
@@ -99,6 +105,28 @@ module PublicationService
     count
   end
 
+  def self.update_rooms(rooms:)
+    return unless ZoomEventsService.zoom_enabled
+    zoom_svc = ZoomEventsService.get_svc if ZoomEventsService.zoom_enabled
+
+    rooms.each do |room|
+      if !room.integrations['zoom']
+        sessions = PublishedSession.where("room_id = ? and integrations ->> 'zoom_session_id' is not null",room.id)
+        sessions.each do |session|
+          zoom_svc.unschedule_session(session: session)
+        end
+      else
+        if room.integrations['zoom']['meeting_type'] == "webinar" || room.integrations['zoom']['meeting_type'] == "meeting"
+          # sessions = PublishedSession.where("room_id = ? and integrations ->> 'zoom_session_id' is null",room.id)
+          sessions = PublishedSession.where("room_id = ?",room.id)
+          sessions.each do |session|
+            self.publish_to_zoom(session: session)
+          end
+        end
+      end
+    end
+  end
+
   def self.publish_to_zoom(session:)
     return unless ZoomEventsService.zoom_enabled
     room = session.room
@@ -117,6 +145,10 @@ module PublicationService
         # The session is no longer streamed and is not in a virtual only room
         zoom_svc.unschedule_session(session: session)
       end
+    # TODO: need to look at the update time for the room as well...
+    elsif session.integrations['zoom_session_id']
+      # The session is no longer in a zoom room (webinar or meeting)
+      zoom_svc.unschedule_session(session: session)
     end
   end
 

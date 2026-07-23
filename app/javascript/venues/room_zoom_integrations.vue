@@ -7,7 +7,7 @@
         <b-form inline @submit.prevent="addZoomRoom($event)" class="mb-5 mt-3">
           <b-form-select name="room" :options="nonZoomRoomOptions" :value="null"></b-form-select>
           <b-form-select name="meeting_type" :options="meetingTypeOptions" :value="null" ></b-form-select>
-          <b-form-select name="virtual_room" :options="virtualRoomOptions" :value="null" ></b-form-select>
+          <b-form-select name="virtual_room" :options="virtualRoomOptions" :value="false" ></b-form-select>
           <b-input type="email" name="alternate_host" placeholder="xx@yy.com"></b-input>
           <b-button type="submit" :disabled="!zoom_enabled">Add Zoom Room</b-button>
         </b-form>
@@ -45,15 +45,13 @@ export default {
       {text: "discord", value: 'discord', disabled: false},
     ],
     virtualRoomOptions: [
-      {text: "Select if virtual", value: null, disabled: false},
-      {text: "Yes", value: false, disabled: false},
-      {text: "No", value: true, disabled: false}
+      {text: "No", value: false, disabled: false},
+      {text: "Yes", value: true, disabled: false},
     ],
     model: 'room'
   }),
   computed: {
     zoomRooms() {
-      // SORT
       return this.collection.filter(r => r.integrations?.zoom).sort((a, b) => a.sort_order > b.sort_order)
     },
     nonZoomRoomOptions() {
