@@ -1,6 +1,4 @@
 class Conclar::SessionSerializer < ActiveModel::Serializer
-  attributes :title
-
   attribute :format do    
     object.format.name if object.format
   end
@@ -13,8 +11,36 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     end
   end
 
+  attribute :title do
+    if object.title
+      object.title
+              .gsub(/(&nbsp;)+/, " ")
+              .gsub("\u200B", "") # unlikely
+              .gsub("\uFEFF", "") # unlikely
+              .gsub(/\r\n?/, "\n")
+              .gsub(/[ \t]+\n/, "\n")
+              .gsub(/\n{3,}/, "\n\n")
+              .gsub(/ {2,}/, " ")
+              .strip
+    else
+      object.title
+    end
+  end
+
   attribute :desc do
-    object.description
+    if object.description
+      object.description
+              .gsub(/(&nbsp;)+/, " ")
+              .gsub("\u200B", "") # unlikely
+              .gsub("\uFEFF", "") # unlikely
+              .gsub(/\r\n?/, "\n")
+              .gsub(/[ \t]+\n/, "\n")
+              .gsub(/\n{3,}/, "\n\n")
+              .gsub(/ {2,}/, " ")
+              .strip
+    else
+      object.description
+    end
   end
 
   attribute :datetime do
