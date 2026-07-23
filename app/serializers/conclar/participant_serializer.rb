@@ -1,5 +1,21 @@
 class Conclar::ParticipantSerializer < ActiveModel::Serializer
-  attributes :id, :bio
+  attributes :id
+
+  attribute :bio do
+    if object.bio
+      object.bio
+              .gsub(/(&nbsp;)+/, " ")
+              .gsub("\u200B", "") # unlikely
+              .gsub("\uFEFF", "") # unlikely
+              .gsub(/\r\n?/, "\n")
+              .gsub(/[ \t]+\n/, "\n")
+              .gsub(/\n{3,}/, "\n\n")
+              .gsub(/ {2,}/, " ")
+              .strip
+    else
+      object.bio
+    end
+  end
 
   attribute :name do
     object.published_name
