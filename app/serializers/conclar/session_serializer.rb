@@ -201,6 +201,9 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
             res[:recording] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}" if object.recorded        
             # res[:recording] = "#{instance_options[:base_url]}/deep-link/replay?item_id=#{object.id}" if object.recorded        
           end
+          if object.room.integrations['zoom'] && object.room.integrations['zoom']['meeting_type'] == 'discord'
+            res[:session] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
+          end
         end
       end
 
