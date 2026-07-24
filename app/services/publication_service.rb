@@ -114,6 +114,8 @@ module PublicationService
         sessions = PublishedSession.where("room_id = ? and integrations ->> 'zoom_session_id' is not null",room.id)
         sessions.each do |session|
           zoom_svc.unschedule_session(session: session)
+          # concourse
+          remove_from_portal(sessions: [session])
         end
       else
         if room.integrations['zoom']['meeting_type'] == "webinar" || room.integrations['zoom']['meeting_type'] == "meeting"
@@ -145,11 +147,14 @@ module PublicationService
       elsif session.integrations['zoom_session_id'] && !session.streamed
         # The session is no longer streamed and is not in a virtual only room
         zoom_svc.unschedule_session(session: session)
+        # remove from portal
+        remove_from_portal(sessions: [session])
       end
-    # TODO: need to look at the update time for the room as well...
     elsif session.integrations['zoom_session_id']
       # The session is no longer in a zoom room (webinar or meeting)
       zoom_svc.unschedule_session(session: session)
+      # remove from portal
+      remove_from_portal(sessions: [session])
     end
   end
 
