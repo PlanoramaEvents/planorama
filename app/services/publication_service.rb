@@ -119,6 +119,7 @@ module PublicationService
         if room.integrations['zoom']['meeting_type'] == "webinar" || room.integrations['zoom']['meeting_type'] == "meeting"
           # sessions = PublishedSession.where("room_id = ? and integrations ->> 'zoom_session_id' is null",room.id)
           sessions = PublishedSession.where("room_id = ?",room.id)
+          # ERROR
           sessions.each do |session|
             self.publish_to_zoom(session: session)
           end
@@ -134,7 +135,7 @@ module PublicationService
     zoom_svc = ZoomEventsService.get_svc if ZoomEventsService.zoom_enabled
 
     if room.integrations['zoom']['meeting_type'] == "webinar" || room.integrations['zoom']['meeting_type'] == "meeting"
-      if room.integrations['zoom']['virtual_room'] || session.streamed
+      if (room.integrations['zoom']['virtual_room'] == true || room.integrations['zoom']['virtual_room'] == 'true') || session.streamed
         # get if pub_session has a zoom id then it is an update
         if session.integrations['zoom_session_id']
           zoom_svc.update_session(session: session)
