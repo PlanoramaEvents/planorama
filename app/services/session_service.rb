@@ -78,7 +78,7 @@ module SessionService
       {
         params: {
           show_links: show_links,
-          base_portal_url: PortalService.base_url
+          base_url: PortalService.base_url
         }
       }
     ).serializable_hash
@@ -99,7 +99,7 @@ module SessionService
                   sessions,
                   {
                     serializer: Conclar::SessionSerializer,
-                    base_portal_url: PortalService.base_url
+                    base_url: PortalService.base_url
                   }
                 )
 
