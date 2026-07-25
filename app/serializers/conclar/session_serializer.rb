@@ -141,9 +141,9 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     streamed_zoom = (object.room.integrations['zoom'] && (object.room.integrations['zoom']['virtual_room'] == true || object.room.integrations['zoom']['virtual_room'] == 'true'))
     # If a zoom room is in one of these formats then it is not streamed to the public
     # i.e. only the attendees participate and can see what is happening
-    if object.format
-      streamed_zoom &&= ['Reading','Table Talk','Workshop','Party','Discussion Circle','Meetup'].exclude?  object.format.name
-    end
+    # if object.format
+    #   streamed_zoom &&= ['Reading','Table Talk','Workshop','Party','Discussion Circle','Meetup'].exclude?  object.format.name
+    # end
 
     if object.streamed || streamed_zoom
       t = {
