@@ -4,9 +4,9 @@
       ><b-icon-pie-chart-fill class="mr-2"></b-icon-pie-chart-fill
       >Dashboard</b-nav-item
     >
-    <!-- <b-nav-item v-if="can_see_this" to="/venues" active-class="active">
+    <b-nav-item v-if="can_see_this" to="/venues" active-class="active">
       <b-icon-building class="mr-2"></b-icon-building>Venues</b-nav-item
-    > -->
+    >
     <b-nav-item v-if="can_see_this" to="/people" active-class="active"
       ><b-icon-person-fill class="mr-2"></b-icon-person-fill>People</b-nav-item
     >
