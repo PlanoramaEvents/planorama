@@ -6,7 +6,7 @@
     <edit-modal
       :id="modalId"
       :title="modalTitle" 
-      @ok="saveVals"
+      @ok="saveVals()"
       @show="initValue()"
     >
         <b-form-select
@@ -50,7 +50,7 @@ export default {
     EditModal,
   },
   data: () => ({
-    imutableValue: [],
+    mutableValue: [],
     SESSION_NO_TAGS,
   }),
   computed: {
@@ -63,27 +63,13 @@ export default {
     modalTitle() {
       return `Edit ${this.label}`
     },
-    mutableValue: {
-      get() {
-        return this.imutableValue;
-      },
-      set(val) {
-        console.debug("---- SET: ", val)
-        this.imutableValue = val;
-        // this.$emit('input', val)
-      }
-    }
   },
   methods: {
-    saveVals(vals) {
-      console.debug("**** SAVE: ", this.imutableValue, this.mutableValue)
-      this.$emit('input', this.imutableValue)
-    },
-    clearValue() {
-      this.imutableValue = [];
+    saveVals() {
+      this.$emit('input', this.mutableValue)
     },
     initValue() {
-      this.imutableValue = this.value;
+      this.mutableValue = this.value;
     }
   },
 }
