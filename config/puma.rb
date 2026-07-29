@@ -32,3 +32,11 @@ plugin :tmp_restart
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
+
+# Set WEB_CONCURRENCY to be less or equal to number of CPUs
+workers ENV.fetch("WEB_CONCURRENCY") { 1 }
+# load app before forking
+preload_app!
+
+# for rails restart enabling
+# plugin :tmp_restart

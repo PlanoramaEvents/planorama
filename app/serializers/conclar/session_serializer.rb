@@ -1,6 +1,4 @@
 class Conclar::SessionSerializer < ActiveModel::Serializer
-  attributes :title
-
   attribute :format do    
     object.format.name if object.format
   end
@@ -13,8 +11,36 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     end
   end
 
+  attribute :title do
+    if object.title
+      object.title
+              .gsub(/(&nbsp;)+/, " ")
+              .gsub("\u200B", "") # unlikely
+              .gsub("\uFEFF", "") # unlikely
+              .gsub(/\r\n?/, "\n")
+              .gsub(/[ \t]+\n/, "\n")
+              .gsub(/\n{3,}/, "\n\n")
+              .gsub(/ {2,}/, " ")
+              .strip
+    else
+      object.title
+    end
+  end
+
   attribute :desc do
-    object.description
+    if object.description
+      object.description
+              .gsub(/(&nbsp;)+/, " ")
+              .gsub("\u200B", "") # unlikely
+              .gsub("\uFEFF", "") # unlikely
+              .gsub(/\r\n?/, "\n")
+              .gsub(/[ \t]+\n/, "\n")
+              .gsub(/\n{3,}/, "\n\n")
+              .gsub(/ {2,}/, " ")
+              .strip
+    else
+      object.description
+    end
   end
 
   attribute :datetime do
@@ -42,8 +68,17 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       res << a
     end
 
-    # TODO: change
-    # In Person, Online, both
+    if object.room && object.room.integrations['zoom']
+      if (object.room.integrations['zoom']['virtual_room'] == true || object.room.integrations['zoom']['virtual_room'] == 'true') || object.room.integrations['zoom']['meeting_type'] == 'discord'
+        t = {
+          value: "session_online",
+          category: "Environment",
+          label: 'Virtual'
+        }
+        res << t
+      end
+    end
+
     case object.environment
     when 'in_person'
       t = {
@@ -63,7 +98,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       t = {
         value: "session_online",
         category: "Environment",
-        label: 'Online'
+        label: 'Virtual'
       }
       res << t
     else
@@ -72,7 +107,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     if object.age_restriction
       t = {
         value: "session_".concat(object.age_restriction.name),
-        category: "Note",
+        category: "Availability",
         label: object.age_restriction.name
       }
       res << t
@@ -81,7 +116,7 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     if object.require_signup
       t = {
         value: "session_require_signup",
-        category: "Note",
+        category: "Availability",
         label: "Requires Signup"
       }
       res << t
@@ -90,32 +125,40 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
     if object.recorded
       t = {
         value: "session_replay",
-        category: "Note",
-        label: "Replay"
+        category: "Availability",
+        label: "Recorded"
       }
       res << t
     else
       t = {
         value: "session_no_replay",
-        category: "Note",
-        label: "No Replay"
+        category: "Availability",
+        label: "Not Recorded"
       }
       res << t
     end
 
-    if object.streamed
+    streamed_zoom = (object.room.integrations['zoom'] && (object.room.integrations['zoom']['virtual_room'] == true || object.room.integrations['zoom']['virtual_room'] == 'true'))
+    # If a zoom room is in one of these formats then it is not streamed to the public
+    # i.e. only the attendees participate and can see what is happening
+    # if object.format
+    #   streamed_zoom &&= ['Reading','Table Talk','Workshop','Party','Discussion Circle','Meetup'].exclude?  object.format.name
+    # end
+
+    if object.streamed || streamed_zoom
       t = {
-        value: "session_online",
-        category: "Environment",
-        label: 'Online'
+        value: "session_streamed",
+        category: "Availability",
+        label: 'Streamed'
       }
       res << t
-      # t = {
-      #   value: "session_streamed",
-      #   category: "Environment",
-      #   label: "Streamed"
-      # }
-      # res << t
+    else
+      t = {
+        value: "session_not_streamed",
+        category: "Availability",
+        label: 'Not Streamed'
+      }
+      res << t
     end
 
     res
@@ -138,28 +181,33 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
   # links is an array that contains a set of url links for the programme item.
   # Currently, signup, meeting and recording are the valid link types.
   attribute :links do
-    if instance_options[:g24rce]
+    if instance_options[:base_url]
       res = {}
-      if object.environment == 'virtual' || object.streamed
+      if object.environment == 'virtual' || object.streamed || object.integrations['zoom_session_id']
         if object.room.integrations["rce"] && object.room.integrations["rce"]["SegmentType"]
           res = if object.room.integrations["rce"]["SegmentType"] == "stage"
             {
-              stage: "#{instance_options[:g24rce]}deep-link/stage?room_id=#{object.room.id}",
+              stage: "#{instance_options[:base_url]}/deep-link/stage?room_id=#{object.room.id}",
             }
           else # session
             {
-              session: "#{instance_options[:g24rce]}deep-link/session?item_id=#{object.id}"
+              session: "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
             }
+          end
+        elsif PortalService.portal_enabled
+          if object.environment == 'virtual' || object.streamed || 
+                (object.room.integrations['zoom'] && object.room.integrations['zoom']['meeting_type'] != 'discord')
+            res[:session] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
+            res[:recording] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}" if object.recorded        
+            # res[:recording] = "#{instance_options[:base_url]}/deep-link/replay?item_id=#{object.id}" if object.recorded        
+          end
+          if object.room.integrations['zoom'] && object.room.integrations['zoom']['meeting_type'] == 'discord'
+            res[:session] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
           end
         end
       end
 
-      # replay link for recorded session
-      if object.recorded
-        res[:replay] = "#{instance_options[:g24rce]}deep-link/replay?item_id=#{object.id}"
-      end
-
-      res[:chat] = "#{instance_options[:g24rce]}deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
+      res[:chat] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
       res
     end
   end

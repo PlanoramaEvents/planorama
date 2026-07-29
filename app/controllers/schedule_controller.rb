@@ -16,9 +16,17 @@ class ScheduleController < ApplicationController
     cached = PublicationDate.where(sent_external: true).order('created_at desc').first&.publish_snapshots&.schedules&.first
 
     if cached
-      render json: cached.snapshot, content_type: 'application/json'
+      render json: {
+        schemaVersion: 2,
+        info: {},
+        schedule: cached.snapshot
+      }, content_type: 'application/json'
     else
-      render json: [], content_type: 'application/json'
+      render json: {
+        schemaVersion: 2,
+        info: {},
+        schedule: []
+      }, content_type: 'application/json'
     end
   end
 
@@ -26,9 +34,17 @@ class ScheduleController < ApplicationController
     cached = PublicationDate.where(sent_external: true).order('created_at desc').first&.publish_snapshots&.participants&.first
 
     if cached
-      render json: cached.snapshot, content_type: 'application/json'
+      render json: {
+        schemaVersion: 2,
+        info: {},
+        people: cached.snapshot
+      } , content_type: 'application/json'
     else
-      render json: [], content_type: 'application/json'
+      render json: {
+        schemaVersion: 2,
+        info: {},
+        people: []
+      }, content_type: 'application/json'
     end
   end
 

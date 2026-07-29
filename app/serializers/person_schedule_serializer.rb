@@ -65,29 +65,41 @@ class PersonScheduleSerializer
   end
 
   attribute :links do |object, params|
-    if params[:show_links] && params[:g24rce]
-      if object.environment == 'virtual' || object.streamed
-        if object.room.integrations["rce"] && object.room.integrations["rce"]["SegmentType"]
-          if object.room.integrations["rce"]["SegmentType"] == "stage"
+    if params[:show_links]
+      if params[:g24rce]
+        if object.environment == 'virtual' || object.streamed
+          if object.room.integrations["rce"] && object.room.integrations["rce"]["SegmentType"]
+            if object.room.integrations["rce"]["SegmentType"] == "stage"
+              {
+                meeting: "#{params[:g24rce]}deep-link/stage?room_id=#{object.room_id}",
+                chat: "#{params[:g24rce]}deep-link/chat?room_id=#{object.room_id}",
+                recording: "#{params[:g24rce]}deep-link/replay?item_id=#{object.session_id}",
+                join: "#{params[:g24rce]}deep-link/participate?room_id=#{object.room_id}"
+              }
+            else # session
+              {
+                meeting: "#{params[:g24rce]}deep-link/session?item_id=#{object.session_id}",
+                chat: "#{params[:g24rce]}deep-link/chat?item_id=#{object.session_id}",
+                recording: "#{params[:g24rce]}deep-link/replay?item_id=#{object.session_id}",
+                join: "#{params[:g24rce]}deep-link/participate?item_id=#{object.session_id}"
+              }
+            end
+          elsif object.environment == 'hybrid'
             {
-              meeting: "#{params[:g24rce]}deep-link/stage?room_id=#{object.room_id}",
-              chat: "#{params[:g24rce]}deep-link/chat?room_id=#{object.room_id}",
-              recording: "#{params[:g24rce]}deep-link/replay?item_id=#{object.session_id}",
               join: "#{params[:g24rce]}deep-link/participate?room_id=#{object.room_id}"
-            }
-          else # session
-            {
-              meeting: "#{params[:g24rce]}deep-link/session?item_id=#{object.session_id}",
-              chat: "#{params[:g24rce]}deep-link/chat?item_id=#{object.session_id}",
-              recording: "#{params[:g24rce]}deep-link/replay?item_id=#{object.session_id}",
-              join: "#{params[:g24rce]}deep-link/participate?item_id=#{object.session_id}"
             }
           end
         end
-      elsif object.environment == 'hybrid'
-        {
-          join: "#{params[:g24rce]}deep-link/participate?room_id=#{object.room_id}"
-        }
+      elsif PortalService.portal_enabled
+        links = {}
+        links[:chat] = "#{PortalService.base_url}/deep-link/chat?room_id=#{object.room_id}&item_id=#{object.session_id}"
+        # if room is virtual or session is streamed or session has a zoom id
+        if object.environment == 'virtual' || object.streamed || 
+              (object.room.integrations['zoom'] && object.room.integrations['zoom']['meeting_type'] != 'discord')
+          links[:join] = "#{PortalService.base_url}/deep-link/session?item_id=#{object.session_id}"
+          links[:recording] = "#{PortalService.base_url}/deep-link/replay?item_id=#{object.session_id}" if object.recorded                  
+        end
+        links
       end
     end
   end
