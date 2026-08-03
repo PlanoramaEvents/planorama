@@ -67,4 +67,6 @@ Rails.application.configure do
   logger.formatter = config.log_formatter
   config.logger    = ActiveSupport::TaggedLogging.new(logger)
 
+  config.logger = Logger.new('log/planorama.log', 10, 50.megabytes)
+
 end
