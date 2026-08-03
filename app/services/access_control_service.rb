@@ -73,6 +73,7 @@ module AccessControlService
   #
   def self.can_execute?(model: , action: , person:)
     # If the person is an admin then no need to check roles
+    return false unless person
     return true if person.convention_roles.collect(&:role).include?('admin')
 
     policies = PolicyService.policies_for(person: person)
@@ -175,6 +176,7 @@ module AccessControlService
   end
 
   def self.shared_attribute_access?(instance:, person:)
+    return false unless person
     return true if person.convention_roles.collect(&:role).include?('admin')
 
     if instance.is_a?(Person)
