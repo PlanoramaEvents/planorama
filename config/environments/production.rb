@@ -95,6 +95,8 @@ Rails.application.configure do
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  config.logger = Logger.new('log/planorama.log', 10, 50.megabytes)
+
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 

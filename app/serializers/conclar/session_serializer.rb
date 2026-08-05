@@ -77,31 +77,31 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
         }
         res << t
       end
-    end
-
-    case object.environment
-    when 'in_person'
-      t = {
-        value: "session_in_person",
-        category: "Environment",
-        label: 'In Person'
-      }
-      res << t
-    when 'hybrid'
-      t = {
-        value: "session_in_person",
-        category: "Environment",
-        label: 'In Person'
-      }
-      res << t
-    when 'virtual'
-      t = {
-        value: "session_online",
-        category: "Environment",
-        label: 'Virtual'
-      }
-      res << t
     else
+      case object.environment
+      when 'in_person'
+        t = {
+          value: "session_in_person",
+          category: "Environment",
+          label: 'In Person'
+        }
+        res << t
+      when 'hybrid'
+        t = {
+          value: "session_in_person",
+          category: "Environment",
+          label: 'In Person'
+        }
+        res << t
+      when 'virtual'
+        t = {
+          value: "session_online",
+          category: "Environment",
+          label: 'Virtual'
+        }
+        res << t
+      else
+      end
     end
 
     if object.age_restriction
@@ -208,6 +208,8 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       end
 
       res[:chat] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
+
+      res[:signup] = "#{instance_options[:base_url]}/signups" if object.require_signup
       res
     end
   end
