@@ -208,6 +208,8 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       end
 
       res[:chat] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
+
+      res[:signup] = "#{instance_options[:base_url]}/signups" if object.require_signup
       res
     end
   end
