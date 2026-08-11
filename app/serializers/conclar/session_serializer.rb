@@ -138,14 +138,14 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       res << t
     end
 
-    streamed_zoom = (object.room.integrations['zoom'] && (object.room.integrations['zoom']['virtual_room'] == true || object.room.integrations['zoom']['virtual_room'] == 'true'))
-    # If a zoom room is in one of these formats then it is not streamed to the public
+    streamed_room = (object.room.integrations['zoom'] && (object.room.integrations['zoom']['virtual_room'] == true || object.room.integrations['zoom']['virtual_room'] == 'true' || object.room.integrations['zoom']['meeting_type'] == 'discord'))
+    # If a "zoom" room is in one of these formats then it is not streamed to the public
     # i.e. only the attendees participate and can see what is happening
     # if object.format
     #   streamed_zoom &&= ['Reading','Table Talk','Workshop','Party','Discussion Circle','Meetup'].exclude?  object.format.name
     # end
 
-    if object.streamed || streamed_zoom
+    if object.streamed || streamed_room
       t = {
         value: "session_streamed",
         category: "Availability",
@@ -197,17 +197,24 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
         elsif PortalService.portal_enabled
           if object.environment == 'virtual' || object.streamed || 
                 (object.room.integrations['zoom'] && object.room.integrations['zoom']['meeting_type'] != 'discord')
-            res[:session] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
-            res[:recording] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}" if object.recorded        
-            # res[:recording] = "#{instance_options[:base_url]}/deep-link/replay?item_id=#{object.id}" if object.recorded        
+            # check room for watch key
+            if ['07254308-9339-43ce-856a-bd8fc305428a', '85325568-8608-4bed-92fe-7ceb33c5d8c4'].include?  object.room.id
+              res[:join] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
+            else
+              res[:watch] = "#{instance_options[:base_url]}/deep-link/session?item_id=#{object.id}"
+            end
+            res[:recording] = "#{instance_options[:base_url]}/deep-link/replay?item_id=#{object.id}" if object.recorded        
           end
           if object.room.integrations['zoom'] && object.room.integrations['zoom']['meeting_type'] == 'discord'
-            res[:session] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
+            res[:join] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
           end
         end
       end
 
-      res[:chat] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
+      # Only allow chat for most formats except the excluded ones
+      if ['Autographing','Dance','Filk Circle', 'Game', 'Reception', 'Table Talk', ].exclude?  object.format.name
+        res[:chat] = "#{instance_options[:base_url]}/deep-link/chat?room_id=#{object.room.id}&item_id=#{object.id}"
+      end
 
       res[:signup] = "#{instance_options[:base_url]}/signups" if object.require_signup
       res
