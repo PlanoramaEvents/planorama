@@ -87,6 +87,11 @@ class PublishedSession < ApplicationRecord
   acts_as_taggable_on :tags
   acts_as_taggable_on :labels
 
+  def clean_description
+    candidate = Nokogiri::HTML.parse description
+    candidate.text
+  end
+
   def self.only_public
     where(visibility: 'public')
   end
