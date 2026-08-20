@@ -68,41 +68,41 @@ class Conclar::SessionSerializer < ActiveModel::Serializer
       res << a
     end
 
+    env_tag = nil
     if object.room && object.room.integrations['zoom']
       if (object.room.integrations['zoom']['virtual_room'] == true || object.room.integrations['zoom']['virtual_room'] == 'true') || object.room.integrations['zoom']['meeting_type'] == 'discord'
-        t = {
+        env_tag = {
           value: "session_online",
           category: "Environment",
           label: 'Virtual'
         }
-        res << t
       end
-    else
+    end
+    if env_tag.nil?
       case object.environment
       when 'in_person'
-        t = {
+        env_tag = {
           value: "session_in_person",
           category: "Environment",
           label: 'In Person'
         }
-        res << t
       when 'hybrid'
-        t = {
+        env_tag = {
           value: "session_in_person",
           category: "Environment",
           label: 'In Person'
         }
-        res << t
       when 'virtual'
-        t = {
+        env_tag = {
           value: "session_online",
           category: "Environment",
           label: 'Virtual'
         }
-        res << t
       else
       end
     end
+
+    res << env_tag if env_tag
 
     if object.age_restriction
       t = {
